@@ -46703,14 +46703,14 @@ int HP_itemdb_searchrandomid(struct item_group *group) {
 	}
 	return retVal___;
 }
-const char * HP_itemdb_typename(enum item_types type) {
+const char * HP_itemdb_type_to_name(enum item_types type) {
 	int hIndex = 0;
 	const char * retVal___ = NULL;
-	if (HPMHooks.count.HP_itemdb_typename_pre > 0) {
+	if (HPMHooks.count.HP_itemdb_type_to_name_pre > 0) {
 		const char * (*preHookFunc) (enum item_types *type);
 		*HPMforce_return = false;
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_typename_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_itemdb_typename_pre[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_type_to_name_pre; hIndex++) {
+			preHookFunc = HPMHooks.list.HP_itemdb_type_to_name_pre[hIndex].func;
 			retVal___ = preHookFunc(&type);
 		}
 		if (*HPMforce_return) {
@@ -46719,12 +46719,12 @@ const char * HP_itemdb_typename(enum item_types type) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.itemdb.typename(type);
+		retVal___ = HPMHooks.source.itemdb.type_to_name(type);
 	}
-	if (HPMHooks.count.HP_itemdb_typename_post > 0) {
+	if (HPMHooks.count.HP_itemdb_type_to_name_post > 0) {
 		const char * (*postHookFunc) (const char * retVal___, enum item_types type);
-		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_typename_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_itemdb_typename_post[hIndex].func;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_itemdb_type_to_name_post; hIndex++) {
+			postHookFunc = HPMHooks.list.HP_itemdb_type_to_name_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, type);
 		}
 	}

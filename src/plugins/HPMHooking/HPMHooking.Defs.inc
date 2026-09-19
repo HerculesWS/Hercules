@@ -4824,8 +4824,8 @@ typedef int (*HPMHOOK_pre_itemdb_searchname_array_sub) (union DBKey *key, struct
 typedef int (*HPMHOOK_post_itemdb_searchname_array_sub) (int retVal___, union DBKey key, struct DBData data, va_list ap);
 typedef int (*HPMHOOK_pre_itemdb_searchrandomid) (struct item_group **group);
 typedef int (*HPMHOOK_post_itemdb_searchrandomid) (int retVal___, struct item_group *group);
-typedef const char * (*HPMHOOK_pre_itemdb_typename) (enum item_types *type);
-typedef const char * (*HPMHOOK_post_itemdb_typename) (const char * retVal___, enum item_types type);
+typedef const char * (*HPMHOOK_pre_itemdb_type_to_name) (enum item_types *type);
+typedef const char * (*HPMHOOK_post_itemdb_type_to_name) (const char * retVal___, enum item_types type);
 typedef void (*HPMHOOK_pre_itemdb_jobmask2mapid) (uint64 **bclass, uint64 *jobmask);
 typedef void (*HPMHOOK_post_itemdb_jobmask2mapid) (uint64 *bclass, uint64 jobmask);
 typedef void (*HPMHOOK_pre_itemdb_jobid2mapid) (uint64 **bclass, int *job_class, bool *enable);
