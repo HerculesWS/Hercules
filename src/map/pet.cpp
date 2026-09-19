@@ -768,7 +768,7 @@ static int pet_catch_process2(struct map_session_data *sd, int target_id)
 
 /**
  * Is invoked _only_ when a new pet has been created is a product of packet 0x3880
- * see mapif_pet_created@int_pet.c for more information
+ * see mapif_pet_created@int_pet.cpp for more information
  * Handles new pet data from inter-server and prepares item information
  * to add pet egg
  *
@@ -1894,8 +1894,8 @@ static int do_init_pet(bool minimal)
 
 	pet->read_db();
 
-	pet->item_drop_ers = ers_new(sizeof(struct item_drop),"pet.c::item_drop_ers",ERS_OPT_NONE);
-	pet->item_drop_list_ers = ers_new(sizeof(struct item_drop_list),"pet.c::item_drop_list_ers",ERS_OPT_NONE);
+	pet->item_drop_ers = ers_new(sizeof(struct item_drop),"pet.cpp::item_drop_ers",ERS_OPT_NONE);
+	pet->item_drop_list_ers = ers_new(sizeof(struct item_drop_list),"pet.cpp::item_drop_list_ers",ERS_OPT_NONE);
 
 	timer->add_func_list(pet->hungry,"pet_hungry");
 	timer->add_func_list(pet->ai_hard,"pet_ai_hard");

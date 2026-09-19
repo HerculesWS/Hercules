@@ -32,7 +32,7 @@
 struct userconfig_userhotkeys_v2;
 
 /**
- * handlers.c Interface
+ * handlers Interface
  **/
 struct handlers_interface {
 	int (*init) (bool minimal);

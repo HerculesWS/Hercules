@@ -37,7 +37,7 @@ struct s_loginlog_dbs {
 };
 
 /**
- * Loginlog.c Interface
+ * Loginlog Interface
  **/
 struct loginlog_interface {
 	struct Sql *sql_handle;

@@ -31,7 +31,7 @@ typedef cJSON JsonW;
 typedef cJSON_bool JsonWBool;
 
 /**
- * jsonwriter.c Interface
+ * jsonwriter Interface
  **/
 struct jsonwriter_interface {
 	int (*init) (bool minimal);

@@ -6013,7 +6013,7 @@ static int do_init_npc(bool minimal)
 	clan->set_constants();
 
 	if (!minimal) {
-		npc->timer_event_ers = ers_new(sizeof(struct timer_event_data),"clif.c::timer_event_ers",ERS_OPT_NONE);
+		npc->timer_event_ers = ers_new(sizeof(struct timer_event_data),"clif.cpp::timer_event_ers",ERS_OPT_NONE);
 
 		npc->process_files(START_NPC_NUM);
 	}

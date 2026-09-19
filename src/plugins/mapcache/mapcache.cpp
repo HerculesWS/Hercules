@@ -73,7 +73,7 @@ bool needs_grfio;
 
 
 /**
- * code from utlis.c until it's interfaced
+ * code from utlis.cpp until it's interfaced
  **/
 
 #ifdef WIN32

@@ -690,7 +690,7 @@ static void mapreg_final(void)
 static void mapreg_init(void)
 {
 	mapreg->regs.vars = i64db_alloc(DB_OPT_BASE);
-	mapreg->ers = ers_new(sizeof(struct mapreg_save), "mapreg_sql.c::mapreg_ers", ERS_OPT_CLEAN);
+	mapreg->ers = ers_new(sizeof(struct mapreg_save), "mapreg_sql.cpp::mapreg_ers", ERS_OPT_CLEAN);
 	mapreg->load();
 	timer->add_func_list(mapreg->save_timer, "mapreg_save_timer");
 	timer->add_interval(timer->gettick() + MAPREG_AUTOSAVE_INTERVAL, mapreg->save_timer, 0, 0, MAPREG_AUTOSAVE_INTERVAL);

@@ -5164,7 +5164,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 			else
 				cri += sd->critaddrace[tstatus->race];
 
-			// if show_katar_crit_bonus is enabled, it already done the calculation in status.c
+			// if show_katar_crit_bonus is enabled, it already done the calculation in status.cpp
 			if (!battle_config.show_katar_crit_bonus && sd->weapontype == W_KATAR) {
 				cri <<= 1;
 			}
@@ -6403,7 +6403,7 @@ static struct Damage battle_calc_attack(int attack_type, struct block_list *bl, 
 	return d;
 }
 
-//Performs reflect damage (magic (maya) is performed over skill.c).
+//Performs reflect damage (magic (maya) is performed over skill.cpp).
 static void battle_reflect_damage(struct block_list *target, struct block_list *src, struct Damage *wd, uint16 skill_id)
 {
 	int64 damage, rdamage = 0, trdamage = 0;
@@ -8493,7 +8493,7 @@ static void do_init_battle(bool minimal)
 	if (minimal)
 		return;
 
-	battle->delay_damage_ers = ers_new(sizeof(struct delay_damage),"battle.c::delay_damage_ers",ERS_OPT_CLEAR);
+	battle->delay_damage_ers = ers_new(sizeof(struct delay_damage),"battle.cpp::delay_damage_ers",ERS_OPT_CLEAR);
 	timer->add_func_list(battle->delay_damage_sub, "battle_delay_damage_sub");
 }
 

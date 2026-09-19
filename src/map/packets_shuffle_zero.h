@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-//Included directly by clif.c in packet_loaddb()
+//Included directly by clif.cpp in packet_loaddb()
 
 #ifndef MAP_PACKETS_SHUFFLE_ZERO_H
 #define MAP_PACKETS_SHUFFLE_ZERO_H

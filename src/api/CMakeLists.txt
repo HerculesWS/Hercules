@@ -17,17 +17,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 set(API_SRCS
-  api.c
-  aclif.c
-  aloginif.c
-  HPMapi.c
-  httpparser.c
-  httpsender.c
-  handlers.c
-  imageparser.c
-  jsonparser.c
-  jsonwriter.c
-  postheader.c
+  api.cpp
+  aclif.cpp
+  aloginif.cpp
+  HPMapi.cpp
+  httpparser.cpp
+  httpsender.cpp
+  handlers.cpp
+  imageparser.cpp
+  jsonparser.cpp
+  jsonwriter.cpp
+  postheader.cpp
 )
 
 set(API_HDRS
@@ -91,5 +91,3 @@ install(
     DESTINATION
     .
 )
-
-set_source_files_properties(${API_SRCS} PROPERTIES LANGUAGE CXX)

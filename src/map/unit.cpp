@@ -1533,7 +1533,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 	if( battle_config.ksprotection && sd && mob->ksprotected(src, target) )
 		return 0;
 
-	//Normally not needed because clif.c checks for it, but the at/char/script commands don't! [Skotlex]
+	//Normally not needed because clif.cpp checks for it, but the at/char/script commands don't! [Skotlex]
 	if(ud->skilltimer != INVALID_TIMER && skill_id != SA_CASTCANCEL && skill_id != SO_SPELLFIST)
 		return 0;
 
@@ -1921,7 +1921,7 @@ static int unit_skilluse_pos2(struct block_list *src, short skill_x, short skill
 	ud = unit->bl2ud(src);
 	if(ud == NULL) return 0;
 
-	if(ud->skilltimer != INVALID_TIMER) //Normally not needed since clif.c checks for it, but at/char/script commands don't! [Skotlex]
+	if(ud->skilltimer != INVALID_TIMER) //Normally not needed since clif.cpp checks for it, but at/char/script commands don't! [Skotlex]
 		return 0;
 
 	sc = status->get_sc(src);

@@ -2045,7 +2045,7 @@ END_ZEROED_BLOCK;
 };
 
 /**
- * Skill.c Interface
+ * Skill Interface
  **/
 struct skill_interface {
 	int (*init) (bool minimal);

@@ -19,8 +19,8 @@
 ################  TEST CONFIGURATION  ################################
 #                                                                    #
 # When you add a test, add its name here:                            #
-# Example: if you have a test named test_foo.c and another           #
-# one named test_bar.c, add them to the list like this:              #
+# Example: if you have a test named test_foo.cpp and another         #
+# one named test_bar.cpp, add them to the list like this:            #
 #                                                                    #
 #set(HERC_TESTS                                                      #
 #  foo                                                               #
@@ -32,7 +32,7 @@
 #   you will still be able to build your plugin through              #
 #   'make plugin.my_plugin'                                          #
 #                                                                    #
-# Note: DO NOT include the .c extension!!!                           #
+# Note: DO NOT include the .cpp extension!!!                         #
 
 set(HERC_TESTS
   base62
@@ -48,10 +48,8 @@ function(add_test_target _test_name)
   set(_target_name "test_${_test_name}")
 
   add_executable(${_target_name}
-    "${_target_name}.c"
+    "${_target_name}.cpp"
   )
-
-  set_source_files_properties("${_target_name}.c" PROPERTIES LANGUAGE CXX)
 
   target_link_libraries(${_target_name} PUBLIC common)
 

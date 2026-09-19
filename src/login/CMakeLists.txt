@@ -17,13 +17,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 set(LOGIN_SRCS
-  account.c
-  HPMlogin.c
-  ipban.c
-  lclif.c
-  login.c
-  loginlog.c
-  lapiif.c
+  account.cpp
+  HPMlogin.cpp
+  ipban.cpp
+  lclif.cpp
+  login.cpp
+  loginlog.cpp
+  lapiif.cpp
 )
 
 set(LOGIN_HDRS
@@ -72,5 +72,3 @@ install(
     DESTINATION
     .
 )
-
-set_source_files_properties(${LOGIN_SRCS} PROPERTIES LANGUAGE CXX)

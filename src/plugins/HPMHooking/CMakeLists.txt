@@ -20,12 +20,12 @@
 set(HERC_PLUGIN_NAME HPMHooking)
 
 # List of source files of the plugin
-set(HERC_PLUGIN_C
-  HPMHooking.c
+set(HERC_PLUGIN_SRCS
+  HPMHooking.cpp
 )
 
 # List of header files of the plugin
-set(HERC_PLUGIN_H
+set(HERC_PLUGIN_HDRS
   HPMHooking.h
 )
 
@@ -66,8 +66,8 @@ if(BUILD_HPMHOOKING)
 
     add_plugin_target("${HERC_PLUGIN_NAME}_${server}"
       CFILES
-        ${HERC_PLUGIN_C}
-        ${HERC_PLUGIN_H}
+        ${HERC_PLUGIN_SRCS}
+        ${HERC_PLUGIN_HDRS}
         ${HPMHOOKING_INCLUDES}
       CDEFS "HPMHOOKING_${server_upper}"
       VIRTUAL_TARGET "plugin.HPMHooking"

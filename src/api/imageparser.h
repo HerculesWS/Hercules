@@ -34,7 +34,7 @@ struct gif_user_data {
 };
 
 /**
- * imageparser.c Interface
+ * imageparser Interface
  **/
 struct imageparser_interface {
 	int (*init) (bool minimal);

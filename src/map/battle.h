@@ -685,7 +685,7 @@ struct delay_damage {
 };
 
 /**
- * Battle.c Interface
+ * Battle Interface
  **/
 struct battle_interface {
 	/* */

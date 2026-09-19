@@ -5398,7 +5398,7 @@ static int pc_useitem(struct map_session_data *sd, int n)
 	//Since most delay-consume items involve using a "skill-type" target cursor,
 	//perform a skill-use check before going through. [Skotlex]
 	//resurrection was picked as testing skill, as a non-offensive, generic skill, it will do.
-	//FIXME: Is this really needed here? It'll be checked in unit.c after all and this prevents skill items using when silenced [Inkfish]
+	//FIXME: Is this really needed here? It'll be checked in unit.cpp after all and this prevents skill items using when silenced [Inkfish]
 	if( sd->inventory_data[n]->flag.delay_consume && ( sd->ud.skilltimer != INVALID_TIMER /*|| !status->check_skilluse(&sd->bl, &sd->bl, ALL_RESURRECTION, 0)*/ ) )
 		return 0;
 
@@ -12939,9 +12939,9 @@ static void do_init_pc(bool minimal)
 
 	pcg->init();
 
-	pc->sc_display_ers = ers_new(sizeof(struct sc_display_entry), "pc.c:sc_display_ers", ERS_OPT_FLEX_CHUNK);
-	pc->num_reg_ers = ers_new(sizeof(struct script_reg_num), "pc.c::num_reg_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
-	pc->str_reg_ers = ers_new(sizeof(struct script_reg_str), "pc.c::str_reg_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
+	pc->sc_display_ers = ers_new(sizeof(struct sc_display_entry), "pc.cpp:sc_display_ers", ERS_OPT_FLEX_CHUNK);
+	pc->num_reg_ers = ers_new(sizeof(struct script_reg_num), "pc.cpp::num_reg_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
+	pc->str_reg_ers = ers_new(sizeof(struct script_reg_str), "pc.cpp::str_reg_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
 
 	ers_chunk_size(pc->sc_display_ers, 150);
 	ers_chunk_size(pc->num_reg_ers, 300);

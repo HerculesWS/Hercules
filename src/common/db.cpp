@@ -2810,8 +2810,8 @@ static void *db_data2ptr(struct DBData *data)
  */
 static void db_init(void)
 {
-	db_iterator_ers = ers_new(sizeof(struct DBIterator_impl),"db.c::db_iterator_ers", (enum ERSOptions)(ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK)); // FIXME: change this to a flag type
-	db_alloc_ers = ers_new(sizeof(struct DBMap_impl),"db.c::db_alloc_ers",(enum ERSOptions)(ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK)); // FIXME: change this to a flag type
+	db_iterator_ers = ers_new(sizeof(struct DBIterator_impl),"db.cpp::db_iterator_ers", (enum ERSOptions)(ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK)); // FIXME: change this to a flag type
+	db_alloc_ers = ers_new(sizeof(struct DBMap_impl),"db.cpp::db_alloc_ers",(enum ERSOptions)(ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK)); // FIXME: change this to a flag type
 	ers_chunk_size(db_alloc_ers, 50);
 	ers_chunk_size(db_iterator_ers, 10);
 	DB_COUNTSTAT(db_init);

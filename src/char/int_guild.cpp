@@ -1657,7 +1657,7 @@ static bool inter_guild_is_guild_master(int char_id, int guild_id)
 
 // Communication from the map server
 // - Can analyzed only one by one packet
-// Data packet length that you set to inter.c
+// Data packet length that you set to inter.cpp
 //- Shouldn't do checking and packet length, RFIFOSKIP is done by the caller
 // Must Return
 //  1 : ok

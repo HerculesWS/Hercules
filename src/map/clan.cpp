@@ -319,7 +319,7 @@ static void clan_member_online(struct map_session_data *sd, bool first)
 	sc_start2(NULL, &sd->bl, SC_CLAN_INFO, 10000, 0, c->clan_id, INFINITE_DURATION, 0);
 
 	if (!first) {
-		// When first called from pc.c we don't need to do status_calc
+		// When first called from pc.cpp we don't need to do status_calc
 		status_calc_pc(sd, SCO_FORCE);
 	}
 

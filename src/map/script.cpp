@@ -6146,9 +6146,9 @@ static void do_init_script(bool minimal)
 	script->userfunc_db = strdb_alloc(DB_OPT_DUP_KEY,0);
 	script->autobonus_db = strdb_alloc(DB_OPT_DUP_KEY,0);
 
-	script->st_ers = ers_new(sizeof(struct script_state), "script.c::st_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
-	script->stack_ers = ers_new(sizeof(struct script_stack), "script.c::script_stack", (enum ERSOptions)(ERS_OPT_NONE | ERS_OPT_FLEX_CHUNK));
-	script->array_ers = ers_new(sizeof(struct script_array), "script.c::array_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_CLEAR));
+	script->st_ers = ers_new(sizeof(struct script_state), "script.cpp::st_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
+	script->stack_ers = ers_new(sizeof(struct script_stack), "script.cpp::script_stack", (enum ERSOptions)(ERS_OPT_NONE | ERS_OPT_FLEX_CHUNK));
+	script->array_ers = ers_new(sizeof(struct script_array), "script.cpp::array_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_CLEAR));
 
 	ers_chunk_size(script->st_ers, 10);
 	ers_chunk_size(script->stack_ers, 10);
@@ -13811,7 +13811,7 @@ static BUILDIN(sc_start)
 		tick = skill->get_time(status->sc2skill(type), val1);
 	}
 
-	if(script->potion_flag == 1 && script->potion_target) { //skill.c set the flags before running the script, this is a potion-pitched effect.
+	if(script->potion_flag == 1 && script->potion_target) { //skill.cpp set the flags before running the script, this is a potion-pitched effect.
 		bl = map->id2bl(script->potion_target);
 		tick /= 2;// Thrown potions only last half.
 		val4 = 1;// Mark that this was a thrown sc_effect
@@ -13928,7 +13928,7 @@ static BUILDIN(getstatus)
 
 	if( id <= SC_NONE || id >= SC_MAX )
 	{// invalid status type given
-		ShowWarning("script.c:getstatus: Invalid status type given (%d).\n", id);
+		ShowWarning("script.cpp:getstatus: Invalid status type given (%d).\n", id);
 		return true;
 	}
 
@@ -18718,7 +18718,7 @@ static BUILDIN(cardscnt)
 		if (id <= 0)
 			continue;
 
-		index = status->current_equip_item_index; //we get CURRENT WEAPON inventory index from status.c [Lupus]
+		index = status->current_equip_item_index; //we get CURRENT WEAPON inventory index from status.cpp [Lupus]
 		if(index < 0) continue;
 
 		if(!sd->inventory_data[index])
@@ -27391,7 +27391,7 @@ static BUILDIN(_)
 	return true;
 }
 
-// declarations that were supposed to be exported from npc_chat.c
+// declarations that were supposed to be exported from npc_chat.cpp
 BUILDIN(defpattern);
 BUILDIN(activatepset);
 BUILDIN(deactivatepset);

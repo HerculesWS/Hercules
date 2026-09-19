@@ -191,7 +191,7 @@ VECTOR_STRUCT_DECL(s_subnet_vector, struct s_subnet);
 #define SUBNET_MATCH(ip1, ip2, mask) (APPLY_MASK((ip1), (mask)) == APPLY_MASK((ip2), (mask)))
 
 /**
- * Socket.c interface, mostly for reading however.
+ * Socket interface, mostly for reading however.
  **/
 struct socket_interface {
 	int fd_max;

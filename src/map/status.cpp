@@ -288,7 +288,7 @@ static int status_damage(struct block_list *src, struct block_list *target, int6
 		flag |= 8;
 
 #if 0
-	// Let through. battle.c/skill.c have the whole logic of when it's possible or
+	// Let through. battle.cpp/skill.cpp have the whole logic of when it's possible or
 	// not to hurt someone (and this check breaks pet catching) [Skotlex]
 	if (!target->prev && !(flag&2))
 		return 0; //Cannot damage a bl not on a map, except when "charging" hp/sp
@@ -815,7 +815,7 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 		if (!(st->mode&MD_CANATTACK))
 			return 0; //This mode is only needed for melee attacking.
 		//Dead state is not checked for skills as some skills can be used
-		//on dead characters, said checks are left to skill.c [Skotlex]
+		//on dead characters, said checks are left to skill.cpp [Skotlex]
 		if (target && status->isdead(target))
 			return 0;
 		if( src && (sc = status->get_sc(src)) != NULL && sc->data[SC_COLD] && src->type != BL_MOB)
@@ -1014,7 +1014,7 @@ static int status_check_skilluse(struct block_list *src, struct block_list *targ
 	tsc = status->get_sc(target);
 
 	if(tsc && tsc->count) {
-		/* attacks in invincible are capped to 1 damage and handled in batte.c; allow spell break and eske for sealed shrine GDB when in INVINCIBLE state. */
+		/* attacks in invincible are capped to 1 damage and handled in batte.cpp; allow spell break and eske for sealed shrine GDB when in INVINCIBLE state. */
 		if( tsc->data[SC_INVINCIBLE] && !tsc->data[SC_INVINCIBLEOFF] && skill_id && !(skill_id&(SA_SPELLBREAKER|SL_SKE)) )
 			return 0;
 		if(!skill_id && tsc->data[SC_TRICKDEAD])
@@ -2059,7 +2059,7 @@ static int status_calc_pc_(struct map_session_data *sd, enum e_status_calc_opt o
 
 	// Absolute modifiers from passive skills
 #ifndef RENEWAL
-	if((skill_lv=pc->checkskill(sd,BS_WEAPONRESEARCH))>0) // is this correct in pre? there is already hitrate bonus in battle.c
+	if((skill_lv=pc->checkskill(sd,BS_WEAPONRESEARCH))>0) // is this correct in pre? there is already hitrate bonus in battle.cpp
 		bstatus->hit += skill_lv*2;
 #endif
 	if((skill_lv=pc->checkskill(sd,AC_VULTURE))>0) {
@@ -15021,7 +15021,7 @@ static int do_init_status(bool minimal)
 	status->initDummyData();
 	status->readdb();
 	status->natural_heal_prev_tick = timer->gettick();
-	status->data_ers = ers_new(sizeof(struct status_change_entry),"status.c::data_ers",ERS_OPT_NONE);
+	status->data_ers = ers_new(sizeof(struct status_change_entry),"status.cpp::data_ers",ERS_OPT_NONE);
 	timer->add_interval(status->natural_heal_prev_tick + NATURAL_HEAL_INTERVAL, status->natural_heal_timer, 0, 0, NATURAL_HEAL_INTERVAL);
 	return 0;
 }

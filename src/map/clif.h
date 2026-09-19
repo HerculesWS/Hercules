@@ -918,7 +918,7 @@ enum dynamicnpc_create_result {
 };
 
 /**
- * Clif.c Interface
+ * Clif Interface
  **/
 struct clif_interface {
 	/* vars */

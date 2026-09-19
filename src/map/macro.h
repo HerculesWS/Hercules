@@ -73,7 +73,7 @@ enum macro_report_status : int {
 };
 
 /**
- * macro.c Interface
+ * macro Interface
  **/
 struct macro_interface {
 	/* vars */

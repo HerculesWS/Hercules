@@ -54,7 +54,7 @@
  * @author (Athena build 4859) Flavio @ Amazon Project                       *
  * @author (up to Athena build 4706) Athena Dev Teams                        *
  * @encoding US-ASCII                                                        *
- * @see common#db.c                                                          *
+ * @see common#db.cpp                                                        *
 \*****************************************************************************/
 #ifndef COMMON_DB_H
 #define COMMON_DB_H

@@ -64,7 +64,7 @@ struct sysinfo_private {
 	bool (*svn_get_revision) (char **out);
 };
 
-/// sysinfo.c interface source
+/// sysinfo interface source
 static struct sysinfo_interface sysinfo_s;
 static struct sysinfo_private sysinfo_p;
 

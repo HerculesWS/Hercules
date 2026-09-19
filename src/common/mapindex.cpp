@@ -34,7 +34,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* mapindex.c interface source */
+/* mapindex interface source */
 static struct mapindex_interface mapindex_s;
 struct mapindex_interface *mapindex;
 

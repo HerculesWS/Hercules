@@ -265,7 +265,7 @@ static bool clif_setbindip(const char *ip)
 
 /*==========================================
  * Sets map port to 'port'
- * is run from map.c upon loading map server configuration
+ * is run from map.cpp upon loading map server configuration
  *------------------------------------------*/
 static void clif_setport(uint16 port)
 {
@@ -26539,8 +26539,8 @@ static int do_init_clif(bool minimal)
 	timer->add_func_list(clif->clearunit_delayed_sub, "clif_clearunit_delayed_sub");
 	timer->add_func_list(clif->delayquit, "clif_delayquit");
 
-	clif->delay_clearunit_ers = ers_new(sizeof(struct mob_data), "clif.c::delay_clearunit_ers", ERS_OPT_CLEAR);
-	clif->delayed_damage_ers = ers_new(sizeof(struct cdelayed_damage),"clif.c::delayed_damage_ers",ERS_OPT_CLEAR);
+	clif->delay_clearunit_ers = ers_new(sizeof(struct mob_data), "clif.cpp::delay_clearunit_ers", ERS_OPT_CLEAR);
+	clif->delayed_damage_ers = ers_new(sizeof(struct cdelayed_damage),"clif.cpp::delayed_damage_ers",ERS_OPT_CLEAR);
 
 #if PACKETVER_MAIN_NUM >= 20190403 || PACKETVER_RE_NUM >= 20190320
 	timer->add_func_list(clif->pingTimer, "clif_pingTimer");

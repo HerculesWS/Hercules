@@ -89,7 +89,7 @@ struct grade_interface_dbs {
 };
 
 /**
- * grader.c Interface
+ * grader Interface
  **/
 struct grader_interface {
     struct grade_interface_dbs *dbs;

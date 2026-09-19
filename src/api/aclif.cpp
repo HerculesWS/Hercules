@@ -120,7 +120,7 @@ static bool aclif_setbindip(const char *ip)
 
 /*==========================================
  * Sets api port to 'port'
- * is run from api.c upon loading api server configuration
+ * is run from api.cpp upon loading api server configuration
  *------------------------------------------*/
 static void aclif_setport(uint16 port)
 {

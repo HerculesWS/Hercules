@@ -1107,7 +1107,7 @@ enum e_mapitflags {
 
 struct s_mapiterator;
 
-/* temporary until the map.c "Hercules Renewal Phase One" design is complete. */
+/* temporary until the map.cpp "Hercules Renewal Phase One" design is complete. */
 struct mapit_interface {
 	struct s_mapiterator*   (*alloc) (enum e_mapitflags flags, enum bl_type types);
 	void                    (*free) (struct s_mapiterator* iter);

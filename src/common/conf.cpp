@@ -559,7 +559,7 @@ void libconfig_defaults(void) {
 	libconfig->lookup_float = config_lookup_float;
 	libconfig->lookup_bool = config_lookup_bool;
 	libconfig->lookup_string = config_lookup_string;
-	/* those are custom and are from src/common/conf.c */
+	/* those are custom and are from src/common/conf.cpp */
 	libconfig->load_file = config_load_file;
 	libconfig->setting_copy_simple = config_setting_copy_simple;
 	libconfig->setting_copy_elem = config_setting_copy_elem;

@@ -170,7 +170,7 @@ struct s_login_dbs {
 };
 
 /**
- * Login.c Interface
+ * Login Interface
  **/
 struct login_interface {
 	struct DBMap *auth_db;
@@ -254,7 +254,7 @@ struct login_interface {
 };
 
 /**
- * Login.c Interface
+ * lchrif Interface
  **/
 struct lchrif_interface {
 	void (*server_init) (int id);

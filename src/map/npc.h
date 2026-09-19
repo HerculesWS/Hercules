@@ -205,7 +205,7 @@ struct npc_path_data {
 	unsigned short references;
 };
 
-/* npc.c interface */
+/* npc interface */
 struct npc_interface {
 	/* */
 	struct npc_data *motd;

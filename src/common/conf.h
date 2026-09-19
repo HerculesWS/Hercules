@@ -102,7 +102,7 @@ struct libconfig_interface {
 	int (*lookup_bool) (const struct config_t *config, const char *filepath, int *value);
 	int (*lookup_string) (const struct config_t *config, const char *filepath, const char **value);
 
-	/* those are custom and are from src/common/conf.c */
+	/* those are custom and are from src/common/conf.cpp */
 	/* Functions to copy settings from libconfig/contrib */
 	int (*load_file) (struct config_t *config, const char *config_filename);
 	void (*setting_copy_simple) (struct config_setting_t *parent, const struct config_setting_t *src);

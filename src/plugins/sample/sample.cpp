@@ -153,7 +153,7 @@ int my_pc_dropitem_post(int retVal, struct map_session_data *sd, int n, int amou
 
  /**
   * pre-hook for lclif->p->parse_CA_CONNECT_INFO_CHANGED this is a private interface function and while in source it cannot be used
-  * outside of lclif.c since it's private, plugin can use it and hook to private interface functions if needed
+  * outside of lclif.cpp since it's private, plugin can use it and hook to private interface functions if needed
   * the pre-hook takes this currently unused packet and show a notice whenver a player sends it
   **/
 enum parsefunc_rcode my_lclif_parse_CA_CONNECT_INFO_CHANGED_pre(int *fd, struct login_session_data **sd) __attribute__((nonnull(2)));

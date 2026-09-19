@@ -986,7 +986,7 @@ struct guild {
 	struct guild_expulsion expulsion[MAX_GUILDEXPULSION]; ///< Guild expulsion records
 	struct guild_skill skill[MAX_GUILDSKILL];             ///< Guild skills data
 
-	unsigned short save_flag; ///< Flag used in char.c to state what kind of data is being saved/processed
+	unsigned short save_flag; ///< Flag used in char.cpp to state what kind of data is being saved/processed
 
 	short *instance;                                      ///< Array of instances
 	unsigned short instances;                             ///< Amount of instances

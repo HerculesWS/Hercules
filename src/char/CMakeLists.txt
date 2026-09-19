@@ -17,29 +17,29 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 set(CHAR_SRCS
-  char.c
-  HPMchar.c
-  loginif.c
-  mapif.c
-  geoip.c
-  inter.c
-  int_achievement.c
-  int_adventurer_agency.c
-  int_auction.c
-  int_clan.c
-  int_elemental.c
-  int_guild.c
-  int_homun.c
-  int_mail.c
-  int_mercenary.c
-  int_party.c
-  int_pet.c
-  int_quest.c
-  int_rodex.c
-  int_storage.c
-  int_userconfig.c
-  pincode.c
-  capiif.c
+  char.cpp
+  HPMchar.cpp
+  loginif.cpp
+  mapif.cpp
+  geoip.cpp
+  inter.cpp
+  int_achievement.cpp
+  int_adventurer_agency.cpp
+  int_auction.cpp
+  int_clan.cpp
+  int_elemental.cpp
+  int_guild.cpp
+  int_homun.cpp
+  int_mail.cpp
+  int_mercenary.cpp
+  int_party.cpp
+  int_pet.cpp
+  int_quest.cpp
+  int_rodex.cpp
+  int_storage.cpp
+  int_userconfig.cpp
+  pincode.cpp
+  capiif.cpp
 )
 
 set(CHAR_HDRS
@@ -104,5 +104,3 @@ install(
     DESTINATION
     .
 )
-
-set_source_files_properties(${CHAR_SRCS} PROPERTIES LANGUAGE CXX)

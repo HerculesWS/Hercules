@@ -39,7 +39,7 @@
 struct api_session_data;
 
 /**
- * httpsender.c Interface
+ * httpsender Interface
  **/
 struct httpsender_interface {
 	char *tmp_buffer;

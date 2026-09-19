@@ -80,7 +80,7 @@ struct DBMap; // common/db.h
 #define mapindex_exists(n) ( mapindex->list[(n)].name[0] != '\0' )
 
 /**
- * mapindex.c interface
+ * mapindex interface
  **/
 struct mapindex_interface {
 	char config_file[80];

@@ -20,10 +20,10 @@
 set(HERC_PLUGIN_NAME constdb2doc)
 
 # List of source files of the plugin
-set(HERC_PLUGIN_C
-  constdb2doc.c
+set(HERC_PLUGIN_SRCS
+  constdb2doc.cpp
 )
 
 add_plugin_target(${HERC_PLUGIN_NAME}
-  CFILES ${HERC_PLUGIN_C}
+  CFILES ${HERC_PLUGIN_SRCS}
 )
