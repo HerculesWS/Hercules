@@ -5335,6 +5335,12 @@ static bool script_config_read(const char *filename, bool imported)
 	libconfig->setting_lookup_int(setting, "input_min_value", &script->config.input_min_value);
 	libconfig->setting_lookup_int(setting, "input_max_value", &script->config.input_max_value);
 
+	if (script->config.input_min_value > script->config.input_max_value) {
+		ShowWarning("script_config_read: input_min_value (%d) must not be greater than input_max_value (%d). Value adjusted to %d.\n",
+			script->config.input_min_value, script->config.input_max_value, script->config.input_max_value);
+		script->config.input_min_value = script->config.input_max_value;
+	}
+
 	if (!HPM->parse_conf(&config, filename, HPCT_SCRIPT, imported))
 		retval = false;
 

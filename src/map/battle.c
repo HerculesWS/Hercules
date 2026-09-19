@@ -8252,6 +8252,14 @@ static void battle_set_defaults(void)
 
 static void battle_adjust_conf(void)
 {
+#define ENSURE_NOT_GT(l, r) do { \
+		if ((l) > (r)) { \
+			ShowWarning("battle_adjust_conf: %s (%d) must not be greater than %s (%d). Value adjusted to %d.\n", \
+				#l, (l), #r, (r), (r)); \
+			(l) = (r); \
+		} \
+	} while (false)
+
 	battle_config.monster_max_aspd = 2000 - battle_config.monster_max_aspd*10;
 	battle_config.max_aspd = 2000 - battle_config.max_aspd*10;
 	battle_config.max_walk_speed = 100*DEFAULT_WALK_SPEED/battle_config.max_walk_speed;
@@ -8260,8 +8268,28 @@ static void battle_adjust_conf(void)
 	if(battle_config.max_def > 100 && !battle_config.weapon_defense_type) // added by [Skotlex]
 		battle_config.max_def = 100;
 
-	if(battle_config.min_hitrate > battle_config.max_hitrate)
-		battle_config.min_hitrate = battle_config.max_hitrate;
+	// These values are used in code that assumes min <= max
+	ENSURE_NOT_GT(battle_config.min_hitrate, battle_config.max_hitrate);
+	ENSURE_NOT_GT(battle_config.item_drop_common_min, battle_config.item_drop_common_max);
+	ENSURE_NOT_GT(battle_config.item_drop_equip_min, battle_config.item_drop_equip_max);
+	ENSURE_NOT_GT(battle_config.item_drop_card_min, battle_config.item_drop_card_max);
+	ENSURE_NOT_GT(battle_config.item_drop_mvp_min, battle_config.item_drop_mvp_max);
+	ENSURE_NOT_GT(battle_config.item_drop_heal_min, battle_config.item_drop_heal_max);
+	ENSURE_NOT_GT(battle_config.item_drop_use_min, battle_config.item_drop_use_max);
+	ENSURE_NOT_GT(battle_config.item_drop_adddrop_min, battle_config.item_drop_adddrop_max);
+	ENSURE_NOT_GT(battle_config.item_drop_add_chain_min, battle_config.item_drop_add_chain_max);
+	ENSURE_NOT_GT(battle_config.item_drop_treasure_min, battle_config.item_drop_treasure_max);
+	ENSURE_NOT_GT(battle_config.min_hair_style, battle_config.max_hair_style);
+	ENSURE_NOT_GT(battle_config.min_hair_color, battle_config.max_hair_color);
+	ENSURE_NOT_GT(battle_config.min_cloth_color, battle_config.max_cloth_color);
+	ENSURE_NOT_GT(battle_config.min_body_style, battle_config.max_body_style);
+	ENSURE_NOT_GT(battle_config.batk_min, battle_config.batk_max);
+	ENSURE_NOT_GT(battle_config.matk_min, battle_config.matk_max);
+	ENSURE_NOT_GT(battle_config.watk_min, battle_config.watk_max);
+	ENSURE_NOT_GT(battle_config.flee_min, battle_config.flee_max);
+	ENSURE_NOT_GT(battle_config.flee2_min, battle_config.flee2_max);
+	ENSURE_NOT_GT(battle_config.critical_min, battle_config.critical_max);
+	ENSURE_NOT_GT(battle_config.hit_min, battle_config.hit_max);
 
 	if(battle_config.pet_max_atk1 > battle_config.pet_max_atk2) //Skotlex
 		battle_config.pet_max_atk1 = battle_config.pet_max_atk2;
@@ -8349,6 +8377,8 @@ static void battle_adjust_conf(void)
 	if (battle_config.custom_cell_stack_limit != 1)
 		ShowWarning("Battle setting 'custom_cell_stack_limit' takes no effect as this server was compiled without Cell Stack Limit support.\n");
 #endif
+
+#undef ENSURE_NOT_GT
 }
 
 /**
