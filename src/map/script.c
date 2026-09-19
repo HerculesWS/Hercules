@@ -336,8 +336,8 @@ static void script_reportfunc(struct script_state *st)
 /*==========================================
  * Output error message
  *------------------------------------------*/
-static void disp_error_message2(const char *mes, const char *pos, int report)  __attribute__((nonnull (1))) analyzer_noreturn;
-static void disp_error_message2(const char *mes, const char *pos, int report)
+[[noreturn]] static void disp_error_message2(const char *mes, const char *pos, int report)  __attribute__((nonnull (1))) analyzer_noreturn;
+[[noreturn]] static void disp_error_message2(const char *mes, const char *pos, int report)
 {
 	throw script_parse_exception(mes, pos, report != 0);
 }
@@ -745,11 +745,9 @@ static void set_label(int l, int pos, const char *script_pos)
 	if(script->str_data[l].type==C_INT || script->str_data[l].type==C_PARAM || script->str_data[l].type==C_FUNC) {
 		//Prevent overwriting constants values, parameters and built-in functions [Skotlex]
 		disp_error_message("set_label: invalid label name",script_pos);
-		return;
 	}
 	if(script->str_data[l].label!=-1) {
 		disp_error_message("set_label: dup label ",script_pos);
-		return;
 	}
 	script->str_data[l].type=(script->str_data[l].type == C_USERFUNC ? C_USERFUNC_POS : C_POS);
 	script->str_data[l].label=pos;
@@ -989,21 +987,20 @@ static const char *parse_callfunc(const char *p, int require_paren, int is_custo
 #endif
 				disp_error_message("script:parse_callfunc: expect command, missing function name or calling undeclared function", p);
 #ifdef SCRIPT_CALLFUNC_CHECK
-			} else {
-				script->addl(script->buildin_callfunc_ref);
-				script->addc(C_ARG);
-				script->addc(C_STR);
+			}
+			script->addl(script->buildin_callfunc_ref);
+			script->addc(C_ARG);
+			script->addc(C_STR);
 
-				while (*name != '\0') {
-					script->addb(*name++);
-				}
+			while (*name != '\0') {
+				script->addb(*name++);
+			}
 
-				script->addb(0);
-				arg = script->buildin[script->str_data[script->buildin_callfunc_ref].val];
+			script->addb(0);
+			arg = script->buildin[script->str_data[script->buildin_callfunc_ref].val];
 
-				if (*arg != '*') {
-					++ arg;
-				}
+			if (*arg != '*') {
+				++ arg;
 			}
 #endif
 		}
@@ -1838,10 +1835,6 @@ static const char *parse_line(const char *p)
 	return p;
 }
 
-#ifdef _MSC_VER
-#pragma warning (push)
-#pragma warning (disable: 4702)
-#endif
 /**
  * parses a local function expression
  *
@@ -1918,23 +1911,14 @@ static const char *parse_syntax_function (const char *p, bool is_public)
 	}
 
 	disp_error_message("script:parse_syntax_function: expected ';' or '{' at function syntax", p);
-	return p;
 }
-#ifdef _MSC_VER
-#pragma warning (pop)
-#endif
 
-#ifdef _MSC_VER
-#pragma warning (push)
-#pragma warning (disable: 4702)
-#endif
 // { ... } Closing process
 static const char *parse_curly_close(const char *p)
 {
 	nullpo_retr(NULL, p);
 	if(script->syntax.curly_count <= 0) {
 		disp_error_message("parse_curly_close: unexpected string",p);
-		return p + 1;
 	}
 	if (script->syntax.curly[script->syntax.curly_count-1].type == TYPE_NULL) {
 		script->syntax.curly_count--;
@@ -1983,16 +1967,8 @@ static const char *parse_curly_close(const char *p)
 		return p;
 	}
 	disp_error_message("parse_curly_close: unexpected string",p);
-	return p + 1;
 }
-#ifdef _MSC_VER
-#pragma warning (pop)
-#endif
 
-#ifdef _MSC_VER
-#pragma warning (push)
-#pragma warning (disable: 4702)
-#endif
 // Syntax-related processing
 // break, case, continue, default, do, for, function,
 // if, switch, while ? will handle this internally.
@@ -2047,7 +2023,6 @@ static const char *parse_syntax(const char *p)
 			int pos = script->syntax.curly_count-1;
 			if(pos < 0 || script->syntax.curly[pos].type != TYPE_SWITCH) {
 				disp_error_message("parse_syntax: unexpected 'case' ",p);
-				return p+1;
 			}
 			char label[256];
 			int  l,v;
@@ -2402,9 +2377,6 @@ static const char *parse_syntax(const char *p)
 	}
 	return NULL;
 }
-#ifdef _MSC_VER
-#pragma warning (pop)
-#endif
 
 static const char *parse_syntax_close(const char *p)
 {
@@ -2418,10 +2390,6 @@ static const char *parse_syntax_close(const char *p)
 	return p;
 }
 
-#ifdef _MSC_VER
-#pragma warning (push)
-#pragma warning (disable: 4702)
-#endif
 // Close judgment if, for, while, of do
 // flag == 1 : closed
 // flag == 0 : not closed
@@ -2541,7 +2509,6 @@ static const char *parse_syntax_close_sub(const char *p, int *flag)
 		p = script->skip_space(p);
 		if (p == NULL /* Can't be NULL but silence gcc warnings */ || *p != ';') {
 			disp_error_message("parse_syntax: need ';'",p);
-			return p+1;
 		}
 		p++;
 		script->syntax.curly_count--;
@@ -2596,9 +2563,6 @@ static const char *parse_syntax_close_sub(const char *p, int *flag)
 		return p;
 	}
 }
-#ifdef _MSC_VER
-#pragma warning (pop)
-#endif
 
 /// Retrieves the value of a constant.
 static bool script_get_constant(const char *name, int *value)
@@ -2909,10 +2873,6 @@ static void script_warning(const char *src, const char *file, int start_line, co
 	StrBuf->Destroy(&buf);
 }
 
-#ifdef _MSC_VER
-#  pragma warning(push)
-#  pragma warning(disable : 4702)
-#endif
 /*==========================================
  * Analysis of the script
  *------------------------------------------*/
@@ -2977,8 +2937,6 @@ static struct script_code *parse_script(const char *src, const char *file, int l
 		} else { // requires brackets around the script
 			if (*p != '{') {
 				disp_error_message("not found '{'", p);
-				if (retval)
-					*retval = EXIT_FAILURE;
 			}
 			p = script->skip_space(p + 1);
 			if (*p == '}' && !(options & SCRIPT_RETURN_EMPTY_SCRIPT)) {
@@ -3063,8 +3021,6 @@ static struct script_code *parse_script(const char *src, const char *file, int l
 
 		if (unresolved_names) {
 			disp_error_message("parse_script: unresolved function references", p);
-			if (retval)
-				*retval = EXIT_FAILURE;
 		}
 
 #ifdef SCRIPT_DEBUG_DISP
@@ -3150,9 +3106,6 @@ static struct script_code *parse_script(const char *src, const char *file, int l
 		return NULL;
 	}
 }
-#ifdef _MSC_VER
-#  pragma warning(pop)
-#endif
 
 /**
  * Creates a new script_code instance from an existing one.
