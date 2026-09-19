@@ -68,6 +68,7 @@
 #include <time.h>
 
 #define SKILLUNITTIMER_INTERVAL 100
+#define TIMERSKILL_INTERVAL 150 // Delay before skills such as Jupitel Thunder and Waterball deal their damage.
 
 static struct skill_interface skill_s;
 static struct s_skill_dbs skilldbs;
@@ -4455,6 +4456,15 @@ static int skill_timerskill(int tid, int64 tick, int id, intptr_t data)
 				case KN_AUTOCOUNTER:
 					clif->skill_nodamage(src,target,skl->skill_id,skl->skill_lv,1);
 					break;
+				case WZ_JUPITEL:
+					// Official behaviour is to hit as long as there is a line of sight, regardless of distance
+					if (!status->isdead(target)
+					    && path->search_long(NULL, src, src->m, src->x, src->y, target->x, target->y, CELL_CHKNOREACH)) {
+						// Apply canact delay here to prevent unlimited casting
+						ud->canact_tick = tick + skill->delay_fix(src, skl->skill_id, skl->skill_lv);
+						skill->attack(BF_MAGIC, src, src, target, skl->skill_id, skl->skill_lv, tick, skl->flag);
+					}
+					break;
 				case WZ_WATERBALL:
 					skill->toggle_magicpower(src, skl->skill_id, skl->skill_lv); // only the first hit will be amplify
 					if (!status->isdead(target))
@@ -5526,7 +5536,6 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 		case MG_LIGHTNINGBOLT:
 		case WZ_EARTHSPIKE:
 		case AL_HEAL:
-		case WZ_JUPITEL:
 		case NPC_DARKTHUNDER:
 		case PR_ASPERSIO:
 		case MG_FROSTDIVER:
@@ -5564,6 +5573,11 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 				skill->attack(BF_MAGIC,src,src,bl,sid,skill_lv,tick,flag|SD_LEVEL);
 			}
 			break;
+		case WZ_JUPITEL:
+			//Damage and knockback are delayed, which lets another spell be cast first. (issue #2702)
+			skill->addtimerskill(src, tick + TIMERSKILL_INTERVAL, bl->id, 0, 0, skill_id, skill_lv, 1, flag);
+			break;
+
 		case WZ_WATERBALL:
 			{
 				int range = skill_lv / 2;
@@ -6365,7 +6379,22 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 
 	if( sd && !(flag&1) )
 	{// ensure that the skill last-cast tick is recorded
-		sd->canskill_tick = timer->gettick();
+		int64 now = timer->gettick();
+
+		switch (skill_id) {
+			//This skill doesn't deal its damage right away, so another spell may be cast before
+			//it lands. Only allowed once every 2 seconds, to keep it from being abused. (issue #2702)
+			case WZ_JUPITEL:
+				if (DIFF_TICK(now, sd->canskill_tick) > 2000) {
+					sd->ud.canact_tick = now;
+					sd->canskill_tick = now - 2000 + TIMERSKILL_INTERVAL;
+					break;
+				}
+				FALLTHROUGH
+			default:
+				sd->canskill_tick = now;
+				break;
+		}
 
 		if( sd->state.arrow_atk )
 		{// consume arrow on last invocation to this skill.
