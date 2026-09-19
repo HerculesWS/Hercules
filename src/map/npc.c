@@ -4434,8 +4434,8 @@ static void npc_movenpc(struct npc_data *nd, int16 x, int16 y)
 	m = nd->bl.m;
 	if (m < 0 || nd->bl.prev == NULL) return; //Not on a map.
 
-	x = cap_value(x, 0, map->list[m].xs-1);
-	y = cap_value(y, 0, map->list[m].ys-1);
+	x = cap_value(x, 0, HMAX(0, map->list[m].xs - 1));
+	y = cap_value(y, 0, HMAX(0, map->list[m].ys - 1));
 
 	map->foreachinrange(clif->outsight, &nd->bl, AREA_SIZE, BL_PC, &nd->bl);
 	map->moveblock(&nd->bl, x, y, timer->gettick());

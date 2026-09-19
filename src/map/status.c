@@ -1189,7 +1189,7 @@ static int status_calc_mob_(struct mob_data *md, enum e_status_calc_opt opt)
 		mstatus->max_sp += diff*mstatus->int_;
 		mstatus->hp = mstatus->max_hp;
 		mstatus->sp = mstatus->max_sp;
-		mstatus->speed -= cap_value((unsigned int)diff, 0, mstatus->speed - 10);
+		mstatus->speed -= cap_value((unsigned int)diff, 0, mstatus->speed - HMIN(mstatus->speed, 10));
 	}
 
 	if (flag&2 && battle_config.mob_size_influence) {

@@ -335,9 +335,7 @@ static void pc_addsoulball(struct map_session_data *sd, int max)
 		sd->soulball = 0;
 	}
 
-	if (max > MAX_SOUL_BALL)
-		max = MAX_SOUL_BALL;
-
+	max = cap_value(max, 0, MAX_SOUL_BALL);
 	sd->soulball = cap_value(sd->soulball + 1, 0, max);
 	sc_start(&sd->bl, &sd->bl, SC_SOULENERGY, 100, sd->soulball, skill->get_time2(SP_SOULCOLLECT, 1), 0);
 	clif->soulballs(&sd->bl, sd->soulball, AREA);

@@ -5536,8 +5536,8 @@ ACMD(npcmove)
 		return false; //Not on a map.
 	}
 
-	x = cap_value(x, 0, map->list[m].xs-1);
-	y = cap_value(y, 0, map->list[m].ys-1);
+	x = cap_value(x, 0, HMAX(0, map->list[m].xs - 1));
+	y = cap_value(y, 0, HMAX(0, map->list[m].ys - 1));
 	map->foreachinrange(clif->outsight, &nd->bl, AREA_SIZE, BL_PC, &nd->bl);
 	map->moveblock(&nd->bl, x, y, timer->gettick());
 	map->foreachinrange(clif->insight, &nd->bl, AREA_SIZE, BL_PC, &nd->bl);

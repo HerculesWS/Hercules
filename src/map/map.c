@@ -1699,6 +1699,9 @@ static int map_search_free_cell(struct block_list *src, int16 m, int16 *x, int16
 		tries = HMIN(width * height, 100);
 	}
 
+	if (map->list[m].xs <= 1 || map->list[m].ys <= 1) // Sanity check for the below value clamping
+		return 0;
+
 	int avoidplayer_retries = 0;
 	while (tries-- > 0) {
 		if (range_x < 0)

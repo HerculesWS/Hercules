@@ -9385,7 +9385,7 @@ static BUILDIN(makeitem2)
 		} else {
 			int16 search_x = 0;
 			int16 search_y = 0;
-			int range = (script_hasdata(st, 14) ? cap_value(script_getnum(st, 14), 1, battle_config.area_size) : 3);
+			int range = (script_hasdata(st, 14) ? cap_value(script_getnum(st, 14), 1, HMAX(1, battle_config.area_size)) : 3);
 			map->search_free_cell(&sd->bl, sd->bl.m, &search_x, &search_y, range, range, SFC_DEFAULT); // Locate spot next to player.
 			x = search_x;
 			y = search_y;

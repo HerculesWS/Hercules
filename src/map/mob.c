@@ -4203,6 +4203,7 @@ static unsigned int mob_drop_adjust(int baserate, int rate_adjust, unsigned shor
 	int64 rate = baserate;
 
 	Assert_ret(baserate >= 0);
+	Assert_ret(rate_min <= rate_max);
 
 	if (rate_adjust != 100 && baserate > 0) {
 		if (battle_config.logarithmic_drops && rate_adjust > 0) {
