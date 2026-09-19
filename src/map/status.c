@@ -11582,8 +11582,13 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 			if(sce->val3 == BCT_SELF)
 				skill->clear_unitgroup(bl);
 			break;
-		case SC_BASILICA: //Clear the skill area. [Skotlex]
-			skill->clear_unitgroup(bl);
+		case SC_BASILICA: // Clear the Basilica area only, the caster's other ground skills are left alone.
+			if (sce->val3 != 0) {
+				struct skill_unit_group *group = skill->id2group(sce->val3);
+				sce->val3 = 0;
+				if (group != NULL)
+					skill->del_unitgroup(group);
+			}
 			break;
 		case SC_TRICKDEAD:
 			if (vd) vd->dead_sit = 0;
