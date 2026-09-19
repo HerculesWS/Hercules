@@ -336,7 +336,7 @@ static void script_reportfunc(struct script_state *st)
 /*==========================================
  * Output error message
  *------------------------------------------*/
-[[noreturn]] static void disp_error_message2(const char *mes, const char *pos, int report)  __attribute__((nonnull (1))) analyzer_noreturn;
+[[noreturn]] static void disp_error_message2(const char *mes, const char *pos, int report)  __attribute__((nonnull (1)));
 [[noreturn]] static void disp_error_message2(const char *mes, const char *pos, int report)
 {
 	throw script_parse_exception(mes, pos, report != 0);
