@@ -83,6 +83,7 @@
 #include "common/utils.h"
 #include "common/chunked/wfifo.h"
 
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

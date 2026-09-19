@@ -75,6 +75,7 @@
 #include "common/timer.h"
 #include "common/utils.h"
 
+#include <algorithm>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -6404,7 +6405,7 @@ ACMD(autolootitem)
 ACMD(autoloottype)
 {
 	uint8 action = 3; // 1=add, 2=remove, 3=help+list (default), 4=reset
-	enum item_types type = -1;
+	enum item_types type{};
 	unsigned int ITEM_NONE = 0;
 
 	if (*message) {

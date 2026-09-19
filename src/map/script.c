@@ -79,6 +79,7 @@
 #include "common/utils.h"
 #include "common/HPM.h"
 
+#include <algorithm>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>

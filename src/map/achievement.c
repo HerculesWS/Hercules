@@ -36,6 +36,7 @@
 #include "common/showmsg.h"
 #include "common/strlib.h"
 
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

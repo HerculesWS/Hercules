@@ -171,3 +171,5 @@ install(
 )
 
 add_dependencies(sql map-server)
+
+set_source_files_properties(${MAP_SRCS} PROPERTIES LANGUAGE CXX)

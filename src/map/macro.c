@@ -37,6 +37,7 @@
 #include "map/clif.h"
 #include "map/pc.h"
 
+#include <algorithm>
 #include <stdlib.h>
 
 static struct macro_interface macro_s;
