@@ -64,7 +64,7 @@ static bool inter_userconfig_load_emotes(int account_id, struct userconfig_emote
 
 static enum userconfig_from_sql_result inter_userconfig_emotes_from_sql(int account_id, struct userconfig_emotes *emotes)
 {
-	nullpo_ret(emotes);
+	nullpo_retr(USERCONFIG_FROM_SQL_SUCCESS, emotes); // FIXME: We're preserving old behavior here but probably a failure should be returned
 
 	StringBuf buf;
 	StrBuf->Init(&buf);
@@ -77,7 +77,7 @@ static enum userconfig_from_sql_result inter_userconfig_emotes_from_sql(int acco
 	if (result != SQL_SUCCESS) {
 		if (result == SQL_ERROR)
 			Sql_ShowDebug(inter->sql_handle);
-		
+
 		StrBuf->Destroy(&buf);
 		return (result == SQL_NO_DATA ? USERCONFIG_FROM_SQL_NOT_EXISTS : USERCONFIG_FROM_SQL_ERROR);
 	}

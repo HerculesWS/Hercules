@@ -49,6 +49,7 @@
 #include "common/timer.h"
 #include "common/utils.h"
 
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -133,7 +134,7 @@ static int party_db_final(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct party_data *p;
 
-	if ((p = DB->data2ptr(data))) {
+	if ((p = (struct party_data *)DB->data2ptr(data))) {
 		if (p->instance)
 			aFree(p->instance);
 
@@ -146,16 +147,16 @@ static struct party_data *party_search(int party_id)
 {
 	if(!party_id)
 		return NULL;
-	return (struct party_data*)idb_get(party->db,party_id);
+	return (struct party_data *)idb_get(party->db, party_id);
 }
 
 /// Party data lookup using party name.
 static struct party_data *party_searchname(const char *str)
 {
-	struct party_data* p;
+	struct party_data *p;
 
 	struct DBIterator *iter = db_iterator(party->db);
-	for (p = dbi_first(iter); dbi_exists(iter); p = dbi_next(iter)) {
+	for (p = (struct party_data *)dbi_first(iter); dbi_exists(iter); p = (struct party_data *)dbi_next(iter)) {
 		if( strncmpi(p->party.name,str,NAME_LENGTH) == 0 )
 			break;
 	}
@@ -276,7 +277,6 @@ static void party_check_state(struct party_data *p)
 
 static int party_recv_info(const struct party *sp, int char_id)
 {
-	struct party_data* p;
 	const struct party_member *member;
 	struct map_session_data* sd;
 	int removed[MAX_PARTY];// member_id in old data
@@ -289,7 +289,7 @@ static int party_recv_info(const struct party *sp, int char_id)
 
 	nullpo_ret(sp);
 
-	p = (struct party_data*)idb_get(party->db, sp->party_id);
+	struct party_data *p = (struct party_data *)idb_get(party->db, sp->party_id);
 	if( p != NULL ) {// diff members
 		int i;
 		for (member_id = 0; member_id < MAX_PARTY; ++member_id) {
@@ -989,11 +989,9 @@ static int party_skill_check(struct map_session_data *sd, int party_id, uint16 s
 static int party_send_xy_timer(int tid, int64 tick, int id, intptr_t data)
 {
 	struct DBIterator *iter = db_iterator(party->db);
-	struct party_data* p;
 
 	// for each existing party,
-	for( p = dbi_first(iter); dbi_exists(iter); p = dbi_next(iter) )
-	{
+	for (struct party_data *p = (struct party_data *)dbi_first(iter); dbi_exists(iter); p = (struct party_data *)dbi_next(iter)) {
 		int i;
 
 		if( !p->party.count )
@@ -1065,11 +1063,11 @@ static int party_exp_share(struct party_data *p, struct block_list *src, unsigne
 	if (battle_config.party_even_share_bonus && c > 1) {
 		double bonus = 100 + battle_config.party_even_share_bonus*(c-1);
 		if (base_exp)
-			base_exp = (unsigned int) cap_value(base_exp * bonus/100, 0, UINT_MAX);
+			base_exp = (unsigned int)std::clamp(base_exp * bonus/100, 0.0, (double)UINT_MAX);
 		if (job_exp)
-			job_exp = (unsigned int) cap_value(job_exp * bonus/100, 0, UINT_MAX);
+			job_exp = (unsigned int)std::clamp(job_exp * bonus/100, 0.0, (double)UINT_MAX);
 		if (zeny)
-			zeny = (unsigned int) cap_value(zeny * bonus/100, INT_MIN, INT_MAX);
+			zeny = (unsigned int)std::clamp(zeny * bonus/100, (double)INT_MIN, (double)INT_MAX);
 	}
 
 	for (i = 0; i < c; i++) {
@@ -1145,7 +1143,7 @@ static int party_share_loot(struct party_data *p, struct map_session_data *sd, s
 			return i;
 	}
 
-	if( p && battle_config.party_show_share_picker && battle_config.show_picker_item_type&(1<<itemdb_type(item_data->nameid)) )
+	if (p && battle_config.party_show_share_picker && battle_config.show_picker_item_type & (1u << (unsigned int)itemdb_type(item_data->nameid)))
 		clif->party_show_picker(target, item_data);
 
 	return 0;
@@ -1289,12 +1287,11 @@ static struct party_booking_ad_info *create_party_booking_data(void)
 static void party_recruit_register(struct map_session_data *sd, short level, const char *notice)
 {
 #ifdef PARTY_RECRUIT
-	struct party_booking_ad_info *pb_ad;
 
 	nullpo_retv(sd);
 	nullpo_retv(notice);
 
-	pb_ad = (struct party_booking_ad_info*)idb_get(party->booking_db, sd->status.char_id);
+	struct party_booking_ad_info *pb_ad = (struct party_booking_ad_info *)idb_get(party->booking_db, sd->status.char_id);
 
 	if( pb_ad == NULL )
 	{
@@ -1322,13 +1319,12 @@ static void party_recruit_register(struct map_session_data *sd, short level, con
 static void party_booking_register(struct map_session_data *sd, short level, short mapid, short *job)
 {
 #ifndef PARTY_RECRUIT
-	struct party_booking_ad_info *pb_ad;
 	int i;
 
 	nullpo_retv(sd);
 	nullpo_retv(job);
 
-	pb_ad = (struct party_booking_ad_info *)idb_get(party->booking_db, sd->status.char_id);
+	struct party_booking_ad_info *pb_ad = (struct party_booking_ad_info *)idb_get(party->booking_db, sd->status.char_id);
 	if (pb_ad == NULL) {
 		pb_ad = party->create_booking_data();
 		idb_put(party->booking_db, sd->status.char_id, pb_ad);
@@ -1359,10 +1355,8 @@ static void party_booking_register(struct map_session_data *sd, short level, sho
 static void party_recruit_update(struct map_session_data *sd, const char *notice)
 {
 #ifdef PARTY_RECRUIT
-	struct party_booking_ad_info *pb_ad;
-
 	nullpo_retv(sd);
-	pb_ad = (struct party_booking_ad_info*)idb_get(party->booking_db, sd->status.char_id);
+	struct party_booking_ad_info *pb_ad = (struct party_booking_ad_info *)idb_get(party->booking_db, sd->status.char_id);
 
 	if( pb_ad == NULL )
 		return;
@@ -1382,12 +1376,11 @@ static void party_booking_update(struct map_session_data *sd, short *job)
 {
 #ifndef PARTY_RECRUIT
 	int i;
-	struct party_booking_ad_info *pb_ad;
 
 	nullpo_retv(sd);
 	nullpo_retv(job);
 
-	pb_ad = (struct party_booking_ad_info *)idb_get(party->booking_db, sd->status.char_id);
+	struct party_booking_ad_info *pb_ad = (struct party_booking_ad_info *)idb_get(party->booking_db, sd->status.char_id);
 
 	if (pb_ad == NULL)
 		return;
@@ -1410,7 +1403,6 @@ static void party_booking_update(struct map_session_data *sd, short *job)
 static void party_recruit_search(struct map_session_data *sd, short level, short mapid, unsigned long lastindex, short resultcount)
 {
 #ifdef PARTY_RECRUIT
-	struct party_booking_ad_info *pb_ad;
 	int count = 0;
 	struct party_booking_ad_info *result_list[MAX_PARTY_BOOKING_RESULTS];
 	bool more_result = false;
@@ -1419,7 +1411,7 @@ static void party_recruit_search(struct map_session_data *sd, short level, short
 	nullpo_retv(sd);
 	memset(result_list, 0, sizeof(result_list));
 
-	for (pb_ad = dbi_first(iter); dbi_exists(iter); pb_ad = dbi_next(iter)) {
+	for (struct party_booking_ad_info *pb_ad = (struct party_booking_ad_info *)dbi_first(iter); dbi_exists(iter); pb_ad = (struct party_booking_ad_info *)dbi_next(iter)) {
 		if (level != 0 && (pb_ad->p_detail.level < level - 15 || pb_ad->p_detail.level > level))
 			continue;
 		if (count >= MAX_PARTY_BOOKING_RESULTS) {
@@ -1439,7 +1431,6 @@ static void party_recruit_search(struct map_session_data *sd, short level, short
 static void party_booking_search(struct map_session_data *sd, short level, short mapid, short job, unsigned long lastindex, short resultcount)
 {
 #ifndef PARTY_RECRUIT
-	struct party_booking_ad_info *pb_ad;
 	int i;
 	int count = 0;
 	struct party_booking_ad_info *result_list[MAX_PARTY_BOOKING_RESULTS];
@@ -1450,7 +1441,7 @@ static void party_booking_search(struct map_session_data *sd, short level, short
 
 	memset(result_list, 0, sizeof(result_list));
 
-	for (pb_ad = dbi_first(iter); dbi_exists(iter); pb_ad = dbi_next(iter)) {
+	for (struct party_booking_ad_info *pb_ad = (struct party_booking_ad_info *)dbi_first(iter); dbi_exists(iter); pb_ad = (struct party_booking_ad_info *)dbi_next(iter)) {
 		if (pb_ad->index < lastindex || (level != 0 && (pb_ad->p_detail.level < level - 15 || pb_ad->p_detail.level > level)))
 			continue;
 		if (count >= MAX_PARTY_BOOKING_RESULTS) {
@@ -1480,12 +1471,10 @@ static void party_booking_search(struct map_session_data *sd, short level, short
 
 static bool party_booking_delete(struct map_session_data *sd)
 {
-	struct party_booking_ad_info* pb_ad;
-
 	nullpo_retr(false, sd);
 
-	if((pb_ad = (struct party_booking_ad_info*)idb_get(party->booking_db, sd->status.char_id))!=NULL)
-	{
+	struct party_booking_ad_info *pb_ad;
+	if((pb_ad = (struct party_booking_ad_info *)idb_get(party->booking_db, sd->status.char_id)) != NULL) {
 #ifdef PARTY_RECRUIT
 		clif->PartyRecruitDeleteNotify(sd, pb_ad->index);
 #else

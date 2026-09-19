@@ -59,6 +59,7 @@
 #include "common/timer.h"
 #include "common/utils.h"
 
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -105,6 +106,8 @@ static struct unit_data *unit_bl2ud(struct block_list *bl)
 	default:
 		Assert_retr(NULL, false);
 	}
+
+	return NULL; // TODO: Should be unreachable but compiler still complains [hemagx]
 }
 
 /**
@@ -143,6 +146,7 @@ static const struct unit_data *unit_cbl2ud(const struct block_list *bl)
 	default:
 		Assert_retr(NULL, false);
 	}
+	return NULL; // TODO: Should be unreachable but compiler still complains [hemagx]
 }
 
 /**
@@ -178,7 +182,7 @@ static int unit_walk_toxy_sub(struct block_list *bl)
 	if (status->isdead(bl))
 		return 1;
 
-	struct walkpath_data wpd = {0};
+	struct walkpath_data wpd{};
 
 	if (!path->search(&wpd, bl, bl->m, bl->x, bl->y, ud->to_x, ud->to_y, ud->state.walk_easy, CELL_CHKNOPASS))
 		return 1;
@@ -200,9 +204,8 @@ static int unit_walk_toxy_sub(struct block_list *bl)
 		// Trim the last part of the path to account for range,
 		// but always move at least one cell when requested to move.
 		for (int i = ud->chaserange * 10 - 10; i > 0 && ud->walkpath.path_len > 1;) {
-			enum unit_dir dir;
 			ud->walkpath.path_len--;
-			dir = ud->walkpath.path[ud->walkpath.path_len];
+			enum unit_dir dir = (enum unit_dir)ud->walkpath.path[ud->walkpath.path_len];
 			Assert_retr(1, dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
 			if (unit_is_diagonal_dir(dir))
 				i -= MOVE_COST * 20; // When chasing, units will target a diamond-shaped area in range [Playtester]
@@ -364,7 +367,7 @@ static int unit_walk_toxy_timer(int tid, int64 tick, int id, intptr_t data)
 	if (status->isdead(bl)) // Should not be able to move
 		return 1;
 
-	enum unit_dir dir = ud->walkpath.path[ud->walkpath.path_pos];
+	enum unit_dir dir = (enum unit_dir)ud->walkpath.path[ud->walkpath.path_pos];
 	Assert_retr(1, dir >= UNIT_DIR_FIRST && dir < UNIT_DIR_MAX);
 	int x = bl->x;
 	int y = bl->y;
@@ -1511,7 +1514,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 				target = map->id2bl(target_id);
 				if (target != NULL)
 					break;
-				FALLTHROUGH // Attacking nothing, choose master as default target instead
+				[[fallthrough]]; // Attacking nothing, choose master as default target instead
 			case HLIF_HEAL:
 			case HLIF_AVOID:
 			case HAMI_DEFENCE:
@@ -1663,7 +1666,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 #ifndef RENEWAL
 	case MO_FINGEROFFENSIVE:
 		if(sd)
-			casttime += casttime * min(skill_lv, sd->spiritball);
+			casttime += casttime * std::min((int)skill_lv, sd->spiritball);
 	break;
 #endif
 	case MO_EXTREMITYFIST:
@@ -1676,7 +1679,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 	break;
 	case CR_DEVOTION:
 		if (sd) {
-			int i = 0, count = min(skill_lv, 5);
+			int i = 0, count = std::min((int)skill_lv, 5);
 			ARR_FIND(0, count, i, sd->devotion[i] == target_id);
 			if (i == count) {
 				ARR_FIND(0, count, i, sd->devotion[i] == 0);
@@ -1853,7 +1856,7 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 		ud->state.skillcastcancel = 0;
 
 	if (sd == NULL || sd->auto_cast_current.type < AUTOCAST_ABRA || skill->get_cast(skill_id, skill_lv) != 0)
-		ud->canact_tick = tick + max(casttime, max((int)status_get_amotion(src), battle_config.min_skill_delay_limit));
+		ud->canact_tick = tick + std::max(casttime, std::max((int)status_get_amotion(src), battle_config.min_skill_delay_limit));
 	if( sd )
 	{
 		switch( skill_id )
@@ -1993,7 +1996,7 @@ static int unit_skilluse_pos2(struct block_list *src, short skill_x, short skill
 
 	ud->state.skillcastcancel = castcancel&&casttime>0?1:0;
 	if (sd == NULL || sd->auto_cast_current.type < AUTOCAST_ABRA || skill->get_cast(skill_id, skill_lv) != 0)
-		ud->canact_tick = tick + max(casttime, max((int)status_get_amotion(src), battle_config.min_skill_delay_limit));
+		ud->canact_tick = tick + std::max(casttime, std::max((int)status_get_amotion(src), battle_config.min_skill_delay_limit));
 #if 0
 	if (sd) {
 		switch (skill_id) {
@@ -2319,7 +2322,7 @@ static int unit_calc_pos(struct block_list *bl, int tx, int ty, enum unit_dir di
 		if (!unit->can_reach_pos(bl, x, y, 0)) {
 			int i;
 			for (i = 0; i < 12; i++) {
-				enum unit_dir k = rnd() % UNIT_DIR_MAX; // Pick a Random Dir
+				enum unit_dir k = (enum unit_dir)(rnd() % UNIT_DIR_MAX); // Pick a Random Dir
 				dx = -dirx[k] * 2;
 				dy = -diry[k] * 2;
 				x = tx + dx;
@@ -2480,7 +2483,7 @@ static int unit_attack_timer_sub(struct block_list *src, int tid, int64 tick)
 			return 1;
 		}
 
-		ud->attackabletime = max(tick + sstatus->adelay, ud->attackabletime);
+		ud->attackabletime = std::max(tick + sstatus->adelay, ud->attackabletime);
 		// You can't move if you can't attack neither.
 		if (src->type&battle_config.attack_walk_delay)
 			unit->set_walkdelay(src, tick, sstatus->amotion, 1);
@@ -2618,7 +2621,7 @@ static int unit_fixdamage(struct block_list *src, struct block_list *target, int
 	if(damage+damage2 <= 0)
 		return 0;
 
-	return status_fix_damage(src,target,damage+damage2,clif->damage(target,target,sdelay,ddelay,damage,div,type,damage2));
+	return status_fix_damage(src, target, damage + damage2, clif->damage(target, target, sdelay, ddelay, damage, div, (enum battle_dmg_type)type, damage2));
 }
 
 /*==========================================
@@ -2881,7 +2884,7 @@ static int unit_remove_map(struct block_list *bl, enum clr_type clrtype, const c
 			if( elemental->get_lifetime(ed) <= 0 && !(ed->master && !ed->master->state.active) ) {
 				clif->clearunit_area(bl,clrtype);
 				map->delblock(bl);
-				unit->free(bl,0);
+				unit->free(bl, CLR_OUTSIGHT);
 				map->freeblock_unlock();
 				return 0;
 			}

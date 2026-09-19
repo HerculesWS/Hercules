@@ -37,6 +37,7 @@
 #include "map/clif.h"
 #include "map/pc.h"
 
+#include <algorithm>
 #include <stdlib.h>
 
 static struct macro_interface macro_s;
@@ -57,7 +58,7 @@ static void macro_captcha_register(struct map_session_data *sd, const int image_
 	// Allocate a new captcha entry
 	VECTOR_ENSURE(macro->captcha_registery, 1, 1);
 
-	struct captcha_data cd = { 0 };
+	struct captcha_data cd{};
 	cd.upload_size = 0;
 	cd.image_size = image_size;
 	safestrncpy(cd.captcha_answer, captcha_answer, sizeof(cd.captcha_answer));
@@ -114,7 +115,7 @@ static void macro_captcha_preview(struct map_session_data *sd, const int captcha
 	const int chunks = (cd->image_size / MAX_CAPTCHA_CHUNK_SIZE) +
 						(cd->image_size % MAX_CAPTCHA_CHUNK_SIZE != 0);
 	for (int i = 0, offset = 0; i < chunks; i++) {
-		const int chunk_size = min(cd->image_size - offset, MAX_CAPTCHA_CHUNK_SIZE);
+		const int chunk_size = std::min(cd->image_size - offset, MAX_CAPTCHA_CHUNK_SIZE);
 		clif->captcha_preview_request_download(sd, cd->captcha_key, chunk_size, &cd->image_data[offset]);
 		offset += chunk_size;
 	}
@@ -134,7 +135,7 @@ static void macro_detector_request(struct map_session_data *sd)
 	const int chunks = (cd->image_size / MAX_CAPTCHA_CHUNK_SIZE) +
 						(cd->image_size % MAX_CAPTCHA_CHUNK_SIZE != 0);
 	for (int i = 0, offset = 0; i < chunks; i++) {
-		const int chunk_size = min(cd->image_size - offset, MAX_CAPTCHA_CHUNK_SIZE);
+		const int chunk_size = std::min(cd->image_size - offset, MAX_CAPTCHA_CHUNK_SIZE);
 		clif->macro_detector_request_download(sd, cd->captcha_key, chunk_size, &cd->image_data[offset]);
 		offset += chunk_size;
 	}
@@ -300,7 +301,7 @@ static bool macro_read_captcha_db_libconfig(void)
 	}
 
 	libconfig->destroy(&captcha_db_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 	return true;
 }
 
@@ -344,7 +345,7 @@ static bool macro_read_captcha_db_libconfig_sub(const struct config_setting_t *i
 		}
 	}
 
-	struct captcha_data cd = { 0 };
+	struct captcha_data cd{};
 	if (!macro->read_captcha_db_libconfig_sub_loadbmp(filepath, &cd))
 		return false;
 
@@ -381,7 +382,7 @@ static bool macro_read_captcha_db_libconfig_sub_loadbmp(const char *filepath, st
 	}
 
 	// Load the file data and verify magic
-	char *bmp_data = aMalloc(CAPTCHA_BMP_SIZE);
+	char *bmp_data = (char *)aMalloc(CAPTCHA_BMP_SIZE);
 	if (fread(bmp_data, CAPTCHA_BMP_SIZE, 1, fp) != 1) {
 		ShowError("%s: Failed to read data from \"%s\"\n", __func__, filepath);
 		fclose(fp);

@@ -38,6 +38,7 @@
 #include "common/showmsg.h"
 #include "common/strlib.h"
 
+#include <algorithm>
 #include <stdio.h>
 #include <string.h>
 
@@ -61,7 +62,7 @@ static struct chat_data *chat_createchat(struct block_list *bl, const char *titl
 	safestrncpy(cd->pass, pass, sizeof(cd->pass));
 	cd->pub = pub;
 	cd->users = 0;
-	cd->limit = min(limit, ARRAYLENGTH(cd->usersd));
+	cd->limit = std::min(limit, ARRAYLENGTH(cd->usersd));
 	cd->trigger = trigger;
 	cd->zeny = zeny;
 	cd->min_level = min_level;
@@ -350,7 +351,7 @@ static bool chat_changechatstatus(struct map_session_data *sd, const char *title
 
 	safestrncpy(cd->title, title, CHATROOM_TITLE_SIZE);
 	safestrncpy(cd->pass, pass, CHATROOM_PASS_SIZE);
-	cd->limit = min(limit, ARRAYLENGTH(cd->usersd));
+	cd->limit = std::min(limit, ARRAYLENGTH(cd->usersd));
 	cd->pub = pub;
 
 	clif->changechatstatus(cd);

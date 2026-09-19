@@ -27,7 +27,7 @@
 #include "common/nullpo.h"
 #include "common/showmsg.h"
 
-#include <errno.h>
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -910,7 +910,6 @@ static bool sv_readdb(const char *directory, const char *filename, char delim, i
 	FILE* fp;
 	int lines = 0;
 	int entries = 0;
-	char** fields; // buffer for fields ([0] is reserved)
 	int columns, fields_length;
 	char path[1024], line[1024];
 
@@ -924,7 +923,7 @@ static bool sv_readdb(const char *directory, const char *filename, char delim, i
 
 	// allocate enough memory for the maximum requested amount of columns plus the reserved one
 	fields_length = maxcols+1;
-	fields = (char**)aMalloc(fields_length*sizeof(char*));
+	char **fields = (char **)aMalloc(fields_length*sizeof(char*)); // buffer for fields ([0] is reserved)
 
 	// process rows one by one
 	while( fgets(line, sizeof(line), fp) ) {
@@ -967,7 +966,7 @@ static bool sv_readdb(const char *directory, const char *filename, char delim, i
 
 	aFree(fields);
 	fclose(fp);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", entries, path);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", entries, path);
 
 	return true;
 }
@@ -990,7 +989,7 @@ static StringBuf *StringBuf_Malloc(void)
 static void StringBuf_Init(StringBuf *self)
 {
 	self->max_ = 1024;
-	self->ptr_ = self->buf_ = (char*)aMalloc(self->max_ + 1);
+	self->ptr_ = self->buf_ = (char *)aMalloc(self->max_ + 1);
 }
 
 /// Appends the result of printf to the StringBuf
@@ -1027,7 +1026,7 @@ static int StringBuf_Vprintf(StringBuf *self, const char *fmt, va_list ap)
 		/* Else try again with more space. */
 		self->max_ *= 2; // twice the old size
 		off = (int)(self->ptr_ - self->buf_);
-		self->buf_ = (char*)aRealloc(self->buf_, self->max_ + 1);
+		self->buf_ = (char *)aRealloc(self->buf_, self->max_ + 1);
 		self->ptr_ = self->buf_ + off;
 	}
 }
@@ -1041,7 +1040,7 @@ static int StringBuf_Append(StringBuf *self, const StringBuf *sbuf)
 	if( needed >= available ) {
 		size_t off = (self->ptr_ - self->buf_);
 		self->max_ += needed;
-		self->buf_ = (char*)aRealloc(self->buf_, self->max_ + 1);
+		self->buf_ = (char *)aRealloc(self->buf_, self->max_ + 1);
 		self->ptr_ = self->buf_ + off;
 	}
 
@@ -1059,8 +1058,8 @@ static int StringBuf_AppendStr(StringBuf *self, const char *str)
 	if( needed >= available ) {
 		// not enough space, expand the buffer (minimum expansion = 1024)
 		size_t off = (self->ptr_ - self->buf_);
-		self->max_ += max(needed, 1024);
-		self->buf_ = (char*)aRealloc(self->buf_, self->max_ + 1);
+		self->max_ += std::max(needed, (size_t)1024);
+		self->buf_ = (char *)aRealloc(self->buf_, self->max_ + 1);
 		self->ptr_ = self->buf_ + off;
 	}
 

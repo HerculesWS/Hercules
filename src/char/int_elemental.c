@@ -163,10 +163,10 @@ static int inter_elemental_parse_frommap(int fd)
 	unsigned short cmd = RFIFOW(fd,0);
 
 	switch (cmd) {
-		case 0x307c: mapif->parse_elemental_create(fd, RFIFOP(fd,4)); break;
+		case 0x307c: mapif->parse_elemental_create(fd, RFIFOP(struct s_elemental *, fd, 4)); break;
 		case 0x307d: mapif->parse_elemental_load(fd, RFIFOL(fd,2), RFIFOL(fd,6)); break;
 		case 0x307e: mapif->parse_elemental_delete(fd, RFIFOL(fd,2)); break;
-		case 0x307f: mapif->parse_elemental_save(fd, RFIFOP(fd,4)); break;
+		case 0x307f: mapif->parse_elemental_save(fd, RFIFOP(struct s_elemental *, fd, 4)); break;
 		default:
 			return 0;
 	}

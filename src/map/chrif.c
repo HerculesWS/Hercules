@@ -87,7 +87,7 @@ static void chrif_check_shutdown(void)
 
 static struct auth_node* chrif_search(int account_id)
 {
-	return (struct auth_node*)idb_get(chrif->auth_db, account_id);
+	return (struct auth_node *)idb_get(chrif->auth_db, account_id);
 }
 
 static struct auth_node* chrif_auth_check(int account_id, int char_id, enum sd_state state)
@@ -221,7 +221,7 @@ static bool chrif_setip(const char *ip)
 
 	safestrncpy(chrif->ip_str, ip, sizeof(chrif->ip_str));
 
-	ShowInfo("Char Server IP Address : '"CL_WHITE"%s"CL_RESET"' -> '"CL_WHITE"%s"CL_RESET"'.\n", ip, sockt->ip2str(chrif->ip, ip_str));
+	ShowInfo("Char Server IP Address : '" CL_WHITE "%s" CL_RESET "' -> '" CL_WHITE "%s" CL_RESET "'.\n", ip, sockt->ip2str(chrif->ip, ip_str));
 
 	return true;
 }
@@ -281,7 +281,7 @@ static bool chrif_save(struct map_session_data *sd, int flag)
 	WFIFOL(chrif->fd,4) = sd->status.account_id;
 	WFIFOL(chrif->fd,8) = sd->status.char_id;
 	WFIFOB(chrif->fd,12) = (flag==1)?1:0; //Flag to tell char-server this character is quitting.
-	memcpy(WFIFOP(chrif->fd,13), &sd->status, sizeof(sd->status));
+	memcpy(WFIFOP(struct mmo_charstatus *, chrif->fd, 13), &sd->status, sizeof(sd->status));
 	WFIFOSET(chrif->fd, WFIFOW(chrif->fd,2));
 
 	if( sd->status.pet_id > 0 && sd->pd )
@@ -312,8 +312,8 @@ static void chrif_connect(int fd)
 	ShowStatus("Logging in to char server...\n");
 	WFIFOHEAD(fd,60);
 	WFIFOW(fd,0) = 0x2af8;
-	memcpy(WFIFOP(fd,2), chrif->userid, NAME_LENGTH);
-	memcpy(WFIFOP(fd,26), chrif->passwd, NAME_LENGTH);
+	memcpy(WFIFOP(char *, fd, 2), chrif->userid, NAME_LENGTH);
+	memcpy(WFIFOP(char *, fd, 26), chrif->passwd, NAME_LENGTH);
 	WFIFOL(fd,50) = 0;
 	WFIFOL(fd,54) = htonl(clif->map_ip);
 	WFIFOW(fd,58) = htons(clif->map_port);
@@ -355,16 +355,16 @@ static void chrif_connectack(int fd)
 		exit(EXIT_FAILURE);
 	}
 
-	ShowStatus("Successfully logged on to Char Server (Connection: '"CL_WHITE"%d"CL_RESET"').\n",fd);
+	ShowStatus("Successfully logged on to Char Server (Connection: '" CL_WHITE "%d" CL_RESET "').\n",fd);
 	chrif->state = 1;
 	chrif->connected = 1;
 
 	chrif->sendmap(fd);
 
-	ShowStatus("Event '"CL_WHITE"OnInterIfInit"CL_RESET"' executed with '"CL_WHITE"%d"CL_RESET"' NPCs.\n", npc->event_doall("OnInterIfInit"));
+	ShowStatus("Event '" CL_WHITE "OnInterIfInit" CL_RESET "' executed with '" CL_WHITE "%d" CL_RESET "' NPCs.\n", npc->event_doall("OnInterIfInit"));
 	if( !char_init_done ) {
 		char_init_done = true;
-		ShowStatus("Event '"CL_WHITE"OnInterIfInitOnce"CL_RESET"' executed with '"CL_WHITE"%d"CL_RESET"' NPCs.\n", npc->event_doall("OnInterIfInitOnce"));
+		ShowStatus("Event '" CL_WHITE "OnInterIfInitOnce" CL_RESET "' executed with '" CL_WHITE "%d" CL_RESET "' NPCs.\n", npc->event_doall("OnInterIfInitOnce"));
 		guild->castle_map_init();
 	}
 
@@ -377,7 +377,7 @@ static void chrif_connectack(int fd)
  */
 static int chrif_reconnect(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct auth_node *node = DB->data2ptr(data);
+	struct auth_node *node = (struct auth_node *)DB->data2ptr(data);
 
 	nullpo_ret(node);
 	switch (node->state) {
@@ -443,7 +443,7 @@ static void chrif_sendmapack(int fd)
 		exit(EXIT_FAILURE);
 	}
 
-	memcpy(map->wisp_server_name, RFIFOP(fd,3), NAME_LENGTH);
+	memcpy(map->wisp_server_name, RFIFOP(char *, fd, 3), NAME_LENGTH);
 
 	chrif->on_ready();
 }
@@ -479,7 +479,7 @@ static void chrif_authreq(struct map_session_data *sd, bool hstandalone)
 	}
 
 	WFIFOHEAD(chrif->fd, sizeof(struct PACKET_MAPCHAR_AUTH_REQ));
-	struct PACKET_MAPCHAR_AUTH_REQ *p = WFIFOP(chrif->fd, 0);
+	struct PACKET_MAPCHAR_AUTH_REQ *p = WP2PTR(struct PACKET_MAPCHAR_AUTH_REQ *, chrif->fd);
 	p->packetType = HEADER_MAPCHAR_AUTH_REQ;
 	p->account_id = sd->status.account_id;
 	p->char_id = sd->status.char_id;
@@ -507,7 +507,7 @@ static void chrif_authok(int fd)
 
 	//Check if both servers agree on the struct's size
 	if( RFIFOW(fd,2) - 25 != sizeof(struct mmo_charstatus) ) {
-		ShowError("chrif_authok: Data size mismatch! %d != %"PRIuS"\n", RFIFOW(fd,2) - 25, sizeof(struct mmo_charstatus));
+		ShowError("chrif_authok: Data size mismatch! %d != %" PRIuS "\n", RFIFOW(fd,2) - 25, sizeof(struct mmo_charstatus));
 		return;
 	}
 
@@ -517,7 +517,7 @@ static void chrif_authok(int fd)
 	expiration_time = (time_t)(int32)RFIFOL(fd,16);
 	group_id = RFIFOL(fd,20);
 	changing_mapservers = (RFIFOB(fd,24));
-	charstatus = RFIFOP(fd,25);
+	charstatus = RFIFOP(struct mmo_charstatus *, fd, 25);
 	char_id = charstatus->char_id;
 
 	//Check if we don't already have player data in our server
@@ -591,7 +591,7 @@ static void chrif_authfail(int fd)
  */
 static int auth_db_cleanup_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct auth_node *node = DB->data2ptr(data);
+	struct auth_node *node = (struct auth_node *)DB->data2ptr(data);
 
 	nullpo_retr(1, node);
 	if(DIFF_TICK(timer->gettick(),node->node_created)>60000) {
@@ -682,8 +682,8 @@ static bool chrif_changeemail(int id, const char *actual_email, const char *new_
 	WFIFOHEAD(chrif->fd,86);
 	WFIFOW(chrif->fd,0) = 0x2b0c;
 	WFIFOL(chrif->fd,2) = id;
-	memcpy(WFIFOP(chrif->fd,6), actual_email, 40);
-	memcpy(WFIFOP(chrif->fd,46), new_email, 40);
+	memcpy(WFIFOP(char *, chrif->fd, 6), actual_email, 40);
+	memcpy(WFIFOP(char *, chrif->fd, 46), new_email, 40);
 	WFIFOSET(chrif->fd,86);
 
 	return true;
@@ -711,7 +711,7 @@ static bool chrif_char_ask_name(int acc, const char *character_name, unsigned sh
 	WFIFOHEAD(chrif->fd,44);
 	WFIFOW(chrif->fd,0) = 0x2b0e;
 	WFIFOL(chrif->fd,2) = acc;
-	safestrncpy(WFIFOP(chrif->fd,6), character_name, NAME_LENGTH);
+	safestrncpy(WFIFOP(char *, chrif->fd, 6), character_name, NAME_LENGTH);
 	WFIFOW(chrif->fd,30) = operation_type;
 
 	if (operation_type == CHAR_ASK_NAME_BAN || operation_type == CHAR_ASK_NAME_CHARBAN) {
@@ -744,7 +744,7 @@ static bool chrif_changesex(struct map_session_data *sd, bool change_account)
 	WFIFOHEAD(chrif->fd,44);
 	WFIFOW(chrif->fd,0) = 0x2b0e;
 	WFIFOL(chrif->fd,2) = sd->status.account_id;
-	safestrncpy(WFIFOP(chrif->fd,6), sd->status.name, NAME_LENGTH);
+	safestrncpy(WFIFOP(char *, chrif->fd, 6), sd->status.name, NAME_LENGTH);
 	WFIFOW(chrif->fd,30) = change_account ? CHAR_ASK_NAME_CHANGESEX : CHAR_ASK_NAME_CHANGECHARSEX;
 	if (!change_account)
 		WFIFOB(chrif->fd,32) = sd->status.sex == SEX_MALE ? SEX_FEMALE : SEX_MALE;
@@ -1029,26 +1029,26 @@ static void chrif_recvfamelist(int fd)
 
 	size = RFIFOW(fd, 6); //Blacksmith block size
 	for (num = 0; len < size && num < MAX_FAME_LIST; num++) {
-		memcpy(&pc->smith_fame_list[num], RFIFOP(fd,len), sizeof(struct fame_list));
+		memcpy(&pc->smith_fame_list[num], RFIFOP(struct fame_list *, fd, len), sizeof(struct fame_list));
 		len += sizeof(struct fame_list);
 	}
 	total += num;
 
 	size = RFIFOW(fd, 4); //Alchemist block size
 	for (num = 0; len < size && num < MAX_FAME_LIST; num++) {
-		memcpy(&pc->chemist_fame_list[num], RFIFOP(fd,len), sizeof(struct fame_list));
+		memcpy(&pc->chemist_fame_list[num], RFIFOP(struct fame_list *, fd, len), sizeof(struct fame_list));
 		len += sizeof(struct fame_list);
 	}
 	total += num;
 
 	size = RFIFOW(fd, 2); //Total packet length
 	for (num = 0; len < size && num < MAX_FAME_LIST; num++) {
-		memcpy(&pc->taekwon_fame_list[num], RFIFOP(fd,len), sizeof(struct fame_list));
+		memcpy(&pc->taekwon_fame_list[num], RFIFOP(struct fame_list *, fd, len), sizeof(struct fame_list));
 		len += sizeof(struct fame_list);
 	}
 	total += num;
 
-	ShowInfo("Received Fame List of '"CL_WHITE"%d"CL_RESET"' characters.\n", total);
+	ShowInfo("Received Fame List of '" CL_WHITE "%d" CL_RESET "' characters.\n", total);
 }
 
 /// fame ranking update confirmation
@@ -1114,7 +1114,7 @@ static bool chrif_save_scdata(struct map_session_data *sd)
 		data.val2 = sc->data[i]->val2;
 		data.val3 = sc->data[i]->val3;
 		data.val4 = sc->data[i]->val4;
-		memcpy(WFIFOP(chrif->fd,14 +count*sizeof(struct status_change_data)),
+		memcpy(WFIFOP(struct status_change_data *, chrif->fd, 14 + count * sizeof(struct status_change_data)),
 			&data, sizeof(struct status_change_data));
 		count++;
 	}
@@ -1155,7 +1155,7 @@ static bool chrif_load_scdata(int fd)
 	count = RFIFOW(fd,12); //sc_count
 
 	for (i = 0; i < count; i++) {
-		const struct status_change_data *data = RFIFOP(fd,14 + i*sizeof(struct status_change_data));
+		const struct status_change_data *data = RFIFOP(struct status_change_data *, fd, 14 + i*sizeof(struct status_change_data));
 		status->change_start_sub(NULL, &sd->bl, (sc_type)data->type, 10000, data->val1, data->val2, data->val3, data->val4,
 			data->tick, data->total_tick, SCFLAG_NOAVOID | SCFLAG_FIXEDTICK | SCFLAG_LOADED | SCFLAG_FIXEDRATE, 0);
 	}
@@ -1381,10 +1381,10 @@ static int chrif_parse(int fd)
 			case 0x2afd: chrif->authok(fd); break;
 			case 0x2b00: map->setusers(RFIFOL(fd,2)); chrif->keepalive(fd); break;
 			case 0x2b03: clif->charselectok(RFIFOL(fd,2), RFIFOB(fd,6)); break;
-			case 0x2b09: map->addnickdb(RFIFOL(fd,2), RFIFOP(fd,6)); break;
+			case 0x2b09: map->addnickdb(RFIFOL(fd,2), RFIFOP(char *, fd, 6)); break;
 			case 0x2b0a: sockt->datasync(fd, false); break;
 			case 0x2b0d: chrif->changedsex(fd); break;
-			case 0x2b0f: chrif->char_ask_name_answer(RFIFOL(fd,2), RFIFOP(fd,6), RFIFOW(fd,30), RFIFOW(fd,32)); break;
+			case 0x2b0f: chrif->char_ask_name_answer(RFIFOL(fd, 2), RFIFOP(char *, fd, 6), RFIFOW(fd, 30), RFIFOW(fd, 32)); break;
 			case 0x2b12: chrif->divorceack(RFIFOL(fd,2), RFIFOL(fd,6)); break;
 			case 0x2b14: chrif->idbanned(fd); break;
 			case 0x2b1b: chrif->recvfamelist(fd); break;
@@ -1551,7 +1551,7 @@ static void chrif_del_scdata_single(int account_id, int char_id, short type)
  */
 static int auth_db_final(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct auth_node *node = DB->data2ptr(data);
+	struct auth_node *node = (struct auth_node *)DB->data2ptr(data);
 
 	nullpo_ret(node);
 	if (node->sd) {

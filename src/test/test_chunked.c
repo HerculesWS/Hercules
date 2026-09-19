@@ -34,18 +34,22 @@
 
 #undef WFIFOHEAD
 #undef WFIFOP
+#undef WFIFO2PTR
 #undef WFIFOSET
 
 #define WFIFOHEAD(fd, size) fake_WFIFOHEAD(fd, size)
-#define WFIFOP(fd, pos) fake_WFIFOP(fd, pos)
+#define WFIFOP(T, fd, pos) ((T)fake_WFIFOP(fd, pos))
+#define WFIFO2PTR(T, fd) ((T)fake_WFIFOP(fd, 0))
 #define WFIFOSET(fd, size) fake_WFIFOSET(fd, size)
 
 #undef RFIFOHEAD
 #undef RFIFOP
+#undef RFIFO2PTR
 #undef RFIFOSET
 
 #define RFIFOHEAD(fd, size) fake_RFIFOHEAD(fd, size)
-#define RFIFOP(fd, pos) fake_RFIFOP(fd, pos)
+#define RFIFOP(T, fd, pos) ((const T)fake_RFIFOP(fd, pos))
+#define RFIFO2PTR(T, fd) ((const T)fake_RFIFOP(fd, 0))
 #define RFIFOSET(fd, size) fake_RFIFOSET(fd, size)
 
 #undef WFIFO_CHUNK_SIZE
@@ -135,7 +139,7 @@ static void fake_WFIFOHEAD(int fd, int size)
 
 	fake_wfd = fd;
 	fake_wsize = size;
-	fake_wbuf = aCalloc(1, size);
+	fake_wbuf = (uint8 *)aCalloc(1, size);
 }
 
 static void fake_WFIFOSET(int fd, int size)
@@ -253,7 +257,7 @@ static void testChunked1Send(int fd, int size)
 	ShowBuf("test send called: ", fake_wbuf, fake_wsize);
 #endif
 	// reallocate buffer always for detect overflow
-	char *buf = aCalloc(1, size);
+	char *buf = (char *)aCalloc(1, size);
 	memcpy(buf, fake_wbuf, size);
 	if (pRecv != NULL)
 		pRecv(buf, size);
@@ -319,7 +323,7 @@ static void testChunkedBuf2(char *data, int sz)
 	write_clear();
 
 	// reallocate buffer always for detect overflow
-	fake_rflags = aCalloc(1, cnt);
+	fake_rflags = (char *)aCalloc(1, cnt);
 
 	WFIFO_CHUNKED_INIT(p, fd, 0x1234, PACKET_TEST_CHUNKED, data, data_len) {
 		WFIFO_CHUNKED_BLOCK_START(p);
@@ -376,15 +380,27 @@ static void testChunked1(void)
 	ShowStatus("Test chunked\n");
 	pWFIFOSET = testChunked1Send;
 	pRecv = testChunked1Recv;
-	testChunkedBuf("test line", 0);
-	testChunkedBuf("test", 0);
-	testChunkedBuf("this is very long data line for chunked packets data.", 0);
-	testChunkedBuf("", 0);
+	{
+		char test_string[] = "test line";
+		testChunkedBuf(test_string, 0);
+	}
+	{
+		char test_string[] = "test";
+		testChunkedBuf(test_string, 0);
+	}
+	{
+		char test_string[] = "this is very long data line for chunked packets data.";
+		testChunkedBuf(test_string, 0);
+	}
+	{
+		char test_string[] = "";
+		testChunkedBuf(test_string, 0);
+	}
 	show_success = false;
 	ShowStatus("Test long chunked\n");
 	for (int f = 1; f < MAX_TEST_BUFFER; f += 100) {
 		// reallocate buffer always for detect overflow
-		char *buf = aCalloc(1, f);
+		char *buf = (char *)aCalloc(1, f);
 		for (int i = 0; i < f; i ++) {
 			buf[i] = '0' + (i % 10);
 		}

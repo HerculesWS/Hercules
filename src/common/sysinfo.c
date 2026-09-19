@@ -262,23 +262,22 @@ static bool sysinfo_svn_get_revision(char **out)
 	// - ignores database file structure
 	// - assumes the data in NODES.dav_cache column ends with "!svn/ver/<revision>/<path>)"
 	// - since it's a cache column, the data might not even exist
-	if ((fp = fopen(".svn"PATHSEP_STR"wc.db", "rb")) != NULL || (fp = fopen(".."PATHSEP_STR".svn"PATHSEP_STR"wc.db", "rb")) != NULL) {
+	if ((fp = fopen(".svn" PATHSEP_STR "wc.db", "rb")) != NULL || (fp = fopen(".." PATHSEP_STR ".svn" PATHSEP_STR "wc.db", "rb")) != NULL) {
 
 #ifndef SVNNODEPATH //not sure how to handle branches, so I'll leave this overridable define until a better solution comes up
 #define SVNNODEPATH trunk
 #endif // SVNNODEPATH
 
 		const char* prefix = "!svn/ver/";
-		const char* postfix = "/"EXPAND_AND_QUOTE(SVNNODEPATH)")"; // there should exist only 1 entry like this
+		const char* postfix = "/" EXPAND_AND_QUOTE(SVNNODEPATH) ")"; // there should exist only 1 entry like this
 		size_t prefix_len = strlen(prefix);
 		size_t postfix_len = strlen(postfix);
 		size_t i,j,flen;
-		char* buffer;
 
 		// read file to buffer
 		fseek(fp, 0, SEEK_END);
 		flen = ftell(fp);
-		buffer = (char*)aMalloc(flen + 1);
+		char *buffer = (char *)aMalloc(flen + 1);
 		fseek(fp, 0, SEEK_SET);
 		flen = fread(buffer, 1, flen, fp);
 		buffer[flen] = '\0';
@@ -297,7 +296,7 @@ static bool sysinfo_svn_get_revision(char **out)
 			// done
 			if (*out != NULL)
 				aFree(*out);
-			*out = aCalloc(1, 8);
+			*out = (char *)aCalloc(1, 8);
 			snprintf(*out, 8, "%d", atoi(buffer + j));
 			break;
 		}
@@ -857,10 +856,10 @@ static const char *sysinfo_arch(void)
 static bool sysinfo_is64bit(void)
 {
 #ifdef __64BIT__
-	STATIC_ASSERT(sizeof(void *) == 8, "Unexpected pointer size for 64 bit builds");
+	static_assert(sizeof(void *) == 8, "Unexpected pointer size for 64 bit builds");
 	return true;
 #else
-	STATIC_ASSERT(sizeof(void *) == 4, "Unexpected pointer size for 32 bit builds");
+	static_assert(sizeof(void *) == 4, "Unexpected pointer size for 32 bit builds");
 	return false;
 #endif
 }
@@ -1019,13 +1018,13 @@ static void sysinfo_init(void)
 	sysinfo_vcsrevision_src_retrieve();
 #else
 	sysinfo->p->platform = SYSINFO_PLATFORM;
-	sysinfo->p->osversion = SYSINFO_OSVERSION;
+	sysinfo->p->osversion = aStrdup(SYSINFO_OSVERSION);
 	sysinfo->p->cpucores = SYSINFO_CPUCORES;
-	sysinfo->p->cpu = SYSINFO_CPU;
-	sysinfo->p->arch = SYSINFO_ARCH;
+	sysinfo->p->cpu = aStrdup(SYSINFO_CPU);
+	sysinfo->p->arch = aStrdup(SYSINFO_ARCH);
 	sysinfo->p->cflags = SYSINFO_CFLAGS;
 	sysinfo->p->vcstype = SYSINFO_VCSTYPE;
-	sysinfo->p->vcsrevision_src = SYSINFO_VCSREV;
+	sysinfo->p->vcsrevision_src = aStrdup(SYSINFO_VCSREV);
 #endif
 	sysinfo->vcsrevision_reload();
 	sysinfo_vcstype_name_retrieve(); // Must be called after setting vcstype
@@ -1036,21 +1035,18 @@ static void sysinfo_init(void)
  */
 static void sysinfo_final(void)
 {
-#ifdef WIN32
-	// Only need to be free'd in win32, they're #defined elsewhere
+	sysinfo->p->platform = NULL;
 	if (sysinfo->p->osversion)
 		aFree(sysinfo->p->osversion);
+	sysinfo->p->osversion = NULL;
 	if (sysinfo->p->cpu)
 		aFree(sysinfo->p->cpu);
+	sysinfo->p->cpu = NULL;
 	if (sysinfo->p->arch)
 		aFree(sysinfo->p->arch);
+	sysinfo->p->arch = NULL;
 	if (sysinfo->p->vcsrevision_src)
 		aFree(sysinfo->p->vcsrevision_src);
-#endif
-	sysinfo->p->platform = NULL;
-	sysinfo->p->osversion = NULL;
-	sysinfo->p->cpu = NULL;
-	sysinfo->p->arch = NULL;
 	sysinfo->p->vcsrevision_src = NULL;
 	sysinfo->p->cflags = NULL;
 	if (sysinfo->p->vcsrevision_scripts)

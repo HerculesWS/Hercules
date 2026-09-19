@@ -51,12 +51,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-HPExport struct hplugin_info pinfo = {
+HPM_DECLARE_PLUGIN(
 	"Sample",    // Plugin name
-	SERVER_TYPE_CHAR|SERVER_TYPE_LOGIN|SERVER_TYPE_MAP|SERVER_TYPE_API,// Which server types this plugin works with?
-	"0.1",       // Plugin version
-	HPM_VERSION, // HPM Version (don't change, macro is automatically updated)
-};
+	(enum server_types)(SERVER_TYPE_CHAR | SERVER_TYPE_LOGIN | SERVER_TYPE_MAP | SERVER_TYPE_API),// Which server types this plugin works with?
+	"0.1"        // Plugin version
+)
+
 ACMD(sample) {//@sample command - 5 params: const int fd, struct map_session_data* sd, const char* command, const char* message, struct AtCommandInfo *info
 	atcmd_sample_message(message, sd->status.name);
 	return true;
@@ -67,7 +67,7 @@ BUILDIN(sample) {//script command 'sample(num);' - 1 param: struct script_state*
 	return true;
 }
 CPCMD(sample) {//console command 'sample' - 1 param: char *line
-	ShowInfo("I'm being run! arg -> '%s'\n",line?line:"NONE");
+	ShowInfo("I'm being run! arg -> '%s'\n",line ? line : "NONE");
 }
 struct sample_data_struct {
 	struct point lastMSGPosition;
@@ -80,7 +80,7 @@ int my_setting;
 /* cmd 0xf3 - it is a client-server existent id, for clif_parse_GlobalMessage */
 /* in this sample we do nothing and simply redirect */
 void sample_packet0f3(int fd) {
-	struct map_session_data *sd = sockt->session[fd]->session_data;
+	struct map_session_data *sd = (struct map_session_data *)sockt->session[fd]->session_data;
 	struct sample_data_struct *data;
 
 	if( !sd ) return;/* socket didn't fully log-in? this packet shouldn't do anything then! */
@@ -88,7 +88,7 @@ void sample_packet0f3(int fd) {
 	ShowInfo("sample_packet0f3: Hello World! received 0xf3 for '%s', redirecting!\n",sd->status.name);
 
 	/* sample usage of appending data to a socket_data (sockt->session[]) entry */
-	if( !(data = getFromSession(sockt->session[fd],0)) ) {
+	if( !(data = (struct sample_data_struct *)getFromSession(sockt->session[fd],0)) ) {
 		CREATE(data,struct sample_data_struct,1);
 
 		data->lastMSGPosition.map = sd->status.last_point.map;
@@ -107,7 +107,7 @@ void sample_packet0f3(int fd) {
 	}
 
 	/* sample usage of appending data to a map_session_data (sd) entry */
-	if( !(data = getFromMSD(sd,0)) ) {
+	if( !(data = (struct sample_data_struct *)getFromMSD(sd,0)) ) {
 		CREATE(data,struct sample_data_struct,1);
 
 		data->lastMSGPosition.map = sd->status.last_point.map;
@@ -189,7 +189,7 @@ int return_my_setting(const char *key)
 }
 
 /* Prints a message to console and shows an example of function declared by defined later */
-static void atcmd_sample_message(const char *message, const char *sd_name)
+void atcmd_sample_message(const char *message, const char *sd_name)
 {
 	printf("I'm being run! message -> '%s' by %s\n", message, sd_name);
 }

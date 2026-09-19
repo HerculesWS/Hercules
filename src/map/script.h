@@ -357,7 +357,7 @@ enum {
 	MF_NOSENDMAIL,
 };
 
-enum navigation_mode {
+enum navigation_mode : int {
 	NAV_MODE_ALL     = 0,
 	NAV_MODE_MAP     = 1,
 	NAV_MODE_NPC     = 2,
@@ -370,7 +370,7 @@ enum navigation_mode {
 	NAV_MODE_MAX     = 4,
 };
 
-enum navigation_service {
+enum navigation_service : int {
 	NAV_NONE               = 0,
 	NAV_AIRSHIP_ONLY       = 1,
 	NAV_SCROLL_ONLY        = 10,
@@ -765,8 +765,8 @@ struct script_state {
 
 struct script_function {
 	bool (*func)(struct script_state *st);
-	char *name;
-	char *arg;
+	const char *name;
+	const char *arg;
 	bool deprecated;
 };
 
@@ -970,7 +970,7 @@ struct script_interface {
 	void (*warning) (const char* src, const char* file, int start_line, const char* error_msg, const char* error_pos);
 	/* */
 	struct script_code* (*clone_script) (struct script_code* original);
-	bool (*addScript) (char *name, char *args, bool (*func)(struct script_state *st), bool isDeprecated);
+	bool (*addScript) (const char *name, const char *args, bool (*func)(struct script_state *st), bool isDeprecated);
 	int (*conv_num) (struct script_state *st,struct script_data *data);
 	const char* (*conv_str) (struct script_state *st,struct script_data *data);
 	struct map_session_data *(*rid2sd) (struct script_state *st);

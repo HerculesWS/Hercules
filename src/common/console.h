@@ -97,7 +97,7 @@ struct console_input_interface {
 	int (*key_pressed) (void);
 	void (*load_defaults) (void);
 	void (*parse_list_subs) (struct CParseEntry *cmd, unsigned char depth);
-	void (*addCommand) (char *name, CParseFunc func);
+	void (*addCommand) (const char *name, CParseFunc func);
 	void (*setSQL) (struct Sql *SQL_handle);
 #else // not CONSOLE_INPUT
 	UNAVAILABLE_STRUCT;

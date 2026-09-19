@@ -65,7 +65,7 @@ struct quest_interface *quest;
  * @param quest_id ID to lookup
  * @return Quest entry (equals to &quest->dummy if the ID is invalid)
  */
-static struct quest_db *quest_db(int quest_id)
+static struct quest_db *quest_db_(int quest_id)
 {
 	if (quest_id < 0 || quest_id >= MAX_QUEST_DB || quest->db_data[quest_id] == NULL)
 		return &quest->dummy;
@@ -445,7 +445,7 @@ static int quest_check(struct map_session_data *sd, int quest_id, enum quest_che
 			}
 			return 0;
 		default:
-			ShowError("quest_check_quest: Unknown parameter %u", type);
+			ShowError("quest_check_quest: Unknown parameter %u", (unsigned int)type);
 			break;
 	}
 
@@ -704,7 +704,7 @@ static int quest_read_db(void)
 		count++;
 	}
 	libconfig->destroy(&quest_db_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 	return count;
 }
 
@@ -986,7 +986,7 @@ static bool quest_questinfo_validate_homunculus_type(struct map_session_data *sd
 		return false;
 	if (!homun_alive(sd->hd))
 		return false;
-	if (homun->class2type(sd->hd->homunculus.class_) != qi->homunculus_type)
+	if (homun->class2type((enum homun_id)sd->hd->homunculus.class_) != qi->homunculus_type)
 		return false;
 	return true;
 }
@@ -1059,7 +1059,7 @@ static enum quest_mobtype quest_mobsize2client(uint8 size)
 		return QMT_SZ_LARGE;
 
 	default:
-		return 0;
+		return QMT_NONE;
 	}
 }
 
@@ -1087,7 +1087,7 @@ static enum quest_mobtype quest_mobele2client(uint8 type)
 	case ELE_UNDEAD:
 		return QMT_ELE_UNDEAD;
 	default:
-		return 0;
+		return QMT_NONE;
 	}
 }
 
@@ -1115,7 +1115,7 @@ static enum quest_mobtype quest_mobrace2client(uint8 type)
 	case RC_DRAGON:
 		return QMT_RC_DRAGON;
 	default:
-		return 0;
+		return QMT_NONE;
 	}
 }
 
@@ -1168,7 +1168,7 @@ void quest_defaults(void)
 	quest->final = do_final_quest;
 	quest->reload = do_reload_quest;
 	/* */
-	quest->db = quest_db;
+	quest->db = quest_db_;
 	quest->pc_login = quest_pc_login;
 	quest->add = quest_add;
 	quest->change = quest_change;

@@ -38,6 +38,7 @@
 #include "common/strlib.h"
 #include "common/timer.h"
 
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -125,7 +126,7 @@ static struct irc_func *irc_func_search(char *function_name)
 /// @copydoc ircbot_interface::parse()
 static int irc_parse(int fd)
 {
-	char *parse_string = NULL, *p = NULL, *str_safe = NULL;
+	char *p = NULL, *str_safe = NULL;
 
 	if (sockt->session[fd]->flag.eof) {
 		sockt->close(fd);
@@ -141,8 +142,8 @@ static int irc_parse(int fd)
 	if( !RFIFOREST(fd) )
 		return 0;
 
-	parse_string = aMalloc(RFIFOREST(fd));
-	safestrncpy(parse_string, RFIFOP(fd,0), RFIFOREST(fd));
+	char *parse_string = (char *)aMalloc(RFIFOREST(fd));
+	safestrncpy(parse_string, RFIFOP(char *, fd, 0), RFIFOREST(fd));
 	RFIFOSKIP(fd, RFIFOREST(fd));
 	RFIFOFLUSH(fd);
 
@@ -171,12 +172,12 @@ static void irc_parse_source(char *source, char *nick, char *ident, char *host)
 	nullpo_retv(host);
 	for(size_t i = 0; i < len; i++) {
 		if( stage == 0 && source[i] == '!' ) {
-			safestrncpy(nick, &source[0], min(i + 1, IRC_NICK_LENGTH));
+			safestrncpy(nick, &source[0], std::min(i + 1, (size_t)IRC_NICK_LENGTH));
 			pos = (int)i + 1;
 			stage = 1;
 		} else if( stage == 1 && source[i] == '@' ) {
-			safestrncpy(ident, &source[pos], min(i - pos + 1, IRC_IDENT_LENGTH));
-			safestrncpy(host, &source[i+1], min(len - i, IRC_HOST_LENGTH));
+			safestrncpy(ident, &source[pos], std::min(i - pos + 1, (size_t)IRC_IDENT_LENGTH));
+			safestrncpy(host, &source[i+1], std::min(len - i, (size_t)IRC_HOST_LENGTH));
 			break;
 		}
 	}
@@ -214,7 +215,7 @@ static void irc_parse_sub(int fd, char *str)
 }
 
 /// @copydoc ircbot_interface::queue()
-static void irc_queue(char *str)
+static void irc_queue(const char *str)
 {
 	struct message_flood *queue_entry = NULL;
 
@@ -272,7 +273,7 @@ static int irc_queue_timer(int tid, int64 tick, int id, intptr_t data)
 }
 
 /// @copydoc ircbot_interface::send()
-static void irc_send(char *str, bool force)
+static void irc_send(const char *str, bool force)
 {
 	size_t len;
 	nullpo_retv(str);
@@ -287,7 +288,7 @@ static void irc_send(char *str, bool force)
 	}
 
 	WFIFOHEAD(ircbot->fd, len);
-	snprintf(WFIFOP(ircbot->fd,0),IRC_MESSAGE_LENGTH, "%s\r\n", str);
+	snprintf(WFIFOP(char *, ircbot->fd, 0), IRC_MESSAGE_LENGTH, "%s\r\n", str);
 	WFIFOSET(ircbot->fd, len);
 }
 

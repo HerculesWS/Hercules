@@ -97,13 +97,13 @@ void ShowDump(const void *buffer, size_t length)
 		sprintf(hex+(i%16)*3, "%02X ", RBUFB(buffer,i));
 
 		if ((i%16) == 15) {
-			ShowDebug("%03"PRIXS" %s  %s\n", i/16, hex, ascii);
+			ShowDebug("%03" PRIXS " %s  %s\n", i/16, hex, ascii);
 		}
 	}
 
 	if ((i%16) != 0) {
 		ascii[i%16] = 0;
-		ShowDebug("%03"PRIXS" %-48s  %-16s\n", i/16, hex, ascii);
+		ShowDebug("%03" PRIXS " %-48s  %-16s\n", i/16, hex, ascii);
 	}
 }
 
@@ -406,7 +406,7 @@ uint64 get_percentage64(const uint64 A, const uint64 B)
 
 	if( B == 0 )
 	{
-		ShowError("get_percentage(): division by zero! (A=%"PRIu64",B=%"PRIu64")\n", A, B);
+		ShowError("get_percentage(): division by zero! (A=%" PRIu64 ",B=%" PRIu64 ")\n", A, B);
 		return ~0U;
 	}
 
@@ -414,7 +414,7 @@ uint64 get_percentage64(const uint64 A, const uint64 B)
 
 	if( result > UINT_MAX )
 	{
-		ShowError("get_percentage(): result percentage too high! (A=%"PRIu64",B=%"PRIu64",result=%g)\n", A, B, result);
+		ShowError("get_percentage(): result percentage too high! (A=%" PRIu64 ",B=%" PRIu64 ",result=%g)\n", A, B, result);
 		return UINT_MAX;
 	}
 

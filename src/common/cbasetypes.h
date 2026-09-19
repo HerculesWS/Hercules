@@ -100,18 +100,6 @@
 #define DEBUG
 #endif
 
-// debug function name
-#ifndef __NETBSD__
-#if !defined(__STDC_VERSION__) || __STDC_VERSION__ < 199901L
-#	if __GNUC__ >= 2 || defined(WIN32)
-#		define __func__ __FUNCTION__
-#	else
-#		define __func__ ""
-#	endif
-#endif
-#endif
-
-
 // disable attributed stuff on non-GNU
 #if !defined(__GNUC__) && !defined(MINGW)
 #  define  __attribute__(x)
@@ -282,7 +270,6 @@ typedef uintptr_t uintptr;
 // keyword replacement
 #ifdef _MSC_VER
 // For MSVC (windows)
-#define inline __inline
 #define forceinline __forceinline
 #define ra_align(n) __declspec(align(n))
 #else
@@ -355,60 +342,6 @@ typedef uintptr_t uintptr;
 #else  // defined(__GNUC__) && !defined(__clang__)
 #define GCC11ATTR(str)
 #endif // defined(__GNUC__) && !defined(__clang__)
-
-// fallthrough attribute only enabled on gcc >= 7.0
-#if defined(__GNUC__) && (GCC_VERSION >= 70000)
-#define FALLTHROUGH __attribute__ ((fallthrough));
-#else // ! defined(__GNUC__) && (GCC_VERSION >= 70000)
-#define FALLTHROUGH
-#endif // ! defined(__GNUC__) && (GCC_VERSION >= 70000)
-
-// boolean types for C
-#if !defined(_MSC_VER) || _MSC_VER >= 1800
-// MSVC doesn't have stdbool.h yet as of Visual Studio 2012 (MSVC version 17.00)
-// but it will support it in Visual Studio 2013 (MSVC version 18.00)
-// http://blogs.msdn.com/b/vcblog/archive/2013/07/19/c99-library-support-in-visual-studio-2013.aspx
-// GCC and Clang are assumed to be C99 compliant
-#include <stdbool.h> // bool, true, false, __bool_true_false_are_defined
-#endif // ! defined(_MSC_VER) || _MSC_VER >= 1800
-
-#ifndef __bool_true_false_are_defined
-// If stdbool.h is not available or does not define this
-typedef char bool;
-#define false (1==0)
-#define true  (1==1)
-#define __bool_true_false_are_defined
-#endif // __bool_true_false_are_defined
-
-//////////////////////////////////////////////////////////////////////////
-// macro tools
-
-#ifdef swap // just to be sure
-#undef swap
-#endif
-// hmm only ints?
-//#define swap(a,b) { int temp=a; a=b; b=temp;}
-// if using macros then something that is type independent
-//#define swap(a,b) ((a == b) || ((a ^= b), (b ^= a), (a ^= b)))
-// Avoid "value computed is not used" warning and generates the same assembly code
-//#define swap(a,b) if (a != b) ((a ^= b), (b ^= a), (a ^= b))
-// but is vulnerable to 'if (foo) swap(bar, baz); else quux();', causing the else to nest incorrectly.
-#define swap(a,b) do { if ((a) != (b)) { (a) ^= (b); (b) ^= (a); (a) ^= (b); } } while(0)
-#define swap_ptr(a,b) do { if ((a) != (b)) (a) = (void*)((intptr_t)(a) ^ (intptr_t)(b)); (b) = (void*)((intptr_t)(a) ^ (intptr_t)(b)); (a) = (void*)((intptr_t)(a) ^ (intptr_t)(b)); } while(0)
-
-#ifndef max
-#define max(a,b) (((a) > (b)) ? (a) : (b))
-#endif
-
-#ifndef min
-#define min(a,b) (((a) < (b)) ? (a) : (b))
-#endif
-
-//////////////////////////////////////////////////////////////////////////
-// should not happen
-#ifndef NULL
-#define NULL (void *)0
-#endif
 
 //////////////////////////////////////////////////////////////////////////
 // Additional printf specifiers
@@ -507,18 +440,5 @@ typedef char bool;
 
 /** Support macros for marking structs as unavailable */
 #define UNAVAILABLE_STRUCT int8 HERC__unavailable_struct
-
-/** Static assertion (only on compilers that support it) */
-#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
-// C11 version
-#define STATIC_ASSERT(ex, msg) _Static_assert(ex, msg)
-#elif defined(_MSC_VER)
-// MSVC doesn't support it, but it accepts the C++ style version
-#define STATIC_ASSERT(ex, msg) static_assert(ex, msg)
-#else
-// Otherise just ignore it until it's supported
-#define STATIC_ASSERT(ex, msg)
-#endif
-
 
 #endif /* COMMON_CBASETYPES_H */

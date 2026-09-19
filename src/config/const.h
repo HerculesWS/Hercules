@@ -113,7 +113,7 @@
 #ifdef RENEWAL_CAST
 	#define VARCAST_REDUCTION(val) do { \
 		if( (varcast_r += (val)) != 0 && varcast_r >= 0 ) \
-			time = time * (1 - (float)min((val), 100) / 100); \
+			time = time * (1 - (float)std::min((val), 100) / 100); \
 	} while(0)
 #endif
 

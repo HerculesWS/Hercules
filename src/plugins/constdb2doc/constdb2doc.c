@@ -45,12 +45,11 @@
 #define OUTPUTFILENAME "doc" PATHSEP_STR "constants_pre-re.md"
 #endif
 
-HPExport struct hplugin_info pinfo = {
+HPM_DECLARE_PLUGIN(
 	"constdb2doc",   // Plugin name
 	SERVER_TYPE_MAP, // Which server types this plugin works with?
-	"0.1",           // Plugin version
-	HPM_VERSION,     // HPM Version (don't change, macro is automatically updated)
-};
+	"0.1"            // Plugin version
+)
 
 FILE *out_fp;
 bool torun = false;
@@ -113,7 +112,7 @@ void constdb2doc_skilldb(void)
 
 	nullpo_retv(out_fp);
 
-	fprintf(out_fp, "## Skills (db/"DBPATH"skill_db.conf)\n\n");
+	fprintf(out_fp, "## Skills (db/" DBPATH "skill_db.conf)\n\n");
 	for (i = 1; i < MAX_SKILL_DB; i++) {
 		if (skill->dbs->db[i].name[0] != '\0')
 			fprintf(out_fp, "- `%s`: %d\n", skill->dbs->db[i].name, skill->dbs->db[i].nameid);
@@ -127,7 +126,7 @@ void constdb2doc_mobdb(void)
 
 	nullpo_retv(out_fp);
 
-	fprintf(out_fp, "## Mobs (db/"DBPATH"mob_db.conf)\n\n");
+	fprintf(out_fp, "## Mobs (db/" DBPATH "mob_db.conf)\n\n");
 	for (i = 0; i < MAX_MOB_DB; i++) {
 		struct mob_db *md = mob->db(i);
 		if (md == mob->dummy || md->sprite[0] == '\0')
@@ -143,14 +142,14 @@ struct item_data *constdb2doc_itemdb_search(int nameid)
 	if (nameid >= 0 && nameid < ARRAYLENGTH(itemdb->array))
 		return itemdb->array[nameid];
 
-	return idb_get(itemdb->other, nameid);
+	return (struct item_data *)idb_get(itemdb->other, nameid);
 }
 
 void constdb2doc_itemdb(void)
 {
 	nullpo_retv(out_fp);
 
-	fprintf(out_fp, "## Items (db/"DBPATH"item_db.conf)\n");
+	fprintf(out_fp, "## Items (db/" DBPATH "item_db.conf)\n");
 	for (int i = 0; i < ARRAYLENGTH(itemdb->array); i++) {
 		struct item_data *id = constdb2doc_itemdb_search(i);
 		if (id == NULL || id->name[0] == '\0')
@@ -160,7 +159,7 @@ void constdb2doc_itemdb(void)
 
 	if (db_size(itemdb->other) > 0) {
 		struct DBIterator *iter = db_iterator(itemdb->other);
-		for (struct item_data *itd = dbi_first(iter); dbi_exists(iter); itd = dbi_next(iter)) {
+		for (struct item_data *itd = (struct item_data *)dbi_first(iter); dbi_exists(iter); itd = (struct item_data *)dbi_next(iter)) {
 			if (itd == &itemdb->dummy)
 				continue;
 			fprintf(out_fp, "- `%s`: %d\n", itd->name, itd->nameid);
@@ -178,7 +177,7 @@ void constdb2doc_itemoptions(void)
 	fprintf(out_fp, "## Item Options (db/item_options.conf)\n\n");
 	if (db_size(itemdb->options) > 0) {
 		struct DBIterator *iter = db_iterator(itemdb->options);
-		for (struct itemdb_option *ito = dbi_first(iter); dbi_exists(iter); ito = dbi_next(iter)) {
+		for (struct itemdb_option *ito = (struct itemdb_option *)dbi_first(iter); dbi_exists(iter); ito = (struct itemdb_option *)dbi_next(iter)) {
 			fprintf(out_fp, "- `%s`: %d\n", ito->name, ito->index);
 		}
 		dbi_destroy(iter);

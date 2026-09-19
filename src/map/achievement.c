@@ -36,6 +36,7 @@
 #include "common/showmsg.h"
 #include "common/strlib.h"
 
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -50,7 +51,7 @@ struct achievement_interface *achievement;
  */
 static const struct achievement_data *achievement_get(int aid)
 {
-	return (struct achievement_data *) idb_get(achievement->db, aid);
+	return (struct achievement_data *)idb_get(achievement->db, aid);
 }
 
 /**
@@ -73,7 +74,7 @@ static struct achievement *achievement_ensure(struct map_session_data *sd, const
 	ARR_FIND(0, VECTOR_LENGTH(sd->achievement), i, (s_ad = &VECTOR_INDEX(sd->achievement, i)) && s_ad->id == ad->id);
 
 	if (i == VECTOR_LENGTH(sd->achievement)) {
-		struct achievement ta = { 0 };
+		struct achievement ta{};
 		ta.id = ad->id;
 
 		VECTOR_ENSURE(sd->achievement, 1, 1);
@@ -189,7 +190,7 @@ static void achievement_progress_add(struct map_session_data *sd, const struct a
 
 	// Check and increment the objective count.
 	if (!ach->objective[obj_idx] || ach->objective[obj_idx] < VECTOR_INDEX(ad->objective, obj_idx).goal) {
-		ach->objective[obj_idx] = min(progress + ach->objective[obj_idx], VECTOR_INDEX(ad->objective, obj_idx).goal);
+		ach->objective[obj_idx] = std::min(progress + ach->objective[obj_idx], VECTOR_INDEX(ad->objective, obj_idx).goal);
 
 		// Check if the Achievement is complete.
 		if (achievement->check_complete(sd, ad)) {
@@ -398,7 +399,7 @@ static bool achievement_validate(struct map_session_data *sd, int aid, unsigned 
  */
 static void achievement_validate_mob_kill(struct map_session_data *sd, int mob_id)
 {
-	struct achievement_objective criteria = { 0 };
+	struct achievement_objective criteria{};
 
 	nullpo_retv(sd);
 	Assert_retv(mob_id > 0 && mob->db(mob_id) != NULL);
@@ -422,7 +423,7 @@ static void achievement_validate_mob_kill(struct map_session_data *sd, int mob_i
  */
 static void achievement_validate_mob_damage(struct map_session_data *sd, unsigned int damage, bool received)
 {
-	struct achievement_objective criteria = { 0 };
+	struct achievement_objective criteria{};
 
 	nullpo_retv(sd);
 	Assert_retv(damage > 0);
@@ -452,7 +453,7 @@ static void achievement_validate_mob_damage(struct map_session_data *sd, unsigne
  */
 static void achievement_validate_pc_kill(struct map_session_data *sd, struct map_session_data *dstsd)
 {
-	struct achievement_objective criteria = { 0 };
+	struct achievement_objective criteria{};
 
 	nullpo_retv(sd);
 	nullpo_retv(dstsd);
@@ -490,7 +491,7 @@ static void achievement_validate_pc_kill(struct map_session_data *sd, struct map
  */
 static void achievement_validate_pc_damage(struct map_session_data *sd, struct map_session_data *dstsd, unsigned int damage)
 {
-	struct achievement_objective criteria = { 0 };
+	struct achievement_objective criteria{};
 
 	nullpo_retv(sd);
 
@@ -519,7 +520,7 @@ static void achievement_validate_pc_damage(struct map_session_data *sd, struct m
  */
 static void achievement_validate_jobchange(struct map_session_data *sd)
 {
-	struct achievement_objective criteria = { 0 };
+	struct achievement_objective criteria{};
 
 	nullpo_retv(sd);
 
@@ -549,7 +550,7 @@ static void achievement_validate_jobchange(struct map_session_data *sd)
  */
 static void achievement_validate_stats(struct map_session_data *sd, enum status_point_types stat_type, int progress)
 {
-	struct achievement_objective criteria = { 0 };
+	struct achievement_objective criteria{};
 
 	nullpo_retv(sd);
 	Assert_retv(progress > 0);
@@ -590,7 +591,7 @@ static void achievement_validate_stats(struct map_session_data *sd, enum status_
  */
 static void achievement_validate_chatroom_create(struct map_session_data *sd)
 {
-	struct achievement_objective criteria = { 0 };
+	struct achievement_objective criteria{};
 
 	nullpo_retv(sd);
 
@@ -616,7 +617,7 @@ static void achievement_validate_chatroom_create(struct map_session_data *sd)
  */
 static void achievement_validate_chatroom_members(struct map_session_data *sd, int progress)
 {
-	struct achievement_objective criteria = { 0 };
+	struct achievement_objective criteria{};
 
 	nullpo_retv(sd);
 
@@ -638,7 +639,7 @@ static void achievement_validate_chatroom_members(struct map_session_data *sd, i
  */
 static void achievement_validate_friend_add(struct map_session_data *sd)
 {
-	struct achievement_objective criteria = { 0 };
+	struct achievement_objective criteria{};
 
 	nullpo_retv(sd);
 
@@ -658,7 +659,7 @@ static void achievement_validate_friend_add(struct map_session_data *sd)
  */
 static void achievement_validate_party_create(struct map_session_data *sd)
 {
-	struct achievement_objective criteria = { 0 };
+	struct achievement_objective criteria{};
 
 	nullpo_retv(sd);
 
@@ -677,7 +678,7 @@ static void achievement_validate_party_create(struct map_session_data *sd)
  */
 static void achievement_validate_marry(struct map_session_data *sd)
 {
-	struct achievement_objective criteria = { 0 };
+	struct achievement_objective criteria{};
 
 	nullpo_retv(sd);
 
@@ -699,7 +700,7 @@ static void achievement_validate_marry(struct map_session_data *sd)
  */
 static void achievement_validate_adopt(struct map_session_data *sd, bool parent)
 {
-	struct achievement_objective criteria = { 0 };
+	struct achievement_objective criteria{};
 
 	nullpo_retv(sd);
 
@@ -727,7 +728,7 @@ static void achievement_validate_adopt(struct map_session_data *sd, bool parent)
  */
 static void achievement_validate_zeny(struct map_session_data *sd, int amount)
 {
-	struct achievement_objective criteria = { 0 };
+	struct achievement_objective criteria{};
 
 	nullpo_retv(sd);
 
@@ -766,7 +767,7 @@ static void achievement_validate_zeny(struct map_session_data *sd, int amount)
  */
 static void achievement_validate_refine(struct map_session_data *sd, unsigned int idx, bool success)
 {
-	struct achievement_objective criteria = { 0 };
+	struct achievement_objective criteria{};
 	struct item_data *id = NULL;
 
 	nullpo_retv(sd);
@@ -829,7 +830,7 @@ static void achievement_validate_refine(struct map_session_data *sd, unsigned in
 static void achievement_validate_item_get(struct map_session_data *sd, int nameid, int amount)
 {
 	struct item_data *it = itemdb->exists(nameid);
-	struct achievement_objective criteria = { 0 };
+	struct achievement_objective criteria{};
 
 	nullpo_retv(sd);
 
@@ -845,7 +846,7 @@ static void achievement_validate_item_get(struct map_session_data *sd, int namei
 	criteria.unique.itemid = 0; // cleanup
 
 	/* Item Buy Value*/
-	criteria.goal = max(it->value_buy, 1);
+	criteria.goal = std::max(it->value_buy, 1);
 	achievement->validate_type(sd, ACH_ITEM_GET_WORTH, &criteria, false);
 
 	/* Item Type */
@@ -865,7 +866,7 @@ static void achievement_validate_item_get(struct map_session_data *sd, int namei
 static void achievement_validate_item_sell(struct map_session_data *sd, int nameid, int amount)
 {
 	struct item_data *it = itemdb->exists(nameid);
-	struct achievement_objective criteria = { 0 };
+	struct achievement_objective criteria{};
 
 	nullpo_retv(sd);
 
@@ -877,7 +878,7 @@ static void achievement_validate_item_sell(struct map_session_data *sd, int name
 
 	criteria.unique.itemid = it->nameid;
 
-	criteria.goal = max(it->value_sell, 1);
+	criteria.goal = std::max(it->value_sell, 1);
 
 	achievement->validate_type(sd, ACH_ITEM_SELL_WORTH, &criteria, false);
 }
@@ -891,7 +892,7 @@ static void achievement_validate_item_sell(struct map_session_data *sd, int name
 static void achievement_validate_achieve(struct map_session_data *sd, int achid)
 {
 	const struct achievement_data *ad = achievement->get(achid);
-	struct achievement_objective criteria = { 0 };
+	struct achievement_objective criteria{};
 
 	nullpo_retv(sd);
 	nullpo_retv(ad);
@@ -916,7 +917,7 @@ static void achievement_validate_achieve(struct map_session_data *sd, int achid)
  */
 static void achievement_validate_taming(struct map_session_data *sd, int class_)
 {
-	struct achievement_objective criteria = { 0 };
+	struct achievement_objective criteria{};
 
 	nullpo_retv(sd);
 
@@ -940,7 +941,7 @@ static void achievement_validate_taming(struct map_session_data *sd, int class_)
  */
 static void achievement_validate_achievement_rank(struct map_session_data *sd, int rank)
 {
-	struct achievement_objective criteria = { 0 };
+	struct achievement_objective criteria{};
 
 	nullpo_retv(sd);
 
@@ -1044,7 +1045,7 @@ static void achievement_get_rewards_items(struct map_session_data *sd, const str
 	nullpo_retv(sd);
 	nullpo_retv(ad);
 
-	struct item it = { 0 };
+	struct item it{};
 	it.identify = 1;
 
 	for (int i = 0; i < VECTOR_LENGTH(ad->rewards.item); i++) {
@@ -1105,7 +1106,7 @@ static void achievement_readdb_ranks(void)
 {
 	char filename[256];
 	libconfig->format_db_path("achievement_rank_db.conf", filename, sizeof(filename));
-	struct config_t ar_conf = { 0 };
+	struct config_t ar_conf{};
 	struct config_setting_t *ardb = NULL, *conf = NULL;
 	int entry = 0;
 
@@ -1156,7 +1157,7 @@ static void achievement_readdb_ranks(void)
 		return;
 	}
 
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", entry, filename);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", entry, filename);
 }
 
 /**
@@ -1530,7 +1531,7 @@ static bool achievement_readdb_objective_sub(const struct config_setting_t *conf
 
 	sprintf(objnum, "*%d", index); // Search Objective 1..MAX
 	if ((tt = libconfig->setting_get_member(conf, objnum)) && config_setting_is_group(tt)) {
-		struct achievement_objective obj = { 0 };
+		struct achievement_objective obj{};
 		struct config_setting_t *c = NULL;
 
 		/* Description */
@@ -1641,7 +1642,7 @@ static bool achievement_readdb_objectives(const struct config_setting_t *conf, s
 static bool achievement_readdb_validate_reward_item_sub(const struct config_setting_t *t, int index, struct achievement_data *entry)
 {
 	struct config_setting_t *it = NULL;
-	struct achievement_reward_item item = { 0 };
+	struct achievement_reward_item item{};
 	const char *name = NULL;
 	int amount = 0;
 	int val = 0;
@@ -1783,8 +1784,8 @@ static void achievement_readdb_additional_fields(const struct config_setting_t *
 static void achievement_readb(void)
 {
 	char filename[256];
-	libconfig->format_db_path(DBPATH"achievement_db.conf", filename, sizeof(filename));
-	struct config_t ach_conf = { 0 };
+	libconfig->format_db_path(DBPATH "achievement_db.conf", filename, sizeof(filename));
+	struct config_t ach_conf{};
 	struct config_setting_t *achdb = NULL, *conf = NULL;
 	int entry = 0, count = 0;
 	VECTOR_DECL(int) duplicate;
@@ -1803,7 +1804,8 @@ static void achievement_readb(void)
 	while ((conf = libconfig->setting_get_elem(achdb, entry++))) {
 		const char *string = NULL;
 		int val = 0, i = 0;
-		struct achievement_data t_ad = { 0 }, *p_ad = NULL;
+		struct achievement_data t_ad{};
+		struct achievement_data *p_ad = NULL;
 
 		/* Achievement ID */
 		if (libconfig->setting_lookup_int(conf, "Id", &t_ad.id) == 0) {
@@ -1872,7 +1874,7 @@ static void achievement_readb(void)
 
 	VECTOR_CLEAR(duplicate);
 
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filename);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filename);
 }
 
 /**
@@ -1905,7 +1907,7 @@ static void do_init_achievement(bool minimal)
 static int achievement_db_finalize(union DBKey key, struct DBData *data, va_list args)
 {
 	int i = 0;
-	struct achievement_data *ad = DB->data2ptr(data);
+	struct achievement_data *ad = (struct achievement_data *)DB->data2ptr(data);
 
 	for(i = 0; i < VECTOR_LENGTH(ad->objective); i++)
 		VECTOR_CLEAR(VECTOR_INDEX(ad->objective, i).jobid);

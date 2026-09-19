@@ -281,7 +281,7 @@ static unsigned long grfio_crc32(const unsigned char *buf, unsigned int len)
 /// @copydoc grfio_interface::decode_zip
 static int grfio_decode_zip(void *dest, unsigned long *dest_len, const void *source, unsigned long source_len)
 {
-	const int ret = uncompress(dest, dest_len, source, source_len);
+	const int ret = uncompress((uint8 *)dest, dest_len, (const uint8 *)source, source_len);
 	if (ret != Z_OK)
 		grfio->report_error(ret);
 	return ret;
@@ -296,7 +296,7 @@ static int grfio_encode_zip(void *dest, unsigned long *dest_len, const void *sou
 		/* [Ind/Hercules] */
 		CREATE(dest, unsigned char, *dest_len);
 	}
-	const int ret = compress(dest, dest_len, source, source_len);
+	const int ret = compress((uint8 *)dest, dest_len, (const uint8 *)source, source_len);
 	if (ret != Z_OK)
 		grfio->report_error(ret);
 	return ret;
@@ -383,7 +383,7 @@ static struct grf_filelist *grfio_filelist_add(struct grf_filelist *entry)
 #define FILELIST_ADDS 1024 // number increment of file lists `
 
 	if (filelist_entrys >= filelist_maxentry) {
-		filelist = aRealloc(filelist, (filelist_maxentry + FILELIST_ADDS) * sizeof(struct grf_filelist));
+		filelist = (struct grf_filelist *)aRealloc(filelist, (filelist_maxentry + FILELIST_ADDS) * sizeof(struct grf_filelist));
 		memset(filelist + filelist_maxentry, '\0', FILELIST_ADDS * sizeof(struct grf_filelist));
 		filelist_maxentry += FILELIST_ADDS;
 	}
@@ -429,7 +429,7 @@ static void grfio_filelist_compact(void)
 		return;
 
 	if (filelist_entrys < filelist_maxentry) {
-		filelist = aRealloc(filelist, filelist_entrys * sizeof(struct grf_filelist));
+		filelist = (struct grf_filelist *)aRealloc(filelist, filelist_entrys * sizeof(struct grf_filelist));
 		filelist_maxentry = filelist_entrys;
 	}
 }
@@ -476,7 +476,6 @@ static void *grfio_reads(const char *fname, int *size)
 		in = fopen(lfname, "rb");
 		if (in != NULL) {
 			int declen;
-			unsigned char *buf = NULL;
 			hseek(in,0,SEEK_END);
 			declen = (int)htell(in);
 			if (declen == -1) {
@@ -485,7 +484,7 @@ static void *grfio_reads(const char *fname, int *size)
 				return NULL;
 			}
 			hseek(in,0,SEEK_SET);
-			buf = aMalloc(declen+1); // +1 for resnametable zero-termination
+			unsigned char *buf = (unsigned char *)aMalloc(declen + 1); // +1 for resnametable zero-termination
 			buf[declen] = '\0';
 			if (fread(buf, 1, declen, in) != (size_t)declen) {
 				ShowError("An error occurred in fread grfio_reads, fname=%s \n",fname);
@@ -515,8 +514,7 @@ static void *grfio_reads(const char *fname, int *size)
 
 		if (in != NULL) {
 			int fsize = entry->srclen_aligned;
-			unsigned char *buf = aMalloc(fsize);
-			unsigned char *buf2 = NULL;
+			unsigned char *buf = (unsigned char *)aMalloc(fsize);
 			if (hseek(in, entry->srcpos, SEEK_SET) != 0
 			 || fread(buf, 1, fsize, in) != (size_t)fsize) {
 				ShowError("An error occurred in fread in grfio_reads, grfname=%s\n",grfname);
@@ -526,7 +524,7 @@ static void *grfio_reads(const char *fname, int *size)
 			}
 			fclose(in);
 
-			buf2 = aMalloc(entry->declen+1);  // +1 for resnametable zero-termination
+			unsigned char *buf2 = (unsigned char *)aMalloc(entry->declen+1); // +1 for resnametable zero-termination
 			buf2[entry->declen] = '\0';
 			if (entry->type & FILELIST_TYPE_FILE) {
 				// file
@@ -611,7 +609,6 @@ static int grfio_entryread(const char *grfname, int gentry)
 {
 	unsigned char grf_header[0x2e] = { 0 };
 	int entry,entrys,ofs,grf_version;
-	unsigned char *grf_filelist;
 	FILE *fp;
 
 	nullpo_retr(1, grfname);
@@ -642,7 +639,7 @@ static int grfio_entryread(const char *grfname, int gentry)
 	if (grf_version == 0x01) {
 		// ****** Grf version 01xx ******
 		int64 list_size = grf_size - htell(fp);
-		grf_filelist = aMalloc(list_size);
+		unsigned char *grf_filelist = (unsigned char *)aMalloc(list_size);
 		if (fread(grf_filelist,1,list_size,fp) != (size_t)list_size) {
 			ShowError("Couldn't read all grf_filelist element of %s \n", grfname);
 			aFree(grf_filelist);
@@ -655,7 +652,7 @@ static int grfio_entryread(const char *grfname, int gentry)
 
 		// Get an entry
 		for (entry = 0, ofs = 0; entry < entrys; ++entry) {
-			struct grf_filelist aentry = { 0 };
+			struct grf_filelist aentry{};
 			int ofs2 = ofs+getlong(grf_filelist+ofs)+4;
 			unsigned char type = grf_filelist[ofs2+12];
 			if (type&FILELIST_TYPE_FILE) {
@@ -692,7 +689,6 @@ static int grfio_entryread(const char *grfname, int gentry)
 	} else if (grf_version == 0x02) {
 		// ****** Grf version 02xx ******
 		unsigned char eheader[8];
-		unsigned char *rBuf;
 		uLongf rSize, eSize;
 
 		if (fread(eheader,1,8,fp) != 8) {
@@ -709,7 +705,7 @@ static int grfio_entryread(const char *grfname, int gentry)
 			return 4;
 		}
 
-		rBuf = aMalloc(rSize); // Get a Read Size
+		unsigned char *rBuf = (unsigned char *)aMalloc(rSize); // Get a Read Size
 		if (fread(rBuf,1,rSize,fp) != rSize) {
 			ShowError("An error occurred in fread \n");
 			fclose(fp);
@@ -717,7 +713,7 @@ static int grfio_entryread(const char *grfname, int gentry)
 			return 4;
 		}
 		fclose(fp);
-		grf_filelist = aMalloc(eSize); // Get a Extend Size
+		unsigned char *grf_filelist = (unsigned char *)aMalloc(eSize); // Get a Extend Size
 		grfio->decode_zip(grf_filelist, &eSize, rBuf, rSize); // Decode function
 		aFree(rBuf);
 
@@ -807,7 +803,7 @@ static bool grfio_parse_restable_row(const char *row)
 	grfio_localpath_create(local, sizeof(local), dst);
 	if (exists(local)) {
 		// alias for local resource
-		struct grf_filelist fentry = { 0 };
+		struct grf_filelist fentry{};
 		safestrncpy(fentry.fn, src, sizeof(fentry.fn));
 		fentry.fnd = aStrdup(dst);
 		grfio_filelist_modify(&fentry);
@@ -839,12 +835,12 @@ static void grfio_resourcecheck(void)
 		}
 
 		fclose(fp);
-		ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", i, "resnametable.txt");
+		ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", i, "resnametable.txt");
 		return; // we're done here!
 	}
 
 	// read resnametable from loaded GRF's, only if it cannot be loaded from the data directory
-	buf = grfio->reads("data\\resnametable.txt", &size);
+	buf = (char *)grfio->reads("data\\resnametable.txt", &size);
 	if (buf != NULL) {
 		char *ptr = NULL;
 		buf[size] = '\0';
@@ -861,7 +857,7 @@ static void grfio_resourcecheck(void)
 		}
 
 		aFree(buf);
-		ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", i, "data\\resnametable.txt");
+		ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", i, "data\\resnametable.txt");
 		return;
 	}
 }
@@ -879,7 +875,7 @@ static int grfio_add(const char *fname)
 	if (gentry_entrys >= gentry_maxentry) {
 #define GENTRY_ADDS 4 // The number increment of gentry_table entries
 		gentry_maxentry += GENTRY_ADDS;
-		gentry_table = aRealloc(gentry_table, gentry_maxentry * sizeof(char*));
+		gentry_table = (char **)aRealloc(gentry_table, gentry_maxentry * sizeof(char *));
 		memset(gentry_table + (gentry_maxentry - GENTRY_ADDS), 0, sizeof(char*) * GENTRY_ADDS);
 #undef GENTRY_ADDS
 	}
@@ -948,7 +944,7 @@ static void grfio_init(const char *fname)
 		}
 
 		fclose(data_conf);
-		ShowStatus("Done reading '"CL_WHITE"%s"CL_RESET"'.\n", fname);
+		ShowStatus("Done reading '" CL_WHITE "%s" CL_RESET "'.\n", fname);
 	}
 
 	if (grf_num == 0)

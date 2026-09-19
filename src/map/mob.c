@@ -60,6 +60,7 @@
 #include "common/timer.h"
 #include "common/utils.h"
 
+#include <algorithm>
 #include <math.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -96,13 +97,13 @@ static struct DBMap *item_drop_ratio_other_db = NULL;
 static struct eri *item_drop_ers; //For loot drops delay structures.
 static struct eri *item_drop_list_ers;
 
-static struct mob_db *mob_db(int index)
+static struct mob_db *mob_db_(int index)
 {
 	if (index < 0 || index > MAX_MOB_DB || mob->db_data[index] == NULL)
 		return mob->dummy;
 	return mob->db_data[index];
 }
-static struct mob_chat *mob_chat(short id)
+static struct mob_chat *mob_chat_(short id)
 {
 	if(id <= 0 || id > MAX_MOB_CHAT || mob->chat_db[id] == NULL)
 		return NULL;
@@ -649,7 +650,7 @@ static int mob_once_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y
 		int mob_id = class_;
 
 		if (mob_id < 0) {
-			mob_id = mob->get_random_id(-class_ - 1, (battle_config.random_monster_checklv == 1) ? 3 : 1,
+			mob_id = mob->get_random_id((enum mob_groups)(-class_ - 1), (battle_config.random_monster_checklv == 1) ? 3 : 1,
 						    (sd != NULL) ? sd->status.base_level : 255);
 		}
 
@@ -665,7 +666,7 @@ static int mob_once_spawn(struct map_session_data *sd, int16 m, int16 x, int16 y
 			if (gc != NULL) {
 				struct guild *g = guild->search(gc->guild_id);
 
-				md->guardian_data = (struct guardian_data*)aCalloc(1, sizeof(struct guardian_data));
+				md->guardian_data = (struct guardian_data *)aCalloc(1, sizeof(struct guardian_data));
 				md->guardian_data->castle = gc;
 				md->guardian_data->number = MAX_GUARDIANS;
 
@@ -703,9 +704,9 @@ static int mob_once_spawn_area(struct map_session_data *sd, int16 m, int16 x0, i
 
 	// normalize x/y coordinates
 	if (x0 > x1)
-		swap(x0, x1);
+		std::swap(x0, x1);
 	if (y0 > y1)
-		swap(y0, y1);
+		std::swap(y0, y1);
 
 	// choose a suitable max. number of attempts
 	max = (y1 - y0 + 1)*(x1 - x0 + 1)*3;
@@ -840,7 +841,7 @@ static int mob_spawn_guardian(const char *mapname, short x, short y, const char 
 		return 0;
 	}
 
-	if (class_ <= 0 && (class_ = mob->get_random_id(-class_ - 1, 1, 99)) == 0)
+	if (class_ <= 0 && (class_ = mob->get_random_id((enum mob_groups)(-class_ - 1), 1, 99)) == 0) // FIXME: This should be class_ < 0, not <=
 		return 0;
 
 	if (!has_index) {
@@ -892,7 +893,7 @@ static int mob_spawn_guardian(const char *mapname, short x, short y, const char 
 
 	struct mob_data *md = mob->spawn_dataset(&data, npc_id);
 
-	md->guardian_data = (struct guardian_data*)aCalloc(1, sizeof(struct guardian_data));
+	md->guardian_data = (struct guardian_data *)aCalloc(1, sizeof(struct guardian_data));
 	md->guardian_data->number = guardian;
 	md->guardian_data->castle = gc;
 
@@ -955,7 +956,7 @@ static int mob_spawn_bg(const char *mapname, short x, short y, const char *mobna
 		return 0;
 	}
 
-	if (class_ <= 0 && (class_ = mob->get_random_id(-class_ - 1, 1, 99)) == 0)
+	if (class_ <= 0 && (class_ = mob->get_random_id((enum mob_groups)(-class_ - 1), 1, 99)) == 0) // FIXME: This should be class_ < 0, not <=
 		return 0;
 
 	struct spawn_data data;
@@ -1170,7 +1171,7 @@ static int mob_spawn(struct mob_data *md)
 	md->move_fail_count = 0;
 	md->ud.state.attack_continue = 0;
 	md->ud.target_to = 0;
-	md->ud.dir = 0;
+	md->ud.dir = UNIT_DIR_NORTH;
 	if( md->spawn_timer != INVALID_TIMER )
 	{
 		timer->delete_(md->spawn_timer, mob->delayspawn);
@@ -1307,7 +1308,7 @@ static int mob_ai_sub_hard_activesearch(struct block_list *bl, va_list ap)
 		case BL_PC:
 			if (BL_UCCAST(BL_PC, bl)->state.gangsterparadise && !(status_get_mode(&md->bl)&MD_BOSS))
 				return 0; //Gangster paradise protection.
-			FALLTHROUGH
+			[[fallthrough]];
 		case BL_NUL:
 		case BL_MOB:
 		case BL_PET:
@@ -1592,7 +1593,7 @@ static int mob_unlocktarget(struct mob_data *md, int64 tick)
 			break;
 		//Because it is not unset when the mob finishes walking.
 		md->state.skillstate = MSS_IDLE;
-		FALLTHROUGH
+		[[fallthrough]];
 	case MSS_IDLE:
 		// Idle skill.
 		if ((++md->ud.walk_count % IDLE_SKILL_INTERVAL) == 0 && mob->use_skill(md, tick, -1) == 0)
@@ -2496,7 +2497,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 	struct status_data *mstatus;
 	struct map_session_data *sd = BL_CAST(BL_PC, src);
-	struct map_session_data *tmpsd[DAMAGELOG_SIZE] = { NULL };
+	struct map_session_data *tmpsd[DAMAGELOG_SIZE]{};
 	struct map_session_data *mvp_sd = sd, *second_sd = NULL, *third_sd = NULL;
 	struct item_data *id = NULL;
 
@@ -2504,7 +2505,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 		struct party_data *p;
 		int id,zeny;
 		unsigned int base_exp,job_exp;
-	} pt[DAMAGELOG_SIZE] = { { 0 } };
+	} pt[DAMAGELOG_SIZE]{};
 	int i, temp, count, m;
 	int dmgbltypes = 0;  // bitfield of all bl types, that caused damage to the mob and are eligible for exp distribution
 	unsigned int mvp_damage;
@@ -2650,12 +2651,12 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 		if (map->list[m].flag.nobaseexp || !md->db->base_exp)
 			base_exp = 0;
 		else
-			base_exp = (unsigned int)cap_value(md->db->base_exp * per * bonus/100. * map->list[m].bexp/100., 1, UINT_MAX);
+			base_exp = (unsigned int)std::clamp(md->db->base_exp * per * bonus/100. * map->list[m].bexp/100., 1.0, (double)UINT_MAX);
 
 		if (map->list[m].flag.nojobexp || !md->db->job_exp || md->dmglog[i].flag == MDLF_HOMUN) //Homun earned job-exp is always lost.
 			job_exp = 0;
 		else
-			job_exp = (unsigned int)cap_value(md->db->job_exp * per * bonus/100. * map->list[m].jexp/100., 1, UINT_MAX);
+			job_exp = (unsigned int)std::clamp(md->db->job_exp * per * bonus/100. * map->list[m].jexp/100., 1.0, (double)UINT_MAX);
 
 		if ( (temp = tmpsd[i]->status.party_id) > 0 ) {
 			int j;
@@ -2792,12 +2793,12 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 			}
 
 			if (battle_config.drop_rate0item)
-				drop_rate = max(drop_rate, 0);
+				drop_rate = std::max(drop_rate, 0);
 			else
-				drop_rate = max(drop_rate, 1);
+				drop_rate = std::max(drop_rate, 1);
 
 			// Make sure the bonuses don't make the drop rate grow past the configured threshold (unless it already was)
-			drop_rate = min(drop_rate, max(md->db->dropitem[i].p, battle_config.item_drop_bonus_max_threshold));
+			drop_rate = std::min(drop_rate, std::max(md->db->dropitem[i].p, battle_config.item_drop_bonus_max_threshold));
 
 			// attempt to drop the item
 			if (rnd() % 10000 >= drop_rate)
@@ -2846,7 +2847,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 						//it's negative, then it should be multiplied. e.g. for Mimic,Myst Case Cards, etc
 						// rate = base_rate * (mob_level/10) + 1
 						drop_rate = -sd->add_drop[i].rate*(md->level/10)+1;
-						drop_rate = cap_value(drop_rate, battle_config.item_drop_adddrop_min, battle_config.item_drop_adddrop_max);
+						drop_rate = std::clamp(drop_rate, battle_config.item_drop_adddrop_min, battle_config.item_drop_adddrop_max);
 						if (drop_rate > 10000) drop_rate = 10000;
 					}
 					else
@@ -2895,7 +2896,6 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 	if(mvp_sd && md->db->mexp > 0 && md->special_state.ai == AI_NONE) {
 		int log_mvp[2] = {0};
-		unsigned int mexp;
 		int64 exp;
 
 		//mapflag: noexp check [Lorky]
@@ -2907,7 +2907,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 				exp += apply_percentrate64(exp, battle_config.exp_bonus_attacker * (count-1), 100); //[Gengar]
 		}
 
-		mexp = (unsigned int)cap_value(exp, 1, UINT_MAX);
+		unsigned int mexp = (unsigned int)std::clamp(exp, (int64)1, (int64)UINT_MAX);
 
 		clif->mvp_effect(mvp_sd);
 		clif->mvp_exp(mvp_sd,mexp);
@@ -2916,7 +2916,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 		if (!(map->list[m].flag.nomvploot || type&1)) {
 			/* pose them randomly in the list -- so on 100% drop servers it wont always drop the same item */
-			struct mob_drop mdrop[MAX_MVP_DROP] = { { 0 } };
+			struct mob_drop mdrop[MAX_MVP_DROP]{};
 
 			for (i = 0; i < MAX_MVP_DROP; i++) {
 				int rpos;
@@ -2944,7 +2944,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 				if (rate <= 0 && !battle_config.drop_rate0item)
 					rate = 1;
 				if (rate > rnd()%10000) {
-					struct item item = { 0 };
+					struct item item{};
 
 					item.nameid = mdrop[i].nameid;
 					item.identify = itemdb->isidentified2(data);
@@ -2997,7 +2997,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 
 		if( sd ) {
 			if( sd->mission_mobid == md->class_) { //TK_MISSION [Skotlex]
-				if (++sd->mission_count >= 100 && (temp = mob->get_random_id(0, 0xE, sd->status.base_level)) != 0) {
+				if (++sd->mission_count >= 100 && (temp = mob->get_random_id(MOBG_DEAD_BRANCH, 0xE, sd->status.base_level)) != 0) {
 					pc->addfame(sd, RANKTYPE_TAEKWON, 1);
 					sd->mission_mobid = temp;
 					pc_setglobalreg(sd,script->add_variable("TK_MISSION_ID"), temp);
@@ -3212,7 +3212,7 @@ static int mob_class_change(struct mob_data *md, int class_)
 		md->skilldelay[i] = c;
 
 	if(md->lootitem == NULL && md->db->status.mode&MD_LOOTER)
-		md->lootitem=(struct item *)aCalloc(LOOTITEM_SIZE,sizeof(struct item));
+		md->lootitem = (struct item *)aCalloc(LOOTITEM_SIZE, sizeof(struct item));
 
 	//Targets should be cleared no morph
 	md->target_id = md->attacked_id = 0;
@@ -3733,7 +3733,7 @@ static int mob_use_skill(struct mob_data *md, int64 tick, int event)
 					break;
 
 				// If monster has a master but master wasn't found, try a friend.
-				FALLTHROUGH
+				[[fallthrough]];
 			case MST_FRIEND: // Monster's friend is within skill range. Skill center is monster position.
 				bl = (fbl != NULL) ? fbl : &md->bl;
 				break;
@@ -3786,7 +3786,7 @@ static int mob_use_skill(struct mob_data *md, int64 tick, int event)
 					break;
 
 				// If monster has a master but master wasn't found, try a friend.
-				FALLTHROUGH
+				[[fallthrough]];
 			case MST_FRIEND: // Monster's friend is within skill range.
 				bl = (fbl != NULL) ? fbl : &md->bl;
 				break;
@@ -3928,7 +3928,7 @@ static int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 
 	if (class_ < 0 || class_ >= MOB_CLONE_END)
 		return 0;
 
-	mob->db_data[class_] = (struct mob_db*)aCalloc(1, sizeof(struct mob_db));
+	mob->db_data[class_] = (struct mob_db *)aCalloc(1, sizeof(struct mob_db));
 
 	struct mob_db *db = mob->db_data[class_];
 	struct status_data *mstatus = &db->status;
@@ -4082,9 +4082,9 @@ static int mob_clone_spawn(struct map_session_data *sd, int16 m, int16 x, int16 
 		} else {
 			switch (skill_id) { /// Certain special skills that are passive, and thus, never triggered.
 			case MO_TRIPLEATTACK:
-				FALLTHROUGH
+				[[fallthrough]];
 			case TF_DOUBLE:
-				FALLTHROUGH
+				[[fallthrough]];
 			case GS_CHAINACTION:
 				mob_skills[i].state = MSS_BERSERK;
 				mob_skills[i].target = MST_TARGET;
@@ -4170,7 +4170,7 @@ static int mob_makedummymobdb(int class_)
 		return 0;
 	}
 	//Initialize dummy data.
-	mob->dummy = (struct mob_db*)aCalloc(1, sizeof(struct mob_db)); //Initializing the dummy mob.
+	mob->dummy = (struct mob_db *)aCalloc(1, sizeof(struct mob_db)); //Initializing the dummy mob.
 	sprintf(mob->dummy->sprite,"DUMMY");
 	sprintf(mob->dummy->name,"Dummy");
 	sprintf(mob->dummy->jname,"Dummy");
@@ -4204,6 +4204,7 @@ static unsigned int mob_drop_adjust(int baserate, int rate_adjust, unsigned shor
 	int64 rate = baserate;
 
 	Assert_ret(baserate >= 0);
+	Assert_ret(rate_min <= rate_max);
 
 	if (rate_adjust != 100 && baserate > 0) {
 		if (battle_config.logarithmic_drops && rate_adjust > 0) {
@@ -4217,7 +4218,7 @@ static unsigned int mob_drop_adjust(int baserate, int rate_adjust, unsigned shor
 		}
 	}
 
-	return (unsigned int)cap_value(rate,rate_min,rate_max);
+	return (unsigned int)std::clamp(rate, (int64)rate_min, (int64)rate_max);
 }
 
 static struct item_drop_ratio *mob_get_item_drop_ratio(int nameid)
@@ -4386,7 +4387,7 @@ static bool mob_read_optdrops_optslot(struct config_setting_t *optslot, int n, i
 	}
 
 	struct optdrop_group_optslot *entry = &(mob->opt_drop_groups[group_id].optslot[n]);
-	entry->options = aCalloc(count, sizeof(struct optdrop_group_option));
+	entry->options = (struct optdrop_group_option *)aCalloc(count, sizeof(struct optdrop_group_option));
 
 	int idx = 0;
 	int i = 0;
@@ -4473,7 +4474,7 @@ static bool mob_read_optdrops_db(void)
 
 	int i = 0;
 	if (groups != NULL && (count = libconfig->setting_length(groups)) > 0) {
-		mob->opt_drop_groups = aCalloc(count, sizeof(struct optdrop_group));
+		mob->opt_drop_groups = (struct optdrop_group *)aCalloc(count, sizeof(struct optdrop_group));
 		mob->opt_drop_groups_count = count; // maximum size (used by assertions)
 
 		struct config_setting_t *group = NULL;
@@ -4486,7 +4487,7 @@ static bool mob_read_optdrops_db(void)
 
 	libconfig->destroy(&option_groups);
 
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", i, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", i, filepath);
 	return true;
 }
 
@@ -4892,7 +4893,7 @@ static int mob_db_validate_entry(struct mob_db *entry, int n, const char *source
 		return 0;
 	}
 
-	entry->lv = cap_value(entry->lv, 1, USHRT_MAX);
+	entry->lv = std::clamp((int)entry->lv, 1, USHRT_MAX);
 
 	if (entry->status.max_sp < 1)
 		entry->status.max_sp = 1;
@@ -4926,9 +4927,9 @@ static int mob_db_validate_entry(struct mob_db *entry, int n, const char *source
 	if (entry->range3 < entry->range2)
 		entry->range3 = entry->range2;
 
-	entry->status.size = cap_value(entry->status.size, 0, 2);
+	entry->status.size = std::clamp((int)entry->status.size, 0, 2);
 
-	entry->status.race = cap_value(entry->status.race, 0, RC_MAX - 1);
+	entry->status.race = std::clamp((int)entry->status.race, 0, RC_MAX - 1);
 
 	if (entry->status.def_ele >= ELE_MAX) {
 		ShowWarning("mob_read_db_sub: Invalid element type %d for monster ID %d (max=%d).\n", entry->status.def_ele, entry->mob_id, ELE_MAX-1);
@@ -4953,7 +4954,7 @@ static int mob_db_validate_entry(struct mob_db *entry, int n, const char *source
 
 	// Finally insert monster's data into the database.
 	if (mob->db_data[entry->mob_id] == NULL) {
-		mob->db_data[entry->mob_id] = (struct mob_db*)aMalloc(sizeof(struct mob_db));
+		mob->db_data[entry->mob_id] = (struct mob_db *)aMalloc(sizeof(struct mob_db));
 	} else {
 		//Copy over spawn data
 		memcpy(&entry->spawn, mob->db_data[entry->mob_id]->spawn, sizeof(entry->spawn));
@@ -4978,7 +4979,7 @@ static int mob_db_validate_entry(struct mob_db *entry, int n, const char *source
  */
 static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *source)
 {
-	struct mob_db md = { 0 };
+	struct mob_db md{};
 	struct config_setting_t *t = NULL;
 	const char *str = NULL;
 	int i32 = 0;
@@ -5133,12 +5134,12 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 
 	if (map->setting_lookup_const(mobt, "Exp", &i32) && i32 >= 0) {
 		int64 exp = apply_percentrate64(i32, battle_config.base_exp_rate, 100);
-		md.base_exp = (unsigned int)cap_value(exp, 0, UINT_MAX);
+		md.base_exp = (unsigned int)std::clamp(exp, (int64)0, (int64)UINT_MAX);
 	}
 
 	if (map->setting_lookup_const(mobt, "JExp", &i32) && i32 >= 0) {
 		int64 exp = apply_percentrate64(i32, battle_config.job_exp_rate, 100);
-		md.job_exp = (unsigned int)cap_value(exp, 0, UINT_MAX);
+		md.job_exp = (unsigned int)std::clamp(exp, (int64)0, (int64)UINT_MAX);
 	}
 
 	if (map->setting_lookup_const(mobt, "AttackRange", &i32) && i32 >= 0) {
@@ -5244,13 +5245,13 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 	md.status.aspd_rate = 1000;
 
 	if (map->setting_lookup_const(mobt, "AttackDelay", &i32) && i32 >= 0) {
-		md.status.adelay = cap_value(i32, battle_config.monster_max_aspd*2, 4000);
+		md.status.adelay = std::clamp(i32, battle_config.monster_max_aspd*2, 4000);
 	} else if (!inherit) {
 		md.status.adelay = 4000;
 	}
 
 	if (map->setting_lookup_const(mobt, "AttackMotion", &i32) && i32 >= 0) {
-		md.status.amotion = cap_value(i32, battle_config.monster_max_aspd, 2000);
+		md.status.amotion = std::clamp(i32, battle_config.monster_max_aspd, 2000);
 	} else if (!inherit) {
 		md.status.amotion = 2000;
 	}
@@ -5266,7 +5267,7 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 	if (map->setting_lookup_const(mobt, "MvpExp", &i32) && i32 >= 0) {
 		// Some new MVP's MEXP multiple by high exp-rate cause overflow. [LuzZza]
 		int64 exp = apply_percentrate64(i32, battle_config.mvp_exp_rate, 100);
-		md.mexp = (unsigned int)cap_value(exp, 0, UINT_MAX);
+		md.mexp = (unsigned int)std::clamp(exp, (int64)0, (int64)UINT_MAX);
 	}
 
 	if (maxhpUpdated) {
@@ -5277,7 +5278,7 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 		} else { //Normal mob
 			maxhp = apply_percentrate64(maxhp, battle_config.monster_hp_rate, 100);
 		}
-		md.status.max_hp = (unsigned int)cap_value(maxhp, 1, UINT_MAX);
+		md.status.max_hp = (unsigned int)std::clamp(maxhp, (int64)1, (int64)UINT_MAX);
 	}
 
 	if ((t = libconfig->setting_get_member(mobt, "MvpDrops"))) {
@@ -5293,7 +5294,7 @@ static int mob_read_db_sub(struct config_setting_t *mobt, int n, const char *sou
 	}
 
 	if (map->setting_lookup_const(mobt, "DamageTakenRate", &i32) && i32 >= 0) {
-		md.dmg_taken_rate = cap_value(i32, 1, INT_MAX);
+		md.dmg_taken_rate = std::clamp(i32, 1, INT_MAX);
 	} else if (!inherit) {
 		md.dmg_taken_rate = 100;
 	}
@@ -5343,7 +5344,7 @@ static bool mob_get_const(const struct config_setting_t *it, int *value)
 static void mob_readdb(void)
 {
 	const char* filename[] = {
-		DBPATH"mob_db.conf",
+		DBPATH "mob_db.conf",
 		"mob_db2.conf" };
 	int i;
 
@@ -5401,7 +5402,7 @@ static int mob_read_libconfig(const char *filename, bool ignore_missing)
 		}
 	}
 	libconfig->destroy(&mob_db_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 
 	return count;
 }
@@ -5446,7 +5447,7 @@ static void mob_race2_db_removal_notice(void)
 static void mob_read_group_db(void)
 {
 	const char *filename[] = {
-		DBPATH"mob_group.conf",
+		DBPATH "mob_group.conf",
 		"mob_group2.conf"
 	};
 
@@ -5475,7 +5476,7 @@ static bool mob_read_group_db_libconfig(const char *filename)
 	}
 
 	libconfig->destroy(&mg_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 	return true;
 }
 
@@ -5497,7 +5498,7 @@ static bool mob_read_group_db_libconfig_sub(struct config_setting_t *it, const c
 		return false;
 	}
 
-	if (!mob->read_group_db_libconfig_sub_group(it, group_id, source))
+	if (!mob->read_group_db_libconfig_sub_group(it, (enum mob_groups)group_id, source))
 		return false;
 
 	return true;
@@ -5571,7 +5572,7 @@ static bool mob_parse_row_chatdb(char **str, const char *source, int line, int *
 	}
 
 	if (mob->chat_db[msg_id] == NULL)
-		mob->chat_db[msg_id] = (struct mob_chat*)aCalloc(1, sizeof (struct mob_chat));
+		mob->chat_db[msg_id] = (struct mob_chat *)aCalloc(1, sizeof (struct mob_chat));
 
 	ms = mob->chat_db[msg_id];
 	//MSG ID
@@ -5658,7 +5659,7 @@ static void mob_readchatdb(void)
 		count++;
 	}
 	fclose(fp);
-	ShowStatus("Done reading '"CL_WHITE"%"PRIu32""CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%" PRIu32 CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 }
 
 /*==========================================
@@ -5694,7 +5695,7 @@ static bool mob_skill_db_libconfig(const char *filename, bool ignore_missing)
 	}
 
 	libconfig->destroy(&mob_skill_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", i, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", i, filepath);
 	return true;
 }
 
@@ -5793,13 +5794,13 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 			    __func__, i32, skill_id, skill_name, mob_str, mob_sprite, mob_id);
 		i32 = MSS_ANY;
 	}
-	ms->state = i32;
+	ms->state = (enum MobSkillState)i32;
 
 	int res = libconfig->setting_lookup_int(it, "SkillLevel", &i32);
-	ms->skill_lv = (res == CONFIG_FALSE) ? 1 : cap_value(i32, 1, battle_config.mob_max_skilllvl);
+	ms->skill_lv = (res == CONFIG_FALSE) ? 1 : std::clamp(i32, 1, battle_config.mob_max_skilllvl);
 
 	res = libconfig->setting_lookup_int(it, "Rate", &i32);
-	ms->permillage = (res == CONFIG_FALSE) ? 1 : cap_value(i32, 1, 10000);
+	ms->permillage = (res == CONFIG_FALSE) ? 1 : std::clamp(i32, 1, 10000);
 
 	// Apply battle_config modifier to rate (permillage).
 	if (battle_config.mob_skill_rate != 100)
@@ -5811,19 +5812,19 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 		ms->permillage = 1;
 
 	res = libconfig->setting_lookup_int(it, "CastTime", &i32);
-	ms->casttime = (res == CONFIG_FALSE) ? 0 : cap_value(i32, 0, MOB_MAX_CASTTIME);
+	ms->casttime = (res == CONFIG_FALSE) ? 0 : std::clamp(i32, 0, MOB_MAX_CASTTIME);
 
 	res = libconfig->setting_lookup_int(it, "Delay", &i32);
-	ms->delay = (res == CONFIG_FALSE) ? 0 : cap_value(i32, 0, MOB_MAX_DELAY);
+	ms->delay = (res == CONFIG_FALSE) ? 0 : std::clamp(i32, 0, MOB_MAX_DELAY);
 
 	// Apply battle_config modifier to delay.
 	if (battle_config.mob_skill_delay != 100)
 		ms->delay = ms->delay * battle_config.mob_skill_delay / 100;
 
-	ms->delay = min(ms->delay, MOB_MAX_DELAY);
+	ms->delay = std::min(ms->delay, MOB_MAX_DELAY);
 
 	res = libconfig->setting_lookup_bool(it, "Cancelable", &i32);
-	ms->cancel = (res == CONFIG_FALSE) ? 0 : cap_value(i32, 0, 1);
+	ms->cancel = (res == CONFIG_FALSE) ? 0 : std::clamp(i32, 0, 1);
 
 	i32 = MST_TARGET;
 	if (map->setting_lookup_const(it, "SkillTarget", &i32) && (i32 < MST_TARGET || i32 > MST_AROUND)) {
@@ -5848,7 +5849,7 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 	}
 	ms->cond1 = i32;
 
-	ms->cond2 = !map->setting_lookup_const(it, "ConditionData", &i32) ? 0 : cap_value(i32, SHRT_MIN, SHRT_MAX);
+	ms->cond2 = !map->setting_lookup_const(it, "ConditionData", &i32) ? 0 : std::clamp(i32, SHRT_MIN, SHRT_MAX);
 
 	for (int i = 0; i < 5; i++) {
 		char valname[16];
@@ -5879,7 +5880,7 @@ static bool mob_skill_db_libconfig_sub_skill(struct config_setting_t *it, int n,
 	}
 
 	res = map->setting_lookup_const(it, "Emotion", &i32);
-	ms->emotion = res ? cap_value(i32, -1, SHRT_MAX) : -1;
+	ms->emotion = res ? std::clamp(i32, -1, SHRT_MAX) : -1;
 
 	if (libconfig->setting_lookup_int(it, "ChatMsgID", &i32) == CONFIG_TRUE) {
 		if (i32 <= 0 || i32 > MAX_MOB_CHAT || mob->chat_db[i32] == NULL) {
@@ -5930,7 +5931,7 @@ static void mob_readskilldb(void)
 {
 
 	const char *filename[] = {
-		DBPATH"mob_skill_db.conf",
+		DBPATH "mob_skill_db.conf",
 		"mob_skill_db2.conf"
 	};
 	int i;
@@ -5966,7 +5967,7 @@ static bool mob_readdb_itemratio(char *str[], int columns, int current)
 
 	dropRatio = mob->get_item_drop_ratio(nameid);
 	if (dropRatio == NULL) {
-		dropRatio = (struct item_drop_ratio*)aCalloc(1, sizeof(struct item_drop_ratio));
+		dropRatio = (struct item_drop_ratio *)aCalloc(1, sizeof(struct item_drop_ratio));
 		mob->set_item_drop_ratio(nameid, dropRatio);
 	}
 
@@ -6003,7 +6004,7 @@ static void mob_load(bool minimal)
  */
 static int mob_final_ratio_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct item_drop_ratio *ratio = DB->data2ptr(data);
+	struct item_drop_ratio *ratio = (struct item_drop_ratio *)DB->data2ptr(data);
 
 	if (ratio)
 		aFree(ratio);
@@ -6014,7 +6015,7 @@ static int mob_final_ratio_sub(union DBKey key, struct DBData *data, va_list ap)
 static int mob_reload_sub_mob(struct mob_data *md, va_list args)
 {
 	nullpo_ret(md);
-	md->db = mob_db(md->class_);
+	md->db = mob->db(md->class_);
 
 	status_calc_mob(md, SCO_FIRST);
 
@@ -6081,7 +6082,7 @@ static int do_init_mob(bool minimal)
 {
 	// Initialize the mob database
 	memset(mob->db_data,0,sizeof(mob->db_data)); //Clear the array
-	mob->db_data[0] = (struct mob_db*)aCalloc(1, sizeof (struct mob_db)); //This mob is used for random spawns
+	mob->db_data[0] = (struct mob_db *)aCalloc(1, sizeof (struct mob_db)); //This mob is used for random spawns
 	mob->makedummymobdb(0); //The first time this is invoked, it creates the dummy mob
 	item_drop_ers = ers_new(sizeof(struct item_drop),"mob.c::item_drop_ers",ERS_OPT_CLEAN);
 	item_drop_list_ers = ers_new(sizeof(struct item_drop_list),"mob.c::item_drop_list_ers",ERS_OPT_NONE);
@@ -6229,8 +6230,8 @@ void mob_defaults(void)
 	mob->init = do_init_mob;
 	mob->final = do_final_mob;
 	/* */
-	mob->db = mob_db;
-	mob->chat = mob_chat;
+	mob->db = mob_db_;
+	mob->chat = mob_chat_;
 	mob->makedummymobdb = mob_makedummymobdb;
 	mob->spawn_guardian_sub = mob_spawn_guardian_sub;
 	mob->skill_id2skill_idx = mob_skill_id2skill_idx;

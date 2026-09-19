@@ -472,28 +472,28 @@ static int Sql_P_BindSqlDataType(MYSQL_BIND *bind, enum SqlDataType buffer_type,
 		// fixed size
 	case SQLDT_UINT8:
 		bind->is_unsigned = 1;
-		FALLTHROUGH
+		[[fallthrough]];
 	case SQLDT_INT8:
 		bind->buffer_type = MYSQL_TYPE_TINY;
 		Assert_retr(SQL_ERROR, buffer_len == 1);
 		break;
 	case SQLDT_UINT16:
 		bind->is_unsigned = 1;
-		FALLTHROUGH
+		[[fallthrough]];
 	case SQLDT_INT16:
 		bind->buffer_type = MYSQL_TYPE_SHORT;
 		Assert_retr(SQL_ERROR, buffer_len == 2);
 		break;
 	case SQLDT_UINT32:
 		bind->is_unsigned = 1;
-		FALLTHROUGH
+		[[fallthrough]];
 	case SQLDT_INT32:
 		bind->buffer_type = MYSQL_TYPE_LONG;
 		Assert_retr(SQL_ERROR, buffer_len == 4);
 		break;
 	case SQLDT_UINT64:
 		bind->is_unsigned = 1;
-		FALLTHROUGH
+		[[fallthrough]];
 	case SQLDT_INT64:
 		bind->buffer_type = MYSQL_TYPE_LONGLONG;
 		Assert_retr(SQL_ERROR, buffer_len == 8);
@@ -501,35 +501,35 @@ static int Sql_P_BindSqlDataType(MYSQL_BIND *bind, enum SqlDataType buffer_type,
 		// platform dependent size
 	case SQLDT_UCHAR:
 		bind->is_unsigned = 1;
-		FALLTHROUGH
+		[[fallthrough]];
 	case SQLDT_CHAR:
 		bind->buffer_type = Sql_P_SizeToMysqlIntType(sizeof(char));
 		Assert_retr(SQL_ERROR, buffer_len == sizeof(char));
 		break;
 	case SQLDT_USHORT:
 		bind->is_unsigned = 1;
-		FALLTHROUGH
+		[[fallthrough]];
 	case SQLDT_SHORT:
 		bind->buffer_type = Sql_P_SizeToMysqlIntType(sizeof(short));
 		Assert_retr(SQL_ERROR, buffer_len == sizeof(short));
 		break;
 	case SQLDT_UINT:
 		bind->is_unsigned = 1;
-		FALLTHROUGH
+		[[fallthrough]];
 	case SQLDT_INT:
 		bind->buffer_type = Sql_P_SizeToMysqlIntType(sizeof(int));
 		Assert_retr(SQL_ERROR, buffer_len == sizeof(int));
 		break;
 	case SQLDT_ULONG:
 		bind->is_unsigned = 1;
-		FALLTHROUGH
+		[[fallthrough]];
 	case SQLDT_LONG:
 		bind->buffer_type = Sql_P_SizeToMysqlIntType(sizeof(long));
 		Assert_retr(SQL_ERROR, buffer_len == sizeof(long));
 		break;
 	case SQLDT_ULONGLONG:
 		bind->is_unsigned = 1;
-		FALLTHROUGH
+		[[fallthrough]];
 	case SQLDT_LONGLONG:
 		bind->buffer_type = Sql_P_SizeToMysqlIntType(sizeof(long long));
 		Assert_retr(SQL_ERROR, buffer_len == sizeof(long long));
@@ -561,7 +561,7 @@ static int Sql_P_BindSqlDataType(MYSQL_BIND *bind, enum SqlDataType buffer_type,
 		break;
 	default:
 	case SQLDT_LASTID:
-		ShowDebug("Sql_P_BindSqlDataType: unsupported buffer type (%u)\n", buffer_type);
+		ShowDebug("Sql_P_BindSqlDataType: unsupported buffer type (%u)\n", (unsigned int)buffer_type);
 		return SQL_ERROR;
 	}
 	bind->buffer = buffer;
@@ -583,7 +583,7 @@ static void Sql_P_ShowDebugMysqlFieldInfo(const char *prefix, enum enum_field_ty
 	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch (type) {
 		default:
-			ShowDebug("%stype=%s%u, length=%lu\n", prefix, sign, type, length);
+			ShowDebug("%stype=%s%u, length=%lu\n", prefix, sign, (unsigned int)type, length);
 			return;
 #define SHOW_DEBUG_OF(x) case x: type_string = #x; break
 		SHOW_DEBUG_OF(MYSQL_TYPE_TINY);
@@ -814,7 +814,7 @@ static int SqlStmt_BindColumn(struct SqlStmt *self, size_t idx, enum SqlDataType
 
 	if (buffer_type == SQLDT_STRING || buffer_type == SQLDT_ENUM) {
 		if (buffer_len < 1) {
-			ShowDebug("SqlStmt_BindColumn: buffer_len(%"PRIuS") is too small, no room for the null-terminator\n", buffer_len);
+			ShowDebug("SqlStmt_BindColumn: buffer_len(%" PRIuS ") is too small, no room for the null-terminator\n", buffer_len);
 			return SQL_ERROR;
 		}
 		--buffer_len;// null-terminator
@@ -1074,7 +1074,7 @@ void Sql_HerculesUpdateCheck(struct Sql *self)
 			if( SQL_ERROR == SQL->Query(self, "SELECT 1 FROM `sql_updates` WHERE `timestamp` = '%u' LIMIT 1", timestampui) )
 				Sql_ShowDebug(self);
 			if( Sql_NumRows(self) != 1 ) {
-				StrBuf->Printf(&buf,CL_MAGENTA"[SQL]"CL_RESET": -- '"CL_WHITE"%s"CL_RESET"'\n", path);
+				StrBuf->Printf(&buf,CL_MAGENTA "[SQL]" CL_RESET ": -- '" CL_WHITE "%s" CL_RESET "'\n", path);
 				performed++;
 			}
 		}
@@ -1085,7 +1085,7 @@ void Sql_HerculesUpdateCheck(struct Sql *self)
 	fclose(ifp);
 
 	if( performed ) {
-		ShowSQL("- detected %u new "CL_WHITE"SQL updates"CL_RESET"\n",performed);
+		ShowSQL("- detected %u new " CL_WHITE "SQL updates" CL_RESET "\n",performed);
 		ShowMessage("%s",StrBuf->Value(&buf));
 		ShowSQL("To manually skip, type: 'sql update skip <file name>'\n");
 	}

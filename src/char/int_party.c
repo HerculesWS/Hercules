@@ -36,6 +36,7 @@
 #include "common/sql.h"
 #include "common/strlib.h"
 
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -60,8 +61,8 @@ static int inter_party_check_lv(struct party_data *p)
 		if (p->party.member[i].online == 0 || p->party.member[i].char_id == p->family)
 			continue; /// If not online OR if it's a family party and this is the child, don't affect exp range.
 
-		p->min_lv = min(p->min_lv, p->party.member[i].lv);
-		p->max_lv = max(p->max_lv, p->party.member[i].lv);
+		p->min_lv = std::min(p->min_lv, p->party.member[i].lv);
+		p->max_lv = std::max(p->max_lv, p->party.member[i].lv);
 	}
 
 	if (p->party.exp == 1 && inter_party->check_exp_share(p) == 0) {
@@ -99,7 +100,7 @@ static int inter_party_is_family_party(struct party_data *p)
 		if (p->party.member[i].online == 0)
 			continue;
 
-		struct mmo_charstatus *char_i = idb_get(chr->char_db_, p->party.member[i].char_id);
+		struct mmo_charstatus *char_i = (struct mmo_charstatus *)idb_get(chr->char_db_, p->party.member[i].char_id);
 
 		if (char_i == NULL)
 			continue;
@@ -108,7 +109,7 @@ static int inter_party_is_family_party(struct party_data *p)
 			if (p->party.member[j].online == 0)
 				continue;
 
-			struct mmo_charstatus *char_j = idb_get(chr->char_db_, p->party.member[j].char_id);
+			struct mmo_charstatus *char_j = (struct mmo_charstatus *)idb_get(chr->char_db_, p->party.member[j].char_id);
 
 			if (char_j == NULL)
 				continue;
@@ -132,7 +133,7 @@ static int inter_party_is_family_party(struct party_data *p)
 
 	if (child_id != 0 && p->size > 2) {
 		for (int i = 0; i < MAX_PARTY; i++) {
-			struct mmo_charstatus *party_member = idb_get(chr->char_db_, p->party.member[i].char_id);
+			struct mmo_charstatus *party_member = (struct mmo_charstatus *)idb_get(chr->char_db_, p->party.member[i].char_id);
 
 			/// Check if there is a stranger within the party.
 			if (party_member != NULL && party_member->char_id != child_id && party_member->child != child_id) {
@@ -191,7 +192,7 @@ static int inter_party_tosql(struct party *p, int flag, int index)
 	party_id = p->party_id;
 
 #ifdef NOISY
-	ShowInfo("Save party request ("CL_BOLD"%d"CL_RESET" - %s).\n", party_id, p->name);
+	ShowInfo("Save party request (" CL_BOLD "%d" CL_RESET " - %s).\n", party_id, p->name);
 #endif
 	SQL->EscapeStringLen(inter->sql_handle, esc_name, p->name, strnlen(p->name, NAME_LENGTH));
 
@@ -291,20 +292,19 @@ static struct party_data *inter_party_fromsql(int party_id)
 {
 	int leader_id = 0;
 	int leader_char = 0;
-	struct party_data* p;
 	struct party_member* m;
 	char* data;
 	size_t len;
 	int i;
 
 #ifdef NOISY
-	ShowInfo("Load party request ("CL_BOLD"%d"CL_RESET")\n", party_id);
+	ShowInfo("Load party request (" CL_BOLD "%d" CL_RESET ")\n", party_id);
 #endif
 	if( party_id <= 0 )
 		return NULL;
 
 	//Load from memory
-	p = (struct party_data*)idb_get(inter_party->db, party_id);
+	struct party_data *p = (struct party_data *)idb_get(inter_party->db, party_id);
 	if( p != NULL )
 		return p;
 
@@ -321,7 +321,7 @@ static struct party_data *inter_party_fromsql(int party_id)
 		return NULL;
 
 	p->party.party_id = party_id;
-	SQL->GetData(inter->sql_handle, 1, &data, &len); memcpy(p->party.name, data, min(len, NAME_LENGTH));
+	SQL->GetData(inter->sql_handle, 1, &data, &len); memcpy(p->party.name, data, std::min(len, (size_t)NAME_LENGTH));
 	SQL->GetData(inter->sql_handle, 2, &data, NULL); p->party.exp = (atoi(data) ? 1 : 0);
 	SQL->GetData(inter->sql_handle, 3, &data, NULL); p->party.item = atoi(data);
 	SQL->GetData(inter->sql_handle, 4, &data, NULL); leader_id = atoi(data);
@@ -339,7 +339,7 @@ static struct party_data *inter_party_fromsql(int party_id)
 		m = &p->party.member[i];
 		SQL->GetData(inter->sql_handle, 0, &data, NULL); m->account_id = atoi(data);
 		SQL->GetData(inter->sql_handle, 1, &data, NULL); m->char_id = atoi(data);
-		SQL->GetData(inter->sql_handle, 2, &data, &len); memcpy(m->name, data, min(len, NAME_LENGTH));
+		SQL->GetData(inter->sql_handle, 2, &data, &len); memcpy(m->name, data, std::min(len, (size_t)NAME_LENGTH));
 		SQL->GetData(inter->sql_handle, 3, &data, NULL); m->lv = atoi(data);
 		SQL->GetData(inter->sql_handle, 4, &data, NULL); m->map = mapindex->name2id(data);
 		SQL->GetData(inter->sql_handle, 5, &data, NULL); m->online = (atoi(data) ? 1 : 0);
@@ -363,7 +363,7 @@ static int inter_party_sql_init(void)
 {
 	//memory alloc
 	inter_party->db = idb_alloc(DB_OPT_RELEASE_DATA);
-	inter_party->pt = (struct party_data*)aCalloc(1, sizeof(struct party_data));
+	inter_party->pt = (struct party_data *)aCalloc(1, sizeof(struct party_data));
 	if (!inter_party->pt) {
 		ShowFatalError("inter_party->sql_init: Out of Memory!\n");
 		exit(EXIT_FAILURE);
@@ -434,7 +434,6 @@ static int inter_party_check_empty(struct party_data *p)
 // Create Party
 static struct party_data *inter_party_create(const char *name, int item, int item2, const struct party_member *leader)
 {
-	struct party_data *p;
 	int i;
 	nullpo_ret(name);
 	nullpo_ret(leader);
@@ -450,7 +449,7 @@ static struct party_data *inter_party_create(const char *name, int item, int ite
 					char *newname = aStrndup(name, NAME_LENGTH-1);
 					normalize_name(newname,"\"");
 					trim(newname);
-					p = inter_party->create(newname, item, item2, leader);
+					struct party_data *p = inter_party->create(newname, item, item2, leader);
 					aFree(newname);
 					return p;
 				}
@@ -463,7 +462,7 @@ static struct party_data *inter_party_create(const char *name, int item, int ite
 			}
 	}
 
-	p = (struct party_data*)aCalloc(1, sizeof(struct party_data));
+	struct party_data *p = (struct party_data *)aCalloc(1, sizeof(struct party_data));
 
 	safestrncpy(p->party.name, name, NAME_LENGTH);
 	p->party.exp=0;
@@ -680,9 +679,9 @@ static int inter_party_parse_frommap(int fd)
 {
 	RFIFOHEAD(fd);
 	switch(RFIFOW(fd,0)) {
-	case 0x3020: mapif->parse_CreateParty(fd, RFIFOP(fd,4), RFIFOB(fd,28), RFIFOB(fd,29), RFIFOP(fd,30)); break;
+	case 0x3020: mapif->parse_CreateParty(fd, RFIFOP(char *, fd, 4), RFIFOB(fd, 28), RFIFOB(fd, 29), RFIFOP(struct party_member *, fd, 30)); break;
 	case 0x3021: mapif->parse_PartyInfo(fd, RFIFOL(fd,2), RFIFOL(fd,6)); break;
-	case 0x3022: mapif->parse_PartyAddMember(fd, RFIFOL(fd,4), RFIFOP(fd,8)); break;
+	case 0x3022: mapif->parse_PartyAddMember(fd, RFIFOL(fd, 4), RFIFOP(struct party_member *, fd, 8)); break;
 	case 0x3023: mapif->parse_PartyChangeOption(fd, RFIFOL(fd,2), RFIFOL(fd,6), RFIFOW(fd,10), RFIFOW(fd,12)); break;
 	case 0x3024: mapif->parse_PartyLeave(fd, RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10)); break;
 	case 0x3025: mapif->parse_PartyChangeMap(fd, RFIFOL(fd,2), RFIFOL(fd,6), RFIFOL(fd,10), RFIFOW(fd,14), RFIFOB(fd,16), RFIFOW(fd,17)); break;

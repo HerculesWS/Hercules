@@ -40,19 +40,12 @@ struct npc_data;
 struct channel_data;
 struct hplugin_data_store;
 
-#if (defined(__GNUC__) || defined(MINGW)) && !defined(__clang__) && !defined(__ARM_ARCH)
 #define GUARD_MAP_LOCK_CONCAT(a, b) GUARD_MAP_LOCK_CONCAT_INNER(a, b)
 #define GUARD_MAP_LOCK_CONCAT_INNER(a, b) a ## b
 #define GUARD_MAP_LOCK GUARD_MAP_LOCK0(__FILE__, __func__, __COUNTER__, __LINE__)
 #define GUARD_MAP_LOCK0(file, func, lineStr, line) \
-	void GUARD_MAP_LOCK_CONCAT(map_lock_check, lineStr) (int *lock_count) \
-	{ \
-		map->lock_check(file, func, line, *lock_count); \
-	} \
-	int GUARD_MAP_LOCK_CONCAT(current_map_lock_, lineStr) __attribute__((__cleanup__(GUARD_MAP_LOCK_CONCAT(map_lock_check, lineStr)))) = map->block_free_lock;
-#else  // defined(__GNUC__) || defined(MINGW)
-#define GUARD_MAP_LOCK
-#endif  // defined(__GNUC__) || defined(MINGW)
+  guard_map_lock GUARD_MAP_LOCK_CONCAT(map_lock_checker_, lineStr)(file, func, line);
+
 
 enum E_MAPSERVER_ST {
 	MAPSERVER_ST_RUNNING = CORE_ST_LAST,
@@ -321,11 +314,11 @@ enum {
 	//                          = JOBL_THIRD | JOBL_BABY | JOBL_2_2 | MAPID_SUMMONER,
 };
 
-STATIC_ASSERT(((MAPID_1_1_MAX - 1) | MAPID_BASEMASK) == MAPID_BASEMASK, "First class map IDs do not fit into MAPID_BASEMASK");
+static_assert(((MAPID_1_1_MAX - 1) | MAPID_BASEMASK) == MAPID_BASEMASK, "First class map IDs do not fit into MAPID_BASEMASK");
 
 //This stackable implementation does not means a BL can be more than one type at a time, but it's
 // meant to make it easier to check for multiple types at a time on invocations such as map_foreach* calls [Skotlex]
-enum bl_type {
+enum bl_type : unsigned int {
 	BL_NUL   = 0x000,
 	BL_PC    = 0x001,
 	BL_MOB   = 0x002,
@@ -345,6 +338,7 @@ enum npc_subtype { WARP, SHOP, SCRIPT, CASHSHOP, TOMB };
 
 /** optional flags for script labels, used by the label db */
 enum script_label_flags {
+	LABEL_NOFLAGS     = 0x0,
 	/** the label can be called from outside the local scope of the NPC */
 	LABEL_IS_EXTERN   = 0x1,
 	/** the label is a public or private local NPC function */
@@ -1532,6 +1526,19 @@ END_ZEROED_BLOCK;
 	struct map_zone_data *(*merge_zone) (struct map_zone_data *main, struct map_zone_data *other);
 	void (*zone_clear_single) (struct map_zone_data *zone);
 	void (*lock_check) (const char *file, const char *func, int line, int lock_count);
+};
+
+class guard_map_lock
+{
+public:
+	guard_map_lock(const char *file, const char *func, int line);
+	~guard_map_lock();
+
+private:
+	const char *m_file;
+	const char *m_func;
+	int m_line;
+	int m_expected_lock;
 };
 
 #ifdef HERCULES_CORE

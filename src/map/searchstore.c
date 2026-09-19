@@ -31,6 +31,8 @@
 #include "common/showmsg.h" // ShowError, ShowWarning
 #include "common/strlib.h" // safestrncpy
 
+#include <utility>
+
 static struct searchstore_interface searchstore_s;
 struct searchstore_interface *searchstore;
 
@@ -103,7 +105,6 @@ static void searchstore_query(struct map_session_data *sd,
 				const int32 *cardlist, unsigned int card_count)
 {
 	unsigned int i;
-	struct map_session_data* pl_sd;
 	struct DBIterator *iter;
 	struct s_search_store_search s;
 	searchstore_searchall_t store_searchall;
@@ -161,7 +162,7 @@ static void searchstore_query(struct map_session_data *sd,
 	}
 
 	if( max_price < min_price ) {
-		swap(min_price, max_price);
+		std::swap(min_price, max_price);
 	}
 
 	sd->searchstore.uses--;
@@ -172,7 +173,7 @@ static void searchstore_query(struct map_session_data *sd,
 	searchstore->clear(sd);
 
 	// allocate max. amount of results
-	sd->searchstore.items = (struct s_search_store_info_item*)aMalloc(sizeof(struct s_search_store_info_item)*battle_config.searchstore_maxresults);
+	sd->searchstore.items = (struct s_search_store_info_item *)aMalloc(sizeof(struct s_search_store_info_item) * battle_config.searchstore_maxresults);
 
 	// search
 	s.search_sd  = sd;
@@ -184,7 +185,7 @@ static void searchstore_query(struct map_session_data *sd,
 	s.max_price  = max_price;
 	iter         = db_iterator(vending->db);
 
-	for( pl_sd = dbi_first(iter); dbi_exists(iter);  pl_sd = dbi_next(iter) ) {
+	for (struct map_session_data *pl_sd = (struct map_session_data *)dbi_first(iter); dbi_exists(iter); pl_sd = (struct map_session_data *)dbi_next(iter)) {
 		if( sd == pl_sd ) {// skip own shop, if any
 			continue;
 		}
@@ -199,7 +200,7 @@ static void searchstore_query(struct map_session_data *sd,
 
 	if( sd->searchstore.count ) {
 		// reclaim unused memory
-		sd->searchstore.items = (struct s_search_store_info_item*)aRealloc(sd->searchstore.items, sizeof(struct s_search_store_info_item)*sd->searchstore.count);
+		sd->searchstore.items = (struct s_search_store_info_item *)aRealloc(sd->searchstore.items, sizeof(struct s_search_store_info_item) * sd->searchstore.count);
 
 		// present results
 		clif->search_store_info_ack(sd);

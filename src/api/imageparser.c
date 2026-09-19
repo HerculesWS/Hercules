@@ -130,7 +130,7 @@ static int imageparser_read_gif_func(GifFileType *gif, GifByteType *buf, int len
 
 	if (len < 0)
 		return 0;
-	struct gif_user_data *userData = gif->UserData;
+	struct gif_user_data *userData = (struct gif_user_data *)gif->UserData;
 	nullpo_ret(userData);
 	const uint64 read_pos = userData->read_pos;
 	const uint64 emblem_len = userData->emblem_len;
@@ -150,7 +150,7 @@ static bool imageparser_validate_gif_emblem(const char *emblem, uint64 emblem_le
 
 	if (emblem_len > (uint64)extraconf->emblems->max_gif_guild_emblem_size) {
 #ifdef DEBUG_ERRORS
-		ShowError("Error: gif image file size too big: %"PRIu64"\n", emblem_len);
+		ShowError("Error: gif image file size too big: %" PRIu64 "\n", emblem_len);
 #endif
 		return false;
 	}

@@ -50,7 +50,7 @@ struct mapreg_interface *mapreg; //!< Public interface structure.
  **/
 static int mapreg_get_num_reg(int64 uid)
 {
-	struct mapreg_save *var = i64db_get(mapreg->regs.vars, uid);
+	struct mapreg_save *var = (struct mapreg_save *)i64db_get(mapreg->regs.vars, uid);
 	return (var != NULL) ? var->u.i : 0;
 }
 
@@ -63,7 +63,7 @@ static int mapreg_get_num_reg(int64 uid)
  **/
 static char *mapreg_get_str_reg(int64 uid)
 {
-	struct mapreg_save *var = i64db_get(mapreg->regs.vars, uid);
+	struct mapreg_save *var = (struct mapreg_save *)i64db_get(mapreg->regs.vars, uid);
 	return (var != NULL) ? var->u.str : NULL;
 }
 
@@ -86,7 +86,7 @@ static bool mapreg_set_num_db(int64 uid, const char *name, unsigned int index, i
 	if (value == 0)
 		return mapreg->delete_num_db(uid, name, index);
 
-	struct mapreg_save *var = i64db_get(mapreg->regs.vars, uid);
+	struct mapreg_save *var = (struct mapreg_save *)i64db_get(mapreg->regs.vars, uid);
 
 	// Update variable.
 	if (var != NULL) {
@@ -152,7 +152,7 @@ static bool mapreg_delete_num_db(int64 uid, const char *name, unsigned int index
 	Assert_retr(false, *name != '\0');
 	Assert_retr(false, strlen(name) <= SCRIPT_VARNAME_LENGTH);
 
-	struct mapreg_save *var = i64db_get(mapreg->regs.vars, uid);
+	struct mapreg_save *var = (struct mapreg_save *)i64db_get(mapreg->regs.vars, uid);
 
 	if (var != NULL)
 		ers_free(mapreg->ers, var);
@@ -228,7 +228,7 @@ static bool mapreg_set_str_db(int64 uid, const char *name, unsigned int index, c
 	if (script->is_permanent_variable(name))
 		Assert_retr(false, strlen(value) <= SCRIPT_STRING_VAR_LENGTH);
 
-	struct mapreg_save *var = i64db_get(mapreg->regs.vars, uid);
+	struct mapreg_save *var = (struct mapreg_save *)i64db_get(mapreg->regs.vars, uid);
 
 	// Update variable.
 	if (var != NULL) {
@@ -297,7 +297,7 @@ static bool mapreg_delete_str_db(int64 uid, const char *name, unsigned int index
 	Assert_retr(false, *name != '\0');
 	Assert_retr(false, strlen(name) <= SCRIPT_VARNAME_LENGTH);
 
-	struct mapreg_save *var = i64db_get(mapreg->regs.vars, uid);
+	struct mapreg_save *var = (struct mapreg_save *)i64db_get(mapreg->regs.vars, uid);
 
 	if (var != NULL) {
 		if (var->u.str != NULL)
@@ -543,13 +543,11 @@ static void mapreg_save_str_db(const char *name, unsigned int index, const char 
  * Saves permanent global variables to the database.
  *
  **/
-static void mapreg_save(void)
+static void mapreg_save_(void)
 {
 	if (mapreg->dirty) {
 		struct DBIterator *iter = db_iterator(mapreg->regs.vars);
-		struct mapreg_save *var = NULL;
-
-		for (var = dbi_first(iter); dbi_exists(iter); var = dbi_next(iter)) {
+		for (struct mapreg_save *var = (struct mapreg_save *)dbi_first(iter); dbi_exists(iter); var = (struct mapreg_save *)dbi_next(iter)) {
 			if (var->save) {
 				int index = script_getvaridx(var->uid);
 				const char *name = script->get_str(script_getvarid(var->uid));
@@ -604,7 +602,7 @@ static int mapreg_destroy_reg(union DBKey key, struct DBData *data, va_list ap)
 	if (data->type != DB_DATA_PTR) // Sanity check
 		return 1;
 
-	struct mapreg_save *var = DB->data2ptr(data);
+	struct mapreg_save *var = (struct mapreg_save *)DB->data2ptr(data);
 
 	if (var == NULL)
 		return 1;
@@ -730,7 +728,7 @@ void mapreg_defaults(void)
 	mapreg->load = mapreg_load;
 	mapreg->save_num_db = mapreg_save_num_db;
 	mapreg->save_str_db = mapreg_save_str_db;
-	mapreg->save = mapreg_save;
+	mapreg->save = mapreg_save_;
 	mapreg->save_timer = mapreg_save_timer;
 	mapreg->destroyreg = mapreg_destroy_reg;
 	mapreg->reload = mapreg_reload;

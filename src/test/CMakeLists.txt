@@ -51,6 +51,8 @@ function(add_test_target _test_name)
     "${_target_name}.c"
   )
 
+  set_source_files_properties("${_target_name}.c" PROPERTIES LANGUAGE CXX)
+
   target_link_libraries(${_target_name} PUBLIC common)
 
   add_dependencies(tests ${_target_name})

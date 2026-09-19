@@ -49,6 +49,7 @@
 #include "common/timer.h"
 #include "common/utils.h"
 
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -171,7 +172,7 @@ static bool guild_read_castledb_libconfig(void)
 	}
 
 	libconfig->destroy(&castle_conf);
-	ShowStatus("Done reading '"CL_WHITE"%u"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", db_size(guild->castle_db), config_filename);
+	ShowStatus("Done reading '" CL_WHITE "%u" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", db_size(guild->castle_db), config_filename);
 	return true;
 }
 
@@ -262,13 +263,13 @@ static bool guild_read_castledb_libconfig_sub_warp(struct config_setting_t *wd, 
 		if (i64 > MAX_ZENY) {
 			ShowWarning("guild_read_castledb_libconfig_sub_warp: ZenyCost is too big in \"%s\", for castle (%d), capping to MAX_ZENY.\n", source, gc->castle_id);
 		}
-		gc->client_warp.zeny = cap_value((int)i64, 0, MAX_ZENY);
+		gc->client_warp.zeny = std::clamp((int)i64, 0, MAX_ZENY); // FIXME: This doesn't do what it claims above (it should operate on the larger range and then cast the result)
 	}
 	if (libconfig->setting_lookup_int64(wd, "ZenyCostSiegeTime", &i64)) {
 		if (i64 > MAX_ZENY) {
 			ShowWarning("guild_read_castledb_libconfig_sub_warp: ZenyCostSiegeTime is too big in \"%s\", for castle (%d), capping to MAX_ZENY.\n", source, gc->castle_id);
 		}
-		gc->client_warp.zeny_siege = cap_value((int)i64, 0, MAX_ZENY);
+		gc->client_warp.zeny_siege = std::clamp((int)i64, 0, MAX_ZENY); // FIXME: This doesn't do what it claims above (it should operate on the larger range and then cast the result)
 	}
 	return true;
 }
@@ -276,18 +277,17 @@ static bool guild_read_castledb_libconfig_sub_warp(struct config_setting_t *wd, 
 /// lookup: guild id -> guild*
 static struct guild *guild_search(int guild_id)
 {
-	return (struct guild*)idb_get(guild->db,guild_id);
+	return (struct guild *)idb_get(guild->db, guild_id);
 }
 
 /// lookup: guild name -> guild*
 static struct guild *guild_searchname(const char *str)
 {
-	struct guild* g;
+	struct guild *g;
 	struct DBIterator *iter = db_iterator(guild->db);
 
 	nullpo_retr(NULL, str);
-	for( g = dbi_first(iter); dbi_exists(iter); g = dbi_next(iter) )
-	{
+	for (g = (struct guild *)dbi_first(iter); dbi_exists(iter); g = (struct guild *)dbi_next(iter)) {
 		if( strcmpi(g->name, str) == 0 )
 			break;
 	}
@@ -299,17 +299,16 @@ static struct guild *guild_searchname(const char *str)
 /// lookup: castle id -> castle*
 static struct guild_castle *guild_castle_search(int gcid)
 {
-	return (struct guild_castle*)idb_get(guild->castle_db,gcid);
+	return (struct guild_castle *)idb_get(guild->castle_db, gcid);
 }
 
 /// lookup: map index -> castle*
 static struct guild_castle *guild_mapindex2gc(short map_index)
 {
-	struct guild_castle* gc;
+	struct guild_castle *gc;
 	struct DBIterator *iter = db_iterator(guild->castle_db);
 
-	for( gc = dbi_first(iter); dbi_exists(iter); gc = dbi_next(iter) )
-	{
+	for (gc = (struct guild_castle *)dbi_first(iter); dbi_exists(iter); gc = (struct guild_castle *)dbi_next(iter)) {
 		if( gc->mapindex == map_index )
 			break;
 	}
@@ -391,10 +390,9 @@ static void guild_makemember(struct guild_member *m, struct map_session_data *sd
 static int guild_payexp_timer_sub(union DBKey key, struct DBData *data, va_list ap)
 {
 	int i;
-	struct guild_expcache *c;
 	struct guild *g;
 
-	c = DB->data2ptr(data);
+	struct guild_expcache *c = (struct guild_expcache *)DB->data2ptr(data);
 
 	if ((g = guild->search(c->guild_id)) == NULL
 	 || (i = guild->getindex(g, c->account_id, c->char_id)) == INDEX_NOT_FOUND
@@ -428,7 +426,7 @@ static int guild_payexp_timer(int tid, int64 tick, int id, intptr_t data)
  */
 static int guild_send_xy_timer_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct guild *g = DB->data2ptr(data);
+	struct guild *g = (struct guild *)DB->data2ptr(data);
 	int i;
 
 	nullpo_ret(g);
@@ -544,7 +542,7 @@ static int guild_npc_request_info(int guild_id, const char *event)
 		safestrncpy(ev->name, event, sizeof(ev->name));
 		//The one in the db (if present) becomes the next event from this.
 		if (guild->infoevent_db->put(guild->infoevent_db, DB->i2key(guild_id), DB->ptr2data(ev), &prev))
-			ev->next = DB->data2ptr(&prev);
+			ev->next = (struct eventlist *)DB->data2ptr(&prev);
 	}
 
 	return guild->request_info(guild_id);
@@ -610,9 +608,9 @@ static int guild_recv_info(const struct guild *sg, struct fifo_chunk_buf *emblem
 
 	nullpo_ret(sg);
 
-	if((g = (struct guild*)idb_get(guild->db,sg->guild_id))==NULL) {
+	if((g = (struct guild *)idb_get(guild->db, sg->guild_id)) == NULL) {
 		guild_new = true;
-		g=(struct guild *)aCalloc(1,sizeof(struct guild));
+		g = (struct guild *)aCalloc(1, sizeof(struct guild));
 		g->instance = NULL;
 		g->instances = 0;
 		idb_put(guild->db,sg->guild_id,g);
@@ -694,7 +692,7 @@ static int guild_recv_info(const struct guild *sg, struct fifo_chunk_buf *emblem
 	} else {
 		if (!guild_new)
 			aFree(before.emblem_data);
-		g->emblem_data = aMalloc(emblem_buf->data_size);
+		g->emblem_data = (char *)aMalloc(emblem_buf->data_size);
 		memcpy(g->emblem_data, emblem_buf->data, emblem_buf->data_size);
 	}
 
@@ -741,7 +739,8 @@ static int guild_recv_info(const struct guild *sg, struct fifo_chunk_buf *emblem
 
 	//Occurrence of an event
 	if (guild->infoevent_db->remove(guild->infoevent_db, DB->i2key(sg->guild_id), &data)) {
-		struct eventlist *ev = DB->data2ptr(&data), *ev2;
+		struct eventlist *ev = (struct eventlist *)DB->data2ptr(&data);
+		struct eventlist *ev2;
 		while(ev) {
 			npc->event_do(ev->name);
 			ev2=ev->next;
@@ -1001,7 +1000,7 @@ static int guild_leave(struct map_session_data *sd, int guild_id, int account_id
  * Request remove a player to a given guild_id
  * mes - non null terminated string
  *----------------------------------------*/
-static int guild_expulsion(struct map_session_data *sd, int guild_id, int account_id, int char_id, const char *mes)
+static int guild_expulsion_(struct map_session_data *sd, int guild_id, int account_id, int char_id, const char *mes)
 {
 	struct map_session_data *tsd;
 	struct guild *g;
@@ -1100,7 +1099,7 @@ static void guild_retrieveitembound(int char_id, int aid, int guild_id)
 	if (sd != NULL) { //Character is online
 		pc->bound_clear(sd,IBT_GUILD);
 	} else { //Character is offline, ask char server to do the job
-		struct guild_storage *gstor = idb_get(gstorage->db,guild_id);
+		struct guild_storage *gstor = (struct guild_storage *)idb_get(gstorage->db, guild_id);
 		if (gstor != NULL && gstor->in_use) {
 			// Someone is in guild storage, close them
 			struct s_mapiterator* iter = mapit_getallusers();
@@ -1276,7 +1275,7 @@ static bool guild_change_position(int guild_id, int idx, int mode, int exp_mode,
 	struct guild_position p;
 	nullpo_ret(name);
 
-	exp_mode = cap_value(exp_mode, 0, battle_config.guild_exp_limit);
+	exp_mode = std::clamp(exp_mode, 0, battle_config.guild_exp_limit);
 	p.mode = mode&GPERM_MASK;
 	p.exp_mode=exp_mode;
 	safestrncpy(p.name,name,NAME_LENGTH);
@@ -1369,7 +1368,7 @@ static int guild_emblem_changed(int len, int guild_id, int emblem_id, const char
 		return 0;
 
 	if (len > g->emblem_len)
-		g->emblem_data = aReallocz(g->emblem_data, len);
+		g->emblem_data = (char *)aReallocz(g->emblem_data, len);
 	memcpy(g->emblem_data, data, len);
 	g->emblem_len = len;
 	g->emblem_id = emblem_id;
@@ -1384,9 +1383,7 @@ static int guild_emblem_changed(int len, int guild_id, int emblem_id, const char
 	}
 	{// update guardians (mobs)
 		struct DBIterator *iter = db_iterator(guild->castle_db);
-		struct guild_castle* gc;
-		for( gc = (struct guild_castle*)dbi_first(iter) ; dbi_exists(iter); gc = (struct guild_castle*)dbi_next(iter) )
-		{
+		for (struct guild_castle *gc = (struct guild_castle *)dbi_first(iter); dbi_exists(iter); gc = (struct guild_castle *)dbi_next(iter)) {
 			if( gc->guild_id != guild_id )
 				continue;
 			// update permanent guardians
@@ -1441,7 +1438,6 @@ static struct DBData create_expcache(union DBKey key, va_list args)
 static uint64 guild_payexp(struct map_session_data *sd, uint64 exp)
 {
 	struct guild *g;
-	struct guild_expcache *c;
 	int per;
 
 	nullpo_ret(sd);
@@ -1457,7 +1453,7 @@ static uint64 guild_payexp(struct map_session_data *sd, uint64 exp)
 	if (per < 100)
 		exp = exp * per / 100;
 	//Otherwise tax everything.
-	c = DB->data2ptr(guild->expcache_db->ensure(guild->expcache_db, DB->i2key(sd->status.char_id), guild->create_expcache, sd));
+	struct guild_expcache *c = (struct guild_expcache *)DB->data2ptr(guild->expcache_db->ensure(guild->expcache_db, DB->i2key(sd->status.char_id), guild->create_expcache, sd));
 
 	if (c->exp > UINT64_MAX - exp)
 		c->exp = UINT64_MAX;
@@ -1474,13 +1470,12 @@ static uint64 guild_payexp(struct map_session_data *sd, uint64 exp)
  *---------------------------------------------------*/
 static int guild_getexp(struct map_session_data *sd, int exp)
 {
-	struct guild_expcache *c;
 	nullpo_ret(sd);
 
 	if (sd->status.guild_id == 0 || sd->guild == NULL)
 		return 0;
 
-	c = DB->data2ptr(guild->expcache_db->ensure(guild->expcache_db, DB->i2key(sd->status.char_id), guild->create_expcache, sd));
+	struct guild_expcache *c = (struct guild_expcache *)DB->data2ptr(guild->expcache_db->ensure(guild->expcache_db, DB->i2key(sd->status.char_id), guild->create_expcache, sd));
 	if (c->exp > UINT64_MAX - exp)
 		c->exp = UINT64_MAX;
 	else
@@ -1537,7 +1532,7 @@ static int guild_skillupack(int guild_id, uint16 skill_id, int account_id)
 			// Guild storage handling
 			case GD_GUILD_STORAGE:
 #ifdef OFFICIAL_GUILD_STORAGE
-				g->max_storage = min(g->skill[skill_id-GD_SKILLBASE].lv * GUILD_STORAGE_EXPANSION_STEP, MAX_GUILD_STORAGE);
+				g->max_storage = std::min(g->skill[skill_id-GD_SKILLBASE].lv * GUILD_STORAGE_EXPANSION_STEP, MAX_GUILD_STORAGE);
 #endif // OFFICIAL_GUILD_STORAGE
 				break;
 		}
@@ -1563,11 +1558,11 @@ static void guild_guildaura_refresh(struct map_session_data *sd, uint16 skill_id
 		return;
 	if (sd->sc.data[type] && (group = skill->id2group(sd->sc.data[type]->val4)) != NULL) {
 		skill->del_unitgroup(group);
-		status_change_end(&sd->bl,type,INVALID_TIMER);
+		status_change_end(&sd->bl, (enum sc_type)type, INVALID_TIMER);
 	}
 	group = skill->unitsetting(&sd->bl,skill_id,skill_lv,sd->bl.x,sd->bl.y,0);
 	if( group ) {
-		sc_start4(NULL, &sd->bl, type, 100, (battle_config.guild_aura & 16) ? 0 : skill_lv, 0, 0, group->group_id, 600000, skill_id);// duration doesn't matter these status never end with val4
+		sc_start4(NULL, &sd->bl, (enum sc_type)type, 100, (battle_config.guild_aura & 16) ? 0 : skill_lv, 0, 0, group->group_id, 600000, skill_id);// duration doesn't matter these status never end with val4
 	}
 	return;
 }
@@ -1894,7 +1889,7 @@ static int guild_allianceack(int guild_id1, int guild_id2, int account_id1, int 
  */
 static int guild_broken_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct guild *g = DB->data2ptr(data);
+	struct guild *g = (struct guild *)DB->data2ptr(data);
 	int guild_id=va_arg(ap,int);
 	int i,j;
 	struct map_session_data *sd=NULL;
@@ -1920,7 +1915,7 @@ static int guild_broken_sub(union DBKey key, struct DBData *data, va_list ap)
  */
 static int castle_guild_broken_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct guild_castle *gc = DB->data2ptr(data);
+	struct guild_castle *gc = (struct guild_castle *)DB->data2ptr(data);
 	int guild_id = va_arg(ap, int);
 
 	nullpo_ret(gc);
@@ -2134,19 +2129,18 @@ static void guild_castle_map_init(void)
 	int num = db_size(guild->castle_db);
 
 	if (num > 0) {
-		struct guild_castle* gc = NULL;
 		int *castle_ids, *cursor;
 		struct DBIterator *iter = NULL;
 
 		CREATE(castle_ids, int, num);
 		cursor = castle_ids;
 		iter = db_iterator(guild->castle_db);
-		for (gc = dbi_first(iter); dbi_exists(iter); gc = dbi_next(iter)) {
+		for (struct guild_castle *gc = (struct guild_castle *)dbi_first(iter); dbi_exists(iter); gc = (struct guild_castle *)dbi_next(iter)) {
 			*(cursor++) = gc->castle_id;
 		}
 		dbi_destroy(iter);
 		if (intif->guild_castle_dataload(num, castle_ids))
-			ShowStatus("Requested '"CL_WHITE"%d"CL_RESET"' guild castles from char-server...\n", num);
+			ShowStatus("Requested '" CL_WHITE "%d" CL_RESET "' guild castles from char-server...\n", num);
 		aFree(castle_ids);
 	}
 }
@@ -2300,7 +2294,7 @@ static int guild_castledataloadack(int len, const struct guild_castle *gc)
 			}
 		}
 	}
-	ShowStatus("Received '"CL_WHITE"%d"CL_RESET"' guild castles from char-server.\n", n);
+	ShowStatus("Received '" CL_WHITE "%d" CL_RESET "' guild castles from char-server.\n", n);
 	return 0;
 }
 
@@ -2348,10 +2342,9 @@ static void guild_agit2_end(void)
 static int guild_checkcastles(struct guild *g)
 {
 	int nb_cas = 0;
-	struct guild_castle* gc = NULL;
 	struct DBIterator *iter = db_iterator(guild->castle_db);
 
-	for (gc = dbi_first(iter); dbi_exists(iter); gc = dbi_next(iter)) {
+	for (struct guild_castle *gc = (struct guild_castle *)dbi_first(iter); dbi_exists(iter); gc = (struct guild_castle *)dbi_next(iter)) {
 		if (gc->guild_id == g->guild_id) {
 			nb_cas++;
 		}
@@ -2424,7 +2417,7 @@ static void guild_flag_remove(struct npc_data *nd)
 static int eventlist_db_final(union DBKey key, struct DBData *data, va_list ap)
 {
 	struct eventlist *next = NULL;
-	struct eventlist *current = DB->data2ptr(data);
+	struct eventlist *current = (struct eventlist *)DB->data2ptr(data);
 	while (current != NULL) {
 		next = current->next;
 		aFree(current);
@@ -2447,7 +2440,7 @@ static int guild_expcache_db_final(union DBKey key, struct DBData *data, va_list
  */
 static int guild_castle_db_final(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct guild_castle* gc = DB->data2ptr(data);
+	struct guild_castle *gc = (struct guild_castle *)DB->data2ptr(data);
 	if( gc->temp_guardians )
 		aFree(gc->temp_guardians);
 	aFree(gc);
@@ -2456,7 +2449,7 @@ static int guild_castle_db_final(union DBKey key, struct DBData *data, va_list a
 
 static int guild_db_final(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct guild* g = DB->data2ptr(data);
+	struct guild *g = (struct guild *)DB->data2ptr(data);
 	aFree(g->emblem_data);
 	return 0;
 }
@@ -2496,9 +2489,7 @@ static void do_init_guild(bool minimal)
 static void do_final_guild(void)
 {
 	struct DBIterator *iter = db_iterator(guild->db);
-	struct guild *g;
-
-	for( g = dbi_first(iter); dbi_exists(iter); g = dbi_next(iter) ) {
+	for (struct guild *g = (struct guild *)dbi_first(iter); dbi_exists(iter); g = (struct guild *)dbi_next(iter)) {
 		if( g->channel != NULL )
 			channel->delete_(g->channel);
 		if( g->instance != NULL ) {
@@ -2571,7 +2562,7 @@ void guild_defaults(void)
 	guild->member_added = guild_member_added;
 	guild->leave = guild_leave;
 	guild->member_withdraw = guild_member_withdraw;
-	guild->expulsion = guild_expulsion;
+	guild->expulsion = guild_expulsion_;
 	guild->skillup = guild_skillup;
 	guild->block_skill = guild_block_skill;
 	guild->reqalliance = guild_reqalliance;

@@ -30,7 +30,7 @@
 #define MAX_PACKET_DB 0x0F00
 #endif
 
-STATIC_ASSERT(MAX_PACKET_DB <= USHRT_MAX, "MAX_PACKET_DB must not exceed 2 bytes (USHRT_MAX / 65,535)");
+static_assert(MAX_PACKET_DB <= USHRT_MAX, "MAX_PACKET_DB must not exceed 2 bytes (USHRT_MAX / 65,535)");
 
 #ifndef MIN_INTIF_PACKET_DB
 #define MIN_INTIF_PACKET_DB 0x3800

@@ -52,6 +52,7 @@
 #include "common/timer.h"
 #include "common/utils.h"
 
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -97,7 +98,7 @@ static void pet_set_hunger(struct pet_data *pd, int value)
 	nullpo_retv(pd);
 	nullpo_retv(pd->msd);
 
-	pd->pet.hungry = cap_value(value, PET_HUNGER_STARVING, PET_HUNGER_STUFFED);
+	pd->pet.hungry = std::clamp(value, (int)PET_HUNGER_STARVING, (int)PET_HUNGER_STUFFED);
 
 	clif->send_petdata(pd->msd, pd, 2, pd->pet.hungry);
 }
@@ -145,7 +146,7 @@ static void pet_set_intimate(struct pet_data *pd, int value)
 	nullpo_retv(pd);
 	nullpo_retv(pd->msd);
 
-	pd->pet.intimate = cap_value(value, PET_INTIMACY_NONE, PET_INTIMACY_MAX);
+	pd->pet.intimate = std::clamp(value, (int)PET_INTIMACY_NONE, (int)PET_INTIMACY_MAX);
 
 	struct map_session_data *sd = pd->msd;
 
@@ -271,7 +272,7 @@ static int pet_target_check(struct map_session_data *sd, struct block_list *bl, 
 
 	int rate = ((type == 0) ? pd->petDB->attack_rate : pd->petDB->defence_attack_rate) * pd->rate_fix / 1000;
 
-	if (rnd() % 10000 < max(rate, 1) && (pd->target_id == 0 || rnd() % 10000 < pd->petDB->change_target_rate))
+	if (rnd() % 10000 < std::max(rate, 1) && (pd->target_id == 0 || rnd() % 10000 < pd->petDB->change_target_rate))
 		pd->target_id = bl->id;
 
 	return 0;
@@ -362,7 +363,7 @@ static int pet_hungry(int tid, int64 tick, int id, intptr_t data)
 	}
 
 	interval = interval * battle_config.pet_hungry_delay_rate / 100;
-	pd->pet_hungry_timer = timer->add(tick + max(interval, 1), pet->hungry, sd->bl.id, 0);
+	pd->pet_hungry_timer = timer->add(tick + std::max(interval, 1), pet->hungry, sd->bl.id, 0);
 
 	return 0;
 }
@@ -468,7 +469,7 @@ static int pet_return_egg(struct map_session_data *sd, struct pet_data *pd)
 		clif->inventoryList(sd);
 	} else {
 		// The pet egg wasn't found: it was probably hatched with the old system that deleted the egg.
-		struct item tmp_item = {0};
+		struct item tmp_item{};
 		int flag;
 
 		tmp_item.nameid = pd->petDB->EggID;
@@ -565,7 +566,7 @@ static int pet_data_init(struct map_session_data *sd, struct s_pet *petinfo)
 
 	if (pd->petDB->hungry_delay > 0) {
 		int interval = pd->petDB->hungry_delay * battle_config.pet_hungry_delay_rate / 100;
-		pd->pet_hungry_timer = timer->add(timer->gettick() + max(interval, 1), pet->hungry, sd->bl.id, 0);
+		pd->pet_hungry_timer = timer->add(timer->gettick() + std::max(interval, 1), pet->hungry, sd->bl.id, 0);
 	}
 
 	return 0;
@@ -748,7 +749,7 @@ static int pet_catch_process2(struct map_session_data *sd, int target_id)
 		pet_catch_rate = (capture + lvl_diff_mod + char_luk_mod) * (200 - mob_hp_perc) / 100;
 	}
 
-	pet_catch_rate = cap_value(pet_catch_rate, 1, 10000) * battle_config.pet_catch_rate / 100;
+	pet_catch_rate = std::clamp(pet_catch_rate, 1, 10000) * battle_config.pet_catch_rate / 100;
 
 	if (rnd() % 10000 < pet_catch_rate) {
 		unit->remove_map(&md->bl, CLR_OUTSIGHT, ALC_MARK);
@@ -1118,7 +1119,7 @@ static int pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, int
 		if (DIFF_TICK(tick, pd->ud.canmove_tick) < 0)
 			return 0; // Can't move yet.
 
-		pd->status.speed = max(sd->battle_status.speed / 2, MIN_WALK_SPEED);
+		pd->status.speed = std::max(sd->battle_status.speed / 2, (uint32)MIN_WALK_SPEED);
 
 		if (unit->walk_tobl(&pd->bl, &sd->bl, 3, 0) != 0)
 			pet->randomwalk(pd, tick);
@@ -1454,7 +1455,7 @@ static int pet_skill_support_timer(int tid, int64 tick, int id, intptr_t data)
 static void pet_read_db(void)
 {
 	const char *filename[] = {
-		DBPATH"pet_db.conf",
+		DBPATH "pet_db.conf",
 		"pet_db2.conf"
 	};
 
@@ -1518,7 +1519,7 @@ static int pet_read_db_libconfig(const char *filename, bool ignore_missing)
 		count++;
 	}
 	libconfig->destroy(&pet_db_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 
 	return count;
 }
@@ -1541,7 +1542,7 @@ static int pet_read_db_sub(struct config_setting_t *it, int n, const char *sourc
 	nullpo_ret(it);
 	nullpo_ret(source);
 
-	struct s_pet_db entry = { 0 };
+	struct s_pet_db entry{};
 	int i32 = 0;
 
 	if (libconfig->setting_lookup_int(it, "Id", &i32) == CONFIG_FALSE) {
@@ -1643,17 +1644,17 @@ static int pet_read_db_sub(struct config_setting_t *it, int n, const char *sourc
 	}
 
 	if (libconfig->setting_lookup_int(it, "FoodEffectiveness", &i32) == CONFIG_TRUE)
-		entry.fullness = cap_value(i32, 1, PET_HUNGER_STUFFED);
+		entry.fullness = std::clamp(i32, 1, (int)PET_HUNGER_STUFFED);
 	else if (!inherit)
 		entry.fullness = 80;
 
 	if (libconfig->setting_lookup_int(it, "HungerDelay", &i32) == CONFIG_TRUE)
-		entry.hungry_delay = cap_value(1000 * i32, 0, INT_MAX);
+		entry.hungry_delay = std::clamp(1000 * i32, 0, INT_MAX);
 	else if (!inherit)
 		entry.hungry_delay = 60000;
 
 	if (libconfig->setting_lookup_int(it, "HungerDecrement", &i32) == CONFIG_TRUE)
-		entry.hunger_decrement = cap_value(i32, PET_HUNGER_STARVING, PET_HUNGER_STUFFED - 1);
+		entry.hunger_decrement = std::clamp(i32, (int)PET_HUNGER_STARVING, (int)(PET_HUNGER_STUFFED - 1));
 	else if (!inherit)
 		entry.hunger_decrement = 1;
 
@@ -1669,7 +1670,7 @@ static int pet_read_db_sub(struct config_setting_t *it, int n, const char *sourc
 		entry.r_hungry = 10;
 		entry.r_full = 100;
 		entry.die = 20;
-		entry.starving_delay = min(20000, entry.hungry_delay);
+		entry.starving_delay = std::min(20000, entry.hungry_delay);
 		entry.starving_decrement = 20;
 	}
 
@@ -1677,12 +1678,12 @@ static int pet_read_db_sub(struct config_setting_t *it, int n, const char *sourc
 		pet->read_db_sub_intimacy(&entry, t);
 
 	if (libconfig->setting_lookup_int(it, "CaptureRate", &i32) == CONFIG_TRUE)
-		entry.capture = cap_value(i32, 1, 10000);
+		entry.capture = std::clamp(i32, 1, 10000);
 	else if (!inherit)
 		entry.capture = 1000;
 
 	if (libconfig->setting_lookup_int(it, "Speed", &i32) == CONFIG_TRUE)
-		entry.speed = cap_value(i32, MIN_WALK_SPEED, MAX_WALK_SPEED);
+		entry.speed = std::clamp(i32, MIN_WALK_SPEED, MAX_WALK_SPEED);
 	else if (!inherit)
 		entry.speed = DEFAULT_WALK_SPEED;
 
@@ -1697,17 +1698,17 @@ static int pet_read_db_sub(struct config_setting_t *it, int n, const char *sourc
 	}
 
 	if (libconfig->setting_lookup_int(it, "AttackRate", &i32) == CONFIG_TRUE)
-		entry.attack_rate = cap_value(i32, 0, 10000);
+		entry.attack_rate = std::clamp(i32, 0, 10000);
 	else if (!inherit)
 		entry.attack_rate = 300;
 
 	if (libconfig->setting_lookup_int(it, "DefendRate", &i32) == CONFIG_TRUE)
-		entry.defence_attack_rate = cap_value(i32, 0, 10000);
+		entry.defence_attack_rate = std::clamp(i32, 0, 10000);
 	else if (!inherit)
 		entry.defence_attack_rate = 300;
 
 	if (libconfig->setting_lookup_int(it, "ChangeTargetRate", &i32) == CONFIG_TRUE)
-		entry.change_target_rate = cap_value(i32, 0, 10000);
+		entry.change_target_rate = std::clamp(i32, 0, 10000);
 	else if (!inherit)
 		entry.change_target_rate = 800;
 
@@ -1779,7 +1780,7 @@ static bool pet_read_db_sub_evolution(struct s_pet_db *entry, struct config_sett
 			VECTOR_INIT(ped.items);
 
 			while ((item = libconfig->setting_get_elem(pett, j))) {
-				struct itemlist_entry list = { 0 };
+				struct itemlist_entry list{};
 				int quantity = 0;
 
 				str = config_setting_name(item);
@@ -1835,22 +1836,22 @@ static bool pet_read_db_sub_intimacy(struct s_pet_db *entry, struct config_setti
 	int i32 = 0;
 
 	if (libconfig->setting_lookup_int(t, "Initial", &i32) == CONFIG_TRUE)
-		entry->intimate = cap_value(i32, PET_INTIMACY_AWKWARD, PET_INTIMACY_MAX);
+		entry->intimate = std::clamp(i32, (int)PET_INTIMACY_AWKWARD, (int)PET_INTIMACY_MAX);
 
 	if (libconfig->setting_lookup_int(t, "FeedIncrement", &i32) == CONFIG_TRUE)
-		entry->r_hungry = cap_value(i32, PET_INTIMACY_AWKWARD, PET_INTIMACY_MAX);
+		entry->r_hungry = std::clamp(i32, (int)PET_INTIMACY_AWKWARD, (int)PET_INTIMACY_MAX);
 
 	if (libconfig->setting_lookup_int(t, "OverFeedDecrement", &i32) == CONFIG_TRUE)
-		entry->r_full = cap_value(i32, PET_INTIMACY_NONE, PET_INTIMACY_MAX);
+		entry->r_full = std::clamp(i32, (int)PET_INTIMACY_NONE, (int)PET_INTIMACY_MAX);
 
 	if (libconfig->setting_lookup_int(t, "OwnerDeathDecrement", &i32) == CONFIG_TRUE)
-		entry->die = cap_value(i32, PET_INTIMACY_NONE, PET_INTIMACY_MAX);
+		entry->die = std::clamp(i32, (int)PET_INTIMACY_NONE, (int)PET_INTIMACY_MAX);
 
 	if (libconfig->setting_lookup_int(t, "StarvingDelay", &i32) == CONFIG_TRUE)
-		entry->starving_delay = cap_value(1000 * i32, 0, entry->hungry_delay);
+		entry->starving_delay = std::clamp(1000 * i32, 0, entry->hungry_delay);
 
 	if (libconfig->setting_lookup_int(t, "StarvingDecrement", &i32) == CONFIG_TRUE)
-		entry->starving_decrement = cap_value(i32, PET_INTIMACY_NONE, PET_INTIMACY_MAX);
+		entry->starving_decrement = std::clamp(i32, (int)PET_INTIMACY_NONE, (int)PET_INTIMACY_MAX);
 
 	if (entry->starving_decrement == PET_INTIMACY_NONE)
 		entry->starving_delay = 0;

@@ -72,3 +72,5 @@ install(
     DESTINATION
     .
 )
+
+set_source_files_properties(${LOGIN_SRCS} PROPERTIES LANGUAGE CXX)

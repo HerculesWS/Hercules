@@ -76,7 +76,7 @@ static int inter_achievement_tosql(int char_id, struct char_achievements *cp, co
 			save = true;
 
 		if (save) {
-			StrBuf->Printf(&buf, "%s('%d', '%d', '%"PRId64"', '%"PRId64"'", rows ?", ":"", char_id, pa->id, (int64)pa->completed_at, (int64)pa->rewarded_at);
+			StrBuf->Printf(&buf, "%s('%d', '%d', '%" PRId64 "', '%" PRId64 "'", rows ?", ":"", char_id, pa->id, (int64)pa->completed_at, (int64)pa->rewarded_at);
 			for (j = 0; j < MAX_ACHIEVEMENT_OBJECTIVES; j++)
 				StrBuf->Printf(&buf, ", '%d'", pa->objective[j]);
 			StrBuf->AppendStr(&buf, ")");
@@ -141,7 +141,7 @@ static bool inter_achievement_fromsql(int char_id, struct char_achievements *cp)
 		VECTOR_ENSURE(*cp, num_rows, 1);
 
 		for (i = 0; i < num_rows && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); i++) {
-			struct achievement t_ach = { 0 };
+			struct achievement t_ach{};
 			SQL->GetData(inter->sql_handle, 0, &data, NULL); t_ach.id = atoi(data);
 			SQL->GetData(inter->sql_handle, 1, &data, NULL); t_ach.completed_at = atoi(data);
 			SQL->GetData(inter->sql_handle, 2, &data, NULL); t_ach.rewarded_at = atoi(data);
@@ -217,7 +217,7 @@ static struct DBData inter_achievement_ensure_char_achievements(union DBKey key,
  */
 static int inter_achievement_char_achievements_clear(union DBKey key, struct DBData *data, va_list args)
 {
-	struct char_achievements *ca = DB->data2ptr(data);
+	struct char_achievements *ca = (struct char_achievements *)DB->data2ptr(data);
 
 	VECTOR_CLEAR(*ca);
 

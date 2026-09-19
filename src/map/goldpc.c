@@ -21,14 +21,15 @@
 
 #include "goldpc.h"
 
+#include "map/pc.h"
+
 #include "common/memmgr.h"
 #include "common/nullpo.h"
 #include "common/showmsg.h"
 #include "common/timer.h"
 #include "common/utils.h"
 
-#include "map/pc.h"
-
+#include <algorithm>
 #include <stdlib.h>
 
 static struct goldpc_interface goldpc_s;
@@ -62,7 +63,7 @@ void goldpc_read_db_libconfig(void)
 	}
 
 	libconfig->destroy(&goldpc_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 }
 
 bool goldpc_read_db_libconfig_sub(const struct config_setting_t *it, int n, const char *source)
@@ -70,7 +71,7 @@ bool goldpc_read_db_libconfig_sub(const struct config_setting_t *it, int n, cons
 	nullpo_retr(false, it);
 	nullpo_retr(false, source);
 
-	struct goldpc_mode mode = { 0 };
+	struct goldpc_mode mode{};
 
 	if (libconfig->setting_lookup_int(it, "Id", &mode.id) == CONFIG_FALSE) {
 		ShowError("%s: Invalid GoldPC mode Id provided for entry %d in '%s', skipping...\n", __func__, n, source);
@@ -102,7 +103,7 @@ bool goldpc_read_db_libconfig_sub(const struct config_setting_t *it, int n, cons
 	// Client always counts towards GOLDPC_MAX_TIME, so calculate an offset that should be added when sending to client
 	mode.time_offset = (GOLDPC_MAX_TIME - mode.required_time);
 
-	struct goldpc_mode *mode_entry = aCalloc(1, sizeof(struct goldpc_mode));
+	struct goldpc_mode *mode_entry = (struct goldpc_mode *)aCalloc(1, sizeof(struct goldpc_mode));
 	*mode_entry = mode;
 	idb_put(goldpc->db, mode.id, mode_entry);
 
@@ -153,7 +154,7 @@ static void goldpc_addpoints(struct map_session_data *sd, int points)
 	else
 		final_balance = GOLDPC_MAX_POINTS;
 
-	final_balance = cap_value(final_balance, 0, GOLDPC_MAX_POINTS);
+	final_balance = std::clamp(final_balance, 0, GOLDPC_MAX_POINTS);
 	pc_setaccountreg(sd, script->add_variable(GOLDPC_POINTS_VAR), final_balance);
 }
 
@@ -273,7 +274,7 @@ static void goldpc_stop(struct map_session_data *sd)
 	if (sd->goldpc.tid != INVALID_TIMER) {
 		if (sd->goldpc.start_tick > 0) {
 			int played_ticks = (int) ((timer->gettick() - sd->goldpc.start_tick) / 1000);
-			int playtime = (int) cap_value(played_ticks + sd->goldpc.play_time, 0, GOLDPC_MAX_TIME);
+			int playtime = (int)std::clamp(played_ticks + sd->goldpc.play_time, 0, GOLDPC_MAX_TIME);
 
 			sd->goldpc.play_time = playtime;
 			pc_setaccountreg(sd, script->add_variable(GOLDPC_PLAYTIME_VAR), playtime);
@@ -290,7 +291,7 @@ static void goldpc_stop(struct map_session_data *sd)
  */
 static struct goldpc_mode * goldpc_db_exists(int id)
 {
-	return (struct goldpc_mode *) idb_get(goldpc->db, id);
+	return (struct goldpc_mode *)idb_get(goldpc->db, id);
 }
 
 static int do_init_goldpc(bool minimal)

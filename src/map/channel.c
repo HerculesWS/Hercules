@@ -83,7 +83,7 @@ static struct channel_data *channel_search(const char *name, struct map_session_
 		return sd->guild->channel;
 	}
 
-	return strdb_get(channel->db, realname);
+	return (struct channel_data *)strdb_get(channel->db, realname);
 }
 
 /**
@@ -129,9 +129,8 @@ static void channel_delete(struct channel_data *chan)
 	nullpo_retv(chan);
 
 	if (db_size(chan->users) && !channel->config->closing) {
-		struct map_session_data *sd;
 		struct DBIterator *iter = db_iterator(chan->users);
-		for (sd = dbi_first(iter); dbi_exists(iter); sd = dbi_next(iter)) {
+		for (struct map_session_data *sd = (struct map_session_data *)dbi_first(iter); dbi_exists(iter); sd = (struct map_session_data *)dbi_next(iter)) {
 			channel->leave_sub(chan, sd);
 		}
 		dbi_destroy(iter);
@@ -194,7 +193,7 @@ static enum channel_operation_status channel_ban(struct channel_data *chan, cons
 		return HCS_STATUS_ALREADY;
 
 	if (!chan->banned)
-		chan->banned = idb_alloc(DB_OPT_BASE|DB_OPT_ALLOW_NULL_DATA|DB_OPT_RELEASE_DATA);
+		chan->banned = idb_alloc((enum DBOptions)(DB_OPT_BASE | DB_OPT_ALLOW_NULL_DATA | DB_OPT_RELEASE_DATA));
 
 	CREATE(entry, struct channel_ban_entry, 1);
 	safestrncpy(entry->name, tsd->status.name, NAME_LENGTH);
@@ -810,7 +809,7 @@ static void read_channels_config(void)
 		}
 		channel->config->channel_opt_msg_delay = channel_opt_msg_delay;
 
-		ShowStatus("Done reading '"CL_WHITE"%u"CL_RESET"' channels in '"CL_WHITE"%s"CL_RESET"'.\n", db_size(channel->db), config_filename);
+		ShowStatus("Done reading '" CL_WHITE "%u" CL_RESET "' channels in '" CL_WHITE "%s" CL_RESET "'.\n", db_size(channel->db), config_filename);
 	}
 	libconfig->destroy(&channels_conf);
 }
@@ -823,7 +822,7 @@ static int do_init_channel(bool minimal)
 	if (minimal)
 		return 0;
 
-	channel->db = stridb_alloc(DB_OPT_DUP_KEY|DB_OPT_RELEASE_DATA, HCS_NAME_LENGTH);
+	channel->db = stridb_alloc((enum DBOptions)(DB_OPT_DUP_KEY | DB_OPT_RELEASE_DATA), HCS_NAME_LENGTH);
 	channel->config->ally = channel->config->local = channel->config->irc = channel->config->ally_autojoin = channel->config->local_autojoin = channel->config->irc_autojoin = false;
 	channel->config_read();
 
@@ -833,9 +832,7 @@ static int do_init_channel(bool minimal)
 static void do_final_channel(void)
 {
 	struct DBIterator *iter = db_iterator(channel->db);
-	struct channel_data *chan;
-
-	for( chan = dbi_first(iter); dbi_exists(iter); chan = dbi_next(iter) ) {
+	for (struct channel_data *chan = (struct channel_data *)dbi_first(iter); dbi_exists(iter); chan = (struct channel_data *)dbi_next(iter)) {
 		channel->delete_(chan);
 	}
 

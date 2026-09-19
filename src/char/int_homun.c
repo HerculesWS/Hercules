@@ -34,6 +34,7 @@
 #include "common/strlib.h"
 #include "common/utils.h"
 
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -70,7 +71,7 @@ static bool inter_homunculus_create(struct s_homunculus *hd)
 
 	if (SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` "
 			"(`char_id`, `class`,`prev_class`,`name`,`level`,`exp`,`intimacy`,`hunger`, `str`, `agi`, `vit`, `int`, `dex`, `luk`, `hp`,`max_hp`,`sp`,`max_sp`,`skill_point`, `rename_flag`, `vaporize`, `autofeed`) "
-			"VALUES ('%d', '%d', '%d', '%s', '%d', '%"PRIu64"', '%u', '%d', '%d', %d, '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d')",
+			"VALUES ('%d', '%d', '%d', '%s', '%d', '%" PRIu64 "', '%u', '%d', '%d', %d, '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d')",
 			homunculus_db, hd->char_id, hd->class_, hd->prev_class, esc_name, hd->level, hd->exp, hd->intimacy, hd->hunger, hd->str, hd->agi, hd->vit, hd->int_, hd->dex, hd->luk,
 			hd->hp, hd->max_hp, hd->sp, hd->max_sp, hd->skillpts, hd->rename_flag, hd->vaporize, hd->autofeed)) {
 		Sql_ShowDebug(inter->sql_handle);
@@ -96,7 +97,7 @@ static bool inter_homunculus_save(const struct s_homunculus *hd)
 
 	SQL->EscapeStringLen(inter->sql_handle, esc_name, hd->name, strnlen(hd->name, NAME_LENGTH));
 
-	if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `char_id`='%d', `class`='%d',`prev_class`='%d',`name`='%s',`level`='%d',`exp`='%"PRIu64"',`intimacy`='%u',`hunger`='%d', `str`='%d', `agi`='%d', `vit`='%d', `int`='%d', `dex`='%d', `luk`='%d', `hp`='%d',`max_hp`='%d',`sp`='%d',`max_sp`='%d',`skill_point`='%d', `rename_flag`='%d', `vaporize`='%d', `autofeed`='%d' WHERE `homun_id`='%d'",
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `char_id`='%d', `class`='%d',`prev_class`='%d',`name`='%s',`level`='%d',`exp`='%" PRIu64 "',`intimacy`='%u',`hunger`='%d', `str`='%d', `agi`='%d', `vit`='%d', `int`='%d', `dex`='%d', `luk`='%d', `hp`='%d',`max_hp`='%d',`sp`='%d',`max_sp`='%d',`skill_point`='%d', `rename_flag`='%d', `vaporize`='%d', `autofeed`='%d' WHERE `homun_id`='%d'",
 			homunculus_db, hd->char_id, hd->class_, hd->prev_class, esc_name, hd->level, hd->exp, hd->intimacy, hd->hunger, hd->str, hd->agi, hd->vit, hd->int_, hd->dex, hd->luk,
 			hd->hp, hd->max_hp, hd->sp, hd->max_sp, hd->skillpts, hd->rename_flag, hd->vaporize, hd->autofeed, hd->hom_id)) {
 		Sql_ShowDebug(inter->sql_handle);
@@ -179,8 +180,8 @@ static bool inter_homunculus_load(int homun_id, struct s_homunculus *hd)
 	SQL->GetData(inter->sql_handle, 22, &data, NULL); hd->autofeed = atoi(data);
 	SQL->FreeResult(inter->sql_handle);
 
-	hd->intimacy = cap_value(hd->intimacy, 0, 100000);
-	hd->hunger = cap_value(hd->hunger, 0, 100);
+	hd->intimacy = std::clamp(hd->intimacy, 0u, 100000u);
+	hd->hunger = std::clamp((int)hd->hunger, 0, 100);
 
 	// Load Homunculus Skill
 	if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `id`,`lv` FROM `%s` WHERE `homun_id`=%d", skill_homunculus_db, homun_id)) {
@@ -249,11 +250,11 @@ static int inter_homunculus_parse_frommap(int fd)
 	unsigned short cmd = RFIFOW(fd,0);
 
 	switch (cmd) {
-		case 0x3090: mapif->parse_homunculus_create(fd, RFIFOW(fd,2), RFIFOL(fd,4), RFIFOP(fd,8)); break;
+		case 0x3090: mapif->parse_homunculus_create(fd, RFIFOW(fd, 2), RFIFOL(fd, 4), RFIFOP(struct s_homunculus *, fd, 8)); break;
 		case 0x3091: mapif->parse_homunculus_load  (fd, RFIFOL(fd,2), RFIFOL(fd,6)); break;
-		case 0x3092: mapif->parse_homunculus_save  (fd, RFIFOW(fd,2), RFIFOL(fd,4), RFIFOP(fd,8)); break;
+		case 0x3092: mapif->parse_homunculus_save(fd, RFIFOW(fd, 2), RFIFOL(fd, 4), RFIFOP(struct s_homunculus *, fd, 8)); break;
 		case 0x3093: mapif->parse_homunculus_delete(fd, RFIFOL(fd,2)); break;
-		case 0x3094: mapif->parse_homunculus_rename(fd, RFIFOL(fd,2), RFIFOL(fd,6), RFIFOP(fd,10)); break;
+		case 0x3094: mapif->parse_homunculus_rename(fd, RFIFOL(fd, 2), RFIFOL(fd, 6), RFIFOP(char *, fd, 10)); break;
 		default:
 			return 0;
 	}

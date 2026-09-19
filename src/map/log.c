@@ -108,7 +108,7 @@ static char log_chattype2char(e_log_chat_type type)
 	}
 
 	// should not get here, fallback
-	ShowDebug("log_chattype2char: Unknown chat type %u.\n", type);
+	ShowDebug("log_chattype2char: Unknown chat type %u.\n", (unsigned int)type);
 	return 'O';
 }
 
@@ -184,7 +184,7 @@ static void log_pick_sub_sql(int id, int16 m, e_log_pick_type type, int amount, 
 	if (SQL_ERROR == SQL->Query(logs->mysql_handle,
 	    LOG_QUERY " INTO `%s` (`time`, `char_id`, `type`, `nameid`, `amount`, `refine`, `grade`, `card0`, `card1`, `card2`, `card3`, "
 		"`opt_idx0`, `opt_val0`, `opt_idx1`, `opt_val1`, `opt_idx2`, `opt_val2`, `opt_idx3`, `opt_val3`, `opt_idx4`, `opt_val4`, `map`, `unique_id`) "
-	    "VALUES (NOW(), '%d', '%c', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%s', '%"PRIu64"')",
+	    "VALUES (NOW(), '%d', '%c', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%s', '%" PRIu64 "')",
 	    logs->config.log_pick, id, logs->picktype2char(type), itm->nameid, amount, itm->refine, itm->grade, itm->card[0], itm->card[1], itm->card[2], itm->card[3],
 		itm->option[0].index, itm->option[0].value, itm->option[1].index, itm->option[1].value, itm->option[2].index, itm->option[2].value,
 		itm->option[3].index, itm->option[3].value, itm->option[4].index, itm->option[4].value,
@@ -205,7 +205,7 @@ static void log_pick_sub_txt(int id, int16 m, e_log_pick_type type, int amount, 
 		return;
 	time(&curtime);
 	strftime(timestring, sizeof(timestring), "%m/%d/%Y %H:%M:%S", localtime(&curtime));
-	fprintf(logfp,"%s - %d\t%c\t%d,%d,%d,%d,%d,%d,%d,%s,'%"PRIu64"'\n",
+	fprintf(logfp,"%s - %d\t%c\t%d,%d,%d,%d,%d,%d,%d,%s,'%" PRIu64 "'\n",
 	        timestring, id, logs->picktype2char(type), itm->nameid, amount, itm->refine, itm->card[0], itm->card[1], itm->card[2], itm->card[3],
 		map->list[m].name, itm->unique_id);
 	fclose(logfp);
@@ -499,10 +499,10 @@ static void log_sql_init(void)
 	// log db connection
 	logs->mysql_handle = SQL->Malloc();
 
-	ShowInfo(""CL_WHITE"[SQL]"CL_RESET": Connecting to the Log Database "CL_WHITE"%s"CL_RESET" At "CL_WHITE"%s"CL_RESET"...\n",logs->db_name,logs->db_ip);
+	ShowInfo(CL_WHITE "[SQL]" CL_RESET ": Connecting to the Log Database " CL_WHITE "%s" CL_RESET " At " CL_WHITE "%s" CL_RESET "...\n",logs->db_name,logs->db_ip);
 	if ( SQL_ERROR == SQL->Connect(logs->mysql_handle, logs->db_id, logs->db_pw, logs->db_ip, logs->db_port, logs->db_name) )
 		exit(EXIT_FAILURE);
-	ShowStatus(""CL_WHITE"[SQL]"CL_RESET": Successfully '"CL_GREEN"connected"CL_RESET"' to Database '"CL_WHITE"%s"CL_RESET"'.\n", logs->db_name);
+	ShowStatus(CL_WHITE "[SQL]" CL_RESET ": Successfully '" CL_GREEN "connected" CL_RESET "' to Database '" CL_WHITE "%s" CL_RESET "'.\n", logs->db_name);
 
 	if (map->default_codepage[0] != '\0')
 		if ( SQL_ERROR == SQL->SetEncoding(logs->mysql_handle, map->default_codepage) )
@@ -523,7 +523,7 @@ static void log_set_defaults(void)
 	memset(&logs->config, 0, sizeof(logs->config));
 
 	//map_log default values
-	logs->config.enable_logs = 0xFFFFF;
+	logs->config.enable_logs = LOG_TYPE_ALL;
 	logs->config.commands = true;
 
 	//map_log/database default values
@@ -707,7 +707,7 @@ static bool log_config_read(const char *filename, bool imported)
 	}
 
 	if (libconfig->setting_lookup_int(setting, "enable", &temp) == CONFIG_TRUE) {
-		logs->config.enable_logs = temp&LOG_TYPE_ALL; // e_log_pick_type
+		logs->config.enable_logs = (e_log_pick_type)(temp & LOG_TYPE_ALL); // e_log_pick_type
 	}
 	libconfig->setting_lookup_int(setting, "log_zeny", &logs->config.zeny);
 	libconfig->setting_lookup_bool_real(setting, "log_branch", &logs->config.branch);

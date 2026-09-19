@@ -32,6 +32,7 @@
 #include "map/pc.h"
 #include "map/script.h"
 
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -108,7 +109,7 @@ static void refine_refinery_refine_request(struct map_session_data *sd, int item
 	if (pc->payzeny(sd, req->req[i].cost, LOG_TYPE_REFINE, NULL) != 0)
 		return;
 
-	int refine_chance = refine->get_refine_chance(weapon_level, refine_level, req->req[i].type);
+	int refine_chance = refine->get_refine_chance((enum refine_type)weapon_level, refine_level, req->req[i].type);
 	if (rnd() % 100 >= refine_chance) {
 		clif->misceffect(&sd->bl, 2);
 
@@ -123,7 +124,7 @@ static void refine_refinery_refine_request(struct map_session_data *sd, int item
 			break;
 		case REFINE_FAILURE_BEHAVIOR_DOWNGRADE:
 			sd->status.inventory[item_index].refine -= 1;
-			sd->status.inventory[item_index].refine = cap_value(sd->status.inventory[item_index].refine, 0, MAX_REFINE);
+			sd->status.inventory[item_index].refine = std::clamp((int)sd->status.inventory[item_index].refine, 0, MAX_REFINE);
 			clif->refine(sd->fd, 2, item_index, sd->status.inventory[item_index].refine);
 			logs->pick_pc(sd, LOG_TYPE_REFINE, 1, &sd->status.inventory[item_index], sd->inventory_data[item_index]);
 			refine->refinery_add_item(sd, item_index);
@@ -136,7 +137,7 @@ static void refine_refinery_refine_request(struct map_session_data *sd, int item
 		}
 	} else {
 		sd->status.inventory[item_index].refine += 1;
-		sd->status.inventory[item_index].refine = cap_value(sd->status.inventory[item_index].refine, 0, MAX_REFINE);
+		sd->status.inventory[item_index].refine = std::clamp((int)sd->status.inventory[item_index].refine, 0, MAX_REFINE);
 
 		clif->misceffect(&sd->bl, 3);
 		clif->refine(sd->fd, 0, item_index, sd->status.inventory[item_index].refine);
@@ -317,7 +318,7 @@ static bool refine_readdb_refinery_ui_settings_items(const struct config_setting
 	}
 
 	req->req[req->req_count].nameid = itd->nameid;
-	req->req[req->req_count].type = type;
+	req->req[req->req_count].type = (enum refine_chance_type)type;
 	req->req[req->req_count].cost = cost;
 	req->req[req->req_count].failure_behavior = behavior;
 	req->req_count++;
@@ -389,7 +390,7 @@ static bool refine_readdb_refinery_ui_settings_sub(const struct config_setting_t
 		}
 	}
 
-	struct s_refine_requirement req = {0};
+	struct s_refine_requirement req{};
 	if (libconfig->setting_lookup_int(elem, "BlacksmithBlessing", &req.blacksmith_blessing) == CONFIG_TRUE) {
 		if (req.blacksmith_blessing < 1 || req.blacksmith_blessing > INT8_MAX) {
 			ShowWarning("refine_readdb_requirements_sub: Invalid 'BlacksmithBlessing' amount was given value %d expected a value between %d and %d in entry'%s' in \"%s\" defaulting to 0...\n", req.blacksmith_blessing, 1, INT8_MAX, name, source);
@@ -624,7 +625,7 @@ static int refine_readdb_refine_libconfig(const char *filename)
 		}
 	}
 	libconfig->destroy(&refine_db_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 
 	return count;
 }
@@ -635,7 +636,7 @@ static int refine_init(bool minimal)
 	if (minimal)
 		return 0;
 
-	refine->p->readdb_refine_libconfig(DBPATH"refine_db.conf");
+	refine->p->readdb_refine_libconfig(DBPATH "refine_db.conf");
 	return 0;
 }
 

@@ -168,8 +168,8 @@ static const char *inter_job_name(int class_)
  * Argument-list version of inter_msg_to_fd
  * @see inter_msg_to_fd
  */
-static void inter_vmsg_to_fd(int fd, int u_fd, int aid, char *msg, va_list ap) __attribute__((format(printf, 4, 0)));
-static void inter_vmsg_to_fd(int fd, int u_fd, int aid, char *msg, va_list ap)
+static void inter_vmsg_to_fd(int fd, int u_fd, int aid, const char *msg, va_list ap) __attribute__((format(printf, 4, 0)));
+static void inter_vmsg_to_fd(int fd, int u_fd, int aid, const char *msg, va_list ap)
 {
 	char msg_out[512];
 	va_list apcopy;
@@ -186,7 +186,7 @@ static void inter_vmsg_to_fd(int fd, int u_fd, int aid, char *msg, va_list ap)
 	WFIFOW(fd,2) = 12 + (unsigned short)len;
 	WFIFOL(fd,4) = u_fd;
 	WFIFOL(fd,8) = aid;
-	safestrncpy(WFIFOP(fd,12), msg_out, len);
+	safestrncpy(WFIFOP(char *, fd, 12), msg_out, len);
 
 	WFIFOSET(fd,12 + len);
 
@@ -202,8 +202,8 @@ static void inter_vmsg_to_fd(int fd, int u_fd, int aid, char *msg, va_list ap)
  * @param msg  Message format string
  * @param ...  Additional parameters for (v)sprinf
  */
-static void inter_msg_to_fd(int fd, int u_fd, int aid, char *msg, ...) __attribute__((format(printf, 4, 5)));
-static void inter_msg_to_fd(int fd, int u_fd, int aid, char *msg, ...)
+static void inter_msg_to_fd(int fd, int u_fd, int aid, const char *msg, ...) __attribute__((format(printf, 4, 5)));
+static void inter_msg_to_fd(int fd, int u_fd, int aid, const char *msg, ...)
 {
 	va_list ap;
 	va_start(ap,msg);
@@ -253,7 +253,7 @@ static void inter_accinfo(int u_fd, int aid, int castergroup, const char *query,
 					SQL->GetData(inter->sql_handle, 4, &data, NULL); job_level = atoi(data);
 					SQL->GetData(inter->sql_handle, 5, &data, NULL); online = atoi(data);
 
-					inter->msg_to_fd(map_fd, u_fd, aid, "[AID: %d] %s | %s | Level: %d/%d | %s", account_id, name, inter->job_name(class_), base_level, job_level, online?"Online":"Offline");
+					inter->msg_to_fd(map_fd, u_fd, aid, "[AID: %d] %s | %s | Level: %d/%d | %s", account_id, name, inter->job_name(class_), base_level, job_level, online ? "Online" : "Offline");
 				}
 				SQL->FreeResult(inter->sql_handle);
 				return;
@@ -330,7 +330,7 @@ static void inter_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int ac
 			SQL->GetData(inter->sql_handle, 5, &data, NULL); job_level = atoi(data);
 			SQL->GetData(inter->sql_handle, 6, &data, NULL); online = atoi(data);
 
-			inter->msg_to_fd(map_fd, u_fd, u_aid, "[Slot/CID: %d/%d] %s | %s | Level: %d/%d | %s", char_num, char_id, name, inter->job_name(class_), base_level, job_level, online?"On":"Off");
+			inter->msg_to_fd(map_fd, u_fd, u_aid, "[Slot/CID: %d/%d] %s | %s | Level: %d/%d | %s", char_num, char_id, name, inter->job_name(class_), base_level, job_level, online ? "On" : "Off");
 		}
 	}
 	SQL->FreeResult(inter->sql_handle);
@@ -442,7 +442,7 @@ static int inter_accreg_fromsql(int account_id, int char_id, int fd, int type)
 		WFIFOB(fd, plen) = (unsigned char)len;/* won't be higher; the column size is 32 */
 		plen += 1;
 
-		safestrncpy(WFIFOP(fd,plen), data, len);
+		safestrncpy(WFIFOP(char *, fd, plen), data, len);
 		plen += len;
 
 		SQL->GetData(inter->sql_handle, 1, &data, NULL);
@@ -456,7 +456,7 @@ static int inter_accreg_fromsql(int account_id, int char_id, int fd, int type)
 		WFIFOB(fd, plen) = (unsigned char)len; // Won't be higher; the column size is 255.
 		plen += 1;
 
-		safestrncpy(WFIFOP(fd, plen), data, len + 1);
+		safestrncpy(WFIFOP(char *, fd, plen), data, len + 1);
 		plen += len + 1;
 
 		WFIFOW(fd, 14) += 1;
@@ -523,7 +523,7 @@ static int inter_accreg_fromsql(int account_id, int char_id, int fd, int type)
 		WFIFOB(fd, plen) = (unsigned char)len;/* won't be higher; the column size is 32 */
 		plen += 1;
 
-		safestrncpy(WFIFOP(fd,plen), data, len);
+		safestrncpy(WFIFOP(char *, fd, plen), data, len);
 		plen += len;
 
 		SQL->GetData(inter->sql_handle, 1, &data, NULL);
@@ -678,8 +678,8 @@ static bool inter_config_read(const char *filename, bool imported)
  * Save interlog into sql (arglist version)
  * @see inter_log
  */
-static int inter_vlog(char *fmt, va_list ap) __attribute__((format(printf, 1, 0)));
-static int inter_vlog(char *fmt, va_list ap)
+static int inter_vlog(const char *fmt, va_list ap) __attribute__((format(printf, 1, 0)));
+static int inter_vlog(const char *fmt, va_list ap)
 {
 	char str[255];
 	char esc_str[sizeof(str)*2+1];// escaped str
@@ -702,8 +702,8 @@ static int inter_vlog(char *fmt, va_list ap)
  * @param ... Additional (printf-like) arguments
  * @return Always 0 // FIXME
  */
-static int inter_log(char *fmt, ...) __attribute__((format(printf, 1, 2)));
-static int inter_log(char *fmt, ...)
+static int inter_log(const char *fmt, ...) __attribute__((format(printf, 1, 2)));
+static int inter_log(const char *fmt, ...)
 {
 	va_list ap;
 	int ret;

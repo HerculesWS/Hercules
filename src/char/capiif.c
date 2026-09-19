@@ -130,7 +130,7 @@ static void capiif_parse_proxy_api_from_map(int fd)
 	if (!sockt->session_is_active(login_fd))
 		return;
 	WFIFOHEAD(login_fd, len);
-	memcpy(WFIFOP(login_fd, 0), inPacket, len);
+	memcpy(WP2PTR(struct PACKET_API_PROXY *, login_fd), inPacket, len);
 	WFIFOW(login_fd, 0) = HEADER_API_PROXY_REPLY;
 	WFIFOSET(login_fd, len);
 }
@@ -269,7 +269,7 @@ void capiif_emblem_download(int fd, int guild_id, int emblem_id)
 
 static struct online_char_data* capiif_get_online_character(const struct PACKET_API_PROXY *p)
 {
-	struct online_char_data* character = (struct online_char_data*)idb_get(chr->online_char_db, p->account_id);
+	struct online_char_data *character = (struct online_char_data *)idb_get(chr->online_char_db, p->account_id);
 	if (character == NULL) {
 		ShowError("Cant get online character. Account %d is not online.", p->account_id);
 		return NULL;

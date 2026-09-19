@@ -38,12 +38,11 @@
 #include <stdio.h>
 #include <string.h>
 
-HPExport struct hplugin_info pinfo = {
+HPM_DECLARE_PLUGIN(
 	"Mapcache",      ///< Plugin name
 	SERVER_TYPE_MAP, ///< Which server types this plugin works with?
-	"1.0.0",         ///< Plugin version
-	HPM_VERSION,     ///< HPM Version (don't change, macro is automatically updated)
-};
+	"1.0.0"          ///< Plugin version
+)
 
 /**
  * Yes.. old mapcache was never packed, and we loaded and wrote a compiler paded structs
@@ -104,7 +103,7 @@ float GetFloat(const unsigned char* buf)
 
 bool write_mapcache(const uint8 *buf, int32 buf_len, bool is_compressed, const char *mapname, int16 xs, int16 ys)
 {
-	struct map_cache_header header = { 0 };
+	struct map_cache_header header{};
 	char file_path[255];
 	int mapname_len;
 	unsigned long compressed_buf_len = 0;
@@ -173,9 +172,9 @@ bool write_mapcache(const uint8 *buf, int32 buf_len, bool is_compressed, const c
 
 bool convert_old_mapcache(void)
 {
-	const char *path = "db/"DBPATH"map_cache.dat";
+	const char *path = "db/" DBPATH "map_cache.dat";
 	FILE *mapcache_fp = fopen(path, "rb");
-	struct old_mapcache_main_header header = { 0 };
+	struct old_mapcache_main_header header{};
 	uint8 *p, *cursor;
 	uint32 file_size;
 	int i;
@@ -214,7 +213,7 @@ bool convert_old_mapcache(void)
 	for (i = 0; i < header.map_count; ++i) {
 		struct old_mapcache_map_info *info = (struct old_mapcache_map_info *)cursor;
 
-		ShowStatus("Creating mapcache: %s"CL_CLL"\n", info->name);
+		ShowStatus("Creating mapcache: %s" CL_CLL "\n", info->name);
 
 		if (write_mapcache((uint8 *)info + sizeof(*info), info->len, true, info->name, info->xs, info->ys) == false) {
 			ShowError("failed To convert map '%s'\n", info->name);
@@ -259,7 +258,7 @@ bool mapcache_read_maplist(const char *filepath)
 bool mapcache_cache_map(const char *mapname)
 {
 	char filepath[255] = { 0 };
-	uint8 *gat, *rsw, *gat_cursor;
+	uint8 *gat_cursor;
 	uint8 *cells;
 	int water_height, map_size, xy;
 	int16 xs, ys;
@@ -267,7 +266,7 @@ bool mapcache_cache_map(const char *mapname)
 	nullpo_retr(false, mapname);
 
 	snprintf(filepath, sizeof(filepath), "data\\%s.gat", mapname);
-	gat = grfio_read(filepath);
+	uint8 *gat = (uint8 *)grfio_read(filepath);
 
 	if (gat == NULL) {
 		ShowError("mapcache_cache_map: Could not read %s, aborting caching map %s\n", filepath, mapname);
@@ -276,7 +275,7 @@ bool mapcache_cache_map(const char *mapname)
 
 	snprintf(filepath, sizeof(filepath), "data\\%s.rsw", mapname);
 
-	rsw = grfio_read(filepath);
+	uint8 *rsw = (uint8 *)grfio_read(filepath);
 
 	if (rsw == NULL) {
 		water_height = NO_WATER;
@@ -358,7 +357,7 @@ bool mapcache_rebuild(void)
 	}
 
 	for (i = 0; i < VECTOR_LENGTH(maplist); ++i) {
-		ShowStatus("Creating mapcache: %s"CL_CLL"\r", VECTOR_INDEX(maplist, i));
+		ShowStatus("Creating mapcache: %s" CL_CLL "\r", VECTOR_INDEX(maplist, i));
 		mapcache_cache_map(VECTOR_INDEX(maplist, i));
 	}
 
@@ -368,7 +367,7 @@ bool mapcache_rebuild(void)
 bool fix_md5_truncation_sub(FILE *fp, const char *map_name)
 {
 	unsigned int file_size;
-	struct map_cache_header mheader = { 0 };
+	struct map_cache_header mheader{};
 	uint8 *buf = NULL;
 
 	nullpo_retr(false, fp);
@@ -489,13 +488,13 @@ CMDLINEARG(fixmd5)
 HPExport void server_preinit(void)
 {
 	addArg("--convert-old-mapcache", false, convertmapcache,
-			"Converts an old db/"DBPATH"map_cache.dat file to the new format.");
+			"Converts an old db/" DBPATH "map_cache.dat file to the new format.");
 	addArg("--rebuild-mapcache", false, rebuild,
-			"Rebuilds the entire mapcache folder (maps/"DBPATH"), using db/map_index.txt as index.");
+			"Rebuilds the entire mapcache folder (maps/" DBPATH "), using db/map_index.txt as index.");
 	addArg("--map", true, cachemap,
-			"Rebuilds an individual map's cache into maps/"DBPATH" (usage: --map <map_name_without_extension>).");
+			"Rebuilds an individual map's cache into maps/" DBPATH " (usage: --map <map_name_without_extension>).");
 	addArg("--fix-md5", false, fixmd5,
-			"Updates the checksum for the files in maps/"DBPATH", using db/map_index.txt as index (see PR #1981).");
+			"Updates the checksum for the files in maps/" DBPATH ", using db/map_index.txt as index (see PR #1981).");
 
 	needs_grfio = false;
 	VECTOR_INIT(maplist);

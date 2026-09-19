@@ -110,7 +110,7 @@ static int instance_create(int owner_id, const char *name, enum instance_owner_t
 			break;
 		case IOT_MAX:
 		default:
-			ShowError("instance_create: unknown type %u for owner_id %d and name %s.\n", type, owner_id, name);
+			ShowError("instance_create: unknown type %u for owner_id %d and name %s.\n", (unsigned int)type, owner_id, name);
 			return -1;
 	}
 
@@ -259,8 +259,8 @@ static int instance_add_map(const char *name, int instance_id, bool usebasename,
 	}
 
 	size = map->list[im].bxs * map->list[im].bys * sizeof(struct block_list*);
-	map->list[im].block = (struct block_list**)aCalloc(1, size);
-	map->list[im].block_mob = (struct block_list**)aCalloc(1, size);
+	map->list[im].block = (struct block_list **)aCalloc(1, size);
+	map->list[im].block_mob = (struct block_list **)aCalloc(1, size);
 
 	memset(map->list[im].npc, 0x00, sizeof(map->list[i].npc));
 	map->list[im].npc_num = 0;
@@ -400,7 +400,7 @@ static int instance_init_npc(struct block_list *bl, va_list args)
 
 	snprintf(evname, EVENT_NAME_LENGTH, "%s::OnInstanceInit", nd->exname);
 
-	if( ( ev = strdb_get(npc->ev_db, evname) ) )
+	if ((ev = (struct event_data *)strdb_get(npc->ev_db, evname)) != NULL)
 		script->run_npc(ev->nd->u.scr.script, ev->pos, 0, ev->nd->bl.id);
 
 	return 1;
@@ -608,7 +608,7 @@ static void instance_destroy(int instance_id)
 			break;
 		case IOT_MAX:
 		default:
-			ShowError("instance_destroy: unknown type %u for owner_id %d and name '%s'.\n", instance->list[instance_id].owner_type, instance->list[instance_id].owner_id, instance->list[instance_id].name);
+			ShowError("instance_destroy: unknown type %u for owner_id %d and name '%s'.\n", (unsigned int)instance->list[instance_id].owner_type, instance->list[instance_id].owner_id, instance->list[instance_id].name);
 			break;
 	}
 
@@ -720,7 +720,7 @@ static void instance_set_timeout(int instance_id, unsigned int progress_timeout,
 	}
 
 	if( instance->list[instance_id].idle_timer == INVALID_TIMER && instance->list[instance_id].progress_timer != INVALID_TIMER )
-		clif->instance(instance_id, 3, 0);
+		clif->instance(instance_id, INSTANCE_WND_INFO_PROGRESS_TIME, 0);
 }
 
 /*--------------------------------------
@@ -817,7 +817,7 @@ static void instance_reload_map_flags(int instance_id)
 		struct map_data *dstMap = &map->list[curInst->map[i]];
 		const struct map_data *srcMap = &map->list[dstMap->instance_src_map];
 
-		memcpy(&dstMap->flag, &srcMap->flag, sizeof(struct map_flag));
+		memcpy(&dstMap->flag, &srcMap->flag, sizeof(struct map_data::map_flag));
 
 		dstMap->flag.src4instance = 0;
 	}

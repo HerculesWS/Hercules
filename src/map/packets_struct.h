@@ -4584,7 +4584,7 @@ struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub {
 } __attribute__((packed));
 
 // Workaround check for Visual Studio bug (error C2233)
-STATIC_ASSERT(sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub2[1]) ==
+static_assert(sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub2[1]) ==
 	sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub2),
 	"Wrong PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub size");
 
@@ -4625,7 +4625,7 @@ struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub {
 } __attribute__((packed));
 
 // Workaround check for Visual Studio bug (error C2233)
-STATIC_ASSERT(sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub2[1]) ==
+static_assert(sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub2[1]) ==
 	sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub2),
 	"Wrong PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub size");
 

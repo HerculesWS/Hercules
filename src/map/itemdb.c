@@ -38,6 +38,7 @@
 #include "common/strlib.h"
 #include "common/utils.h"
 
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -52,7 +53,9 @@ struct itemdb_interface *itemdb;
  */
 static int itemdb_searchname_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct item_data *item = DB->data2ptr(data), **dst, **dst2;
+	struct item_data *item = (struct item_data *)DB->data2ptr(data);
+	struct item_data **dst;
+	struct item_data **dst2;
 	char *str;
 	str=va_arg(ap,char *);
 	nullpo_ret(str);
@@ -109,7 +112,7 @@ static struct item_data *itemdb_searchname(const char *str)
 /* name to item data */
 static struct item_data *itemdb_name2id(const char *str)
 {
-	return strdb_get(itemdb->names,str);
+	return (struct item_data *)strdb_get(itemdb->names, str);
 }
 
 /**
@@ -117,9 +120,9 @@ static struct item_data *itemdb_name2id(const char *str)
  */
 static int itemdb_searchname_array_sub(union DBKey key, struct DBData data, va_list ap)
 {
-	struct item_data *itd = DB->data2ptr(&data);
+	struct item_data *itd = (struct item_data *)DB->data2ptr(&data);
 	const char *str = va_arg(ap, const char *);
-	enum item_name_search_flag flag = va_arg(ap, enum item_name_search_flag);
+	enum item_name_search_flag flag = (enum item_name_search_flag)va_arg(ap, int);
 
 	nullpo_ret(str);
 
@@ -199,18 +202,18 @@ static int itemdb_searchname_array(struct item_data **data, const int size, cons
 		int dbmap_count = 0;
 		CREATE(dbmap_data, struct DBData *, dbmap_size);
 
-		dbmap_count = itemdb->other->getall(itemdb->other, dbmap_data, dbmap_size, itemdb->searchname_array_sub, str, flag);
-		dbmap_size = min(dbmap_count, dbmap_size);
+		dbmap_count = itemdb->other->getall(itemdb->other, dbmap_data, dbmap_size, itemdb->searchname_array_sub, str, (int)flag);
+		dbmap_size = std::min(dbmap_count, dbmap_size);
 
 		for (int i = 0; i < dbmap_size; ++i) {
-			data[length] = DB->data2ptr(dbmap_data[i]);
+			data[length] = (struct item_data *)DB->data2ptr(dbmap_data[i]);
 			++length;
 		}
 
 		results_count += dbmap_count;
 		aFree(dbmap_data);
 	} else { // We got all matches we can return, so we only need to count now.
-		results_count += itemdb->other->getall(itemdb->other, NULL, 0, itemdb->searchname_array_sub, str, flag);
+		results_count += itemdb->other->getall(itemdb->other, NULL, 0, itemdb->searchname_array_sub, str, (int)flag);
 	}
 
 	return results_count;
@@ -367,11 +370,10 @@ static const struct item_group *itemdb_search_group(int nameid)
 /// Returns the item_data or NULL if it does not exist.
 static struct item_data *itemdb_exists(int nameid)
 {
-	struct item_data* item;
 
 	if( nameid >= 0 && nameid < ARRAYLENGTH(itemdb->array) )
 		return itemdb->array[nameid];
-	item = (struct item_data*)idb_get(itemdb->other,nameid);
+	struct item_data *item = (struct item_data *)idb_get(itemdb->other, nameid);
 	if( item == &itemdb->dummy )
 		return NULL;// dummy data, doesn't exist
 	return item;
@@ -399,7 +401,7 @@ static struct item_reform *itemdb_reform_exists(int idx)
 
 /// Returns human readable name for given item type.
 /// @param type Type id to retrieve name for ( IT_* ).
-static const char *itemdb_typename(enum item_types type)
+static const char *itemdb_type_to_name(enum item_types type)
 {
 	switch(type)
 	{
@@ -669,17 +671,16 @@ static struct item_data *create_item_data(int nameid)
  *------------------------------------------*/
 static struct item_data *itemdb_load(int nameid)
 {
-	struct item_data *id;
 
 	if( nameid >= 0 && nameid < ARRAYLENGTH(itemdb->array) )
 	{
-		id = itemdb->array[nameid];
+		struct item_data *id = itemdb->array[nameid];
 		if( id == NULL || id == &itemdb->dummy )
 			id = itemdb->array[nameid] = itemdb->create_item_data(nameid);
 		return id;
 	}
 
-	id = (struct item_data*)idb_get(itemdb->other, nameid);
+	struct item_data *id = (struct item_data *)idb_get(itemdb->other, nameid);
 	if( id == NULL || id == &itemdb->dummy )
 	{
 		id = itemdb->create_item_data(nameid);
@@ -697,7 +698,7 @@ static struct item_data *itemdb_search(int nameid)
 	if( nameid >= 0 && nameid < ARRAYLENGTH(itemdb->array) )
 		id = itemdb->array[nameid];
 	else
-		id = (struct item_data*)idb_get(itemdb->other, nameid);
+		id = (struct item_data *)idb_get(itemdb->other, nameid);
 
 	if( id == NULL )
 	{
@@ -922,15 +923,14 @@ static void itemdb_read_groups(void)
 	struct config_t item_group_conf;
 	struct config_setting_t *itg = NULL, *it = NULL;
 	char config_filename[256];
-	libconfig->format_db_path(DBPATH"item_group.conf", config_filename, sizeof(config_filename));
+	libconfig->format_db_path(DBPATH "item_group.conf", config_filename, sizeof(config_filename));
 	const char *itname;
 	int i = 0, count = 0, c;
-	unsigned int *gsize = NULL;
 
 	if (!libconfig->load_file(&item_group_conf, config_filename))
 		return;
 
-	gsize = aMalloc( libconfig->setting_length(item_group_conf.root) * sizeof(unsigned int) );
+	unsigned int *gsize = (unsigned int *)aMalloc(libconfig->setting_length(item_group_conf.root) * sizeof(unsigned int));
 
 	for(i = 0; i < libconfig->setting_length(item_group_conf.root); i++)
 		gsize[i] = 0;
@@ -999,7 +999,7 @@ static void itemdb_read_groups(void)
 
 	libconfig->destroy(&item_group_conf);
 	aFree(gsize);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, config_filename);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, config_filename);
 }
 
 /* [Ind/Hercules] - HCache for Packages */
@@ -1208,7 +1208,7 @@ static bool itemdb_read_cached_packages(const char *config_filename)
 		}
 	}
 	fclose(file);
-	ShowStatus("Done reading '"CL_WHITE"%hu"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"' ("CL_GREEN"C"CL_RESET").\n", pcount, config_filename);
+	ShowStatus("Done reading '" CL_WHITE "%hu" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "' (" CL_GREEN "C" CL_RESET ").\n", pcount, config_filename);
 
 	return true;
 }
@@ -1217,10 +1217,9 @@ static void itemdb_read_packages(void)
 	struct config_t item_packages_conf;
 	struct config_setting_t *itg = NULL, *it = NULL, *t = NULL;
 	char config_filename[256];
-	libconfig->format_db_path(DBPATH"item_packages.conf", config_filename, sizeof(config_filename));
+	libconfig->format_db_path(DBPATH "item_packages.conf", config_filename, sizeof(config_filename));
 	const char *itname;
 	int i = 0, count = 0, c = 0, highest_gcount = 0;
-	unsigned int *must = NULL, *random = NULL, *rgroup = NULL, **rgroups = NULL;
 	struct item_package_rand_entry **prev = NULL;
 
 	if( HCache->check(config_filename) ) {
@@ -1231,10 +1230,10 @@ static void itemdb_read_packages(void)
 	if (!libconfig->load_file(&item_packages_conf, config_filename))
 		return;
 
-	must = aMalloc( libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int) );
-	random = aMalloc( libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int) );
-	rgroup = aMalloc( libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int) );
-	rgroups = aMalloc( libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int *) );
+	unsigned int *must = (unsigned int *)aMalloc(libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int));
+	unsigned int *random = (unsigned int *)aMalloc(libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int));
+	unsigned int *rgroup = (unsigned int *)aMalloc(libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int));
+	unsigned int **rgroups = (unsigned int **)aMalloc(libconfig->setting_length(item_packages_conf.root) * sizeof(unsigned int *));
 
 	for(i = 0; i < libconfig->setting_length(item_packages_conf.root); i++) {
 		must[i] = 0;
@@ -1283,7 +1282,7 @@ static void itemdb_read_packages(void)
 	}
 
 	for(i = 0; i < libconfig->setting_length(item_packages_conf.root); i++ ) {
-		rgroups[i] = aMalloc( rgroup[i] * sizeof(unsigned int) );
+		rgroups[i] = (unsigned int *)aMalloc(rgroup[i] * sizeof(unsigned int));
 		for( c = 0; (unsigned int)c < rgroup[i]; c++ ) {
 			rgroups[i][c] = 0;
 		}
@@ -1437,7 +1436,7 @@ static void itemdb_read_packages(void)
 	if( HCache->enabled )
 		itemdb->write_cached_packages(config_filename);
 
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, config_filename);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, config_filename);
 }
 
 /**
@@ -1484,7 +1483,8 @@ static void itemdb_read_options(void)
 	VECTOR_ENSURE(duplicate_id, libconfig->setting_length(ito), 1);
 
 	while ((conf = libconfig->setting_get_elem(ito, index++))) {
-		struct itemdb_option t_opt = { 0 }, *s_opt = NULL;
+		struct itemdb_option t_opt{};
+		struct itemdb_option *s_opt = NULL;
 		const char *str = NULL;
 		int i = 0;
 
@@ -1560,7 +1560,7 @@ static void itemdb_read_options(void)
 
 	VECTOR_CLEAR(duplicate_id);
 
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 }
 
 static void itemdb_read_chains(void)
@@ -1568,7 +1568,7 @@ static void itemdb_read_chains(void)
 	struct config_t item_chain_conf;
 	struct config_setting_t *itc = NULL;
 	char config_filename[256];
-	libconfig->format_db_path(DBPATH"item_chain.conf", config_filename, sizeof(config_filename));
+	libconfig->format_db_path(DBPATH "item_chain.conf", config_filename, sizeof(config_filename));
 	int i = 0, count = 0;
 
 	if (!libconfig->load_file(&item_chain_conf, config_filename))
@@ -1611,7 +1611,7 @@ static void itemdb_read_chains(void)
 			if (battle_config.item_rate_add_chain != 100)
 				rate = rate * battle_config.item_rate_add_chain / 100;
 
-			item->rate = cap_value(rate, battle_config.item_drop_add_chain_min, battle_config.item_drop_add_chain_max);
+			item->rate = std::clamp(rate, battle_config.item_drop_add_chain_min, battle_config.item_drop_add_chain_max);
 
 			prev = item;
 		}
@@ -1642,14 +1642,14 @@ static void itemdb_read_chains(void)
 	else
 		itemdb->chain_cache[ECC_NEO_INSURANCE] = i;
 
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, config_filename);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, config_filename);
 }
 
 static bool itemdb_read_combodb_libconfig(void)
 {
 	struct config_t combo_conf;
 	char filepath[290];
-	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH"item_combo_db.conf");
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH "item_combo_db.conf");
 
 	if (libconfig->load_file(&combo_conf, filepath) == CONFIG_FALSE) {
 		ShowError("itemdb_read_combodb_libconfig: can't read %s\n", filepath);
@@ -1672,7 +1672,7 @@ static bool itemdb_read_combodb_libconfig(void)
 	}
 
 	libconfig->destroy(&combo_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 	return true;
 }
 
@@ -1942,7 +1942,7 @@ static int itemdb_validate_entry(struct item_data *entry, int n, const char *sou
 		entry->subtype = A_ARROW;
 	}
 
-	entry->wlv = cap_value(entry->wlv, REFINE_TYPE_ARMOR, REFINE_TYPE_MAX);
+	entry->wlv = std::clamp(entry->wlv, (int)REFINE_TYPE_ARMOR, (int)REFINE_TYPE_MAX);
 
 	if( !entry->elvmax )
 		entry->elvmax = MAX_LEVEL;
@@ -2042,7 +2042,7 @@ static void itemdb_readdb_job_sub(struct item_data *id, struct config_setting_t 
  */
 static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const char *source, struct DBMap *itemconst_db)
 {
-	struct item_data id = { 0 };
+	struct item_data id{};
 	struct config_setting_t *t = NULL;
 	const char *str = NULL;
 	int i32 = 0;
@@ -2386,7 +2386,7 @@ static int itemdb_readdb_libconfig_sub(struct config_setting_t *it, int n, const
 			int stack_flag = libconfig->setting_get_int_elem(t, 1);
 			int stack_amount = libconfig->setting_get_int_elem(t, 0);
 			if (stack_amount >= 0) {
-				id.stack.amount = cap_value(stack_amount, 0, USHRT_MAX);
+				id.stack.amount = std::clamp(stack_amount, 0, USHRT_MAX);
 				id.stack.inventory = (stack_flag&1)!=0;
 				id.stack.cart = (stack_flag&2)!=0;
 				id.stack.storage = (stack_flag&4)!=0;
@@ -2489,7 +2489,7 @@ static int itemdb_readdb_libconfig(const char *filename, struct DBMap *itemconst
 	}
 	db_destroy(duplicate_db);
 	libconfig->destroy(&item_db_conf);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 	return count;
 }
 
@@ -2513,7 +2513,7 @@ static bool itemdb_read_libconfig_lapineddukddak(void)
 	int i = 0;
 	int count = 0;
 
-	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH"item_lapineddukddak.conf");
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH "item_lapineddukddak.conf");
 	if (libconfig->load_file(&item_lapineddukddak, filepath) == CONFIG_FALSE)
 		return false;
 
@@ -2523,7 +2523,7 @@ static bool itemdb_read_libconfig_lapineddukddak(void)
 	}
 
 	libconfig->destroy(&item_lapineddukddak);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 	return true;
 }
 
@@ -2542,7 +2542,7 @@ static bool itemdb_read_libconfig_lapineddukddak_sub(struct config_setting_t *it
 		return false;
 	}
 
-	data->lapineddukddak = aCalloc(1, sizeof(struct item_lapineddukddak));
+	data->lapineddukddak = (struct item_lapineddukddak *)aCalloc(1, sizeof(struct item_lapineddukddak));
 	if (libconfig->setting_lookup_int(it, "NeedCount", &i32) == CONFIG_TRUE)
 		data->lapineddukddak->NeedCount = (int16)i32;
 
@@ -2574,7 +2574,7 @@ static bool itemdb_read_libconfig_lapineddukddak_sub_sources(struct config_setti
 	VECTOR_INIT(data->lapineddukddak->SourceItems);
 	while ((entry = libconfig->setting_get_elem(sources, i++)) != NULL) {
 		struct item_data *edata = NULL;
-		struct itemlist_entry item = { 0 };
+		struct itemlist_entry item{};
 		const char *name = config_setting_name(entry);
 		int i32 = 0;
 
@@ -2605,7 +2605,7 @@ static bool itemdb_read_libconfig_lapineupgrade(void)
 	int i = 0;
 	int count = 0;
 
-	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH"item_lapineupgrade.conf");
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH "item_lapineupgrade.conf");
 	if (libconfig->load_file(&item_lapineupgrade, filepath) == CONFIG_FALSE)
 		return false;
 
@@ -2615,7 +2615,7 @@ static bool itemdb_read_libconfig_lapineupgrade(void)
 	}
 
 	libconfig->destroy(&item_lapineupgrade);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 	return true;
 }
 
@@ -2635,7 +2635,7 @@ static bool itemdb_read_libconfig_lapineupgrade_sub(struct config_setting_t *it,
 		return false;
 	}
 
-	data->lapineupgrade = aCalloc(1, sizeof(struct item_lapineupgrade));
+	data->lapineupgrade = (struct item_lapineupgrade *)aCalloc(1, sizeof(struct item_lapineupgrade));
 
 	if (libconfig->setting_lookup_int(it, "NeedRefineMin", &i32) == CONFIG_TRUE)
 		data->lapineupgrade->NeedRefineMin = (int8)i32;
@@ -2671,7 +2671,7 @@ static bool itemdb_read_libconfig_lapineupgrade_sub_targets(struct config_settin
 	VECTOR_INIT(data->lapineupgrade->TargetItems);
 	while ((entry = libconfig->setting_get_elem(targets, i++)) != NULL) {
 		struct item_data *edata = NULL;
-		struct itemlist_entry item = {0};
+		struct itemlist_entry item{};
 		const char *name = config_setting_name(entry);
 		int i32 = 0;
 
@@ -2698,7 +2698,7 @@ static bool itemdb_read_libconfig_item_reform_info(void)
 	struct config_t item_reform;
 	char filepath[290];
 
-	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH"item_reform_info.conf");
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH "item_reform_info.conf");
 	if (libconfig->load_file(&item_reform, filepath) == CONFIG_FALSE)
 		return false;
 
@@ -2712,7 +2712,7 @@ static bool itemdb_read_libconfig_item_reform_info(void)
 	}
 
 	libconfig->destroy(&item_reform);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 	return true;
 }
 
@@ -2721,7 +2721,7 @@ static bool itemdb_read_libconfig_item_reform_info_sub(struct config_setting_t *
 	nullpo_retr(false, it);
 	nullpo_retr(false, source);
 
-	struct item_reform ir = { 0 };
+	struct item_reform ir{};
 
 	if (libconfig->setting_lookup_int(it, "Id", &ir.Id) == CONFIG_FALSE || ir.Id < 0) {
 		ShowWarning("%s: invalid entry Id %d at %s, skipping..\n", __func__, ir.Id, source);
@@ -2751,7 +2751,7 @@ static bool itemdb_read_libconfig_item_reform_info_sub(struct config_setting_t *
 		return false;
 
 	/* Allocate memory and copy contents */
-	struct item_reform *s_ir = aCalloc(1, sizeof(struct item_reform));
+	struct item_reform *s_ir = (struct item_reform *)aCalloc(1, sizeof(struct item_reform));
 	*s_ir = ir;
 
 	/* Store ptr in the database */
@@ -2775,7 +2775,7 @@ static bool itemdb_read_libconfig_item_reform_info_materials(struct config_setti
 	while ((entry = libconfig->setting_get_elem(it, i++)) != NULL) {
 		const char *name = config_setting_name(entry);
 		struct item_data *idata = itemdb->name2id(name);
-		struct itemlist_entry item = { 0 };
+		struct itemlist_entry item{};
 
 		if (idata == NULL) {
 			ShowWarning("%s: unknown item '%s' for entry with Id %d, skipping..\n", __func__, name, ir->Id);
@@ -2803,13 +2803,13 @@ static bool itemdb_read_libconfig_item_reform_info_reqinfo(struct config_setting
 
 	int i32 = 0;
 	if (libconfig->setting_lookup_int(it, "NeedRefineMin", &i32) == CONFIG_TRUE)
-		ir->NeedRefineMin = cap_value(i32, 0, MAX_REFINE);
+		ir->NeedRefineMin = std::clamp(i32, 0, MAX_REFINE);
 
 	if (libconfig->setting_lookup_int(it, "NeedRefineMax", &i32) == CONFIG_TRUE)
-		ir->NeedRefineMax = cap_value(i32, 0, MAX_REFINE);
+		ir->NeedRefineMax = std::clamp(i32, 0, MAX_REFINE);
 
 	if (libconfig->setting_lookup_int(it, "NeedOptionNumMin", &i32) == CONFIG_TRUE)
-		ir->NeedOptionNumMin = cap_value(i32, 0, MAX_ITEM_OPTIONS);
+		ir->NeedOptionNumMin = std::clamp(i32, 0, MAX_ITEM_OPTIONS);
 
 	if (libconfig->setting_lookup_bool(it, "IsEmptySocket", &i32) == CONFIG_TRUE)
 		ir->IsEmptySocket = (bool)i32;
@@ -2824,7 +2824,7 @@ static bool itemdb_read_libconfig_item_reform_info_behinfo(struct config_setting
 
 	int i32 = 0;
 	if (libconfig->setting_lookup_int(it, "ChangeRefineValue", &i32) == CONFIG_TRUE)
-		ir->ChangeRefineValue = cap_value(i32, -MAX_REFINE, MAX_REFINE);
+		ir->ChangeRefineValue = std::clamp(i32, -MAX_REFINE, MAX_REFINE);
 
 	if (libconfig->setting_lookup_bool(it, "PreserveSocketItem", &i32) == CONFIG_TRUE)
 		ir->PreserveSocketItem = (bool)i32;
@@ -2843,7 +2843,7 @@ static bool itemdb_read_libconfig_item_reform_list(void)
 	struct config_t item_reform;
 	char filepath[290];
 
-	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH"item_reform_list.conf");
+	snprintf(filepath, sizeof(filepath), "%s/%s", map->db_path, DBPATH "item_reform_list.conf");
 	if (libconfig->load_file(&item_reform, filepath) == CONFIG_FALSE)
 		return false;
 
@@ -2860,7 +2860,7 @@ static bool itemdb_read_libconfig_item_reform_list(void)
 	}
 
 	libconfig->destroy(&item_reform);
-	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"%s"CL_RESET"'.\n", count, filepath);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, filepath);
 	return true;
 }
 
@@ -2958,7 +2958,7 @@ static void itemdb_item_reform(struct map_session_data *sd, const struct item_re
 		memcpy(&item_tmp.option, itr->option, sizeof(item_tmp.option));
 	if (ir->PreserveGrade)
 		item_tmp.grade = itr->grade;
-	item_tmp.refine = cap_value(itr->refine + ir->ChangeRefineValue, 0, MAX_REFINE);
+	item_tmp.refine = std::clamp(itr->refine + ir->ChangeRefineValue, 0, MAX_REFINE);
 
 	// Consume the required materials
 	for (int i = 0; i < VECTOR_LENGTH(ir->Materials); ++i) {
@@ -2994,7 +2994,7 @@ static void itemdb_read(bool minimal)
 	struct DBData prev;
 
 	const char *filename[] = {
-		DBPATH"item_db.conf",
+		DBPATH "item_db.conf",
 		"item_db2.conf",
 	};
 
@@ -3010,7 +3010,7 @@ static void itemdb_read(bool minimal)
 	for( i = 0; i < ARRAYLENGTH(itemdb->array); ++i ) {
 		if( itemdb->array[i] ) {
 			if( itemdb->names->put(itemdb->names,DB->str2key(itemdb->array[i]->name),DB->ptr2data(itemdb->array[i]),&prev) ) {
-				struct item_data *data = DB->data2ptr(&prev);
+				struct item_data *data = (struct item_data *)DB->data2ptr(&prev);
 				ShowError("itemdb_read: duplicate AegisName '%s' in item ID %d and %d\n",itemdb->array[i]->name,itemdb->array[i]->nameid,data->nameid);
 			}
 		}
@@ -3041,11 +3041,11 @@ static void itemdb_read(bool minimal)
  */
 static int itemdb_addname_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct item_data *item = DB->data2ptr(data);
+	struct item_data *item = (struct item_data *)DB->data2ptr(data);
 	struct DBData prev;
 
 	if (itemdb->names->put(itemdb->names, DB->str2key(item->name), DB->ptr2data(item), &prev)) {
-		struct item_data *oldItem = DB->data2ptr(&prev);
+		struct item_data *oldItem = (struct item_data *)DB->data2ptr(&prev);
 		ShowError("itemdb_read: duplicate AegisName '%s' in item ID %d and %d\n", item->name, item->nameid, oldItem->nameid);
 	}
 
@@ -3121,7 +3121,7 @@ static void destroy_item_data(struct item_data *self, int free_self)
  */
 static int itemdb_final_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct item_data *id = DB->data2ptr(data);
+	struct item_data *id = (struct item_data *)DB->data2ptr(data);
 
 	if( id != &itemdb->dummy )
 		itemdb->destroy_item_data(id, 1);
@@ -3131,7 +3131,7 @@ static int itemdb_final_sub(union DBKey key, struct DBData *data, va_list ap)
 
 static int itemdb_options_final_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct itemdb_option *ito = DB->data2ptr(data);
+	struct itemdb_option *ito = (struct itemdb_option *)DB->data2ptr(data);
 
 	if (ito->script != NULL)
 		script->free_code(ito->script);
@@ -3141,7 +3141,7 @@ static int itemdb_options_final_sub(union DBKey key, struct DBData *data, va_lis
 
 static int itemdb_reform_final_sub(union DBKey key, struct DBData *data, va_list ap)
 {
-	struct item_reform *ito = DB->data2ptr(data);
+	struct item_reform *ito = (struct item_reform *)DB->data2ptr(data);
 
 	VECTOR_CLEAR(ito->Materials);
 
@@ -3286,13 +3286,13 @@ static void itemdb_reload(void)
 static void itemdb_name_constants(void)
 {
 	struct DBIterator *iter = db_iterator(itemdb->names);
-	struct item_data *data;
 
 #ifdef ENABLE_CASE_CHECK
 	script->parser_current_file = "Item Database (Likely an invalid or conflicting AegisName)";
 #endif // ENABLE_CASE_CHECK
-	for( data = dbi_first(iter); dbi_exists(iter); data = dbi_next(iter) )
+	for (struct item_data *data = (struct item_data *)dbi_first(iter); dbi_exists(iter); data = (struct item_data *)dbi_next(iter)) {
 		script->set_constant2(data->name, data->nameid, false, false);
+	}
 #ifdef ENABLE_CASE_CHECK
 	script->parser_current_file = NULL;
 #endif // ENABLE_CASE_CHECK
@@ -3383,7 +3383,7 @@ void itemdb_defaults(void)
 	itemdb->searchname_sub = itemdb_searchname_sub;
 	itemdb->searchname_array_sub = itemdb_searchname_array_sub;
 	itemdb->searchrandomid = itemdb_searchrandomid;
-	itemdb->typename = itemdb_typename;
+	itemdb->type_to_name = itemdb_type_to_name;
 	itemdb->jobmask2mapid = itemdb_jobmask2mapid;
 	itemdb->jobid2mapid = itemdb_jobid2mapid;
 	itemdb->create_dummy_data = create_dummy_data;

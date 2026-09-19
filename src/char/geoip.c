@@ -123,7 +123,7 @@ static void geoip_final(bool shutdown)
 
 	if (geoip->data->active) {
 		if (!shutdown)
-			ShowStatus("GeoIP "CL_RED"disabled"CL_RESET".\n");
+			ShowStatus("GeoIP " CL_RED "disabled" CL_RESET ".\n");
 		geoip->data->active = false;
 	}
 }
@@ -157,7 +157,7 @@ static void geoip_init(void)
 		geoip->final(false);
 		return;
 	}
-	geoip->data->cache = aMalloc(sizeof(unsigned char) * bufa.st_size);
+	geoip->data->cache = (unsigned char *)aMalloc(sizeof(unsigned char) * bufa.st_size);
 	if (fread(geoip->data->cache, sizeof(unsigned char), bufa.st_size, db) != (size_t)bufa.st_size) {
 		ShowError("geoip_cache: Couldn't read all elements!\n");
 		fclose(db);
@@ -200,7 +200,7 @@ static void geoip_init(void)
 		geoip->final(false);
 		return;
 	}
-	ShowStatus("Finished Reading "CL_GREEN"GeoIP"CL_RESET" Database.\n");
+	ShowStatus("Finished Reading " CL_GREEN "GeoIP" CL_RESET " Database.\n");
 }
 
 void geoip_defaults(void)
