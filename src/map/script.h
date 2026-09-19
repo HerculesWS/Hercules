@@ -28,7 +28,8 @@
 #include "common/strlib.h" //StringBuf
 
 #include <errno.h>
-#include <setjmp.h>
+#include <exception>
+#include <string>
 
 /**
  * Declarations
@@ -841,6 +842,67 @@ struct string_translation {
 	uint8 *buf; // Array of struct string_translation_entry
 };
 
+class script_parse_exception : public std::exception
+{
+  public:
+	/**
+	 * Script fatal error exception
+	 *
+	 * @param msg The parsing error message
+	 * @param pos A pointer to the script string at the position of which the error ocurred in
+	 * @param report Whether to report the error or not
+	 */
+	script_parse_exception(const std::string &msg, const char *pos, bool report) noexcept
+	        : m_msg(msg), m_pos(pos), m_report(report){};
+
+	/**
+	 * @brief Returns attached message with the script parse exception
+	 *
+	 * @return immutable pointer to C-style string of the message
+	 */
+	[[nodiscard]] const char *what() const noexcept override
+	{
+		return m_msg.c_str();
+	};
+
+	//[[nodiscard]] script_parse_exception &operator=(const script_parse_exception &other) noexcept;
+
+	/**
+	 * @brief Returns attached message with the script parse exception
+	 *
+	 * @return immutable reference to std:string of the message
+	 */
+	[[nodiscard]] const std::string &msg() const noexcept
+	{
+		return m_msg;
+	};
+
+	/**
+	 * @brief Returns the current internal buffer of the script string at which the error occured
+	 *
+	 * @return immutable pointer to a C-style string of the script at the error position
+	 */
+	[[nodiscard]] const char *pos() const noexcept
+	{
+		return m_pos;
+	};
+
+	/**
+	 * @brief Whether or not to show a script error report to the user
+	 *
+	 * @return bool
+	 */
+	[[nodiscard]] bool report() const noexcept
+	{
+		return m_report;
+	};
+
+  private:
+	std::string m_msg; //< Error message produced by the script parser
+	const char *m_pos; //< Pointer to the script string at the position of the error
+	bool m_report;     //< Whether or not to show a report
+};
+
 /**
  * Interface
  **/
@@ -898,18 +960,6 @@ struct script_interface {
 	int buildin_callsub_ref;
 	int buildin_callfunc_ref;
 	int buildin_getelementofarray_ref;
-	/* */
-#ifdef _MSC_VER
-#pragma warning (push)
-#pragma warning (disable: 4324)
-#endif
-	jmp_buf     error_jump;
-#ifdef _MSC_VER
-#pragma warning (pop)
-#endif
-	char*       error_msg;
-	const char* error_pos;
-	int         error_report; // if the error should produce output
 	// Used by disp_warning_message
 	const char* parser_current_src;
 	const char* parser_current_file;

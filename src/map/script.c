@@ -339,10 +339,7 @@ static void script_reportfunc(struct script_state *st)
 static void disp_error_message2(const char *mes, const char *pos, int report)  __attribute__((nonnull (1))) analyzer_noreturn;
 static void disp_error_message2(const char *mes, const char *pos, int report)
 {
-	script->error_msg = aStrdup(mes);
-	script->error_pos = pos;
-	script->error_report = report;
-	longjmp( script->error_jump, 1 );
+	throw script_parse_exception(mes, pos, report != 0);
 }
 #define disp_error_message(mes,pos) (disp_error_message2((mes),(pos),1))
 
@@ -2913,244 +2910,248 @@ static void script_warning(const char *src, const char *file, int start_line, co
 }
 
 #ifdef _MSC_VER
-#pragma warning (push)
-#pragma warning (disable: 4702)
+#  pragma warning(push)
+#  pragma warning(disable : 4702)
 #endif
 /*==========================================
  * Analysis of the script
  *------------------------------------------*/
 static struct script_code *parse_script(const char *src, const char *file, int line, int options, int *retval)
 {
-	const char *p,*tmpp;
+	const char *p, *tmpp;
 	int i;
-	struct script_code* code = NULL;
+	struct script_code *code = NULL;
 	char end;
 	bool unresolved_names = false;
 
-	script->parser_current_src = src;
+	script->parser_current_src  = src;
 	script->parser_current_file = file;
 	script->parser_current_line = line;
 
-	if( src == NULL )
-		return NULL;// empty script
+	if (src == NULL)
+		return NULL; // empty script
 
-	if( script->parse_cleanup_timer_id == INVALID_TIMER ) {
+	if (script->parse_cleanup_timer_id == INVALID_TIMER) {
 		script->parse_cleanup_timer_id = timer->add(timer->gettick() + 10, script->parse_cleanup_timer, 0, 0);
 	}
 
-	memset(&script->syntax,0,sizeof(script->syntax));
-	script->syntax.last_func = -1;/* as valid values are >= 0 */
-	if( script->parser_current_npc_name ) {
-		if( !script->translation_db )
+	memset(&script->syntax, 0, sizeof(script->syntax));
+	script->syntax.last_func = -1; /* as valid values are >= 0 */
+	if (script->parser_current_npc_name) {
+		if (!script->translation_db)
 			script->load_translations();
-		if( script->translation_db )
-			script->syntax.translation_db = (struct DBMap *)strdb_get(script->translation_db, script->parser_current_npc_name);
+		if (script->translation_db)
+			script->syntax.translation_db
+			        = (struct DBMap *)strdb_get(script->translation_db, script->parser_current_npc_name);
 	}
 
 	VECTOR_TRUNCATE(script->buf);
 	script->parse_nextline(true, NULL);
 
-	// who called parse_script is responsible for clearing the database after using it, but just in case... lets clear it here
-	if( options&SCRIPT_USE_LABEL_DB )
+	// who called parse_script is responsible for clearing the database after
+	// using it, but just in case... lets clear it here
+	if (options & SCRIPT_USE_LABEL_DB)
 		script->label_count = 0;
 	script->parse_options = options;
 
-#ifdef _MSC_VER
-#pragma warning (push)
-#pragma warning (disable: 4611)
+	try {
+		script->parse_syntax_for_flag = 0;
+		p                             = src;
+		p                             = script->skip_space(p);
+
+		if (options & SCRIPT_IGNORE_EXTERNAL_BRACKETS) {
+			// does not require brackets around the script
+
+			if (*p == '\0' && !(options & SCRIPT_RETURN_EMPTY_SCRIPT)) {
+				// empty script and can return NULL
+				VECTOR_TRUNCATE(script->buf);
+#ifdef ENABLE_CASE_CHECK
+				script->local_casecheck.clear();
+				script->parser_current_src  = NULL;
+				script->parser_current_file = NULL;
+				script->parser_current_line = 0;
+#endif // ENABLE_CASE_CHECK
+				return NULL;
+			}
+			end = '\0';
+		} else { // requires brackets around the script
+			if (*p != '{') {
+				disp_error_message("not found '{'", p);
+				if (retval)
+					*retval = EXIT_FAILURE;
+			}
+			p = script->skip_space(p + 1);
+			if (*p == '}' && !(options & SCRIPT_RETURN_EMPTY_SCRIPT)) {
+				// empty script and can return NULL
+				VECTOR_TRUNCATE(script->buf);
+#ifdef ENABLE_CASE_CHECK
+				script->local_casecheck.clear();
+				script->parser_current_src  = NULL;
+				script->parser_current_file = NULL;
+				script->parser_current_line = 0;
+#endif // ENABLE_CASE_CHECK
+				return NULL;
+			}
+			end = '}';
+		}
+
+		// clear references of labels, variables and internal functions
+		for (i = LABEL_START; i < script->str_num; i++) {
+			if (script->str_data[i].type == C_POS || script->str_data[i].type == C_NAME
+			    || script->str_data[i].type == C_USERFUNC || script->str_data[i].type == C_USERFUNC_POS) {
+				script->str_data[i].type      = C_NOP;
+				script->str_data[i].backpatch = -1;
+				script->str_data[i].label     = -1;
+			}
+		}
+
+		while (script->syntax.curly_count != 0 || *p != end) {
+			if (*p == '\0') {
+				disp_error_message("script:parse_script: unexpected end of script", p);
+			}
+
+			// Special handling only label
+			tmpp = script->skip_space(script->skip_word(p));
+
+			if (tmpp != NULL /* Can't be NULL but silence gcc warnings */ && *tmpp == ':'
+			    && !(strncmp(p, "default:", 8) == 0 && p + 7 == tmpp)
+			    && !(strncmp(p, "function", 8) == 0 && script->skip_space(p + 8) == tmpp)) {
+				i = script->add_word(p);
+				script->set_label(i, VECTOR_LENGTH(script->buf), p);
+
+				if ((script->parse_options & SCRIPT_USE_LABEL_DB) != 0) {
+					bool is_extern = ((p[0] == 'O' || p[0] == 'o') && (p[1] == 'N' || p[1] == 'n'));
+					script->label_add(i,
+					                  VECTOR_LENGTH(script->buf),
+					                  is_extern ? LABEL_IS_EXTERN : LABEL_NOFLAGS);
+				}
+
+				p = tmpp + 1;
+				p = script->skip_space(p);
+				continue;
+			}
+
+			// All other lumped
+			p = script->parse_line(p);
+			p = script->skip_space(p);
+
+			script->parse_nextline(false, p);
+		}
+
+		script->addc(C_NOP);
+
+		// default unknown references to variables
+		for (i = LABEL_START; i < script->str_num; i++) {
+			if (script->str_data[i].type == C_NOP) {
+				int j;
+				script->str_data[i].type  = C_NAME;
+				script->str_data[i].label = i;
+				for (j = script->str_data[i].backpatch; j >= 0 && j != 0x00ffffff;) {
+					int next = GETVALUE(&script->buf, j);
+					SETVALUE(&script->buf, j, i);
+					j = next;
+				}
+			} else if (script->str_data[i].type == C_USERFUNC) {
+				// 'function name;' without follow-up code
+				ShowError("parse_script: function '%s' declared but not defined.\n",
+				          script->str_buf + script->str_data[i].str);
+				if (retval)
+					*retval = EXIT_FAILURE;
+				unresolved_names = true;
+			}
+		}
+
+		if (unresolved_names) {
+			disp_error_message("parse_script: unresolved function references", p);
+			if (retval)
+				*retval = EXIT_FAILURE;
+		}
+
+#ifdef SCRIPT_DEBUG_DISP
+		for (i = 0; i < VECTOR_LENGTH(script->buf); i++) {
+			if ((i & 15) == 0)
+				ShowMessage("%04x : ", i);
+			ShowMessage("%02x ", VECTOR_INDEX(script->buf, i));
+			if ((i & 15) == 15)
+				ShowMessage("\n");
+		}
+		ShowMessage("\n");
 #endif
-	if( setjmp( script->error_jump ) != 0 ) {
-#ifdef _MSC_VER
-#pragma warning (pop)
+#ifdef SCRIPT_DEBUG_DISASM
+		i = 0;
+		while (i < VECTOR_LENGTH(script->buf)) {
+			c_op op = script->get_com(&script->buf, &i);
+			int j   = i; // Note: i is modified in the line above.
+
+			ShowMessage("%06x %s", i, script->op2name(op));
+
+			PRAGMA_GCC46(GCC diagnostic push)
+			PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+			switch (op) {
+			case C_INT:
+				ShowMessage(" %d", script->get_num(&script->buf, &i));
+				break;
+			case C_POS:
+				ShowMessage(" 0x%06x", *(int *)(&VECTOR_INDEX(script->buf, i)) & 0xffffff);
+				i += 3;
+				break;
+			case C_NAME:
+				j = (*(int *)(&VECTOR_INDEX(script->buf, i)) & 0xffffff);
+				ShowMessage(" %s", (j == 0xffffff) ? "?? unknown ??" : script->get_str(j));
+				i += 3;
+				break;
+			case C_STR:
+				j = (int)strlen((char *)&VECTOR_INDEX(script->buf, i));
+				ShowMessage(" %s", &VECTOR_INDEX(script->buf, i));
+				i += j + 1;
+				break;
+			}
+			PRAGMA_GCC46(GCC diagnostic pop)
+			ShowMessage(CL_CLL "\n");
+		}
 #endif
-		//Restore program state when script has problems. [from jA]
-		const int size = ARRAYLENGTH(script->syntax.curly);
-		if( script->error_report )
-			script->error(src,file,line,script->error_msg,script->error_pos);
-		aFree( script->error_msg );
-		VECTOR_TRUNCATE(script->buf);
-		for(i=LABEL_START;i<script->str_num;i++)
-			if(script->str_data[i].type == C_NOP) script->str_data[i].type = C_NAME;
-		for(i=0; i<size; i++)
-			linkdb_final(&script->syntax.curly[i].case_label);
+
+		CREATE(code, struct script_code, 1);
+		VECTOR_INIT(code->script_buf);
+		VECTOR_ENSURE(code->script_buf, VECTOR_LENGTH(script->buf), 1);
+		VECTOR_PUSHARRAY(code->script_buf, VECTOR_DATA(script->buf), VECTOR_LENGTH(script->buf));
+		code->local.vars   = NULL;
+		code->local.arrays = NULL;
 #ifdef ENABLE_CASE_CHECK
 		script->local_casecheck.clear();
-		script->parser_current_src = NULL;
+		script->parser_current_src  = NULL;
 		script->parser_current_file = NULL;
 		script->parser_current_line = 0;
 #endif // ENABLE_CASE_CHECK
-		if (retval) *retval = EXIT_FAILURE;
+		return code;
+	} catch (script_parse_exception &parse_exception) {
+		// Restore program state when script has problems. [from jA]
+		const int size = ARRAYLENGTH(script->syntax.curly);
+		if (parse_exception.report())
+			script->error(src, file, line, parse_exception.msg().c_str(), parse_exception.pos());
+
+		VECTOR_TRUNCATE(script->buf);
+
+		for (i = LABEL_START; i < script->str_num; i++) {
+			if (script->str_data[i].type == C_NOP)
+				script->str_data[i].type = C_NAME;
+		}
+
+		for (i = 0; i < size; i++)
+			linkdb_final(&script->syntax.curly[i].case_label);
+#ifdef ENABLE_CASE_CHECK
+		script->local_casecheck.clear();
+		script->parser_current_src  = NULL;
+		script->parser_current_file = NULL;
+		script->parser_current_line = 0;
+#endif // ENABLE_CASE_CHECK
+		if (retval)
+			*retval = EXIT_FAILURE;
 		return NULL;
 	}
-
-	script->parse_syntax_for_flag=0;
-	p=src;
-	p=script->skip_space(p);
-	if( options&SCRIPT_IGNORE_EXTERNAL_BRACKETS )
-	{// does not require brackets around the script
-		if (*p == '\0' && !(options&SCRIPT_RETURN_EMPTY_SCRIPT)) {
-			// empty script and can return NULL
-			VECTOR_TRUNCATE(script->buf);
-#ifdef ENABLE_CASE_CHECK
-			script->local_casecheck.clear();
-			script->parser_current_src = NULL;
-			script->parser_current_file = NULL;
-			script->parser_current_line = 0;
-#endif // ENABLE_CASE_CHECK
-			return NULL;
-		}
-		end = '\0';
-	}
-	else
-	{// requires brackets around the script
-		if( *p != '{' ) {
-			disp_error_message("not found '{'",p);
-			if (retval) *retval = EXIT_FAILURE;
-		}
-		p = script->skip_space(p+1);
-		if (*p == '}' && !(options&SCRIPT_RETURN_EMPTY_SCRIPT)) {
-			// empty script and can return NULL
-			VECTOR_TRUNCATE(script->buf);
-#ifdef ENABLE_CASE_CHECK
-			script->local_casecheck.clear();
-			script->parser_current_src = NULL;
-			script->parser_current_file = NULL;
-			script->parser_current_line = 0;
-#endif // ENABLE_CASE_CHECK
-			return NULL;
-		}
-		end = '}';
-	}
-
-	// clear references of labels, variables and internal functions
-	for(i=LABEL_START;i<script->str_num;i++) {
-		if(
-			script->str_data[i].type==C_POS || script->str_data[i].type==C_NAME ||
-			script->str_data[i].type==C_USERFUNC || script->str_data[i].type == C_USERFUNC_POS
-		  ) {
-			script->str_data[i].type=C_NOP;
-			script->str_data[i].backpatch=-1;
-			script->str_data[i].label=-1;
-		}
-	}
-
-	while (script->syntax.curly_count != 0 || *p != end) {
-		if (*p == '\0') {
-			disp_error_message("script:parse_script: unexpected end of script", p);
-		}
-
-		// Special handling only label
-		tmpp = script->skip_space(script->skip_word(p));
-
-		if (tmpp != NULL /* Can't be NULL but silence gcc warnings */ && *tmpp == ':'
-			&& !(strncmp(p, "default:", 8) == 0 && p + 7 == tmpp)
-			&& !(strncmp(p, "function", 8) == 0 && script->skip_space(p + 8) == tmpp)) {
-			i = script->add_word(p);
-			script->set_label(i, VECTOR_LENGTH(script->buf), p);
-
-			if ((script->parse_options & SCRIPT_USE_LABEL_DB) != 0) {
-				bool is_extern = ((p[0] == 'O' || p[0] == 'o') && (p[1] == 'N' || p[1] == 'n'));
-				script->label_add(i, VECTOR_LENGTH(script->buf), is_extern ? LABEL_IS_EXTERN : LABEL_NOFLAGS);
-			}
-
-			p = tmpp + 1;
-			p = script->skip_space(p);
-			continue;
-		}
-
-		// All other lumped
-		p = script->parse_line(p);
-		p = script->skip_space(p);
-
-		script->parse_nextline(false, p);
-	}
-
-	script->addc(C_NOP);
-
-	// default unknown references to variables
-	for (i = LABEL_START; i < script->str_num; i++) {
-		if (script->str_data[i].type == C_NOP) {
-			int j;
-			script->str_data[i].type=C_NAME;
-			script->str_data[i].label=i;
-			for (j = script->str_data[i].backpatch; j >= 0 && j != 0x00ffffff; ) {
-				int next = GETVALUE(&script->buf, j);
-				SETVALUE(&script->buf, j, i);
-				j = next;
-			}
-		} else if(script->str_data[i].type == C_USERFUNC) {
-			// 'function name;' without follow-up code
-			ShowError("parse_script: function '%s' declared but not defined.\n", script->str_buf+script->str_data[i].str);
-			if (retval) *retval = EXIT_FAILURE;
-			unresolved_names = true;
-		}
-	}
-
-	if( unresolved_names ) {
-		disp_error_message("parse_script: unresolved function references", p);
-		if (retval) *retval = EXIT_FAILURE;
-	}
-
-#ifdef SCRIPT_DEBUG_DISP
-	for (i = 0; i < VECTOR_LENGTH(script->buf); i++) {
-		if ((i&15) == 0)
-			ShowMessage("%04x : ",i);
-		ShowMessage("%02x ", VECTOR_INDEX(script->buf, i));
-		if ((i&15) == 15)
-			ShowMessage("\n");
-	}
-	ShowMessage("\n");
-#endif
-#ifdef SCRIPT_DEBUG_DISASM
-	i = 0;
-	while (i < VECTOR_LENGTH(script->buf)) {
-		c_op op = script->get_com(&script->buf, &i);
-		int j = i; // Note: i is modified in the line above.
-
-		ShowMessage("%06x %s", i, script->op2name(op));
-
-		PRAGMA_GCC46(GCC diagnostic push)
-		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
-		switch (op) {
-		case C_INT:
-			ShowMessage(" %d", script->get_num(&script->buf, &i));
-			break;
-		case C_POS:
-			ShowMessage(" 0x%06x", *(int*)(&VECTOR_INDEX(script->buf, i))&0xffffff);
-			i += 3;
-			break;
-		case C_NAME:
-			j = (*(int*)(&VECTOR_INDEX(script->buf, i))&0xffffff);
-			ShowMessage(" %s", ( j == 0xffffff ) ? "?? unknown ??" : script->get_str(j));
-			i += 3;
-			break;
-		case C_STR:
-			j = (int)strlen((char*)&VECTOR_INDEX(script->buf, i));
-			ShowMessage(" %s", &VECTOR_INDEX(script->buf, i));
-			i += j+1;
-			break;
-		}
-		PRAGMA_GCC46(GCC diagnostic pop)
-		ShowMessage(CL_CLL "\n");
-	}
-#endif
-
-	CREATE(code,struct script_code,1);
-	VECTOR_INIT(code->script_buf);
-	VECTOR_ENSURE(code->script_buf, VECTOR_LENGTH(script->buf), 1);
-	VECTOR_PUSHARRAY(code->script_buf, VECTOR_DATA(script->buf), VECTOR_LENGTH(script->buf));
-	code->local.vars = NULL;
-	code->local.arrays = NULL;
-#ifdef ENABLE_CASE_CHECK
-	script->local_casecheck.clear();
-	script->parser_current_src = NULL;
-	script->parser_current_file = NULL;
-	script->parser_current_line = 0;
-#endif // ENABLE_CASE_CHECK
-	return code;
 }
 #ifdef _MSC_VER
-#pragma warning (pop)
+#  pragma warning(pop)
 #endif
 
 /**
@@ -30862,10 +30863,6 @@ void script_defaults(void)
 	script->buildin_callfunc_ref = 0;
 	script->buildin_getelementofarray_ref = 0;
 
-	memset(script->error_jump,0,sizeof(script->error_jump));
-	script->error_msg = NULL;
-	script->error_pos = NULL;
-	script->error_report = 0;
 	script->parser_current_src = NULL;
 	script->parser_current_file = NULL;
 	script->parser_current_line = 0;
