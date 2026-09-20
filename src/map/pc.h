@@ -1102,6 +1102,7 @@ END_ZEROED_BLOCK; /* End */
 	int (*unequipitem) (struct map_session_data *sd,int n,int flag);
 	void (*unequipitem_pos) (struct map_session_data *sd, int n, int pos);
 	void (*unequipitem_pos_sub) (struct map_session_data *sd, int pos_combination, int *look, int look_type, int pos, int pos_costume);
+	void (*run_unequip_item_scripts) (struct map_session_data *sd, int inv_idx);
 	int (*checkitem) (struct map_session_data *sd);
 	int (*useitem) (struct map_session_data *sd,int n);
 	void (*autocast_clear_current) (struct map_session_data *sd);
@@ -1255,6 +1256,7 @@ END_ZEROED_BLOCK; /* End */
 	void (*bank_withdraw) (struct map_session_data *sd, int money);
 
 	void (*rental_expire) (struct map_session_data *sd, int i);
+	void (*clear_stale_equipment_statuses) (struct map_session_data *sd);
 	void (*scdata_received) (struct map_session_data *sd);
 
 	void (*bound_clear) (struct map_session_data *sd, enum e_item_bound_type type);
