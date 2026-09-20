@@ -10592,40 +10592,7 @@ static int pc_unequipitem(struct map_session_data *sd, int n, int flag)
 		status_change_end(&sd->bl, SC_CRUCIS, INVALID_TIMER);
 
 	// Execute unequip script. [Skotlex]
-	if (sd->inventory_data[n] != NULL) {
-		struct item_data *equip_data = sd->inventory_data[n];
-		struct map_zone_data *zone = map->list[sd->bl.m].zone;
-		int dis_items_cnt = zone->disabled_items_count;
-
-		if (equip_data->unequip_script != NULL) {
-			int idx;
-
-			ARR_FIND(0, dis_items_cnt, idx, zone->disabled_items[idx] == equip_data->nameid);
-
-			if (idx == dis_items_cnt)
-				script->run_item_unequip_script(sd, equip_data, npc->fake_nd->bl.id);
-		}
-
-		struct item *equip = &sd->status.inventory[n];
-
-		if (!itemdb_isspecial(equip->card[0])) {
-			for (int slot = 0; slot < equip_data->slot; slot++) {
-				if (equip->card[slot] == 0)
-					continue;
-
-				struct item_data *card_data = itemdb->exists(equip->card[slot]);
-
-				if (card_data != NULL && card_data->unequip_script != NULL) {
-					int idx;
-
-					ARR_FIND(0, dis_items_cnt, idx, zone->disabled_items[idx] == card_data->nameid);
-
-					if (idx == dis_items_cnt)
-						script->run_item_unequip_script(sd, card_data, npc->fake_nd->bl.id);
-				}
-			}
-		}
-	}
+	pc->run_unequip_item_scripts(sd, n);
 
 	sd->npc_item_flag = iflag;
 
@@ -12172,11 +12139,94 @@ static void pc_bank_withdraw(struct map_session_data *sd, int money)
 		clif->bank_withdraw(sd,BWA_SUCCESS);
 	}
 }
+/**
+ * Run the item and card unequip scripts for the equipped inventory entry.
+ *
+ * This is used to trigger the same runtime cleanup path as normal equipment
+ * removal, including card-based status effects that must be cleared when the
+ * item is no longer equipped.
+ *
+ * @param sd      Character session data.
+ * @param inv_idx Inventory slot to process.
+ */
+static void pc_run_unequip_item_scripts(struct map_session_data *sd, int inv_idx)
+{
+	nullpo_retv(sd);
+
+	if (inv_idx < 0 || inv_idx >= sd->status.inventorySize)
+		return;
+
+	if (sd->inventory_data[inv_idx] == NULL)
+		return;
+
+	struct item_data *equip_data = sd->inventory_data[inv_idx];
+	struct item *equip = &sd->status.inventory[inv_idx];
+	struct map_zone_data *zone = map->list[sd->bl.m].zone;
+	int dis_items_cnt = (zone != NULL) ? zone->disabled_items_count : 0;
+
+	if (equip_data->unequip_script != NULL) {
+		int idx = dis_items_cnt;
+
+		if (zone != NULL)
+			ARR_FIND(0, dis_items_cnt, idx, zone->disabled_items[idx] == equip_data->nameid);
+		if (idx == dis_items_cnt)
+			script->run_item_unequip_script(sd, equip_data, npc->fake_nd->bl.id);
+	}
+
+	if (equip == NULL || itemdb_isspecial(equip->card[0]))
+		return;
+
+	for (int slot = 0; slot < equip_data->slot; slot++) {
+		struct item_data *card_data;
+		int idx = dis_items_cnt;
+
+		if (equip->card[slot] == 0)
+			continue;
+
+		card_data = itemdb->exists(equip->card[slot]);
+		if (card_data == NULL || card_data->unequip_script == NULL)
+			continue;
+
+		if (zone != NULL)
+			ARR_FIND(0, dis_items_cnt, idx, zone->disabled_items[idx] == card_data->nameid);
+		if (idx == dis_items_cnt)
+			script->run_item_unequip_script(sd, card_data, npc->fake_nd->bl.id);
+	}
+}
+
+/**
+ * Clear stale status effects caused by equipment or card unequip logic.
+ *
+ * Some items/cards grant temporary or permanent status effects through equip and
+ * unequip scripts. When a character loads or a stale equipment state is detected,
+ * this replays the proper unequip cleanup path for remaining inventory entries so
+ * runtime sc_data matches the actual equipment state.
+ *
+ * @param sd Character session data.
+ */
+static void pc_clear_stale_equipment_statuses(struct map_session_data *sd)
+{
+	nullpo_retv(sd);
+
+	for (int i = 0; i < sd->status.inventorySize; i++) {
+		struct item *equip = &sd->status.inventory[i];
+		struct item_data *data;
+
+		if (equip->nameid == 0 || equip->equip != 0)
+			continue;
+
+		data = sd->inventory_data[i];
+		if (data != NULL)
+			pc->run_unequip_item_scripts(sd, i);
+	}
+}
+
 /* status change data arrived from char-server */
 static void pc_scdata_received(struct map_session_data *sd)
 {
 	nullpo_retv(sd);
 	pc->inventory_rentals(sd);
+	pc->clear_stale_equipment_statuses(sd);
 
 	if (sd->expiration_time != 0) { // don't display if it's unlimited or unknow value
 		time_t exp_time = sd->expiration_time;
@@ -13270,6 +13320,8 @@ void pc_defaults(void)
 	pc->bank_deposit = pc_bank_deposit;
 
 	pc->rental_expire = pc_rental_expire;
+	pc->run_unequip_item_scripts = pc_run_unequip_item_scripts;
+	pc->clear_stale_equipment_statuses = pc_clear_stale_equipment_statuses;
 	pc->scdata_received = pc_scdata_received;
 
 	pc->bound_clear = pc_bound_clear;

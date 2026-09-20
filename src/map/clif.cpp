@@ -11225,8 +11225,6 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 	 *
 	 **/
 	if (map->list[sd->bl.m].zone != NULL && map->list[sd->bl.m].zone->disabled_items_count != 0) {
-		struct map_zone_data *zone = map->list[sd->bl.m].zone;
-		int dis_items_cnt = zone->disabled_items_count;
 		int handled_equip = 0x00000000;
 
 		for (int i = 0; i < EQI_MAX; i++) {
@@ -11244,37 +11242,10 @@ static void clif_parse_LoadEndAck(int fd, struct map_session_data *sd)
 
 			handled_equip |= equip_data->equip;
 
-			if (equip_data->unequip_script != NULL) {
-				int idx;
-
-				ARR_FIND(0, dis_items_cnt, idx, zone->disabled_items[idx] == equip_data->nameid);
-
-				if (idx < dis_items_cnt)
-					script->run_item_unequip_script(sd, equip_data, npc->fake_nd->bl.id);
-			}
-
 			if (inv_idx != sd->equip_index[i])
 				continue; // Unequip script execution corrupted the inventory index.
 
-			struct item *equip = &sd->status.inventory[inv_idx];
-
-			if (equip != NULL && !itemdb_isspecial(equip->card[0])) {
-				for (int slot = 0; slot < equip_data->slot; slot++) {
-					if (equip->card[slot] == 0)
-						continue;
-
-					struct item_data *card_data = itemdb->exists(equip->card[slot]);
-
-					if (card_data != NULL && card_data->unequip_script != NULL) {
-						int idx;
-
-						ARR_FIND(0, dis_items_cnt, idx, zone->disabled_items[idx] == card_data->nameid);
-
-						if (idx < dis_items_cnt)
-							script->run_item_unequip_script(sd, card_data, npc->fake_nd->bl.id);
-					}
-				}
-			}
+			pc->run_unequip_item_scripts(sd, inv_idx);
 		}
 	}
 
