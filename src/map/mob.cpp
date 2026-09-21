@@ -1531,7 +1531,7 @@ static int mob_ai_sub_hard_slavemob(struct mob_data *md, int64 tick)
 
 		// Approach master if within view range, chase back to Master's area also if standing on top of the master.
 		if( (md->master_dist>MOB_SLAVEDISTANCE || md->master_dist == 0)
-		 && unit->can_move(&md->bl)
+		 && unit->can_move(&md->bl, {})
 		) {
 			short x = bl->x, y = bl->y;
 			mob_stop_attack(md);
@@ -1646,7 +1646,7 @@ static int mob_randomwalk(struct mob_data *md, int64 tick)
 	nullpo_ret(md);
 
 	if(DIFF_TICK(md->next_walktime,tick)>0 ||
-	   !unit->can_move(&md->bl) ||
+	   !unit->can_move(&md->bl, {}) ||
 	   !(status_get_mode(&md->bl)&MD_CANMOVE))
 		return 0;
 
@@ -1747,7 +1747,7 @@ static bool mob_ai_sub_hard(struct mob_data *md, int64 tick)
 		view_range = md->db->range2;
 	mode = status_get_mode(&md->bl);
 
-	can_move = (mode&MD_CANMOVE)&&unit->can_move(&md->bl);
+	can_move = (mode&MD_CANMOVE)&&unit->can_move(&md->bl, {});
 
 	if (md->target_id) {
 		//Check validity of current target. [Skotlex]
@@ -2075,7 +2075,7 @@ static int mob_ai_sub_lazy(struct mob_data *md, va_list args)
 		return 0;
 	}
 
-	if( DIFF_TICK(md->next_walktime,tick) < 0 && (status_get_mode(&md->bl)&MD_CANMOVE) && unit->can_move(&md->bl) ) {
+	if( DIFF_TICK(md->next_walktime,tick) < 0 && (status_get_mode(&md->bl)&MD_CANMOVE) && unit->can_move(&md->bl, {}) ) {
 		if( rnd()%1000 < MOB_LAZYMOVEPERC(md) )
 			mob->randomwalk(md, tick);
 	}

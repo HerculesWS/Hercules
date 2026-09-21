@@ -1040,7 +1040,7 @@ static int pet_randomwalk(struct pet_data *pd, int64 tick)
 	nullpo_ret(pd);
 	Assert_ret(pd->msd == 0 || pd->msd->pd == pd);
 
-	if (DIFF_TICK(pd->next_walktime,tick) < 0 && unit->can_move(&pd->bl)) {
+	if (DIFF_TICK(pd->next_walktime,tick) < 0 && unit->can_move(&pd->bl, {})) {
 		const int retrycount=20;
 		int i,c,d=12-pd->move_fail_count;
 		if (d < 5)
