@@ -250,12 +250,18 @@ sub parse($$) {
 			$rtinit = ' = UNIT_DIR_UNDEFINED';
 		} elsif ($x =~ /^enum\s+quest_mobtype$/) { # Known enum quest_mobtype
 			$rtinit = ' = QMT_RC_DEMIHUMAN';
+		} elsif ($x =~ /^enum\s+userconfig_from_sql_result$/) { # Known enum userconfig_from_sql_result
+			$rtinit = ' = USERCONFIG_FROM_SQL_SUCCESS';
+		} elsif ($x =~ /^enum\s+battle_dmg_type$/) { # Known enum userconfig_from_sql_result
+			$rtinit = ' = BDT_NORMAL';
+		} elsif ($x =~ /^enum\s+cast_enum$/) { # Known enum userconfig_from_sql_result
+			$rtinit = ' = CAST_GROUND';
 		} elsif ($x =~ /^e_scb_flag$/) { # Known typedef e_scb_flag
 			$rtinit = ' = SCB_NONE';
 		} elsif ($x eq 'DBComparator' or $x eq 'DBHasher' or $x eq 'DBReleaser') { # DB function pointers
 			$rtinit = ' = NULL';
 		} elsif ($x =~ /^(?:struct|union)\s+.*$/) { # Structs and unions
-			$rtinit = ' = { 0 }';
+			$rtinit = '{}';
 		} elsif ($x =~ /^float|double$/) { # Floating point variables
 			$rtinit = ' = 0.';
 		} elsif ($x =~ /^(?:(?:un)?signed\s+)?(?:char|int|long|short)$/
@@ -717,6 +723,12 @@ EOF
 			$beforeblock2 .= "\n\t\t$_" foreach (@{ $if->{before} });
 			$afterblock2 .= "\n\t\t$_" foreach (@{ $if->{after} });
 			$retval = ' retVal___' unless $if->{type} eq 'void';
+			my $prehook_type = $if->{predef};
+			$prehook_type =~ s/preHookFunc//;
+			$prehook_type =~ s/;//;
+			my $posthook_type = $if->{postdef};
+			$posthook_type =~ s/postHookFunc//;
+			$posthook_type =~ s/;//;
 
 			print FH <<"EOF";
 $if->{handlerdef} {$if->{notes}
@@ -725,7 +737,7 @@ $if->{handlerdef} {$if->{notes}
 		$if->{predef}
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.$if->{hname}_pre; hIndex++) {$beforeblock3
-			preHookFunc = HPMHooks.list.$if->{hname}_pre[hIndex].func;
+			preHookFunc = (${prehook_type})HPMHooks.list.$if->{hname}_pre[hIndex].func;
 			$if->{precall}$afterblock3
 		}
 		if (*HPMforce_return) {
@@ -739,7 +751,7 @@ $if->{handlerdef} {$if->{notes}
 	if (HPMHooks.count.$if->{hname}_post > 0) {
 		$if->{postdef}
 		for (hIndex = 0; hIndex < HPMHooks.count.$if->{hname}_post; hIndex++) {$beforeblock3
-			postHookFunc = HPMHooks.list.$if->{hname}_post[hIndex].func;
+			postHookFunc = (${posthook_type})HPMHooks.list.$if->{hname}_post[hIndex].func;
 			$if->{postcall}$afterblock3
 		}
 	}

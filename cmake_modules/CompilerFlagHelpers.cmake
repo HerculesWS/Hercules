@@ -42,6 +42,26 @@ function(testadd_warning_compiler_flag _name)
   endif()
 endfunction()
 
+function(testadd_warning_compiler_flag_target _target_name _name)
+  set(options REQUIRED)
+  cmake_parse_arguments(PARSE_ARGV
+    1
+    arg
+    "${options}"
+    ""
+    ""
+  )
+
+  string(REGEX REPLACE "[^A-Za-z0-9_]" "_" _TESTADD_WARNING_FLAG_NAME _TESTADD_WARNING_FLAG_${_name})
+  set(CMAKE_REQUIRED_FLAGS "-Werror -Wfatal-errors")
+  check_c_compiler_flag("-W${_name}" ${_TESTADD_WARNING_FLAG_NAME}_FOUND)
+  if(${_TESTADD_WARNING_FLAG_NAME}_FOUND)
+    target_compile_options(${_target_name} PRIVATE "-W${_name}")
+  elseif(${arg_REQUIRED})
+    message(FATAL_ERROR "Compiler warning flag -W${_name} is required")
+  endif()
+endfunction()
+
 # Tests for compiler flag
 # _name flag name
 # REQUIRED flag to fail if check doesn't pass

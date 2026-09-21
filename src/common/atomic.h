@@ -38,6 +38,7 @@
 
 #if _MSC_VER < 1800
 #if !defined(_M_X64)
+
 // When compiling for windows 32bit, the 8byte interlocked operations are not provided by Microsoft
 // (because they need at least i586 so its not generic enough.. ... )
 forceinline int64 InterlockedCompareExchange64(volatile int64 *dest, int64 exch, int64 _cmp){

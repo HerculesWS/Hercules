@@ -129,7 +129,7 @@ struct char_server_data {
 };
 
 /**
- * aclif.c Interface
+ * aclif Interface
  **/
 struct aclif_interface {
 	/* vars */

@@ -809,7 +809,7 @@ Warps to a random coordinate on the current map.
 
 Warps to predefined locations in major cities.
 If no ID is given, all available maps will be displayed in the chat window.
-Locations and coordinates are stored in '/src/map/atcommand.c'.
+Locations and coordinates are stored in '/src/map/atcommand.cpp'.
 
 ---------------------------------------
 

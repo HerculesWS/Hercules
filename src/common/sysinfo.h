@@ -34,7 +34,7 @@
 struct sysinfo_private;
 
 /**
- * sysinfo.c interface
+ * sysinfo interface
  **/
 struct sysinfo_interface {
 	struct sysinfo_private *p;

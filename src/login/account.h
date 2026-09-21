@@ -184,7 +184,7 @@ typedef struct AccountDBIterator_SQL
 } AccountDBIterator_SQL;
 
 /**
- * Account.c Interface
+ * Account Interface
  **/
 struct account_interface {
 	struct Sql* (*db_sql_up) (AccountDB* self);

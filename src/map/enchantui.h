@@ -82,7 +82,7 @@ struct enchant_info {
 };
 
 /**
- * enchantui.c Interface
+ * enchantui Interface
  **/
 struct enchantui_interface {
 	/* vars */

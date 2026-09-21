@@ -25,7 +25,7 @@
 #include "map/itemdb.h"
 #include "map/map.h"
 
-enum grade_level {
+enum grade_level : int {
     ITEM_GRADE_NONE = 0,
     ITEM_GRADE_D    = 1,
     ITEM_GRADE_C    = 2,
@@ -39,7 +39,7 @@ enum grade_level {
 #endif
 };
 
-STATIC_ASSERT(MAX_ITEM_GRADE == (ITEM_GRADE_MAX - 1), "Maximum item grade mismatch!");
+static_assert(MAX_ITEM_GRADE == (ITEM_GRADE_MAX - 1), "Maximum item grade mismatch!");
 
 enum grade_ui_failure_behavior {
     GRADE_FAILURE_BEHAVIOR_KEEP      = 0,
@@ -47,7 +47,7 @@ enum grade_ui_failure_behavior {
     GRADE_FAILURE_BEHAVIOR_DOWNGRADE = 2,
 };
 
-enum grade_ui_result {
+enum grade_ui_result : int {
     GRADE_UPGRADE_SUCCESS          = 0,
     GRADE_UPGRADE_FAILED_KEEP      = 1,
     GRADE_UPGRADE_FAILED_DOWNGRADE = 2,
@@ -89,7 +89,7 @@ struct grade_interface_dbs {
 };
 
 /**
- * grader.c Interface
+ * grader Interface
  **/
 struct grader_interface {
     struct grade_interface_dbs *dbs;

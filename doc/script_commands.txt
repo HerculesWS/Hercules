@@ -252,7 +252,7 @@ well as doc/constants_(pre-)re.md.
 You may also use a monster's ID constant instead to display a monster sprite
 for this NPC, in npcs that have view ids of mobs it's encouraged to use
 OnTouch events with a 2,2 range and with an 'end' after the header to avoid
-bugs (for more info on why see npc_click@map/npc.c). It is possible to use a job
+bugs (for more info on why see npc_click@map/npc.cpp). It is possible to use a job
 sprite as well, but you must first define it as a monster sprite,
 a full description on how to do this is not in the scope of this manual.
 A 'FAKE_NPC' sprite will make the NPC invisible (and unclickable).
@@ -1250,7 +1250,7 @@ doevent()) and called label is in NPC that has trigger area, that label must
 end with "Global" to work globally (i.e. if RID is outside of the trigger area,
 which usually happens since otherwise there would be no point calling the label
 with doevent(), because OnTouch would do the job). For further reference look
-for npc_event in npc.c.
+for npc_event in npc.cpp.
 
 Scripting commands and functions
 --------------------------------
@@ -1884,6 +1884,7 @@ if the value was higher than 'max', -1 if lower than 'min' and 0 otherwise.
 For string inputs it returns 1 if the string was longer than 'max', -1 is
 shorter than 'min' and 0 otherwise. Note that an input string has a maximum
 length of 70 characters.
+If <min> is greater than <max>, an error will be returned.
 
 ---------------------------------------
 
@@ -9038,6 +9039,8 @@ Example:
 *cap_value(<number>, <min>, <max>)
 
 Returns the number but capped between <min> and <max>.
+
+If <min> is greater than <max>, an error will be returned.
 
 Example:
 	// capped between 0 ~ 100

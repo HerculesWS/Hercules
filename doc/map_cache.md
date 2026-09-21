@@ -30,7 +30,7 @@ The new system involves the use of the new 'mapcache' plugin to generate files. 
 - `db/[pre-re or re]/map_cache.dat` has been dropped (no longer supported).
 - In its place are individual `.mcache` files for every map located in `maps/[pre-re or re]/`
 - `mapcache`executable has been removed.
-- Replaced with the `mapcache` plugin (`src/plugins/mapcache.c`).
+- Replaced with the `mapcache` plugin (`src/plugins/mapcache`).
 
 ## How to generate the mapcache?
 

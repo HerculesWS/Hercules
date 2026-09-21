@@ -38,7 +38,7 @@ struct s_ipban_dbs {
 };
 
 /**
- * Ipban.c Interface
+ * Ipban Interface
  **/
 struct ipban_interface {
 	struct s_ipban_dbs *dbs;

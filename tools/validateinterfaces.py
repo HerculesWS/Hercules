@@ -299,7 +299,7 @@ def processIfDir(tracker, srcDir):
         if not os.path.isfile(cPath):
             processIfDir(tracker, cPath)
         else:
-            if file1[-2:] == ".c":
+            if file1[-2:] == ".cpp":
                 file2 = file1[:-2] + ".h"
                 hPath = srcDir + os.path.sep + file2;
                 if os.path.exists(hPath) and os.path.isfile(hPath):
@@ -348,8 +348,8 @@ def processDir(tracker, srcDir):
         cPath = os.path.abspath(srcDir + os.path.sep + file1)
         if not os.path.isfile(cPath):
             processDir(tracker, cPath)
-        elif file1[-2:] == ".c" or file1[-2:] == ".h":
-#        elif file1[-2:] == ".c":
+        elif file1[-2:] == ".cpp" or file1[-2:] == ".h":
+#        elif file1[-2:] == ".cpp":
             checkFile(tracker, cPath)
 
 
@@ -393,7 +393,7 @@ def processLostDir(tracker, srcDir):
         cPath = os.path.abspath(srcDir + os.path.sep + file1)
         if not os.path.isfile(cPath):
             processLostDir(tracker, cPath)
-        elif file1[-2:] == ".c":
+        elif file1[-2:] == ".cpp":
             checkLostFile(tracker, cPath)
 
 

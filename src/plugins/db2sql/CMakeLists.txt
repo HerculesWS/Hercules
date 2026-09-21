@@ -20,10 +20,10 @@
 set(HERC_PLUGIN_NAME db2sql)
 
 # List of source files of the plugin
-set(HERC_PLUGIN_C
-  db2sql.c
+set(HERC_PLUGIN_SRCS
+  db2sql.cpp
 )
 
 add_plugin_target(${HERC_PLUGIN_NAME}
-  CFILES ${HERC_PLUGIN_C}
+  CFILES ${HERC_PLUGIN_SRCS}
 )

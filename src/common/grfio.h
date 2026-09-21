@@ -130,4 +130,5 @@ void grfio_defaults(void);
 #endif // HERCULES_CORE
 
 HPShared struct grfio_interface *grfio; ///< Pointer to the grfio interface.
+
 #endif /* COMMON_GRFIO_H */

@@ -292,9 +292,9 @@ EOF
 		echo "Cloning plugins repository..."
 		# Nothing to clone right now, all relevant plugins are part of the repository.
 		#git clone http://github.com/HerculesWS/StaffPlugins.git || aborterror "Unable to fetch plugin repository"
-		#if [ -f StaffPlugins/Haru/script_mapquit/script_mapquit.c -a -f StaffPlugins/Haru/script_mapquit/examples/ci_test.txt ]; then
+		#if [ -f StaffPlugins/Haru/script_mapquit/script_mapquit.cpp -a -f StaffPlugins/Haru/script_mapquit/examples/ci_test.txt ]; then
 		#	pushd src/plugins || aborterror "Unable to enter plugins directory."
-		#	ln -s ../../StaffPlugins/Haru/script_mapquit/script_mapquit.c ./
+		#	ln -s ../../StaffPlugins/Haru/script_mapquit/script_mapquit.cpp ./
 		#	popd
 		#else
 		#	echo "Plugin not found, skipping advanced tests."

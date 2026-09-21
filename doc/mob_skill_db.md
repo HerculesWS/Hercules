@@ -139,11 +139,11 @@ Minimum value is `1`. Maximum value is `10000`.
 
 ### CastTime
 The skill's cast time in milliseconds.  
-Minimum value is `0`. Maximum value is `MOB_MAX_CASTTIME` from [src/map/mob.c](../src/map/mob.c#L81).
+Minimum value is `0`. Maximum value is `MOB_MAX_CASTTIME` from [src/map/mob.cpp](../src/map/mob.cpp#L81).
 
 ### Delay
 The time in milliseconds before attempting to cast the same skill again.  
-Minimum value is `0`. Maximum value is `MOB_MAX_DELAY` from [src/map/mob.c](../src/map/mob.c#L82).
+Minimum value is `0`. Maximum value is `MOB_MAX_DELAY` from [src/map/mob.cpp](../src/map/mob.cpp#L82).
 
 ### Cancelable
 Defines whether the skill is cancelable or not.
@@ -170,7 +170,7 @@ MSC_LONGRANGEATTACKED | Monster is range attacked.
 MSC_AFTERSKILL        | Monster has used skill `ConditionData`. (If `ConditionData` is `0`, all skills are triggered.)
 MSC_SKILLUSED         | Skill `ConditionData` was used on the monster. (If `ConditionData` is `0`, all skills are triggered.)
 MSC_CASTTARGETED      | A skill is being cast on the monster.
-MSC_RUDEATTACKED      | Monster was rude attacked `RUDE_ATTACKED_COUNT` times. ([src/map/mob.c#L84](../src/map/mob.c))
+MSC_RUDEATTACKED      | Monster was rude attacked `RUDE_ATTACKED_COUNT` times. ([src/map/mob.cpp#L84](../src/map/mob.cpp))
 MSC_MASTERHPLTMAXRATE | The monster master's HP in percent is less than `ConditionData`.
 MSC_MASTERATTACKED    | The monster's master is attacked.
 MSC_ALCHEMIST         | The monster was summoned by an Alchemist class character.

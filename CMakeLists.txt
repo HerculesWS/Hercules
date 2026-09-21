@@ -24,6 +24,9 @@ project(hercules LANGUAGES C CXX)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS NO)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE BOOL "Enable compile commands" FORCE)
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
   set(CMAKE_INSTALL_LIBDIR "lib")
@@ -164,7 +167,7 @@ if(MSVC)
   add_compile_options(/wd4100) # Disable unused parameter warning mostly due to BUILDIN and similar functions having unused parameters
   add_compile_options(/wd4312) # Disable conversion to greater size warning (see 0xdeadbeef pointers)
   # Definations
-  add_compile_definitions(WIN32 _WIN32 __WIN32 _CRT_SECURE_NO_DEPRECATE _CRT_NONSTDC_NO_DEPRECATE FD_SETSIZE=4096 WIN32_LEAN_AND_MEAN)
+  add_compile_definitions(WIN32 _WIN32 __WIN32 _CRT_SECURE_NO_DEPRECATE _CRT_NONSTDC_NO_DEPRECATE FD_SETSIZE=4096 WIN32_LEAN_AND_MEAN NOMINMAX)
 else()
   # Check for mandatory compile flags
   include(CompilerFlagHelpers)

@@ -20,10 +20,10 @@
 set(HERC_PLUGIN_NAME httpsample)
 
 # List of source files of the plugin
-set(HERC_PLUGIN_C
-  httpsample.c
+set(HERC_PLUGIN_SRCS
+  httpsample.cpp
 )
 
 add_plugin_target(${HERC_PLUGIN_NAME}
-  CFILES ${HERC_PLUGIN_C}
+  CFILES ${HERC_PLUGIN_SRCS}
 )

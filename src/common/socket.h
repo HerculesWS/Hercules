@@ -43,25 +43,25 @@ struct config_setting_t;
 #define RFIFOHEAD(fd)
 #define WFIFOHEAD(fd, size) sockt->wfifohead(fd, size)
 
-#define RFIFOP(fd,pos) ((const void *)(sockt->session[fd]->rdata + sockt->session[fd]->rdata_pos + (pos)))
-#define WFIFOP(fd,pos) ((void *)(sockt->session[fd]->wdata + sockt->session[fd]->wdata_size + (pos)))
+#define RFIFOP(T, fd, pos) ((const T)(const void *)(sockt->session[fd]->rdata + sockt->session[fd]->rdata_pos + (pos)))
+#define WFIFOP(T, fd, pos) ((T)(void *)(sockt->session[fd]->wdata + sockt->session[fd]->wdata_size + (pos)))
 
-#define RFIFOB(fd,pos) (*(const uint8*)RFIFOP((fd),(pos)))
-#define RFIFOSB(fd,pos) (*(const int8*)RFIFOP((fd),(pos)))
-#define WFIFOB(fd,pos) (*(uint8*)WFIFOP((fd),(pos)))
-#define WFIFOSB(fd,pos) (*(int8*)WFIFOP((fd),(pos)))
-#define RFIFOW(fd,pos) (*(const uint16*)RFIFOP((fd),(pos)))
-#define RFIFOSW(fd,pos) (*(const int16*)RFIFOP((fd),(pos)))
-#define WFIFOW(fd,pos) (*(uint16*)WFIFOP((fd),(pos)))
-#define WFIFOSW(fd,pos) (*(int16*)WFIFOP((fd),(pos)))
-#define RFIFOL(fd,pos) (*(const uint32*)RFIFOP((fd),(pos)))
-#define RFIFOSL(fd,pos) (*(const int32*)RFIFOP((fd),(pos)))
-#define WFIFOL(fd,pos) (*(uint32*)WFIFOP((fd),(pos)))
-#define WFIFOSL(fd,pos) (*(int32*)WFIFOP((fd),(pos)))
-#define RFIFOQ(fd,pos) (*(const uint64*)RFIFOP((fd),(pos)))
-#define RFIFOSQ(fd,pos) (*(const int64*)RFIFOP((fd),(pos)))
-#define WFIFOQ(fd,pos) (*(uint64*)WFIFOP((fd),(pos)))
-#define WFIFOSQ(fd,pos) (*(int64*)WFIFOP((fd),(pos)))
+#define RFIFOB(fd,pos) (*RFIFOP(uint8 *, (fd),(pos)))
+#define RFIFOSB(fd,pos) (*RFIFOP(int8 *, (fd),(pos)))
+#define WFIFOB(fd,pos) (*WFIFOP(uint8 *, (fd),(pos)))
+#define WFIFOSB(fd,pos) (*WFIFOP(int8 *, (fd),(pos)))
+#define RFIFOW(fd,pos) (*RFIFOP(uint16 *, (fd),(pos)))
+#define RFIFOSW(fd,pos) (*RFIFOP(int16 *, (fd),(pos)))
+#define WFIFOW(fd,pos) (*WFIFOP(uint16 *, (fd),(pos)))
+#define WFIFOSW(fd,pos) (*WFIFOP(int16 *, (fd),(pos)))
+#define RFIFOL(fd,pos) (*RFIFOP(uint32 *, (fd),(pos)))
+#define RFIFOSL(fd,pos) (*RFIFOP(int32 *, (fd),(pos)))
+#define WFIFOL(fd,pos) (*WFIFOP(uint32 *, (fd),(pos)))
+#define WFIFOSL(fd,pos) (*WFIFOP(int32 *, (fd),(pos)))
+#define RFIFOQ(fd,pos) (*RFIFOP(uint64 *, (fd),(pos)))
+#define RFIFOSQ(fd,pos) (*RFIFOP(int64 *, (fd),(pos)))
+#define WFIFOQ(fd,pos) (*WFIFOP(uint64 *, (fd),(pos)))
+#define WFIFOSQ(fd,pos) (*WFIFOP(int64 *, (fd),(pos)))
 #define RFIFOSPACE(fd) (sockt->session[fd]->max_rdata - sockt->session[fd]->rdata_size)
 #define WFIFOSPACE(fd) (sockt->session[fd]->max_wdata - sockt->session[fd]->wdata_size)
 
@@ -82,12 +82,12 @@ struct config_setting_t;
 #define RFIFOSKIP(fd, len) (sockt->rfifoskip(fd, len))
 
 /* [Ind/Hercules] */
-#define RFIFO2PTR(fd) ((const void *)(sockt->session[fd]->rdata + sockt->session[fd]->rdata_pos))
-#define RP2PTR(fd) RFIFO2PTR(fd)
+#define RFIFO2PTR(T, fd) ((const T)(const void *)(sockt->session[fd]->rdata + sockt->session[fd]->rdata_pos))
+#define RP2PTR(T, fd) RFIFO2PTR(T, fd)
 
 /* [Hemagx/Hercules] */
-#define WFIFO2PTR(fd) ((void *)(sockt->session[fd]->wdata + sockt->session[fd]->wdata_size))
-#define WP2PTR(fd) WFIFO2PTR(fd)
+#define WFIFO2PTR(T, fd) ((T)(void *)(sockt->session[fd]->wdata + sockt->session[fd]->wdata_size))
+#define WP2PTR(T, fd) WFIFO2PTR(T, fd)
 
 // buffer I/O macros
 static inline const void *RBUFP_(const void *p, int pos) __attribute__((const, unused));
@@ -95,30 +95,30 @@ static inline const void *RBUFP_(const void *p, int pos)
 {
 	return ((const uint8 *)p) + pos;
 }
-#define RBUFP(p,pos) RBUFP_(p, (int)(pos))
-#define RBUFB(p,pos) (*(const uint8 *)RBUFP((p),(pos)))
-#define RBUFW(p,pos) (*(const uint16 *)RBUFP((p),(pos)))
-#define RBUFL(p,pos) (*(const uint32 *)RBUFP((p),(pos)))
-#define RBUFQ(p,pos) (*(const uint64 *)RBUFP((p),(pos)))
-#define RBUFSB(p,pos) (*(const int8 *)RBUFP((p),(pos)))
-#define RBUFSW(p,pos) (*(const int16 *)RBUFP((p),(pos)))
-#define RBUFSL(p,pos) (*(const int32 *)RBUFP((p),(pos)))
-#define RBUFSQ(p,pos) (*(const int64 *)RBUFP((p),(pos)))
+#define RBUFP(T, p,pos) ((const T)RBUFP_(p, (int)(pos)))
+#define RBUFB(p,pos) (*RBUFP(uint8 *, (p),(pos)))
+#define RBUFW(p,pos) (*RBUFP(uint16 *, (p),(pos)))
+#define RBUFL(p,pos) (*RBUFP(uint32 *, (p),(pos)))
+#define RBUFQ(p,pos) (*RBUFP(uint64 *, (p),(pos)))
+#define RBUFSB(p,pos) (*RBUFP(int8 *, (p),(pos)))
+#define RBUFSW(p,pos) (*RBUFP(int16 *, (p),(pos)))
+#define RBUFSL(p,pos) (*RBUFP(int32 *, (p),(pos)))
+#define RBUFSQ(p,pos) (*RBUFP(int64 *, (p),(pos)))
 
 static inline void *WBUFP_(void *p, int pos) __attribute__((const, unused));
 static inline void *WBUFP_(void *p, int pos)
 {
 	return ((uint8 *)p) + pos;
 }
-#define WBUFP(p,pos) WBUFP_(p, (int)(pos))
-#define WBUFB(p,pos) (*(uint8*)WBUFP((p),(pos)))
-#define WBUFW(p,pos) (*(uint16*)WBUFP((p),(pos)))
-#define WBUFL(p,pos) (*(uint32*)WBUFP((p),(pos)))
-#define WBUFQ(p,pos) (*(uint64*)WBUFP((p),(pos)))
-#define WBUFSB(p,pos) (*(int8*)WBUFP((p),(pos)))
-#define WBUFSW(p,pos) (*(int16*)WBUFP((p),(pos)))
-#define WBUFSL(p,pos) (*(int32*)WBUFP((p),(pos)))
-#define WBUFSQ(p,pos) (*(int64*)WBUFP((p),(pos)))
+#define WBUFP(T, p, pos) ((T)WBUFP_(p, (int)(pos)))
+#define WBUFB(p,pos) (*WBUFP(uint8 *, (p),(pos)))
+#define WBUFW(p,pos) (*WBUFP(uint16 *, (p),(pos)))
+#define WBUFL(p,pos) (*WBUFP(uint32 *, (p),(pos)))
+#define WBUFQ(p,pos) (*WBUFP(uint64 *, (p),(pos)))
+#define WBUFSB(p,pos) (*WBUFP(int8 *, (p),(pos)))
+#define WBUFSW(p,pos) (*WBUFP(int16 *, (p),(pos)))
+#define WBUFSL(p,pos) (*WBUFP(int32 *, (p),(pos)))
+#define WBUFSQ(p,pos) (*WBUFP(int64 *, (p),(pos)))
 
 #define TOB(n) ((uint8)((n)&UINT8_MAX))
 #define TOW(n) ((uint16)((n)&UINT16_MAX))
@@ -191,7 +191,7 @@ VECTOR_STRUCT_DECL(s_subnet_vector, struct s_subnet);
 #define SUBNET_MATCH(ip1, ip2, mask) (APPLY_MASK((ip1), (mask)) == APPLY_MASK((ip2), (mask)))
 
 /**
- * Socket.c interface, mostly for reading however.
+ * Socket interface, mostly for reading however.
  **/
 struct socket_interface {
 	int fd_max;

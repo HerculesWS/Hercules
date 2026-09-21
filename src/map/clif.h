@@ -62,18 +62,18 @@ struct SKILLDATA;
 struct macroaidlist;
 struct s_grade_info;
 
-enum battle_dmg_type;
-enum clif_messages;
-enum rodex_add_item;
-enum rodex_get_zeny;
-enum rodex_get_items;
-enum macro_detect_status;
-enum macro_report_status;
-enum grade_level;
-enum grade_ui_result;
-enum item_reform_status;
-enum navigation_mode;
-enum navigation_service;
+enum battle_dmg_type : int;
+enum clif_messages : unsigned int;
+enum rodex_add_item : int;
+enum rodex_get_zeny : int;
+enum rodex_get_items : int;
+enum macro_detect_status : int;
+enum macro_report_status : int;
+enum grade_level : int;
+enum grade_ui_result : int;
+enum item_reform_status : int;
+enum navigation_mode : int;
+enum navigation_service : int;
 
 /**
  * Defines
@@ -94,8 +94,8 @@ enum navigation_service;
 
 #define MAX_STORAGE_ITEM_PACKET_NORMAL ((INT16_MAX - (sizeof(struct ZC_STORE_ITEMLIST_NORMAL) - (sizeof(struct NORMALITEM_INFO) * MAX_ITEMLIST))) / sizeof(struct NORMALITEM_INFO))
 #define MAX_STORAGE_ITEM_PACKET_EQUIP  ((INT16_MAX - (sizeof(struct ZC_STORE_ITEMLIST_EQUIP) - (sizeof(struct EQUIPITEM_INFO) * MAX_ITEMLIST))) / sizeof(struct EQUIPITEM_INFO))
-STATIC_ASSERT(MAX_STORAGE_ITEM_PACKET_NORMAL > 0, "Max items per storage item packet for normal items is less than 1, it's most likely to be a bug and shall not be ignored.");
-STATIC_ASSERT(MAX_STORAGE_ITEM_PACKET_EQUIP > 0, "Max items per storage item packet for equip items is less than 1, it's most likely to be a bug and shall not be ignored.");
+static_assert(MAX_STORAGE_ITEM_PACKET_NORMAL > 0, "Max items per storage item packet for normal items is less than 1, it's most likely to be a bug and shall not be ignored.");
+static_assert(MAX_STORAGE_ITEM_PACKET_EQUIP > 0, "Max items per storage item packet for equip items is less than 1, it's most likely to be a bug and shall not be ignored.");
 
 /**
  * Enumerations
@@ -462,7 +462,7 @@ enum CASH_SHOP_BUY_RESULT {
 	CSBR_BUSY               = 0xc,
 };
 
-enum BATTLEGROUNDS_QUEUE_ACK {
+enum BATTLEGROUNDS_QUEUE_ACK : int {
 	BGQA_SUCCESS                 = 1,
 	BGQA_FAIL_QUEUING_FINISHED   = 2,
 	BGQA_FAIL_BGNAME_INVALID     = 3,
@@ -918,7 +918,7 @@ enum dynamicnpc_create_result {
 };
 
 /**
- * Clif.c Interface
+ * Clif Interface
  **/
 struct clif_interface {
 	/* vars */

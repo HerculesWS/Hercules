@@ -20,10 +20,10 @@
 set(HERC_PLUGIN_NAME generate-translations)
 
 # List of source files of the plugin
-set(HERC_PLUGIN_C
-  generate-translations.c
+set(HERC_PLUGIN_SRCS
+  generate-translations.cpp
 )
 
 add_plugin_target(${HERC_PLUGIN_NAME}
-  CFILES ${HERC_PLUGIN_C}
+  CFILES ${HERC_PLUGIN_SRCS}
 )

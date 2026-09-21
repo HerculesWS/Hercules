@@ -20,12 +20,12 @@
 set(HERC_PLUGIN_NAME sample)
 
 # List of source files of the plugin
-set(HERC_PLUGIN_C
-  sample.c
+set(HERC_PLUGIN_SRCS
+  sample.cpp
 )
 
 # List of header files of the plugin
-set(HERC_PLUGIN_H
+set(HERC_PLUGIN_HDRS
   sample.h
 )
 
@@ -37,7 +37,7 @@ set(HERC_PLUGIN_DEF
 
 add_plugin_target(${HERC_PLUGIN_NAME}
   CFILES
-    ${HERC_PLUGIN_C}
-    ${HERC_PLUGIN_H}
+    ${HERC_PLUGIN_SRCS}
+    ${HERC_PLUGIN_HDRS}
   CDEFS ${HERC_PLUGIN_DEF}
 )

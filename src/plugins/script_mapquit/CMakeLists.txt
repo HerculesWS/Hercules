@@ -20,10 +20,10 @@
 set(HERC_PLUGIN_NAME script_mapquit)
 
 # List of source files of the plugin
-set(HERC_PLUGIN_C
-  script_mapquit.c
+set(HERC_PLUGIN_SRCS
+  script_mapquit.cpp
 )
 
 add_plugin_target(${HERC_PLUGIN_NAME}
-  CFILES ${HERC_PLUGIN_C}
+  CFILES ${HERC_PLUGIN_SRCS}
 )

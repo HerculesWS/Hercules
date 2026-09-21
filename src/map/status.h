@@ -1109,11 +1109,11 @@ enum _scb_flag
 #endif
 #undef CONST_OR_ENUMVAL
 
-STATIC_ASSERT(sizeof(e_scb_flag) > 4, "e_scb_flag values need to be larger than 32 bits.");
-STATIC_ASSERT(sizeof(SCB_ATK_PERC) > 4, "e_scb_flag values need to be larger than 32 bits.");
-STATIC_ASSERT(sizeof(SCB_MATK_PERC) > 4, "e_scb_flag values need to be larger than 32 bits.");
-STATIC_ASSERT(sizeof(SCB_DEF_PERC) > 4, "e_scb_flag values need to be larger than 32 bits.");
-STATIC_ASSERT(sizeof(SCB_MDEF_PERC) > 4, "e_scb_flag values need to be larger than 32 bits.");
+static_assert(sizeof(e_scb_flag) > 4, "e_scb_flag values need to be larger than 32 bits.");
+static_assert(sizeof(SCB_ATK_PERC) > 4, "e_scb_flag values need to be larger than 32 bits.");
+static_assert(sizeof(SCB_MATK_PERC) > 4, "e_scb_flag values need to be larger than 32 bits.");
+static_assert(sizeof(SCB_DEF_PERC) > 4, "e_scb_flag values need to be larger than 32 bits.");
+static_assert(sizeof(SCB_MDEF_PERC) > 4, "e_scb_flag values need to be larger than 32 bits.");
 
 //Regen related flags.
 enum e_regen {

@@ -47,7 +47,7 @@ struct goldpc_mode {
 };
 
 /**
- * goldpc.c Interface
+ * goldpc Interface
  **/
 struct goldpc_interface {
 	/* vars */

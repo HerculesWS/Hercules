@@ -39,9 +39,6 @@
 #endif
 #endif
 
-//Caps values to min/max
-#define cap_value(a, min, max) (((a) >= (max)) ? (max) : ((a) <= (min)) ? (min) : (a))
-
 #ifdef HERCULES_CORE
 // generate a hex dump of the first 'length' bytes of 'buffer'
 void WriteDump(FILE* fp, const void* buffer, size_t length);

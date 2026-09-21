@@ -428,13 +428,13 @@ enum ItemOptionTypes {
  * Item name search flags
  **/
 
-enum item_name_search_flag {
+enum item_name_search_flag : int {
 	IT_SEARCH_NAME_PARTIAL,
 	IT_SEARCH_NAME_EXACT,
 	IT_SEARCH_NAME_MAX,
 };
 
-enum item_reform_status {
+enum item_reform_status : int {
 	IT_REFORM_SUCCESS = 0,
 	IT_REFORM_NOT_ENOUGH_MATERIALS = 3,
 };
@@ -623,7 +623,7 @@ struct item_data {
 
 #define itemdb_name(n)        (itemdb->search(n)->name)
 #define itemdb_jname(n)       (itemdb->search(n)->jname)
-#define itemdb_type(n)        (itemdb->search(n)->type)
+#define itemdb_type(n)        ((enum item_types)itemdb->search(n)->type)
 #define itemdb_atk(n)         (itemdb->search(n)->atk)
 #define itemdb_def(n)         (itemdb->search(n)->def)
 #define itemdb_subtype(n)     (itemdb->search(n)->subtype)
@@ -716,7 +716,7 @@ struct itemdb_interface {
 	int (*searchname_sub) (union DBKey key, struct DBData *data, va_list ap);
 	int (*searchname_array_sub) (union DBKey key, struct DBData data, va_list ap);
 	int (*searchrandomid) (struct item_group *group);
-	const char* (*typename) (enum item_types type);
+	const char *(*type_to_name) (enum item_types type);
 	void (*jobmask2mapid) (uint64 *bclass, uint64 jobmask);
 	void (*jobid2mapid) (uint64 *bclass, int job_class, bool enable);
 	void (*create_dummy_data) (void);

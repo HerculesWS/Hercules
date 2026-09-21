@@ -28,7 +28,7 @@ local $ENV{XML_SIMPLE_PREFERRED_PARSER} = 'XML::Parser';      # 0m4.256s
 #local $ENV{XML_SIMPLE_PREFERRED_PARSER} = 'XML::SAX::Expat';  # 0m14.186s
 #local $ENV{XML_SIMPLE_PREFERRED_PARSER} = 'XML::LibXML::SAX'; # 0m7.055s
 
-my $HPMDataCheckAPIVer = 1;
+my $HPMDataCheckAPIVer = 2;
 
 my @files = grep { -f } grep { /[^h]\.xml/ } glob 'doxyoutput/xml/struct*.xml';
 my %out;
@@ -37,7 +37,7 @@ foreach my $file (@files) {
 	my $xml = new XML::Simple;
 	my $data = $xml->XMLin($file, ForceArray => 1);
 	my $filekey = (keys %{ $data->{compounddef} })[0];
-	next unless $data->{compounddef}->{$filekey}->{includes}; # means its a struct from a .c file, plugins cant access those so we don't care.
+	next unless $data->{compounddef}->{$filekey}->{includes}; # means its a struct from a .cpp file, plugins cant access those so we don't care.
 	next if $data->{compounddef}->{$filekey}->{compoundname}->[0] =~ /::/; # its a duplicate with a :: name e.g. struct script_state {<...>} ay;
 	my @filepath = split(/[\/\\]/, $data->{compounddef}->{$filekey}->{location}->[0]->{file});
 	my $foldername = uc($filepath[-2]);
@@ -52,7 +52,7 @@ foreach my $file (@files) {
 		} else {
 			$plugintypes = 'SERVER_TYPE_ALL';
 		}
-	} elsif ($foldername =~ /^(LOGIN|CHAR|MAP)/) {
+	} elsif ($foldername =~ /^(LOGIN|CHAR|MAP|API)/) {
 		$plugintypes = "SERVER_TYPE_${foldername}";
 	}
 	my $symboldata = {
@@ -105,7 +105,8 @@ print FH <<"EOF";
 #undef HPM_SYMBOL
 #endif // HPM_SYMBOL
 
-HPExport const struct s_HPMDataCheck HPMDataCheck[] = {
+namespace {
+const struct s_HPMDataCheck HPMDataCheck_s[] = {
 EOF
 
 foreach my $key (sort keys %out) {
@@ -127,8 +128,23 @@ EOF
 }
 print FH <<"EOF";
 };
-HPExport unsigned int HPMDataCheckLen = ARRAYLENGTH(HPMDataCheck);
-HPExport int HPMDataCheckVer = $HPMDataCheckAPIVer;
+constexpr unsigned int HPMDataCheckLen_s = ARRAYLENGTH(HPMDataCheck_s);
+constexpr int HPMDataCheckVer_s = $HPMDataCheckAPIVer;
+}
+
+#define HPMDATACHECK_DEFS \\
+	const struct s_HPMDataCheck *HPMDataCheck = HPMDataCheck_s; \\
+	unsigned int HPMDataCheckLen = HPMDataCheckLen_s; \\
+	int HPMDataCheckVer = HPMDataCheckVer_s;
+HPExport const struct s_HPMDataCheck *HPMDataCheck;
+HPExport unsigned int HPMDataCheckLen;
+HPExport int HPMDataCheckVer;
+#ifdef HPM_PLUGIN_DEFS_ALL
+#define HPM_DECLARE_PLUGIN(plugin_name, plugin_type, plugin_version) \\
+	HPMDATACHECK_DEFS \\
+	HPM_PLUGIN_DEFS_ALL \\
+	HPM_DECLARE_PLUGIN_BASE((plugin_name), (plugin_type), (plugin_version))
+#endif
 
 #endif /* HPM_DATA_CHECK_H */
 EOF

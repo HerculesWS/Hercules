@@ -2581,7 +2581,7 @@ enum msgtable_messages {
 	/** Cart Added. */
 	MSGTBL_CART_ADDED = 1392,
 
-	// atcommand.c::is_atcommand
+	// atcommand.cpp::is_atcommand
 	/** You can't use commands while dead. */
 	MSGTBL_IS_ATCOMMAND_DEAD = 1393,
 
@@ -2763,7 +2763,7 @@ enum msgtable_messages {
 	/** Costume '%s' removed. */
 	MSGTBL_COSTUME_REMOVED = 1473,
 
-	//src/map/pc.c::pc_isUseitem
+	//src/map/pc.cpp::pc_isUseitem
 	/** You cannot use this item while sitting. */
 	MSGTBL_NOT_USE_ITEM_SITTING = 1474,
 	/** You cannot use this item while your storage is open. */
@@ -2772,7 +2772,7 @@ enum msgtable_messages {
 	/** You are already mounting something else. */
 	MSGTBL_ALREADY_MOUNTED = 1476,
 
-	//src/map/pc.c::pc_isUseitem
+	//src/map/pc.cpp::pc_isUseitem
 	/** Item cannot be opened when the inventory is full. */
 	MSGTBL_INVENTORY_FULL = 1477,
 
@@ -2780,7 +2780,7 @@ enum msgtable_messages {
 	/** Homunculus reached its maximum level of '%d'. */
 	MSGTBL_HOMUNCULU_MAX_LV = 1478,
 
-	//src/map/clif.c::clif_parse_GlobalMessage
+	//src/map/clif.cpp::clif_parse_GlobalMessage
 	/** Dear angel, can you hear my voice? */
 	MSGTBL_DEAR_ANGEL_MSG = 1479,
 	/** I am %s Super Novice~ */
@@ -2794,11 +2794,11 @@ enum msgtable_messages {
 	/** Banking is disabled. */
 	MSGTBL_BANKING_DISABLED = 1483,
 
-	//src/map/atcommand.c::ACMD(auction)
+	//src/map/atcommand.cpp::ACMD(auction)
 	/** Auction is disabled. */
 	MSGTBL_AUCTION_DISABLED = 1484,
 
-	// src/map/clif.c::clif_change_title_ack
+	// src/map/clif.cpp::clif_change_title_ack
 	/** Title is not yet earned. */
 	MSGTBL_TITLE_NOT_EARNED = 1485,
 

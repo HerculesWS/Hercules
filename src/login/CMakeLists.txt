@@ -17,13 +17,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 set(LOGIN_SRCS
-  account.c
-  HPMlogin.c
-  ipban.c
-  lclif.c
-  login.c
-  loginlog.c
-  lapiif.c
+  account.cpp
+  HPMlogin.cpp
+  ipban.cpp
+  lclif.cpp
+  login.cpp
+  loginlog.cpp
+  lapiif.cpp
 )
 
 set(LOGIN_HDRS

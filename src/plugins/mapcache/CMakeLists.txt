@@ -20,10 +20,10 @@
 set(HERC_PLUGIN_NAME mapcache)
 
 # List of source files of the plugin
-set(HERC_PLUGIN_C
-  mapcache.c
+set(HERC_PLUGIN_SRCS
+  mapcache.cpp
 )
 
 add_plugin_target(${HERC_PLUGIN_NAME}
-  CFILES ${HERC_PLUGIN_C}
+  CFILES ${HERC_PLUGIN_SRCS}
 )

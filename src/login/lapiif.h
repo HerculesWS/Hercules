@@ -31,7 +31,7 @@ struct login_session_data;
 #define LAPIIF_PACKET_LEN_TABLE_SIZE 0x8
 
 /**
- * Lapi.c Interface
+ * Lapiif Interface
  **/
 struct lapiif_interface {
 	int packet_len_table[LAPIIF_PACKET_LEN_TABLE_SIZE];

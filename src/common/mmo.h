@@ -316,9 +316,9 @@
 #ifndef MAX_ACHIEVEMENT_DB
 #define MAX_ACHIEVEMENT_DB 360          // Maximum number of achievements
 #define MAX_ACHIEVEMENT_OBJECTIVES 10   // Maximum number of achievement objectives
-STATIC_ASSERT(MAX_ACHIEVEMENT_OBJECTIVES <= 10, "This value is limited by the client and database layout and should only be increased if you know the consequences.");
+static_assert(MAX_ACHIEVEMENT_OBJECTIVES <= 10, "This value is limited by the client and database layout and should only be increased if you know the consequences.");
 #define MAX_ACHIEVEMENT_RANKS 20 // Achievement Ranks
-STATIC_ASSERT(MAX_ACHIEVEMENT_RANKS <= 255, "This value is limited by the client and database layout and should only be increased if you know the consequences.");
+static_assert(MAX_ACHIEVEMENT_RANKS <= 255, "This value is limited by the client and database layout and should only be increased if you know the consequences.");
 #define MAX_ACHIEVEMENT_ITEM_REWARDS 10 // Achievement Rewards
 #endif
 
@@ -396,7 +396,7 @@ STATIC_ASSERT(MAX_ACHIEVEMENT_RANKS <= 255, "This value is limited by the client
 #ifndef MAX_ITEM_OPTIONS
 #define MAX_ITEM_OPTIONS 5
 #endif
-STATIC_ASSERT(MAX_ITEM_OPTIONS <= 5, "This value is limited by the client and database layout and should only be increased if you know the consequences.");
+static_assert(MAX_ITEM_OPTIONS <= 5, "This value is limited by the client and database layout and should only be increased if you know the consequences.");
 
 // RoDEX
 #define RODEX_TITLE_LENGTH (40 + 1)
@@ -424,9 +424,9 @@ STATIC_ASSERT(MAX_ITEM_OPTIONS <= 5, "This value is limited by the client and da
 #define JOBL_THIRD 0x4000
 
 #define SCRIPT_VARNAME_LENGTH 32 ///< Maximum length of a script variable's name including affixes and excluding NULL-terminator.
-STATIC_ASSERT(SCRIPT_VARNAME_LENGTH <= 32, "This value is limited by the inter-server communication and database layout and should only be increased if you know the consequences.");
+static_assert(SCRIPT_VARNAME_LENGTH <= 32, "This value is limited by the inter-server communication and database layout and should only be increased if you know the consequences.");
 #define SCRIPT_STRING_VAR_LENGTH 255 ///< Maximum length of strings stored in script variables excluding NULL-terminator.
-STATIC_ASSERT(SCRIPT_STRING_VAR_LENGTH <= 255, "This value is limited by the inter-server communication and database layout and should only be increased if you know the consequences.");
+static_assert(SCRIPT_STRING_VAR_LENGTH <= 255, "This value is limited by the inter-server communication and database layout and should only be increased if you know the consequences.");
 
 #define INFINITE_DURATION (-1) // Infinite duration for status changes
 
@@ -509,7 +509,7 @@ struct item {
  * @anchor MAX_STORAGE_ASSERT
  *
  **/
-STATIC_ASSERT(MAX_STORAGE * sizeof(struct item) + 8 <= 0xFFFF, "The maximum amount of item slots per account storage is limited by the inter-server communication layout. Use a smaller value!");
+static_assert(MAX_STORAGE * sizeof(struct item) + 8 <= 0xFFFF, "The maximum amount of item slots per account storage is limited by the inter-server communication layout. Use a smaller value!");
 
 //Equip position constants
 enum equip_pos {
@@ -675,7 +675,7 @@ struct guild_storage {
  * @anchor MAX_GUILD_STORAGE_ASSERT
  *
  **/
-STATIC_ASSERT(20 + sizeof(struct item) * MAX_GUILD_STORAGE <= 0xFFFF, "The maximum amount of item slots per guild storage is limited by the inter-server communication layout. Use a smaller value!");
+static_assert(20 + sizeof(struct item) * MAX_GUILD_STORAGE <= 0xFFFF, "The maximum amount of item slots per guild storage is limited by the inter-server communication layout. Use a smaller value!");
 
 struct s_pet {
 	int account_id;
@@ -986,7 +986,7 @@ struct guild {
 	struct guild_expulsion expulsion[MAX_GUILDEXPULSION]; ///< Guild expulsion records
 	struct guild_skill skill[MAX_GUILDSKILL];             ///< Guild skills data
 
-	unsigned short save_flag; ///< Flag used in char.c to state what kind of data is being saved/processed
+	unsigned short save_flag; ///< Flag used in char.cpp to state what kind of data is being saved/processed
 
 	short *instance;                                      ///< Array of instances
 	unsigned short instances;                             ///< Amount of instances

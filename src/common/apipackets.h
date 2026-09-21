@@ -97,7 +97,7 @@ enum proxy_flag {
 	proxy_flag_map = 4
 };
 
-STATIC_ASSERT(sizeof(struct PACKET_API_PROXY) == sizeof(struct PACKET_API_PROXY0),
+static_assert(sizeof(struct PACKET_API_PROXY) == sizeof(struct PACKET_API_PROXY0),
 		"Structs PACKET_API_PROXY and PACKET_API_PROXY0 must be same");
 
 struct PACKET_API_PROXY_CHUNKED {
@@ -293,10 +293,10 @@ struct PACKET_API_REPLY_party_info {
 #define WFIFO_APICHAR_SIZE sizeof(struct PACKET_API_PROXY)
 #define CHUNKED_FLAG_SIZE 1
 
-#define RFIFO_DATA_PTR() RFIFOP(fd, WFIFO_APICHAR_SIZE)
-#define RFIFO_API_DATA(var, type) const struct PACKET_API_ ## type ## _data *var = (const struct PACKET_API_ ## type ## _data*)RFIFO_DATA_PTR()
-#define RFIFO_API_PROXY_PACKET(var) const struct PACKET_API_PROXY *var = RFIFOP(fd, 0)
-#define RFIFO_API_PROXY_PACKET_CHUNKED(var) const struct PACKET_API_PROXY_CHUNKED *var = RFIFOP(fd, 0)
+#define RFIFO_DATA_PTR(T) RFIFOP(T, fd, WFIFO_APICHAR_SIZE)
+#define RFIFO_API_DATA(var, type) const struct PACKET_API_ ## type ## _data *var = RFIFO_DATA_PTR(struct PACKET_API_ ## type ## _data *)
+#define RFIFO_API_PROXY_PACKET(var) const struct PACKET_API_PROXY *var = RP2PTR(struct PACKET_API_PROXY *, fd)
+#define RFIFO_API_PROXY_PACKET_CHUNKED(var) const struct PACKET_API_PROXY_CHUNKED *var = RP2PTR(struct PACKET_API_PROXY_CHUNKED *, fd)
 #define GET_RFIFO_API_PROXY_PACKET_SIZE(fd) (RFIFOW(fd, 2) - sizeof(struct PACKET_API_PROXY))
 #define PROXY_PACKET_FLAG(packet, flag) ((packet)->flags & (flag)) != 0
 

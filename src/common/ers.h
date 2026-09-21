@@ -193,6 +193,7 @@ void ers_report(void);
  **/
 void ers_final(void);
 #endif // HERCULES_CORE
+
 #endif /* DISABLE_ERS / not DISABLE_ERS */
 
 #endif /* COMMON_ERS_H */

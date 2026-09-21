@@ -155,7 +155,7 @@ struct homun_dbs {
 	struct homun_skill_tree_entry skill_tree[MAX_HOMUNCULUS_CLASS][MAX_SKILL_TREE];
 };
 
-/* homunculus.c interface */
+/* homunculus interface */
 struct homunculus_interface {
 	struct homun_dbs *dbs;
 	/* */

@@ -34,20 +34,22 @@ struct socket_data;
 struct map_session_data;
 struct hplugin_data_store;
 
-#define HPM_VERSION "1.2"
+enum server_types : unsigned int;
+
+#define HPM_VERSION "1.3"
 
 // Maximum length of the configuration path for configs added with add*Conf
 #define HPM_ADDCONF_LENGTH 40
 
 struct hplugin_info {
-	char* name;
+	const char *name;
 	enum server_types type;
-	char* version;
-	char* req_version;
+	const char *version;
+	const char *req_version;
 };
 
 struct s_HPMDataCheck {
-	char *name;
+	const char *name;
 	unsigned int size;
 	int type;
 };
@@ -231,9 +233,9 @@ struct HPMi_interface {
 	unsigned int pid;
 	/* */
 	void (*event[HPET_MAX]) (void);
-	bool (*addCommand) (char *name, bool (*func)(const int fd, struct map_session_data* sd, const char* command, const char* message,struct AtCommandInfo *info));
-	bool (*addScript) (char *name, char *args, bool (*func)(struct script_state *st), bool isDeprecated);
-	void (*addCPCommand) (char *name, CParseFunc func);
+	bool (*addCommand) (const char *name, bool (*func)(const int fd, struct map_session_data* sd, const char* command, const char* message,struct AtCommandInfo *info));
+	bool (*addScript) (const char *name, const char *args, bool (*func)(struct script_state *st), bool isDeprecated);
+	void (*addCPCommand) (const char *name, CParseFunc func);
 	/* HPM Custom Data */
 	void (*addToHPData) (enum HPluginDataTypes type, uint32 pluginID, struct hplugin_data_store **storeptr, void *data, uint32 classid, bool autofree);
 	void *(*getFromHPData) (enum HPluginDataTypes type, uint32 pluginID, struct hplugin_data_store *store, uint32 classid);
@@ -241,11 +243,11 @@ struct HPMi_interface {
 	/* packet */
 	bool (*addPacket) (unsigned short cmd, int length, void (*receive)(int fd), unsigned int point, unsigned int pluginID);
 	/* program --arg/-a */
-	bool (*addArg) (unsigned int pluginID, char *name, bool has_param, CmdlineExecFunc func, const char *help);
+	bool (*addArg) (unsigned int pluginID, const char *name, bool has_param, CmdlineExecFunc func, const char *help);
 	/* battle-config recv param */
-	bool (*addConf) (unsigned int pluginID, enum HPluginConfType type, char *name, void (*parse_func) (const char *key, const char *val), int (*return_func) (const char *key), bool required);
+	bool (*addConf) (unsigned int pluginID, enum HPluginConfType type, const char *name, void (*parse_func) (const char *key, const char *val), int (*return_func) (const char *key), bool required);
 	/* pc group permission */
-	void (*addPCGPermission) (unsigned int pluginID, char *name, unsigned int *mask);
+	void (*addPCGPermission) (unsigned int pluginID, const char *name, unsigned int *mask);
 
 	struct Sql *sql_handle;
 
@@ -256,17 +258,28 @@ struct HPMi_interface {
 #ifdef HERCULES_CORE
 #define HPM_SYMBOL(n, s) (HPM->share((s), (n)), true)
 #else // ! HERCULES_CORE
-#ifdef HERCULES_CORE_HPMI_SKIP
-extern struct HPMi_interface HPMi_s;
-extern struct HPMi_interface *HPMi;
-extern void *(*import_symbol) (char *name, unsigned int pID);
-#else
 HPExport struct HPMi_interface HPMi_s;
 HPExport struct HPMi_interface *HPMi;
-HPExport void *(*import_symbol) (char *name, unsigned int pID);
-#endif
-#define HPM_SYMBOL(n, s) ((s) = import_symbol((n),HPMi->pid))
-#endif // !HERCULES_CORE
+HPExport void *(*import_symbol) (const char *name, unsigned int pID);
+HPExport struct hplugin_info pinfo;
 
+#define HPM_PLUGIN_DEFS_BASE                                                   \
+  struct HPMi_interface HPMi_s;                                                \
+  struct HPMi_interface *HPMi;                                                 \
+  void *(*import_symbol)(const char *name, unsigned int pID);
+
+#define HPM_PLUGIN_DEFS_ALL HPM_PLUGIN_DEFS_BASE
+
+#define HPM_DECLARE_PLUGIN_BASE(n, t, v)                                       \
+  struct hplugin_info pinfo = {                                                \
+      .name = (n),                                                             \
+      .type = (t),                                                             \
+      .version = (v),                                                          \
+      .req_version = HPM_VERSION,                                              \
+  };
+
+#define HPM_SYMBOL(n, s) ((s) = static_cast<decltype(s)>(import_symbol((n),HPMi->pid)))
+
+#endif // !HERCULES_CORE
 
 #endif /* COMMON_HPMI_H */

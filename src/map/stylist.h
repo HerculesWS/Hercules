@@ -40,7 +40,7 @@ struct stylist_data_entry {
 };
 
 /**
- * stylist.c Interface
+ * stylist Interface
  **/
 struct stylist_interface {
 	VECTOR_DECL(struct stylist_data_entry) data[MAX_STYLIST_TYPE];

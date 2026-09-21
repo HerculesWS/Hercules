@@ -17,31 +17,31 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 set(COMMON_SRCS
-  base62.c
-  conf.c
-  db.c
-  des.c
-  ers.c
-  extraconf.c
-  grfio.c
-  HPM.c
-  mapindex.c
-  md5calc.c
-  mutex.c
-  nullpo.c
-  packets.c
-  random.c
-  showmsg.c
-  strlib.c
-  sysinfo.c
-  thread.c
-  timer.c
-  utils.c
-  console.c
-  core.c
-  memmgr.c
-  socket.c
-  sql.c
+  base62.cpp
+  conf.cpp
+  db.cpp
+  des.cpp
+  ers.cpp
+  extraconf.cpp
+  grfio.cpp
+  HPM.cpp
+  mapindex.cpp
+  md5calc.cpp
+  mutex.cpp
+  nullpo.cpp
+  packets.cpp
+  random.cpp
+  showmsg.cpp
+  strlib.cpp
+  sysinfo.cpp
+  thread.cpp
+  timer.cpp
+  utils.cpp
+  console.cpp
+  core.cpp
+  memmgr.cpp
+  socket.cpp
+  sql.cpp
 )
 
 set(COMMON_HDRS

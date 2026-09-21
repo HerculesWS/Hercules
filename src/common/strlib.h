@@ -25,6 +25,7 @@
 
 #include <stdarg.h>
 #include <string.h>
+#include <type_traits>
 
 /// Convenience macros
 
@@ -48,27 +49,31 @@
 #define safestrnlen(string,maxlen)   (strlib->safestrnlen_((string),(maxlen)))
 #define strline(str,pos)             (strlib->strline_((str),(pos)))
 #define bin2hex(output,input,count)  (strlib->bin2hex_((output),(input),(count)))
-#if (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L)
-#if defined(__GNUC__) && !defined(__clang__) && GCC_VERSION < 40900
-// _Generic is only supported starting with GCC 4.9
-#else
+
 #ifdef strchr
 #undef strchr
-#endif // strchr
-#define strchr(src, chr)             _Generic((src), \
-		const char * : ((const char *)(strchr)((src), (chr))), \
-		char *       : ((strchr)((src), (chr))) \
-		)
-#define strrchr(src, chr)            _Generic((src), \
-		const char * : ((const char *)(strrchr)((src), (chr))), \
-		char *       : ((strrchr)((src), (chr))) \
-		)
-#define strstr(haystack, needle)     _Generic((haystack), \
-		const char * : ((const char *)(strstr)((haystack), (needle))), \
-		char *       : ((strstr)((haystack), (needle))) \
-		)
 #endif
-#endif
+template<class T>
+T HSTRCHR(T src, int c)
+{
+	static_assert(std::is_same_v<std::decay_t<T>, char *> || std::is_same_v<std::decay_t<T>, const char *>, "Invalid type passed to strchr");
+	return (strchr)(src, c);
+}
+template<class T>
+T HSTRRCHR(T src, int c)
+{
+	static_assert(std::is_same_v<std::decay_t<T>, char *> || std::is_same_v<std::decay_t<T>, const char *>, "Invalid type passed to strrchr");
+	return (strrchr)(src, c);
+}
+template<class T>
+T HSTRSTR(T haystack, const char *needle)
+{
+	static_assert(std::is_same_v<std::decay_t<T>, char *> || std::is_same_v<std::decay_t<T>, const char *>, "Invalid type passed to strstr");
+	return (strstr)(haystack, needle);
+}
+#define strchr HSTRCHR
+#define strrchr HSTRRCHR
+#define strstr HSTRSTR
 
 /// Bitfield determining the behavior of sv_parse and sv_split.
 typedef enum e_svopt {

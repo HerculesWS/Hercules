@@ -33,7 +33,7 @@ struct multipartparser;
 struct multipartparser_callbacks;
 
 /**
- * httpparser.c Interface
+ * httpparser Interface
  **/
 struct httpparser_interface {
 	/* vars */
