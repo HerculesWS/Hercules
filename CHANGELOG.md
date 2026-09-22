@@ -22,6 +22,136 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2026.09] `September 2026`
+
+### Codebase migration to C++
+
+In an effort to start modernizing our code base we're officially migrating Hercules development to C++20, this would allow much stricter checks on our code and open up the window to using a lot of the amazing features of C++20 (and later versions in the future), that will allow us to write more robust, safer and cleaner code.
+
+The first step which comes in this release focuses mainly on fixing any C++ violations we have in our code, and replaces some basic macros with their STL counterpart, we tried to keep the changes as minimal as possible to keep the migration process as simple and atomic as possible.
+
+#### Merging recommendation for heavily modified codebases
+
+Merging this release into large, heavily modified codebases is likely to generate several conflicts. Merging it in one go might make the conflicts extremely challenging to resolve correctly.
+
+The recommendation based on the dev team's own experience with similar situations with heavily modified forks, is to merge it in several steps.
+In particular, the commits in PR#3487 have been carefully organized so that each commit is reasonably atomic, and so that after each commit (possibly minus the commits before the HPM hook updates, and some other subtleties such as the one ahead of the `GUARD_MAP_LOCK` update) leaves the server in a fully buildable and runnable state.
+
+The most careful approach involves creating a merge commit for every (or every other) commit in the PR into a temporary branch derived from your development/master branch, resolving the conflicts that will arise at each step (which will be small and very clear given the contents of the few commits you're merging, or even none at all), and then trying to build your server after each merge. In case of build errors caused by the merged commit (or in case of any other custom code that needs to be updated to match what our commit did), make a commit after the merge, before proceeding to the next merge. Rebuild the HPM hooks again after each of our rebuilds, if that caused a conflict.
+Some commits will require additional care: the ones that enable new warnings/disable warning suppressions, and the ones that switch the language to C++ (see commit messages following the pattern 'Implement required code changes for * to compile as C++). Those are likely to trigger warnings in your custom codebase that aren't their direct consequence but rather missing compliance with previous commits. In those cases the recommended approach is to create several follow-up commits, possibly split by category (multiple commits fixing each specific warning type), and clean/rebuild until no new warnings are generated.
+The final challenge will be the last commit, that renames every .c file to .cpp, potentially causing a conflict on each modified .c file in your codebase. Carefully inspect the content of our commit to see that there are minimal text changes, and mostly just renames, and resolve the conflict accordingly, preserving your customized code in each file.
+Once everything is merged, and the server builds cleanly without warnings again, if you want a clean history in your repository and you're familiar enough and not scared of interactive merges, make a backup of the branch with all the merges (i.e. create a new branch at that point), and do an interactive rebase on top of your origin/master (or however your main development branch is called), using the `--interactive --rebase-merges` flags. Now you can reorder the follow-up commits (that you'll mostly see at the bottom of the rebase todo text) so that they are right after their respective related merge commits. This may cause some small conflicts that you'll have to resolve again, but it might be worth for your future git bisect pleasure, to have a clean history.
+
+### Added
+- Added `ninjac` alias (activated through `setup_env.ps1`) which adds colorful output.
+- Added a `.clang-format` file with recommended coding style.
+
+### Changed
+- Removed usage of `gcc` extensions in `test_equippos` plugin.
+- Added a type argument to the following macros `WFIFO2PTR`, `WP2PTR`, `RFIFO2PTR`, `RP2PTR`, `WBUFP`, `RBUFP`, `WFIFOP` and `RFIFOP`.
+- Replaced `WFIFOP` with `WP2PTR` where appropriate.
+- Replaced `RFIFOP` with `RP2PTR` where appropriate.
+- Added explicit type cast to the calls of `DB->data2ptr()`, `{*}db_get()`, `{*}db_ensure()`, `idb_{first,last,next,prev}()`, `aMalloc`, `aCalloc`, `aRealloc`, and `sockt->session[fd]->session_data`.
+- Added explicit type cast between `void *` type and other pointer types.
+- Reworked `@changelook` command code to clarify types and avoid reusage of variables with incompatible types.
+- Changed `skill->get_hit()` to return the appropriate enum value from `battle_dmg_type`.
+- Updated `skill->validate_skilltype()` to be stricter on the validation of enum `battle_dmg_type` values.
+- Updated `skill->get_casttype()` to return the appropriate enum `cast_enum`.
+- Update the signatures of `skill->attack_display_unknown()`, `skill->attack_dir_unknown()`, and `skill->attack_blow_unknown()` to use more adequate types.
+- Added explicit cast between integral types and enums.
+- Added a 'zero' value `QMT_NONE` to enum `quest_mobtype`.
+- Added a 'zero' value `LABEL_NOFLAGS` to enum `script_label_flags`.
+- Added spaces between string literals and macros.
+- Ensured both branches of `min()` and `max()` branches resolves to the same type.
+- Defined `NOMINMAX` in MSVC builds to prevent the definition of `min` and `max` as macros.
+- Defined `HSWAP()`, `HSWAP_PTR()`, `HMAX()`, and `HMIN()` macros to help with transition to C++ and replaced `swap()`, `swap_ptr()`, `max()`, and `min()` with them.
+- Ensured that the following configurations that defines a min/max checks their input to ensure that the minimum value is less than the maximum value.
+  - `script.conf`:
+    - `input_min_value` and `input_max_value`
+  - `battle.conf`:
+    - `min_hitrate` and `max_hitrate` (this was already silently applied before, without printing a warning)
+  - `client.conf`:
+    - `min_hair_style` and `max_hair_style`
+    - `min_hair_color` and `max_hair_color`
+    - `min_cloth_color` and `max_cloth_color`
+    - `min_body_style` and `max_body_style`
+  - `drops.conf`
+    - `item_drop_common_min` and `item_drop_common_max`
+    - `item_drop_heal_min` and `item_drop_heal_max`
+    - `item_drop_use_min` and `item_drop_use_max`
+    - `item_drop_equip_min` and `item_drop_equip_max`
+    - `item_drop_card_min` and `item_drop_card_max`
+    - `item_drop_mvp_min` and `item_drop_mvp_max`
+    - `item_drop_add_min` and `item_drop_add_max`
+    - `item_drop_add_chain_min` and `item_drop_add_chain_max`
+    - `item_drop_treasure_min` and `item_drop_treasure_max`
+  - `limits.conf`
+    - `batk_min_limit` and `batk_max_limit`
+    - `matk_min_limit` and `matk_max_limit`
+    - `watk_min_limit` and `watk_max_limit`
+    - `flee_min_limit` and `flee_max_limit`
+    - `flee2_min_limit` and `flee2_max_limit`
+    - `critical_min_limit` and `critical_max_limit`
+    - `hit_min_limit` and `hit_max_limit`
+- Updated the minimum values of the following configurations to match the expected minimum values in code
+  - `pet.conf`:
+    - `pet_max_stats` (new minimum: 1)
+    - `pet_max_atk1` (new minimum: 1)
+    - `pet_max_atk2` (new minimum: 2)
+- Renamed `itemdb->typename()` to `itemdb->type_to_name()` to avoid c++ keyword conflicts.
+- Renamed `guild_expulsion()`, `mapreg_save()`, `mob_db()`, `mob_chat()`, `quest_db()`, and `skill_timerskill()` to avoid conflicts with structure names.
+- Avoid useless initialization of some `char *` pointers `(*_CONF_NAME)` with string literals in `map_defaults()`.
+- Added `ZERO_INITIALIZED` macro to zero initialize structures during the transition from C to C++.
+- Changed `char *` pointers in `sysinfo` to always own their data.
+- Added a return to `unit->bl2ud()` and `unit->cbl2ud()` to silence a false-positive unreachable code warnings.
+- Added `CXX_ENUM_TYPE` macro to declare the underlying type of enums to allow those to be forward declared, this is a transition macro from C to C++.
+- Update HPMHookGenerator to include explicit type cast for hook function pointers.
+- Remove unused switch in `lapiif->parse_fromapi_api_proxy`.
+- Commented unimplemented tests in `test_libconfig`.
+- Moved `suggest-attribute=format` warning suppression from HPMHooks headers to CMake.
+- Added the `HPM_DECLARE_PLUGIN()` macro replacing the manual definition of the `pinfo` struct
+  - The macro allows to automatically populate the `.req_version` field and
+    to provide additional declarations.
+  - The `HPMi_s`, `HPMi`, `import_symbol` variables are now declared only when
+    the `HPM_DECLARE_PLUGIN()` macro is used, instead of automatically by
+    the `HPMi.h` header (this makes the code more ODR-compliant in the C++
+    migration, ensuring that a plugin with multiple `.c` files won't declare
+    those symbols multiple times)
+  - The `HPM_VERSION` is increased to 1.3
+  - Plugins will need to be updated to the new syntax
+- Replaced `STATIC_ASSERT()` with the C++ version `static_assert`.
+- Implemented type aware version of the following macros `WFIFO_CHUNKED_BLOCK_START_RAW1`, `WFIFO_CHUNKED_FINAL_START_RAW1`, `RFIFO_CHUNKED_COMPLETE`, and `VECTOR_{*}`.
+- Implement C++ replacements for the const-correct `strchr`, `strrchr`, and `strstr` generics.
+- Removed `register` specifier keyword from variables as it's no longer supported in C++.
+- Changed the following macros with their STL counterpart.
+  - `min` with `std::min`
+  - `max` with `std::max`
+  - `cap_value` with `std::clamp`
+- Changed `GUARD_MAP_LOCK` to use a class and relay on RAII to clean up instead of gcc extension `__cleanup__`.
+- Replaced `FALLTHROUGH` macro with C++ annotation `[[fallthrough]]`.
+- Changed script parsing errors from using a `longjmp` to use a C++ exception `script_parse_exception`.
+- Removed `analyzer_noreturn` and replaced it with C++ annotation `[[noreturn]]`
+
+### Fixed
+- Fixed HPMHooks data check generator marking API server as unknown type.
+- Fixed a call to `mob_db()` that was bypassing the interface.
+- Fixed a conflicting enum name in `test_equippos` plugin.
+- Fixed missing initializer warnings in `test_equippos` plugin.
+- Fixed missing enums `userconfig_from_sql_result`, `battle_dmg_type` and `cast_enum` from HPMHookGen script.
+- Fixed the default values of battle config flags `skillrange_by_distance`, `attack_attr_none`, and `enable_logs` the default now is guaranteed to fit within the corresponding enum instead of an arbitrarily large and potentially overflowing value.
+- Fixed `skill->strip_equip()` attempting to start `SC_NONE` for strip types that don't specify a debuff.
+- Fixed `type` variable in `skill->attack()` being overwritten with unrelated data.
+- Fixed several variables that was pointing to string literals to be of type `const char *`.
+- Fixed nullpo assertions in `jsonparser->get()`, `jsonparser->get_string_value()`, and `jsonparser->get_child_string_value()` returning the wrong type.
+- Fixed a missing scope in switch case of `BUILDIN(setunitdata)` to ensure variables lifetime when jumping out of the case.
+- Fixed missing `FALLTHROUGH` annotations to many switch cases in `skill->castend_nodamage_id()`.
+- Fixed a `FALLTHROUGH` annotations not being used directly before the next label in `PR_REDEMPTIO` case and cleaned up the the surrounding if condition to improve code flow.
+- Fixed script commands `input()` and `cap_value()` to check for their minimum/maximum ranges to ensure the range is correct and it now halts the script instead of causing an undefined behavior.
+- Sanitized the min-max range passed to `cap_value()` to ensure min < max to avoid undefined/undocumented behavior.
+- Fixed missing includes of `apisessiondata.h` and `mimepart.h` from `HPMapi.c`.
+- Fixed the following functions returning an integer from a boolean type functions `chr->find_available_map_fallback`, `inter->guild_remove_alliance`, and `script->sprintf_helper`.
+- Fixed some mixing of integer/boolean value checks in map server.
+
 ## [v2026.07] `July 2026`
 
 ### Added
