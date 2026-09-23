@@ -1811,6 +1811,9 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 	if (sd != NULL && sd->auto_cast_current.itemskill_instant_cast && sd->auto_cast_current.type == AUTOCAST_ITEM)
 		casttime = 0;
 
+	// Mystical Amplification switches state when the cast begins, not when it ends. (issue #2702)
+	skill->toggle_magicpower(src, skill_id, skill_lv);
+
 	map->freeblock_lock();
 
 	// in official this is triggered even if no cast time.
@@ -2031,6 +2034,9 @@ static int unit_skilluse_pos2(struct block_list *src, short skill_x, short skill
 
 	if (sd != NULL && sd->auto_cast_current.itemskill_instant_cast && sd->auto_cast_current.type == AUTOCAST_ITEM)
 		casttime = 0;
+
+	// Mystical Amplification switches state when the cast begins, not when it ends. (issue #2702)
+	skill->toggle_magicpower(src, skill_id, skill_lv);
 
 	// in official this is triggered even if no cast time.
 	clif->useskill(src, src->id, 0, skill_x, skill_y, skill_id, skill_lv, casttime);

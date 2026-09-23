@@ -12281,8 +12281,15 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 		}
 	}
 
-	if (calc_flag)
-		status_calc_bl(bl,calc_flag);
+	if (calc_flag) {
+		if (type == SC_MAGICPOWER) {
+			//Mystical Amplification recalculates MATK at once, so that spells which are
+			//already under way lose the bonus straight away. (issue #2702)
+			status->calc_bl_(bl, calc_flag, SCO_FORCE);
+		} else {
+			status_calc_bl(bl, calc_flag);
+		}
+	}
 
 	if(opt_flag&4) //Out of hiding, invoke on place.
 		skill->unit_move(bl,timer->gettick(),1);

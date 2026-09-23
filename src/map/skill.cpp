@@ -69,6 +69,7 @@
 #include <time.h>
 
 #define SKILLUNITTIMER_INTERVAL 100
+#define TIMERSKILL_INTERVAL 150 // Delay before skills such as Jupitel Thunder and Waterball deal their damage.
 
 static struct skill_interface skill_s;
 static struct s_skill_dbs skilldbs;
@@ -1505,6 +1506,10 @@ static struct s_skill_unit_layout *skill_get_unit_layout(uint16 skill_id, uint16
 		ShowError("skill_get_unit_layout: unsupported layout type %d for skill %d (level %d)\n", pos, skill_id, skill_lv);
 		pos = std::clamp(pos, 0, MAX_SQUARE_LAYOUT); // cap to nearest square layout
 	}
+
+	// Monsters deploy more units than players on level 10. (issue #2702)
+	if (src->type == BL_MOB && skill_lv >= 10 && skill_id == WZ_WATERBALL)
+		pos = 4; // 9x9 area
 
 	if (pos != -1) // simple single-definition layout
 		return &skill->dbs->unit_layout[pos];
@@ -4400,6 +4405,7 @@ static int skill_timerskill_(int tid, int64 tick, int id, intptr_t data)
 	struct block_list *src = map->id2bl(id),*target = NULL;
 	struct unit_data *ud = unit->bl2ud(src);
 	struct skill_timerskill *skl;
+	struct skill_unit *su = NULL;
 	int range;
 
 	nullpo_ret(src);
@@ -4462,11 +4468,32 @@ static int skill_timerskill_(int tid, int64 tick, int id, intptr_t data)
 					clif->skill_nodamage(src,target,skl->skill_id,skl->skill_lv,1);
 					break;
 				case WZ_WATERBALL:
-					skill->toggle_magicpower(src, skl->skill_id, skl->skill_lv); // only the first hit will be amplify
-					if (!status->isdead(target))
-						skill->attack(BF_MAGIC,src,src,target,skl->skill_id,skl->skill_lv,tick,skl->flag);
-					if (skl->type>1 && !status->isdead(target) && !status->isdead(src)) {
-						skill->addtimerskill(src,tick+125,target->id,0,0,skl->skill_id,skl->skill_lv,skl->type-1,skl->flag);
+				{
+					//Find the next waterball cell to consume. (issue #2702)
+					struct s_skill_unit_layout *layout = skill->get_unit_layout(skl->skill_id, skl->skill_lv, src, skl->x, skl->y);
+
+					for (int i = skl->type; i >= 0 && i < layout->count; i++) {
+						su = map->find_skill_unit_oncell(src, skl->x + layout->dx[i], skl->y + layout->dy[i], WZ_WATERBALL, NULL, 0);
+						if (su != NULL)
+							break;
+					}
+				}
+				[[fallthrough]];
+				case WZ_JUPITEL:
+					// Official behaviour is to hit as long as there is a line of sight, regardless of distance
+					if (skl->type > 0 && !status->isdead(target)
+					    && path->search_long(NULL, src, src->m, src->x, src->y, target->x, target->y, CELL_CHKWALL)) {
+						// Apply canact delay here to prevent unlimited casting
+						ud->canact_tick = tick + skill->delay_fix(src, skl->skill_id, skl->skill_lv);
+						skill->attack(BF_MAGIC, src, src, target, skl->skill_id, skl->skill_lv, tick, skl->flag);
+					}
+					if (su != NULL && !status->isdead(target) && !status->isdead(src)) {
+						if (skl->type > 0)
+							skill->toggle_magicpower(src, skl->skill_id, skl->skill_lv); // only the first hit is amplified
+						skill->delunit(su); // consume the cell this waterball came from
+						//The timer continues until the target is dead, even without a line of sight
+						unit->set_walkdelay(src, tick, TIMERSKILL_INTERVAL, 1);
+						skill->addtimerskill(src, tick + TIMERSKILL_INTERVAL, target->id, skl->x, skl->y, skl->skill_id, skl->skill_lv, skl->type + 1, skl->flag);
 					} else {
 						struct status_change *sc = status->get_sc(src);
 						if(sc) {
@@ -5533,7 +5560,6 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 		case MG_LIGHTNINGBOLT:
 		case WZ_EARTHSPIKE:
 		case AL_HEAL:
-		case WZ_JUPITEL:
 		case NPC_DARKTHUNDER:
 		case PR_ASPERSIO:
 		case MG_FROSTDIVER:
@@ -5571,38 +5597,15 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 				skill->attack(BF_MAGIC,src,src,bl,sid,skill_lv,tick,flag|SD_LEVEL);
 			}
 			break;
+		case WZ_JUPITEL:
+			//Damage and knockback are delayed, which lets another spell be cast first. (issue #2702)
+			skill->addtimerskill(src, tick + TIMERSKILL_INTERVAL, bl->id, 0, 0, skill_id, skill_lv, 1, flag);
+			break;
+
 		case WZ_WATERBALL:
-			{
-				int range = skill_lv / 2;
-				int maxlv = skill->get_max(skill_id); // learnable level
-				int count = 0;
-				int x, y;
-				struct skill_unit *su;
-
-				if( skill_lv > maxlv ) {
-					if( src->type == BL_MOB && skill_lv == 10 )
-						range = 4;
-					else
-						range = maxlv / 2;
-				}
-
-				for( y = src->y - range; y <= src->y + range; ++y )
-					for( x = src->x - range; x <= src->x + range; ++x ) {
-						if( !map->find_skill_unit_oncell(src,x,y,SA_LANDPROTECTOR,NULL,1) ) {
-							if (src->type != BL_PC || map->getcell(src->m, src, x, y, CELL_CHKWATER)) // non-players bypass the water requirement
-								count++; // natural water cell
-							else if( (su = map->find_skill_unit_oncell(src,x,y,SA_DELUGE,NULL,1)) != NULL
-							      || (su = map->find_skill_unit_oncell(src,x,y,NJ_SUITON,NULL,1)) != NULL ) {
-								count++; // skill-induced water cell
-								skill->delunit(su); // consume cell
-							}
-						}
-					}
-
-				if( count > 1 ) // queue the remaining count - 1 timerskill Waterballs
-					skill->addtimerskill(src,tick+150,bl->id,0,0,skill_id,skill_lv,count-1,flag);
-			}
-			skill->attack(BF_MAGIC,src,src,bl,skill_id,skill_lv,tick,flag);
+			//Deploy the waterball cells, the timer turns them into waterballs one by one. (issue #2702)
+			skill->unitsetting(src, skill_id, skill_lv, src->x, src->y, 0);
+			skill->addtimerskill(src, tick, bl->id, src->x, src->y, skill_id, skill_lv, 0, flag);
 			break;
 
 		case PR_BENEDICTIO:
@@ -5832,7 +5835,6 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 			if (sd) {
 				int i;
 				clif->skill_nodamage(src, bl, skill_id, skill_lv, 1);
-				skill->toggle_magicpower(src, skill_id, skill_lv);
 				// Priority is to release SpellBook
 				if (sc && sc->data[SC_READING_SB]) {
 					// SpellBook
@@ -6372,7 +6374,23 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 
 	if( sd && !(flag&1) )
 	{// ensure that the skill last-cast tick is recorded
-		sd->canskill_tick = timer->gettick();
+		int64 now = timer->gettick();
+
+		switch (skill_id) {
+			//These skills don't deal their damage right away, so another spell may be cast before
+			//it lands. Only allowed once every 2 seconds, to keep it from being abused. (issue #2702)
+			case WZ_JUPITEL:
+			case WZ_WATERBALL:
+				if (DIFF_TICK(now, sd->canskill_tick) > 2000) {
+					sd->ud.canact_tick = now;
+					sd->canskill_tick = now - 2000 + TIMERSKILL_INTERVAL;
+					break;
+				}
+				[[fallthrough]];
+			default:
+				sd->canskill_tick = now;
+				break;
+		}
 
 		if( sd->state.arrow_atk )
 		{// consume arrow on last invocation to this skill.
@@ -6651,9 +6669,6 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 				src->type, src->id, ud->skill_id, ud->skill_lv, target->id);
 
 		map->freeblock_lock();
-
-		// SC_MAGICPOWER needs to switch states before any damage is actually dealt
-		skill->toggle_magicpower(src, ud->skill_id, ud->skill_lv);
 
 #if 0 // On aegis damage skills are also increase by camouflage. Need confirmation on kRO.
 		if( ud->skill_id != RA_CAMOUFLAGE ) // only normal attack and auto cast skills benefit from its bonuses
@@ -12441,9 +12456,6 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 	}
 	PRAGMA_GCC46(GCC diagnostic pop)
 
-	// SC_MAGICPOWER needs to switch states before any damage is actually dealt
-	skill->toggle_magicpower(src, skill_id, skill_lv);
-
 	PRAGMA_GCC46(GCC diagnostic push)
 	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch(skill_id) {
@@ -13824,6 +13836,14 @@ static struct skill_unit_group *skill_unitsetting(struct block_list *src, uint16
 				val1 = (skill_lv <= 1) ? 500 : 200 + 200*skill_lv;
 				val2 = map->getcell(src->m, src, ux, uy, CELL_GETTYPE);
 				break;
+			case WZ_WATERBALL:
+				// Only water, Deluge and Suiton cells become waterball units. Non-players
+				// bypass the water requirement. (issue #2702)
+				if (sd == NULL || map->getcell(src->m, src, ux, uy, CELL_CHKWATER)
+				    || map->find_skill_unit_oncell(src, ux, uy, SA_DELUGE, NULL, 1) != NULL
+				    || map->find_skill_unit_oncell(src, ux, uy, NJ_SUITON, NULL, 1) != NULL)
+					break;
+				continue;
 			case HT_LANDMINE:
 			case MA_LANDMINE:
 			case HT_ANKLESNARE:
@@ -18781,6 +18801,15 @@ static int skill_cell_overlap(struct block_list *bl, va_list ap)
 					break;
 			}
 			break;
+		case WZ_WATERBALL:
+			switch (su->group->skill_id) {
+				case SA_DELUGE:
+				case NJ_SUITON:
+					//Deluge and Suiton cells are consumed to become waterball units. (issue #2702)
+					skill->delunit(su);
+					return 1;
+			}
+			break; // Waterball cells can be placed on top of each other
 		case WZ_ICEWALL:
 #ifndef RENEWAL // 2018.11 rebalance - Basilica changed to a self buff
 		case HP_BASILICA:
