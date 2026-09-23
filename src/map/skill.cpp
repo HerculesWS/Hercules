@@ -12249,6 +12249,36 @@ static int skill_count_wos(struct block_list *bl, va_list ap)
 	return 0;
 }
 
+/**
+ * Checks whether the area Basilica requires is free.
+ *
+ * Officially a 7x7 area centered on the caster must be free of obstacles,
+ * characters and ground skill units, the caster's own ones included.
+ *
+ * @param src The caster.
+ * @param x The center cell's X coordinate.
+ * @param y The center cell's Y coordinate.
+ * @retval true if Basilica can be created there.
+ */
+static bool skill_basilica_area_clear(struct block_list *src, int x, int y)
+{
+	const int area = 3;
+
+	nullpo_retr(false, src);
+
+	if (map->foreachinarea(skill->count_wos, src->m, x - area, y - area, x + area, y + area, BL_MOB | BL_PC | BL_SKILL, src) != 0)
+		return false;
+
+	for (int i = x - area; i <= x + area; i++) {
+		for (int j = y - area; j <= y + area; j++) {
+			if (map->getcell(src->m, src, i, j, CELL_CHKPASS) == 0)
+				return false;
+		}
+	}
+
+	return true;
+}
+
 /*==========================================
  *
  *------------------------------------------*/
@@ -12651,20 +12681,23 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 
 #ifndef RENEWAL // 2018.11 rebalance - Basilica changed to a self buff
 		case HP_BASILICA:
-			if( sc && sc->data[SC_BASILICA] )
+			if (sc != NULL && sc->data[SC_BASILICA] != NULL && sc->data[SC_BASILICA]->val4 == src->id) {
 				status_change_end(src, SC_BASILICA, INVALID_TIMER); // Cancel Basilica
-			else { // Create Basilica. Start SC on caster. Unit timer start SC on others.
-				if( map->foreachinrange(skill->count_wos, src, 2, BL_MOB|BL_PC, src) ) {
-					if( sd )
-						clif->skill_fail(sd, skill_id, USESKILL_FAIL, 0, 0);
-					return 1;
-				}
-
-				skill->clear_unitgroup(src);
-				if( skill->unitsetting(src,skill_id,skill_lv,x,y,0) )
-					sc_start4(src, src, type, 100, skill_lv, 0, 0, src->id, skill->get_time(skill_id, skill_lv), skill_id);
-				flag|=1;
+				return 0; // Cancelling Basilica consumes none of its requirements.
 			}
+			// Create Basilica. Start SC on caster. Unit timer start SC on others.
+			// The free area is only required to begin casting, so characters entering
+			// it during the cast don't prevent the Basilica from being created.
+			// Creating a Basilica doesn't remove the caster's other ground skills.
+			if ((sg = skill->unitsetting(src, skill_id, skill_lv, x, y, 0)) != NULL) {
+				// The requirements have to be consumed before the status change starts,
+				// otherwise the turn off check in skill_get_requirement() would skip them.
+				if (sd != NULL)
+					skill->consume_requirement(sd, skill_id, skill_lv, 2);
+
+				sc_start4(src, src, type, 100, skill_lv, 0, sg->group_id, src->id, skill->get_time(skill_id, skill_lv), skill_id);
+			}
+			flag|=1;
 			break;
 #endif
 
@@ -15696,6 +15729,13 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 	PRAGMA_GCC46(GCC diagnostic push)
 	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch( skill_id ) { // Turn off check.
+#ifndef RENEWAL // 2018.11 rebalance - Basilica changed to a self buff
+		case HP_BASILICA:
+			// Cancelling Basilica doesn't re-check the skill's requirements.
+			if (sc != NULL && sc->data[SC_BASILICA] != NULL && sc->data[SC_BASILICA]->val4 == sd->bl.id)
+				return 1;
+			break;
+#endif
 		case BS_MAXIMIZE:
 		case NV_TRICKDEAD:
 		case TF_HIDING:
@@ -15831,6 +15871,20 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 	PRAGMA_GCC46(GCC diagnostic push)
 	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 	switch( skill_id ) {
+#ifndef RENEWAL // 2018.11 rebalance - Basilica changed to a self buff
+		case HP_BASILICA:
+			// Officially the requirements and the free area are checked before the cast starts,
+			// so that a Basilica which can't be created fails right away instead of after the cast.
+			if (skill->items_required(sd, skill_id, skill_lv)
+			    && skill->check_condition_required_items(sd, skill_id, skill_lv) != 0)
+				return 0;
+
+			if (!skill->basilica_area_clear(&sd->bl, sd->bl.x, sd->bl.y)) {
+				clif->skill_fail(sd, skill_id, USESKILL_FAIL, 0, 0);
+				return 0;
+			}
+			break;
+#endif
 		case MC_VENDING:
 		case ALL_BUYING_STORE:
 			if (map->list[sd->bl.m].flag.novending) {
@@ -17235,6 +17289,13 @@ static struct skill_condition skill_get_requirement(struct map_session_data *sd,
 		sc = NULL;
 
 	switch( skill_id ) { // Turn off check.
+#ifndef RENEWAL // 2018.11 rebalance - Basilica changed to a self buff
+		case HP_BASILICA:
+			// Cancelling Basilica doesn't consume the skill's requirements.
+			if (sc != NULL && sc->data[SC_BASILICA] != NULL && sc->data[SC_BASILICA]->val4 == sd->bl.id)
+				return req;
+			break;
+#endif
 		case BS_MAXIMIZE:
 		case NV_TRICKDEAD:
 		case TF_HIDING:
@@ -19423,6 +19484,18 @@ static int skill_delunitgroup(struct skill_unit_group *group)
 			status_change_end(src, SC_GOSPEL, INVALID_TIMER);
 		}
 	}
+
+#ifndef RENEWAL // 2018.11 rebalance - Basilica changed to a self buff
+	// end Basilica's status change on 'src'
+	// (needs to be done when the group is deleted by other means than skill deactivation)
+	if (group->unit_id == UNT_BASILICA) {
+		struct status_change *sc = status->get_sc(src);
+		if (sc != NULL && sc->data[SC_BASILICA] != NULL && sc->data[SC_BASILICA]->val3 == group->group_id) {
+			sc->data[SC_BASILICA]->val3 = 0; // Remove reference to this group. [Streusel]
+			status_change_end(src, SC_BASILICA, INVALID_TIMER);
+		}
+	}
+#endif
 
 	switch( group->skill_id ) {
 		case SG_SUN_WARM:
@@ -25935,5 +26008,6 @@ void skill_defaults(void)
 	skill->splash_target = skill_splash_target;
 	skill->check_npc_chaospanic = skill_check_npc_chaospanic;
 	skill->count_wos = skill_count_wos;
+	skill->basilica_area_clear = skill_basilica_area_clear;
 	skill->add_bard_dancer_soullink_songs = skill_add_bard_dancer_soullink_songs;
 }
