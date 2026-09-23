@@ -5495,7 +5495,51 @@ static int pc_useitem(struct map_session_data *sd, int n)
 	if (nameid == ITEMID_MEGAPHONE)
 		sd->state.using_megaphone = 1;
 
+	// Save the script the player is currently attached to, so that using an item doesn't
+	// clobber an NPC conversation already in progress. (issue #3471)
+	struct script_state *previous_st = sd->st;
+	bool previous_menu_or_input = false;
+	int previous_npc_menu = 0;
+	int previous_npc_amount_min = 0;
+	int previous_npc_amount_max = 0;
+
+	if (previous_st != NULL) {
+		// A menu() or input() the previous script is waiting on left its answer pending in the
+		// session data. The item script must not read it as its own, or its menu() would return
+		// a selection the player never made for it and its input() a number meant for the NPC.
+		previous_menu_or_input = (sd->state.menu_or_input != 0);
+		previous_npc_menu = sd->npc_menu;
+		previous_npc_amount_min = sd->npc_amount_min;
+		previous_npc_amount_max = sd->npc_amount_max;
+		sd->state.menu_or_input = 0;
+		sd->npc_menu = 0;
+
+		// Detach the player from the running script, so the item script doesn't back it up.
+		script->detach_rid(previous_st);
+	}
+
 	script->run_use_script(sd, sd->inventory_data[n], npc->fake_nd->bl.id);
+
+	if (previous_st != NULL) {
+		if (sd->st != NULL) {
+			// The item script paused to show a window of its own, so that is what the client
+			// displays now and the previous conversation can no longer be resumed. Whatever it
+			// is waiting for belongs to the item script, so the saved state is dropped with it.
+			script->free_state(previous_st);
+		} else {
+			// Detaching cleared the RID, so it has to be restored before reattaching.
+			previous_st->rid = sd->bl.id;
+			script->attach_state(previous_st);
+
+			// The client still shows the previous script's window, so its pending answer is
+			// handed back for whenever the player gets around to it.
+			sd->state.menu_or_input = (previous_menu_or_input ? 1 : 0);
+			sd->npc_menu = previous_npc_menu;
+			sd->npc_amount_min = previous_npc_amount_min;
+			sd->npc_amount_max = previous_npc_amount_max;
+		}
+	}
+
 	script->potion_flag = 0;
 
 	// If Earth Spike Scroll is used while SC_EARTHSCROLL is active, there is a chance to don't consume the scroll. [Kenpachi]
