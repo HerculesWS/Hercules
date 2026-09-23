@@ -16963,6 +16963,14 @@ static int skill_check_condition_castend(struct map_session_data *sd, uint16 ski
 			break;
 		}
 
+		case PF_SOULBURN:
+			//Soul Siphon only works on players. (issue #3480)
+			if (BL_CAST(BL_PC, target) == NULL) {
+				clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
+				return 0;
+			}
+			break;
+
 		case NC_SILVERSNIPER:
 		case NC_MAGICDECOY: {
 				int c = 0;
