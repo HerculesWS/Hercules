@@ -9501,6 +9501,8 @@ static bool pc_can_attack(struct map_session_data *sd, int target_id)
 		sd->sc.data[SC_BLADESTOP] ||
 		sd->sc.data[SC_DEEP_SLEEP] ||
 		sd->sc.data[SC_FALLENEMPIRE] ||
+		//The caster may not attack while their own Gravitational Field is active. (issue #3472)
+		(sd->sc.data[SC_GRAVITATION] && sd->sc.data[SC_GRAVITATION]->val3 == BCT_SELF) ||
 		sd->block_action.attack)
 			return false;
 

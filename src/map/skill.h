@@ -1924,6 +1924,7 @@ struct skill_unit_group {
 	char *valstr;
 	int unit_id;
 	int group_id;
+	int link_group_id; //Group that is deleted along with this one, 0 if none.
 	int alive_count;
 	int item_id; //store item used.
 	struct {
