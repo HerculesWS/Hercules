@@ -101311,15 +101311,15 @@ int HP_unit_is_walking(struct block_list *bl) {
 	}
 	return retVal___;
 }
-int HP_unit_can_move(struct block_list *bl) {
+int HP_unit_can_move(struct block_list *bl, std::optional<e_skill> skill_id) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_unit_can_move_pre > 0) {
-		int (*preHookFunc) (struct block_list **bl);
+		int (*preHookFunc) (struct block_list **bl, std::optional<e_skill> *skill_id);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_can_move_pre; hIndex++) {
-			preHookFunc = (int (*) (struct block_list **bl))HPMHooks.list.HP_unit_can_move_pre[hIndex].func;
-			retVal___ = preHookFunc(&bl);
+			preHookFunc = (int (*) (struct block_list **bl, std::optional<e_skill> *skill_id))HPMHooks.list.HP_unit_can_move_pre[hIndex].func;
+			retVal___ = preHookFunc(&bl, &skill_id);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -101327,13 +101327,13 @@ int HP_unit_can_move(struct block_list *bl) {
 		}
 	}
 	{
-		retVal___ = HPMHooks.source.unit.can_move(bl);
+		retVal___ = HPMHooks.source.unit.can_move(bl, skill_id);
 	}
 	if (HPMHooks.count.HP_unit_can_move_post > 0) {
-		int (*postHookFunc) (int retVal___, struct block_list *bl);
+		int (*postHookFunc) (int retVal___, struct block_list *bl, std::optional<e_skill> skill_id);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_unit_can_move_post; hIndex++) {
-			postHookFunc = (int (*) (int retVal___, struct block_list *bl))HPMHooks.list.HP_unit_can_move_post[hIndex].func;
-			retVal___ = postHookFunc(retVal___, bl);
+			postHookFunc = (int (*) (int retVal___, struct block_list *bl, std::optional<e_skill> skill_id))HPMHooks.list.HP_unit_can_move_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, bl, skill_id);
 		}
 	}
 	return retVal___;

@@ -4330,7 +4330,7 @@ static int skill_check_condition_mercenary(struct block_list *bl, int skill_id, 
 	if( !type )
 		switch( state ) {
 			case ST_MOVE_ENABLE:
-				if( !unit->can_move(bl) ) {
+				if (!unit->can_move(bl, static_cast<e_skill>(skill_id))) {
 					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 					return 0;
 				}
@@ -15394,7 +15394,7 @@ static int skill_check_condition_char_sub(struct block_list *bl, va_list ap)
 			return 1;
 		default: //Warning: Assuming Ensemble Dance/Songs for code speed. [Skotlex]
 			{
-				if(pc_issit(tsd) || !unit->can_move(&tsd->bl))
+				if(pc_issit(tsd) || !unit->can_move(&tsd->bl, {}))
 					return 0;
 
 				uint16 skill_lv = pc->checkskill(tsd, skill_id);
@@ -15937,7 +15937,7 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 					default:
 						return 0;
 				}
-			} else if (!unit->can_move(&sd->bl)) {
+			} else if (!unit->can_move(&sd->bl, static_cast<e_skill>(skill_id))) {
 				//Placed here as ST_MOVE_ENABLE should not apply if rooted or on a combo. [Skotlex]
 				clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 				return 0;
@@ -16522,7 +16522,7 @@ static int skill_check_condition_castbegin(struct map_session_data *sd, uint16 s
 			if (sc && sc->data[SC_COMBOATTACK] && sc->data[SC_COMBOATTACK]->val1 == skill_id)
 				sd->ud.canmove_tick = timer->gettick(); //When using a combo, cancel the can't move delay to enable the skill. [Skotlex]
 
-			if (!unit->can_move(&sd->bl)) {
+			if (!unit->can_move(&sd->bl, static_cast<e_skill>(skill_id))) {
 				clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 				return 0;
 			}
@@ -22490,6 +22490,7 @@ static void skill_validate_skillinfo(struct config_setting_t *conf, struct s_ski
 			{ "RangeModByRadius", INF2_RANGE_RADIUS },
 			{ "RangeModByResearchTrap", INF2_RANGE_RESEARCHTRAP },
 			{ "AllowPlagiarism", INF2_ALLOW_PLAGIARIZE },
+			{ "IgnoreWalkDelayTick", INF2_IGNORE_WALK_DELAY_TICK },
 		};
 
 		while ((tt = libconfig->setting_get_elem(t, i++)) != NULL) {

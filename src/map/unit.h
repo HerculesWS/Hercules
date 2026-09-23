@@ -27,6 +27,8 @@
 #include "map/unitdefines.h" // enum unit_dir
 #include "common/hercules.h"
 
+#include <optional>
+
 struct map_session_data;
 struct block_list;
 
@@ -127,7 +129,7 @@ struct unit_interface {
 	int (*steptimer) (int tid, int64 tick, int id, intptr_t data);
 	void (*stop_stepaction) (struct block_list *bl);
 	int (*is_walking) (struct block_list *bl);
-	int (*can_move) (struct block_list *bl);
+	int (*can_move) (struct block_list *bl, std::optional<e_skill> skill_id);
 	int (*resume_running) (int tid, int64 tick, int id, intptr_t data);
 	int (*set_walkdelay_timer) (int tid, int64 tick, int id, intptr_t data);
 	int (*set_walkdelay) (struct block_list *bl, int64 tick, int delay, int type);

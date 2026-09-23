@@ -624,7 +624,7 @@ static int unit_walk_toxy(struct block_list *bl, short x, short y, int flag)
 		return 0;
 	}
 
-	if ((flag & 2) == 0 && ((status_get_mode(bl) & MD_CANMOVE) == 0 || unit->can_move(bl) == 0))
+	if ((flag & 2) == 0 && ((status_get_mode(bl) & MD_CANMOVE) == 0 || unit->can_move(bl, {}) == 0))
 		return 1;
 
 	ud->state.walk_easy = flag & 1;
@@ -694,7 +694,7 @@ static int unit_walktobl_timer(int tid, int64 tick, int id, intptr_t data)
 	if (ud->walktimer == INVALID_TIMER && ud->target == data) {
 		if (DIFF_TICK(ud->canmove_tick, tick) > 0) // Keep waiting?
 			timer->add(ud->canmove_tick + 1, unit->walktobl_timer, id, data);
-		else if (unit->can_move(bl) != 0 && unit->walk_toxy_sub(bl) == 0 && ud->state.attack_continue != 0)
+		else if (unit->can_move(bl, {}) != 0 && unit->walk_toxy_sub(bl) == 0 && ud->state.attack_continue != 0)
 			set_mobstate(bl);
 	}
 	return 0;
@@ -765,7 +765,7 @@ static int unit_walk_tobl(struct block_list *bl, struct block_list *tbl, int ran
 		return 0;
 	}
 
-	if (unit->can_move(bl) == 0)
+	if (unit->can_move(bl, {}) == 0)
 		return 1;
 
 	if (unit->walk_toxy_sub(bl) == 0) {
@@ -833,7 +833,7 @@ static bool unit_run(struct block_list *bl, struct map_session_data *sd, enum sc
 	if (sc == NULL || sc->data[type] == NULL)
 		return false;
 
-	if (unit->can_move(bl) == 0) {
+	if (unit->can_move(bl, {}) == 0) {
 		status_change_end(bl, type, INVALID_TIMER);
 		return false;
 	}
@@ -1215,8 +1215,10 @@ static int unit_is_walking(struct block_list *bl)
 
 /*==========================================
  * Determines if the bl can move based on status changes. [Skotlex]
+ * skill_id is the skill the check is performed for, or empty when the check is
+ * not related to a skill. It lets a skill bypass the checks its db flags allow.
  *------------------------------------------*/
-static int unit_can_move(struct block_list *bl)
+static int unit_can_move(struct block_list *bl, std::optional<e_skill> skill_id)
 {
 	struct map_session_data *sd;
 	struct unit_data *ud;
@@ -1243,7 +1245,11 @@ static int unit_can_move(struct block_list *bl)
 		}
 	}
 
-	if (DIFF_TICK(ud->canmove_tick, timer->gettick()) > 0)
+	// Skills flagged as IgnoreWalkDelayTick may be used while the walk delay left over by a
+	// previously used skill is still running, but not while the unit is actually immobilized.
+	bool ignore_walk_delay = skill_id.has_value() && (skill->get_inf2(*skill_id) & INF2_IGNORE_WALK_DELAY_TICK) != 0;
+
+	if (!ignore_walk_delay && DIFF_TICK(ud->canmove_tick, timer->gettick()) > 0)
 		return 0;
 
 	if (sd && (
@@ -1381,7 +1387,7 @@ static int unit_set_walkdelay(struct block_list *bl, int64 tick, int delay, int 
 			return 0;
 	} else {
 		//Don't set walk delays when already trapped.
-		if (!unit->can_move(bl))
+		if (!unit->can_move(bl, {}))
 			return 0;
 		//Immune to being stopped for double the flinch time
 		if (DIFF_TICK(ud->canmove_tick, tick-delay) > 0)
