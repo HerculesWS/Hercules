@@ -1045,69 +1045,52 @@ enum manner_flags
 	MANNER_NOROOM    = 0x10,
 };
 
-#ifndef _MSC_VER
-#define CONST_OR_ENUMVAL(_const_, _val_) _const_ = _val_,
-#else
-#define CONST_OR_ENUMVAL(_const_, _val_) static const uint64_t _const_ = _val_;
-#endif
-
-#ifndef _MSC_VER
 //Define flags for the status_calc_bl function. [Skotlex]
-enum _scb_flag
+enum e_scb_flag : uint64
 {
-#endif
-	CONST_OR_ENUMVAL(SCB_NONE,    0x00000000)
-	CONST_OR_ENUMVAL(SCB_BASE,    0x00000001)
-	CONST_OR_ENUMVAL(SCB_MAXHP,   0x00000002)
-	CONST_OR_ENUMVAL(SCB_MAXSP,   0x00000004)
-	CONST_OR_ENUMVAL(SCB_STR,     0x00000008)
-	CONST_OR_ENUMVAL(SCB_AGI,     0x00000010)
-	CONST_OR_ENUMVAL(SCB_VIT,     0x00000020)
-	CONST_OR_ENUMVAL(SCB_INT,     0x00000040)
-	CONST_OR_ENUMVAL(SCB_DEX,     0x00000080)
-	CONST_OR_ENUMVAL(SCB_LUK,     0x00000100)
-	CONST_OR_ENUMVAL(SCB_BATK,    0x00000200)
-	CONST_OR_ENUMVAL(SCB_WATK,    0x00000400)
-	CONST_OR_ENUMVAL(SCB_MATK,    0x00000800)
-	CONST_OR_ENUMVAL(SCB_HIT,     0x00001000)
-	CONST_OR_ENUMVAL(SCB_FLEE,    0x00002000)
-	CONST_OR_ENUMVAL(SCB_DEF,     0x00004000)
-	CONST_OR_ENUMVAL(SCB_DEF2,    0x00008000)
-	CONST_OR_ENUMVAL(SCB_MDEF,    0x00010000)
-	CONST_OR_ENUMVAL(SCB_MDEF2,   0x00020000)
-	CONST_OR_ENUMVAL(SCB_SPEED,   0x00040000)
-	CONST_OR_ENUMVAL(SCB_ASPD,    0x00080000)
-	CONST_OR_ENUMVAL(SCB_DSPD,    0x00100000)
-	CONST_OR_ENUMVAL(SCB_CRI,     0x00200000)
-	CONST_OR_ENUMVAL(SCB_FLEE2,   0x00400000)
-	CONST_OR_ENUMVAL(SCB_ATK_ELE, 0x00800000)
-	CONST_OR_ENUMVAL(SCB_DEF_ELE, 0x01000000)
-	CONST_OR_ENUMVAL(SCB_MODE,    0x02000000)
-	CONST_OR_ENUMVAL(SCB_SIZE,    0x04000000)
-	CONST_OR_ENUMVAL(SCB_RACE,    0x08000000)
-	CONST_OR_ENUMVAL(SCB_RANGE,   0x10000000)
-	CONST_OR_ENUMVAL(SCB_REGEN,   0x20000000)
-	CONST_OR_ENUMVAL(SCB_DYE,     0x40000000) // force cloth-dye change to 0 to avoid client crashes.
+	SCB_NONE    = 0x00000000ull,
+	SCB_BASE    = 0x00000001ull,
+	SCB_MAXHP   = 0x00000002ull,
+	SCB_MAXSP   = 0x00000004ull,
+	SCB_STR     = 0x00000008ull,
+	SCB_AGI     = 0x00000010ull,
+	SCB_VIT     = 0x00000020ull,
+	SCB_INT     = 0x00000040ull,
+	SCB_DEX     = 0x00000080ull,
+	SCB_LUK     = 0x00000100ull,
+	SCB_BATK    = 0x00000200ull,
+	SCB_WATK    = 0x00000400ull,
+	SCB_MATK    = 0x00000800ull,
+	SCB_HIT     = 0x00001000ull,
+	SCB_FLEE    = 0x00002000ull,
+	SCB_DEF     = 0x00004000ull,
+	SCB_DEF2    = 0x00008000ull,
+	SCB_MDEF    = 0x00010000ull,
+	SCB_MDEF2   = 0x00020000ull,
+	SCB_SPEED   = 0x00040000ull,
+	SCB_ASPD    = 0x00080000ull,
+	SCB_DSPD    = 0x00100000ull,
+	SCB_CRI     = 0x00200000ull,
+	SCB_FLEE2   = 0x00400000ull,
+	SCB_ATK_ELE = 0x00800000ull,
+	SCB_DEF_ELE = 0x01000000ull,
+	SCB_MODE    = 0x02000000ull,
+	SCB_SIZE    = 0x04000000ull,
+	SCB_RACE    = 0x08000000ull,
+	SCB_RANGE   = 0x10000000ull,
+	SCB_REGEN   = 0x20000000ull,
+	SCB_DYE     = 0x40000000ull, // force cloth-dye change to 0 to avoid client crashes,
 #if 0 // Currently No SC use it. Also, when this will be implemented, there will be need to change to 64bit variable
-	CONST_OR_ENUMVAL(SCB_BODY,    0x80000000) // Force bodysStyle change to 0
+	SCB_BODY    = 0x80000000ull, // Force bodysStyle change to 0
 #endif
-	CONST_OR_ENUMVAL(SCB_ATK_PERC,  0x100000000)
-	CONST_OR_ENUMVAL(SCB_MATK_PERC, 0x200000000)
-	CONST_OR_ENUMVAL(SCB_DEF_PERC,  0x400000000)
-	CONST_OR_ENUMVAL(SCB_MDEF_PERC, 0x800000000)
+	SCB_ATK_PERC  = 0x100000000ull,
+	SCB_MATK_PERC = 0x200000000ull,
+	SCB_DEF_PERC  = 0x400000000ull,
+	SCB_MDEF_PERC = 0x800000000ull,
 
-	CONST_OR_ENUMVAL(SCB_BATTLE,    0xF3FFFFFFE)
-	CONST_OR_ENUMVAL(SCB_ALL,       0xF3FFFFFFF)
-#ifndef _MSC_VER
+	SCB_BATTLE    = 0xF3FFFFFFEull,
+	SCB_ALL       = 0xF3FFFFFFFull,
 };
-#endif
-
-#ifndef _MSC_VER
-	typedef enum _scb_flag e_scb_flag;
-#else
-	typedef uint64_t e_scb_flag;
-#endif
-#undef CONST_OR_ENUMVAL
 
 static_assert(sizeof(e_scb_flag) > 4, "e_scb_flag values need to be larger than 32 bits.");
 static_assert(sizeof(SCB_ATK_PERC) > 4, "e_scb_flag values need to be larger than 32 bits.");
