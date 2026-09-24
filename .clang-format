@@ -1,121 +1,189 @@
 ---
 BasedOnStyle: LLVM
-Language:        Cpp
+Language: Cpp
 AccessModifierOffset: -6
-AlignAfterOpenBracket: Align
+AlignAfterOpenBracket: true
 AlignArrayOfStructures: Right
 AlignConsecutiveAssignments:
-  Enabled:         true
+  Enabled:          true
   AcrossEmptyLines: false
-  AcrossComments:  true
-  AlignCompound:   true
-  PadOperators:    true
+  AcrossComments:   true
+  AlignCompound:    true
+  # EnumAssignments:  true
+  PadOperators:     true
 AlignConsecutiveBitFields:
-  Enabled:         true
+  Enabled:          true
   AcrossEmptyLines: false
-  AcrossComments:  true
-  AlignCompound:   false
-  PadOperators:    false
+  AcrossComments:   true
 AlignConsecutiveDeclarations:
-  Enabled:         false
-  AcrossEmptyLines: false
-  AcrossComments:  false
-  AlignCompound:   false
-  PadOperators:    false
+  Enabled:                   false
+  AcrossEmptyLines:          false
+  AcrossComments:            false
+  AlignFunctionDeclarations: false
+  AlignFunctionPointers:     false
 AlignConsecutiveMacros:
-  Enabled:         true
+  Enabled:          true
   AcrossEmptyLines: false
-  AcrossComments:  true
-  AlignCompound:   false
-  PadOperators:    false
-AlignEscapedNewlines: Left
+  AcrossComments:   true
+AlignConsecutiveShortCaseStatements:
+  Enabled:          false
+  AcrossEmptyLines: false
+  AcrossComments:   false
+  AlignCaseColons:  false
+AlignEscapedNewlines: DontAlign
 AlignOperands:   AlignAfterOperator
-AlignTrailingComments: true
+AlignTrailingComments:
+  Kind:           Always
+  OverEmptyLines: 0
 AllowAllArgumentsOnNextLine: true
-AllowShortEnumsOnASingleLine: false
+AllowAllParametersOfDeclarationOnNextLine: true
+AllowBreakBeforeNoexceptSpecifier: Always
 AllowShortBlocksOnASingleLine: Never
+AllowShortCaseExpressionOnASingleLine: false
 AllowShortCaseLabelsOnASingleLine: false
+AllowShortCompoundRequirementOnASingleLine: true
+AllowShortEnumsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: None
-AllowShortLambdasOnASingleLine: Inline
 AllowShortIfStatementsOnASingleLine: Never
+AllowShortLambdasOnASingleLine: Inline
 AllowShortLoopsOnASingleLine: false
-AlwaysBreakAfterReturnType: None
+AllowShortNamespacesOnASingleLine: false
 AlwaysBreakBeforeMultilineStrings: true
-AlwaysBreakTemplateDeclarations: Yes
-BinPackArguments: false
+AttributeMacros: [__attribute__, forceinline, ra_align, GCCATTR, GCC10ATTR, GCC11ATTR, HPExport, HPShared]
+BinPackArguments: true
+BinPackLongBracedList: true
 BinPackParameters: true
+BitFieldColonSpacing: Both
+BracedInitializerIndentWidth: 8
+BreakAdjacentStringLiterals: false
+BreakAfterAttributes: Never
+BreakAfterOpenBracketBracedList: true
+BreakAfterOpenBracketFunction: true
+BreakAfterOpenBracketIf: true
+BreakAfterOpenBracketLoop: true
+BreakAfterOpenBracketSwitch: true
+BreakAfterReturnType: Automatic
 BreakBeforeBinaryOperators: All
-BreakBeforeConceptDeclarations: Allowed
 BreakBeforeBraces: Linux
+BreakBeforeCloseBracketBracedList: true
+BreakBeforeCloseBracketFunction: true
+BreakBeforeCloseBracketIf: true
+BreakBeforeCloseBracketLoop: true
+BreakBeforeCloseBracketSwitch: true
+BreakBeforeConceptDeclarations: Allowed
+BreakBeforeInlineASMColon: Always
+BreakBeforeTemplateCloser: true
 BreakBeforeTernaryOperators: true
+BreakBinaryOperations: RespectPrecedence
 BreakConstructorInitializers: BeforeColon
+BreakFunctionDefinitionParameters: false
+BreakInheritanceList: AfterComma
 BreakStringLiterals: true
-ColumnLimit:     120
-QualifierAlignment: Left
+BreakTemplateDeclarations: Yes
+ColumnLimit: 120
 CompactNamespaces: true
 ConstructorInitializerIndentWidth: 8
 ContinuationIndentWidth: 8
-Cpp11BracedListStyle: true
-DeriveLineEnding: false
+Cpp11BracedListStyle: FunctionCall
 DerivePointerAlignment: false
-DisableFormat:   false
-EmptyLineAfterAccessModifier: Leave
+DisableFormat: false
+EmptyLineAfterAccessModifier: Never
 EmptyLineBeforeAccessModifier: LogicalBlock
-PackConstructorInitializers: NextLine
+EnumTrailingComma: Leave # TODO: Change to Insert after everything is formatted, and review the changes (see warning in the docs)
 FixNamespaceComments: true
+ForEachMacros: [JSONPARSER_FOR_EACH, WFIFO_CHUNKED_INIT_RAW, WFIFO_CHUNKED_INIT, WFIFO_CLIENT_CHUNKED_INIT, BONUS_FOREACH_RCARRAY_FROMMASK]
+IfMacros: [RFIFO_CHUNKED_ERROR, RFIFO_CHUNKED_COMPLETE]
 IncludeBlocks:   Preserve
+IncludeCategories:
+ - Regex:        '^"common/hercules.h"'
+   Priority:     -10
 IndentAccessModifiers: false
-IndentCaseLabels: false
 IndentCaseBlocks: false
+IndentCaseLabels: false
+IndentExportBlock: false
+IndentExternBlock: NoIndent
 IndentGotoLabels: false
 IndentPPDirectives: AfterHash
-IndentExternBlock: NoIndent
 IndentRequiresClause: true
-IndentWidth:     8
+IndentWidth: 8
 IndentWrappedFunctionNames: true
-InsertBraces:    false
-InsertTrailingCommas: None
-KeepEmptyLinesAtTheStartOfBlocks: false
+InsertBraces: false # TODO: Change to true after everything is formatted and review the changes (see warning in the docs)
+InsertNewlineAtEOF: true
+IntegerLiteralSeparator:
+  Binary:                 8
+  BinaryMaxDigitsRemove:  0
+  BinaryMinDigitsInsert:  8
+  Decimal:                3
+  DecimalMaxDigitsRemove: 0
+  DecimalMinDigitsInsert: 7
+  Hex:                    4
+  HexMaxDigitsRemove:     0
+  HexMinDigitsInsert:     9
+KeepEmptyLines:
+  AtEndOfFile:    false
+  AtStartOfBlock: false
+  AtStartOfFile:  false
+KeepFormFeed: false
 LambdaBodyIndentation: OuterScope
+LineEnding: DeriveLF
+MainIncludeChar: Quote
 MaxEmptyLinesToKeep: 1
 NamespaceIndentation: None
+NumericLiteralCase:
+  ExponentLetter: Lower
+  HexDigit:       Upper
+  Prefix:         Lower
+  Suffix:         Lower
+PPIndentWidth: 2
+PackConstructorInitializers: NextLine
 PointerAlignment: Right
-PPIndentWidth:   2
+QualifierAlignment: Leave # TODO: After everything is formatted, change to Left and review the output (see warning in the docs)
 ReferenceAlignment: Right
-ReflowComments:  true
+ReflowComments: Always
+RemoveBracesLLVM: false
+RemoveEmptyLinesInUnwrappedLines: true
+RemoveParentheses: Leave
+RemoveSemicolon: false
 RequiresClausePosition: OwnLine
+RequiresExpressionIndentation: OuterScope
 SeparateDefinitionBlocks: Always
 ShortNamespaceLines: 0
-SortIncludes:    CaseInsensitive
-SortUsingDeclarations: true
+SkipMacroDefinitionBody: false
+SortIncludes:
+  Enabled:            false # TODO: After everything is formatted, change to true and review the output
+  IgnoreCase:         true
+  IgnoreExtension:    false
+  # Natural:            false
+  # FilesBeforeFolders: true
+SortUsingDeclarations: Lexicographic
 SpaceAfterCStyleCast: false
 SpaceAfterLogicalNot: false
+SpaceAfterOperatorKeyword: false
 SpaceAfterTemplateKeyword: false
+SpaceAroundPointerQualifiers: Default
 SpaceBeforeAssignmentOperators: true
 SpaceBeforeCaseColon: false
 SpaceBeforeCpp11BracedList: false
 SpaceBeforeCtorInitializerColon: true
 SpaceBeforeInheritanceColon: true
-SpaceBeforeParens: ControlStatements
-SpaceAroundPointerQualifiers: Default
+SpaceBeforeParens: ControlStatementsExceptControlMacros
 SpaceBeforeRangeBasedForLoopColon: true
-SpaceInEmptyBlock: false
-SpaceInEmptyParentheses: false
+SpaceBeforeSquareBrackets: false
+SpaceInEmptyBraces: Never
 SpacesBeforeTrailingComments: 1
-SpacesInAngles:  Never
+SpacesInAngles: Never
 SpacesInConditionalStatement: false
 SpacesInContainerLiterals: true
-SpacesInCStyleCastParentheses: false
 SpacesInLineCommentPrefix:
-  Minimum:         1
-  Maximum:         -1
-SpacesInParentheses: false
+ Minimum: 1
+ Maximum: -1
+SpacesInParens: Never
 SpacesInSquareBrackets: false
-SpaceBeforeSquareBrackets: false
-BitFieldColonSpacing: Both
-Standard:        c++20
-TabWidth:        8
-UseCRLF:         false
-UseTab:          ForIndentation
+Standard: c++20
+StatementMacros: [HPMDATACHECK_DEFS, HPM_DECLARE_PLUGIN, HTTP_IGNORE_DATA, DEFINE_PACKET_HEADER, DEFINE_PACKET_ID]
+TabWidth: 8
+TypenameMacros: [VECTOR_DECL, VECTOR_STRUCT_DECL, VECTOR_VAR, VECTOR_STRUCT_VAR, BHEAP_DECL, BHEAP_STRUCT_DECL, BHEAP_VAR, BHEAP_STRUCT_VAR, GET_HTTP_DATA, CREATE_HTTP_DATA, RFIFO_API_DATA, RFIFO_API_PROXY_PACKET, RFIFO_API_PROXY_PACKET_CHUNKED, BEGIN_ZEROED_BLOCK, END_ZEROED_BLOCK, UNAVAILABLE_STRUCT, CREATE_BUFFER, NEWBUF]
+UseTab: ForIndentation
 WhitespaceSensitiveMacros: [EXPAND_AND_QUOTE, QUOTE, PRAGMA_GCC46, PRAGMA_GCC5, PRAGMA_GCC7, PRAGMA_GCC9]
+WrapNamespaceBodyWithEmptyLines: Never
 ...
