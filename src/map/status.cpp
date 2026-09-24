@@ -5911,11 +5911,11 @@ static short status_calc_aspd_rate(struct block_list *bl, struct status_change *
 	if( sc->data[SC_GOLDENE_FERSE])
 		aspd_rate -= sc->data[SC_GOLDENE_FERSE]->val3 * 10;
 	if (sc->data[SC_ACARAJE])
-		aspd_rate += sc->data[SC_ACARAJE]->val2 * 10;
+		aspd_rate -= sc->data[SC_ACARAJE]->val2 * 10;
 	if (sc->data[SC_BATTLESCROLL])
-		aspd_rate += sc->data[SC_BATTLESCROLL]->val1 * 10;
+		aspd_rate -= sc->data[SC_BATTLESCROLL]->val1 * 10;
 	if (sc->data[SC_STEAMPACK])
-		aspd_rate += sc->data[SC_STEAMPACK]->val2 * 10;
+		aspd_rate -= sc->data[SC_STEAMPACK]->val2 * 10;
 	if (sc->data[SC_SKF_ASPD] != NULL)
 		aspd_rate -= sc->data[SC_SKF_ASPD]->val1 * 10;
 	if (sc->data[SC_STARSTANCE] != NULL)
