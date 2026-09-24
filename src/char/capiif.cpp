@@ -291,7 +291,7 @@ void capiif_parse_userconfig_load_hotkeys(int fd)
 		data->result = (load_res ? 1 : 0);
 		WFIFOSET(chr->login_fd, packet->packet_len);
 	}
-	WFIFO_APICHAR_PACKET_REPLY_EMPTY()
+	WFIFO_APICHAR_PACKET_REPLY_EMPTY();
 	packet->msg_id = API_MSG_userconfig_load;
 	WFIFOSET(chr->login_fd, packet->packet_len);
 }

@@ -260,7 +260,7 @@ static int battle_delay_damage_sub(int tid, int64 tick, int id, intptr_t data)
 {
 	struct delay_damage *dat = (struct delay_damage *)data;
 
-	GUARD_MAP_LOCK
+	GUARD_MAP_LOCK;
 
 	if ( dat ) {
 		struct block_list *src = map->id2bl(dat->src_id);
@@ -301,7 +301,7 @@ static int battle_delay_damage_sub(int tid, int64 tick, int id, intptr_t data)
 
 static int battle_delay_damage(int64 tick, int amotion, struct block_list *src, struct block_list *target, int attack_type, uint16 skill_id, uint16 skill_lv, int64 damage, enum damage_lv dmg_lv, int ddelay, bool additional_effects)
 {
-	GUARD_MAP_LOCK
+	GUARD_MAP_LOCK;
 
 	struct delay_damage *dat;
 	struct status_change *sc;
@@ -4804,7 +4804,7 @@ static void battle_calc_misc_attack_unknown(struct block_list *src, struct block
 // FIXME: wflag is undocumented
 static struct Damage battle_calc_weapon_attack(struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int wflag)
 {
-	GUARD_MAP_LOCK
+	GUARD_MAP_LOCK;
 
 	short temp=0;
 	short s_ele, s_ele_;
@@ -6704,7 +6704,7 @@ static void battle_drain(struct map_session_data *sd, struct block_list *tbl, in
 // Deals the same damage to targets in area. [pakpil]
 static int battle_damage_area(struct block_list *bl, va_list ap)
 {
-	GUARD_MAP_LOCK
+	GUARD_MAP_LOCK;
 
 	int64 tick;
 	int amotion, dmotion, damage;
@@ -6818,7 +6818,7 @@ static bool battle_should_bladestop_attacker(struct block_list *attacker, struct
 // FIXME: flag is undocumented
 static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_list *target, int64 tick, int flag)
 {
-	GUARD_MAP_LOCK
+	GUARD_MAP_LOCK;
 
 	struct map_session_data *sd = NULL;
 	struct status_data *sstatus, *tstatus;

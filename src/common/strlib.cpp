@@ -473,8 +473,8 @@ static int sv_parse_next(struct s_svstate *svstate)
 	((opt&SV_TERMINATE_CR) && str[i] == '\r') || \
 	((opt&SV_TERMINATE_CRLF) && i+1 < len && str[i] == '\r' && str[i+1] == '\n') )
 #define IS_C_ESCAPE() ( (opt&SV_ESCAPE_C) && str[i] == '\\' )
-#define SET_FIELD_START() svstate->start = i
-#define SET_FIELD_END() svstate->end = i
+#define SET_FIELD_START() (svstate->start = i)
+#define SET_FIELD_END() (svstate->end = i)
 
 	i = svstate->off;
 	state = START_OF_FIELD;

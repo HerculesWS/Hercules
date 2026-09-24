@@ -28,14 +28,16 @@ struct fifo_chunk_buf {
 	int data_size;
 };
 
-#define fifo_chunk_buf_init(dataVar) \
-	(dataVar).data = NULL; \
-	(dataVar).data_size = 0
+#define fifo_chunk_buf_init(dataVar) do { \
+		(dataVar).data = NULL; \
+		(dataVar).data_size = 0; \
+	} while (false)
 
-#define fifo_chunk_buf_clear(dataVar) \
-	aFree((dataVar).data); \
-	(dataVar).data = NULL; \
-	(dataVar).data_size = 0
+#define fifo_chunk_buf_clear(dataVar) do { \
+		aFree((dataVar).data); \
+		(dataVar).data = NULL; \
+		(dataVar).data_size = 0; \
+	} while (false)
 
 
 #define RFIFO_CHUNKED_INIT(p, src_data_size, dst_data) \
@@ -60,13 +62,14 @@ struct fifo_chunk_buf {
 	} \
 	if (p ## _flag == 2)
 
-#define RFIFO_CHUNKED_FREE(p) \
-	aFree(*p ## _dst_data_ptr); \
-	*p ## _dst_data_ptr = NULL
+#define RFIFO_CHUNKED_FREE(p) do { \
+		aFree(*p ## _dst_data_ptr); \
+		*p ## _dst_data_ptr = NULL; \
+	} while (false)
 
 
-#define GET_RFIFO_PACKET_CHUNKED_SIZE(fd, pname) (RFIFOW(fd, 2) - sizeof(struct pname))
-#define GET_RBUF_PACKET_CHUNKED_SIZE(fd, pname) (RBUFW(fd, 2) - sizeof(struct pname))
-#define GET_RFIFO_API_PROXY_PACKET_CHUNKED_SIZE(fd) GET_RFIFO_PACKET_CHUNKED_SIZE(fd, PACKET_API_PROXY_CHUNKED)
+#define GET_RFIFO_PACKET_CHUNKED_SIZE(fd, pname) (RFIFOW((fd), 2) - sizeof(struct pname))
+#define GET_RBUF_PACKET_CHUNKED_SIZE(fd, pname) (RBUFW((fd), 2) - sizeof(struct pname))
+#define GET_RFIFO_API_PROXY_PACKET_CHUNKED_SIZE(fd) GET_RFIFO_PACKET_CHUNKED_SIZE((fd), PACKET_API_PROXY_CHUNKED)
 
 #endif /* COMMON_CHUNKED_RFIFO_H */

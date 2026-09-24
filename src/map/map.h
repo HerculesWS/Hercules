@@ -44,7 +44,7 @@ struct hplugin_data_store;
 #define GUARD_MAP_LOCK_CONCAT_INNER(a, b) a ## b
 #define GUARD_MAP_LOCK GUARD_MAP_LOCK0(__FILE__, __func__, __COUNTER__, __LINE__)
 #define GUARD_MAP_LOCK0(file, func, lineStr, line) \
-  guard_map_lock GUARD_MAP_LOCK_CONCAT(map_lock_checker_, lineStr)(file, func, line);
+  guard_map_lock GUARD_MAP_LOCK_CONCAT(map_lock_checker_, lineStr)(file, func, line)
 
 
 enum E_MAPSERVER_ST {
@@ -945,7 +945,7 @@ struct map_drop_list {
 /**
  * Map ID (m) for "none" or unallocated map.
  */
-#define MAPID_NONE -1
+#define MAPID_NONE (-1)
 
 struct map_data {
 	char name[MAP_NAME_LENGTH];

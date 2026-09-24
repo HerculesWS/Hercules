@@ -24642,11 +24642,12 @@ static void clif_parse_npc_expanded_barter_closed(int fd, struct map_session_dat
 }
 
 #if PACKETVER_MAIN_NUM >= 20191120 || PACKETVER_RE_NUM >= 20191106 || PACKETVER_ZERO_NUM >= 20191127
-#define NEXT_EXPANDED_BARTER_ITEM(var, count) \
-	var = (struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub *)((char*)item + \
-		sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub) - \
-		sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub2) + \
-		count * sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub2))
+#define NEXT_EXPANDED_BARTER_ITEM(var, count) do { \
+		(var) = (struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub *)((char*)item + \
+			sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub) - \
+			sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub2) + \
+			count * sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub2)); \
+	} while (false)
 #endif
 
 static void clif_npc_expanded_barter_open(struct map_session_data *sd, struct npc_data *nd)

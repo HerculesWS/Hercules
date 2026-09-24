@@ -30,7 +30,7 @@
 typedef cJSON JsonP;
 typedef cJSON_bool JsonPBool;
 
-#define JSONPARSER_FOR_EACH(element, array) for(JsonP *element = (array != NULL) ? (array)->child : NULL; element != NULL; element = element->next)
+#define JSONPARSER_FOR_EACH(element, array) for(JsonP *element = ((array) != NULL) ? (array)->child : NULL; element != NULL; element = element->next)
 
 /**
  * jsonparser Interface
