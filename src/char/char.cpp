@@ -6242,10 +6242,10 @@ static CMDLINEARG(runonce)
  */
 void cmdline_args_init_local(void)
 {
-	CMDLINEARG_DEF2(run-once, runonce, "Closes server after loading (testing).", CMDLINE_OPT_NORMAL);
-	CMDLINEARG_DEF2(char-config, charconfig, "Alternative char-server configuration.", CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(inter-config, interconfig, "Alternative inter-server configuration.", CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(net-config, netconfig, "Alternative network configuration.", CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2("run-once", runonce, "Closes server after loading (testing).", CMDLINE_OPT_NORMAL);
+	CMDLINEARG_DEF2("char-config", charconfig, "Alternative char-server configuration.", CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2("inter-config", interconfig, "Alternative inter-server configuration.", CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2("net-config", netconfig, "Alternative network configuration.", CMDLINE_OPT_PARAM);
 }
 
 int do_init(int argc, char **argv)

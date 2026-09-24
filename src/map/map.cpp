@@ -6925,18 +6925,18 @@ static CMDLINEARG(loadscript)
  */
 void cmdline_args_init_local(void)
 {
-	CMDLINEARG_DEF2(run-once, runonce, "Closes server after loading (testing).", CMDLINE_OPT_NORMAL);
-	CMDLINEARG_DEF2(map-config, mapconfig, "Alternative map-server configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(battle-config, battleconfig, "Alternative battle configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(atcommand-config, atcommandconfig, "Alternative atcommand configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(script-config, scriptconfig, "Alternative script configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(msg-config, msgconfig, "Alternative message configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(grf-path, grfpath, "Alternative GRF path configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(storage-path, storagepath, "Alternative Storage configuration path.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(inter-config, interconfig, "Alternative inter-server configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(log-config, logconfig, "Alternative logging configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(script-check, scriptcheck, "Doesn't run the server, only tests the scripts passed through --load-script.", CMDLINE_OPT_SILENT);
-	CMDLINEARG_DEF2(load-script, loadscript, "Loads an additional script (can be repeated).", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2("run-once", runonce, "Closes server after loading (testing).", CMDLINE_OPT_NORMAL);
+	CMDLINEARG_DEF2("map-config", mapconfig, "Alternative map-server configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2("battle-config", battleconfig, "Alternative battle configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2("atcommand-config", atcommandconfig, "Alternative atcommand configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2("script-config", scriptconfig, "Alternative script configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2("msg-config", msgconfig, "Alternative message configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2("grf-path", grfpath, "Alternative GRF path configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2("storage-path", storagepath, "Alternative Storage configuration path.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2("inter-config", interconfig, "Alternative inter-server configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2("log-config", logconfig, "Alternative logging configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2("script-check", scriptcheck, "Doesn't run the server, only tests the scripts passed through --load-script.", CMDLINE_OPT_SILENT);
+	CMDLINEARG_DEF2("load-script", loadscript, "Loads an additional script (can be repeated).", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
 }
 
 int do_init(int argc, char *argv[])
