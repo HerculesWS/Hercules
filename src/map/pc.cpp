@@ -2183,7 +2183,7 @@ static int pc_bonus_autospell_onskill(struct s_autospell *spell, int max, short 
  * @retval 1 on success.
  * @retval 0 on failure.
  */
-static int pc_bonus_addeff(struct s_addeffect *effect, int max, enum sc_type id, int16 rate, int16 arrow_rate, uint8 flag, uint16 duration)
+static int pc_bonus_addeff(struct s_addeffect *effect, int max, enum sc_type id, int16 rate, int16 arrow_rate, uint8 flag, uint16 duration, uint16 wait_duration)
 {
 	int i;
 
@@ -2197,7 +2197,7 @@ static int pc_bonus_addeff(struct s_addeffect *effect, int max, enum sc_type id,
 
 	for (i = 0; i < max && effect[i].flag; i++) {
 		// Update existing effect if any.
-		if (effect[i].id == id && effect[i].flag == flag && effect[i].duration == duration) {
+		if (effect[i].id == id && effect[i].flag == flag && effect[i].duration == duration && effect[i].wait_duration == wait_duration) {
 			effect[i].rate += rate;
 			effect[i].arrow_rate += arrow_rate;
 			return 1;
@@ -2212,16 +2212,17 @@ static int pc_bonus_addeff(struct s_addeffect *effect, int max, enum sc_type id,
 	effect[i].arrow_rate = arrow_rate;
 	effect[i].flag = flag;
 	effect[i].duration = duration;
+	effect[i].wait_duration = wait_duration;
 	return 1;
 }
 
-static int pc_bonus_addeff_onskill(struct s_addeffectonskill *effect, int max, enum sc_type id, short rate, short skill_id, unsigned char target)
+static int pc_bonus_addeff_onskill(struct s_addeffectonskill *effect, int max, enum sc_type id, short rate, short skill_id, unsigned char target, uint16 wait_duration)
 {
 	int i;
 
 	nullpo_ret(effect);
 	for( i = 0; i < max && effect[i].skill; i++ ) {
-		if( effect[i].id == id && effect[i].skill == skill_id && effect[i].target == target ) {
+		if( effect[i].id == id && effect[i].skill == skill_id && effect[i].target == target && effect[i].wait_duration == wait_duration ) {
 			effect[i].rate += rate;
 			return 1;
 		}
@@ -2234,6 +2235,7 @@ static int pc_bonus_addeff_onskill(struct s_addeffectonskill *effect, int max, e
 	effect[i].rate = rate;
 	effect[i].skill = skill_id;
 	effect[i].target = target;
+	effect[i].wait_duration = wait_duration;
 	return 1;
 }
 
@@ -3229,7 +3231,7 @@ static int pc_bonus2(struct map_session_data *sd, int type, int type2, int val)
 				break;
 			}
 			pc->bonus_addeff(sd->addeff, ARRAYLENGTH(sd->addeff), (sc_type)type2,
-			                 sd->state.lr_flag!=2?val:0, sd->state.lr_flag==2?val:0, 0, 0);
+			                 sd->state.lr_flag!=2?val:0, sd->state.lr_flag==2?val:0, 0, 0, 0);
 			break;
 		case SP_ADDEFF2:
 			if (type2 > SC_MAX) {
@@ -3237,7 +3239,7 @@ static int pc_bonus2(struct map_session_data *sd, int type, int type2, int val)
 				break;
 			}
 			pc->bonus_addeff(sd->addeff, ARRAYLENGTH(sd->addeff), (sc_type)type2,
-			                 sd->state.lr_flag!=2?val:0, sd->state.lr_flag==2?val:0, ATF_SELF, 0);
+			                 sd->state.lr_flag!=2?val:0, sd->state.lr_flag==2?val:0, ATF_SELF, 0, 0);
 			break;
 		case SP_RESEFF:
 			if (type2 < SC_COMMON_MIN || type2 > SC_COMMON_MAX) {
@@ -3510,7 +3512,7 @@ static int pc_bonus2(struct map_session_data *sd, int type, int type2, int val)
 				break;
 			}
 			if(sd->state.lr_flag != 2)
-				pc->bonus_addeff(sd->addeff2, ARRAYLENGTH(sd->addeff2), (sc_type)type2, val, 0, 0, 0);
+				pc->bonus_addeff(sd->addeff2, ARRAYLENGTH(sd->addeff2), (sc_type)type2, val, 0, 0, 0, 0);
 			break;
 		case SP_SKILL_ATK:
 			if(sd->state.lr_flag == 2)
@@ -4057,7 +4059,7 @@ static int pc_bonus3(struct map_session_data *sd, int type, int type2, int type3
 				break;
 			}
 			pc->bonus_addeff(sd->addeff, ARRAYLENGTH(sd->addeff), (sc_type)type2,
-			                 sd->state.lr_flag!=2?type3:0, sd->state.lr_flag==2?type3:0, val, 0);
+			                 sd->state.lr_flag!=2?type3:0, sd->state.lr_flag==2?type3:0, val, 0, 0);
 			break;
 
 		case SP_ADDEFF_WHENHIT:
@@ -4066,7 +4068,7 @@ static int pc_bonus3(struct map_session_data *sd, int type, int type2, int type3
 				break;
 			}
 			if(sd->state.lr_flag != 2)
-				pc->bonus_addeff(sd->addeff2, ARRAYLENGTH(sd->addeff2), (sc_type)type2, type3, 0, val, 0);
+				pc->bonus_addeff(sd->addeff2, ARRAYLENGTH(sd->addeff2), (sc_type)type2, type3, 0, val, 0, 0);
 			break;
 
 		case SP_ADDEFF_ONSKILL:
@@ -4075,7 +4077,7 @@ static int pc_bonus3(struct map_session_data *sd, int type, int type2, int type3
 				break;
 			}
 			if( sd->state.lr_flag != 2 )
-				pc->bonus_addeff_onskill(sd->addeff3, ARRAYLENGTH(sd->addeff3), (sc_type)type3, val, type2, ATF_TARGET);
+				pc->bonus_addeff_onskill(sd->addeff3, ARRAYLENGTH(sd->addeff3), (sc_type)type3, val, type2, ATF_TARGET, 0);
 			break;
 
 		case SP_ADDELE:
@@ -4224,7 +4226,7 @@ static int pc_bonus4(struct map_session_data *sd, int type, int type2, int type3
 			break;
 		}
 		if( sd->state.lr_flag != 2 )
-			pc->bonus_addeff_onskill(sd->addeff3, ARRAYLENGTH(sd->addeff3), (sc_type)type3, type4, type2, val);
+			pc->bonus_addeff_onskill(sd->addeff3, ARRAYLENGTH(sd->addeff3), (sc_type)type3, type4, type2, val, 0);
 		break;
 
 	case SP_SET_DEF_RACE: //bonus4 bSetDefRace,n,x,r,y;
@@ -4276,7 +4278,7 @@ static int pc_bonus4(struct map_session_data *sd, int type, int type2, int type3
 		}
 
 		pc->bonus_addeff(sd->addeff, ARRAYLENGTH(sd->addeff), (sc_type)type2,
-		                 sd->state.lr_flag!=2?type3:0, sd->state.lr_flag==2?type3:0, type4, duration);
+		                 sd->state.lr_flag!=2?type3:0, sd->state.lr_flag==2?type3:0, type4, duration, 0);
 	}
 		break;
 
@@ -4307,6 +4309,53 @@ static int pc_bonus5(struct map_session_data *sd, int type, int type2, int type3
 		case SP_AUTOSPELL_ONSKILL:
 			if(sd->state.lr_flag != 2)
 				pc->bonus_autospell_onskill(sd->autospell3, ARRAYLENGTH(sd->autospell3), type2, (val&1) ? -type3 : type3, (val&2) ? -type4 : type4, type5, status->current_equip_card_id);
+			break;
+
+		case SP_ADDEFF: //bonus5 bAddEff,sc,rate,flag,duration,wait;
+		{
+			uint16 duration;
+			if (type2 > SC_MAX) {
+				ShowWarning("pc_bonus5 (Add Effect): %d is not supported.\n", type2);
+				break;
+			}
+			if (type5 < 0 || type5 > UINT16_MAX) {
+				ShowWarning("pc_bonus5 (Add Effect): invalid duration %d. Valid range: [0:%d].\n", type5, UINT16_MAX);
+				duration = (type5 < 0 ? 0 : UINT16_MAX);
+			} else {
+				duration = (uint16)type5;
+			}
+
+			pc->bonus_addeff(sd->addeff, ARRAYLENGTH(sd->addeff), (sc_type)type2,
+			                 sd->state.lr_flag!=2?type3:0, sd->state.lr_flag==2?type3:0, type4, duration, (uint16)cap_value(val, 0, UINT16_MAX));
+		}
+			break;
+
+		case SP_ADDEFF_ONSKILL: //bonus5 bAddEffOnSkill,skill,sc,rate,target,wait;
+			if (type3 > SC_MAX) {
+				ShowWarning("pc_bonus5 (Add Effect on skill): %d is not supported.\n", type3);
+				break;
+			}
+			if (sd->state.lr_flag != 2)
+				pc->bonus_addeff_onskill(sd->addeff3, ARRAYLENGTH(sd->addeff3), (sc_type)type3, type4, type2, type5, (uint16)cap_value(val, 0, UINT16_MAX));
+			break;
+
+		case SP_ADDEFF_WHENHIT: //bonus5 bAddEffWhenHit,sc,rate,flag,duration,wait;
+		{
+			uint16 duration;
+			if (type2 > SC_MAX) {
+				ShowWarning("pc_bonus5 (Add Effect when hit): %d is not supported.\n", type2);
+				break;
+			}
+			if (type5 < 0 || type5 > UINT16_MAX) {
+				ShowWarning("pc_bonus5 (Add Effect when hit): invalid duration %d. Valid range: [0:%d].\n", type5, UINT16_MAX);
+				duration = (type5 < 0 ? 0 : UINT16_MAX);
+			} else {
+				duration = (uint16)type5;
+			}
+
+			if (sd->state.lr_flag != 2)
+				pc->bonus_addeff(sd->addeff2, ARRAYLENGTH(sd->addeff2), (sc_type)type2, type3, 0, type4, duration, (uint16)cap_value(val, 0, UINT16_MAX));
+		}
 			break;
 
 		default:

@@ -318,10 +318,13 @@ bonus2 bAddEff,`eff`,`n`;                    | Adds a `n`/100% chance to cause e
 bonus2 bAddEff2,`eff`,`n`;                   | Adds a `n`/100% chance to cause effect `eff` on self when attacking.
 bonus3 bAddEff,`eff`,`n`,`abf`;              | Adds a `n`/100% chance to cause effect `eff` to the target when attacking for target abf
 bonus4 bAddEff,`eff`,`n`,`abf`,`t`;          | Adds a `n`/100% chance to cause effect `eff` to the target when attacking for target `abf` for `t` milliseconds <br/> (Note:The effect can't be avoided nor its duration reduced. Duration: 0-65535)
+bonus5 bAddEff,`eff`,`n`,`abf`,`t`,`wait`;   | Same as the `bonus4` form, but also sets the opt1 wait/transition duration (in milliseconds) for effects that have one (currently only `SC_STONE`'s `OPT1_STONEWAIT`). If `wait` is 0 or omitted, a built-in default is used. Ignored by effects with no wait/transition state.
 bonus3 bAddEffOnSkill,`sk`,`eff`,`n`;        | Adds a `n`/100% chance to cause effect `eff` on enemy when using skill `sk`
 bonus4 bAddEffOnSkill,`sk`,`eff`,`n`,`abf`;  | Adds a `n`/100% chance to cause effect `eff` when using skill `sk`
+bonus5 bAddEffOnSkill,`sk`,`eff`,`n`,`abf`,`wait`; | Same as the `bonus4` form, but also sets the opt1 wait/transition duration (in milliseconds); see `bAddEff`'s `bonus5` form above.
 bonus2 bAddEffWhenHit,`eff`,`n`;             | `n`/100% chance to cause effect `eff` to the enemy when being hit by physical damage
 bonus3 bAddEffWhenHit,`eff`,`n`,`abf`;       | Adds a `n`/100% chance to cause effect `eff` to the enemy when being hit by physical damage
+bonus5 bAddEffWhenHit,`eff`,`n`,`abf`,`t`,`wait`; | Same as the `bonus3` form, but also sets a fixed duration `t` (in milliseconds) and the opt1 wait/transition duration `wait` (in milliseconds); see `bAddEff`'s `bonus5` form above. Pass 0 for `t` to keep the default, reducible duration.
 bonus2 bWeaponComaRace,`r`,`n`;              | Adds a `n`/100% chance to cause Coma when attacking a monster of race `r` with a weapon attack
 bonus2 bWeaponComaEle,`e`,`n`;               | Adds a `n`/100% chance to cause Coma when attacking a monster of element `e` with weapon attack
 
