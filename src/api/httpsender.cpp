@@ -48,13 +48,15 @@
 #include <stdarg.h>
 #include <time.h>
 
-#define WFIFOADDSTR(fd, str) \
-    memcpy(WFIFOP(char *, fd, 0), str, strlen(str)); \
-    WFIFOSET(fd, strlen(str));
+#define WFIFOADDSTR(fd, str) do { \
+		memcpy(WFIFOP(char *, fd, 0), str, strlen(str)); \
+		WFIFOSET(fd, strlen(str)); \
+	} while (false)
 
-#define WFIFOADDBUF(fd, buf, buf_size) \
-    memcpy(WFIFOP(char *, fd, 0), buf, buf_size); \
-    WFIFOSET(fd, buf_size);
+#define WFIFOADDBUF(fd, buf, buf_size) do { \
+		memcpy(WFIFOP(char *, fd, 0), buf, buf_size); \
+		WFIFOSET(fd, buf_size); \
+	} while (false)
 
 static struct httpsender_interface httpsender_s;
 struct httpsender_interface *httpsender;

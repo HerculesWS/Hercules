@@ -586,7 +586,7 @@ static struct skill_unit *map_find_skill_unit_oncell(struct block_list *target, 
  */
 static int bl_vforeach(int (*func)(struct block_list*, va_list), int blockcount, int max, va_list args)
 {
-	GUARD_MAP_LOCK
+	GUARD_MAP_LOCK;
 
 	int i;
 	int returnCount = 0;

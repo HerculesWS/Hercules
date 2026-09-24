@@ -51,18 +51,19 @@ struct aloginif_interface *aloginif;
 
 //#define DEBUG_LOG
 
-#define INIT_PACKET_PROXY_FIELDS(p, sd, param) \
-	(p)->msg_id = msg_id; \
-	if ((param & (proxy_flag_char | proxy_flag_map)) != 0) { \
-		(p)->char_server_id = aclif->get_char_server_id(sd); \
-	} else { \
-		(p)->char_server_id = -1; \
-	} \
-	(p)->client_fd = sd->fd; \
-	(p)->account_id = sd->account_id; \
-	(p)->char_id = sd->char_id; \
-	(p)->client_random_id = sd->id; \
-	(p)->flags = param
+#define INIT_PACKET_PROXY_FIELDS(p, sd, param) do { \
+		(p)->msg_id = msg_id; \
+		if ((param & (proxy_flag_char | proxy_flag_map)) != 0) { \
+			(p)->char_server_id = aclif->get_char_server_id(sd); \
+		} else { \
+			(p)->char_server_id = -1; \
+		} \
+		(p)->client_fd = (sd)->fd; \
+		(p)->account_id = (sd)->account_id; \
+		(p)->char_id = (sd)->char_id; \
+		(p)->client_random_id = (sd)->id; \
+		(p)->flags = (param); \
+	} while (false)
 
 // sets login-server's user id
 static void aloginif_setuserid(char *id)

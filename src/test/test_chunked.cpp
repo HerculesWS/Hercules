@@ -55,43 +55,47 @@
 #undef WFIFO_CHUNK_SIZE
 #define WFIFO_CHUNK_SIZE fake_GET_WCHUNK_SIZE()
 
-#define SHOW_TEST_ERROR(...) ShowError("  failed: " #__VA_ARGS__ "\n");
+#define SHOW_TEST_ERROR(...) ShowError("  failed: " #__VA_ARGS__ "\n")
 
-#define TEST(...) \
-	if (!(__VA_ARGS__)) { \
-		ShowError("  failed: " #__VA_ARGS__ "\n"); \
-		exit(1); \
-	} else if (show_success) { \
-		ShowStatus("  passed: " #__VA_ARGS__ "\n"); \
-	}
+#define TEST(...) do { \
+		if (!(__VA_ARGS__)) { \
+			ShowError("  failed: " #__VA_ARGS__ "\n"); \
+			exit(1); \
+		} else if (show_success) { \
+			ShowStatus("  passed: " #__VA_ARGS__ "\n"); \
+		} \
+	} while (false)
 
-#define TEST_INT(a, b) \
-	if ((a) != (b)) { \
-		ShowError("  failed: " #a " == " #b "  ->  %d == %d\n", a, b); \
-		exit(1); \
-	} else if (show_success) { \
-		ShowStatus("  passed: " #a " == " #b "  ->  %d\n", a); \
-	}
+#define TEST_INT(a, b) do { \
+		if ((a) != (b)) { \
+			ShowError("  failed: " #a " == " #b "  ->  %d == %d\n", a, b); \
+			exit(1); \
+		} else if (show_success) { \
+			ShowStatus("  passed: " #a " == " #b "  ->  %d\n", a); \
+		} \
+	} while (false)
 
-#define TEST_UINT(a, b) \
-	if ((a) != (b)) { \
-		ShowError("  failed: " #a " == " #b "  ->  %u == %u\n", a, b); \
-		exit(1); \
-	} else if (show_success) { \
-		ShowStatus("  passed: " #a " == " #b "  ->  %u\n", a); \
-	}
+#define TEST_UINT(a, b) do { \
+		if ((a) != (b)) { \
+			ShowError("  failed: " #a " == " #b "  ->  %u == %u\n", a, b); \
+			exit(1); \
+		} else if (show_success) { \
+			ShowStatus("  passed: " #a " == " #b "  ->  %u\n", a); \
+		} \
+	} while (false)
 
-#define TEST_BUF(a, b, size) \
-	if (memcmp(a, b, size) != 0) { \
-		ShowError("  failed: " #a " == " #b "  ->\n"); \
-		ShowBuf("   a   ", a, size); \
-		ShowBuf("   b   ", b, size); \
-		ShowBufDiff("   diff", a, b, size); \
-		exit(1); \
-	} else if (show_success) { \
-		ShowStatus("  passed: " #a " == " #b "  ->  "); \
-		ShowBuf("", a, size); \
-	}
+#define TEST_BUF(a, b, size) do { \
+		if (memcmp(a, b, size) != 0) { \
+			ShowError("  failed: " #a " == " #b "  ->\n"); \
+			ShowBuf("   a   ", a, size); \
+			ShowBuf("   b   ", b, size); \
+			ShowBufDiff("   diff", a, b, size); \
+			exit(1); \
+		} else if (show_success) { \
+			ShowStatus("  passed: " #a " == " #b "  ->  "); \
+			ShowBuf("", a, size); \
+		} \
+	} while (false)
 
 //#define DEBUGLOG
 

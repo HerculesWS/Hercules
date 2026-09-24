@@ -12507,7 +12507,7 @@ static int buildin_killmonster_sub(struct block_list *bl, va_list ap)
 }
 static BUILDIN(killmonster)
 {
-	GUARD_MAP_LOCK
+	GUARD_MAP_LOCK;
 
 	const char *mapname,*event;
 	int16 m,allflag=0;
@@ -22183,7 +22183,7 @@ static BUILDIN(getunitdata)
 		return true;
 	}
 
-#define getunitdata_sub(idx__,var__) script->setd_sub(st,NULL,name,(idx__),(void *)h64BPTRSIZE((int)(var__)),data->ref);
+#define getunitdata_sub(idx__,var__) script->setd_sub(st,NULL,name,(idx__),(void *)h64BPTRSIZE((int)(var__)),data->ref)
 
 	switch (bl->type) {
 	case BL_MOB:
