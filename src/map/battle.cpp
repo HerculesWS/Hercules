@@ -629,22 +629,28 @@ static int64 battle_calc_base_damage2(struct status_data *st, struct weapon_atk 
 		if (atkmin > atkmax)
 			atkmin = atkmax;
 	} else { //PCs
-		atkmax = wa->atk;
 		type = (wa == &st->lhw)?EQI_HAND_L:EQI_HAND_R;
 
-		if (!(flag&1) || (flag&2)) { //Normal attacks
-			atkmin = st->dex;
+		if (flag&4) { // Magic Crasher uses MATK instead of weapon ATK
+			atkmin = st->matk_min;
+			atkmax = st->matk_max;
+		} else {
+			atkmax = wa->atk;
 
-			if (sd->equip_index[type] >= 0 && sd->inventory_data[sd->equip_index[type]])
-				atkmin = atkmin*(80 + sd->inventory_data[sd->equip_index[type]]->wlv*20)/100;
+			if (!(flag&1) || (flag&2)) { //Normal attacks
+				atkmin = st->dex;
 
-			if (atkmin > atkmax)
-				atkmin = atkmax;
+				if (sd->equip_index[type] >= 0 && sd->inventory_data[sd->equip_index[type]])
+					atkmin = atkmin*(80 + sd->inventory_data[sd->equip_index[type]]->wlv*20)/100;
 
-			if(flag&2 && !(flag&16)) { //Bows
-				atkmin = atkmin*atkmax/100;
 				if (atkmin > atkmax)
-					atkmax = atkmin;
+					atkmin = atkmax;
+
+				if(flag&2 && !(flag&16)) { //Bows
+					atkmin = atkmin*atkmax/100;
+					if (atkmin > atkmax)
+						atkmax = atkmin;
+				}
 			}
 		}
 	}
@@ -669,9 +675,7 @@ static int64 battle_calc_base_damage2(struct status_data *st, struct weapon_atk 
 	}
 
 	//Finally, add baseatk
-	if(flag&4)
-		damage += st->matk_min;
-	else
+	if (!(flag&4))
 		damage += st->batk;
 
 	//rodatazone says that Overrefined bonuses are part of baseatk
