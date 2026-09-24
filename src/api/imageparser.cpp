@@ -185,17 +185,17 @@ static bool imageparser_validate_gif_emblem(const char *emblem, uint64 emblem_le
 		return false;
 	}
 
-// last frame resolution check disabled because client support other frames resolution [4144]
-/*
-	if (image->Image.Width != extraconf->emblems->guild_emblem_width ||
-	    image->Image.Height != extraconf->emblems->guild_emblem_height) {
-#ifdef DEBUG_ERRORS
+	// last frame resolution check disabled because client support other frames resolution [4144]
+#if 0
+	if (image->Image.Width != extraconf->emblems->guild_emblem_width
+	    || image->Image.Height != extraconf->emblems->guild_emblem_height) {
+  #ifdef DEBUG_ERRORS
 		ShowError("Error: Gif image resolution error: %d, %d\n", image->Image.Width, image->Image.Height);
-#endif
+  #endif
 		DGifCloseFile(image, &error);
 		return false;
 	}
-*/
+#endif // 0
 	// check image resolution and images count
 	if (image->SWidth != extraconf->emblems->guild_emblem_width ||
 	    image->SHeight != extraconf->emblems->guild_emblem_height) {
