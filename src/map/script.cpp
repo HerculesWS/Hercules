@@ -12085,6 +12085,9 @@ static BUILDIN(itemskill)
 	if (sd == NULL)
 		return true;
 
+	// Discard leftovers of a previous auto-cast, e.g. itemskill_conditions_checked, which would bypass the conditions check.
+	pc->autocast_clear_current(sd);
+
 	sd->auto_cast_current.type = AUTOCAST_ITEM;
 	sd->auto_cast_current.skill_id = script_isstringtype(st, 2) ? skill->name2id(script_getstr(st, 2)) : script_getnum(st, 2);
 	sd->auto_cast_current.skill_lv = script_getnum(st, 3);
