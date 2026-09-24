@@ -2229,9 +2229,9 @@ static CMDLINEARG(netconfig)
  */
 void cmdline_args_init_local(void)
 {
-	CMDLINEARG_DEF2(run-once, runonce, "Closes server after loading (testing).", CMDLINE_OPT_NORMAL);
-	CMDLINEARG_DEF2(login-config, loginconfig, "Alternative login-server configuration.", CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(net-config, netconfig, "Alternative subnet configuration.", CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2("run-once", runonce, "Closes server after loading (testing).", CMDLINE_OPT_NORMAL);
+	CMDLINEARG_DEF2("login-config", loginconfig, "Alternative login-server configuration.", CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2("net-config", netconfig, "Alternative subnet configuration.", CMDLINE_OPT_PARAM);
 }
 
 //------------------------------
