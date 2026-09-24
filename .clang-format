@@ -117,4 +117,5 @@ Standard:        c++20
 TabWidth:        8
 UseCRLF:         false
 UseTab:          ForIndentation
+WhitespaceSensitiveMacros: [EXPAND_AND_QUOTE, QUOTE, PRAGMA_GCC46, PRAGMA_GCC5, PRAGMA_GCC7, PRAGMA_GCC9]
 ...
