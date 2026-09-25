@@ -911,8 +911,8 @@ struct script_interface {
 	struct DBMap *st_db;
 	unsigned int active_scripts;
 	unsigned int next_id;
-	ERS *st_ers;
-	ERS *stack_ers;
+	ERS<script_state> *st_ers;
+	ERS<script_stack> *stack_ers;
 	/* */
 	VECTOR_DECL(struct script_queue) hq;
 	VECTOR_DECL(struct script_queue_iterator) hqi;
@@ -922,7 +922,7 @@ struct script_interface {
 	/**
 	 * used to generate quick script_array entries
 	 **/
-	ERS *array_ers;
+	ERS<script_array> *array_ers;
 	/* */
 	struct str_data_struct *str_data;
 	int str_data_size; // size of the data

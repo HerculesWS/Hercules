@@ -26,6 +26,7 @@
 #include "map/unit.h" // struct unit_data
 #include "common/hercules.h"
 #include "common/db.h"
+#include "common/ers.h"
 
 #include <pcre.h>
 
@@ -205,6 +206,15 @@ struct npc_path_data {
 	unsigned short references;
 };
 
+struct timer_event_data {
+	/// Attached player for this timer.
+	int rid;
+	/// timer index (starts with 0, then goes up to nd->u.scr.timeramount)
+	int next;
+	/// holds total time elapsed for the script from when timer was started to when last time the event triggered.
+	int time;
+};
+
 /* npc interface */
 struct npc_interface {
 	/* */
@@ -216,7 +226,7 @@ struct npc_interface {
 	/// const char* npc_name -> struct npc_data*
 	struct DBMap *name_db;
 	struct DBMap *path_db;
-	ERS *timer_event_ers; ///< For the npc timer data. [Skotlex]
+	ERS<timer_event_data> *timer_event_ers; ///< For the npc timer data. [Skotlex]
 	struct npc_data *fake_nd;
 	struct npc_src_list *src_files;
 	struct unit_data base_ud;
