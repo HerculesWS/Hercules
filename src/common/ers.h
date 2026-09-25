@@ -64,6 +64,7 @@
 #include <forward_list>
 #include <string>
 #include <tuple>
+#include <vector>
 
 /*****************************************************************************\
  *  (1) All public parts of the Entry Reusage System.                        *
@@ -107,7 +108,7 @@ class ERI
 	 * Reports debug information for instance cache
 	 * @return used blocks, total blocks, memory used, total memory
 	 */
-	[[nodiscard]] virtual std::tuple<unsigned int, unsigned int, unsigned int, unsigned int>
+	[[nodiscard]] virtual std::tuple<size_t, size_t, size_t, size_t>
 	        report_cache(void) const noexcept = 0;
 
 #ifdef DEBUG
@@ -157,18 +158,13 @@ class ERS : public ERI
 	 */
 	~ERS() noexcept override
 	{
-		if (m_count > 0) {
+		if (used_objects() > 0) {
 			if ((m_options & ERS_OPT_CLEAR) == 0) {
-				ShowWarning("Memory leak detected at ERS '%s', %u objects not freed.\n",
+				ShowWarning("Memory leak detected at ERS '%s', %" PRIuS " objects not freed.\n",
 				            m_name.c_str(),
-				            m_count);
+				            used_objects());
 			}
 		}
-
-		for (unsigned int i = 0; i < m_cache.used; i++)
-			aFree(m_cache.blocks[i]);
-
-		aFree(m_cache.blocks);
 
 		remove_from_global_list();
 	}
@@ -186,29 +182,24 @@ class ERS : public ERI
 		if (m_cache.reuse_list.empty() == false) {
 			ret = m_cache.reuse_list.front();
 			m_cache.reuse_list.pop_front();
-		} else if (m_cache.free > 0) {
-			m_cache.free--;
-			ret = reinterpret_cast<T *>(&m_cache.blocks[m_cache.used - 1][m_cache.free * sizeof(T)]);
+			m_cache.reuse_size--;
+
+			new (ret) T(std::forward<Args>(args)...);
+		} else if (m_cache.blocks.size() > 0 && m_cache.blocks.back().size() < m_cache.blocks.back().capacity()) {
+			m_cache.blocks.back().emplace_back(std::forward<Args>(args)...);
+			ret = &m_cache.blocks.back().back();
 		} else {
-			if (m_cache.used == m_cache.max) {
-				m_cache.max = (m_cache.max * 4) + 3;
-				RECREATE(m_cache.blocks, unsigned char *, m_cache.max);
-			}
+			m_cache.blocks.emplace_back();
 
-			CREATE(m_cache.blocks[m_cache.used], unsigned char, sizeof(T) * m_cache.chunk_size);
-			m_cache.used++;
-
-			m_cache.free = m_cache.chunk_size - 1;
-			ret = reinterpret_cast<T *>(&m_cache.blocks[m_cache.used - 1][m_cache.free * sizeof(T)]);
+			auto &chunk = m_cache.blocks.back();
+			chunk.reserve(m_cache.chunk_size);
+			chunk.emplace_back(std::forward<Args>(args)...);
+			ret = &chunk.back();
 		}
 
-		new (ret) T(std::forward<Args>(args)...);
-		m_count++;
-		m_cache.used_objs++;
-
 #ifdef DEBUG
-		if (m_count > m_peak)
-			m_peak = m_count;
+		if (m_peak < used_objects())
+			m_peak = used_objects();
 #endif
 
 		return ret;
@@ -233,8 +224,7 @@ class ERS : public ERI
 			memset(entry, 0, sizeof(T));
 
 		m_cache.reuse_list.push_front(entry);
-		m_count--;
-		m_cache.used_objs--;
+		m_cache.reuse_size++;
 	}
 
 	/**
@@ -269,27 +259,27 @@ class ERS : public ERI
 	 * Reports debug information for instance cache
 	 * @return used blocks, total blocks, memory used, total memory
 	 */
-	[[nodiscard]] std::tuple<unsigned int, unsigned int, unsigned int, unsigned int>
+	[[nodiscard]] std::tuple<size_t, size_t, size_t, size_t>
 	        report_cache(void) const noexcept override
 	{
 		ShowMessage(CL_BOLD "[ERS Cache of size '" CL_NORMAL CL_WHITE "%" PRIuS CL_NORMAL CL_BOLD
 		                    "' report]\n" CL_NORMAL,
 		            sizeof(T));
-		ShowMessage("\tblocks in use      : %u/%u\n", m_cache.used_objs, m_cache.used_objs + m_cache.free);
-		ShowMessage("\tblocks unused      : %u\n", m_cache.free);
+		ShowMessage("\tblocks in use      : %" PRIuS "/%" PRIuS "\n", used_objects(), used_objects() + unused_blocks());
+		ShowMessage("\tblocks unused      : %" PRIuS "\n", unused_blocks());
 		ShowMessage("\tmemory in use      : %.2f MB\n",
-		            m_cache.used_objs == 0 ? 0.
-		                                   : (double)((m_cache.used_objs * sizeof(T)) / 1024) / 1024);
+		            used_objects() == 0 ? 0.
+		                                   : (double)((used_objects() * sizeof(T)) / 1024) / 1024);
 		ShowMessage("\tmemory allocated   : %.2f MB\n",
-		            (m_cache.free + m_cache.used_objs) == 0
+		            (unused_blocks() + used_objects()) == 0
 		                    ? 0.
-		                    : (double)(((m_cache.used_objs + m_cache.free) * sizeof(T)) / 1024)
+		                    : (double)(((used_objects() + unused_blocks()) * sizeof(T)) / 1024)
 		                              / 1024);
 
-		return {m_cache.used_objs,
-		        m_cache.used_objs + m_cache.free,
-		        m_cache.used_objs * sizeof(T),
-		        (m_cache.used_objs + m_cache.free) * sizeof(T)};
+		return {used_objects(),
+		        used_objects() + unused_blocks(),
+		        used_objects() * sizeof(T),
+		        (used_objects() + unused_blocks()) * sizeof(T)};
 	}
 
 #ifdef DEBUG
@@ -299,42 +289,61 @@ class ERS : public ERI
 	 */
 	[[nodiscard]] bool report(void) const noexcept override
 	{
-		if ((m_options & ERS_OPT_WAIT) != 0 && m_count == 0)
+		if ((m_options & ERS_OPT_WAIT) != 0 && used_objects() == 0)
 			return false;
 
 		ShowMessage(CL_BOLD "[ERS Instance " CL_NORMAL CL_WHITE "%s" CL_NORMAL CL_BOLD " report]\n" CL_NORMAL,
 		            m_name.c_str());
 		ShowMessage("\tblock size        : %" PRIuS "\n", sizeof(T));
-		ShowMessage("\tblocks being used : %u\n", m_count);
-		ShowMessage("\tpeak blocks       : %u\n", m_peak);
+		ShowMessage("\tblocks being used : %" PRIuS "\n", used_objects());
+		ShowMessage("\tpeak blocks       : %" PRIuS "\n", m_peak);
 		ShowMessage("\tmemory in use     : %.2f MB\n",
-		            m_count == 0 ? 0. : (double)((m_count * sizeof(T)) / 1024) / 1024);
+		            used_objects() == 0 ? 0. : (double)((used_objects() * sizeof(T)) / 1024) / 1024);
 
 		return true;
 	}
 #endif
 
   private:
+  	/**
+	 * Returns never used blocks
+	 * @return allocated blocks that aren't used
+	 */
+	[[nodiscard]] size_t unused_blocks(void) const noexcept
+	{
+		if (m_cache.blocks.size() < 1)
+			return 0;
+
+		return m_cache.blocks.back().capacity() - m_cache.blocks.back().size();
+	}
+
+	/**
+	 * Returns currently allocated objects
+	 * @return count of objects that are actually allocated for us
+	 */
+	[[nodiscard]] size_t used_objects(void) const noexcept
+	{
+		if (m_cache.blocks.size() < 1)
+			return 0;
+
+		return (m_cache.blocks.size() * m_cache.chunk_size) - unused_blocks() - m_cache.reuse_size;
+	}
+
 	std::string m_name; //< Name, used for debugging purposes
 
 	enum ERSOptions m_options {
 		ERS_OPT_NONE
 	}; //< Misc options
 
-	unsigned int m_count{0}; //< Count of objects in use, used for detecting memory leaks
-
 #ifdef DEBUG
 	/* for data analysis [Ind/Hercules] */
-	unsigned int m_peak{0};
+	size_t m_peak{0};
 #endif
 
 	struct {
-		std::forward_list<T *> reuse_list; //< Reuse linked list
-		unsigned char **blocks{nullptr};   //< Memory blocks array
-		unsigned int max{0};               //< Max number of blocks
-		unsigned int free{0};              //< Free objects count
-		unsigned int used{0};              //< Used blocks count
-		unsigned int used_objs{0};         //< Objects in-use count
+		std::forward_list<T *> reuse_list;  //< Reuse linked list
+		size_t reuse_size{0};
+		std::vector<std::vector<T>> blocks; //< Memory blocks array
 		unsigned int chunk_size{
 		        ers_chunk_size}; //< Default = ERS_BLOCK_ENTRIES, can be adjusted for performance for individual
 		                         // cache sizes.
