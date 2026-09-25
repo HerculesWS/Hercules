@@ -60,6 +60,7 @@
 
 #include "common/cbasetypes.h"
 
+#include <forward_list>
 #include <string>
 #include <tuple>
 
@@ -190,7 +191,7 @@ class ERS
 
 	struct {
 		unsigned int object_size;             //< Allocated object size, including ers_list size
-		struct ers_list *reuse_list{nullptr}; //< Reuse linked list
+		std::forward_list<void *> reuse_list; //< Reuse linked list
 		unsigned char **blocks{nullptr};      //< Memory blocks array
 		unsigned int max{0};                  //< Max number of blocks
 		unsigned int free{0};                 //< Free objects count
