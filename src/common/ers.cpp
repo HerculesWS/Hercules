@@ -62,135 +62,23 @@
 
 #include "ers.h"
 
-#include "common/cbasetypes.h"
 #include "common/memmgr.h" // CREATE, RECREATE, aMalloc, aFree
-#include "common/nullpo.h"
-#include "common/showmsg.h" // ShowMessage, ShowError, ShowFatalError, CL_BOLD, CL_NORMAL
 
 #include <stdlib.h>
-#include <string.h>
 
 #ifndef DISABLE_ERS
 
 static std::forward_list<ERI *> ers_instance_list;
 
-void *ERS::alloc() noexcept
+void ERI::add_to_global_list(void) noexcept
 {
-	void *ret;
-
-	if (m_cache.reuse_list.empty() == false) {
-		ret = m_cache.reuse_list.front();
-		m_cache.reuse_list.pop_front();
-	} else if (m_cache.free > 0) {
-		m_cache.free--;
-		ret = &m_cache.blocks[m_cache.used - 1][m_cache.free * (size_t)m_cache.object_size];
-	} else {
-		if (m_cache.used == m_cache.max) {
-			m_cache.max = (m_cache.max * 4) + 3;
-			RECREATE(m_cache.blocks, unsigned char *, m_cache.max);
-		}
-
-		CREATE(m_cache.blocks[m_cache.used], unsigned char, m_cache.object_size * m_cache.chunk_size);
-		m_cache.used++;
-
-		m_cache.free = m_cache.chunk_size -1;
-		ret = &m_cache.blocks[m_cache.used - 1][m_cache.free * (size_t)m_cache.object_size];
-	}
-
-	m_count++;
-	m_cache.used_objs++;
-
-#ifdef DEBUG
-	if (m_count > m_peak)
-		m_peak = m_count;
-#endif
-
-	return ret;
-}
-
-void ERS::free(void *entry) noexcept
-{
-	if (entry == nullptr) {
-		ShowError("ERS::free: NULL entry, nothing to free.\n");
-		return;
-	}
-
-	if ((m_options & ERS_OPT_CLEAN) != 0)
-		memset(entry, 0, m_cache.object_size);
-
-	m_cache.reuse_list.push_front(entry);
-	m_count--;
-	m_cache.used_objs--;
-}
-
-size_t ERS::entry_size() const noexcept
-{
-	return m_cache.object_size;
-}
-
-ERS::~ERS() noexcept
-{
-	if (m_count > 0) {
-		if ((m_options & ERS_OPT_CLEAR) == 0) {
-			ShowWarning("Memory leak detected at ERS '%s', %u objects not freed.\n", m_name.c_str(), m_count);
-		}
-	}
-
-	for (unsigned int i = 0; i < m_cache.used; i++)
-		aFree(m_cache.blocks[i]);
-
-	aFree(m_cache.blocks);
-
-	ers_instance_list.remove(this);
-}
-
-void ERS::chunk_size(unsigned int new_size) noexcept
-{
-	if ((m_options&ERS_OPT_FLEX_CHUNK) == 0) {
-		ShowWarning("ers_cache_size: '%s' has adjusted its chunk size to '%u', however ERS_OPT_FLEX_CHUNK is missing!\n", m_name.c_str(), new_size);
-	}
-
-	m_cache.chunk_size = new_size;
-}
-
-ERS::ERS(uint32 size, const std::string &name, enum ERSOptions options) noexcept : m_name(name), m_options(options) // FIXME: change this to a flag type
-{
-#if ERS_ALIGNED > 1 // If it's aligned to 1-byte boundaries, no need to bother.
-	if (size % ERS_ALIGNED)
-		size += ERS_ALIGNED - size % ERS_ALIGNED;
-#endif
-
-	m_cache.object_size = size;
-
 	ers_instance_list.push_front(this);
 }
 
-std::tuple<unsigned int, unsigned int, unsigned int, unsigned int> ERS::report_cache(void) const noexcept
+void ERI::remove_from_global_list(void) noexcept
 {
-	ShowMessage(CL_BOLD "[ERS Cache of size '" CL_NORMAL CL_WHITE "%u" CL_NORMAL CL_BOLD "' report]\n" CL_NORMAL, m_cache.object_size);
-	ShowMessage("\tblocks in use      : %u/%u\n", m_cache.used_objs, m_cache.used_objs + m_cache.free);
-	ShowMessage("\tblocks unused      : %u\n", m_cache.free);
-	ShowMessage("\tmemory in use      : %.2f MB\n", m_cache.used_objs == 0 ? 0. : (double)((m_cache.used_objs * m_cache.object_size)/1024)/1024);
-	ShowMessage("\tmemory allocated   : %.2f MB\n", (m_cache.free + m_cache.used_objs) == 0 ? 0. : (double)(((m_cache.used_objs + m_cache.free) * m_cache.object_size)/1024)/1024);
-
-	return {m_cache.used_objs, m_cache.used_objs + m_cache.free, m_cache.used_objs * m_cache.object_size, (m_cache.used_objs + m_cache.free) * m_cache.object_size};
+	ers_instance_list.remove(this);
 }
-
-#ifdef DEBUG
-bool ERS::report(void) const noexcept
-{
-	if ((m_options & ERS_OPT_WAIT) != 0 && m_count == 0)
-		return false;
-
-	ShowMessage(CL_BOLD "[ERS Instance " CL_NORMAL CL_WHITE "%s" CL_NORMAL CL_BOLD " report]\n" CL_NORMAL, m_name.c_str());
-	ShowMessage("\tblock size        : %u\n", m_cache.object_size);
-	ShowMessage("\tblocks being used : %u\n", m_count);
-	ShowMessage("\tpeak blocks       : %u\n", m_peak);
-	ShowMessage("\tmemory in use     : %.2f MB\n", m_count == 0 ? 0. : (double)((m_count * m_cache.object_size)/1024)/1024);
-
-	return true;
-}
-#endif
 
 void ers_report(void)
 {

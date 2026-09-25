@@ -7236,7 +7236,7 @@ static void status_display_add(struct map_session_data *sd, enum sc_type type, i
 		return;
 	}
 
-	entry = ers_alloc(pc->sc_display_ers, struct sc_display_entry);
+	entry = ers_alloc(pc->sc_display_ers);
 
 	entry->type = type;
 	entry->val1 = dval1;
@@ -10060,7 +10060,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			timer->delete_(sce->timer, status->change_timer);
 	} else {// new sc
 		++(sc->count);
-		sce = sc->data[type] = ers_alloc(status->data_ers, struct status_change_entry);
+		sce = sc->data[type] = ers_alloc(status->data_ers);
 	}
 
 	sce->val1 = val1;
@@ -15021,7 +15021,7 @@ static int do_init_status(bool minimal)
 	status->initDummyData();
 	status->readdb();
 	status->natural_heal_prev_tick = timer->gettick();
-	status->data_ers = ers_new(sizeof(struct status_change_entry),"status.cpp::data_ers",ERS_OPT_NONE);
+	status->data_ers = ers_new(status_change_entry,"status.cpp::data_ers",ERS_OPT_NONE);
 	timer->add_interval(status->natural_heal_prev_tick + NATURAL_HEAL_INTERVAL, status->natural_heal_timer, 0, 0, NATURAL_HEAL_INTERVAL);
 	return 0;
 }

@@ -23,11 +23,11 @@
 
 #include "map/script.h"
 #include "common/db.h"
+#include "common/ers.h"
 #include "common/hercules.h"
 
 /** Forward Declarations **/
 struct config_setting_t;
-class ERS;
 
 #ifndef MAPREG_AUTOSAVE_INTERVAL
 #define MAPREG_AUTOSAVE_INTERVAL (300 * 1000) //!< Interval for auto-saving permanent global variables to the database in milliseconds.
@@ -47,7 +47,7 @@ struct mapreg_save {
 /** The mapreg interface structure. **/
 struct mapreg_interface {
 	/** Interface variables. **/
-	ERS *ers;    //!< Entry manager for global variables.
+	ERS<mapreg_save> *ers; //!< Entry manager for global variables.
 	struct reg_db regs; //!< Generic database for global variables.
 	bool dirty;         //!< Whether there are modified global variables to be saved.
 	bool skip_insert;   //!< Whether to skip inserting the variable into the SQL database in mapreg_set_*_db().

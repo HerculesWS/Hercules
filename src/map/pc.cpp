@@ -9584,7 +9584,7 @@ static void pc_setregstr(struct map_session_data *sd, int64 reg, const char *str
 	nullpo_retv(sd);
 	nullpo_retv(str);
 	if( str[0] ) {
-		struct script_reg_str *p_new = ers_alloc(pc->str_reg_ers, struct script_reg_str);
+		struct script_reg_str *p_new = ers_alloc(pc->str_reg_ers);
 
 		p_new->value = aStrdup(str);
 		p_new->flag.type = 1;
@@ -9722,7 +9722,7 @@ static int pc_setregistry(struct map_session_data *sd, int64 reg, int val)
 		if( index )
 			script->array_update(&sd->regs, reg, false);
 
-		p = ers_alloc(pc->num_reg_ers, struct script_reg_num);
+		p = ers_alloc(pc->num_reg_ers);
 
 		p->value = val;
 		if( !pc->reg_load )
@@ -9779,7 +9779,7 @@ static int pc_setregistry_str(struct map_session_data *sd, int64 reg, const char
 		if( index )
 			script->array_update(&sd->regs, reg, false);
 
-		p = ers_alloc(pc->str_reg_ers, struct script_reg_str);
+		p = ers_alloc(pc->str_reg_ers);
 
 		p->value = aStrdup(val);
 		if( !pc->reg_load )
@@ -12939,9 +12939,9 @@ static void do_init_pc(bool minimal)
 
 	pcg->init();
 
-	pc->sc_display_ers = ers_new(sizeof(struct sc_display_entry), "pc.cpp:sc_display_ers", ERS_OPT_FLEX_CHUNK);
-	pc->num_reg_ers = ers_new(sizeof(struct script_reg_num), "pc.cpp::num_reg_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
-	pc->str_reg_ers = ers_new(sizeof(struct script_reg_str), "pc.cpp::str_reg_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
+	pc->sc_display_ers = ers_new(sc_display_entry, "pc.cpp:sc_display_ers", ERS_OPT_FLEX_CHUNK);
+	pc->num_reg_ers = ers_new(script_reg_num, "pc.cpp::num_reg_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
+	pc->str_reg_ers = ers_new(script_reg_str, "pc.cpp::str_reg_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
 
 	ers_chunk_size(pc->sc_display_ers, 150);
 	ers_chunk_size(pc->num_reg_ers, 300);

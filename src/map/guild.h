@@ -24,11 +24,11 @@
 #include "map/map.h" // EVENT_NAME_LENGTH
 #include "common/hercules.h"
 #include "common/db.h"
+#include "common/ers.h"
 #include "common/mmo.h"
 
 struct fifo_chunk_buf;
 struct map_session_data;
-class ERS;
 
 /**
  * Defines
@@ -78,7 +78,7 @@ struct guild_interface {
 	struct DBMap *expcache_db; // int char_id -> struct guild_expcache*
 	struct DBMap *infoevent_db; // int guild_id -> struct eventlist*
 	/* */
-	ERS *expcache_ers; //For handling of guild exp payment.
+	ERS<guild_expcache> *expcache_ers; //For handling of guild exp payment.
 	/* */
 	struct s_guild_skill_tree skill_tree[MAX_GUILDSKILL];
 	/* guild flags cache */

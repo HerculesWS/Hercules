@@ -23,6 +23,7 @@
 
 #include "map/map.h" //ELE_MAX
 #include "common/hercules.h"
+#include "common/ers.h"
 
 /**
  * Declarations
@@ -33,7 +34,6 @@ struct block_list;
 struct weapon_atk;
 struct status_change;
 struct status_data;
-class ERS;
 
 /**
  * Defines
@@ -693,7 +693,7 @@ struct battle_interface {
 	struct Battle_Config *bc;
 	/* elemental damage rate. [Defending Element Level][Attacking Element][Defending Element] */
 	int attr_fix_table[4][ELE_MAX][ELE_MAX];
-	ERS *delay_damage_ers; //For battle delay damage structures.
+	ERS<struct delay_damage> *delay_damage_ers; //For battle delay damage structures.
 	/* init */
 	void (*init) (bool minimal);
 	/* final */

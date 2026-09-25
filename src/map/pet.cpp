@@ -1283,7 +1283,7 @@ static int pet_lootitem_drop(struct pet_data *pd, struct map_session_data *sd)
 	struct item_drop *ditem;
 	if(!pd || !pd->loot || !pd->loot->count)
 		return 0;
-	dlist = ers_alloc(pet->item_drop_list_ers, struct item_drop_list);
+	dlist = ers_alloc(pet->item_drop_list_ers);
 	dlist->m = pd->bl.m;
 	dlist->x = pd->bl.x;
 	dlist->y = pd->bl.y;
@@ -1297,13 +1297,13 @@ static int pet_lootitem_drop(struct pet_data *pd, struct map_session_data *sd)
 		if (sd) {
 			if ((flag = pc->additem(sd,it,it->amount,LOG_TYPE_PICKDROP_PLAYER))) {
 				clif->additem(sd,0,0,flag);
-				ditem = ers_alloc(pet->item_drop_ers, struct item_drop);
+				ditem = ers_alloc(pet->item_drop_ers);
 				memcpy(&ditem->item_data, it, sizeof(struct item));
 				ditem->next = dlist->item;
 				dlist->item = ditem;
 			}
 		} else {
-			ditem = ers_alloc(pet->item_drop_ers, struct item_drop);
+			ditem = ers_alloc(pet->item_drop_ers);
 			memcpy(&ditem->item_data, it, sizeof(struct item));
 			ditem->next = dlist->item;
 			dlist->item = ditem;
@@ -1894,8 +1894,8 @@ static int do_init_pet(bool minimal)
 
 	pet->read_db();
 
-	pet->item_drop_ers = ers_new(sizeof(struct item_drop),"pet.cpp::item_drop_ers",ERS_OPT_NONE);
-	pet->item_drop_list_ers = ers_new(sizeof(struct item_drop_list),"pet.cpp::item_drop_list_ers",ERS_OPT_NONE);
+	pet->item_drop_ers = ers_new(item_drop,"pet.cpp::item_drop_ers",ERS_OPT_NONE);
+	pet->item_drop_list_ers = ers_new(item_drop_list,"pet.cpp::item_drop_list_ers",ERS_OPT_NONE);
 
 	timer->add_func_list(pet->hungry,"pet_hungry");
 	timer->add_func_list(pet->ai_hard,"pet_ai_hard");

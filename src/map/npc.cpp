@@ -585,12 +585,6 @@ static int npc_timerevent_export(struct npc_data *nd, int i)
 	return 0;
 }
 
-struct timer_event_data {
-	int rid; //Attached player for this timer.
-	int next; //timer index (starts with 0, then goes up to nd->u.scr.timeramount)
-	int time; //holds total time elapsed for the script from when timer was started to when last time the event triggered.
-};
-
 /*==========================================
  * triger 'OnTimerXXXX' events
  *------------------------------------------*/
@@ -692,7 +686,7 @@ static int npc_timerevent_start(struct npc_data *nd, int rid)
 		int next;
 		struct timer_event_data *ted;
 		// Arrange for the next event
-		ted = ers_alloc(npc->timer_event_ers, struct timer_event_data);
+		ted = ers_alloc(npc->timer_event_ers);
 		ted->next = j; // Set event index
 		ted->time = nd->u.scr.timer_event[j].timer;
 		next = nd->u.scr.timer_event[j].timer - nd->u.scr.timer;
@@ -737,7 +731,7 @@ static int npc_timerevent_stop(struct npc_data *nd)
 	if (*tid != INVALID_TIMER) {
 		const struct TimerData *td = timer->get(*tid);
 		if (td && td->data)
-			ers_free(npc->timer_event_ers, (void*)td->data);
+			ers_free(npc->timer_event_ers, reinterpret_cast<timer_event_data *>(td->data));
 		timer->delete_(*tid,npc->timerevent);
 		*tid = INVALID_TIMER;
 	}
@@ -3167,7 +3161,7 @@ static int npc_unload(struct npc_data *nd, bool single, bool unload_mobs)
 					continue;
 
 				if (td != NULL && td->data != 0)
-					ers_free(npc->timer_event_ers, (void*)td->data);
+					ers_free(npc->timer_event_ers, reinterpret_cast<timer_event_data *>(td->data));
 
 				timer->delete_(sd->npc_timer_id, npc->timerevent);
 				sd->npc_timer_id = INVALID_TIMER;
@@ -3180,7 +3174,7 @@ static int npc_unload(struct npc_data *nd, bool single, bool unload_mobs)
 			const struct TimerData *td = timer->get(nd->u.scr.timerid);
 
 			if (td != NULL && td->data != 0)
-				ers_free(npc->timer_event_ers, (void*)td->data);
+				ers_free(npc->timer_event_ers, reinterpret_cast<timer_event_data *>(td->data));
 
 			timer->delete_(nd->u.scr.timerid, npc->timerevent);
 		}
@@ -6013,7 +6007,7 @@ static int do_init_npc(bool minimal)
 	clan->set_constants();
 
 	if (!minimal) {
-		npc->timer_event_ers = ers_new(sizeof(struct timer_event_data),"clif.cpp::timer_event_ers",ERS_OPT_NONE);
+		npc->timer_event_ers = ers_new(timer_event_data,"clif.cpp::timer_event_ers",ERS_OPT_NONE);
 
 		npc->process_files(START_NPC_NUM);
 	}

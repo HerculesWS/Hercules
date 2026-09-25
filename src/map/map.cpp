@@ -153,7 +153,7 @@ static int map_freeblock(struct block_list *bl)
 
 	if (map->block_free_lock == 0) {
 		if( bl->type == BL_ITEM )
-			ers_free(map->flooritem_ers, bl);
+			ers_free(map->flooritem_ers, BL_UCAST(BL_ITEM, bl));
 		else
 			aFree(bl);
 		bl = NULL;
@@ -194,7 +194,7 @@ static int map_freeblock_unlock(void)
 			map->block_free_sanitize[i] = NULL;
 #endif
 			if( map->block_free[i]->type == BL_ITEM )
-				ers_free(map->flooritem_ers, map->block_free[i]);
+				ers_free(map->flooritem_ers, BL_UCAST(BL_ITEM, map->block_free[i]));
 			else
 				aFree(map->block_free[i]);
 			map->block_free[i] = NULL;
@@ -1858,7 +1858,7 @@ static int map_addflooritem(const struct block_list *bl, struct item *item_data,
 		return 0;
 	r=rnd();
 
-	fitem = ers_alloc(map->flooritem_ers, struct flooritem_data);
+	fitem = ers_alloc(map->flooritem_ers);
 
 	fitem->bl.type = BL_ITEM;
 	fitem->bl.prev = fitem->bl.next = NULL;
@@ -2652,7 +2652,7 @@ static struct s_mapiterator *mapit_alloc(enum e_mapitflags flags, enum bl_type t
 {
 	struct s_mapiterator* iter;
 
-	iter = ers_alloc(map->iterator_ers, struct s_mapiterator);
+	iter = ers_alloc(map->iterator_ers);
 	iter->flags = flags;
 	iter->types = types;
 	if( types == BL_PC )       iter->dbi = db_iterator(map->pc_db);
@@ -7041,10 +7041,10 @@ int do_init(int argc, char *argv[])
 	map->iwall_db  = strdb_alloc((enum DBOptions)(DB_OPT_DUP_KEY | DB_OPT_RELEASE_DATA), 2*NAME_LENGTH+2+1); // [Zephyrus] Invisible Walls
 	map->zone_db   = strdb_alloc((enum DBOptions)(DB_OPT_DUP_KEY | DB_OPT_RELEASE_DATA), MAP_ZONE_NAME_LENGTH);
 
-	map->iterator_ers = ers_new(sizeof(struct s_mapiterator), "map.cpp::map_iterator_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
+	map->iterator_ers = ers_new(s_mapiterator, "map.cpp::map_iterator_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
 	ers_chunk_size(map->iterator_ers, 25);
 
-	map->flooritem_ers = ers_new(sizeof(struct flooritem_data), "map.cpp::map_flooritem_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
+	map->flooritem_ers = ers_new(flooritem_data, "map.cpp::map_flooritem_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
 	ers_chunk_size(map->flooritem_ers, 100);
 
 	if (!minimal) {

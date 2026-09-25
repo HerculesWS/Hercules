@@ -2060,10 +2060,10 @@ struct skill_interface {
 	struct DBMap *group_db;// int group_id -> struct skill_unit_group*
 	struct DBMap *bowling_db;// int mob_id -> struct mob_data*s
 	/* */
-	ERS *unit_ers; //For handling skill_unit's [Skotlex]
-	ERS *timer_ers; //For handling skill_timerskills [Skotlex]
-	ERS *cd_ers; // ERS Storage for skill cool down managers [Ind/Hercules]
-	ERS *cd_entry_ers; // ERS Storage for skill cool down entries [Ind/Hercules]
+	ERS<skill_unit_group> *unit_ers; //For handling skill_unit's [Skotlex]
+	ERS<skill_timerskill> *timer_ers; //For handling skill_timerskills [Skotlex]
+	ERS<skill_cd> *cd_ers; // ERS Storage for skill cool down managers [Ind/Hercules]
+	ERS<skill_cd_entry> *cd_entry_ers; // ERS Storage for skill cool down entries [Ind/Hercules]
 	/* */
 	struct s_skill_dbs *dbs;
 	/* */

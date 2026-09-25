@@ -24,6 +24,7 @@
 #include "map/map.h"
 #include "map/packets_struct.h"
 #include "common/hercules.h"
+#include "common/ers.h"
 #include "common/mmo.h"
 
 #include <stdarg.h>
@@ -35,7 +36,6 @@ struct StringBuf;
 struct battleground_data;
 struct channel_data;
 struct chat_data;
-class ERS;
 struct flooritem_data;
 struct guild;
 struct homun_data;
@@ -929,7 +929,7 @@ struct clif_interface {
 	int map_fd;
 	int cmd;
 	/* for clif_clearunit_delayed */
-	ERS *delay_clearunit_ers;
+	ERS<mob_data> *delay_clearunit_ers;
 	/* Cash Shop [Ind/Hercules] */
 	struct {
 		struct hCSData **data[CASHSHOP_TAB_MAX];
@@ -946,7 +946,7 @@ struct clif_interface {
 	/* */
 	bool ally_only;
 	/* */
-	ERS *delayed_damage_ers;
+	ERS<cdelayed_damage> *delayed_damage_ers;
 	/* */
 	VECTOR_DECL(struct attendance_entry) attendance_data;
 	/* core */

@@ -104,7 +104,7 @@ static bool mapreg_set_num_db(int64 uid, const char *name, unsigned int index, i
 	if (index != 0)
 		script->array_update(&mapreg->regs, uid, false);
 
-	var = ers_alloc(mapreg->ers, struct mapreg_save);
+	var = ers_alloc(mapreg->ers);
 	var->u.i = value;
 	var->uid = uid;
 	var->save = false;
@@ -249,7 +249,7 @@ static bool mapreg_set_str_db(int64 uid, const char *name, unsigned int index, c
 	if (index != 0)
 		script->array_update(&mapreg->regs, uid, false);
 
-	var = ers_alloc(mapreg->ers, struct mapreg_save);
+	var = ers_alloc(mapreg->ers);
 	var->u.str = aStrdup(value);
 	var->uid = uid;
 	var->save = false;
@@ -690,7 +690,7 @@ static void mapreg_final(void)
 static void mapreg_init(void)
 {
 	mapreg->regs.vars = i64db_alloc(DB_OPT_BASE);
-	mapreg->ers = ers_new(sizeof(struct mapreg_save), "mapreg_sql.cpp::mapreg_ers", ERS_OPT_CLEAN);
+	mapreg->ers = ers_new(mapreg_save, "mapreg_sql.cpp::mapreg_ers", ERS_OPT_CLEAN);
 	mapreg->load();
 	timer->add_func_list(mapreg->save_timer, "mapreg_save_timer");
 	timer->add_interval(timer->gettick() + MAPREG_AUTOSAVE_INTERVAL, mapreg->save_timer, 0, 0, MAPREG_AUTOSAVE_INTERVAL);

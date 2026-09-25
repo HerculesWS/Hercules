@@ -58,7 +58,8 @@
 #ifndef COMMON_ERS_H
 #define COMMON_ERS_H
 
-#include "common/cbasetypes.h"
+#include "common/showmsg.h"
+#include "common/memmgr.h"
 
 #include <forward_list>
 #include <string>
@@ -127,26 +128,44 @@ class ERI
 	 */
 	[[nodiscard]] virtual bool report(void) const noexcept = 0;
 #endif
+
+  protected:
+	/**
+	 * Adds ERS instance to the global list of instances
+	 */
+	void add_to_global_list(void) noexcept;
+	/**
+	 * Removes ERS instance from global list of instances
+	 */
+	void remove_from_global_list(void) noexcept;
 };
 
 /**
  * Public interface of the entry manager.
  */
+template<typename T>
 class ERS : public ERI
 {
   public:
 	/**
-	 * Get a new instance of the manager that handles the specified entry size.
-	 * Size has to greater than 0.
-	 * If the specified size is smaller than a pointer, the size of a pointer is
-	 * used instead.
+	 * Get a new instance of the manager that handles the specified entry type.
 	 * It's also aligned to ERS_ALIGNED bytes, so the smallest multiple of
 	 * ERS_ALIGNED that is greater or equal to size is what's actually used.
-	 * @param size the size of object stored in ERS
 	 * @param name the name of this ERS manager instance
 	 * @param options a bitmask options of this instance manager
 	 */
-	ERS(uint32 size, const std::string &name, enum ERSOptions options) noexcept;
+	ERS(const std::string &name, enum ERSOptions options) noexcept
+	        : m_name(name), m_options(options) // FIXME: change this to a flag type
+	{
+		unsigned int size = sizeof(T);
+#if ERS_ALIGNED > 1 // If it's aligned to 1-byte boundaries, no need to bother.
+		if (size % ERS_ALIGNED)
+			size += ERS_ALIGNED - size % ERS_ALIGNED;
+#endif
+
+		m_cache.object_size = size;
+		add_to_global_list();
+	};
 
 	/**
 	 * Destroy this instance of the manager.
@@ -154,14 +173,64 @@ class ERS : public ERI
 	 * When destroying the manager a warning is shown if the manager has
 	 * missing/extra entries.
 	 */
-	~ERS() noexcept override;
+	~ERS() noexcept override
+	{
+		if (m_count > 0) {
+			if ((m_options & ERS_OPT_CLEAR) == 0) {
+				ShowWarning("Memory leak detected at ERS '%s', %u objects not freed.\n",
+				            m_name.c_str(),
+				            m_count);
+			}
+		}
+
+		for (unsigned int i = 0; i < m_cache.used; i++)
+			aFree(m_cache.blocks[i]);
+
+		aFree(m_cache.blocks);
+
+		remove_from_global_list();
+	}
 
 	/**
 	 * Allocate an entry from this entry manager.
 	 * If there are reusable entries available, it reuses one instead.
 	 * @return An entry
 	 */
-	[[nodiscard]] void *alloc(void) noexcept;
+	[[nodiscard]] T *alloc(void) noexcept
+	{
+		T *ret;
+
+		if (m_cache.reuse_list.empty() == false) {
+			ret = m_cache.reuse_list.front();
+			m_cache.reuse_list.pop_front();
+		} else if (m_cache.free > 0) {
+			m_cache.free--;
+			ret = reinterpret_cast<T *>(
+			        &m_cache.blocks[m_cache.used - 1][m_cache.free * (size_t)m_cache.object_size]);
+		} else {
+			if (m_cache.used == m_cache.max) {
+				m_cache.max = (m_cache.max * 4) + 3;
+				RECREATE(m_cache.blocks, unsigned char *, m_cache.max);
+			}
+
+			CREATE(m_cache.blocks[m_cache.used], unsigned char, m_cache.object_size *m_cache.chunk_size);
+			m_cache.used++;
+
+			m_cache.free = m_cache.chunk_size - 1;
+			ret          = reinterpret_cast<T *>(
+                                &m_cache.blocks[m_cache.used - 1][m_cache.free * (size_t)m_cache.object_size]);
+		}
+
+		m_count++;
+		m_cache.used_objs++;
+
+#ifdef DEBUG
+		if (m_count > m_peak)
+			m_peak = m_count;
+#endif
+
+		return ret;
+	}
 
 	/**
 	 * Free an entry allocated from this manager.
@@ -169,34 +238,96 @@ class ERS : public ERI
 	 * Freeing such an entry can lead to unexpected behavior.
 	 * @param entry Entry to be freed
 	 */
-	void free(void *entry) noexcept;
+	void free(T *entry) noexcept
+	{
+		if (entry == nullptr) {
+			ShowError("ERS::free: NULL entry, nothing to free.\n");
+			return;
+		}
+
+		if ((m_options & ERS_OPT_CLEAN) != 0)
+			memset(entry, 0, m_cache.object_size);
+
+		m_cache.reuse_list.push_front(entry);
+		m_count--;
+		m_cache.used_objs--;
+	}
 
 	/**
 	 * Return the size of the entries allocated from this manager.
 	 * @param self Interface of the entry manager
 	 * @return Size of the entries of this manager in bytes
 	 */
-	[[nodiscard]] size_t entry_size(void) const noexcept;
+	[[nodiscard]] size_t entry_size(void) const noexcept
+	{
+		return m_cache.object_size;
+	}
 
 	/**
 	 * Adjusts chunk size of the ers cache requires ERS_OPT_FLEX_CHUNK option
 	 * otherwise it throws a warning
 	 * @param new_size the new chunk size
 	 */
-	void chunk_size(unsigned int new_size) noexcept;
+	void chunk_size(unsigned int new_size) noexcept
+	{
+		if ((m_options & ERS_OPT_FLEX_CHUNK) == 0) {
+			ShowWarning(
+			        "ers_cache_size: '%s' has adjusted its chunk size to '%u', however ERS_OPT_FLEX_CHUNK "
+			        "is missing!\n",
+			        m_name.c_str(),
+			        new_size);
+		}
+
+		m_cache.chunk_size = new_size;
+	}
 
 	/**
 	 * Reports debug information for instance cache
 	 * @return used blocks, total blocks, memory used, total memory
 	 */
-	[[nodiscard]] std::tuple<unsigned int, unsigned int, unsigned int, unsigned int> report_cache(void) const noexcept override;
+	[[nodiscard]] std::tuple<unsigned int, unsigned int, unsigned int, unsigned int>
+	        report_cache(void) const noexcept override
+	{
+		ShowMessage(CL_BOLD "[ERS Cache of size '" CL_NORMAL CL_WHITE "%u" CL_NORMAL CL_BOLD
+		                    "' report]\n" CL_NORMAL,
+		            m_cache.object_size);
+		ShowMessage("\tblocks in use      : %u/%u\n", m_cache.used_objs, m_cache.used_objs + m_cache.free);
+		ShowMessage("\tblocks unused      : %u\n", m_cache.free);
+		ShowMessage("\tmemory in use      : %.2f MB\n",
+		            m_cache.used_objs == 0 ? 0.
+		                                   : (double)((m_cache.used_objs * m_cache.object_size) / 1024) / 1024);
+		ShowMessage("\tmemory allocated   : %.2f MB\n",
+		            (m_cache.free + m_cache.used_objs) == 0
+		                    ? 0.
+		                    : (double)(((m_cache.used_objs + m_cache.free) * m_cache.object_size) / 1024)
+		                              / 1024);
+
+		return {m_cache.used_objs,
+		        m_cache.used_objs + m_cache.free,
+		        m_cache.used_objs * m_cache.object_size,
+		        (m_cache.used_objs + m_cache.free) * m_cache.object_size};
+	}
 
 #ifdef DEBUG
 	/**
 	 * Reports debug information for current instance.
 	 * @return true if reports is displayed, false otherwise.
 	 */
-	[[nodiscard]] bool report(void) const noexcept override;
+	[[nodiscard]] bool report(void) const noexcept override
+	{
+		if ((m_options & ERS_OPT_WAIT) != 0 && m_count == 0)
+			return false;
+
+		ShowMessage(CL_BOLD "[ERS Instance " CL_NORMAL CL_WHITE "%s" CL_NORMAL CL_BOLD " report]\n" CL_NORMAL,
+		            m_name.c_str());
+		ShowMessage("\tblock size        : %u\n", m_cache.object_size);
+		ShowMessage("\tblocks being used : %u\n", m_count);
+		ShowMessage("\tpeak blocks       : %u\n", m_peak);
+		ShowMessage("\tmemory in use     : %.2f MB\n",
+		            m_count == 0 ? 0. : (double)((m_count * m_cache.object_size) / 1024) / 1024);
+
+		return true;
+	}
 #endif
 
   private:
@@ -205,7 +336,8 @@ class ERS : public ERI
 	enum ERSOptions m_options {
 		ERS_OPT_NONE
 	}; //< Misc options
-	unsigned int m_count{0};            //< Count of objects in use, used for detecting memory leaks
+
+	unsigned int m_count{0}; //< Count of objects in use, used for detecting memory leaks
 
 #ifdef DEBUG
 	/* for data analysis [Ind/Hercules] */
@@ -213,13 +345,13 @@ class ERS : public ERI
 #endif
 
 	struct {
-		unsigned int object_size;             //< Allocated object size, including ers_list size
-		std::forward_list<void *> reuse_list; //< Reuse linked list
-		unsigned char **blocks{nullptr};      //< Memory blocks array
-		unsigned int max{0};                  //< Max number of blocks
-		unsigned int free{0};                 //< Free objects count
-		unsigned int used{0};                 //< Used blocks count
-		unsigned int used_objs{0};            //< Objects in-use count
+		unsigned int object_size;          //< Allocated object size, including ers_list size
+		std::forward_list<T *> reuse_list; //< Reuse linked list
+		unsigned char **blocks{nullptr};   //< Memory blocks array
+		unsigned int max{0};               //< Max number of blocks
+		unsigned int free{0};              //< Free objects count
+		unsigned int used{0};              //< Used blocks count
+		unsigned int used_objs{0};         //< Objects in-use count
 		unsigned int chunk_size{
 		        ers_chunk_size}; //< Default = ERS_BLOCK_ENTRIES, can be adjusted for performance for individual
 		                         // cache sizes.
@@ -234,14 +366,14 @@ class ERS : public ERI
 #	define ers_destroy(obj) ((void)(obj), (void)0)
 #	define ers_chunk_size(obj,size) ((void)(obj), (void)(size), (size_t)0)
 // Disable the public functions
-#	define ers_new(size,name,options) NULL
+#	define ers_new(type,name,options) nullptr
 #	define ers_report() (void)0
 #	define ers_final() (void)0
 #else /* not DISABLE_ERS */
 // These defines should be used to allow the code to keep working whenever
 // the system is disabled
-#	define ers_new(size,name,options) (new ERS((size), (name), (options)))
-#	define ers_alloc(obj,type) ((type *)(obj)->alloc())
+#	define ers_new(type,name,options) (new ERS<type>((name), (options)))
+#	define ers_alloc(obj) ((obj)->alloc())
 #	define ers_free(obj,entry) ((obj)->free((entry)))
 #	define ers_entry_size(obj) ((obj)->entry_size())
 #	define ers_destroy(obj)    (delete (obj))

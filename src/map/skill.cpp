@@ -4670,7 +4670,7 @@ static int skill_addtimerskill(struct block_list *src, int64 tick, int target, i
 	ARR_FIND( 0, MAX_SKILLTIMERSKILL, i, ud->skilltimerskill[i] == 0 );
 	if( i == MAX_SKILLTIMERSKILL ) return 1;
 
-	ud->skilltimerskill[i] = ers_alloc(skill->timer_ers, struct skill_timerskill);
+	ud->skilltimerskill[i] = ers_alloc(skill->timer_ers);
 	ud->skilltimerskill[i]->timer = timer->add(tick, skill->timerskill, src->id, i);
 	ud->skilltimerskill[i]->src_id = src->id;
 	ud->skilltimerskill[i]->target_id = target;
@@ -19339,7 +19339,7 @@ static struct skill_unit_group *skill_initunitgroup(struct block_list *src, int 
 		i = MAX_SKILLUNITGROUP-1;
 	}
 
-	group              = ers_alloc(skill->unit_ers, struct skill_unit_group);
+	group              = ers_alloc(skill->unit_ers);
 	group->src_id      = src->id;
 	group->party_id    = status->get_party_id(src);
 	group->guild_id    = status->get_guild_id(src);
@@ -21217,7 +21217,7 @@ static int skill_blockpc_start_(struct map_session_data *sd, uint16 skill_id, in
 		clif->skill_cooldown(sd, skill_id, tick);
 
 	if ((cd = (struct skill_cd *)idb_get(skill->cd_db, sd->status.char_id)) == NULL) {// create a new skill cooldown object for map storage
-		cd = ers_alloc(skill->cd_ers, struct skill_cd);
+		cd = ers_alloc(skill->cd_ers);
 
 		idb_put( skill->cd_db, sd->status.char_id, cd );
 	} else {
@@ -21262,7 +21262,7 @@ static int skill_blockpc_start_(struct map_session_data *sd, uint16 skill_id, in
 		return -1;
 	}
 
-	cd->entry[cd->cursor] = ers_alloc(skill->cd_entry_ers,struct skill_cd_entry);
+	cd->entry[cd->cursor] = ers_alloc(skill->cd_entry_ers);
 
 	cd->entry[cd->cursor]->duration = tick;
 	cd->entry[cd->cursor]->total = tick;
@@ -25547,10 +25547,10 @@ static int do_init_skill(bool minimal)
 	skill->cd_db = idb_alloc(DB_OPT_BASE);
 	skill->usave_db = idb_alloc(DB_OPT_RELEASE_DATA);
 	skill->bowling_db = idb_alloc(DB_OPT_BASE);
-	skill->unit_ers = ers_new(sizeof(struct skill_unit_group), "skill.cpp::skill_unit_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
-	skill->timer_ers  = ers_new(sizeof(struct skill_timerskill), "skill.cpp::skill_timer_ers", (enum ERSOptions)(ERS_OPT_NONE | ERS_OPT_FLEX_CHUNK));
-	skill->cd_ers = ers_new(sizeof(struct skill_cd), "skill.cpp::skill_cd_ers", (enum ERSOptions)(ERS_OPT_CLEAR | ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
-	skill->cd_entry_ers = ers_new(sizeof(struct skill_cd_entry), "skill.cpp::skill_cd_entry_ers", (enum ERSOptions)(ERS_OPT_CLEAR | ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
+	skill->unit_ers = ers_new(skill_unit_group, "skill.cpp::skill_unit_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
+	skill->timer_ers  = ers_new(skill_timerskill, "skill.cpp::skill_timer_ers", (enum ERSOptions)(ERS_OPT_NONE | ERS_OPT_FLEX_CHUNK));
+	skill->cd_ers = ers_new(skill_cd, "skill.cpp::skill_cd_ers", (enum ERSOptions)(ERS_OPT_CLEAR | ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
+	skill->cd_entry_ers = ers_new(skill_cd_entry, "skill.cpp::skill_cd_entry_ers", (enum ERSOptions)(ERS_OPT_CLEAR | ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
 
 	ers_chunk_size(skill->cd_ers, 25);
 	ers_chunk_size(skill->cd_entry_ers, 100);
