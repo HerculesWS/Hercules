@@ -60,6 +60,8 @@
 
 #include "common/cbasetypes.h"
 
+#include <string>
+
 /*****************************************************************************\
  *  (1) All public parts of the Entry Reusage System.                        *
  *  DISABLE_ERS           - Define to disable this system.                   *
@@ -102,49 +104,86 @@ enum ERSOptions {
 
 /**
  * Public interface of the entry manager.
- * @param alloc Allocate an entry from this manager
- * @param free Free an entry allocated from this manager
- * @param entry_size Return the size of the entries of this manager
- * @param destroy Destroy this instance of the manager
  */
-typedef struct eri {
-
+class ERS
+{
+  public:
 	/**
-	 * Allocate an entry from this entry manager.
-	 * If there are reusable entries available, it reuses one instead.
-	 * @param self Interface of the entry manager
-	 * @return An entry
+	 * Get a new instance of the manager that handles the specified entry size.
+	 * Size has to greater than 0.
+	 * If the specified size is smaller than a pointer, the size of a pointer is
+	 * used instead.
+	 * It's also aligned to ERS_ALIGNED bytes, so the smallest multiple of
+	 * ERS_ALIGNED that is greater or equal to size is what's actually used.
+	 * @param size the size of object stored in ERS
+	 * @param name the name of this ERS manager instance
+	 * @param options a bitmask options of this instance manager
 	 */
-	void *(*alloc)(struct eri *self);
-
-	/**
-	 * Free an entry allocated from this manager.
-	 * WARNING: Does not check if the entry was allocated by this manager.
-	 * Freeing such an entry can lead to unexpected behavior.
-	 * @param self Interface of the entry manager
-	 * @param entry Entry to be freed
-	 */
-	void (*free)(struct eri *self, void *entry);
-
-	/**
-	 * Return the size of the entries allocated from this manager.
-	 * @param self Interface of the entry manager
-	 * @return Size of the entries of this manager in bytes
-	 */
-	size_t (*entry_size)(struct eri *self);
+	ERS(uint32 size, const std::string &name, enum ERSOptions options) noexcept;
 
 	/**
 	 * Destroy this instance of the manager.
 	 * The manager is actually only destroyed when all the instances are destroyed.
 	 * When destroying the manager a warning is shown if the manager has
 	 * missing/extra entries.
-	 * @param self Interface of the entry manager
 	 */
-	void (*destroy)(struct eri *self);
+	~ERS() noexcept;
 
-	/* */
-	void (*chunk_size) (struct eri *self, unsigned int new_size);
-} ERS;
+	/**
+	 * Allocate an entry from this entry manager.
+	 * If there are reusable entries available, it reuses one instead.
+	 * @return An entry
+	 */
+	[[nodiscard]] void *alloc(void) noexcept;
+
+	/**
+	 * Free an entry allocated from this manager.
+	 * WARNING: Does not check if the entry was allocated by this manager.
+	 * Freeing such an entry can lead to unexpected behavior.
+	 * @param entry Entry to be freed
+	 */
+	void free(void *entry) noexcept;
+
+	/**
+	 * Return the size of the entries allocated from this manager.
+	 * @param self Interface of the entry manager
+	 * @return Size of the entries of this manager in bytes
+	 */
+	[[nodiscard]] size_t entry_size(void) const noexcept;
+
+	/**
+	 * Adjusts chunk size of the ers cache requires ERS_OPT_FLEX_CHUNK option
+	 * otherwise it throws a warning
+	 * @param new_size the new chunk size
+	 */
+	void chunk_size(unsigned int new_size) noexcept;
+
+#ifdef DEBUG
+	/**
+	 * Reports debug information for current instance.
+	 * @return true if reports is displayed, false otherwise.
+	 */
+	[[nodiscard]] bool report(void) const noexcept;
+#endif
+
+	// Linked list
+	ERS *m_next{nullptr};
+	ERS *m_prev{nullptr};
+
+  private:
+	std::string m_name; //< Name, used for debugging purposes
+
+	enum ERSOptions m_options {
+		ERS_OPT_NONE
+	}; //< Misc options
+	struct ers_cache *m_cache{nullptr}; //< Our cache
+	unsigned int m_count{0};            //< Count of objects in use, used for detecting memory leaks
+
+#ifdef DEBUG
+	/* for data analysis [Ind/Hercules] */
+	unsigned int m_peak{0};
+#endif
+};
 
 #ifdef DISABLE_ERS
 // Use memory manager to allocate/free and disable other interface functions
@@ -160,25 +199,14 @@ typedef struct eri {
 #else /* not DISABLE_ERS */
 // These defines should be used to allow the code to keep working whenever
 // the system is disabled
-#	define ers_alloc(obj,type) ((type *)(obj)->alloc(obj))
-#	define ers_free(obj,entry) ((obj)->free((obj),(entry)))
-#	define ers_entry_size(obj) ((obj)->entry_size(obj))
-#	define ers_destroy(obj)    ((obj)->destroy(obj))
-#	define ers_chunk_size(obj,size) ((obj)->chunk_size((obj),(size)))
+#	define ers_new(size,name,options) (new ERS((size), (name), (options)))
+#	define ers_alloc(obj,type) ((type *)(obj)->alloc())
+#	define ers_free(obj,entry) ((obj)->free((entry)))
+#	define ers_entry_size(obj) ((obj)->entry_size())
+#	define ers_destroy(obj)    (delete (obj))
+#	define ers_chunk_size(obj,size) ((obj)->chunk_size((size)))
 
 #ifdef HERCULES_CORE
-/**
- * Get a new instance of the manager that handles the specified entry size.
- * Size has to greater than 0.
- * If the specified size is smaller than a pointer, the size of a pointer is
- * used instead.
- * It's also aligned to ERS_ALIGNED bytes, so the smallest multiple of
- * ERS_ALIGNED that is greater or equal to size is what's actually used.
- * @param The requested size of the entry in bytes
- * @return Interface of the object
- */
-ERS *ers_new(uint32 size, const char *name, enum ERSOptions options);
-
 /**
  * Print a report about the current state of the Entry Reusage System.
  * Shows information about the global system and each entry manager.

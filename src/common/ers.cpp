@@ -80,8 +80,6 @@ struct ers_list
 	struct ers_list *Next;
 };
 
-struct ers_instance_t;
-
 typedef struct ers_cache
 {
 	// Allocated object size, including ers_list size
@@ -118,33 +116,9 @@ typedef struct ers_cache
 	struct ers_cache *Next, *Prev;
 } ers_cache_t;
 
-struct ers_instance_t {
-	// Interface to ERS
-	struct eri VTable;
-
-	// Name, used for debugging purposes
-	char *Name;
-
-	// Misc options
-	enum ERSOptions Options;
-
-	// Our cache
-	ers_cache_t *Cache;
-
-	// Count of objects in use, used for detecting memory leaks
-	unsigned int Count;
-
-#ifdef DEBUG
-	/* for data analysis [Ind/Hercules] */
-	unsigned int Peak;
-#endif
-	struct ers_instance_t *Next, *Prev;
-};
-
-
 // Array containing a pointer for all ers_cache structures
 static ers_cache_t *CacheList = NULL;
-static struct ers_instance_t *InstanceList = NULL;
+static ERS *InstanceList = NULL;
 
 /**
  * @param Options the options from the instance seeking a cache, we use it to give it a cache with matching configuration
@@ -205,128 +179,94 @@ static void ers_free_cache(ers_cache_t *cache, bool remove)
 	aFree(cache);
 }
 
-static void *ers_obj_alloc_entry(ERS *self)
+void *ERS::alloc() noexcept
 {
-	struct ers_instance_t *instance = (struct ers_instance_t *)self;
 	void *ret;
 
-	if (instance == NULL) {
-		ShowError("ers_obj_alloc_entry: NULL object, aborting entry freeing.\n");
-		return NULL;
-	}
-
-	if (instance->Cache->ReuseList != NULL) {
-		ret = (void *)((unsigned char *)instance->Cache->ReuseList + sizeof(struct ers_list));
-		instance->Cache->ReuseList = instance->Cache->ReuseList->Next;
-	} else if (instance->Cache->Free > 0) {
-		instance->Cache->Free--;
-		ret = &instance->Cache->Blocks[instance->Cache->Used - 1][instance->Cache->Free * (size_t)instance->Cache->ObjectSize + sizeof(struct ers_list)];
+	if (m_cache->ReuseList != nullptr) {
+		ret = (void *)((unsigned char *)m_cache->ReuseList + sizeof(struct ers_list));
+		m_cache->ReuseList = m_cache->ReuseList->Next;
+	} else if (m_cache->Free > 0) {
+		m_cache->Free--;
+		ret = &m_cache->Blocks[m_cache->Used - 1][m_cache->Free * (size_t)m_cache->ObjectSize + sizeof(struct ers_list)];
 	} else {
-		if (instance->Cache->Used == instance->Cache->Max) {
-			instance->Cache->Max = (instance->Cache->Max * 4) + 3;
-			RECREATE(instance->Cache->Blocks, unsigned char *, instance->Cache->Max);
+		if (m_cache->Used == m_cache->Max) {
+			m_cache->Max = (m_cache->Max * 4) + 3;
+			RECREATE(m_cache->Blocks, unsigned char *, m_cache->Max);
 		}
 
-		CREATE(instance->Cache->Blocks[instance->Cache->Used], unsigned char, instance->Cache->ObjectSize * instance->Cache->ChunkSize);
-		instance->Cache->Used++;
+		CREATE(m_cache->Blocks[m_cache->Used], unsigned char, m_cache->ObjectSize * m_cache->ChunkSize);
+		m_cache->Used++;
 
-		instance->Cache->Free = instance->Cache->ChunkSize -1;
-		ret = &instance->Cache->Blocks[instance->Cache->Used - 1][instance->Cache->Free * (size_t)instance->Cache->ObjectSize + sizeof(struct ers_list)];
+		m_cache->Free = m_cache->ChunkSize -1;
+		ret = &m_cache->Blocks[m_cache->Used - 1][m_cache->Free * (size_t)m_cache->ObjectSize + sizeof(struct ers_list)];
 	}
 
-	instance->Count++;
-	instance->Cache->UsedObjs++;
+	m_count++;
+	m_cache->UsedObjs++;
 
 #ifdef DEBUG
-	if( instance->Count > instance->Peak )
-		instance->Peak = instance->Count;
+	if (m_count > m_peak)
+		m_peak = m_count;
 #endif
 
 	return ret;
 }
 
-static void ers_obj_free_entry(ERS *self, void *entry)
+void ERS::free(void *entry) noexcept
 {
-	struct ers_instance_t *instance = (struct ers_instance_t *)self;
 	struct ers_list *reuse = (struct ers_list *)((unsigned char *)entry - sizeof(struct ers_list));
 
-	if (instance == NULL) {
-		ShowError("ers_obj_free_entry: NULL object, aborting entry freeing.\n");
-		return;
-	} else if (entry == NULL) {
-		ShowError("ers_obj_free_entry: NULL entry, nothing to free.\n");
+	if (entry == nullptr) {
+		ShowError("ERS::free: NULL entry, nothing to free.\n");
 		return;
 	}
 
-	if( instance->Cache->Options & ERS_OPT_CLEAN )
-		memset((unsigned char*)reuse + sizeof(struct ers_list), 0, instance->Cache->ObjectSize - sizeof(struct ers_list));
+	if ((m_cache->Options & ERS_OPT_CLEAN) != 0)
+		memset((unsigned char*)reuse + sizeof(struct ers_list), 0, m_cache->ObjectSize - sizeof(struct ers_list));
 
-	reuse->Next = instance->Cache->ReuseList;
-	instance->Cache->ReuseList = reuse;
-	instance->Count--;
-	instance->Cache->UsedObjs--;
+	reuse->Next = m_cache->ReuseList;
+	m_cache->ReuseList = reuse;
+	m_count--;
+	m_cache->UsedObjs--;
 }
 
-static size_t ers_obj_entry_size(ERS *self)
+size_t ERS::entry_size() const noexcept
 {
-	struct ers_instance_t *instance = (struct ers_instance_t *)self;
-
-	if (instance == NULL) {
-		ShowError("ers_obj_entry_size: NULL object, aborting entry freeing.\n");
-		return 0;
-	}
-
-	return instance->Cache->ObjectSize;
+	return m_cache->ObjectSize;
 }
 
-static void ers_obj_destroy(ERS *self)
+ERS::~ERS() noexcept
 {
-	struct ers_instance_t *instance = (struct ers_instance_t *)self;
-
-	if (instance == NULL) {
-		ShowError("ers_obj_destroy: NULL object, aborting entry freeing.\n");
-		return;
+	if (m_count > 0) {
+		if ((m_options & ERS_OPT_CLEAR) == 0) {
+			ShowWarning("Memory leak detected at ERS '%s', %u objects not freed.\n", m_name.c_str(), m_count);
+		}
 	}
 
-	if (instance->Count > 0)
-		if (!(instance->Options & ERS_OPT_CLEAR))
-			ShowWarning("Memory leak detected at ERS '%s', %u objects not freed.\n", instance->Name, instance->Count);
+	if (--m_cache->ReferenceCount <= 0)
+		ers_free_cache(m_cache, true);
 
-	if (--instance->Cache->ReferenceCount <= 0)
-		ers_free_cache(instance->Cache, true);
+	if (m_next)
+		m_next->m_prev = m_prev;
 
-	if (instance->Next)
-		instance->Next->Prev = instance->Prev;
-
-	if (instance->Prev)
-		instance->Prev->Next = instance->Next;
+	if (m_prev)
+		m_prev->m_next = m_next;
 	else
-		InstanceList = instance->Next;
-
-	aFree(instance->Name);
-	aFree(instance);
+		InstanceList = m_next;
 }
 
-static void ers_cache_size(ERS *self, unsigned int new_size)
+void ERS::chunk_size(unsigned int new_size) noexcept
 {
-	struct ers_instance_t *instance = (struct ers_instance_t *)self;
-
-	nullpo_retv(instance);
-
-	if( !(instance->Cache->Options&ERS_OPT_FLEX_CHUNK) ) {
-		ShowWarning("ers_cache_size: '%s' has adjusted its chunk size to '%u', however ERS_OPT_FLEX_CHUNK is missing!\n", instance->Name, new_size);
+	if ((m_cache->Options&ERS_OPT_FLEX_CHUNK) == 0) {
+		ShowWarning("ers_cache_size: '%s' has adjusted its chunk size to '%u', however ERS_OPT_FLEX_CHUNK is missing!\n", m_name.c_str(), new_size);
 	}
 
-	instance->Cache->ChunkSize = new_size;
+	m_cache->ChunkSize = new_size;
 }
 
-ERS *ers_new(uint32 size, const char *name, enum ERSOptions options) // FIXME: change this to a flag type
+ERS::ERS(uint32 size, const std::string &name, enum ERSOptions options) noexcept : m_name(name), m_options(options) // FIXME: change this to a flag type
 {
-	struct ers_instance_t *instance;
-
-	nullpo_retr(NULL, name);
-	CREATE(instance,struct ers_instance_t, 1);
-
 	size += sizeof(struct ers_list);
 
 #if ERS_ALIGNED > 1 // If it's aligned to 1-byte boundaries, no need to bother.
@@ -334,51 +274,47 @@ ERS *ers_new(uint32 size, const char *name, enum ERSOptions options) // FIXME: c
 		size += ERS_ALIGNED - size % ERS_ALIGNED;
 #endif
 
-	instance->VTable.alloc = ers_obj_alloc_entry;
-	instance->VTable.free = ers_obj_free_entry;
-	instance->VTable.entry_size = ers_obj_entry_size;
-	instance->VTable.destroy = ers_obj_destroy;
-	instance->VTable.chunk_size = ers_cache_size;
-
-	instance->Name = aStrdup(name);
-	instance->Options = options;
-
-	instance->Cache = ers_find_cache(size,instance->Options);
-
-	instance->Cache->ReferenceCount++;
+	m_cache = ers_find_cache(size,m_options);
+	m_cache->ReferenceCount++;
 
 	if (InstanceList == NULL) {
-		InstanceList = instance;
+		InstanceList = this;
 	} else {
-		instance->Next = InstanceList;
-		instance->Next->Prev = instance;
-		InstanceList = instance;
-		InstanceList->Prev = NULL;
+		m_next = InstanceList;
+		m_next->m_prev = this;
+		InstanceList = this;
+		InstanceList->m_prev = nullptr;
 	}
-
-	instance->Count = 0;
-
-	return &instance->VTable;
 }
+
+#ifdef DEBUG
+bool ERS::report(void) const noexcept
+{
+	if ((m_options & ERS_OPT_WAIT) != 0 && m_count == 0)
+		return false;
+
+	ShowMessage(CL_BOLD "[ERS Instance " CL_NORMAL CL_WHITE "%s" CL_NORMAL CL_BOLD " report]\n" CL_NORMAL, m_name.c_str());
+	ShowMessage("\tblock size        : %u\n", m_cache->ObjectSize);
+	ShowMessage("\tblocks being used : %u\n", m_count);
+	ShowMessage("\tpeak blocks       : %u\n", m_peak);
+	ShowMessage("\tmemory in use     : %.2f MB\n", m_count == 0 ? 0. : (double)((m_count * m_cache->ObjectSize)/1024)/1024);
+
+	return true;
+}
+#endif
 
 void ers_report(void)
 {
 	ers_cache_t *cache;
 	unsigned int cache_c = 0, blocks_u = 0, blocks_a = 0, memory_b = 0, memory_t = 0;
 #ifdef DEBUG
-	struct ers_instance_t *instance;
 	unsigned int instance_c = 0, instance_c_d = 0;
 
-	for (instance = InstanceList; instance; instance = instance->Next) {
+	for (const ERS *instance = InstanceList; instance; instance = instance->m_next) {
 		instance_c++;
-		if( (instance->Options & ERS_OPT_WAIT) && !instance->Count )
+		if (instance->report() == false)
 			continue;
 		instance_c_d++;
-		ShowMessage(CL_BOLD "[ERS Instance " CL_NORMAL CL_WHITE "%s" CL_NORMAL CL_BOLD " report]\n" CL_NORMAL, instance->Name);
-		ShowMessage("\tblock size        : %u\n", instance->Cache->ObjectSize);
-		ShowMessage("\tblocks being used : %u\n", instance->Count);
-		ShowMessage("\tpeak blocks       : %u\n", instance->Peak);
-		ShowMessage("\tmemory in use     : %.2f MB\n", instance->Count == 0 ? 0. : (double)((instance->Count * instance->Cache->ObjectSize)/1024)/1024);
 	}
 #endif
 
@@ -408,11 +344,11 @@ void ers_report(void)
  **/
 void ers_final(void)
 {
-	struct ers_instance_t *instance = InstanceList, *next;
+	ERS *instance = InstanceList, *next;
 
-	while( instance ) {
-		next = instance->Next;
-		ers_obj_destroy((ERS*)instance);
+	while (instance != nullptr) {
+		next = instance->m_next;
+		delete instance;
 		instance = next;
 	}
 }

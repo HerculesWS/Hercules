@@ -358,8 +358,8 @@ static struct db_stats {
 #endif /* !defined(DB_ENABLE_STATS) */
 
 /* [Ind/Hercules] */
-static struct eri *db_iterator_ers;
-static struct eri *db_alloc_ers;
+static ERS *db_iterator_ers;
+static ERS *db_alloc_ers;
 
 /*****************************************************************************\
  *  (2) Section of private functions used by the database system.            *

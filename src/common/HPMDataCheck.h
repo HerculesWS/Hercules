@@ -304,11 +304,6 @@ const struct s_HPMDataCheck HPMDataCheck_s[] = {
 	#else
 		#define COMMON_DES_H
 	#endif // COMMON_DES_H
-	#ifdef COMMON_ERS_H
-		{ "eri", sizeof(struct eri), SERVER_TYPE_ALL },
-	#else
-		#define COMMON_ERS_H
-	#endif // COMMON_ERS_H
 	#ifdef COMMON_EXTRACONF_H
 		{ "config_data", sizeof(struct config_data), SERVER_TYPE_ALL },
 		{ "config_data_old", sizeof(struct config_data_old), SERVER_TYPE_ALL },

@@ -144,8 +144,8 @@ struct pet_data {
 
 struct pet_interface {
 	struct s_pet_db db[MAX_PET_DB];
-	struct eri *item_drop_ers; //For loot drops delay structures.
-	struct eri *item_drop_list_ers;
+	ERS *item_drop_ers; //For loot drops delay structures.
+	ERS *item_drop_list_ers;
 
 	/* */
 	int (*init) (bool minimal);
