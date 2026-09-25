@@ -72,7 +72,7 @@
 
 #ifndef DISABLE_ERS
 
-static std::forward_list<ERS *> ers_instance_list;
+static std::forward_list<ERI *> ers_instance_list;
 
 void *ERS::alloc() noexcept
 {
@@ -165,7 +165,7 @@ ERS::ERS(uint32 size, const std::string &name, enum ERSOptions options) noexcept
 	ers_instance_list.push_front(this);
 }
 
-std::tuple<unsigned int, unsigned int, unsigned int, unsigned int> ERS::report_cache(void) const noexcept
+std::tuple<unsigned int, unsigned int, unsigned int, unsigned int> ERS::print_report_cache(void) const noexcept
 {
 	ShowMessage(CL_BOLD "[ERS Cache of size '" CL_NORMAL CL_WHITE "%u" CL_NORMAL CL_BOLD "' report]\n" CL_NORMAL, m_cache.object_size);
 	ShowMessage("\tblocks in use      : %u/%u\n", m_cache.used_objs, m_cache.used_objs + m_cache.free);
@@ -177,7 +177,7 @@ std::tuple<unsigned int, unsigned int, unsigned int, unsigned int> ERS::report_c
 }
 
 #ifdef DEBUG
-bool ERS::report(void) const noexcept
+bool ERS::print_report(void) const noexcept
 {
 	if ((m_options & ERS_OPT_WAIT) != 0 && m_count == 0)
 		return false;
@@ -200,14 +200,14 @@ void ers_report(void)
 
 	for (const auto *instance : ers_instance_list) {
 		instance_c++;
-		if (instance->report() == false)
+		if (instance->print_report() == false)
 			continue;
 		instance_c_d++;
 	}
 #endif
 
 	for (const auto instance : ers_instance_list) {
-		const auto [blocks_used, blocks_total, memory_used, memory_total] = instance->report_cache();
+		const auto [blocks_used, blocks_total, memory_used, memory_total] = instance->print_report_cache();
 
 		blocks_u += blocks_used;
 		blocks_a += blocks_total;
