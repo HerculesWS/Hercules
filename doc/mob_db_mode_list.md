@@ -30,7 +30,7 @@ MD_ASSIST             | 0x00008 |        8 | When a nearby mob of the same class
 MD_CASTSENSOR_IDLE    | 0x00010 |       16 | Will go after characters who start casting on them if idle or walking (without a target).
 MD_BOSS               | 0x00020 |       32 | Special flag which makes mobs immune to certain status changes and skills.
 MD_PLANT              | 0x00040 |       64 | Always receives 1 damage from attacks.
-MD_CANATTACK          | 0x00080 |      128 | Enables the mob to attack/retaliate when you are within attack range. <br/>Note that this only enables them to use normal attacks, skills are always allowed.
+MD_CANATTACK          | 0x00080 |      128 | Enables the mob to attack/retaliate when you are within attack range. <br/>Note that this only enables them to use normal attacks, skills are allowed regardless (see MD_NOCAST_SKILL to disable them).
 MD_DETECTOR           | 0x00100 |      256 | Enables mob to detect and attack characters who are in hiding/cloak.
 MD_CASTSENSOR_CHASE   | 0x00200 |      512 | Will go after characters who start casting on them if idle or chasing other players (they switch chase targets)
 MD_CHANGECHASE        | 0x00400 |     1024 | Allows chasing mobs to switch targets if another player happens to be within attack range (handy on ranged attackers, for example)
@@ -40,6 +40,7 @@ MD_CHANGETARGET_CHASE | 0x02000 |     8192 | Enables a mob to switch targets whe
 MD_TARGETWEAK         | 0x04000 |    16384 | Allows aggressive monsters to only be aggressive against characters that are five levels below it's own level. </br>For example, a monster of level 104 will not pick fights with a level 99.
 MD_NOKNOCKBACK        | 0x08000 |    32768 | Monsters will be immune to knockback's effect.
 MD_RANDOMTARGET       | 0x10000 |    65536 | Picks a new random target in range on each attack/skill. (not implemented)
+MD_NOCAST_SKILL       | 0x20000 |   131072 | Disables the monster's use of mob_skill_db skills (both idle and combat states). Normal attacks are unaffected; use MD_CANATTACK to control those.
 
 ## Aegis Mob Types:
 What Aegis has are mob-types, where each type represents an AI behavior that is mimicked by a group of eA mode bits. 
