@@ -4483,7 +4483,7 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 			short totaldef = (tmdef + tdef - ((uint64)(tmdef + tdef) >> 32)) >> 1; // FIXME: What's the >> 32 supposed to do here? tmdef and tdef are both 16-bit...
 
 			matk = battle->calc_magic_attack(src, target, skill_id, skill_lv, mflag).damage;
-			atk = battle->calc_base_damage(src, target, skill_id, skill_lv, nk, false, s_ele, ELE_NEUTRAL, EQI_HAND_R, (sc && sc->data[SC_MAXIMIZEPOWER] ? BCBD_CRITICAL : BCBD_NONE)|(sc && sc->data[SC_WEAPONPERFECT] ? BCBD_SKIP_SIZE_ADJUSTMENT : BCBD_NONE), md.flag);
+			atk = battle->calc_base_damage(src, target, skill_id, skill_lv, nk, false, s_ele, ELE_NEUTRAL, EQI_HAND_R, (enum battle_calc_base_damage_flag)((sc && sc->data[SC_MAXIMIZEPOWER] ? BCBD_CRITICAL : BCBD_NONE)|(sc && sc->data[SC_WEAPONPERFECT] ? BCBD_SKIP_SIZE_ADJUSTMENT : BCBD_NONE)), md.flag);
 			md.damage = matk + atk;
 			if( src->type == BL_MOB ){
 				totaldef = (tdef + tmdef) >> 1;
@@ -4557,7 +4557,7 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 		int ratio = 300 + 50 * skill_lv;
 		int64 matk = battle->calc_magic_attack(src, target, skill_id, skill_lv, mflag).damage;
 		short totaldef = status->get_total_def(target) + status->get_total_mdef(target);
-		int64 atk = battle->calc_base_damage(src, target, skill_id, skill_lv, nk, false, s_ele, ELE_NEUTRAL, EQI_HAND_R, (sc && sc->data[SC_MAXIMIZEPOWER] ? BCBD_CRITICAL : BCBD_NONE) | (sc && sc->data[SC_WEAPONPERFECT] ? BCBD_SKIP_SIZE_ADJUSTMENT : BCBD_NONE), md.flag);
+		int64 atk = battle->calc_base_damage(src, target, skill_id, skill_lv, nk, false, s_ele, ELE_NEUTRAL, EQI_HAND_R, (enum battle_calc_base_damage_flag)((sc && sc->data[SC_MAXIMIZEPOWER] ? BCBD_CRITICAL : BCBD_NONE) | (sc && sc->data[SC_WEAPONPERFECT] ? BCBD_SKIP_SIZE_ADJUSTMENT : BCBD_NONE)), md.flag);
 
 		md.damage = (matk + atk) * ratio / 100;
 		md.damage -= totaldef;
@@ -5388,8 +5388,8 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 #define ATK_ADD( a ) do { int64 temp__ = (a); wd.damage += temp__; if (flag.lh) wd.damage2 += temp__; } while(0)
 #define ATK_ADD2( a , b ) do { wd.damage += (a); if (flag.lh) wd.damage2 += (b); } while(0)
 #ifdef RENEWAL
-#define GET_NORMAL_ATTACK( f , s ) ( wd.damage = battle->calc_base_damage(src, target, s, skill_lv, nk, n_ele, s_ele, s_ele_, EQI_HAND_R, (f), wd.flag) )
-#define GET_NORMAL_ATTACK2( f , s ) ( wd.damage2 = battle->calc_base_damage(src, target, s, skill_lv, nk, n_ele, s_ele, s_ele_, EQI_HAND_L, (f), wd.flag) )
+#define GET_NORMAL_ATTACK( f , s ) ( wd.damage = battle->calc_base_damage(src, target, s, skill_lv, nk, n_ele, s_ele, s_ele_, EQI_HAND_R, (enum battle_calc_base_damage_flag)(f), wd.flag) )
+#define GET_NORMAL_ATTACK2( f , s ) ( wd.damage2 = battle->calc_base_damage(src, target, s, skill_lv, nk, n_ele, s_ele, s_ele_, EQI_HAND_L, (enum battle_calc_base_damage_flag)(f), wd.flag) )
 #endif
 		switch (skill_id) {
 			//Calc base damage according to skill
@@ -5979,18 +5979,18 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 #endif
 			) { //Defense reduction
 			wd.damage = battle->calc_defense(BF_WEAPON, src, target, skill_id, skill_lv, wd.damage,
-											 (flag.idef?BCD_IGNORE_DEFENSE:BCD_NONE)|(flag.pdef?BCD_PIERCE_DEFENSE:BCD_NONE)
+											 (enum battle_calc_defense_flag)((flag.idef?BCD_IGNORE_DEFENSE:BCD_NONE)|(flag.pdef?BCD_PIERCE_DEFENSE:BCD_NONE)
 #ifdef RENEWAL
 											 |(flag.tdef?BCD_TOTAL_DEFENSE_REDUCTION:BCD_NONE)
 #endif
-											 , flag.pdef);
+											 ), flag.pdef);
 			if( wd.damage2 )
 				wd.damage2 = battle->calc_defense(BF_WEAPON, src, target, skill_id, skill_lv, wd.damage2,
-												  (flag.idef2?BCD_IGNORE_DEFENSE:BCD_NONE)|(flag.pdef2?BCD_PIERCE_DEFENSE:BCD_NONE)
+												  (enum battle_calc_defense_flag)((flag.idef2?BCD_IGNORE_DEFENSE:BCD_NONE)|(flag.pdef2?BCD_PIERCE_DEFENSE:BCD_NONE)
 #ifdef RENEWAL
 												  |(flag.tdef?BCD_TOTAL_DEFENSE_REDUCTION:BCD_NONE)
 #endif
-												  , flag.pdef2);
+												  ), flag.pdef2);
 		}
 
 #ifdef RENEWAL

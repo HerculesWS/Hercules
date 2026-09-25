@@ -254,6 +254,8 @@ sub parse($$) {
 			$rtinit = ' = USERCONFIG_FROM_SQL_SUCCESS';
 		} elsif ($x =~ /^enum\s+battle_dmg_type$/) { # Known enum userconfig_from_sql_result
 			$rtinit = ' = BDT_NORMAL';
+		} elsif ($x =~ /^enum\s+login_auth_result$/) { # Known enum login_auth_result
+			$rtinit = ' = LOGIN_AUTH_UNREGISTERED_ID';
 		} elsif ($x =~ /^enum\s+cast_enum$/) { # Known enum userconfig_from_sql_result
 			$rtinit = ' = CAST_GROUND';
 		} elsif ($x =~ /^e_scb_flag$/) { # Known typedef e_scb_flag

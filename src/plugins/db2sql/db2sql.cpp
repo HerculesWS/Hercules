@@ -397,7 +397,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source, st
 
 		// stack_flag
 		if (it->stack.amount) {
-			enum ItemStackRestrictions value = ISR_NONE;
+			int value = ISR_NONE;
 			value |= it->stack.inventory ? ISR_INVENTORY : ISR_NONE;
 			value |= it->stack.cart ? ISR_CART : ISR_NONE;
 			value |= it->stack.storage ? ISR_STORAGE : ISR_NONE;

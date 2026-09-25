@@ -546,7 +546,7 @@ static void storage_storage_quit(struct map_session_data *sd, int flag)
 	nullpo_retv(sd);
 
 	if (map->save_settings&4)
-		chrif->save(sd, flag); //Invokes the storage saving as well.
+		chrif->save(sd, (enum chrif_save_flag)flag); //Invokes the storage saving as well.
 
 	sd->state.storage_flag = STORAGE_FLAG_CLOSED;
 }
