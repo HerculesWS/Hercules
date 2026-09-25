@@ -216,7 +216,7 @@ struct npc_interface {
 	/// const char* npc_name -> struct npc_data*
 	struct DBMap *name_db;
 	struct DBMap *path_db;
-	struct eri *timer_event_ers; ///< For the npc timer data. [Skotlex]
+	ERS *timer_event_ers; ///< For the npc timer data. [Skotlex]
 	struct npc_data *fake_nd;
 	struct npc_src_list *src_files;
 	struct unit_data base_ud;
