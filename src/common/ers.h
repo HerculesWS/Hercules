@@ -82,17 +82,6 @@
  */
 //#define DISABLE_ERS
 
-/**
- * Entries are aligned to ERS_ALIGNED bytes in the blocks of entries.
- * By default it aligns to one byte, using the "natural order" of the entries.
- * This should NEVER be set to zero or less.
- * If greater than one, some memory can be wasted. This should never be needed
- * but is here just in case some alignment issues arise.
- */
-#ifndef ERS_ALIGNED
-#	define ERS_ALIGNED 1
-#endif /* not ERS_ALIGN_ENTRY */
-
 constexpr unsigned int ers_chunk_size = 2048;
 
 enum ERSOptions {
@@ -157,13 +146,6 @@ class ERS : public ERI
 	ERS(const std::string &name, enum ERSOptions options) noexcept
 	        : m_name(name), m_options(options) // FIXME: change this to a flag type
 	{
-		unsigned int size = sizeof(T);
-#if ERS_ALIGNED > 1 // If it's aligned to 1-byte boundaries, no need to bother.
-		if (size % ERS_ALIGNED)
-			size += ERS_ALIGNED - size % ERS_ALIGNED;
-#endif
-
-		m_cache.object_size = size;
 		add_to_global_list();
 	};
 
@@ -206,19 +188,19 @@ class ERS : public ERI
 		} else if (m_cache.free > 0) {
 			m_cache.free--;
 			ret = reinterpret_cast<T *>(
-			        &m_cache.blocks[m_cache.used - 1][m_cache.free * (size_t)m_cache.object_size]);
+			        &m_cache.blocks[m_cache.used - 1][m_cache.free * sizeof(T)]);
 		} else {
 			if (m_cache.used == m_cache.max) {
 				m_cache.max = (m_cache.max * 4) + 3;
 				RECREATE(m_cache.blocks, unsigned char *, m_cache.max);
 			}
 
-			CREATE(m_cache.blocks[m_cache.used], unsigned char, m_cache.object_size *m_cache.chunk_size);
+			CREATE(m_cache.blocks[m_cache.used], unsigned char, sizeof(T) *m_cache.chunk_size);
 			m_cache.used++;
 
 			m_cache.free = m_cache.chunk_size - 1;
 			ret          = reinterpret_cast<T *>(
-                                &m_cache.blocks[m_cache.used - 1][m_cache.free * (size_t)m_cache.object_size]);
+                                &m_cache.blocks[m_cache.used - 1][m_cache.free * sizeof(T)]);
 		}
 
 		m_count++;
@@ -246,7 +228,7 @@ class ERS : public ERI
 		}
 
 		if ((m_options & ERS_OPT_CLEAN) != 0)
-			memset(entry, 0, m_cache.object_size);
+			memset(entry, 0, sizeof(T));
 
 		m_cache.reuse_list.push_front(entry);
 		m_count--;
@@ -260,7 +242,7 @@ class ERS : public ERI
 	 */
 	[[nodiscard]] size_t entry_size(void) const noexcept
 	{
-		return m_cache.object_size;
+		return sizeof(T);
 	}
 
 	/**
@@ -288,24 +270,24 @@ class ERS : public ERI
 	[[nodiscard]] std::tuple<unsigned int, unsigned int, unsigned int, unsigned int>
 	        report_cache(void) const noexcept override
 	{
-		ShowMessage(CL_BOLD "[ERS Cache of size '" CL_NORMAL CL_WHITE "%u" CL_NORMAL CL_BOLD
+		ShowMessage(CL_BOLD "[ERS Cache of size '" CL_NORMAL CL_WHITE "%" PRIuS CL_NORMAL CL_BOLD
 		                    "' report]\n" CL_NORMAL,
-		            m_cache.object_size);
+		            sizeof(T));
 		ShowMessage("\tblocks in use      : %u/%u\n", m_cache.used_objs, m_cache.used_objs + m_cache.free);
 		ShowMessage("\tblocks unused      : %u\n", m_cache.free);
 		ShowMessage("\tmemory in use      : %.2f MB\n",
 		            m_cache.used_objs == 0 ? 0.
-		                                   : (double)((m_cache.used_objs * m_cache.object_size) / 1024) / 1024);
+		                                   : (double)((m_cache.used_objs * sizeof(T)) / 1024) / 1024);
 		ShowMessage("\tmemory allocated   : %.2f MB\n",
 		            (m_cache.free + m_cache.used_objs) == 0
 		                    ? 0.
-		                    : (double)(((m_cache.used_objs + m_cache.free) * m_cache.object_size) / 1024)
+		                    : (double)(((m_cache.used_objs + m_cache.free) * sizeof(T)) / 1024)
 		                              / 1024);
 
 		return {m_cache.used_objs,
 		        m_cache.used_objs + m_cache.free,
-		        m_cache.used_objs * m_cache.object_size,
-		        (m_cache.used_objs + m_cache.free) * m_cache.object_size};
+		        m_cache.used_objs * sizeof(T),
+		        (m_cache.used_objs + m_cache.free) * sizeof(T)};
 	}
 
 #ifdef DEBUG
@@ -320,11 +302,11 @@ class ERS : public ERI
 
 		ShowMessage(CL_BOLD "[ERS Instance " CL_NORMAL CL_WHITE "%s" CL_NORMAL CL_BOLD " report]\n" CL_NORMAL,
 		            m_name.c_str());
-		ShowMessage("\tblock size        : %u\n", m_cache.object_size);
+		ShowMessage("\tblock size        : %" PRIuS "\n", sizeof(T));
 		ShowMessage("\tblocks being used : %u\n", m_count);
 		ShowMessage("\tpeak blocks       : %u\n", m_peak);
 		ShowMessage("\tmemory in use     : %.2f MB\n",
-		            m_count == 0 ? 0. : (double)((m_count * m_cache.object_size) / 1024) / 1024);
+		            m_count == 0 ? 0. : (double)((m_count * sizeof(T)) / 1024) / 1024);
 
 		return true;
 	}
@@ -345,7 +327,6 @@ class ERS : public ERI
 #endif
 
 	struct {
-		unsigned int object_size;          //< Allocated object size, including ers_list size
 		std::forward_list<T *> reuse_list; //< Reuse linked list
 		unsigned char **blocks{nullptr};   //< Memory blocks array
 		unsigned int max{0};               //< Max number of blocks
