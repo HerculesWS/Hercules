@@ -67,6 +67,7 @@
 #include "common/nullpo.h"
 #include "common/showmsg.h" // ShowMessage, ShowError, ShowFatalError, CL_BOLD, CL_NORMAL
 
+#include <forward_list>
 #include <stdlib.h>
 #include <string.h>
 
@@ -118,7 +119,7 @@ typedef struct ers_cache
 
 // Array containing a pointer for all ers_cache structures
 static ers_cache_t *CacheList = NULL;
-static ERS *InstanceList = NULL;
+static std::forward_list<ERS *> ers_instance_list;
 
 /**
  * @param Options the options from the instance seeking a cache, we use it to give it a cache with matching configuration
@@ -247,13 +248,7 @@ ERS::~ERS() noexcept
 	if (--m_cache->ReferenceCount <= 0)
 		ers_free_cache(m_cache, true);
 
-	if (m_next)
-		m_next->m_prev = m_prev;
-
-	if (m_prev)
-		m_prev->m_next = m_next;
-	else
-		InstanceList = m_next;
+	ers_instance_list.remove(this);
 }
 
 void ERS::chunk_size(unsigned int new_size) noexcept
@@ -277,14 +272,7 @@ ERS::ERS(uint32 size, const std::string &name, enum ERSOptions options) noexcept
 	m_cache = ers_find_cache(size,m_options);
 	m_cache->ReferenceCount++;
 
-	if (InstanceList == NULL) {
-		InstanceList = this;
-	} else {
-		m_next = InstanceList;
-		m_next->m_prev = this;
-		InstanceList = this;
-		InstanceList->m_prev = nullptr;
-	}
+	ers_instance_list.push_front(this);
 }
 
 #ifdef DEBUG
@@ -310,7 +298,7 @@ void ers_report(void)
 #ifdef DEBUG
 	unsigned int instance_c = 0, instance_c_d = 0;
 
-	for (const ERS *instance = InstanceList; instance; instance = instance->m_next) {
+	for (const auto instance : ers_instance_list) {
 		instance_c++;
 		if (instance->report() == false)
 			continue;
@@ -344,13 +332,11 @@ void ers_report(void)
  **/
 void ers_final(void)
 {
-	ERS *instance = InstanceList, *next;
-
-	while (instance != nullptr) {
-		next = instance->m_next;
+	for (auto instance : ers_instance_list) {
 		delete instance;
-		instance = next;
 	}
+
+	ers_instance_list.clear();
 }
 
 #endif
