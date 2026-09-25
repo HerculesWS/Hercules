@@ -32,6 +32,7 @@ struct mercenary_data;
 struct mob_data;
 struct npc_data;
 struct pet_data;
+class ERS;
 
 //Change the equation when the values are high enough to discard the
 //imprecision in exchange of overflow protection [Skotlex]
@@ -1411,7 +1412,7 @@ struct status_interface {
 	struct s_status_dbs *dbs;
 	VECTOR_DECL(struct s_unit_params) unit_params_groups;
 
-	struct eri *data_ers; //For sc_data entries
+	ERS *data_ers; //For sc_data entries
 	struct status_data dummy;
 	struct s_unit_params dummy_unit_params;
 	int64 natural_heal_prev_tick;

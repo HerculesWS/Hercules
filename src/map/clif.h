@@ -35,7 +35,7 @@ struct StringBuf;
 struct battleground_data;
 struct channel_data;
 struct chat_data;
-struct eri;
+class ERS;
 struct flooritem_data;
 struct guild;
 struct homun_data;
@@ -929,7 +929,7 @@ struct clif_interface {
 	int map_fd;
 	int cmd;
 	/* for clif_clearunit_delayed */
-	struct eri *delay_clearunit_ers;
+	ERS *delay_clearunit_ers;
 	/* Cash Shop [Ind/Hercules] */
 	struct {
 		struct hCSData **data[CASHSHOP_TAB_MAX];
@@ -946,7 +946,7 @@ struct clif_interface {
 	/* */
 	bool ally_only;
 	/* */
-	struct eri *delayed_damage_ers;
+	ERS *delayed_damage_ers;
 	/* */
 	VECTOR_DECL(struct attendance_entry) attendance_data;
 	/* core */

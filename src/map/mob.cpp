@@ -94,8 +94,8 @@ struct item_drop_ratio {
 static struct item_drop_ratio *item_drop_ratio_db[MAX_ITEMDB];
 static struct DBMap *item_drop_ratio_other_db = NULL;
 
-static struct eri *item_drop_ers; //For loot drops delay structures.
-static struct eri *item_drop_list_ers;
+static ERS *item_drop_ers; //For loot drops delay structures.
+static ERS *item_drop_list_ers;
 
 static struct mob_db *mob_db_(int index)
 {

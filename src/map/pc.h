@@ -965,14 +965,14 @@ END_ZEROED_BLOCK; /* End */
 	unsigned int equip_pos[EQI_MAX];
 	struct sg_data sg_info[MAX_PC_FEELHATE];
 	/* */
-	struct eri *sc_display_ers;
+	ERS *sc_display_ers;
 	/* global expiration timer id */
 	int expiration_tid;
 	/**
 	 * ERS for the bulk of pc vars
 	 **/
-	struct eri *num_reg_ers;
-	struct eri *str_reg_ers;
+	ERS *num_reg_ers;
+	ERS *str_reg_ers;
 	/* */
 	bool reg_load;
 	/* funcs */
