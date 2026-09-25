@@ -166,10 +166,6 @@ class ERS
 	[[nodiscard]] bool report(void) const noexcept;
 #endif
 
-	// Linked list
-	ERS *m_next{nullptr};
-	ERS *m_prev{nullptr};
-
   private:
 	std::string m_name; //< Name, used for debugging purposes
 
