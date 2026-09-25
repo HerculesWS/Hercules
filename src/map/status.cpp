@@ -10243,7 +10243,7 @@ static int status_change_start(struct block_list *src, struct block_list *bl, en
  */
 static int status_change_start_delayed_timer(int tid, int64 tick, int id, intptr_t data)
 {
-	struct s_status_change_start_delayed *entry = idb_get(status->delayed_start_db, id);
+	struct s_status_change_start_delayed *entry = (struct s_status_change_start_delayed *)idb_get(status->delayed_start_db, id);
 
 	if (entry == NULL)
 		return 0;
@@ -10301,7 +10301,7 @@ static void status_change_start_delayed(struct block_list *src, struct block_lis
 		return;
 	}
 
-	struct s_status_change_start_delayed *entry = aMalloc(sizeof(*entry));
+	struct s_status_change_start_delayed *entry = (struct s_status_change_start_delayed *)aMalloc(sizeof(*entry));
 
 	entry->src_id = src != NULL ? src->id : 0;
 	entry->bl_id = bl->id;
