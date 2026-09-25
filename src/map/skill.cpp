@@ -1609,7 +1609,7 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 				int delay = (skill_id == 0 || is_single_hit_weapon_skill) ? sstatus->amotion + 500 : 0;
 #ifdef RENEWAL
 				if (delay > 0)
-					temp = max(1, temp - delay);
+					temp = std::max(1, temp - delay);
 #endif
 
 				if (sd->addeff[i].flag&ATF_TARGET)
