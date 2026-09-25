@@ -27,7 +27,7 @@
 
 /** Forward Declarations **/
 struct config_setting_t;
-struct eri;
+class ERS;
 
 #ifndef MAPREG_AUTOSAVE_INTERVAL
 /// Interval for auto-saving permanent global variables to the database in milliseconds.
@@ -48,7 +48,7 @@ struct mapreg_save {
 /** The mapreg interface structure. **/
 struct mapreg_interface {
 	/** Interface variables. **/
-	struct eri *ers;    //!< Entry manager for global variables.
+	ERS *ers;    //!< Entry manager for global variables.
 	struct reg_db regs; //!< Generic database for global variables.
 	bool dirty;         //!< Whether there are modified global variables to be saved.
 	bool skip_insert;   //!< Whether to skip inserting the variable into the SQL database in mapreg_set_*_db().
