@@ -107,9 +107,32 @@ enum ERSOptions {
 };
 
 /**
+ * A common interface for ERS
+ */
+class ERI
+{
+  public:
+	virtual ~ERI() = default;
+	/**
+	 * Reports debug information for instance cache
+	 * @return used blocks, total blocks, memory used, total memory
+	 */
+	[[nodiscard]] virtual std::tuple<unsigned int, unsigned int, unsigned int, unsigned int>
+	        report_cache(void) const noexcept = 0;
+
+#ifdef DEBUG
+	/**
+	 * Reports debug information for current instance.
+	 * @return true if reports is displayed, false otherwise.
+	 */
+	[[nodiscard]] virtual bool report(void) const noexcept = 0;
+#endif
+};
+
+/**
  * Public interface of the entry manager.
  */
-class ERS
+class ERS : public ERI
 {
   public:
 	/**
@@ -131,7 +154,7 @@ class ERS
 	 * When destroying the manager a warning is shown if the manager has
 	 * missing/extra entries.
 	 */
-	~ERS() noexcept;
+	~ERS() noexcept override;
 
 	/**
 	 * Allocate an entry from this entry manager.
@@ -166,14 +189,14 @@ class ERS
 	 * Reports debug information for instance cache
 	 * @return used blocks, total blocks, memory used, total memory
 	 */
-	[[nodiscard]] std::tuple<unsigned int, unsigned int, unsigned int, unsigned int> report_cache(void) const noexcept;
+	[[nodiscard]] std::tuple<unsigned int, unsigned int, unsigned int, unsigned int> report_cache(void) const noexcept override;
 
 #ifdef DEBUG
 	/**
 	 * Reports debug information for current instance.
 	 * @return true if reports is displayed, false otherwise.
 	 */
-	[[nodiscard]] bool report(void) const noexcept;
+	[[nodiscard]] bool report(void) const noexcept override;
 #endif
 
   private:

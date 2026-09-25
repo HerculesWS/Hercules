@@ -72,7 +72,7 @@
 
 #ifndef DISABLE_ERS
 
-static std::forward_list<ERS *> ers_instance_list;
+static std::forward_list<ERI *> ers_instance_list;
 
 void *ERS::alloc() noexcept
 {
