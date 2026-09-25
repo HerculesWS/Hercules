@@ -629,8 +629,7 @@ static void timer_check_timers(void)
 	const bool haveTsc = (strstr(bufAll, "tsc ") != NULL);
 	if (strcmp(bufCur, "tsc") != 0) {
 		if (haveTsc || (strcmp(bufCur, "hyperv_clocksource_tsc_page") != 0 && strcmp(bufCur, "kvm-clock") != 0)) {
-			ShowClockError("Unoptimal clock source detected: '%s'. "
-			    "Please set clock source to 'tsc' or 'hyperv_clocksource_tsc_page' or 'kvm-clock'\n", bufCur);
+			ShowClockError("Unoptimal clock source detected: '%s'. Please set clock source to 'tsc' or 'hyperv_clocksource_tsc_page' or 'kvm-clock'\n", bufCur);
 			return;
 		}
 	}
