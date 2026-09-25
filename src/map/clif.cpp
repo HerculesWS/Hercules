@@ -12793,7 +12793,7 @@ static void clif_equipswitch_add(struct map_session_data *sd, int index, int pos
 #if PACKETVER_MAIN_NUM >= 20170208 || PACKETVER_RE_NUM >= 20170208 || PACKETVER_ZERO_NUM >= 20170208
 	nullpo_retv(sd);
 
-	struct PACKET_ZC_ACK_WEAR_EQUIP_SWITCH packet = {0};
+	struct PACKET_ZC_ACK_WEAR_EQUIP_SWITCH packet{};
 	packet.PacketType = HEADER_ZC_ACK_WEAR_EQUIP_SWITCH;
 	packet.index = index + 2;
 	packet.position = pos;
@@ -12808,7 +12808,7 @@ static void clif_equipswitch_remove(struct map_session_data *sd, int index, int 
 #if PACKETVER_MAIN_NUM >= 20170208 || PACKETVER_RE_NUM >= 20170208 || PACKETVER_ZERO_NUM >= 20170208
 	nullpo_retv(sd);
 
-	struct PACKET_ZC_ACK_TAKEOFF_EQUIP_SWITCH packet = {0};
+	struct PACKET_ZC_ACK_TAKEOFF_EQUIP_SWITCH packet{};
 	packet.PacketType = HEADER_ZC_ACK_TAKEOFF_EQUIP_SWITCH;
 	packet.index = index + 2;
 	packet.position = pos;
@@ -12827,7 +12827,7 @@ static void clif_equipswitch_list(struct map_session_data *sd)
 		return;
 
 	int buf_size = sizeof(struct PACKET_ZC_EQUIP_SWITCH_LIST) + sizeof(struct PACKET_ZC_EQUIP_SWITCH_ITEM) * EQI_MAX;
-	struct PACKET_ZC_EQUIP_SWITCH_LIST *packet = aMalloc(buf_size);
+	struct PACKET_ZC_EQUIP_SWITCH_LIST *packet = (struct PACKET_ZC_EQUIP_SWITCH_LIST *)aMalloc(buf_size);
 	packet->PacketType = HEADER_ZC_EQUIP_SWITCH_LIST;
 
 	int count = 0;
@@ -12859,7 +12859,7 @@ static void clif_equipswitch_reply(struct map_session_data *sd, bool failed)
 #if PACKETVER_MAIN_NUM >= 20170208 || PACKETVER_RE_NUM >= 20170208 || PACKETVER_ZERO_NUM >= 20170208
 	nullpo_retv(sd);
 
-	struct PACKET_ZC_ACK_EQUIP_SWITCH packet = {0};
+	struct PACKET_ZC_ACK_EQUIP_SWITCH packet{};
 	packet.PacketType = HEADER_ZC_ACK_EQUIP_SWITCH;
 	packet.failed = failed;
 	clif->send(&packet, sizeof(packet), &sd->bl, SELF);
@@ -12875,7 +12875,7 @@ static void clif_parse_EquipSwitchAdd(int fd, struct map_session_data *sd)
 	if (battle_config.feature_equipswitch == 0)
 		return;
 
-	const struct PACKET_CZ_REQ_WEAR_EQUIP_SWITCH *p = RP2PTR(fd);
+	const struct PACKET_CZ_REQ_WEAR_EQUIP_SWITCH *p = RP2PTR(struct PACKET_CZ_REQ_WEAR_EQUIP_SWITCH *, fd);
 
 	int index = p->index - 2;
 	if (index < 0 || index >= sd->status.inventorySize) {
@@ -12897,7 +12897,7 @@ static void clif_parse_EquipSwitchRemove(int fd, struct map_session_data *sd)
 	if (battle_config.feature_equipswitch == 0)
 		return;
 
-	const struct PACKET_CZ_REQ_TAKEOFF_EQUIP_SWITCH *p = RP2PTR(fd);
+	const struct PACKET_CZ_REQ_TAKEOFF_EQUIP_SWITCH *p = RP2PTR(struct PACKET_CZ_REQ_TAKEOFF_EQUIP_SWITCH *, fd);
 
 	int index = p->index - 2;
 	if (index < 0 || index >= sd->status.inventorySize) {
@@ -12951,7 +12951,7 @@ static void clif_parse_EquipSwitchRequestSingle(int fd, struct map_session_data 
 	if (battle_config.feature_equipswitch == 0)
 		return;
 
-	const struct PACKET_CZ_REQ_EQUIP_SWITCH_SINGLE *p = RP2PTR(fd);
+	const struct PACKET_CZ_REQ_EQUIP_SWITCH_SINGLE *p = RP2PTR(struct PACKET_CZ_REQ_EQUIP_SWITCH_SINGLE *, fd);
 
 	int index = p->index - 2;
 	if (index < 0 || index >= sd->status.inventorySize)
