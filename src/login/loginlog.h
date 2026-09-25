@@ -21,10 +21,20 @@
 #ifndef LOGIN_LOGINLOG_H
 #define LOGIN_LOGINLOG_H
 
+#include "login/login.h" // enum login_auth_result
 #include "common/hercules.h"
 #include "common/cbasetypes.h"
 
 struct config_t;
+
+/**
+ * Values for the "rcode" column of the login log, in addition to the
+ * enum login_auth_result values passed through from login_auth_failed().
+ */
+enum loginlog_rcode {
+	LOGINLOG_SUCCESS = 100, ///< Successful login, or a generic informational log entry
+	LOGINLOG_IP_BANNED = -3,
+};
 
 struct s_loginlog_dbs {
 	char log_db_hostname[32];
@@ -44,7 +54,7 @@ struct loginlog_interface {
 	bool enabled;
 	struct s_loginlog_dbs *dbs;
 	unsigned long (*failedattempts) (uint32 ip, unsigned int minutes);
-	void (*log) (uint32 ip, const char* username, int rcode, const char* message);
+	void (*log) (uint32 ip, const char* username, enum loginlog_rcode rcode, const char* message);
 	bool (*init) (void);
 	bool (*final) (void);
 	bool (*config_read_names) (const char *filename, struct config_t *config, bool imported);

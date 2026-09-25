@@ -175,7 +175,7 @@ struct char_interface {
 	int (*char_child) (int parent_id, int child_id);
 	int (*char_family) (int cid1, int cid2, int cid3);
 	void (*disconnect_player) (int account_id);
-	void (*authfail_fd) (int fd, int type);
+	void (*authfail_fd) (int fd, enum notify_ban_errorcode type);
 	void (*request_account_data) (int account_id);
 	void (*auth_ok) (int fd, struct char_session_data *sd);
 	void (*ping_login_server) (int fd);
