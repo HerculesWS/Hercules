@@ -167,12 +167,27 @@ struct s_add_drop {
 	int id;
 	int race, rate;
 };
+/**
+ * Identifies what granted an autobonus: an equipped item (pos, card_id == 0),
+ * a card socketed in an equipped item (pos + card_id), an item combo
+ * (combo_pos), or a pet's equip script (pet_id). Exactly one of
+ * pos/combo_pos/pet_id is expected to be non-zero for any given source.
+ *
+ * combo_pos stores (itemdb combo id + 1), since combo ids are 0-based and 0
+ * here means "not combo-sourced".
+ */
+struct s_autobonus_source {
+	unsigned int pos;
+	int card_id;
+	int combo_pos;
+	int pet_id;
+};
 struct s_autobonus {
 	int rate,atk_type;
 	unsigned int duration;
 	char *bonus_script, *other_script;
 	int active;
-	unsigned int pos;
+	struct s_autobonus_source source;
 };
 enum npc_timeout_type {
 	NPCT_INPUT = 0,
@@ -255,7 +270,6 @@ struct map_session_data {
 		int autolootid[AUTOLOOTITEM_SIZE]; // [Zephyrus]
 		unsigned int autoloottype;
 		unsigned int autolooting : 1; //performance-saver, autolooting state for @alootid
-		unsigned int autobonus; //flag to indicate if an autobonus is activated. [Inkfish]
 		unsigned int gmaster_flag : 1;
 		unsigned int prevend : 1;//used to flag wheather you've spent 40sp to open the vending or not.
 		unsigned int warping : 1;//states whether you're in the middle of a warp processing
@@ -1045,10 +1059,11 @@ END_ZEROED_BLOCK; /* End */
 
 	int (*updateweightstatus) (struct map_session_data *sd);
 
-	int (*addautobonus) (struct s_autobonus *bonus,char max,const char *bonus_script,short rate,unsigned int dur,short atk_type,const char *o_script,unsigned int pos,bool onskill);
+	int (*addautobonus) (struct s_autobonus *bonus,char max,const char *bonus_script,short rate,unsigned int dur,short atk_type,const char *o_script,const struct s_autobonus_source *source,bool onskill);
 	int (*exeautobonus) (struct map_session_data* sd,struct s_autobonus *bonus);
 	int (*endautobonus) (int tid, int64 tick, int id, intptr_t data);
 	int (*delautobonus) (struct map_session_data* sd,struct s_autobonus *bonus,char max,bool restore);
+	bool (*autobonus_is_active) (struct s_autobonus *bonus,char max,const struct s_autobonus_source *source);
 
 	void (*bonus_addele) (struct map_session_data* sd, unsigned char ele, short rate, short flag);
 	void (*bonus_subele) (struct map_session_data* sd, unsigned char ele, short rate, short flag);
