@@ -61,6 +61,7 @@
 #include "common/cbasetypes.h"
 
 #include <string>
+#include <tuple>
 
 /*****************************************************************************\
  *  (1) All public parts of the Entry Reusage System.                        *
@@ -89,6 +90,8 @@
 #ifndef ERS_ALIGNED
 #	define ERS_ALIGNED 1
 #endif /* not ERS_ALIGN_ENTRY */
+
+constexpr unsigned int ers_chunk_size = 2048;
 
 enum ERSOptions {
 	ERS_OPT_NONE        = 0x00,
@@ -158,6 +161,12 @@ class ERS
 	 */
 	void chunk_size(unsigned int new_size) noexcept;
 
+	/**
+	 * Reports debug information for instance cache
+	 * @return used blocks, total blocks, memory used, total memory
+	 */
+	[[nodiscard]] std::tuple<unsigned int, unsigned int, unsigned int, unsigned int> report_cache(void) const noexcept;
+
 #ifdef DEBUG
 	/**
 	 * Reports debug information for current instance.
@@ -172,13 +181,25 @@ class ERS
 	enum ERSOptions m_options {
 		ERS_OPT_NONE
 	}; //< Misc options
-	struct ers_cache *m_cache{nullptr}; //< Our cache
 	unsigned int m_count{0};            //< Count of objects in use, used for detecting memory leaks
 
 #ifdef DEBUG
 	/* for data analysis [Ind/Hercules] */
 	unsigned int m_peak{0};
 #endif
+
+	struct {
+		unsigned int object_size;             //< Allocated object size, including ers_list size
+		struct ers_list *reuse_list{nullptr}; //< Reuse linked list
+		unsigned char **blocks{nullptr};      //< Memory blocks array
+		unsigned int max{0};                  //< Max number of blocks
+		unsigned int free{0};                 //< Free objects count
+		unsigned int used{0};                 //< Used blocks count
+		unsigned int used_objs{0};            //< Objects in-use count
+		unsigned int chunk_size{
+		        ers_chunk_size}; //< Default = ERS_BLOCK_ENTRIES, can be adjusted for performance for individual
+		                         // cache sizes.
+	} m_cache;
 };
 
 #ifdef DISABLE_ERS
