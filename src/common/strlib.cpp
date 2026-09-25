@@ -171,10 +171,11 @@ static char *strlib_trim(char *str)
 	for( end = strlen(str); start < end && str[end-1] && ISSPACE(str[end-1]); --end )
 		;
 	// trim
-	if( start == end )
+	if( start == end ) {
 		*str = '\0';// empty string
-	else
-	{// move string with null-terminator
+	} else
+	{
+		// move string with null-terminator
 		str[end] = '\0';
 		memmove(str,str+start,end-start+1);
 	}

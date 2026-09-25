@@ -224,8 +224,7 @@ static bool usercheck(void)
 #ifdef BUILDBOT
 			return true;
 #else  // BUILDBOT
-			ShowFatalError("You are running Hercules with root privileges, it is not necessary, nor recommended. "
-					"Aborting.\n");
+			ShowFatalError("You are running Hercules with root privileges, it is not necessary, nor recommended. Aborting.\n");
 			return false; // Don't allow noninteractive execution regardless.
 #endif  // BUILDBOT
 		}
@@ -237,10 +236,9 @@ static bool usercheck(void)
 #endif  // BUILDBOT
 #else // not I_AM_AWARE_OF_THE_RISK_AND_STILL_WANT_TO_RUN_HERCULES_AS_ROOT
 		ShowNotice("Execution will be paused for 60 seconds. Press Ctrl-C if you wish to quit.\n");
-		ShowNotice("If you want to get rid of this message, please open %s and uncomment, near the top, the line saying:\n"
-				"\t\"//#define I_AM_AWARE_OF_THE_RISK_AND_STILL_WANT_TO_RUN_HERCULES_AS_ROOT\"\n", __FILE__);
-		ShowNotice("Note: In a near future, this courtesy notice will go away. "
-				"Please update your infrastructure not to require root privileges before then.\n");
+		ShowNotice("If you want to get rid of this message, please open %s and uncomment, near the top, the line saying:\n", __FILE__);
+		ShowNotice("\t\"//#define I_AM_AWARE_OF_THE_RISK_AND_STILL_WANT_TO_RUN_HERCULES_AS_ROOT\"\n");
+		ShowNotice("Note: In a near future, this courtesy notice will go away. Please update your infrastructure not to require root privileges before then.\n");
 		ShowWarning("It's recommended that you " CL_WHITE "press CTRL-C now!" CL_RESET "\n");
 		{
 			int i;
@@ -251,8 +249,7 @@ static bool usercheck(void)
 		}
 		ShowMessage("\n");
 		ShowNotice("Resuming operations with root privileges. "
-				CL_RED "If anything breaks, you get to keep the pieces, "
-				"and the Hercules developers won't be able to help you."
+				CL_RED "If anything breaks, you get to keep the pieces, and the Hercules developers won't be able to help you."
 				CL_RESET "\n");
 #endif // I_AM_AWARE_OF_THE_RISK_AND_STILL_WANT_TO_RUN_HERCULES_AS_ROOT
 	}
@@ -318,7 +315,8 @@ static void core_defaults(void)
 	showmsg_defaults();
 	cmdline_defaults();
 	des_defaults();
-	grfio_defaults(); // Note: grfio is lazily loaded. grfio->init() and grfio->final() are not automatically called.
+	// Note: grfio is lazily loaded. grfio->init() and grfio->final() are not automatically called.
+	grfio_defaults();
 	mutex_defaults();
 	libconfig_defaults();
 	sql_defaults();

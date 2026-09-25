@@ -140,9 +140,7 @@ struct PACKET_API_userconfig_save_userhotkey_v2 {
 	struct PACKET_API_userconfig_save_userhotkey_v2_data data;
 }  __attribute__((packed));
 
-/*
-empty structs not supported by visual studio. left for future usage
-
+#if 0  // empty structs not supported by visual studio. left for future usage
 struct PACKET_API_userconfig_load {
 } __attribute__((packed));
 
@@ -151,7 +149,7 @@ struct PACKET_API_charconfig_load {
 
 struct PACKET_API_emblem_upload {
 } __attribute__((packed));
-*/
+#endif // 0
 
 struct PACKET_API_emblem_upload_guild_id_data {
 	int guild_id;
@@ -228,9 +226,7 @@ struct PACKET_API_REPLY_userconfig_load_hotkeys_tab {
 	struct userconfig_userhotkeys_v2 hotkeys;
 } __attribute__((packed));
 
-/*
-empty structs not supported by visual studio. left for future usage
-
+#if 0  // empty structs not supported by visual studio. left for future usage
 struct PACKET_API_REPLY_userconfig_load {
 } __attribute__((packed));
 
@@ -239,7 +235,7 @@ struct PACKET_API_REPLY_userconfig_save {
 
 struct PACKET_API_REPLY_charconfig_load {
 } __attribute__((packed));
-*/
+#endif // 0
 
 struct PACKET_API_REPLY_emblem_upload {
 	int result; // 0 = error, 1 = success

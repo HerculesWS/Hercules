@@ -24,7 +24,7 @@ packetLen(0x2af8, 60)  /* M->H, chrif_connect -> 'connect to charserver / auth @
 packetLen(0x2af9, 3)   /* H->M, chrif_connectack -> 'answer of the 2af8 login(ok / fail)' */
 packetLen(0x2afa, -1)  /* M->H, chrif_sendmap -> 'sending our maps' */
 packetLen(0x2afb, 27)  /* H->M, chrif_sendmapack -> 'Maps received successfully / or not ..' */
-packetLen(0x2afc, 10)  /* M->H, chrif_scdata_request -> request sc_data for pc->authok'ed char. <- new command reuses previous one. */
+packetLen(0x2afc, 10)  /* M->H, chrif_scdata_request -> request sc_data for pc->authok'ed char. */
 packetLen(0x2afd, -1)  /* H->M, chrif_authok -> 'client authentication ok' */
 packetLen(0x2afe, 6)   /* M->H, send_usercount_tochar -> 'sends player count of this map server to charserver' */
 packetLen(0x2aff, -1)  /* M->H, chrif_send_users_tochar -> 'sends all actual connected character ids to charserver' */

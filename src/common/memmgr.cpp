@@ -776,13 +776,16 @@ static bool memmgr_verify(void *ptr)
 	while( block )
 	{
 		if( (char*)ptr >= (char*)block && (char*)ptr < ((char*)block) + sizeof(struct block) )
-		{// found memory block
+		{
+			// found memory block
 			if( block->unit_used && (char*)ptr >= block->data )
-			{// memory block is being used and ptr points to a sub-unit
+			{
+				// memory block is being used and ptr points to a sub-unit
 				size_t i = (size_t)((char*)ptr - block->data)/block->unit_size;
 				struct unit_head* head = block2unit(block, i);
 				if( i < block->unit_maxused && head->block != NULL )
-				{// memory unit is allocated, check if ptr points to the usable part
+				{
+					// memory unit is allocated, check if ptr points to the usable part
 					return ( (char*)ptr >= ((char*)head) + sizeof(struct unit_head) - sizeof(long)
 						&& (char*)ptr < ((char*)head) + sizeof(struct unit_head) - sizeof(long) + head->size );
 				}
@@ -796,7 +799,8 @@ static bool memmgr_verify(void *ptr)
 	while( large )
 	{
 		if( (char*)ptr >= (char*)large && (char*)ptr < ((char*)large) + large->size )
-		{// found memory block, check if ptr points to the usable part
+		{
+			// found memory block, check if ptr points to the usable part
 			return ( (char*)ptr >= ((char*)large) + sizeof(struct unit_head_large) - sizeof(long)
 				&& (char*)ptr < ((char*)large) + sizeof(struct unit_head_large) - sizeof(long) + large->size );
 		}
@@ -1065,7 +1069,8 @@ void malloc_defaults(void)
 	iMalloc->malloc   = aMalloc_;
 	iMalloc->calloc   = aCalloc_;
 	iMalloc->realloc  = aRealloc_;
-	iMalloc->reallocz = aReallocz_;/* not using memory manager huhum o.o perhaps we could still do something about */
+	/* not using memory manager huhum o.o perhaps we could still do something about */
+	iMalloc->reallocz = aReallocz_;
 	iMalloc->astrdup  = aStrdup_;
 	iMalloc->astrndup = aStrndup_;
 	iMalloc->free     = aFree_;
