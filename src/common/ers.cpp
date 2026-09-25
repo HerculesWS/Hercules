@@ -82,7 +82,7 @@ void ERI::remove_from_global_list(void) noexcept
 
 void ers_report(void)
 {
-	unsigned int blocks_u = 0, blocks_a = 0, memory_b = 0, memory_t = 0;
+	size_t blocks_u = 0, blocks_a = 0, memory_b = 0, memory_t = 0;
 #ifdef DEBUG
 	unsigned int instance_c = 0, instance_c_d = 0;
 
@@ -105,8 +105,8 @@ void ers_report(void)
 #ifdef DEBUG
 	ShowInfo("ers_report: '" CL_WHITE "%u" CL_NORMAL "' instances in use, '" CL_WHITE "%u" CL_NORMAL "' displayed\n", instance_c, instance_c_d);
 #endif
-	ShowInfo("ers_report: '" CL_WHITE "%u" CL_NORMAL "' blocks in use, consuming '" CL_WHITE "%.2f MB" CL_NORMAL "'\n",blocks_u,(double)((memory_b)/1024)/1024);
-	ShowInfo("ers_report: '" CL_WHITE "%u" CL_NORMAL "' blocks total, consuming '" CL_WHITE "%.2f MB" CL_NORMAL "' \n",blocks_a,(double)((memory_t)/1024)/1024);
+	ShowInfo("ers_report: '" CL_WHITE "%" PRIuS CL_NORMAL "' blocks in use, consuming '" CL_WHITE "%.2f MB" CL_NORMAL "'\n",blocks_u,(double)((memory_b)/1024)/1024);
+	ShowInfo("ers_report: '" CL_WHITE "%" PRIuS CL_NORMAL "' blocks total, consuming '" CL_WHITE "%.2f MB" CL_NORMAL "' \n",blocks_a,(double)((memory_t)/1024)/1024);
 }
 
 /**
