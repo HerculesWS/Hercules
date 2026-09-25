@@ -178,7 +178,8 @@ class ERS : public ERI
 	 * If there are reusable entries available, it reuses one instead.
 	 * @return An entry
 	 */
-	[[nodiscard]] T *alloc(void) noexcept
+	template<typename... Args>
+	[[nodiscard]] T *alloc(Args &&...args) noexcept
 	{
 		T *ret;
 
@@ -187,22 +188,21 @@ class ERS : public ERI
 			m_cache.reuse_list.pop_front();
 		} else if (m_cache.free > 0) {
 			m_cache.free--;
-			ret = reinterpret_cast<T *>(
-			        &m_cache.blocks[m_cache.used - 1][m_cache.free * sizeof(T)]);
+			ret = reinterpret_cast<T *>(&m_cache.blocks[m_cache.used - 1][m_cache.free * sizeof(T)]);
 		} else {
 			if (m_cache.used == m_cache.max) {
 				m_cache.max = (m_cache.max * 4) + 3;
 				RECREATE(m_cache.blocks, unsigned char *, m_cache.max);
 			}
 
-			CREATE(m_cache.blocks[m_cache.used], unsigned char, sizeof(T) *m_cache.chunk_size);
+			CREATE(m_cache.blocks[m_cache.used], unsigned char, sizeof(T) * m_cache.chunk_size);
 			m_cache.used++;
 
 			m_cache.free = m_cache.chunk_size - 1;
-			ret          = reinterpret_cast<T *>(
-                                &m_cache.blocks[m_cache.used - 1][m_cache.free * sizeof(T)]);
+			ret = reinterpret_cast<T *>(&m_cache.blocks[m_cache.used - 1][m_cache.free * sizeof(T)]);
 		}
 
+		new (ret) T(std::forward<Args>(args)...);
 		m_count++;
 		m_cache.used_objs++;
 
@@ -226,6 +226,8 @@ class ERS : public ERI
 			ShowError("ERS::free: NULL entry, nothing to free.\n");
 			return;
 		}
+
+		entry->~T();
 
 		if ((m_options & ERS_OPT_CLEAN) != 0)
 			memset(entry, 0, sizeof(T));
@@ -354,7 +356,7 @@ class ERS : public ERI
 // These defines should be used to allow the code to keep working whenever
 // the system is disabled
 #	define ers_new(type,name,options) (new ERS<type>((name), (options)))
-#	define ers_alloc(obj) ((obj)->alloc())
+#	define ers_alloc(obj, ...) ((obj)->alloc(##__VA_ARGS__))
 #	define ers_free(obj,entry) ((obj)->free((entry)))
 #	define ers_entry_size(obj) ((obj)->entry_size())
 #	define ers_destroy(obj)    (delete (obj))
