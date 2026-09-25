@@ -94330,7 +94330,7 @@ void HP_status_change_start_delayed(struct block_list *src, struct block_list *b
 		void (*preHookFunc) (struct block_list **src, struct block_list **bl, enum sc_type *type, int *rate, int *val1, int *val2, int *val3, int *val4, int *tick, int *flag, int *skill_id, int *delay);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_change_start_delayed_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_status_change_start_delayed_pre[hIndex].func;
+			preHookFunc = (void (*) (struct block_list **src, struct block_list **bl, enum sc_type *type, int *rate, int *val1, int *val2, int *val3, int *val4, int *tick, int *flag, int *skill_id, int *delay))HPMHooks.list.HP_status_change_start_delayed_pre[hIndex].func;
 			preHookFunc(&src, &bl, &type, &rate, &val1, &val2, &val3, &val4, &tick, &flag, &skill_id, &delay);
 		}
 		if (*HPMforce_return) {
@@ -94344,7 +94344,7 @@ void HP_status_change_start_delayed(struct block_list *src, struct block_list *b
 	if (HPMHooks.count.HP_status_change_start_delayed_post > 0) {
 		void (*postHookFunc) (struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int val1, int val2, int val3, int val4, int tick, int flag, int skill_id, int delay);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_change_start_delayed_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_status_change_start_delayed_post[hIndex].func;
+			postHookFunc = (void (*) (struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int val1, int val2, int val3, int val4, int tick, int flag, int skill_id, int delay))HPMHooks.list.HP_status_change_start_delayed_post[hIndex].func;
 			postHookFunc(src, bl, type, rate, val1, val2, val3, val4, tick, flag, skill_id, delay);
 		}
 	}
@@ -94357,7 +94357,7 @@ int HP_status_change_start_delayed_timer(int tid, int64 tick, int id, intptr_t d
 		int (*preHookFunc) (int *tid, int64 *tick, int *id, intptr_t *data);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_change_start_delayed_timer_pre; hIndex++) {
-			preHookFunc = HPMHooks.list.HP_status_change_start_delayed_timer_pre[hIndex].func;
+			preHookFunc = (int (*) (int *tid, int64 *tick, int *id, intptr_t *data))HPMHooks.list.HP_status_change_start_delayed_timer_pre[hIndex].func;
 			retVal___ = preHookFunc(&tid, &tick, &id, &data);
 		}
 		if (*HPMforce_return) {
@@ -94371,7 +94371,7 @@ int HP_status_change_start_delayed_timer(int tid, int64 tick, int id, intptr_t d
 	if (HPMHooks.count.HP_status_change_start_delayed_timer_post > 0) {
 		int (*postHookFunc) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_status_change_start_delayed_timer_post; hIndex++) {
-			postHookFunc = HPMHooks.list.HP_status_change_start_delayed_timer_post[hIndex].func;
+			postHookFunc = (int (*) (int retVal___, int tid, int64 tick, int id, intptr_t data))HPMHooks.list.HP_status_change_start_delayed_timer_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, tid, tick, id, data);
 		}
 	}
