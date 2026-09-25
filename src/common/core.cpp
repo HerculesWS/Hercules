@@ -318,7 +318,8 @@ static void core_defaults(void)
 	showmsg_defaults();
 	cmdline_defaults();
 	des_defaults();
-	grfio_defaults(); // Note: grfio is lazily loaded. grfio->init() and grfio->final() are not automatically called.
+	// Note: grfio is lazily loaded. grfio->init() and grfio->final() are not automatically called.
+	grfio_defaults();
 	mutex_defaults();
 	libconfig_defaults();
 	sql_defaults();

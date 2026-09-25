@@ -1065,7 +1065,8 @@ void malloc_defaults(void)
 	iMalloc->malloc   = aMalloc_;
 	iMalloc->calloc   = aCalloc_;
 	iMalloc->realloc  = aRealloc_;
-	iMalloc->reallocz = aReallocz_;/* not using memory manager huhum o.o perhaps we could still do something about */
+	/* not using memory manager huhum o.o perhaps we could still do something about */
+	iMalloc->reallocz = aReallocz_;
 	iMalloc->astrdup  = aStrdup_;
 	iMalloc->astrndup = aStrndup_;
 	iMalloc->free     = aFree_;
