@@ -67,16 +67,10 @@
 #include "common/nullpo.h"
 #include "common/showmsg.h" // ShowMessage, ShowError, ShowFatalError, CL_BOLD, CL_NORMAL
 
-#include <forward_list>
 #include <stdlib.h>
 #include <string.h>
 
 #ifndef DISABLE_ERS
-
-struct ers_list
-{
-	struct ers_list *Next;
-};
 
 static std::forward_list<ERS *> ers_instance_list;
 
@@ -84,12 +78,12 @@ void *ERS::alloc() noexcept
 {
 	void *ret;
 
-	if (m_cache.reuse_list != nullptr) {
-		ret = (void *)((unsigned char *)m_cache.reuse_list + sizeof(struct ers_list));
-		m_cache.reuse_list = m_cache.reuse_list->Next;
+	if (m_cache.reuse_list.empty() == false) {
+		ret = m_cache.reuse_list.front();
+		m_cache.reuse_list.pop_front();
 	} else if (m_cache.free > 0) {
 		m_cache.free--;
-		ret = &m_cache.blocks[m_cache.used - 1][m_cache.free * (size_t)m_cache.object_size + sizeof(struct ers_list)];
+		ret = &m_cache.blocks[m_cache.used - 1][m_cache.free * (size_t)m_cache.object_size];
 	} else {
 		if (m_cache.used == m_cache.max) {
 			m_cache.max = (m_cache.max * 4) + 3;
@@ -100,7 +94,7 @@ void *ERS::alloc() noexcept
 		m_cache.used++;
 
 		m_cache.free = m_cache.chunk_size -1;
-		ret = &m_cache.blocks[m_cache.used - 1][m_cache.free * (size_t)m_cache.object_size + sizeof(struct ers_list)];
+		ret = &m_cache.blocks[m_cache.used - 1][m_cache.free * (size_t)m_cache.object_size];
 	}
 
 	m_count++;
@@ -116,18 +110,15 @@ void *ERS::alloc() noexcept
 
 void ERS::free(void *entry) noexcept
 {
-	struct ers_list *reuse = (struct ers_list *)((unsigned char *)entry - sizeof(struct ers_list));
-
 	if (entry == nullptr) {
 		ShowError("ERS::free: NULL entry, nothing to free.\n");
 		return;
 	}
 
 	if ((m_options & ERS_OPT_CLEAN) != 0)
-		memset((unsigned char*)reuse + sizeof(struct ers_list), 0, m_cache.object_size - sizeof(struct ers_list));
+		memset(entry, 0, m_cache.object_size);
 
-	reuse->Next = m_cache.reuse_list;
-	m_cache.reuse_list = reuse;
+	m_cache.reuse_list.push_front(entry);
 	m_count--;
 	m_cache.used_objs--;
 }
@@ -164,8 +155,6 @@ void ERS::chunk_size(unsigned int new_size) noexcept
 
 ERS::ERS(uint32 size, const std::string &name, enum ERSOptions options) noexcept : m_name(name), m_options(options) // FIXME: change this to a flag type
 {
-	size += sizeof(struct ers_list);
-
 #if ERS_ALIGNED > 1 // If it's aligned to 1-byte boundaries, no need to bother.
 	if (size % ERS_ALIGNED)
 		size += ERS_ALIGNED - size % ERS_ALIGNED;
