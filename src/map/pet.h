@@ -22,9 +22,11 @@
 #define MAP_PET_H
 
 #include "map/map.h" // struct block_list
+#include "map/mob.h"
 #include "map/status.h" // enum sc_type
 #include "map/unit.h" // struct unit_data
 #include "common/hercules.h"
+#include "common/ers.h"
 #include "common/mmo.h" // NAME_LENGTH, struct s_pet
 
 #define MAX_PET_DB       300
@@ -144,8 +146,8 @@ struct pet_data {
 
 struct pet_interface {
 	struct s_pet_db db[MAX_PET_DB];
-	ERS *item_drop_ers; //For loot drops delay structures.
-	ERS *item_drop_list_ers;
+	ERS<item_drop> *item_drop_ers; //For loot drops delay structures.
+	ERS<item_drop_list> *item_drop_list_ers;
 
 	/* */
 	int (*init) (bool minimal);

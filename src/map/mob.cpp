@@ -94,8 +94,8 @@ struct item_drop_ratio {
 static struct item_drop_ratio *item_drop_ratio_db[MAX_ITEMDB];
 static struct DBMap *item_drop_ratio_other_db = NULL;
 
-static ERS *item_drop_ers; //For loot drops delay structures.
-static ERS *item_drop_list_ers;
+static ERS<item_drop> *item_drop_ers; //For loot drops delay structures.
+static ERS<item_drop_list> *item_drop_list_ers;
 
 static struct mob_db *mob_db_(int index)
 {
@@ -2151,7 +2151,7 @@ static void mob_setdropitem_options(struct item *item, struct optdrop_group *opt
  *------------------------------------------*/
 static struct item_drop *mob_setdropitem(int nameid, struct optdrop_group *options, int qty, struct item_data *data)
 {
-	struct item_drop *drop = ers_alloc(item_drop_ers, struct item_drop);
+	struct item_drop *drop = ers_alloc(item_drop_ers);
 	drop->item_data.nameid = nameid;
 	drop->item_data.amount = qty;
 	drop->item_data.identify = data ? itemdb->isidentified2(data) : itemdb->isidentified(nameid);
@@ -2173,7 +2173,7 @@ static struct item_drop *mob_setlootitem(struct item *item)
 	struct item_drop *drop ;
 
 	nullpo_retr(NULL, item);
-	drop = ers_alloc(item_drop_ers, struct item_drop);
+	drop = ers_alloc(item_drop_ers);
 	memcpy(&drop->item_data, item, sizeof(struct item));
 	drop->showdropeffect = false;
 	drop->next = NULL;
@@ -2715,7 +2715,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 		(md->special_state.ai == AI_SPHERE && battle_config.alchemist_summon_reward == 1) //Marine Sphere Drops items.
 		) )
 	{ // Item Drop
-		struct item_drop_list *dlist = ers_alloc(item_drop_list_ers, struct item_drop_list);
+		struct item_drop_list *dlist = ers_alloc(item_drop_list_ers);
 		struct item_drop *ditem;
 		struct item_data* it = NULL;
 		int drop_rate;
@@ -2881,7 +2881,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 			ers_free(item_drop_list_ers, dlist);
 	} else if (md->lootitem && md->lootitem_count) {
 		//Loot MUST drop!
-		struct item_drop_list *dlist = ers_alloc(item_drop_list_ers, struct item_drop_list);
+		struct item_drop_list *dlist = ers_alloc(item_drop_list_ers);
 		dlist->m = md->bl.m;
 		dlist->x = md->bl.x;
 		dlist->y = md->bl.y;
@@ -6084,8 +6084,8 @@ static int do_init_mob(bool minimal)
 	memset(mob->db_data,0,sizeof(mob->db_data)); //Clear the array
 	mob->db_data[0] = (struct mob_db *)aCalloc(1, sizeof (struct mob_db)); //This mob is used for random spawns
 	mob->makedummymobdb(0); //The first time this is invoked, it creates the dummy mob
-	item_drop_ers = ers_new(sizeof(struct item_drop),"mob.cpp::item_drop_ers",ERS_OPT_CLEAN);
-	item_drop_list_ers = ers_new(sizeof(struct item_drop_list),"mob.cpp::item_drop_list_ers",ERS_OPT_NONE);
+	item_drop_ers = ers_new(item_drop,"mob.cpp::item_drop_ers",ERS_OPT_CLEAN);
+	item_drop_list_ers = ers_new(struct item_drop_list,"mob.cpp::item_drop_list_ers",ERS_OPT_NONE);
 
 	mob->load(minimal);
 

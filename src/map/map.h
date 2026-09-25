@@ -25,6 +25,7 @@
 #include "common/hercules.h"
 #include "common/core.h" // CORE_ST_LAST
 #include "common/db.h"
+#include "common/ers.h"
 #include "common/mapindex.h"
 #include "common/mmo.h"
 #include "map/unitdefines.h"  // enum unit_dir
@@ -39,7 +40,6 @@ struct mob_data;
 struct npc_data;
 struct channel_data;
 struct hplugin_data_store;
-class ERS;
 
 #define GUARD_MAP_LOCK_CONCAT(a, b) GUARD_MAP_LOCK_CONCAT_INNER(a, b)
 #define GUARD_MAP_LOCK_CONCAT_INNER(a, b) a ## b
@@ -1339,9 +1339,9 @@ END_ZEROED_BLOCK;
 	struct map_session_data *cpsd;
 	struct map_data *list;
 	/* [Ind/Hercules] */
-	ERS *iterator_ers;
+	ERS<s_mapiterator> *iterator_ers;
 	/* */
-	ERS *flooritem_ers;
+	ERS<flooritem_data> *flooritem_ers;
 	/* */
 	int bonus_id;
 	/* */

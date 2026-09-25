@@ -1423,7 +1423,7 @@ static struct DBData create_expcache(union DBKey key, va_list args)
 	struct guild_expcache *c;
 	struct map_session_data *sd = va_arg(args, struct map_session_data*);
 
-	c = ers_alloc(guild->expcache_ers, struct guild_expcache);
+	c = ers_alloc(guild->expcache_ers);
 	nullpo_retr(DB->ptr2data(c), sd);
 	c->guild_id = sd->status.guild_id;
 	c->account_id = sd->status.account_id;
@@ -2431,7 +2431,7 @@ static int eventlist_db_final(union DBKey key, struct DBData *data, va_list ap)
  */
 static int guild_expcache_db_final(union DBKey key, struct DBData *data, va_list ap)
 {
-	ers_free(guild->expcache_ers, DB->data2ptr(data));
+	ers_free(guild->expcache_ers, reinterpret_cast<guild_expcache *>(DB->data2ptr(data)));
 	return 0;
 }
 
@@ -2475,7 +2475,7 @@ static void do_init_guild(bool minimal)
 	guild->castle_db    = idb_alloc(DB_OPT_BASE);
 	guild->expcache_db  = idb_alloc(DB_OPT_BASE);
 	guild->infoevent_db = idb_alloc(DB_OPT_BASE);
-	guild->expcache_ers = ers_new(sizeof(struct guild_expcache),"guild.cpp::expcache_ers",ERS_OPT_NONE);
+	guild->expcache_ers = ers_new(guild_expcache,"guild.cpp::expcache_ers",ERS_OPT_NONE);
 
 	guild->read_castledb_libconfig();
 	sv->readdb(map->db_path, "guild_skill_tree.txt", ',', 2+MAX_GUILD_SKILL_REQUIRE*2, 2+MAX_GUILD_SKILL_REQUIRE*2, -1, guild->read_guildskill_tree_db); //guild skill tree [Komurka]

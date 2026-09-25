@@ -215,7 +215,7 @@ struct DBMap_impl {
 	unsigned int free_max;
 	unsigned int free_lock;
 	// Other
-	ERS *nodes;
+	ERS<DBNode> *nodes;
 	DBComparator cmp;
 	DBHasher hash;
 	DBReleaser release;
@@ -358,8 +358,8 @@ static struct db_stats {
 #endif /* !defined(DB_ENABLE_STATS) */
 
 /* [Ind/Hercules] */
-static ERS *db_iterator_ers;
-static ERS *db_alloc_ers;
+static ERS<DBIterator_impl> *db_iterator_ers;
+static ERS<DBMap_impl> *db_alloc_ers;
 
 /*****************************************************************************\
  *  (2) Section of private functions used by the database system.            *
@@ -1514,7 +1514,7 @@ static void dbit_obj_destroy(struct DBIterator *self)
 	// unlock the database
 	db_free_unlock(it->db);
 	// free iterator
-	ers_free(db_iterator_ers,self);
+	ers_free(db_iterator_ers,it);
 }
 
 /**
@@ -1532,7 +1532,7 @@ static struct DBIterator *db_obj_iterator(struct DBMap *self)
 	struct DBIterator_impl *it;
 
 	DB_COUNTSTAT(db_iterator);
-	it = ers_alloc(db_iterator_ers, struct DBIterator_impl);
+	it = ers_alloc(db_iterator_ers);
 	/* Interface of the iterator **/
 	it->vtable.first   = dbit_obj_first;
 	it->vtable.last    = dbit_obj_last;
@@ -1813,7 +1813,7 @@ static struct DBData *db_obj_vensure(struct DBMap *self, union DBKey key, DBCrea
 				return NULL;
 		}
 		DB_COUNTSTAT(db_node_alloc);
-		node = ers_alloc(db->nodes, struct DBNode);
+		node = ers_alloc(db->nodes);
 		node->left = NULL;
 		node->right = NULL;
 		node->deleted = 0;
@@ -1953,7 +1953,7 @@ static int db_obj_put(struct DBMap *self, union DBKey key, struct DBData data, s
 	// allocate a new node if necessary
 	if (node == NULL) {
 		DB_COUNTSTAT(db_node_alloc);
-		node = ers_alloc(db->nodes, struct DBNode);
+		node = ers_alloc(db->nodes);
 		node->left = NULL;
 		node->right = NULL;
 		node->deleted = 0;
@@ -2584,7 +2584,7 @@ static struct DBMap *db_alloc(const char *file, const char *func, int line, enum
 		case DB_UINT64: DB_COUNTSTAT(db_uint64_alloc); break;
 	}
 #endif /* DB_ENABLE_STATS */
-	db = ers_alloc(db_alloc_ers, struct DBMap_impl);
+	db = ers_alloc(db_alloc_ers);
 
 	options = DB->fix_options(type, options);
 	/* Interface of the database */
@@ -2616,7 +2616,7 @@ static struct DBMap *db_alloc(const char *file, const char *func, int line, enum
 	db->free_lock = 0;
 	/* Other */
 	snprintf(ers_name, 50, "db_alloc:nodes:%s:%s:%d",func,file,line);
-	db->nodes = ers_new(sizeof(struct DBNode),ers_name,(enum ERSOptions)(ERS_OPT_WAIT|ERS_OPT_CLEAN)); // FIXME: change this to a flag type
+	db->nodes = ers_new(DBNode,ers_name,(enum ERSOptions)(ERS_OPT_WAIT|ERS_OPT_CLEAN)); // FIXME: change this to a flag type
 	db->cmp = DB->default_cmp(type);
 	db->hash = DB->default_hash(type);
 	db->release = DB->default_release(type, options);
@@ -2810,8 +2810,8 @@ static void *db_data2ptr(struct DBData *data)
  */
 static void db_init(void)
 {
-	db_iterator_ers = ers_new(sizeof(struct DBIterator_impl),"db.cpp::db_iterator_ers", (enum ERSOptions)(ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK)); // FIXME: change this to a flag type
-	db_alloc_ers = ers_new(sizeof(struct DBMap_impl),"db.cpp::db_alloc_ers",(enum ERSOptions)(ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK)); // FIXME: change this to a flag type
+	db_iterator_ers = ers_new(DBIterator_impl,"db.cpp::db_iterator_ers", (enum ERSOptions)(ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK)); // FIXME: change this to a flag type
+	db_alloc_ers = ers_new(DBMap_impl,"db.cpp::db_alloc_ers",(enum ERSOptions)(ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK)); // FIXME: change this to a flag type
 	ers_chunk_size(db_alloc_ers, 50);
 	ers_chunk_size(db_iterator_ers, 10);
 	DB_COUNTSTAT(db_init);

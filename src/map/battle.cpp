@@ -332,7 +332,7 @@ static int battle_delay_damage(int64 tick, int amotion, struct block_list *src, 
 		map->freeblock_unlock();
 		return 0;
 	}
-	dat = ers_alloc(battle->delay_damage_ers, struct delay_damage);
+	dat = ers_alloc(battle->delay_damage_ers);
 	dat->src_id = src->id;
 	dat->target_id = target->id;
 	dat->skill_id = skill_id;
@@ -8493,7 +8493,7 @@ static void do_init_battle(bool minimal)
 	if (minimal)
 		return;
 
-	battle->delay_damage_ers = ers_new(sizeof(struct delay_damage),"battle.cpp::delay_damage_ers",ERS_OPT_CLEAR);
+	battle->delay_damage_ers = ers_new(delay_damage,"battle.cpp::delay_damage_ers",ERS_OPT_CLEAR);
 	timer->add_func_list(battle->delay_damage_sub, "battle_delay_damage_sub");
 }
 

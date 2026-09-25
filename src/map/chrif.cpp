@@ -133,7 +133,7 @@ static bool chrif_sd_to_auth(struct map_session_data *sd, enum sd_state state)
 	if ( chrif->search(sd->status.account_id) )
 		return false; //Already exists?
 
-	node = ers_alloc(chrif->auth_db_ers, struct auth_node);
+	node = ers_alloc(chrif->auth_db_ers);
 
 	memset(node, 0, sizeof(struct auth_node));
 
@@ -1592,7 +1592,7 @@ static void do_init_chrif(bool minimal)
 		return;
 
 	chrif->auth_db = idb_alloc(DB_OPT_BASE);
-	chrif->auth_db_ers = ers_new(sizeof(struct auth_node),"chrif.cpp::auth_db_ers",ERS_OPT_NONE);
+	chrif->auth_db_ers = ers_new(auth_node,"chrif.cpp::auth_db_ers",ERS_OPT_NONE);
 
 	timer->add_func_list(chrif->check_connect_char_server, "check_connect_char_server");
 	timer->add_func_list(chrif->auth_db_cleanup, "auth_db_cleanup");

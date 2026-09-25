@@ -3646,7 +3646,7 @@ static void script_array_update(struct reg_db *src, int64 num, bool empty)
 			/* we do nothing if its empty, no point in modifying array data for a new empty member */
 		}
 	} else if ( !empty ) {/* we only move to create if not empty */
-		sa = ers_alloc(script->array_ers, struct script_array);
+		sa = ers_alloc(script->array_ers);
 		sa->id = id;
 		sa->members = NULL;
 		sa->size = 0;
@@ -4271,8 +4271,8 @@ static struct script_state *script_alloc_state(struct script_code *rootscript, i
 {
 	struct script_state* st;
 
-	st = ers_alloc(script->st_ers, struct script_state);
-	st->stack = ers_alloc(script->stack_ers, struct script_stack);
+	st = ers_alloc(script->st_ers);
+	st->stack = ers_alloc(script->stack_ers);
 	st->pending_refs = NULL;
 	st->pending_ref_count = 0;
 	st->stack->sp = 0;
@@ -6146,9 +6146,9 @@ static void do_init_script(bool minimal)
 	script->userfunc_db = strdb_alloc(DB_OPT_DUP_KEY,0);
 	script->autobonus_db = strdb_alloc(DB_OPT_DUP_KEY,0);
 
-	script->st_ers = ers_new(sizeof(struct script_state), "script.cpp::st_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
-	script->stack_ers = ers_new(sizeof(struct script_stack), "script.cpp::script_stack", (enum ERSOptions)(ERS_OPT_NONE | ERS_OPT_FLEX_CHUNK));
-	script->array_ers = ers_new(sizeof(struct script_array), "script.cpp::array_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_CLEAR));
+	script->st_ers = ers_new(script_state, "script.cpp::st_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
+	script->stack_ers = ers_new(script_stack, "script.cpp::script_stack", (enum ERSOptions)(ERS_OPT_NONE | ERS_OPT_FLEX_CHUNK));
+	script->array_ers = ers_new(script_array, "script.cpp::array_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_CLEAR));
 
 	ers_chunk_size(script->st_ers, 10);
 	ers_chunk_size(script->stack_ers, 10);
