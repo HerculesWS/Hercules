@@ -23,9 +23,9 @@
 
 #include "common/hercules.h"
 #include "common/db.h"
+#include "common/ers.h"
 #include "common/mmo.h"
 
-class ERS;
 struct map_session_data;
 struct status_change_entry;
 
@@ -68,7 +68,7 @@ struct chrif_interface {
 	int connected;
 
 	/* */
-	ERS *auth_db_ers; //For re-utilizing player login structures.
+	ERS<auth_node> *auth_db_ers; //For re-utilizing player login structures.
 	struct DBMap *auth_db; // int id -> struct auth_node*
 	/* */
 	int fd;
