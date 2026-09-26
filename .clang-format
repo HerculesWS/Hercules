@@ -1,7 +1,7 @@
 ---
 BasedOnStyle: LLVM
 Language: Cpp
-AccessModifierOffset: -6
+AccessModifierOffset: -4
 AlignAfterOpenBracket: true
 AlignArrayOfStructures: Right
 AlignConsecutiveAssignments:
@@ -54,7 +54,7 @@ BinPackArguments: true
 BinPackLongBracedList: true
 BinPackParameters: true
 BitFieldColonSpacing: Both
-BracedInitializerIndentWidth: 8
+BracedInitializerIndentWidth: 4
 BreakAdjacentStringLiterals: false
 BreakAfterAttributes: Never
 BreakAfterOpenBracketBracedList: true
@@ -78,12 +78,12 @@ BreakBinaryOperations: RespectPrecedence
 BreakConstructorInitializers: BeforeColon
 BreakFunctionDefinitionParameters: false
 BreakInheritanceList: AfterComma
-BreakStringLiterals: true
+BreakStringLiterals: false
 BreakTemplateDeclarations: Yes
 ColumnLimit: 120
 CompactNamespaces: true
 ConstructorInitializerIndentWidth: 8
-ContinuationIndentWidth: 8
+ContinuationIndentWidth: 4
 Cpp11BracedListStyle: FunctionCall
 DerivePointerAlignment: false
 DisableFormat: false
@@ -103,22 +103,18 @@ IndentCaseLabels: false
 IndentExportBlock: false
 IndentExternBlock: NoIndent
 IndentGotoLabels: false
-IndentPPDirectives: AfterHash
+IndentPPDirectives: BeforeHash
 IndentRequiresClause: true
 IndentWidth: 8
 IndentWrappedFunctionNames: true
 InsertBraces: false # TODO: Change to true after everything is formatted and review the changes (see warning in the docs)
 InsertNewlineAtEOF: true
 IntegerLiteralSeparator:
-  Binary:                 8
-  BinaryMaxDigitsRemove:  0
-  BinaryMinDigitsInsert:  8
-  Decimal:                3
-  DecimalMaxDigitsRemove: 0
-  DecimalMinDigitsInsert: 7
-  Hex:                    4
-  HexMaxDigitsRemove:     0
-  HexMinDigitsInsert:     9
+  Binary:                4
+  BinaryMaxDigitsRemove: 2
+  BinaryMinDigitsInsert: 5
+  Decimal:               0
+  Hex:                   0
 KeepEmptyLines:
   AtEndOfFile:    false
   AtStartOfBlock: false
@@ -180,10 +176,10 @@ SpacesInLineCommentPrefix:
 SpacesInParens: Never
 SpacesInSquareBrackets: false
 Standard: c++20
-StatementMacros: [HPMDATACHECK_DEFS, HPM_DECLARE_PLUGIN, HTTP_IGNORE_DATA, DEFINE_PACKET_HEADER, DEFINE_PACKET_ID]
+StatementMacros: [HPMDATACHECK_DEFS, HPM_DECLARE_PLUGIN, HTTP_IGNORE_DATA, DEFINE_PACKET_HEADER, DEFINE_PACKET_ID, PRAGMA_GCC46, PRAGMA_GCC5, PRAGMA_GCC7, PRAGMA_GCC9, PRAGMA_PACK, packetLen]
 TabWidth: 8
 TypenameMacros: [VECTOR_DECL, VECTOR_STRUCT_DECL, VECTOR_VAR, VECTOR_STRUCT_VAR, BHEAP_DECL, BHEAP_STRUCT_DECL, BHEAP_VAR, BHEAP_STRUCT_VAR, GET_HTTP_DATA, CREATE_HTTP_DATA, RFIFO_API_DATA, RFIFO_API_PROXY_PACKET, RFIFO_API_PROXY_PACKET_CHUNKED, BEGIN_ZEROED_BLOCK, END_ZEROED_BLOCK, UNAVAILABLE_STRUCT, CREATE_BUFFER, NEWBUF]
 UseTab: ForIndentation
-WhitespaceSensitiveMacros: [EXPAND_AND_QUOTE, QUOTE, PRAGMA_GCC46, PRAGMA_GCC5, PRAGMA_GCC7, PRAGMA_GCC9]
+WhitespaceSensitiveMacros: [EXPAND_AND_QUOTE, QUOTE, PRAGMA_GCC46, PRAGMA_GCC5, PRAGMA_GCC7, PRAGMA_GCC9, PRAGMA_PACK]
 WrapNamespaceBodyWithEmptyLines: Never
 ...
