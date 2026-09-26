@@ -116,7 +116,7 @@ struct PACKET_AC_REQ_MOBILE_OTP {
 	int16 packet_id;      ///< Packet ID (#HEADER_CA_SSO_LOGIN_REQ)
 	uint32 aid;           ///< Account ID
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(AC_REQ_MOBILE_OTP, 0x09a2);
+DEFINE_PACKET_HEADER(AC_REQ_MOBILE_OTP, 0x09A2);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20171213 || PACKETVER_RE_NUM >= 20171213 || PACKETVER_ZERO_NUM >= 20171808
@@ -128,7 +128,7 @@ struct PACKET_AC_LOGIN_OTP {
 	char loginFlag2[20];
 	char token[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(AC_LOGIN_OTP, 0x0ae3);
+DEFINE_PACKET_HEADER(AC_LOGIN_OTP, 0x0AE3);
 #elif PACKETVER_ZERO_NUM >= 20171123
 // AC_LOGIN_OTP2
 struct PACKET_AC_LOGIN_OTP {
@@ -138,7 +138,7 @@ struct PACKET_AC_LOGIN_OTP {
 	char loginFlag2[6];
 	char token[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(AC_LOGIN_OTP, 0x0ae3);
+DEFINE_PACKET_HEADER(AC_LOGIN_OTP, 0x0AE3);
 #elif PACKETVER_MAIN_NUM >= 20170621 || PACKETVER_RE_NUM >= 20170621 || defined(PACKETVER_ZERO)
 // AC_LOGIN_OTP1
 struct PACKET_AC_LOGIN_OTP {
@@ -147,7 +147,7 @@ struct PACKET_AC_LOGIN_OTP {
 	int32 loginFlag;
 	char token[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(AC_LOGIN_OTP, 0x0ad1);
+DEFINE_PACKET_HEADER(AC_LOGIN_OTP, 0x0AD1);
 #endif
 
 PRAGMA_PACK_POP()

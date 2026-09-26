@@ -151,7 +151,7 @@ struct PACKET_CA_ACK_MOBILE_OTP {
 	uint32 aid;           ///< Account ID
 	char code[6];         ///< Code
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CA_ACK_MOBILE_OTP, 0x09a3);
+DEFINE_PACKET_HEADER(CA_ACK_MOBILE_OTP, 0x09A3);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20181114 || PACKETVER_RE_NUM >= 20181114 || defined(PACKETVER_ZERO)
@@ -159,7 +159,7 @@ struct PACKET_CA_OTP_CODE {
 	int16 packet_id;      ///< Packet ID (#HEADER_CA_OTP_CODE)
 	char code[9];         ///< Code
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CA_OTP_CODE, 0x0ad0);
+DEFINE_PACKET_HEADER(CA_OTP_CODE, 0x0AD0);
 #endif
 
 /**
