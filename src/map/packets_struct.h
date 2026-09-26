@@ -35,201 +35,201 @@
  *
  **/
 enum packet_headers {
-	banking_withdraw_ackType = 0x9aa,
-	banking_deposit_ackType = 0x9a8,
-	banking_checkType = 0x9a6,
-	cart_additem_ackType = 0x12c,
-	sc_notickType = 0x196,
+	banking_withdraw_ackType = 0x9AA,
+	banking_deposit_ackType  = 0x9A8,
+	banking_checkType        = 0x9A6,
+	cart_additem_ackType     = 0x12C,
+	sc_notickType            = 0x196,
 #if PACKETVER < 4
 	idle_unitType = 0x78,
 #elif PACKETVER < 7
-	idle_unitType = 0x1d8,
+	idle_unitType = 0x1D8,
 #elif PACKETVER < 20080102
-	idle_unitType = 0x22a,
+	idle_unitType = 0x22A,
 #elif PACKETVER < 20091103
-	idle_unitType = 0x2ee,
+	idle_unitType = 0x2EE,
 #elif PACKETVER < 20101124
-	idle_unitType = 0x7f9,
+	idle_unitType = 0x7F9,
 #elif PACKETVER < 20120221
 	idle_unitType = 0x857,
 #elif PACKETVER < 20131223
 	idle_unitType = 0x915,
 #elif PACKETVER < 20150513
-	idle_unitType = 0x9dd,
+	idle_unitType = 0x9DD,
 #else
-	idle_unitType = 0x9ff,
+	idle_unitType = 0x9FF,
 #endif
 #if PACKETVER >= 20120618
 	status_changeType = 0x983,
 #elif PACKETVER >= 20090121
-	status_changeType = 0x43f,
+	status_changeType = 0x43F,
 #else
-	status_changeType = sc_notickType,/* 0x196 */
+	status_changeType = sc_notickType, /* 0x196 */
 #endif
-	status_change2Type = 0x43f,
+	status_change2Type    = 0x43F,
 	status_change_endType = 0x196,
 #if PACKETVER < 20091103
-	spawn_unit2Type = 0x7c,
-	idle_unit2Type = 0x78,
+	spawn_unit2Type = 0x7C,
+	idle_unit2Type  = 0x78,
 #endif
 #if PACKETVER < 20071113
-	damageType = 0x8a,
+	damageType = 0x8A,
 #elif PACKETVER < 20131223
-	damageType = 0x2e1,
+	damageType = 0x2E1,
 #else
-	damageType = 0x8c8,
+	damageType = 0x8C8,
 #endif
 #if PACKETVER < 4
 	spawn_unitType = 0x79,
 #elif PACKETVER < 7
-	spawn_unitType = 0x1d9,
+	spawn_unitType = 0x1D9,
 #elif PACKETVER < 20080102
-	spawn_unitType = 0x22b,
+	spawn_unitType = 0x22B,
 #elif PACKETVER < 20091103
-	spawn_unitType = 0x2ed,
+	spawn_unitType = 0x2ED,
 #elif PACKETVER < 20101124
-	spawn_unitType = 0x7f8,
+	spawn_unitType = 0x7F8,
 #elif PACKETVER < 20120221
 	spawn_unitType = 0x858,
 #elif PACKETVER < 20131223
-	spawn_unitType = 0x90f,
+	spawn_unitType = 0x90F,
 #elif PACKETVER < 20150513
-	spawn_unitType = 0x9dc,
+	spawn_unitType = 0x9DC,
 #else
-	spawn_unitType = 0x9fe,
+	spawn_unitType = 0x9FE,
 #endif
 #if PACKETVER < 20080102
 	authokType = 0x73,
 #elif PACKETVER < 20141022
-	authokType = 0x2eb,
+	authokType = 0x2EB,
 // Some clients smaller than 20160330 cant be tested [4144]
 #elif PACKETVER < 20160330
-	authokType = 0xa18,
+	authokType = 0xA18,
 #else
-	authokType = 0x2eb,
+	authokType = 0x2EB,
 #endif
-	script_clearType = 0x8d6,
-	package_item_announceType = 0x7fd,
-	item_drop_announceType = 0x7fd,
+	script_clearType          = 0x8D6,
+	package_item_announceType = 0x7FD,
+	item_drop_announceType    = 0x7FD,
 #if PACKETVER < 4
-	unit_walkingType = 0x7b,
+	unit_walkingType = 0x7B,
 #elif PACKETVER < 7
-	unit_walkingType = 0x1da,
+	unit_walkingType = 0x1DA,
 #elif PACKETVER < 20080102
-	unit_walkingType = 0x22c,
+	unit_walkingType = 0x22C,
 #elif PACKETVER < 20091103
-	unit_walkingType = 0x2ec,
+	unit_walkingType = 0x2EC,
 #elif PACKETVER < 20101124
-	unit_walkingType = 0x7f7,
+	unit_walkingType = 0x7F7,
 #elif PACKETVER < 20120221
 	unit_walkingType = 0x856,
 #elif PACKETVER < 20131223
 	unit_walkingType = 0x914,
 #elif PACKETVER < 20150513
-	unit_walkingType = 0x9db,
+	unit_walkingType = 0x9DB,
 #else
-	unit_walkingType = 0x9fd,
+	unit_walkingType = 0x9FD,
 #endif
-	bgqueue_ackType = 0x8d8,
-	bgqueue_notice_deleteType = 0x8db,
-	bgqueue_registerType = 0x8d7,
-	bgqueue_updateinfoType = 0x8d9,
-	bgqueue_checkstateType = 0x90a,
-	bgqueue_revokereqType = 0x8da,
-	bgqueue_battlebeginackType = 0x8e0,
-	bgqueue_notify_entryType = 0x8d9,
-	bgqueue_battlebeginsType = 0x8df,
-	notify_bounditemType = 0x2d3,
+	bgqueue_ackType            = 0x8D8,
+	bgqueue_notice_deleteType  = 0x8DB,
+	bgqueue_registerType       = 0x8D7,
+	bgqueue_updateinfoType     = 0x8D9,
+	bgqueue_checkstateType     = 0x90A,
+	bgqueue_revokereqType      = 0x8DA,
+	bgqueue_battlebeginackType = 0x8E0,
+	bgqueue_notify_entryType   = 0x8D9,
+	bgqueue_battlebeginsType   = 0x8DF,
+	notify_bounditemType       = 0x2D3,
 #if PACKETVER < 20110718
-	skill_entryType = 0x11f,
+	skill_entryType = 0x11F,
 #elif PACKETVER < 20121212
-	skill_entryType = 0x8c7,
+	skill_entryType = 0x8C7,
 #elif PACKETVER < 20130731
-	skill_entryType = 0x99f,
+	skill_entryType = 0x99F,
 #else
-	skill_entryType = 0x9ca,
+	skill_entryType = 0x9CA,
 #endif
-	graffiti_entryType = 0x1c9,
+	graffiti_entryType = 0x1C9,
 #if defined(PACKETVER_ZERO) || PACKETVER >= 20180418
-	dropflooritemType = 0xadd,
+	dropflooritemType = 0xADD,
 #elif PACKETVER > 20130000 /* not sure date */
-	dropflooritemType = 0x84b,
+	dropflooritemType = 0x84B,
 #else
-	dropflooritemType = 0x9e,
+	dropflooritemType = 0x9E,
 #endif
 #if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
-	inventorylistnormalType = 0xb09,
+	inventorylistnormalType = 0xB09,
 #elif PACKETVER >= 20120925
 	inventorylistnormalType = 0x991,
 #elif PACKETVER >= 20080102
-	inventorylistnormalType = 0x2e8,
+	inventorylistnormalType = 0x2E8,
 #elif PACKETVER >= 20071002
-	inventorylistnormalType = 0x1ee,
+	inventorylistnormalType = 0x1EE,
 #else
-	inventorylistnormalType = 0xa3,
+	inventorylistnormalType = 0xA3,
 #endif
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
-	inventorylistequipType = 0xb39,
+	inventorylistequipType = 0xB39,
 #elif PACKETVER_MAIN_NUM >= 20181002 || PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919
-	inventorylistequipType = 0xb0a,
+	inventorylistequipType = 0xB0A,
 #elif PACKETVER >= 20150226
-	inventorylistequipType = 0xa0d,
+	inventorylistequipType = 0xA0D,
 #elif PACKETVER >= 20120925
 	inventorylistequipType = 0x992,
 #elif PACKETVER >= 20080102
-	inventorylistequipType = 0x2d0,
+	inventorylistequipType = 0x2D0,
 #elif PACKETVER >= 20071002
 	inventorylistequipType = 0x295,
 #else
-	inventorylistequipType = 0xa4,
+	inventorylistequipType = 0xA4,
 #endif
 #if PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
-	storageListNormalType = 0xb09,
+	storageListNormalType = 0xB09,
 #elif PACKETVER >= 20120925
 	storageListNormalType = 0x995,
 #elif PACKETVER >= 20080102
-	storageListNormalType = 0x2ea,
+	storageListNormalType = 0x2EA,
 #elif PACKETVER >= 20071002
 	storageListNormalType = 0x295,
 #else
-	storageListNormalType = 0xa5,
+	storageListNormalType = 0xA5,
 #endif
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
-	storageListEquipType = 0xb39,
+	storageListEquipType = 0xB39,
 #elif PACKETVER_MAIN_NUM >= 20181002 || PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919
-	storageListEquipType = 0xb0a,
+	storageListEquipType = 0xB0A,
 #elif PACKETVER >= 20150226
-	storageListEquipType = 0xa10,
+	storageListEquipType = 0xA10,
 #elif PACKETVER >= 20120925
 	storageListEquipType = 0x996,
 #elif PACKETVER >= 20080102
-	storageListEquipType = 0x2d1,
+	storageListEquipType = 0x2D1,
 #elif PACKETVER >= 20071002
 	storageListEquipType = 0x296,
 #else
-	storageListEquipType = 0xa6,
+	storageListEquipType = 0xA6,
 #endif
 #if PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
-	cartlistnormalType = 0xb09,
+	cartlistnormalType = 0xB09,
 #elif PACKETVER >= 20120925
 	cartlistnormalType = 0x993,
 #elif PACKETVER >= 20080102
-	cartlistnormalType = 0x2e9,
+	cartlistnormalType = 0x2E9,
 #elif PACKETVER >= 20071002
-	cartlistnormalType = 0x1ef,
+	cartlistnormalType = 0x1EF,
 #else
 	cartlistnormalType = 0x123,
 #endif
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
-	cartlistequipType = 0xb39,
+	cartlistequipType = 0xB39,
 #elif PACKETVER_MAIN_NUM >= 20181002 || PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919
-	cartlistequipType = 0xb0a,
+	cartlistequipType = 0xB0A,
 #elif PACKETVER >= 20150226
-	cartlistequipType = 0xa0f,
+	cartlistequipType = 0xA0F,
 #elif PACKETVER >= 20120925
 	cartlistequipType = 0x994,
 #elif PACKETVER >= 20080102
-	cartlistequipType = 0x2d2,
+	cartlistequipType = 0x2D2,
 #elif PACKETVER >= 20071002
 	cartlistequipType = 0x297,
 #else
@@ -239,54 +239,54 @@ enum packet_headers {
 #if PACKETVER >= 20120925
 	equipitemType = 0x998,
 #else
-	equipitemType = 0xa9,
+	equipitemType = 0xA9,
 #endif
 #if PACKETVER >= 20120925
-	unequipitemackType = 0x99a,
+	unequipitemackType = 0x99A,
 #else
-	unequipitemackType = 0xac,
+	unequipitemackType = 0xAC,
 #endif
-	notifybindonequip = 0x2d3,
-	monsterhpType = 0x977,
-	maptypeproperty2Type = 0x99b,
-#if PACKETVER >= 20131223  // version probably can be 20131030 [4144]
-	wisendType = 0x9df,
+	notifybindonequip    = 0x2D3,
+	monsterhpType        = 0x977,
+	maptypeproperty2Type = 0x99B,
+#if PACKETVER >= 20131223 // version probably can be 20131030 [4144]
+	wisendType = 0x9DF,
 #else
 	wisendType = 0x98,
 #endif
-	partyleaderchangedType = 0x7fc,
-	rouletteinfoackType = 0xa1c,
-	roulettgenerateackType = 0xa20,
-	roulettercvitemackType = 0xa22,
+	partyleaderchangedType = 0x7FC,
+	rouletteinfoackType    = 0xA1C,
+	roulettgenerateackType = 0xA20,
+	roulettercvitemackType = 0xA22,
 #if PACKETVER >= 20141016
-	achievementListType = 0xa23,
-	achievementUpdateType = 0xa24,
-	achievementRewardAckType = 0xa26,
+	achievementListType      = 0xA23,
+	achievementUpdateType    = 0xA24,
+	achievementRewardAckType = 0xA26,
 #endif // PACKETVER >= 20141016
 #if PACKETVER_ZERO_NUM >= 20181010 || PACKETVER >= 20181017
-	questListType = 0xaff, ///< ZC_ALL_QUEST_LIST4
-#elif PACKETVER >= 20150513  // [4144] 0x09f8 handling in client from 2014-10-29aRagexe and 2014-03-26cRagexeRE
-	questListType = 0x9f8, ///< ZC_ALL_QUEST_LIST3
+	questListType = 0xAFF, ///< ZC_ALL_QUEST_LIST4
+#elif PACKETVER >= 20150513    // [4144] 0x09f8 handling in client from 2014-10-29aRagexe and 2014-03-26cRagexeRE
+	questListType = 0x9F8, ///< ZC_ALL_QUEST_LIST3
 #elif PACKETVER >= 20141022
-	questListType = 0x97a, ///< ZC_ALL_QUEST_LIST2
-#else // PACKETVER < 20141022
-	questListType = 0x2b1, ///< ZC_ALL_QUEST_LIST
+	questListType = 0x97A, ///< ZC_ALL_QUEST_LIST2
+#else  // PACKETVER < 20141022
+	questListType = 0x2B1, ///< ZC_ALL_QUEST_LIST
 #endif // PACKETVER >= 20141022
 	/* Rodex */
-	rodexicon = 0x09E7,
+	rodexicon        = 0x09E7,
 	rodexwriteresult = 0x09ED,
-	rodexnextpage = 0x09F0,
-	rodexgetzeny = 0x09F2,
-	rodexgetitem = 0x09F4,
-	rodexdelete = 0x09F6,
-	rodexremoveitem = 0x0A07,
-	rodexopenwrite = 0x0A12,
+	rodexnextpage    = 0x09F0,
+	rodexgetzeny     = 0x09F2,
+	rodexgetitem     = 0x09F4,
+	rodexdelete      = 0x09F6,
+	rodexremoveitem  = 0x0A07,
+	rodexopenwrite   = 0x0A12,
 #if PACKETVER < 20160601
 	rodexmailList = 0x09F0,
 #elif PACKETVER < 20170419
 	rodexmailList = 0x0A7D,
 #else // PACKETVER >= 20170419
-	rodexmailList = 0x0Ac2,
+	rodexmailList = 0x0AC2,
 #endif
 #if PACKETVER >= 20151223
 	skillscale = 0xA41,
@@ -295,80 +295,80 @@ enum packet_headers {
 	progressbarunit = 0x09D1,
 #endif
 #if PACKETVER >= 20171207
-	partymemberinfo = 0x0ae4,
-	partyinfo = 0x0ae5,
+	partymemberinfo = 0x0AE4,
+	partyinfo       = 0x0AE5,
 #elif PACKETVER_MAIN_NUM >= 20170524 || PACKETVER_RE_NUM >= 20170502 || defined(PACKETVER_ZERO)
-	partymemberinfo = 0x0a43,
-	partyinfo = 0x0a44,
+	partymemberinfo = 0x0A43,
+	partyinfo       = 0x0A44,
 #else
-	partymemberinfo = 0x01e9,
-	partyinfo = 0x00fb,
+	partymemberinfo = 0x01E9,
+	partyinfo       = 0x00FB,
 #endif
 #if PACKETVER >= 20120716
 	clanOnlineCount = 0x0988, ///< ZC_NOTIFY_CLAN_CONNECTINFO
-	clanLeave = 0x0989, ///< ZC_ACK_CLAN_LEAVE
-	clanMessage = 0x098E, ///< ZC_NOTIFY_CLAN_CHAT
+	clanLeave       = 0x0989, ///< ZC_ACK_CLAN_LEAVE
+	clanMessage     = 0x098E, ///< ZC_NOTIFY_CLAN_CHAT
 #endif
 #if PACKETVER_ZERO_NUM >= 20181010 || PACKETVER >= 20181017
-	questAddType = 0xb0c,
+	questAddType = 0xB0C,
 #elif PACKETVER >= 20150513 // [4144] 0x09f9 handled in client from 2014-10-29aRagexe and 2014-03-26cRagexeRE
-	questAddType = 0x9f9,
+	questAddType = 0x9F9,
 #else
-	questAddType = 0x2b3,
+	questAddType = 0x2B3,
 #endif // PACKETVER < 20150513
 #if PACKETVER_ZERO_NUM >= 20181010 || PACKETVER >= 20181017
-	questUpdateType = 0xafe,
+	questUpdateType = 0xAFE,
 #elif PACKETVER >= 20150513
-	questUpdateType = 0x9fa,
+	questUpdateType = 0x9FA,
 #else
-	questUpdateType = 0x2b5,
+	questUpdateType = 0x2B5,
 #endif // PACKETVER < 20150513
-	questUpdateType2 = 0x8fe,
+	questUpdateType2 = 0x8FE,
 #if PACKETVER >= 20180627
-	authError = 0xb02,
+	authError = 0xB02,
 #elif PACKETVER >= 20101123
-	authError = 0x83e,
+	authError = 0x83E,
 #else
-	authError = 0x6a,
+	authError = 0x6A,
 #endif
 #if PACKETVER >= 3
-	useItemAckType = 0x1c8,
+	useItemAckType = 0x1C8,
 #else
-	useItemAckType = 0xa8,
+	useItemAckType = 0xA8,
 #endif
 #if PACKETVER >= 4
-	sendLookType = 0x1d7,
+	sendLookType = 0x1D7,
 #else
-	sendLookType = 0xc3,
+	sendLookType = 0xC3,
 #endif
 #if PACKETVER >= 20141016
-	buyingStoreUpdateItemType = 0x9e6,
+	buyingStoreUpdateItemType = 0x9E6,
 #else
-	buyingStoreUpdateItemType = 0x81b,
+	buyingStoreUpdateItemType = 0x81B,
 #endif
 	reqName = 0x95,
 #if PACKETVER_MAIN_NUM >= 20170502 || PACKETVER_RE_NUM >= 20170419 || defined(PACKETVER_ZERO)
-	skilWarpPointType = 0xabe,
+	skilWarpPointType = 0xABE,
 #else
-	skilWarpPointType = 0x11c,
+	skilWarpPointType = 0x11C,
 #endif
 #if PACKETVER_MAIN_NUM >= 20161019 || PACKETVER_RE_NUM >= 20160921 || defined(PACKETVER_ZERO)
-	guildExpulsion = 0xa82,
+	guildExpulsion = 0xA82,
 #elif PACKETVER >= 20100803
 	guildExpulsion = 0x839,
 #else
-	guildExpulsion = 0x15c,
+	guildExpulsion = 0x15C,
 #endif
 #if PACKETVER_MAIN_NUM >= 20161019 || PACKETVER_RE_NUM >= 20160921 || defined(PACKETVER_ZERO)
-	guildLeave = 0xa83,
+	guildLeave = 0xA83,
 #else
-	guildLeave = 0x15a,
+	guildLeave = 0x15A,
 #endif
 };
 
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
-DEFINE_PACKET_ID(ZC_PAR_4JOB_CHANGE, 0x0b25);
-#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
+DEFINE_PACKET_ID(ZC_PAR_4JOB_CHANGE, 0x0B25);
+#endif // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 
 PRAGMA_PACK_PUSH(1)
 
@@ -377,21 +377,24 @@ struct PACKET_ZC_PAR_CHANGE {
 	uint16 varID;
 	int32 count;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_PAR_CHANGE, 0x00b0);
+
+DEFINE_PACKET_HEADER(ZC_PAR_CHANGE, 0x00B0);
 
 struct PACKET_ZC_LONGPAR_CHANGE {
 	int16 PacketType;
 	uint16 varID;
 	int32 amount;
 } __attribute__((packed));
-DEFINE_PACKET_ID(ZC_LONGPAR_CHANGE, 0x00b1);
+
+DEFINE_PACKET_ID(ZC_LONGPAR_CHANGE, 0x00B1);
 
 struct PACKET_ZC_STATUS_CHANGE {
 	int16 PacketType;
 	uint16 statusID;
 	uint8 value;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_STATUS_CHANGE, 0x00be);
+
+DEFINE_PACKET_HEADER(ZC_STATUS_CHANGE, 0x00BE);
 
 struct PACKET_ZC_NOTIFY_CARTITEM_COUNTINFO {
 	int16 PacketType;
@@ -400,13 +403,15 @@ struct PACKET_ZC_NOTIFY_CARTITEM_COUNTINFO {
 	int32 curWeight;
 	int32 maxWeight;
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(ZC_NOTIFY_CARTITEM_COUNTINFO, 0x0121);
 
 struct PACKET_ZC_ATTACK_RANGE {
 	int16 PacketType;
 	int16 currentAttRange;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ATTACK_RANGE, 0x013a);
+
+DEFINE_PACKET_HEADER(ZC_ATTACK_RANGE, 0x013A);
 
 struct PACKET_ZC_COUPLESTATUS {
 	int16 PacketType;
@@ -414,6 +419,7 @@ struct PACKET_ZC_COUPLESTATUS {
 	int32 defaultStatus;
 	int32 plusStatus;
 } __attribute__((packed));
+
 DEFINE_PACKET_ID(ZC_COUPLESTATUS, 0x0141);
 
 #if PACKETVER_MAIN_NUM >= 20170906 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO)
@@ -422,8 +428,9 @@ struct PACKET_ZC_LONGLONGPAR_CHANGE {
 	uint16 varID;
 	int64 amount;
 } __attribute__((packed));
-DEFINE_PACKET_ID(ZC_LONGLONGPAR_CHANGE, 0x0acb);
-#endif  // PACKETVER_MAIN_NUM >= 20170906 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO)
+
+DEFINE_PACKET_ID(ZC_LONGLONGPAR_CHANGE, 0x0ACB);
+#endif // PACKETVER_MAIN_NUM >= 20170906 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO)
 
 /**
  * structs for data
@@ -462,8 +469,8 @@ struct NORMALITEM_INFO {
 #if PACKETVER >= 20120925
 	struct {
 		uint8 IsIdentified : 1;
-		uint8 PlaceETCTab : 1;
-		uint8 SpareBits : 6;
+		uint8 PlaceETCTab  : 1;
+		uint8 SpareBits    : 6;
 	} Flag;
 #endif
 } __attribute__((packed));
@@ -498,7 +505,7 @@ struct EQUIPITEM_INFO {
 #endif
 #if !(PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024)
 	uint8 RefiningLevel;
-#endif  // !(PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024)
+#endif // !(PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024)
 	struct EQUIPSLOTINFO slot;
 #if PACKETVER >= 20071002
 	int32 HireExpireDate;
@@ -516,13 +523,13 @@ struct EQUIPITEM_INFO {
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	uint8 RefiningLevel;
 	uint8 grade;
-#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
+#endif // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 #if PACKETVER >= 20120925
 	struct {
 		uint8 IsIdentified : 1;
-		uint8 IsDamaged : 1;
-		uint8 PlaceETCTab : 1;
-		uint8 SpareBits : 5;
+		uint8 IsDamaged    : 1;
+		uint8 PlaceETCTab  : 1;
+		uint8 SpareBits    : 5;
 	} Flag;
 #endif
 } __attribute__((packed));
@@ -571,7 +578,7 @@ struct PACKET_ZC_ITEM_PICKUP_ACK {
 	uint8 IsDamaged;
 #if !(PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024)
 	uint8 refiningLevel;
-#endif  // !(PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024)
+#endif // !(PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024)
 	struct EQUIPSLOTINFO slot;
 #if PACKETVER >= 20120925
 	uint32 location;
@@ -596,23 +603,23 @@ struct PACKET_ZC_ITEM_PICKUP_ACK {
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	uint8 refiningLevel;
 	uint8 grade;
-#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
+#endif // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 } __attribute__((packed));
 
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
-DEFINE_PACKET_HEADER(ZC_ITEM_PICKUP_ACK, 0x0b41);
+DEFINE_PACKET_HEADER(ZC_ITEM_PICKUP_ACK, 0x0B41);
 #elif PACKETVER >= 20160921
-DEFINE_PACKET_HEADER(ZC_ITEM_PICKUP_ACK, 0x0a37);
+DEFINE_PACKET_HEADER(ZC_ITEM_PICKUP_ACK, 0x0A37);
 #elif PACKETVER >= 20150226
-DEFINE_PACKET_HEADER(ZC_ITEM_PICKUP_ACK, 0x0a0c);
+DEFINE_PACKET_HEADER(ZC_ITEM_PICKUP_ACK, 0x0A0C);
 #elif PACKETVER >= 20120925
 DEFINE_PACKET_HEADER(ZC_ITEM_PICKUP_ACK, 0x0990);
 #elif PACKETVER >= 20071002
-DEFINE_PACKET_HEADER(ZC_ITEM_PICKUP_ACK, 0x02d4);
+DEFINE_PACKET_HEADER(ZC_ITEM_PICKUP_ACK, 0x02D4);
 #elif PACKETVER >= 20061218
-DEFINE_PACKET_HEADER(ZC_ITEM_PICKUP_ACK, 0x029a);
+DEFINE_PACKET_HEADER(ZC_ITEM_PICKUP_ACK, 0x029A);
 #else
-DEFINE_PACKET_HEADER(ZC_ITEM_PICKUP_ACK, 0x00a0);
+DEFINE_PACKET_HEADER(ZC_ITEM_PICKUP_ACK, 0x00A0);
 #endif
 
 struct packet_dropflooritem {
@@ -637,12 +644,13 @@ struct packet_dropflooritem {
 	int16 dropeffectmode;
 #endif
 } __attribute__((packed));
+
 struct packet_idle_unit2 {
 #if PACKETVER < 20091103
 	int16 PacketType;
-#if PACKETVER >= 20071106
+  #if PACKETVER >= 20071106
 	uint8 objecttype;
-#endif
+  #endif
 	uint32 GID;
 	int16 speed;
 	int16 bodyState;
@@ -669,7 +677,7 @@ struct packet_idle_unit2 {
 	uint8 ySize;
 	uint8 state;
 	int16 clevel;
-#else // ! PACKETVER < 20091103
+#else  // ! PACKETVER < 20091103
 	UNAVAILABLE_STRUCT;
 #endif // PACKETVER < 20091103
 } __attribute__((packed));
@@ -677,9 +685,9 @@ struct packet_idle_unit2 {
 struct packet_spawn_unit2 {
 #if PACKETVER < 20091103
 	int16 PacketType;
-#if PACKETVER >= 20071106
+  #if PACKETVER >= 20071106
 	uint8 objecttype;
-#endif
+  #endif
 	uint32 GID;
 	int16 speed;
 	int16 bodyState;
@@ -700,7 +708,7 @@ struct packet_spawn_unit2 {
 	uint8 PosDir[3];
 	uint8 xSize;
 	uint8 ySize;
-#else // ! PACKETVER < 20091103
+#else  // ! PACKETVER < 20091103
 	UNAVAILABLE_STRUCT;
 #endif // PACKETVER < 20091103
 } __attribute__((packed));
@@ -959,19 +967,22 @@ struct packet_status_change2 {
 struct packet_maptypeproperty2 {
 	int16 PacketType;
 	int16 type;
+
 	struct {
-		uint32 party             : 1;  // Show attack cursor on non-party members (PvP)
-		uint32 guild             : 1;  // Show attack cursor on non-guild members (GvG)
-		uint32 siege             : 1;  // Show emblem over characters' heads when in GvG (WoE castle)
-		uint32 mineffect         : 1;  // Automatically enable /mineffect
-		uint32 nolockon          : 1;  // TODO: What does this do? (shows attack cursor on non-party members)
-		uint32 countpk           : 1;  /// Show the PvP counter
-		uint32 nopartyformation  : 1;  /// Prevent party creation/modification
-		uint32 bg                : 1;  // TODO: What does this do? Probably related to Battlegrounds, but I'm not sure on the effect
-		uint32 nocostume         : 1;  /// Does not show costume sprite.
-		uint32 usecart           : 1;  /// Allow opening cart inventory
-		uint32 summonstarmiracle : 1;  // TODO: What does this do? Related to Taekwon Masters, but I have no idea.
-		uint32 SpareBits         : 21; /// Currently ignored, reserved for future updates
+		uint32 party            : 1; // Show attack cursor on non-party members (PvP)
+		uint32 guild            : 1; // Show attack cursor on non-guild members (GvG)
+		uint32 siege            : 1; // Show emblem over characters' heads when in GvG (WoE castle)
+		uint32 mineffect        : 1; // Automatically enable /mineffect
+		uint32 nolockon         : 1; // TODO: What does this do? (shows attack cursor on non-party members)
+		uint32 countpk          : 1; /// Show the PvP counter
+		uint32 nopartyformation : 1; /// Prevent party creation/modification
+		uint32 bg
+		    : 1; // TODO: What does this do? Probably related to Battlegrounds, but I'm not sure on the effect
+		uint32 nocostume : 1; /// Does not show costume sprite.
+		uint32 usecart   : 1; /// Allow opening cart inventory
+		uint32 summonstarmiracle
+		    : 1;               // TODO: What does this do? Related to Taekwon Masters, but I have no idea.
+		uint32 SpareBits : 21; /// Currently ignored, reserved for future updates
 	} flag;
 } __attribute__((packed));
 
@@ -1038,48 +1049,48 @@ struct PACKET_ZC_BROADCASTING_SPECIAL_ITEM_OBTAIN_item {
 	int16 PacketType;
 	int16 PacketLength;
 	uint8 type;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 ItemID;
-#else
+  #else
 	uint16 ItemID;
-#endif
+  #endif
 	int8 len;
 	char Name[NAME_LENGTH];
 	int8 boxItemID_len;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 BoxItemID;
-#else
+  #else
 	uint16 BoxItemID;
-#endif
+  #endif
 	int8 refineLevel_len;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 refineLevel;
-#else
+  #else
 	uint16 refineLevel;
-#endif
+  #endif
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_BROADCASTING_SPECIAL_ITEM_OBTAIN_item, 0x0bba)
+DEFINE_PACKET_HEADER(ZC_BROADCASTING_SPECIAL_ITEM_OBTAIN_item, 0x0BBA)
 #elif PACKETVER >= 20091201
 /* made possible thanks to Yommy!! */
 struct PACKET_ZC_BROADCASTING_SPECIAL_ITEM_OBTAIN_item {
 	int16 PacketType;
 	int16 PacketLength;
 	uint8 type;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 ItemID;
-#else
+  #else
 	uint16 ItemID;
-#endif
+  #endif
 	int8 len;
 	char Name[NAME_LENGTH];
 	int8 boxItemID_len;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 BoxItemID;
-#else
+  #else
 	uint16 BoxItemID;
-#endif
+  #endif
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_BROADCASTING_SPECIAL_ITEM_OBTAIN_item, 0x07fd)
+DEFINE_PACKET_HEADER(ZC_BROADCASTING_SPECIAL_ITEM_OBTAIN_item, 0x07FD)
 #endif
 
 /* made possible thanks to Yommy!! */
@@ -1156,6 +1167,7 @@ struct packet_roulette_info_ack {
 	int16 PacketType;
 	int16 PacketLength;
 	uint32 RouletteSerial;
+
 	struct {
 		uint16 Row;
 		uint16 Position;
@@ -1229,7 +1241,10 @@ struct ZC_STORE_ITEMLIST_NORMAL {
 #if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 	uint8 invType;
 #endif
-#if PACKETVER >= 20120925 && PACKETVER_RE_NUM < 20180829 && PACKETVER_ZERO_NUM < 20180919 && PACKETVER_MAIN_NUM < 20181002
+#if PACKETVER >= 20120925 \
+    && PACKETVER_RE_NUM < 20180829 \
+    && PACKETVER_ZERO_NUM < 20180919 \
+    && PACKETVER_MAIN_NUM < 20181002
 	char name[NAME_LENGTH];
 #endif
 	struct NORMALITEM_INFO list[MAX_ITEMLIST];
@@ -1238,31 +1253,33 @@ struct ZC_STORE_ITEMLIST_NORMAL {
 #if PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 struct PACKET_ZC_INVENTORY_START {
 	int16 packetType;
-#if PACKETVER_RE_NUM >= 20180919 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
+  #if PACKETVER_RE_NUM >= 20180919 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 	int16 packetLength;
-#endif
-#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
+  #endif
+  #if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 	uint8 invType;
-#endif
-#if PACKETVER_RE_NUM >= 20180919 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
+  #endif
+  #if PACKETVER_RE_NUM >= 20180919 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 	char name[];
-#else
+  #else
 	char name[NAME_LENGTH];
-#endif
+  #endif
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_INVENTORY_START, 0x0b08);
-#endif  // PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
+
+DEFINE_PACKET_HEADER(ZC_INVENTORY_START, 0x0B08);
+#endif // PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 
 #if PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 struct PACKET_ZC_INVENTORY_END {
 	int16 packetType;
-#if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
+  #if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 	uint8 invType;
-#endif
+  #endif
 	char flag;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_INVENTORY_END, 0x0b0b);
-#endif  // PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
+
+DEFINE_PACKET_HEADER(ZC_INVENTORY_END, 0x0B0B);
+#endif // PACKETVER_RE_NUM >= 20180829 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 
 struct ZC_STORE_ITEMLIST_EQUIP {
 	int16 PacketType;
@@ -1270,7 +1287,10 @@ struct ZC_STORE_ITEMLIST_EQUIP {
 #if PACKETVER_RE_NUM >= 20180912 || PACKETVER_ZERO_NUM >= 20180919 || PACKETVER_MAIN_NUM >= 20181002
 	uint8 invType;
 #endif
-#if PACKETVER >= 20120925 && PACKETVER_RE_NUM < 20180829 && PACKETVER_ZERO_NUM < 20180919 && PACKETVER_MAIN_NUM < 20181002
+#if PACKETVER >= 20120925 \
+    && PACKETVER_RE_NUM < 20180829 \
+    && PACKETVER_ZERO_NUM < 20180919 \
+    && PACKETVER_MAIN_NUM < 20181002
 	char name[NAME_LENGTH];
 #endif
 	struct EQUIPITEM_INFO list[MAX_ITEMLIST];
@@ -1303,7 +1323,7 @@ struct PACKET_ZC_REQ_WEAR_EQUIP_ACK {
 	uint16 wItemSpriteNumber;
 	uint8 result;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_REQ_WEAR_EQUIP_ACK, 0x00aa)
+DEFINE_PACKET_HEADER(ZC_REQ_WEAR_EQUIP_ACK, 0x00AA)
 #else  // PACKETVER_MAIN_NUM >= 20121205 || PACKETVER_RE_NUM >= 20121107 || defined(PACKETVER_ZERO)
 struct PACKET_ZC_REQ_WEAR_EQUIP_ACK {
 	int16 PacketType;
@@ -1311,8 +1331,8 @@ struct PACKET_ZC_REQ_WEAR_EQUIP_ACK {
 	uint16 wearLocation;
 	uint8 result;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_REQ_WEAR_EQUIP_ACK, 0x00aa)
-#endif  // PACKETVER_MAIN_NUM >= 20121205 || PACKETVER_RE_NUM >= 20121107 || defined(PACKETVER_ZERO)
+DEFINE_PACKET_HEADER(ZC_REQ_WEAR_EQUIP_ACK, 0x00AA)
+#endif // PACKETVER_MAIN_NUM >= 20121205 || PACKETVER_RE_NUM >= 20121107 || defined(PACKETVER_ZERO)
 
 struct packet_unequipitem_ack {
 	int16 PacketType;
@@ -1342,7 +1362,8 @@ struct PACKET_ZC_EQUIPWIN_MICROSCOPE {
 	uint8 sex;
 	struct EQUIPITEM_INFO list[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_EQUIPWIN_MICROSCOPE, 0x0b37);
+
+DEFINE_PACKET_HEADER(ZC_EQUIPWIN_MICROSCOPE, 0x0B37);
 #elif PACKETVER_MAIN_NUM >= 20180801 || PACKETVER_RE_NUM >= 20180801 || PACKETVER_ZERO_NUM >= 20180808
 struct PACKET_ZC_EQUIPWIN_MICROSCOPE {
 	int16 PacketType;
@@ -1360,7 +1381,8 @@ struct PACKET_ZC_EQUIPWIN_MICROSCOPE {
 	uint8 sex;
 	struct EQUIPITEM_INFO list[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_EQUIPWIN_MICROSCOPE, 0x0b03);
+
+DEFINE_PACKET_HEADER(ZC_EQUIPWIN_MICROSCOPE, 0x0B03);
 #elif PACKETVER >= 20140820
 struct PACKET_ZC_EQUIPWIN_MICROSCOPE {
 	int16 PacketType;
@@ -1377,7 +1399,8 @@ struct PACKET_ZC_EQUIPWIN_MICROSCOPE {
 	uint8 sex;
 	struct EQUIPITEM_INFO list[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_EQUIPWIN_MICROSCOPE, 0x0a2d);
+
+DEFINE_PACKET_HEADER(ZC_EQUIPWIN_MICROSCOPE, 0x0A2D);
 #elif PACKETVER_MAIN_NUM >= 20121205 || PACKETVER_RE_NUM >= 20121107
 struct PACKET_ZC_EQUIPWIN_MICROSCOPE {
 	int16 PacketType;
@@ -1394,6 +1417,7 @@ struct PACKET_ZC_EQUIPWIN_MICROSCOPE {
 	uint8 sex;
 	struct EQUIPITEM_INFO list[];
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(ZC_EQUIPWIN_MICROSCOPE, 0x0997);
 #elif PACKETVER_MAIN_NUM >= 20111207 || PACKETVER_RE_NUM >= 20111122
 struct PACKET_ZC_EQUIPWIN_MICROSCOPE {
@@ -1411,6 +1435,7 @@ struct PACKET_ZC_EQUIPWIN_MICROSCOPE {
 	uint8 sex;
 	struct EQUIPITEM_INFO list[];
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(ZC_EQUIPWIN_MICROSCOPE, 0x0906);
 #elif PACKETVER >= 20101123
 struct PACKET_ZC_EQUIPWIN_MICROSCOPE {
@@ -1428,8 +1453,12 @@ struct PACKET_ZC_EQUIPWIN_MICROSCOPE {
 	uint8 sex;
 	struct EQUIPITEM_INFO list[];
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(ZC_EQUIPWIN_MICROSCOPE, 0x0859);
-#elif PACKETVER_AD_NUM >= 20071211 || PACKETVER_SAK_NUM >= 20071127 || PACKETVER_MAIN_NUM >= 20071211 || defined(PACKETVER_RE)
+#elif PACKETVER_AD_NUM >= 20071211 \
+    || PACKETVER_SAK_NUM >= 20071127 \
+    || PACKETVER_MAIN_NUM >= 20071211 \
+    || defined(PACKETVER_RE)
 struct PACKET_ZC_EQUIPWIN_MICROSCOPE {
 	int16 PacketType;
 	int16 PacketLength;
@@ -1444,7 +1473,8 @@ struct PACKET_ZC_EQUIPWIN_MICROSCOPE {
 	uint8 sex;
 	struct EQUIPITEM_INFO list[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_EQUIPWIN_MICROSCOPE, 0x02d7);
+
+DEFINE_PACKET_HEADER(ZC_EQUIPWIN_MICROSCOPE, 0x02D7);
 #endif
 
 struct packet_notify_bounditem {
@@ -1522,11 +1552,11 @@ struct packet_gm_monster_item {
 
 #if PACKETVER_MAIN_NUM >= 20130911 || PACKETVER_RE_NUM >= 20130911 || defined(PACKETVER_ZERO)
 struct PACKET_CZ_NPC_MARKET_PURCHASE_sub {
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 ITID;
-#else
+  #else
 	uint16 ITID;
-#endif
+  #endif
 	int32 qty;
 } __attribute__((packed));
 
@@ -1535,47 +1565,51 @@ struct PACKET_CZ_NPC_MARKET_PURCHASE {
 	int16 PacketLength;
 	struct PACKET_CZ_NPC_MARKET_PURCHASE_sub list[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_NPC_MARKET_PURCHASE, 0x09d6)
+DEFINE_PACKET_HEADER(CZ_NPC_MARKET_PURCHASE, 0x09D6)
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 struct PACKET_ZC_NPC_MARKET_OPEN_sub {
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 nameid;
-#else
+  #else
 	uint16 nameid;
-#endif
+  #endif
 	uint8 type;
 	uint32 price;
 	uint32 qty;
 	uint16 weight;
 	uint32 location;
 } __attribute__((packed));
+
 struct PACKET_ZC_NPC_MARKET_OPEN {
 	int16 packetType;
 	int16 packetLength;
 	struct PACKET_ZC_NPC_MARKET_OPEN_sub list[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_NPC_MARKET_OPEN, 0x0b7a);
+
+DEFINE_PACKET_HEADER(ZC_NPC_MARKET_OPEN, 0x0B7A);
 #elif PACKETVER_MAIN_NUM >= 20131120 || PACKETVER_RE_NUM >= 20131106 || defined(PACKETVER_ZERO)
 /* inner struct figured by Ind after some annoying hour of debugging (data Thanks to Yommy) */
 struct PACKET_ZC_NPC_MARKET_OPEN_sub {
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 nameid;
-#else
+  #else
 	uint16 nameid;
-#endif
+  #endif
 	uint8 type;
 	uint32 price;
 	uint32 qty;
 	uint16 weight;
 } __attribute__((packed));
+
 struct PACKET_ZC_NPC_MARKET_OPEN {
 	int16 packetType;
 	int16 packetLength;
 	struct PACKET_ZC_NPC_MARKET_OPEN_sub list[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_NPC_MARKET_OPEN, 0x09d5);
+
+DEFINE_PACKET_HEADER(ZC_NPC_MARKET_OPEN, 0x09D5);
 #endif
 
 struct packet_wis_end {
@@ -1585,7 +1619,6 @@ struct packet_wis_end {
 	uint32 AID;
 #endif
 } __attribute__((packed));
-
 
 struct packet_party_leader_changed {
 	int16 PacketType;
@@ -1600,81 +1633,102 @@ struct hotkey_data {
 	int16 count;  // Item Quantity/Skill Level
 } __attribute__((packed));
 
-#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508 || PACKETVER_ZERO_NUM >= 20190605
-#define MAX_HOTKEYS_PACKET 38
+  #if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508 || PACKETVER_ZERO_NUM >= 20190605
+    #define MAX_HOTKEYS_PACKET 38
+
 struct PACKET_ZC_SHORTCUT_KEY_LIST {
 	int16 packetType;
 	int8 rotate;
 	int16 tab;
 	struct hotkey_data hotkey[MAX_HOTKEYS_PACKET];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_SHORTCUT_KEY_LIST, 0x0b20);
-#elif PACKETVER_MAIN_NUM >= 20141022 || PACKETVER_RE_NUM >= 20141015 || defined(PACKETVER_ZERO)
-#define MAX_HOTKEYS_PACKET 38
+
+DEFINE_PACKET_HEADER(ZC_SHORTCUT_KEY_LIST, 0x0B20);
+  #elif PACKETVER_MAIN_NUM >= 20141022 || PACKETVER_RE_NUM >= 20141015 || defined(PACKETVER_ZERO)
+    #define MAX_HOTKEYS_PACKET 38
+
 struct PACKET_ZC_SHORTCUT_KEY_LIST {
 	int16 packetType;
 	int8 rotate;
 	struct hotkey_data hotkey[MAX_HOTKEYS_PACKET];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_SHORTCUT_KEY_LIST, 0x0a00);
-#elif PACKETVER_MAIN_NUM >= 20090617 || PACKETVER_RE_NUM >= 20090617 || PACKETVER_SAK_NUM >= 20090617
-#define MAX_HOTKEYS_PACKET 38
-struct PACKET_ZC_SHORTCUT_KEY_LIST {
-	int16 packetType;
-	struct hotkey_data hotkey[MAX_HOTKEYS_PACKET];
-} __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_SHORTCUT_KEY_LIST, 0x07d9);
-#elif PACKETVER_MAIN_NUM >= 20090603 || PACKETVER_RE_NUM >= 20090603 || PACKETVER_SAK_NUM >= 20090603
-#define MAX_HOTKEYS_PACKET 36
-struct PACKET_ZC_SHORTCUT_KEY_LIST {
-	int16 packetType;
-	struct hotkey_data hotkey[MAX_HOTKEYS_PACKET];
-} __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_SHORTCUT_KEY_LIST, 0x07d9);
-#elif PACKETVER_MAIN_NUM >= 20070711 || PACKETVER_RE_NUM >= 20080827 || PACKETVER_AD_NUM >= 20070711 || PACKETVER_SAK_NUM >= 20070628
-#define MAX_HOTKEYS_PACKET 27
-struct PACKET_ZC_SHORTCUT_KEY_LIST {
-	int16 packetType;
-	struct hotkey_data hotkey[MAX_HOTKEYS_PACKET];
-} __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_SHORTCUT_KEY_LIST, 0x02b9);
-#endif
 
-#if PACKETVER_MAIN_NUM >= 20070618 || defined(PACKETVER_RE) || defined(PACKETVER_ZERO) || PACKETVER_AD_NUM >= 20070618 || PACKETVER_SAK_NUM >= 20070618
+DEFINE_PACKET_HEADER(ZC_SHORTCUT_KEY_LIST, 0x0A00);
+  #elif PACKETVER_MAIN_NUM >= 20090617 || PACKETVER_RE_NUM >= 20090617 || PACKETVER_SAK_NUM >= 20090617
+    #define MAX_HOTKEYS_PACKET 38
+
+struct PACKET_ZC_SHORTCUT_KEY_LIST {
+	int16 packetType;
+	struct hotkey_data hotkey[MAX_HOTKEYS_PACKET];
+} __attribute__((packed));
+
+DEFINE_PACKET_HEADER(ZC_SHORTCUT_KEY_LIST, 0x07D9);
+  #elif PACKETVER_MAIN_NUM >= 20090603 || PACKETVER_RE_NUM >= 20090603 || PACKETVER_SAK_NUM >= 20090603
+    #define MAX_HOTKEYS_PACKET 36
+
+struct PACKET_ZC_SHORTCUT_KEY_LIST {
+	int16 packetType;
+	struct hotkey_data hotkey[MAX_HOTKEYS_PACKET];
+} __attribute__((packed));
+
+DEFINE_PACKET_HEADER(ZC_SHORTCUT_KEY_LIST, 0x07D9);
+  #elif PACKETVER_MAIN_NUM >= 20070711 \
+      || PACKETVER_RE_NUM >= 20080827 \
+      || PACKETVER_AD_NUM >= 20070711 \
+      || PACKETVER_SAK_NUM >= 20070628
+    #define MAX_HOTKEYS_PACKET 27
+
+struct PACKET_ZC_SHORTCUT_KEY_LIST {
+	int16 packetType;
+	struct hotkey_data hotkey[MAX_HOTKEYS_PACKET];
+} __attribute__((packed));
+
+DEFINE_PACKET_HEADER(ZC_SHORTCUT_KEY_LIST, 0x02B9);
+  #endif
+
+  #if PACKETVER_MAIN_NUM >= 20070618 \
+      || defined(PACKETVER_RE) \
+      || defined(PACKETVER_ZERO) \
+      || PACKETVER_AD_NUM >= 20070618 \
+      || PACKETVER_SAK_NUM >= 20070618
 struct PACKET_CZ_SHORTCUT_KEY_CHANGE1 {
 	int16 packetType;
 	uint16 index;
 	struct hotkey_data hotkey;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_SHORTCUT_KEY_CHANGE1, 0x02ba);
-#endif
 
-#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508 || PACKETVER_ZERO_NUM >= 20190605
+DEFINE_PACKET_HEADER(CZ_SHORTCUT_KEY_CHANGE1, 0x02BA);
+  #endif
+
+  #if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508 || PACKETVER_ZERO_NUM >= 20190605
 struct PACKET_CZ_SHORTCUT_KEY_CHANGE2 {
 	int16 packetType;
 	uint16 tab;
 	uint16 index;
 	struct hotkey_data hotkey;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_SHORTCUT_KEY_CHANGE2, 0x0b21);
-#endif
 
-#if PACKETVER_MAIN_NUM >= 20140129 || PACKETVER_RE_NUM >= 20140129 || defined(PACKETVER_ZERO)
+DEFINE_PACKET_HEADER(CZ_SHORTCUT_KEY_CHANGE2, 0x0B21);
+  #endif
+
+  #if PACKETVER_MAIN_NUM >= 20140129 || PACKETVER_RE_NUM >= 20140129 || defined(PACKETVER_ZERO)
 struct PACKET_CZ_SHORTCUTKEYBAR_ROTATE1 {
 	int16 packetType;
 	uint8 rowshift;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_SHORTCUTKEYBAR_ROTATE1, 0x0a01);
-#endif
 
-#if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508 || PACKETVER_ZERO_NUM >= 20190605
+DEFINE_PACKET_HEADER(CZ_SHORTCUTKEYBAR_ROTATE1, 0x0A01);
+  #endif
+
+  #if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508 || PACKETVER_ZERO_NUM >= 20190605
 struct PACKET_CZ_SHORTCUTKEYBAR_ROTATE2 {
 	int16 packetType;
 	uint16 tab;
 	uint8 rowshift;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_SHORTCUTKEYBAR_ROTATE2, 0x0b22);
-#endif
+
+DEFINE_PACKET_HEADER(CZ_SHORTCUTKEYBAR_ROTATE2, 0x0B22);
+  #endif
 
 #endif // HOTKEY_SAVING
 
@@ -1713,7 +1767,7 @@ struct packet_quest_list_info {
 	int32 quest_endTime;
 	int16 hunting_count;
 	struct packet_mission_info_sub objectives[]; // Note: This will be < MAX_QUEST_OBJECTIVES
-#endif // PACKETVER >= 20141022
+#endif                                               // PACKETVER >= 20141022
 } __attribute__((packed));
 
 /**
@@ -1729,7 +1783,7 @@ struct packet_quest_list_header {
 	uint16 PacketType;
 	uint16 PacketLength;
 	int32 questCount;
-	//struct packet_quest_list_info list[]; // Variable-length
+	// struct packet_quest_list_info list[]; // Variable-length
 } __attribute__((packed));
 
 struct packet_chat_message {
@@ -1761,11 +1815,11 @@ struct PACKET_ZC_ACK_ADD_ITEM_RODEX {
 	int8 result;
 	int16 index;
 	int16 count;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
+  #endif
 	int8 type;
 	int8 IsIdentified;
 	int8 IsDamaged;
@@ -1777,18 +1831,19 @@ struct PACKET_ZC_ACK_ADD_ITEM_RODEX {
 	int8 refiningLevel;
 	int8 grade;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ACK_ADD_ITEM_RODEX, 0x0b3f);
+
+DEFINE_PACKET_HEADER(ZC_ACK_ADD_ITEM_RODEX, 0x0B3F);
 #elif PACKETVER >= 20141119
 struct PACKET_ZC_ACK_ADD_ITEM_RODEX {
 	int16 PacketType;
 	int8 result;
 	int16 index;
 	int16 count;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
+  #endif
 	int8 type;
 	int8 IsIdentified;
 	int8 IsDamaged;
@@ -1799,9 +1854,9 @@ struct PACKET_ZC_ACK_ADD_ITEM_RODEX {
 	uint8 favorite;
 	uint32 location;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ACK_ADD_ITEM_RODEX, 0x0a05);
-#endif  // PACKETVER >= 20141119
 
+DEFINE_PACKET_HEADER(ZC_ACK_ADD_ITEM_RODEX, 0x0A05);
+#endif // PACKETVER >= 20141119
 
 struct PACKET_CZ_REQ_OPEN_WRITE_MAIL {
 	int16 PacketType;
@@ -1852,8 +1907,8 @@ struct PACKET_CZ_CHECKNAME1 {
 	int16 PacketType;
 	char Name[24];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_CHECKNAME1, 0x0a13)
-#endif  // PACKETVER >= 20140423
+DEFINE_PACKET_HEADER(CZ_CHECKNAME1, 0x0A13)
+#endif // PACKETVER >= 20140423
 
 #if PACKETVER_MAIN_NUM >= 20201104 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20201118
 struct PACKET_CZ_CHECKNAME2 {
@@ -1861,8 +1916,8 @@ struct PACKET_CZ_CHECKNAME2 {
 	char Name[24];
 	char own_char;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_CHECKNAME2, 0x0b97)
-#endif  // PACKETVER_MAIN_NUM >= 20201104 || PACKETVER_ZERO_NUM >= 20201118
+DEFINE_PACKET_HEADER(CZ_CHECKNAME2, 0x0B97)
+#endif // PACKETVER_MAIN_NUM >= 20201104 || PACKETVER_ZERO_NUM >= 20201118
 
 #if PACKETVER >= 20160302
 struct PACKET_ZC_CHECKNAME {
@@ -1872,7 +1927,7 @@ struct PACKET_ZC_CHECKNAME {
 	int16 BaseLevel;
 	char Name[24];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_CHECKNAME, 0x0a51)
+DEFINE_PACKET_HEADER(ZC_CHECKNAME, 0x0A51)
 #elif PACKETVER >= 20141119
 struct PACKET_ZC_CHECKNAME {
 	int16 PacketType;
@@ -1880,7 +1935,7 @@ struct PACKET_ZC_CHECKNAME {
 	int16 Class;
 	int16 BaseLevel;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_CHECKNAME, 0x0a14)
+DEFINE_PACKET_HEADER(ZC_CHECKNAME, 0x0A14)
 #endif
 
 struct PACKET_ZC_NOTIFY_UNREADMAIL {
@@ -1941,11 +1996,11 @@ struct PACKET_CZ_REQ_READ_MAIL {
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 struct PACKET_ZC_ACK_READ_RODEX_SUB {
 	int16 count;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 ITID;
-#else
+  #else
 	uint16 ITID;
-#endif
+  #endif
 	int8 IsIdentified;
 	int8 IsDamaged;
 	struct EQUIPSLOTINFO slot;
@@ -1968,16 +2023,17 @@ struct PACKET_ZC_ACK_READ_RODEX {
 	int8 ItemCnt;
 	char Textcontent[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ACK_READ_RODEX, 0x0b63);
+
+DEFINE_PACKET_HEADER(ZC_ACK_READ_RODEX, 0x0B63);
 // [4144] date unconfirmed
 #elif PACKETVER >= 20140115
 struct PACKET_ZC_ACK_READ_RODEX_SUB {
 	int16 count;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 ITID;
-#else
+  #else
 	uint16 ITID;
-#endif
+  #endif
 	int8 IsIdentified;
 	int8 IsDamaged;
 	int8 refiningLevel;
@@ -1999,8 +2055,9 @@ struct PACKET_ZC_ACK_READ_RODEX {
 	int8 ItemCnt;
 	char Textcontent[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ACK_READ_RODEX, 0x09eb);
-#endif  // PACKETVER >= 20140115
+
+DEFINE_PACKET_HEADER(ZC_ACK_READ_RODEX, 0x09EB);
+#endif // PACKETVER >= 20140115
 
 struct PACKET_CZ_REQ_DELETE_MAIL {
 	int16 PacketType;
@@ -2122,7 +2179,8 @@ struct PACKET_ZC_CLANINFO {
 	uint8 AllyCount;
 	uint8 AntagonistCount;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_CLANINFO, 0x098a);
+
+DEFINE_PACKET_HEADER(ZC_CLANINFO, 0x098A);
 #endif
 
 struct PACKET_ZC_NOTIFY_CLAN_CONNECTINFO {
@@ -2264,13 +2322,15 @@ struct PACKET_ZC_UI_OPEN {
 	int8 UIType;
 	int32 data;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_UI_OPEN, 0x0ae2);
+
+DEFINE_PACKET_HEADER(ZC_UI_OPEN, 0x0AE2);
 #elif PACKETVER >= 20151202
 struct PACKET_ZC_UI_OPEN {
 	int16 PacketType;
 	int8 UIType;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_UI_OPEN, 0x0a38);
+
+DEFINE_PACKET_HEADER(ZC_UI_OPEN, 0x0A38);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
@@ -2279,8 +2339,9 @@ struct PACKET_ZC_UI_OPEN2 {
 	int8 UIType;
 	int64 data;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_UI_OPEN2, 0x0b9a);
-#endif  // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
+
+DEFINE_PACKET_HEADER(ZC_UI_OPEN2, 0x0B9A);
+#endif // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 
 struct PACKET_ZC_UI_ACTION {
 	int16 PacketType;
@@ -2389,11 +2450,11 @@ struct PACKET_ZC_ADD_ITEM_TO_STORE {
 	int16 packetType;
 	int16 index;
 	int32 amount;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
+  #endif
 	uint8 itemType;
 	uint8 identified;
 	uint8 damaged;
@@ -2402,17 +2463,17 @@ struct PACKET_ZC_ADD_ITEM_TO_STORE {
 	uint8 refine;
 	uint8 grade;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ADD_ITEM_TO_STORE, 0x0b44)
+DEFINE_PACKET_HEADER(ZC_ADD_ITEM_TO_STORE, 0x0B44)
 #elif PACKETVER_MAIN_NUM >= 20140813 || PACKETVER_RE_NUM >= 20140402 || defined(PACKETVER_ZERO)
 struct PACKET_ZC_ADD_ITEM_TO_STORE {
 	int16 packetType;
 	int16 index;
 	int32 amount;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
+  #endif
 	uint8 itemType;
 	uint8 identified;
 	uint8 damaged;
@@ -2420,41 +2481,41 @@ struct PACKET_ZC_ADD_ITEM_TO_STORE {
 	struct EQUIPSLOTINFO slot;
 	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ADD_ITEM_TO_STORE, 0x0a0a)
+DEFINE_PACKET_HEADER(ZC_ADD_ITEM_TO_STORE, 0x0A0A)
 // [4144] this version unconfirmed
 #elif PACKETVER >= 5
 struct PACKET_ZC_ADD_ITEM_TO_STORE {
 	int16 packetType;
 	int16 index;
 	int32 amount;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
+  #endif
 	uint8 itemType;
 	uint8 identified;
 	uint8 damaged;
 	uint8 refine;
 	struct EQUIPSLOTINFO slot;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ADD_ITEM_TO_STORE, 0x01c4)
+DEFINE_PACKET_HEADER(ZC_ADD_ITEM_TO_STORE, 0x01C4)
 #else
 struct PACKET_ZC_ADD_ITEM_TO_STORE {
 	int16 packetType;
 	int16 index;
 	int32 amount;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
+  #endif
 	uint8 identified;
 	uint8 damaged;
 	uint8 refine;
 	struct EQUIPSLOTINFO slot;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ADD_ITEM_TO_STORE, 0x00f4)
+DEFINE_PACKET_HEADER(ZC_ADD_ITEM_TO_STORE, 0x00F4)
 #endif
 
 struct PACKET_ZC_MVP_GETTING_ITEM {
@@ -2486,11 +2547,11 @@ struct PACKET_ZC_ADD_ITEM_TO_CART {
 	int16 packetType;
 	int16 index;
 	int32 amount;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
+  #endif
 	uint8 itemType;
 	uint8 identified;
 	uint8 damaged;
@@ -2499,17 +2560,18 @@ struct PACKET_ZC_ADD_ITEM_TO_CART {
 	uint8 refine;
 	uint8 grade;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ADD_ITEM_TO_CART, 0x0b45);
+
+DEFINE_PACKET_HEADER(ZC_ADD_ITEM_TO_CART, 0x0B45);
 #elif PACKETVER_MAIN_NUM >= 20140813 || PACKETVER_RE_NUM >= 20140402 || defined(PACKETVER_ZERO)
 struct PACKET_ZC_ADD_ITEM_TO_CART {
 	int16 packetType;
 	int16 index;
 	int32 amount;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
+  #endif
 	uint8 itemType;
 	uint8 identified;
 	uint8 damaged;
@@ -2517,40 +2579,43 @@ struct PACKET_ZC_ADD_ITEM_TO_CART {
 	struct EQUIPSLOTINFO slot;
 	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ADD_ITEM_TO_CART, 0x0a0b);
+
+DEFINE_PACKET_HEADER(ZC_ADD_ITEM_TO_CART, 0x0A0B);
 // [4144] this version unconfirmed
 #elif PACKETVER >= 5
 struct PACKET_ZC_ADD_ITEM_TO_CART {
 	int16 packetType;
 	int16 index;
 	int32 amount;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
+  #endif
 	uint8 itemType;
 	uint8 identified;
 	uint8 damaged;
 	uint8 refine;
 	struct EQUIPSLOTINFO slot;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ADD_ITEM_TO_CART, 0x01c5);
+
+DEFINE_PACKET_HEADER(ZC_ADD_ITEM_TO_CART, 0x01C5);
 #else
 struct PACKET_ZC_ADD_ITEM_TO_CART {
 	int16 packetType;
 	int16 index;
 	int32 amount;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
+  #endif
 	uint8 identified;
 	uint8 damaged;
 	uint8 refine;
 	struct EQUIPSLOTINFO slot;
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(ZC_ADD_ITEM_TO_CART, 0x0124);
 #endif
 
@@ -2644,7 +2709,7 @@ struct PACKET_ZC_ADD_EXCHANGE_ITEM {
 	uint8 damaged;
 #if !(PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024)
 	uint8 refine;
-#endif  // !(PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024)
+#endif // !(PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024)
 	struct EQUIPSLOTINFO slot;
 #if PACKETVER >= 20150226
 	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
@@ -2652,23 +2717,23 @@ struct PACKET_ZC_ADD_EXCHANGE_ITEM {
 #if PACKETVER_MAIN_NUM >= 20161102 || PACKETVER_RE_NUM >= 20161026 || defined(PACKETVER_ZERO)
 	uint32 location;
 	uint16 look;
-#endif  // PACKETVER_MAIN_NUM >= 20161102 || PACKETVER_RE_NUM >= 20161026 || defined(PACKETVER_ZERO)
+#endif // PACKETVER_MAIN_NUM >= 20161102 || PACKETVER_RE_NUM >= 20161026 || defined(PACKETVER_ZERO)
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	uint8 refine;
 	uint8 grade;
-#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
+#endif // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 } __attribute__((packed));
 
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
-DEFINE_PACKET_HEADER(ZC_ADD_EXCHANGE_ITEM, 0x0b42);
+DEFINE_PACKET_HEADER(ZC_ADD_EXCHANGE_ITEM, 0x0B42);
 #elif PACKETVER_MAIN_NUM >= 20161102 || PACKETVER_RE_NUM >= 20161026 || defined(PACKETVER_ZERO)
-DEFINE_PACKET_HEADER(ZC_ADD_EXCHANGE_ITEM, 0x0a96);
+DEFINE_PACKET_HEADER(ZC_ADD_EXCHANGE_ITEM, 0x0A96);
 #elif PACKETVER >= 20150226
-DEFINE_PACKET_HEADER(ZC_ADD_EXCHANGE_ITEM, 0x0a09);
+DEFINE_PACKET_HEADER(ZC_ADD_EXCHANGE_ITEM, 0x0A09);
 #elif PACKETVER >= 20100223
-DEFINE_PACKET_HEADER(ZC_ADD_EXCHANGE_ITEM, 0x080f);
+DEFINE_PACKET_HEADER(ZC_ADD_EXCHANGE_ITEM, 0x080F);
 #else
-DEFINE_PACKET_HEADER(ZC_ADD_EXCHANGE_ITEM, 0x00e9);
+DEFINE_PACKET_HEADER(ZC_ADD_EXCHANGE_ITEM, 0x00E9);
 #endif
 
 struct PACKET_ZC_CASH_TIME_COUNTER {
@@ -2695,11 +2760,11 @@ struct PACKET_ZC_CASH_ITEM_DELETE {
 struct PACKET_ZC_ITEM_PICKUP_PARTY {
 	int16 packetType;
 	uint32 AID;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
+  #endif
 	uint8 identified;
 	uint8 damaged;
 	struct EQUIPSLOTINFO slot;
@@ -2708,16 +2773,17 @@ struct PACKET_ZC_ITEM_PICKUP_PARTY {
 	uint8 refine;
 	uint8 grade;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ITEM_PICKUP_PARTY, 0x0b67);
+
+DEFINE_PACKET_HEADER(ZC_ITEM_PICKUP_PARTY, 0x0B67);
 #elif PACKETVER >= 20070731
 struct PACKET_ZC_ITEM_PICKUP_PARTY {
 	int16 packetType;
 	uint32 AID;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
+  #endif
 	uint8 identified;
 	uint8 damaged;
 	uint8 refine;
@@ -2725,7 +2791,8 @@ struct PACKET_ZC_ITEM_PICKUP_PARTY {
 	uint16 location;
 	uint8 itemType;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ITEM_PICKUP_PARTY, 0x02b8);
+
+DEFINE_PACKET_HEADER(ZC_ITEM_PICKUP_PARTY, 0x02B8);
 #endif
 
 struct PACKET_ZC_UPDATE_ITEM_FROM_BUYING_STORE {
@@ -2761,7 +2828,8 @@ struct PACKET_ZC_ACK_WEAPONREFINE {
 struct PACKET_ZC_PROPERTY_HOMUN {
 	int16 packetType;
 	char name[NAME_LENGTH];
-	// Bit field, bit 0 : rename_flag (1 = already renamed), bit 1 : homunc vaporized (1 = true), bit 2 : homunc dead (1 = true)
+	// Bit field, bit 0 : rename_flag (1 = already renamed), bit 1 : homunc vaporized (1 = true), bit 2 : homunc
+	// dead (1 = true)
 	uint8 flags;
 	uint16 level;
 	uint16 hunger;
@@ -2783,13 +2851,15 @@ struct PACKET_ZC_PROPERTY_HOMUN {
 	uint16 skillPoints;
 	uint16 range;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_PROPERTY_HOMUN, 0x0ba4);
+
+DEFINE_PACKET_HEADER(ZC_PROPERTY_HOMUN, 0x0BA4);
 #elif PACKETVER_MAIN_NUM >= 20200819 || PACKETVER_RE_NUM >= 20200723
 // PACKET_ZC_PROPERTY_HOMUN3
 struct PACKET_ZC_PROPERTY_HOMUN {
 	int16 packetType;
 	char name[NAME_LENGTH];
-	// Bit field, bit 0 : rename_flag (1 = already renamed), bit 1 : homunc vaporized (1 = true), bit 2 : homunc dead (1 = true)
+	// Bit field, bit 0 : rename_flag (1 = already renamed), bit 1 : homunc vaporized (1 = true), bit 2 : homunc
+	// dead (1 = true)
 	uint8 flags;
 	uint16 level;
 	uint16 hunger;
@@ -2811,13 +2881,15 @@ struct PACKET_ZC_PROPERTY_HOMUN {
 	uint16 skillPoints;
 	uint16 range;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_PROPERTY_HOMUN, 0x0b76);
+
+DEFINE_PACKET_HEADER(ZC_PROPERTY_HOMUN, 0x0B76);
 #elif PACKETVER_MAIN_NUM >= 20190619 || PACKETVER_RE_NUM >= 20190605 || PACKETVER_ZERO_NUM >= 20190626
 // PACKET_ZC_PROPERTY_HOMUN3
 struct PACKET_ZC_PROPERTY_HOMUN {
 	int16 packetType;
 	char name[NAME_LENGTH];
-	// Bit field, bit 0 : rename_flag (1 = already renamed), bit 1 : homunc vaporized (1 = true), bit 2 : homunc dead (1 = true)
+	// Bit field, bit 0 : rename_flag (1 = already renamed), bit 1 : homunc vaporized (1 = true), bit 2 : homunc
+	// dead (1 = true)
 	uint8 flags;
 	uint16 level;
 	uint16 hunger;
@@ -2839,22 +2911,24 @@ struct PACKET_ZC_PROPERTY_HOMUN {
 	uint16 skillPoints;
 	uint16 range;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_PROPERTY_HOMUN, 0x0b2f);
+
+DEFINE_PACKET_HEADER(ZC_PROPERTY_HOMUN, 0x0B2F);
 #elif PACKETVER_MAIN_NUM >= 20131230 || PACKETVER_RE_NUM >= 20131230 || defined(PACKETVER_ZERO)
 // PACKET_ZC_PROPERTY_HOMUN2
 struct PACKET_ZC_PROPERTY_HOMUN {
 	int16 packetType;
 	char name[NAME_LENGTH];
-	// Bit field, bit 0 : rename_flag (1 = already renamed), bit 1 : homunc vaporized (1 = true), bit 2 : homunc dead (1 = true)
+	// Bit field, bit 0 : rename_flag (1 = already renamed), bit 1 : homunc vaporized (1 = true), bit 2 : homunc
+	// dead (1 = true)
 	uint8 flags;
 	uint16 level;
 	uint16 hunger;
 	uint16 intimacy;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
+  #endif
 	uint16 atk2;
 	uint16 matk;
 	uint16 hit;
@@ -2872,22 +2946,24 @@ struct PACKET_ZC_PROPERTY_HOMUN {
 	uint16 skillPoints;
 	uint16 range;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_PROPERTY_HOMUN, 0x09f7);
+
+DEFINE_PACKET_HEADER(ZC_PROPERTY_HOMUN, 0x09F7);
 #elif PACKETVER_MAIN_NUM >= 20101005 || PACKETVER_RE_NUM >= 20080827 || defined(PACKETVER_ZERO)
 // PACKET_ZC_PROPERTY_HOMUN1
 struct PACKET_ZC_PROPERTY_HOMUN {
 	int16 packetType;
 	char name[NAME_LENGTH];
-	// Bit field, bit 0 : rename_flag (1 = already renamed), bit 1 : homunc vaporized (1 = true), bit 2 : homunc dead (1 = true)
+	// Bit field, bit 0 : rename_flag (1 = already renamed), bit 1 : homunc vaporized (1 = true), bit 2 : homunc
+	// dead (1 = true)
 	uint8 flags;
 	uint16 level;
 	uint16 hunger;
 	uint16 intimacy;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
+  #endif
 	uint16 atk2;
 	uint16 matk;
 	uint16 hit;
@@ -2905,7 +2981,8 @@ struct PACKET_ZC_PROPERTY_HOMUN {
 	uint16 skillPoints;
 	uint16 range;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_PROPERTY_HOMUN, 0x022e);
+
+DEFINE_PACKET_HEADER(ZC_PROPERTY_HOMUN, 0x022E);
 #endif
 
 struct PACKET_ZC_FAILED_TRADE_BUYING_STORE_TO_SELLER {
@@ -2921,27 +2998,27 @@ struct PACKET_ZC_FAILED_TRADE_BUYING_STORE_TO_SELLER {
 #if PACKETVER >= 20191224
 struct REPAIRITEM_INFO2 {
 	int16 index;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
-	struct EQUIPSLOTINFO slot;  // unused?
-	uint8 refine;  // unused?
-	uint8 grade;  // unused?
+  #endif
+	struct EQUIPSLOTINFO slot; // unused?
+	uint8 refine;              // unused?
+	uint8 grade;               // unused?
 } __attribute__((packed));
 #elif PACKETVER >= 20191106
 struct REPAIRITEM_INFO2 {
 	int16 index;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
-	uint8 refine;  // unused?
-	struct EQUIPSLOTINFO slot;  // unused?
+  #endif
+	uint8 refine;              // unused?
+	struct EQUIPSLOTINFO slot; // unused?
 } __attribute__((packed));
-#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
+#endif // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 
 struct REPAIRITEM_INFO1 {
 	int16 index;
@@ -2950,8 +3027,8 @@ struct REPAIRITEM_INFO1 {
 #else
 	uint16 itemId;
 #endif
-	uint8 refine;  // unused?
-	struct EQUIPSLOTINFO slot;  // unused?
+	uint8 refine;              // unused?
+	struct EQUIPSLOTINFO slot; // unused?
 } __attribute__((packed));
 
 #if PACKETVER >= 20191224
@@ -2959,14 +3036,16 @@ struct PACKET_CZ_REQ_ITEMREPAIR2 {
 	int16 packetType;
 	struct REPAIRITEM_INFO2 item;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_REQ_ITEMREPAIR2, 0x0b66);
-#endif  // PACKETVER >= 20191224
+
+DEFINE_PACKET_HEADER(CZ_REQ_ITEMREPAIR2, 0x0B66);
+#endif // PACKETVER >= 20191224
 
 struct PACKET_CZ_REQ_ITEMREPAIR1 {
 	int16 packetType;
 	struct REPAIRITEM_INFO1 item;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_REQ_ITEMREPAIR1, 0x01fd);
+
+DEFINE_PACKET_HEADER(CZ_REQ_ITEMREPAIR1, 0x01FD);
 
 struct PACKET_CZ_REQ_MAKINGITEM {
 	int16 packetType;
@@ -2999,7 +3078,7 @@ struct PACKET_ZC_ACK_SCHEDULER_CASHITEM_sub {
 #ifdef ENABLE_CASHSHOP_PREVIEW_PATCH
 	uint16 viewSprite;
 	uint32 location;
-#endif  // ENABLE_CASHSHOP_PREVIEW_PATCH
+#endif // ENABLE_CASHSHOP_PREVIEW_PATCH
 } __attribute__((packed));
 
 struct PACKET_ZC_ACK_SCHEDULER_CASHITEM {
@@ -3016,11 +3095,11 @@ struct PACKET_ZC_PC_PURCHASE_MYITEMLIST_sub {
 	int16 index;
 	int16 amount;
 	uint8 itemType;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
+  #endif
 	uint8 identified;
 	uint8 damaged;
 	struct EQUIPSLOTINFO slot;
@@ -3028,78 +3107,84 @@ struct PACKET_ZC_PC_PURCHASE_MYITEMLIST_sub {
 	uint8 refine;
 	uint8 grade;
 } __attribute__((packed));
+
 struct PACKET_ZC_PC_PURCHASE_MYITEMLIST {
 	int16 packetType;
 	int16 packetLength;
 	uint32 AID;
 	struct PACKET_ZC_PC_PURCHASE_MYITEMLIST_sub items[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_PC_PURCHASE_MYITEMLIST, 0x0b40);
-#else  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
+
+DEFINE_PACKET_HEADER(ZC_PC_PURCHASE_MYITEMLIST, 0x0B40);
+#else // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 struct PACKET_ZC_PC_PURCHASE_MYITEMLIST_sub {
 	uint32 price;
 	int16 index;
 	int16 amount;
 	uint8 itemType;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
+  #endif
 	uint8 identified;
 	uint8 damaged;
 	uint8 refine;
 	struct EQUIPSLOTINFO slot;
-#if PACKETVER >= 20150226
+  #if PACKETVER >= 20150226
 	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
-#endif
+  #endif
 } __attribute__((packed));
+
 struct PACKET_ZC_PC_PURCHASE_MYITEMLIST {
 	int16 packetType;
 	int16 packetLength;
 	uint32 AID;
 	struct PACKET_ZC_PC_PURCHASE_MYITEMLIST_sub items[];
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(ZC_PC_PURCHASE_MYITEMLIST, 0x0136);
-#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
+#endif // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 
 #if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 struct PACKET_ZC_PC_PURCHASE_ITEMLIST_sub {
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
+  #endif
 	uint32 price;
 	uint32 discountPrice;
 	uint8 itemType;
 	uint16 viewSprite;
 	uint32 location;
 } __attribute__((packed));
+
 struct PACKET_ZC_PC_PURCHASE_ITEMLIST {
 	int16 packetType;
 	int16 packetLength;
 	struct PACKET_ZC_PC_PURCHASE_ITEMLIST_sub items[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_PC_PURCHASE_ITEMLIST, 0x0b77)
-#else  // PACKETVER_MAIN_NUM >= 20210203
+DEFINE_PACKET_HEADER(ZC_PC_PURCHASE_ITEMLIST, 0x0B77)
+#else // PACKETVER_MAIN_NUM >= 20210203
 struct PACKET_ZC_PC_PURCHASE_ITEMLIST_sub {
 	uint32 price;
 	uint32 discountPrice;
 	uint8 itemType;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
+  #endif
 } __attribute__((packed));
+
 struct PACKET_ZC_PC_PURCHASE_ITEMLIST {
 	int16 packetType;
 	int16 packetLength;
 	struct PACKET_ZC_PC_PURCHASE_ITEMLIST_sub items[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_PC_PURCHASE_ITEMLIST, 0x00c6)
-#endif  // PACKETVER_MAIN_NUM >= 20210203
+DEFINE_PACKET_HEADER(ZC_PC_PURCHASE_ITEMLIST, 0x00C6)
+#endif // PACKETVER_MAIN_NUM >= 20210203
 
 struct PACKET_CZ_PC_PURCHASE_ITEMLIST_sub {
 	uint16 amount;
@@ -3160,11 +3245,11 @@ struct PACKET_ZC_PC_PURCHASE_ITEMLIST_FROMMC_sub {
 	uint16 amount;
 	int16 index;
 	uint8 itemType;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
+  #endif
 	uint8 identified;
 	uint8 damaged;
 	struct EQUIPSLOTINFO slot;
@@ -3182,43 +3267,43 @@ struct PACKET_ZC_PC_PURCHASE_ITEMLIST_FROMMC {
 	uint32 venderId;
 	struct PACKET_ZC_PC_PURCHASE_ITEMLIST_FROMMC_sub items[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_PC_PURCHASE_ITEMLIST_FROMMC, 0x0b3d)
+DEFINE_PACKET_HEADER(ZC_PC_PURCHASE_ITEMLIST_FROMMC, 0x0B3D)
 #elif PACKETVER >= 20100105
 struct PACKET_ZC_PC_PURCHASE_ITEMLIST_FROMMC_sub {
 	uint32 price;
 	uint16 amount;
 	int16 index;
 	uint8 itemType;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
+  #endif
 	uint8 identified;
 	uint8 damaged;
-#if !(PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024)
+  #if !(PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024)
 	uint8 refine;
-#endif
+  #endif
 	struct EQUIPSLOTINFO slot;
-#if PACKETVER >= 20150226
+  #if PACKETVER >= 20150226
 	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
-#endif
-// [4144] date 20160921 not confirmed. Can be bigger or smaller
-#if PACKETVER >= 20160921
+  #endif
+  // [4144] date 20160921 not confirmed. Can be bigger or smaller
+  #if PACKETVER >= 20160921
 	uint32 location;
 	uint16 viewSprite;
-#endif
-#if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
+  #endif
+  #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 	uint8 refine;
 	uint8 grade;
-#endif
+  #endif
 } __attribute__((packed));
 
 struct PACKET_ZC_PC_PURCHASE_ITEMLIST_FROMMC {
 	int16 packetType;
 	int16 packetLength;
 	uint32 AID;
-// [4144] unconfirmed field
+	// [4144] unconfirmed field
 	uint32 venderId;
 	struct PACKET_ZC_PC_PURCHASE_ITEMLIST_FROMMC_sub items[];
 } __attribute__((packed));
@@ -3229,11 +3314,11 @@ struct PACKET_ZC_PC_PURCHASE_ITEMLIST_FROMMC_sub {
 	uint16 amount;
 	int16 index;
 	uint8 itemType;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
+  #endif
 	uint8 identified;
 	uint8 damaged;
 	uint8 refine;
@@ -3316,14 +3401,17 @@ struct PACKET_ZC_MAKINGARROW_LIST {
 	int16 packetLength;
 	struct PACKET_ZC_MAKINGARROW_LIST_sub items[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_MAKINGARROW_LIST, 0x01ad);
+
+DEFINE_PACKET_HEADER(ZC_MAKINGARROW_LIST, 0x01AD);
 
 struct PACKET_ZC_SKILL_SELECT_REQUEST {
 	int16 packetType;
 	int16 packetLength;
-	int32 flag; //< 0 = old code compatibility; 1 = Auto Shadow Spell; same value is received in CZ_SKILL_SELECT_RESPONSE
+	int32 flag; //< 0 = old code compatibility; 1 = Auto Shadow Spell; same value is received in
+	            //CZ_SKILL_SELECT_RESPONSE
 	int16 skillIds[];
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(ZC_SKILL_SELECT_REQUEST, 0x0442);
 
 struct PACKET_CZ_SKILL_SELECT_RESPONSE {
@@ -3333,22 +3421,26 @@ struct PACKET_CZ_SKILL_SELECT_RESPONSE {
 } __attribute__((packed));
 
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
-#define REPAIRITEM_INFO REPAIRITEM_INFO2
+  #define REPAIRITEM_INFO REPAIRITEM_INFO2
+
 struct PACKET_ZC_REPAIRITEMLIST {
 	int16 packetType;
 	int16 packetLength;
 	struct REPAIRITEM_INFO items[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_REPAIRITEMLIST, 0x0b65);
-#else  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
-#define REPAIRITEM_INFO REPAIRITEM_INFO1
+
+DEFINE_PACKET_HEADER(ZC_REPAIRITEMLIST, 0x0B65);
+#else // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
+  #define REPAIRITEM_INFO REPAIRITEM_INFO1
+
 struct PACKET_ZC_REPAIRITEMLIST {
 	int16 packetType;
 	int16 packetLength;
 	struct REPAIRITEM_INFO items[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_REPAIRITEMLIST, 0x01fc);
-#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
+
+DEFINE_PACKET_HEADER(ZC_REPAIRITEMLIST, 0x01FC);
+#endif // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
 
 struct PACKET_ZC_NOTIFY_WEAPONITEMLIST_sub {
 	int16 index;
@@ -3357,8 +3449,8 @@ struct PACKET_ZC_NOTIFY_WEAPONITEMLIST_sub {
 #else
 	uint16 itemId;
 #endif
-	uint8 refine;  // unused?
-	struct EQUIPSLOTINFO slot;  // unused?
+	uint8 refine;              // unused?
+	struct EQUIPSLOTINFO slot; // unused?
 } __attribute__((packed));
 
 struct PACKET_ZC_NOTIFY_WEAPONITEMLIST {
@@ -3381,7 +3473,8 @@ struct PACKET_ZC_MAKINGITEM_LIST {
 	uint16 makeItem;
 	struct PACKET_ZC_MAKINGITEM_LIST_sub items[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_MAKINGITEM_LIST, 0x025a);
+
+DEFINE_PACKET_HEADER(ZC_MAKINGITEM_LIST, 0x025A);
 
 struct PACKET_ZC_PC_CASH_POINT_ITEMLIST_sub {
 	uint32 price;
@@ -3396,7 +3489,7 @@ struct PACKET_ZC_PC_CASH_POINT_ITEMLIST_sub {
 	uint16 viewSprite;
 	uint32 location;
 	uint8 unused[6];
-#endif  // ENABLE_OLD_CASHSHOP_PREVIEW_PATCH
+#endif // ENABLE_OLD_CASHSHOP_PREVIEW_PATCH
 } __attribute__((packed));
 
 struct PACKET_ZC_PC_CASH_POINT_ITEMLIST {
@@ -3428,9 +3521,9 @@ struct PACKET_CZ_PC_BUY_CASH_POINT_ITEM {
 #else
 	uint16 itemId;
 	uint16 amount;
-#if PACKETVER >= 20070711
+  #if PACKETVER >= 20070711
 	uint32 kafraPoints;
-#endif
+  #endif
 #endif
 } __attribute__((packed));
 
@@ -3450,10 +3543,10 @@ struct PACKET_CZ_SEARCH_STORE_INFO {
 	uint32 minPrice;
 	uint8 itemsCount;
 	uint8 cardsCount;
-	struct PACKET_CZ_SEARCH_STORE_INFO_item items[];  // items[itemCount]
-/*
-	struct PACKET_CZ_SEARCH_STORE_INFO_item cards[cardCount];
-*/
+	struct PACKET_CZ_SEARCH_STORE_INFO_item items[]; // items[itemCount]
+	/*
+	        struct PACKET_CZ_SEARCH_STORE_INFO_item cards[cardCount];
+	*/
 } __attribute__((packed));
 
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
@@ -3461,11 +3554,11 @@ struct PACKET_ZC_SEARCH_STORE_INFO_ACK_sub {
 	uint32 storeId;
 	uint32 AID;
 	char shopName[MESSAGE_SIZE];
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
+  #endif
 	uint8 itemType;
 	uint32 price;
 	uint16 amount;
@@ -3483,25 +3576,26 @@ struct PACKET_ZC_SEARCH_STORE_INFO_ACK {
 	uint8 usesCount;
 	struct PACKET_ZC_SEARCH_STORE_INFO_ACK_sub items[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_SEARCH_STORE_INFO_ACK, 0x0b64);
+
+DEFINE_PACKET_HEADER(ZC_SEARCH_STORE_INFO_ACK, 0x0B64);
 #elif PACKETVER_MAIN_NUM >= 20100817 || PACKETVER_RE_NUM >= 20100706 || defined(PACKETVER_ZERO)
 struct PACKET_ZC_SEARCH_STORE_INFO_ACK_sub {
 	uint32 storeId;
 	uint32 AID;
 	char shopName[MESSAGE_SIZE];
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
+  #endif
 	uint8 itemType;
 	uint32 price;
 	uint16 amount;
 	uint8 refine;
 	struct EQUIPSLOTINFO slot;
-#if PACKETVER >= 20150226
+  #if PACKETVER >= 20150226
 	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
-#endif
+  #endif
 } __attribute__((packed));
 
 struct PACKET_ZC_SEARCH_STORE_INFO_ACK {
@@ -3512,9 +3606,9 @@ struct PACKET_ZC_SEARCH_STORE_INFO_ACK {
 	uint8 usesCount;
 	struct PACKET_ZC_SEARCH_STORE_INFO_ACK_sub items[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_SEARCH_STORE_INFO_ACK, 0x0836);
-#endif  // PACKETVER_MAIN_NUM >= 20100817 || PACKETVER_RE_NUM >= 20100706 || defined(PACKETVER_ZERO)
 
+DEFINE_PACKET_HEADER(ZC_SEARCH_STORE_INFO_ACK, 0x0836);
+#endif // PACKETVER_MAIN_NUM >= 20100817 || PACKETVER_RE_NUM >= 20100706 || defined(PACKETVER_ZERO)
 
 /* Achievement System */
 struct ach_list_info {
@@ -3569,7 +3663,8 @@ struct PACKET_ZC_ACK_REQNAMEALL {
 	char position_name[NAME_LENGTH];
 	int32 title_id;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ACK_REQNAMEALL, 0x0a30);
+
+DEFINE_PACKET_HEADER(ZC_ACK_REQNAMEALL, 0x0A30);
 #else
 struct PACKET_ZC_ACK_REQNAMEALL {
 	uint16 packet_id;
@@ -3579,6 +3674,7 @@ struct PACKET_ZC_ACK_REQNAMEALL {
 	char guild_name[NAME_LENGTH];
 	char position_name[NAME_LENGTH];
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(ZC_ACK_REQNAMEALL, 0x0195);
 #endif
 
@@ -3590,13 +3686,15 @@ struct PACKET_ZC_ACK_REQNAMEALL_NPC {
 	char name[NAME_LENGTH];
 	char title[NAME_LENGTH];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ACK_REQNAMEALL_NPC, 0x0adf);
+
+DEFINE_PACKET_HEADER(ZC_ACK_REQNAMEALL_NPC, 0x0ADF);
 #else
 struct PACKET_ZC_ACK_REQNAMEALL_NPC {
 	uint16 packet_id;
 	int32 gid;
 	char name[NAME_LENGTH];
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(ZC_ACK_REQNAMEALL_NPC, 0x0095);
 #endif
 
@@ -3640,15 +3738,16 @@ struct PACKET_ZC_MOVE_ITEM_FAILED {
 	int16 itemIndex;
 	int16 itemCount;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_MOVE_ITEM_FAILED, 0x0aa7);
-#endif  // PACKETVER_MAIN_NUM >= 20161214 || PACKETVER_RE_NUM >= 20161130 || defined(PACKETVER_ZERO)
+
+DEFINE_PACKET_HEADER(ZC_MOVE_ITEM_FAILED, 0x0AA7);
+#endif // PACKETVER_MAIN_NUM >= 20161214 || PACKETVER_RE_NUM >= 20161130 || defined(PACKETVER_ZERO)
 
 #if PACKETVER_MAIN_NUM >= 20161019 || PACKETVER_RE_NUM >= 20160921 || defined(PACKETVER_ZERO)
-#define PACKET_ZC_ACK_BAN_GUILD PACKET_ZC_ACK_BAN_GUILD3
+  #define PACKET_ZC_ACK_BAN_GUILD PACKET_ZC_ACK_BAN_GUILD3
 #elif PACKETVER >= 20100803
-#define PACKET_ZC_ACK_BAN_GUILD PACKET_ZC_ACK_BAN_GUILD2
+  #define PACKET_ZC_ACK_BAN_GUILD PACKET_ZC_ACK_BAN_GUILD2
 #else
-#define PACKET_ZC_ACK_BAN_GUILD PACKET_ZC_ACK_BAN_GUILD1
+  #define PACKET_ZC_ACK_BAN_GUILD PACKET_ZC_ACK_BAN_GUILD1
 #endif
 
 struct PACKET_ZC_ACK_BAN_GUILD1 {
@@ -3671,9 +3770,9 @@ struct PACKET_ZC_ACK_BAN_GUILD3 {
 } __attribute__((packed));
 
 #if PACKETVER_MAIN_NUM >= 20161019 || PACKETVER_RE_NUM >= 20160921 || defined(PACKETVER_ZERO)
-#define PACKET_ZC_ACK_LEAVE_GUILD PACKET_ZC_ACK_LEAVE_GUILD2
+  #define PACKET_ZC_ACK_LEAVE_GUILD PACKET_ZC_ACK_LEAVE_GUILD2
 #else
-#define PACKET_ZC_ACK_LEAVE_GUILD PACKET_ZC_ACK_LEAVE_GUILD1
+  #define PACKET_ZC_ACK_LEAVE_GUILD PACKET_ZC_ACK_LEAVE_GUILD1
 #endif
 
 struct PACKET_ZC_ACK_LEAVE_GUILD1 {
@@ -3707,7 +3806,8 @@ struct PACKET_ZC_VIEW_CAMERAINFO {
 	float rotation;
 	float latitude;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_VIEW_CAMERAINFO, 0x0a78);
+
+DEFINE_PACKET_HEADER(ZC_VIEW_CAMERAINFO, 0x0A78);
 #endif
 
 #if PACKETVER >= 20160525
@@ -3718,7 +3818,8 @@ struct PACKET_CZ_VIEW_CAMERAINFO {
 	float rotation;
 	float latitude;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_VIEW_CAMERAINFO, 0x0a77);
+
+DEFINE_PACKET_HEADER(CZ_VIEW_CAMERAINFO, 0x0A77);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20181128 || PACKETVER_RE_NUM >= 20181031 || PACKETVER_ZERO_NUM >= 20180523
@@ -3728,14 +3829,19 @@ struct PACKET_ZC_AUTOSPELLLIST {
 	int16 packetLength;
 	int skills[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_AUTOSPELLLIST, 0x0afb);
-#elif PACKETVER_MAIN_NUM >= 20090406 || defined(PACKETVER_RE) || defined(PACKETVER_ZERO) || PACKETVER_SAK_NUM >= 20080618
+
+DEFINE_PACKET_HEADER(ZC_AUTOSPELLLIST, 0x0AFB);
+#elif PACKETVER_MAIN_NUM >= 20090406 \
+    || defined(PACKETVER_RE) \
+    || defined(PACKETVER_ZERO) \
+    || PACKETVER_SAK_NUM >= 20080618
 // PACKET_ZC_AUTOSPELLLIST1
 struct PACKET_ZC_AUTOSPELLLIST {
 	int16 packetType;
 	int skills[7];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_AUTOSPELLLIST, 0x01cd);
+
+DEFINE_PACKET_HEADER(ZC_AUTOSPELLLIST, 0x01CD);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
@@ -3748,7 +3854,8 @@ struct PACKET_ZC_CHANGE_ITEM_OPTION {
 	uint8 refiningLevel;
 	uint8 grade;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_CHANGE_ITEM_OPTION, 0x0b43);
+
+DEFINE_PACKET_HEADER(ZC_CHANGE_ITEM_OPTION, 0x0B43);
 #elif PACKETVER_MAIN_NUM >= 20181017 || PACKETVER_RE_NUM >= 20181017 || PACKETVER_ZERO_NUM >= 20181024
 struct PACKET_ZC_CHANGE_ITEM_OPTION {
 	int16 packetType;
@@ -3758,7 +3865,8 @@ struct PACKET_ZC_CHANGE_ITEM_OPTION {
 	struct EQUIPSLOTINFO slot;
 	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_CHANGE_ITEM_OPTION, 0x0b13);
+
+DEFINE_PACKET_HEADER(ZC_CHANGE_ITEM_OPTION, 0x0B13);
 #elif PACKETVER_MAIN_NUM >= 20170726 || PACKETVER_RE_NUM >= 20170621 || defined(PACKETVER_ZERO)
 struct PACKET_ZC_CHANGE_ITEM_OPTION {
 	int16 packetType;
@@ -3767,23 +3875,25 @@ struct PACKET_ZC_CHANGE_ITEM_OPTION {
 	struct EQUIPSLOTINFO slot;
 	struct ItemOptions option_data[MAX_ITEM_OPTIONS];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_CHANGE_ITEM_OPTION, 0x0ab9);
-#endif  // PACKETVER_MAIN_NUM >= 20181017 || PACKETVER_RE_NUM >= 20181017 || PACKETVER_ZERO_NUM >= 20181024
+
+DEFINE_PACKET_HEADER(ZC_CHANGE_ITEM_OPTION, 0x0AB9);
+#endif // PACKETVER_MAIN_NUM >= 20181017 || PACKETVER_RE_NUM >= 20181017 || PACKETVER_ZERO_NUM >= 20181024
 
 #if PACKETVER_MAIN_NUM >= 20160831 || PACKETVER_RE_NUM >= 20151118 || defined(PACKETVER_ZERO)
 struct PACKET_ZC_UPDATE_CARDSLOT {
 	int16 packetType;
 	int16 wearState;
 	int16 cardSlot;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	int32 itemId;
-#else
+  #else
 	int16 itemId;
-#endif
+  #endif
 	int8 equipFlag;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_UPDATE_CARDSLOT, 0x0a3f);
-#endif  // PACKETVER_MAIN_NUM >= 20160831 || PACKETVER_RE_NUM >= 20151118 || defined(PACKETVER_ZERO)
+
+DEFINE_PACKET_HEADER(ZC_UPDATE_CARDSLOT, 0x0A3F);
+#endif // PACKETVER_MAIN_NUM >= 20160831 || PACKETVER_RE_NUM >= 20151118 || defined(PACKETVER_ZERO)
 
 #if PACKETVER_MAIN_NUM >= 20170830 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO)
 struct PACKET_ZC_DEBUGMSG {
@@ -3792,7 +3902,8 @@ struct PACKET_ZC_DEBUGMSG {
 	int32 color;
 	char message[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_DEBUGMSG, 0x0adb);
+
+DEFINE_PACKET_HEADER(ZC_DEBUGMSG, 0x0ADB);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20181002 || PACKETVER_RE_NUM >= 20181002 || PACKETVER_ZERO_NUM >= 20181010
@@ -3802,13 +3913,15 @@ struct PACKET_CZ_USE_SKILL_START {
 	int16 skillLv;
 	uint32 targetId;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_USE_SKILL_START, 0x0b10);
+
+DEFINE_PACKET_HEADER(CZ_USE_SKILL_START, 0x0B10);
 
 struct PACKET_CZ_USE_SKILL_END {
 	int16 packetType;
 	int16 skillId;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_USE_SKILL_END, 0x0b11);
+
+DEFINE_PACKET_HEADER(CZ_USE_SKILL_END, 0x0B11);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20181219 || PACKETVER_RE_NUM >= 20181219 || PACKETVER_ZERO_NUM >= 20181212
@@ -3816,7 +3929,8 @@ struct PACKET_ZC_EXTEND_BODYITEM_SIZE {
 	int16 packetType;
 	int16 expansionSize;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_EXTEND_BODYITEM_SIZE, 0x0b18);
+
+DEFINE_PACKET_HEADER(ZC_EXTEND_BODYITEM_SIZE, 0x0B18);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20181219 || PACKETVER_RE_NUM >= 20181219 || PACKETVER_ZERO_NUM >= 20181212
@@ -3825,7 +3939,8 @@ struct PACKET_ZC_ACK_OPEN_MSGBOX_EXTEND_BODYITEM_SIZE {
 	uint8 result;
 	uint32 itemId;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ACK_OPEN_MSGBOX_EXTEND_BODYITEM_SIZE, 0x0b15);
+
+DEFINE_PACKET_HEADER(ZC_ACK_OPEN_MSGBOX_EXTEND_BODYITEM_SIZE, 0x0B15);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20181219 || PACKETVER_RE_NUM >= 20181219 || PACKETVER_ZERO_NUM >= 20181212
@@ -3833,107 +3948,118 @@ struct PACKET_ZC_ACK_EXTEND_BODYITEM_SIZE {
 	int16 packetType;
 	uint8 result;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ACK_EXTEND_BODYITEM_SIZE, 0x0b17);
+
+DEFINE_PACKET_HEADER(ZC_ACK_EXTEND_BODYITEM_SIZE, 0x0B17);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20181031 || PACKETVER_RE_NUM >= 20181031 || PACKETVER_ZERO_NUM >= 20181114
 struct PACKET_CZ_REQ_OPEN_MSGBOX_EXTEND_BODYITEM_SIZE {
 	int16 packetType;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_REQ_OPEN_MSGBOX_EXTEND_BODYITEM_SIZE, 0x0b14);
+
+DEFINE_PACKET_HEADER(CZ_REQ_OPEN_MSGBOX_EXTEND_BODYITEM_SIZE, 0x0B14);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20181031 || PACKETVER_RE_NUM >= 20181031 || PACKETVER_ZERO_NUM >= 20181114
 struct PACKET_CZ_REQ_EXTEND_BODYITEM_SIZE {
 	int16 packetType;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_REQ_EXTEND_BODYITEM_SIZE, 0x0b16);
+
+DEFINE_PACKET_HEADER(CZ_REQ_EXTEND_BODYITEM_SIZE, 0x0B16);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20181031 || PACKETVER_RE_NUM >= 20181031 || PACKETVER_ZERO_NUM >= 20181114
 struct PACKET_CZ_CLOSE_MSGBOX_EXTEND_BODYITEM_SIZE {
 	int16 packetType;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_CLOSE_MSGBOX_EXTEND_BODYITEM_SIZE, 0x0b19);
+
+DEFINE_PACKET_HEADER(CZ_CLOSE_MSGBOX_EXTEND_BODYITEM_SIZE, 0x0B19);
 #endif
 
 struct PACKET_CZ_REQ_REMAINTIME {
 	int16 packetType;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_REQ_REMAINTIME, 0x01c0);
+
+DEFINE_PACKET_HEADER(CZ_REQ_REMAINTIME, 0x01C0);
 
 struct PACKET_CZ_PARTY_CONFIG {
 	int16 packetType;
 	uint8 refuseInvite;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_PARTY_CONFIG, 0x02c8);
+
+DEFINE_PACKET_HEADER(CZ_PARTY_CONFIG, 0x02C8);
 
 #if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 struct PACKET_ZC_NPC_BARTER_MARKET_ITEMINFO_sub {
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 nameid;
-#else
+  #else
 	uint16 nameid;
-#endif
+  #endif
 	uint8 type;
 	uint32 amount;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 currencyNameid;
-#else
+  #else
 	uint16 currencyNameid;
-#endif
+  #endif
 	uint32 currencyAmount;
 	uint32 weight;
 	uint32 index;
 	uint16 viewSprite;
 	uint32 location;
 } __attribute__((packed));
+
 struct PACKET_ZC_NPC_BARTER_MARKET_ITEMINFO {
 	int16 packetType;
 	int16 packetLength;
 	struct PACKET_ZC_NPC_BARTER_MARKET_ITEMINFO_sub list[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_NPC_BARTER_MARKET_ITEMINFO, 0x0b78);
+
+DEFINE_PACKET_HEADER(ZC_NPC_BARTER_MARKET_ITEMINFO, 0x0B78);
 #elif PACKETVER_MAIN_NUM >= 20190116 || PACKETVER_RE_NUM >= 20190116 || PACKETVER_ZERO_NUM >= 20181226
 struct PACKET_ZC_NPC_BARTER_MARKET_ITEMINFO_sub {
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 nameid;
-#else
+  #else
 	uint16 nameid;
-#endif
+  #endif
 	uint8 type;
 	uint32 amount;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 currencyNameid;
-#else
+  #else
 	uint16 currencyNameid;
-#endif
+  #endif
 	uint32 currencyAmount;
 	uint32 weight;
 	uint32 index;
 } __attribute__((packed));
+
 struct PACKET_ZC_NPC_BARTER_MARKET_ITEMINFO {
 	int16 packetType;
 	int16 packetLength;
 	struct PACKET_ZC_NPC_BARTER_MARKET_ITEMINFO_sub list[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_NPC_BARTER_MARKET_ITEMINFO, 0x0b0e);
+
+DEFINE_PACKET_HEADER(ZC_NPC_BARTER_MARKET_ITEMINFO, 0x0B0E);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20190116 || PACKETVER_RE_NUM >= 20190116 || PACKETVER_ZERO_NUM >= 20181226
 struct PACKET_CZ_NPC_BARTER_MARKET_CLOSE {
 	int16 packetType;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_NPC_BARTER_MARKET_CLOSE, 0x0b12);
+
+DEFINE_PACKET_HEADER(CZ_NPC_BARTER_MARKET_CLOSE, 0x0B12);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20190116 || PACKETVER_RE_NUM >= 20190116 || PACKETVER_ZERO_NUM >= 20181226
 struct PACKET_CZ_NPC_BARTER_MARKET_PURCHASE_sub {
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
+  #endif
 	uint32 amount;
 	uint16 invIndex;
 	uint32 shopIndex;
@@ -3944,10 +4070,11 @@ struct PACKET_CZ_NPC_BARTER_MARKET_PURCHASE {
 	int16 packetLength;
 	struct PACKET_CZ_NPC_BARTER_MARKET_PURCHASE_sub list[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_NPC_BARTER_MARKET_PURCHASE, 0x0b0f);
+
+DEFINE_PACKET_HEADER(CZ_NPC_BARTER_MARKET_PURCHASE, 0x0B0F);
 #endif
 
-#if PACKETVER_MAIN_NUM >= 20181212 || PACKETVER_RE_NUM >= 20181212 ||  PACKETVER_ZERO_NUM >= 20190130
+#if PACKETVER_MAIN_NUM >= 20181212 || PACKETVER_RE_NUM >= 20181212 || PACKETVER_ZERO_NUM >= 20190130
 struct PACKET_ZC_USESKILL_ACK {
 	int16 packetType;
 	uint32 srcId;
@@ -3960,7 +4087,8 @@ struct PACKET_ZC_USESKILL_ACK {
 	uint8 disposable;
 	uint32 attackMT;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_USESKILL_ACK, 0x0b1a);
+
+DEFINE_PACKET_HEADER(ZC_USESKILL_ACK, 0x0B1A);
 #elif PACKETVER_MAIN_NUM >= 20091124 || PACKETVER_RE_NUM >= 20091124 || defined(PACKETVER_ZERO)
 struct PACKET_ZC_USESKILL_ACK {
 	int16 packetType;
@@ -3973,8 +4101,12 @@ struct PACKET_ZC_USESKILL_ACK {
 	uint32 delayTime;
 	uint8 disposable;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_USESKILL_ACK, 0x07fb);
-#elif PACKETVER_MAIN_NUM >= 20090406 || PACKETVER_SAK_NUM >= 20080618 || PACKETVER_RE_NUM >= 20080827 || defined(PACKETVER_ZERO)
+
+DEFINE_PACKET_HEADER(ZC_USESKILL_ACK, 0x07FB);
+#elif PACKETVER_MAIN_NUM >= 20090406 \
+    || PACKETVER_SAK_NUM >= 20080618 \
+    || PACKETVER_RE_NUM >= 20080827 \
+    || defined(PACKETVER_ZERO)
 struct PACKET_ZC_USESKILL_ACK {
 	int16 packetType;
 	uint32 srcId;
@@ -3985,58 +4117,73 @@ struct PACKET_ZC_USESKILL_ACK {
 	uint32 element;
 	uint32 delayTime;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_USESKILL_ACK, 0x013e);
+
+DEFINE_PACKET_HEADER(ZC_USESKILL_ACK, 0x013E);
 #endif
 
-#if PACKETVER_MAIN_NUM >= 20090406 || PACKETVER_RE_NUM >= 20090408 || PACKETVER_SAK_NUM >= 20090408 || defined(PACKETVER_ZERO)
+#if PACKETVER_MAIN_NUM >= 20090406 \
+    || PACKETVER_RE_NUM >= 20090408 \
+    || PACKETVER_SAK_NUM >= 20090408 \
+    || defined(PACKETVER_ZERO)
 struct PACKET_CZ_CLIENT_VERSION {
 	int16 packetType;
 	uint32 clientVersion;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_CLIENT_VERSION, 0x044a);
+
+DEFINE_PACKET_HEADER(CZ_CLIENT_VERSION, 0x044A);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20190227 || PACKETVER_RE_NUM >= 20190220 || PACKETVER_ZERO_NUM >= 20190220
 struct PACKET_CZ_PING_LIVE {
 	int16 packetType;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_PING_LIVE, 0x0b1c);
+
+DEFINE_PACKET_HEADER(CZ_PING_LIVE, 0x0B1C);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20190227 || PACKETVER_RE_NUM >= 20190220 || PACKETVER_ZERO_NUM >= 20190220
 struct PACKET_ZC_PING_LIVE {
 	int16 packetType;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_PING_LIVE, 0x0b1d);
+
+DEFINE_PACKET_HEADER(ZC_PING_LIVE, 0x0B1D);
 #endif
 
 #if PACKETVER >= 20160622
 struct PACKET_CZ_CMD_RESETCOOLTIME {
 	int16 packetType;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_CMD_RESETCOOLTIME, 0x0a88);
+
+DEFINE_PACKET_HEADER(CZ_CMD_RESETCOOLTIME, 0x0A88);
 #endif
 
 #if PACKETVER >= 20151104
 struct PACKET_CZ_CLOSE_UI_STYLINGSHOP {
 	int16 packetType;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_CLOSE_UI_STYLINGSHOP, 0x0a48);
+
+DEFINE_PACKET_HEADER(CZ_CLOSE_UI_STYLINGSHOP, 0x0A48);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20190403 || PACKETVER_RE_NUM >= 20190320 || PACKETVER_ZERO_NUM >= 20190410
 struct PACKET_ZC_NOTIFY_ACTORINIT {
 	int16 packetType;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_NOTIFY_ACTORINIT, 0x0b1b);
+
+DEFINE_PACKET_HEADER(ZC_NOTIFY_ACTORINIT, 0x0B1B);
 #endif
 
-#if PACKETVER_MAIN_NUM >= 20070911 || defined(PACKETVER_RE) || PACKETVER_AD_NUM >= 20070911 || PACKETVER_SAK_NUM >= 20070904 || defined(PACKETVER_ZERO)
+#if PACKETVER_MAIN_NUM >= 20070911 \
+    || defined(PACKETVER_RE) \
+    || PACKETVER_AD_NUM >= 20070911 \
+    || PACKETVER_SAK_NUM >= 20070904 \
+    || defined(PACKETVER_ZERO)
 struct PACKET_ZC_PARTY_CONFIG {
 	int16 packetType;
 	uint8 denyPartyInvites;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_PARTY_CONFIG, 0x02c9);
+
+DEFINE_PACKET_HEADER(ZC_PARTY_CONFIG, 0x02C9);
 #endif
 
 struct PACKET_ZC_ROLE_CHANGE {
@@ -4044,7 +4191,8 @@ struct PACKET_ZC_ROLE_CHANGE {
 	int32 flag;
 	char name[NAME_LENGTH];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ROLE_CHANGE, 0x00e1);
+
+DEFINE_PACKET_HEADER(ZC_ROLE_CHANGE, 0x00E1);
 
 #if PACKETVER >= 20200902
 struct PACKET_ZC_BAN_LIST_sub {
@@ -4059,7 +4207,7 @@ struct PACKET_ZC_BAN_LIST {
 	struct PACKET_ZC_BAN_LIST_sub chars[];
 } __attribute__((packed));
 
-DEFINE_PACKET_HEADER(ZC_BAN_LIST, 0x0b7c);
+DEFINE_PACKET_HEADER(ZC_BAN_LIST, 0x0B7C);
 #elif PACKETVER_MAIN_NUM >= 20161019 || PACKETVER_RE_NUM >= 20160921 || defined(PACKETVER_ZERO)
 struct PACKET_ZC_BAN_LIST_sub {
 	int char_id;
@@ -4072,7 +4220,7 @@ struct PACKET_ZC_BAN_LIST {
 	struct PACKET_ZC_BAN_LIST_sub chars[];
 } __attribute__((packed));
 
-DEFINE_PACKET_HEADER(ZC_BAN_LIST, 0x0a87);
+DEFINE_PACKET_HEADER(ZC_BAN_LIST, 0x0A87);
 // version unconfirmed
 #elif PACKETVER >= 20100803
 struct PACKET_ZC_BAN_LIST_sub {
@@ -4108,7 +4256,8 @@ struct PACKET_ZC_ACK_CLOSE_ROULETTE {
 	int16 packetType;
 	uint8 result;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ACK_CLOSE_ROULETTE, 0x0a1e);
+
+DEFINE_PACKET_HEADER(ZC_ACK_CLOSE_ROULETTE, 0x0A1E);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20120314 || PACKETVER_RE_NUM >= 20120221 || defined(PACKETVER_ZERO)
@@ -4118,7 +4267,8 @@ struct PACKET_ZC_ACK_MERGE_ITEM {
 	int16 amount;
 	uint8 reason;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ACK_MERGE_ITEM, 0x096f);
+
+DEFINE_PACKET_HEADER(ZC_ACK_MERGE_ITEM, 0x096F);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20120314 || PACKETVER_RE_NUM >= 20120221 || defined(PACKETVER_ZERO)
@@ -4131,17 +4281,19 @@ struct PACKET_ZC_MERGE_ITEM_OPEN {
 	uint16 packetLen;
 	struct PACKET_ZC_MERGE_ITEM_OPEN_sub items[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_MERGE_ITEM_OPEN, 0x096d);
+
+DEFINE_PACKET_HEADER(ZC_MERGE_ITEM_OPEN, 0x096D);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20101123 || PACKETVER_RE_NUM >= 20120328 || defined(PACKETVER_ZERO)
 struct PACKET_ZC_SE_PC_BUY_CASHITEM_RESULT {
 	int16 packetType;
-	uint32 itemId;  // unused
+	uint32 itemId; // unused
 	uint16 result;
 	uint32 cashPoints;
 	uint32 kafraPoints;
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(ZC_SE_PC_BUY_CASHITEM_RESULT, 0x0849);
 #endif
 
@@ -4149,7 +4301,8 @@ DEFINE_PACKET_HEADER(ZC_SE_PC_BUY_CASHITEM_RESULT, 0x0849);
 struct PACKET_ZC_OPEN_REFINING_UI {
 	int16 packetType;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_OPEN_REFINING_UI, 0x0aa0);
+
+DEFINE_PACKET_HEADER(ZC_OPEN_REFINING_UI, 0x0AA0);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20161005 || PACKETVER_RE_NUM >= 20161005 || defined(PACKETVER_ZERO)
@@ -4157,16 +4310,17 @@ struct PACKET_CZ_REFINING_SELECT_ITEM {
 	int16 packetType;
 	int16 index;
 };
-DEFINE_PACKET_HEADER(CZ_REFINING_SELECT_ITEM, 0x0aa1);
+
+DEFINE_PACKET_HEADER(CZ_REFINING_SELECT_ITEM, 0x0AA1);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20161130 || PACKETVER_RE_NUM >= 20161109 || defined(PACKETVER_ZERO)
 struct PACKET_ZC_REFINING_MATERIAL_LIST_SUB {
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
+  #endif
 	int8 chance;
 	int32 zeny;
 } __attribute__((packed));
@@ -4178,41 +4332,45 @@ struct PACKET_ZC_REFINING_MATERIAL_LIST {
 	int8 blacksmithBlessing;
 	struct PACKET_ZC_REFINING_MATERIAL_LIST_SUB req[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_REFINING_MATERIAL_LIST, 0x0aa2);
+
+DEFINE_PACKET_HEADER(ZC_REFINING_MATERIAL_LIST, 0x0AA2);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20161005 || PACKETVER_RE_NUM >= 20161005 || defined(PACKETVER_ZERO)
 struct PACKET_CZ_REQ_REFINING {
 	int16 packetType;
 	int16 index;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
+  #endif
 	int8 blacksmithBlessing;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_REQ_REFINING, 0x0aa3);
+
+DEFINE_PACKET_HEADER(CZ_REQ_REFINING, 0x0AA3);
 
 struct PACKET_CZ_CLOSE_REFINING_UI {
 	int16 packetType;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_CLOSE_REFINING_UI, 0x0aa4);
+
+DEFINE_PACKET_HEADER(CZ_CLOSE_REFINING_UI, 0x0AA4);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20170906 || PACKETVER_RE_NUM >= 20170830 || defined(PACKETVER_ZERO)
 struct PACKET_ZC_BROADCAST_ITEMREFINING_RESULT {
 	int16 packetType;
 	char name[NAME_LENGTH];
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
+  #endif
 	int8 refine_level;
 	int8 status;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_BROADCAST_ITEMREFINING_RESULT, 0x0ada);
+
+DEFINE_PACKET_HEADER(ZC_BROADCAST_ITEMREFINING_RESULT, 0x0ADA);
 #endif
 
 struct PACKET_ZC_ACK_RANKING_name {
@@ -4236,7 +4394,8 @@ struct PACKET_ZC_ACK_RANKING {
 	uint32 points[10];
 	uint32 myPoints;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ACK_RANKING, 0x0af6);
+
+DEFINE_PACKET_HEADER(ZC_ACK_RANKING, 0x0AF6);
 #elif PACKETVER_MAIN_NUM >= 20130605 || PACKETVER_RE_NUM >= 20130529 || defined(PACKETVER_ZERO)
 struct PACKET_ZC_ACK_RANKING_sub {
 	struct PACKET_ZC_ACK_RANKING_name names[10];
@@ -4250,7 +4409,7 @@ struct PACKET_ZC_ACK_RANKING {
 	uint32 myPoints;
 } __attribute__((packed));
 
-DEFINE_PACKET_HEADER(ZC_ACK_RANKING, 0x097d);
+DEFINE_PACKET_HEADER(ZC_ACK_RANKING, 0x097D);
 #else
 struct PACKET_ZC_ACK_RANKING_sub {
 	struct PACKET_ZC_ACK_RANKING_name names[10];
@@ -4264,7 +4423,8 @@ struct PACKET_ZC_STATUS_CHANGE_ACK {
 	uint8 ok;
 	uint8 value;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_STATUS_CHANGE_ACK, 0x00bc);
+
+DEFINE_PACKET_HEADER(ZC_STATUS_CHANGE_ACK, 0x00BC);
 
 #if PACKETVER_MAIN_NUM >= 20150507 || PACKETVER_RE_NUM >= 20150429 || defined(PACKETVER_ZERO)
 struct PACKET_ZC_EQUIPMENT_EFFECT {
@@ -4274,7 +4434,8 @@ struct PACKET_ZC_EQUIPMENT_EFFECT {
 	int8 status;
 	uint16 effects[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_EQUIPMENT_EFFECT, 0x0a3b);
+
+DEFINE_PACKET_HEADER(ZC_EQUIPMENT_EFFECT, 0x0A3B);
 #endif
 
 // [4144] this struct updated not in all packets in client
@@ -4305,7 +4466,7 @@ struct PACKET_ZC_ADD_SKILL {
 	struct SKILLDATA skill;
 } __attribute__((packed));
 #if PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190918
-DEFINE_PACKET_HEADER(ZC_ADD_SKILL, 0x0b31);
+DEFINE_PACKET_HEADER(ZC_ADD_SKILL, 0x0B31);
 #else
 DEFINE_PACKET_HEADER(ZC_ADD_SKILL, 0x0111);
 #endif
@@ -4316,9 +4477,9 @@ struct PACKET_ZC_SKILLINFO_LIST {
 	struct SKILLDATA skills[];
 } __attribute__((packed));
 #if PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190918
-DEFINE_PACKET_HEADER(ZC_SKILLINFO_LIST, 0x0b32);
+DEFINE_PACKET_HEADER(ZC_SKILLINFO_LIST, 0x0B32);
 #else
-DEFINE_PACKET_HEADER(ZC_SKILLINFO_LIST, 0x010f);
+DEFINE_PACKET_HEADER(ZC_SKILLINFO_LIST, 0x010F);
 #endif
 
 #if PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190918
@@ -4332,7 +4493,8 @@ struct PACKET_ZC_SKILLINFO_UPDATE2 {
 	uint8 upFlag;
 	uint16 level2;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_SKILLINFO_UPDATE2, 0x0b33);
+
+DEFINE_PACKET_HEADER(ZC_SKILLINFO_UPDATE2, 0x0B33);
 #else
 struct PACKET_ZC_SKILLINFO_UPDATE2 {
 	int16 packetType;
@@ -4343,7 +4505,8 @@ struct PACKET_ZC_SKILLINFO_UPDATE2 {
 	uint16 range2;
 	uint8 upFlag;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_SKILLINFO_UPDATE2, 0x07e1);
+
+DEFINE_PACKET_HEADER(ZC_SKILLINFO_UPDATE2, 0x07E1);
 #endif
 
 struct PACKET_ZC_NPC_MARKET_PURCHASE_RESULT_sub {
@@ -4363,7 +4526,8 @@ struct PACKET_ZC_NPC_MARKET_PURCHASE_RESULT {
 	uint16 result;
 	struct PACKET_ZC_NPC_MARKET_PURCHASE_RESULT_sub list[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_NPC_MARKET_PURCHASE_RESULT, 0x0b4e);
+
+DEFINE_PACKET_HEADER(ZC_NPC_MARKET_PURCHASE_RESULT, 0x0B4E);
 #elif PACKETVER_MAIN_NUM >= 20131120 || PACKETVER_RE_NUM >= 20130911 || defined(PACKETVER_ZERO)
 struct PACKET_ZC_NPC_MARKET_PURCHASE_RESULT {
 	int16 PacketType;
@@ -4371,7 +4535,8 @@ struct PACKET_ZC_NPC_MARKET_PURCHASE_RESULT {
 	uint8 result;
 	struct PACKET_ZC_NPC_MARKET_PURCHASE_RESULT_sub list[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_NPC_MARKET_PURCHASE_RESULT, 0x09d7);
+
+DEFINE_PACKET_HEADER(ZC_NPC_MARKET_PURCHASE_RESULT, 0x09D7);
 #endif
 
 struct PACKET_ZC_TALKBOX_CHATCONTENTS {
@@ -4379,6 +4544,7 @@ struct PACKET_ZC_TALKBOX_CHATCONTENTS {
 	uint32 aid;
 	char message[TALKBOX_MESSAGE_SIZE];
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(ZC_TALKBOX_CHATCONTENTS, 0x0191);
 
 #if PACKETVER_MAIN_NUM >= 20190731 || PACKETVER_RE_NUM >= 20190717 || PACKETVER_ZERO_NUM >= 20190814
@@ -4387,7 +4553,8 @@ struct PACKET_ZC_GUILD_AGIT_INFO {
 	int16 packetLength;
 	int8 castle_list[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_GUILD_AGIT_INFO, 0x0b27);
+
+DEFINE_PACKET_HEADER(ZC_GUILD_AGIT_INFO, 0x0B27);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190522 || PACKETVER_ZERO_NUM >= 20190515
@@ -4395,7 +4562,8 @@ struct PACKET_CZ_REQ_MOVE_GUILD_AGIT {
 	int16 packetType;
 	int8 castle_id;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_REQ_MOVE_GUILD_AGIT, 0x0b28);
+
+DEFINE_PACKET_HEADER(CZ_REQ_MOVE_GUILD_AGIT, 0x0B28);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20190731 || PACKETVER_RE_NUM >= 20190717 || PACKETVER_ZERO_NUM >= 20190814
@@ -4403,7 +4571,8 @@ struct PACKET_ZC_REQ_ACK_MOVE_GUILD_AGIT {
 	int16 packetType;
 	int16 result;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_REQ_ACK_MOVE_GUILD_AGIT, 0x0b2e);
+
+DEFINE_PACKET_HEADER(ZC_REQ_ACK_MOVE_GUILD_AGIT, 0x0B2E);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20190731 || PACKETVER_RE_NUM >= 20190717 || PACKETVER_ZERO_NUM >= 20190814
@@ -4413,7 +4582,8 @@ struct PACKET_ZC_REQ_ACK_AGIT_INVESTMENT {
 	int32 economy;
 	int32 defense;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_REQ_ACK_AGIT_INVESTMENT, 0x0b2d);
+
+DEFINE_PACKET_HEADER(ZC_REQ_ACK_AGIT_INVESTMENT, 0x0B2D);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190522 || PACKETVER_ZERO_NUM >= 20190515
@@ -4421,26 +4591,29 @@ struct PACKET_CZ_REQ_AGIT_INVESTMENT {
 	int16 packetType;
 	int8 castle_id;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_REQ_AGIT_INVESTMENT, 0x0b2c);
+
+DEFINE_PACKET_HEADER(CZ_REQ_AGIT_INVESTMENT, 0x0B2C);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20160601 || PACKETVER_RE_NUM >= 20160525 || defined(PACKETVER_ZERO)
 struct PACKET_ZC_RANDOM_COMBINE_ITEM_UI_OPEN {
 	int16 packetType;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	int32 itemId;
-#else
+  #else
 	int16 itemId;
-#endif
+  #endif
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_RANDOM_COMBINE_ITEM_UI_OPEN, 0x0a4e);
+
+DEFINE_PACKET_HEADER(ZC_RANDOM_COMBINE_ITEM_UI_OPEN, 0x0A4E);
 #endif // PACKETVER_MAIN_NUM >= 20160601 || PACKETVER_RE_NUM >= 20160525 || defined(PACKETVER_ZERO)
 
 #if PACKETVER_MAIN_NUM >= 20160504 || PACKETVER_RE_NUM >= 20160504 || defined(PACKETVER_ZERO)
 struct PACKET_CZ_RANDOM_COMBINE_ITEM_UI_CLOSE {
 	int16 packetType;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_RANDOM_COMBINE_ITEM_UI_CLOSE, 0x0a70);
+
+DEFINE_PACKET_HEADER(CZ_RANDOM_COMBINE_ITEM_UI_CLOSE, 0x0A70);
 #endif // PACKETVER_MAIN_NUM >= 20160504 || PACKETVER_RE_NUM >= 20160504 || defined(PACKETVER_ZERO)
 
 #if PACKETVER >= 20160302
@@ -4452,14 +4625,15 @@ struct PACKET_CZ_REQ_RANDOM_COMBINE_ITEM_sub {
 struct PACKET_CZ_REQ_RANDOM_COMBINE_ITEM {
 	int16 packetType;
 	int16 packetLength;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	int32 itemId;
-#else
+  #else
 	int16 itemId;
-#endif
+  #endif
 	struct PACKET_CZ_REQ_RANDOM_COMBINE_ITEM_sub items[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_REQ_RANDOM_COMBINE_ITEM, 0x0a4f);
+
+DEFINE_PACKET_HEADER(CZ_REQ_RANDOM_COMBINE_ITEM, 0x0A4F);
 #endif // PACKETVER >= 20160302
 
 #if PACKETVER_MAIN_NUM >= 20160601 || PACKETVER_RE_NUM >= 20160525 || defined(PACKETVER_ZERO)
@@ -4467,7 +4641,8 @@ struct PACKET_ZC_ACK_RANDOM_COMBINE_ITEM {
 	int16 packetType;
 	int16 result;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ACK_RANDOM_COMBINE_ITEM, 0x0a50);
+
+DEFINE_PACKET_HEADER(ZC_ACK_RANDOM_COMBINE_ITEM, 0x0A50);
 #endif // PACKETVER_MAIN_NUM >= 20160601 || PACKETVER_RE_NUM >= 20160525 || defined(PACKETVER_ZERO)
 
 #if PACKETVER_MAIN_NUM >= 20190703 || PACKETVER_RE_NUM >= 20190703 || PACKETVER_ZERO_NUM >= 20190709
@@ -4475,7 +4650,8 @@ struct PACKET_CZ_UNINSTALLATION {
 	int16 PacketType;
 	uint8 InstallationKind;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_UNINSTALLATION, 0x0b35);
+
+DEFINE_PACKET_HEADER(CZ_UNINSTALLATION, 0x0B35);
 #endif
 
 // in 3 clients from same version
@@ -4486,14 +4662,20 @@ struct PACKET_ZC_NOTIFY_EFFECT3 {
 	uint32 effectId;
 	uint64 num;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_NOTIFY_EFFECT3, 0x0b69);
-#elif PACKETVER_MAIN_NUM >= 20060911 || PACKETVER_AD_NUM >= 20060911 || PACKETVER_SAK_NUM >= 20060911 || defined(PACKETVER_RE) || defined(PACKETVER_ZERO)
+
+DEFINE_PACKET_HEADER(ZC_NOTIFY_EFFECT3, 0x0B69);
+#elif PACKETVER_MAIN_NUM >= 20060911 \
+    || PACKETVER_AD_NUM >= 20060911 \
+    || PACKETVER_SAK_NUM >= 20060911 \
+    || defined(PACKETVER_RE) \
+    || defined(PACKETVER_ZERO)
 struct PACKET_ZC_NOTIFY_EFFECT3 {
 	int16 packetType;
 	uint32 aid;
 	uint32 effectId;
 	uint32 num;
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(ZC_NOTIFY_EFFECT3, 0x0284);
 #endif
 
@@ -4501,6 +4683,7 @@ DEFINE_PACKET_HEADER(ZC_NOTIFY_EFFECT3, 0x0284);
 struct PACKET_CZ_SE_CASHSHOP_OPEN1 {
 	int16 packetType;
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(CZ_SE_CASHSHOP_OPEN1, 0x0844);
 #endif
 
@@ -4509,14 +4692,16 @@ struct PACKET_CZ_SE_CASHSHOP_OPEN2 {
 	int16 packetType;
 	uint32 tab;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_SE_CASHSHOP_OPEN2, 0x0b6d);
+
+DEFINE_PACKET_HEADER(CZ_SE_CASHSHOP_OPEN2, 0x0B6D);
 #endif
 
 #if PACKETVER >= 20190724
 struct PACKET_CZ_GET_ACCOUNT_LIMTIED_SALE_LIST {
 	int16 packetType;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_GET_ACCOUNT_LIMTIED_SALE_LIST, 0x0b4c);
+
+DEFINE_PACKET_HEADER(CZ_GET_ACCOUNT_LIMTIED_SALE_LIST, 0x0B4C);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20200129 || PACKETVER_RE_NUM >= 20200205 || PACKETVER_ZERO_NUM >= 20191224
@@ -4526,7 +4711,8 @@ struct PACKET_ZC_SE_CASHSHOP_OPEN {
 	uint32 kafraPoints;
 	uint32 tab;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_SE_CASHSHOP_OPEN, 0x0b6e);
+
+DEFINE_PACKET_HEADER(ZC_SE_CASHSHOP_OPEN, 0x0B6E);
 #elif PACKETVER >= 20140730
 struct PACKET_ZC_SE_CASHSHOP_OPEN {
 	int16 packetType;
@@ -4534,13 +4720,15 @@ struct PACKET_ZC_SE_CASHSHOP_OPEN {
 	uint32 kafraPoints;
 	uint32 tab;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_SE_CASHSHOP_OPEN, 0x0a2b);
+
+DEFINE_PACKET_HEADER(ZC_SE_CASHSHOP_OPEN, 0x0A2B);
 #elif PACKETVER_MAIN_NUM >= 20101123 || PACKETVER_RE_NUM >= 20120328 || defined(PACKETVER_ZERO)
 struct PACKET_ZC_SE_CASHSHOP_OPEN {
 	int16 packetType;
 	uint32 cashPoints;
 	uint32 kafraPoints;
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(ZC_SE_CASHSHOP_OPEN, 0x0845);
 #endif
 
@@ -4548,27 +4736,28 @@ DEFINE_PACKET_HEADER(ZC_SE_CASHSHOP_OPEN, 0x0845);
 struct PACKET_CZ_NPC_EXPANDED_BARTER_MARKET_CLOSE {
 	int16 packetType;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_NPC_EXPANDED_BARTER_MARKET_CLOSE, 0x0b58);
+
+DEFINE_PACKET_HEADER(CZ_NPC_EXPANDED_BARTER_MARKET_CLOSE, 0x0B58);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub2 {
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 nameid;
-#else
+  #else
 	uint16 nameid;
-#endif
+  #endif
 	uint16 refine_level;
 	uint32 amount;
 	uint16 type;
 } __attribute__((packed));
 
 struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub {
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 nameid;
-#else
+  #else
 	uint16 nameid;
-#endif
+  #endif
 	uint16 type;
 	uint32 amount;
 	uint32 weight;
@@ -4582,9 +4771,11 @@ struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub {
 } __attribute__((packed));
 
 // Workaround check for Visual Studio bug (error C2233)
-static_assert(sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub2[1]) ==
-	sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub2),
-	"Wrong PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub size");
+static_assert(
+    sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub2[1])
+        == sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub2),
+    "Wrong PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub size"
+);
 
 struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO {
 	int16 packetType;
@@ -4593,25 +4784,25 @@ struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO {
 	struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub items[];
 } __attribute__((packed));
 
-DEFINE_PACKET_HEADER(ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO, 0x0b79);
+DEFINE_PACKET_HEADER(ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO, 0x0B79);
 #elif PACKETVER_MAIN_NUM >= 20191120 || PACKETVER_RE_NUM >= 20191106 || PACKETVER_ZERO_NUM >= 20191127
 struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub2 {
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 nameid;
-#else
+  #else
 	uint16 nameid;
-#endif
+  #endif
 	uint16 refine_level;
 	uint32 amount;
 	uint16 type;
 } __attribute__((packed));
 
 struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub {
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 nameid;
-#else
+  #else
 	uint16 nameid;
-#endif
+  #endif
 	uint16 type;
 	uint32 amount;
 	uint32 weight;
@@ -4623,9 +4814,11 @@ struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub {
 } __attribute__((packed));
 
 // Workaround check for Visual Studio bug (error C2233)
-static_assert(sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub2[1]) ==
-	sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub2),
-	"Wrong PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub size");
+static_assert(
+    sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub2[1])
+        == sizeof(struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub2),
+    "Wrong PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub size"
+);
 
 struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO {
 	int16 packetType;
@@ -4634,16 +4827,16 @@ struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO {
 	struct PACKET_ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO_sub items[];
 } __attribute__((packed));
 
-DEFINE_PACKET_HEADER(ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO, 0x0b56);
-#endif  // PACKETVER_MAIN_NUM >= 20191120 || PACKETVER_RE_NUM >= 20191106 || PACKETVER_ZERO_NUM >= 20191127
+DEFINE_PACKET_HEADER(ZC_NPC_EXPANDED_BARTER_MARKET_ITEMINFO, 0x0B56);
+#endif // PACKETVER_MAIN_NUM >= 20191120 || PACKETVER_RE_NUM >= 20191106 || PACKETVER_ZERO_NUM >= 20191127
 
 #if PACKETVER_MAIN_NUM >= 20190904 || PACKETVER_RE_NUM >= 20190904 || PACKETVER_ZERO_NUM >= 20190828
 struct PACKET_CZ_NPC_EXPANDED_BARTER_MARKET_PURCHASE_sub {
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
+  #endif
 	uint32 shopIndex;
 	uint32 amount;
 } __attribute__((packed));
@@ -4653,7 +4846,8 @@ struct PACKET_CZ_NPC_EXPANDED_BARTER_MARKET_PURCHASE {
 	int16 packetLength;
 	struct PACKET_CZ_NPC_EXPANDED_BARTER_MARKET_PURCHASE_sub list[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_NPC_EXPANDED_BARTER_MARKET_PURCHASE, 0x0b57);
+
+DEFINE_PACKET_HEADER(CZ_NPC_EXPANDED_BARTER_MARKET_PURCHASE, 0x0B57);
 #endif
 
 #if PACKETVER >= 7
@@ -4665,6 +4859,7 @@ struct PACKET_ZC_STATE_CHANGE {
 	int32 effectState;
 	int8 isPKModeON;
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(ZC_STATE_CHANGE, 0x0229);
 #else
 struct PACKET_ZC_STATE_CHANGE {
@@ -4675,6 +4870,7 @@ struct PACKET_ZC_STATE_CHANGE {
 	int16 effectState;
 	int8 isPKModeON;
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(ZC_STATE_CHANGE, 0x0119);
 #endif
 
@@ -4688,43 +4884,48 @@ struct PACKET_ZC_AUTORUN_SKILL {
 	char skill_name[NAME_LENGTH];
 	char up_flag;
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(ZC_AUTORUN_SKILL, 0x0147);
 
 #if PACKETVER_MAIN_NUM >= 20170726 || PACKETVER_RE_NUM >= 20170621 || defined(PACKETVER_ZERO)
 struct PACKET_ZC_RANDOM_UPGRADE_ITEM_UI_OPEN {
 	int16 packetType;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
+  #endif
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_RANDOM_UPGRADE_ITEM_UI_OPEN, 0x0ab4);
+
+DEFINE_PACKET_HEADER(ZC_RANDOM_UPGRADE_ITEM_UI_OPEN, 0x0AB4);
 
 struct PACKET_ZC_ACK_RANDOM_UPGRADE_ITEM {
 	int16 packetType;
 	uint16 result;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ACK_RANDOM_UPGRADE_ITEM, 0x0ab7);
-#endif  // PACKETVER_MAIN_NUM >= 20170726 || PACKETVER_RE_NUM >= 20170621 || defined(PACKETVER_ZERO)
+
+DEFINE_PACKET_HEADER(ZC_ACK_RANDOM_UPGRADE_ITEM, 0x0AB7);
+#endif // PACKETVER_MAIN_NUM >= 20170726 || PACKETVER_RE_NUM >= 20170621 || defined(PACKETVER_ZERO)
 
 #if PACKETVER_MAIN_NUM >= 20170111 || PACKETVER_RE_NUM >= 20170111 || defined(PACKETVER_ZERO)
 struct PACKET_CZ_RANDOM_UPGRADE_ITEM_UI_CLOSE {
 	int16 packetType;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_RANDOM_UPGRADE_ITEM_UI_CLOSE, 0x0ab5);
+
+DEFINE_PACKET_HEADER(CZ_RANDOM_UPGRADE_ITEM_UI_CLOSE, 0x0AB5);
 
 struct PACKET_CZ_REQ_RANDOM_UPGRADE_ITEM {
 	int16 packetType;
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
 	uint32 itemId;
-#else
+  #else
 	uint16 itemId;
-#endif
+  #endif
 	uint16 index;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_REQ_RANDOM_UPGRADE_ITEM, 0x0ab6);
-#endif  // PACKETVER_MAIN_NUM >= 20170111 || PACKETVER_RE_NUM >= 20170111 || defined(PACKETVER_ZERO)
+
+DEFINE_PACKET_HEADER(CZ_REQ_RANDOM_UPGRADE_ITEM, 0x0AB6);
+#endif // PACKETVER_MAIN_NUM >= 20170111 || PACKETVER_RE_NUM >= 20170111 || defined(PACKETVER_ZERO)
 
 #if PACKETVER_MAIN_NUM >= 20120503 || PACKETVER_RE_NUM >= 20120502 || defined(PACKETVER_ZERO)
 struct PACKET_ZC_PERSONAL_INFOMATION_SUB {
@@ -4733,6 +4934,7 @@ struct PACKET_ZC_PERSONAL_INFOMATION_SUB {
 	int32 death;
 	int32 drop;
 } __attribute__((packed));
+
 struct PACKET_ZC_PERSONAL_INFOMATION {
 	int16 packetType;
 	int16 length;
@@ -4741,8 +4943,9 @@ struct PACKET_ZC_PERSONAL_INFOMATION {
 	int32 total_drop;
 	struct PACKET_ZC_PERSONAL_INFOMATION_SUB details[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_PERSONAL_INFOMATION, 0x097b);
-#endif  // PACKETVER_MAIN_NUM >= 20120503 || PACKETVER_RE_NUM >= 20120502 || defined(PACKETVER_ZERO)
+
+DEFINE_PACKET_HEADER(ZC_PERSONAL_INFOMATION, 0x097B);
+#endif // PACKETVER_MAIN_NUM >= 20120503 || PACKETVER_RE_NUM >= 20120502 || defined(PACKETVER_ZERO)
 
 struct PACKET_CZ_REQUEST_ACTNPC {
 	int16 packetType;
@@ -4765,6 +4968,7 @@ struct PACKET_ZC_NOTIFY_SKILL {
 	int16 count;
 	int8 action;
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(ZC_NOTIFY_SKILL, 0x0114);
 #else
 struct PACKET_ZC_NOTIFY_SKILL {
@@ -4780,7 +4984,8 @@ struct PACKET_ZC_NOTIFY_SKILL {
 	int16 count;
 	int8 action;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_NOTIFY_SKILL, 0x01de);
+
+DEFINE_PACKET_HEADER(ZC_NOTIFY_SKILL, 0x01DE);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20130731 || PACKETVER_RE_NUM >= 20130724 || defined(PACKETVER_ZERO)
@@ -4792,7 +4997,8 @@ struct PACKET_ZC_USE_SKILL {
 	uint32 srcAID;
 	int8 result;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_USE_SKILL, 0x09cb);
+
+DEFINE_PACKET_HEADER(ZC_USE_SKILL, 0x09CB);
 #else
 struct PACKET_ZC_USE_SKILL {
 	int16 PacketType;
@@ -4802,7 +5008,8 @@ struct PACKET_ZC_USE_SKILL {
 	uint32 srcAID;
 	int8 result;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_USE_SKILL, 0x011a);
+
+DEFINE_PACKET_HEADER(ZC_USE_SKILL, 0x011A);
 #endif
 
 struct PACKET_ZC_NOTIFY_GROUNDSKILL {
@@ -4814,6 +5021,7 @@ struct PACKET_ZC_NOTIFY_GROUNDSKILL {
 	int16 yPos;
 	uint32 startTime;
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(ZC_NOTIFY_GROUNDSKILL, 0x0117);
 
 #if PACKETVER_MAIN_NUM >= 20081112 || PACKETVER_RE_NUM >= 20081111 || defined(PACKETVER_ZERO)
@@ -4822,7 +5030,8 @@ struct PACKET_ZC_SKILL_POSTDELAY {
 	uint16 SKID;
 	uint32 DelayTM;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_SKILL_POSTDELAY, 0x043d);
+
+DEFINE_PACKET_HEADER(ZC_SKILL_POSTDELAY, 0x043D);
 #endif
 
 struct PACKET_ZC_NOTIFY_SKILL_POSITION {
@@ -4850,7 +5059,8 @@ struct PACKET_ZC_C_MARKERINFO {
 	int16 xPos;
 	int16 yPos;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_C_MARKERINFO, 0x09c1);
+
+DEFINE_PACKET_HEADER(ZC_C_MARKERINFO, 0x09C1);
 #endif
 
 #if PACKETVER >= 20200902
@@ -4868,12 +5078,14 @@ struct GUILD_MEMBER_INFO {
 	uint32 lastLoginTime;
 	char char_name[NAME_LENGTH];
 } __attribute__((packed));
+
 struct PACKET_ZC_MEMBERMGR_INFO {
 	int16 PacketType;
 	int16 packetLength;
 	struct GUILD_MEMBER_INFO guildMemberInfo[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_MEMBERMGR_INFO, 0x0b7d);
+
+DEFINE_PACKET_HEADER(ZC_MEMBERMGR_INFO, 0x0B7D);
 #elif PACKETVER_MAIN_NUM >= 20161214 || PACKETVER_RE_NUM >= 20161130 || defined(PACKETVER_ZERO)
 struct GUILD_MEMBER_INFO {
 	uint32 AID;
@@ -4888,13 +5100,15 @@ struct GUILD_MEMBER_INFO {
 	int32 positionID;
 	uint32 lastLoginTime;
 } __attribute__((packed));
+
 struct PACKET_ZC_MEMBERMGR_INFO {
 	int16 PacketType;
 	int16 packetLength;
 	struct GUILD_MEMBER_INFO guildMemberInfo[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_MEMBERMGR_INFO, 0x0aa5);
-#else  // false: PACKETVER_MAIN_NUM >= 20161214 || PACKETVER_RE_NUM >= 20161130 || defined(PACKETVER_ZERO)
+
+DEFINE_PACKET_HEADER(ZC_MEMBERMGR_INFO, 0x0AA5);
+#else // false: PACKETVER_MAIN_NUM >= 20161214 || PACKETVER_RE_NUM >= 20161130 || defined(PACKETVER_ZERO)
 struct GUILD_MEMBER_INFO {
 	uint32 AID;
 	uint32 GID;
@@ -4909,11 +5123,13 @@ struct GUILD_MEMBER_INFO {
 	char intro[50];
 	char char_name[NAME_LENGTH];
 } __attribute__((packed));
+
 struct PACKET_ZC_MEMBERMGR_INFO {
 	int16 PacketType;
 	int16 packetLength;
 	struct GUILD_MEMBER_INFO guildMemberInfo[];
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(ZC_MEMBERMGR_INFO, 0x0154);
 #endif
 
@@ -4937,7 +5153,8 @@ struct PACKET_ZC_GUILD_INFO {
 	int masterGID;
 	char masterName[NAME_LENGTH];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_GUILD_INFO, 0x0b7b);
+
+DEFINE_PACKET_HEADER(ZC_GUILD_INFO, 0x0B7B);
 #elif PACKETVER_MAIN_NUM >= 20161019 || PACKETVER_RE_NUM >= 20160921 || defined(PACKETVER_ZERO)
 struct PACKET_ZC_GUILD_INFO {
 	int16 PacketType;
@@ -4957,7 +5174,8 @@ struct PACKET_ZC_GUILD_INFO {
 	int zeny;
 	int masterGID;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_GUILD_INFO, 0x0a84);
+
+DEFINE_PACKET_HEADER(ZC_GUILD_INFO, 0x0A84);
 #else
 struct PACKET_ZC_GUILD_INFO {
 	int16 PacketType;
@@ -4977,23 +5195,27 @@ struct PACKET_ZC_GUILD_INFO {
 	char manageLand[MAP_NAME_LENGTH_EXT];
 	int zeny;
 } __attribute__((packed));
-//0x150; [4144] this is packet for older versions?
-DEFINE_PACKET_HEADER(ZC_GUILD_INFO, 0x01b6);
+
+// 0x150; [4144] this is packet for older versions?
+DEFINE_PACKET_HEADER(ZC_GUILD_INFO, 0x01B6);
 #endif
 
 struct PACKET_ZC_POSITION_ID_NAME_INFO {
 	int16 PacketType;
 	int16 PacketLength;
+
 	struct {
 		int positionID;
 		char posName[NAME_LENGTH];
 	} posInfo[MAX_GUILDPOSITION];
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(ZC_POSITION_ID_NAME_INFO, 0x0166);
 
 struct PACKET_ZC_POSITION_INFO {
 	int16 PacketType;
 	int16 PacketLength;
+
 	struct {
 		int positionID;
 		int right;
@@ -5001,6 +5223,7 @@ struct PACKET_ZC_POSITION_INFO {
 		int payRate;
 	} posInfo[MAX_GUILDPOSITION];
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(ZC_POSITION_INFO, 0x0160);
 
 struct GUILD_SKILLDATA {
@@ -5019,6 +5242,7 @@ struct PACKET_ZC_GUILD_SKILLINFO {
 	int16 skillPoint;
 	struct GUILD_SKILLDATA skillInfo[];
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(ZC_GUILD_SKILLINFO, 0x0162);
 
 struct RELATED_GUILD_INFO {
@@ -5032,7 +5256,8 @@ struct PACKET_ZC_MYGUILD_BASIC_INFO {
 	int16 PacketLength;
 	struct RELATED_GUILD_INFO rgInfo[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_MYGUILD_BASIC_INFO, 0x014c);
+
+DEFINE_PACKET_HEADER(ZC_MYGUILD_BASIC_INFO, 0x014C);
 
 #if PACKETVER >= 20160316
 struct PACKET_CZ_REQ_UPLOAD_MACRO_DETECTOR {
@@ -5040,7 +5265,8 @@ struct PACKET_CZ_REQ_UPLOAD_MACRO_DETECTOR {
 	char answer[16];
 	uint16 imageSize;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_REQ_UPLOAD_MACRO_DETECTOR, 0x0a52);
+
+DEFINE_PACKET_HEADER(CZ_REQ_UPLOAD_MACRO_DETECTOR, 0x0A52);
 #endif
 
 #if PACKETVER >= 20160330
@@ -5049,7 +5275,8 @@ struct PACKET_ZC_ACK_UPLOAD_MACRO_DETECTOR {
 	char captchaKey[4];
 	int captchaFlag;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ACK_UPLOAD_MACRO_DETECTOR, 0x0a53);
+
+DEFINE_PACKET_HEADER(ZC_ACK_UPLOAD_MACRO_DETECTOR, 0x0A53);
 #endif
 
 #if PACKETVER >= 20160316
@@ -5059,14 +5286,16 @@ struct PACKET_CZ_UPLOAD_MACRO_DETECTOR_CAPTCHA {
 	char captchaKey[4];
 	char imageData[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_UPLOAD_MACRO_DETECTOR_CAPTCHA, 0x0a54);
+
+DEFINE_PACKET_HEADER(CZ_UPLOAD_MACRO_DETECTOR_CAPTCHA, 0x0A54);
 #endif
 
 #if PACKETVER >= 20160330
 struct PACKET_ZC_COMPLETE_UPLOAD_MACRO_DETECTOR_CAPTCHA {
 	int16 PacketType;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_COMPLETE_UPLOAD_MACRO_DETECTOR_CAPTCHA, 0x0a55);
+
+DEFINE_PACKET_HEADER(ZC_COMPLETE_UPLOAD_MACRO_DETECTOR_CAPTCHA, 0x0A55);
 #endif
 
 #if PACKETVER >= 20160316
@@ -5074,7 +5303,8 @@ struct PACKET_CZ_REQ_APPLY_MACRO_DETECTOR {
 	int16 PacketType;
 	uint32 AID;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_REQ_APPLY_MACRO_DETECTOR, 0x0a56);
+
+DEFINE_PACKET_HEADER(CZ_REQ_APPLY_MACRO_DETECTOR, 0x0A56);
 #endif
 
 #if PACKETVER >= 20160330
@@ -5082,7 +5312,8 @@ struct PACKET_ZC_ACK_APPLY_MACRO_DETECTOR {
 	int16 PacketType;
 	int status;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ACK_APPLY_MACRO_DETECTOR, 0x0a57);
+
+DEFINE_PACKET_HEADER(ZC_ACK_APPLY_MACRO_DETECTOR, 0x0A57);
 #endif
 
 #if PACKETVER >= 20160330
@@ -5091,7 +5322,8 @@ struct PACKET_ZC_APPLY_MACRO_DETECTOR {
 	uint16 imageSize;
 	char captchaKey[4];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_APPLY_MACRO_DETECTOR, 0x0a58);
+
+DEFINE_PACKET_HEADER(ZC_APPLY_MACRO_DETECTOR, 0x0A58);
 #endif
 
 #if PACKETVER >= 20160330
@@ -5101,14 +5333,16 @@ struct PACKET_ZC_APPLY_MACRO_DETECTOR_CAPTCHA {
 	char captchaKey[4];
 	char imageData[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_APPLY_MACRO_DETECTOR_CAPTCHA, 0x0a59);
+
+DEFINE_PACKET_HEADER(ZC_APPLY_MACRO_DETECTOR_CAPTCHA, 0x0A59);
 #endif
 
 #if PACKETVER >= 20160316
 struct PACKET_CZ_COMPLETE_APPLY_MACRO_DETECTOR_CAPTCHA {
 	int16 PacketType;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_COMPLETE_APPLY_MACRO_DETECTOR_CAPTCHA, 0x0a5a);
+
+DEFINE_PACKET_HEADER(CZ_COMPLETE_APPLY_MACRO_DETECTOR_CAPTCHA, 0x0A5A);
 #endif
 
 #if PACKETVER >= 20160330
@@ -5117,7 +5351,8 @@ struct PACKET_ZC_REQ_ANSWER_MACRO_DETECTOR {
 	uint8 retryCount;
 	int timeout;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_REQ_ANSWER_MACRO_DETECTOR, 0x0a5b);
+
+DEFINE_PACKET_HEADER(ZC_REQ_ANSWER_MACRO_DETECTOR, 0x0A5B);
 #endif
 
 #if PACKETVER >= 20160316
@@ -5125,7 +5360,8 @@ struct PACKET_CZ_ACK_ANSWER_MACRO_DETECTOR {
 	int16 PacketType;
 	char answer[16];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_ACK_ANSWER_MACRO_DETECTOR, 0x0a5c);
+
+DEFINE_PACKET_HEADER(CZ_ACK_ANSWER_MACRO_DETECTOR, 0x0A5C);
 #endif
 
 #if PACKETVER >= 20160330
@@ -5133,7 +5369,8 @@ struct PACKET_ZC_CLOSE_MACRO_DETECTOR {
 	int16 PacketType;
 	int status;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_CLOSE_MACRO_DETECTOR, 0x0a5d);
+
+DEFINE_PACKET_HEADER(ZC_CLOSE_MACRO_DETECTOR, 0x0A5D);
 #endif
 
 #if PACKETVER >= 20160323
@@ -5141,7 +5378,8 @@ struct PACKET_CZ_REQ_PREVIEW_MACRO_DETECTOR {
 	int16 PacketType;
 	int captchaID;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_REQ_PREVIEW_MACRO_DETECTOR, 0x0a69);
+
+DEFINE_PACKET_HEADER(CZ_REQ_PREVIEW_MACRO_DETECTOR, 0x0A69);
 #endif
 
 #if PACKETVER >= 20160330
@@ -5151,7 +5389,8 @@ struct PACKET_ZC_ACK_PREVIEW_MACRO_DETECTOR {
 	uint16 imageSize;
 	char captchaKey[4];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ACK_PREVIEW_MACRO_DETECTOR, 0x0a6a);
+
+DEFINE_PACKET_HEADER(ZC_ACK_PREVIEW_MACRO_DETECTOR, 0x0A6A);
 #endif
 
 #if PACKETVER >= 20160330
@@ -5161,7 +5400,8 @@ struct PACKET_ZC_PREVIEW_MACRO_DETECTOR_CAPTCHA {
 	char captchaKey[4];
 	char imageData[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_PREVIEW_MACRO_DETECTOR_CAPTCHA, 0x0a6b);
+
+DEFINE_PACKET_HEADER(ZC_PREVIEW_MACRO_DETECTOR_CAPTCHA, 0x0A6B);
 #endif
 
 #if PACKETVER >= 20160330
@@ -5171,7 +5411,8 @@ struct PACKET_CZ_REQ_PLAYER_AID_IN_RANGE {
 	int16 yPos;
 	int8 RadiusRange;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_REQ_PLAYER_AID_IN_RANGE, 0x0a6c);
+
+DEFINE_PACKET_HEADER(CZ_REQ_PLAYER_AID_IN_RANGE, 0x0A6C);
 #endif
 
 #if PACKETVER >= 20160330
@@ -5180,14 +5421,16 @@ struct PACKET_ZC_ACK_PLAYER_AID_IN_RANGE {
 	int16 PacketLength;
 	uint32 AID[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ACK_PLAYER_AID_IN_RANGE, 0x0a6d);
+
+DEFINE_PACKET_HEADER(ZC_ACK_PLAYER_AID_IN_RANGE, 0x0A6D);
 #endif
 
 struct PACKET_ZC_ACK_MAKE_GROUP {
 	int16 PacketType;
 	int8 result;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ACK_MAKE_GROUP, 0x00fa);
+
+DEFINE_PACKET_HEADER(ZC_ACK_MAKE_GROUP, 0x00FA);
 
 struct PACKET_ZC_PARTY_JOIN_REQ {
 	int16 PacketType;
@@ -5195,9 +5438,9 @@ struct PACKET_ZC_PARTY_JOIN_REQ {
 	char groupName[NAME_LENGTH];
 } __attribute__((packed));
 #if PACKETVER < 20070821
-DEFINE_PACKET_HEADER(ZC_PARTY_JOIN_REQ, 0x00fe);
+DEFINE_PACKET_HEADER(ZC_PARTY_JOIN_REQ, 0x00FE);
 #else
-DEFINE_PACKET_HEADER(ZC_PARTY_JOIN_REQ, 0x02c6);
+DEFINE_PACKET_HEADER(ZC_PARTY_JOIN_REQ, 0x02C6);
 #endif
 
 struct PACKET_ZC_PARTY_JOIN_REQ_ACK {
@@ -5206,9 +5449,9 @@ struct PACKET_ZC_PARTY_JOIN_REQ_ACK {
 	int result;
 } __attribute__((packed));
 #if PACKETVER < 20070821
-DEFINE_PACKET_HEADER(ZC_PARTY_JOIN_REQ_ACK, 0x00fd);
+DEFINE_PACKET_HEADER(ZC_PARTY_JOIN_REQ_ACK, 0x00FD);
 #else
-DEFINE_PACKET_HEADER(ZC_PARTY_JOIN_REQ_ACK, 0x02c5);
+DEFINE_PACKET_HEADER(ZC_PARTY_JOIN_REQ_ACK, 0x02C5);
 #endif
 
 struct PACKET_ZC_NOTIFY_CHAT_PARTY {
@@ -5217,6 +5460,7 @@ struct PACKET_ZC_NOTIFY_CHAT_PARTY {
 	int AID;
 	char chatMsg[];
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(ZC_NOTIFY_CHAT_PARTY, 0x0109);
 
 struct PACKET_ZC_NOTIFY_POSITION_TO_GROUPM {
@@ -5225,6 +5469,7 @@ struct PACKET_ZC_NOTIFY_POSITION_TO_GROUPM {
 	int16 xPos;
 	int16 yPos;
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(ZC_NOTIFY_POSITION_TO_GROUPM, 0x0107);
 
 #if PACKETVER_ZERO_NUM >= 20210504
@@ -5236,7 +5481,8 @@ struct PACKET_ZC_NOTIFY_HP_TO_GROUPM {
 	int sp;
 	int maxsp;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_NOTIFY_HP_TO_GROUPM, 0x0bab);
+
+DEFINE_PACKET_HEADER(ZC_NOTIFY_HP_TO_GROUPM, 0x0BAB);
 #elif PACKETVER >= 20100119
 struct PACKET_ZC_NOTIFY_HP_TO_GROUPM {
 	int16 PacketType;
@@ -5244,7 +5490,8 @@ struct PACKET_ZC_NOTIFY_HP_TO_GROUPM {
 	int hp;
 	int maxhp;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_NOTIFY_HP_TO_GROUPM, 0x080e);
+
+DEFINE_PACKET_HEADER(ZC_NOTIFY_HP_TO_GROUPM, 0x080E);
 #else  // PACKETVER >= 20100119
 struct PACKET_ZC_NOTIFY_HP_TO_GROUPM {
 	int16 PacketType;
@@ -5252,8 +5499,9 @@ struct PACKET_ZC_NOTIFY_HP_TO_GROUPM {
 	int16 hp;
 	int16 maxhp;
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(ZC_NOTIFY_HP_TO_GROUPM, 0x0106);
-#endif  // PACKETVER >= 20100119
+#endif // PACKETVER >= 20100119
 
 #if PACKETVER_MAIN_NUM >= 20170502 || PACKETVER_RE_NUM >= 20170419 || defined(PACKETVER_ZERO)
 struct PACKET_ZC_NOTIFY_MEMBERINFO_TO_GROUPM {
@@ -5262,7 +5510,8 @@ struct PACKET_ZC_NOTIFY_MEMBERINFO_TO_GROUPM {
 	int16 job;
 	int16 level;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_NOTIFY_MEMBERINFO_TO_GROUPM, 0x0abd);
+
+DEFINE_PACKET_HEADER(ZC_NOTIFY_MEMBERINFO_TO_GROUPM, 0x0ABD);
 #endif
 
 struct PACKET_ZC_DELETE_MEMBER_FROM_GROUP {
@@ -5271,22 +5520,25 @@ struct PACKET_ZC_DELETE_MEMBER_FROM_GROUP {
 	char characterName[NAME_LENGTH];
 	int8 result;
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(ZC_DELETE_MEMBER_FROM_GROUP, 0x0105);
 
 #if PACKETVER_MAIN_NUM >= 20210818 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20210818
 struct PACKET_CZ_REQ_TAKEOFF_EQUIP_ALL {
 	int16 PacketType;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_REQ_TAKEOFF_EQUIP_ALL, 0x0bad);
-#endif  // PACKETVER_MAIN_NUM >= 20210818 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20210818
+
+DEFINE_PACKET_HEADER(CZ_REQ_TAKEOFF_EQUIP_ALL, 0x0BAD);
+#endif // PACKETVER_MAIN_NUM >= 20210818 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20210818
 
 #if PACKETVER_MAIN_NUM >= 20210818 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 struct PACKET_ZC_ACK_TAKEOFF_EQUIP_ALL {
 	int16 PacketType;
 	uint8 result;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ACK_TAKEOFF_EQUIP_ALL, 0x0bae);
-#endif  // PACKETVER_MAIN_NUM >= 20210818 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
+
+DEFINE_PACKET_HEADER(ZC_ACK_TAKEOFF_EQUIP_ALL, 0x0BAE);
+#endif // PACKETVER_MAIN_NUM >= 20210818 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 
 #if PACKETVER_ZERO_NUM >= 20210504
 struct PACKET_ZC_BATTLEFIELD_NOTIFY_HP {
@@ -5297,7 +5549,8 @@ struct PACKET_ZC_BATTLEFIELD_NOTIFY_HP {
 	int sp;
 	int maxsp;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_BATTLEFIELD_NOTIFY_HP, 0x0baa);
+
+DEFINE_PACKET_HEADER(ZC_BATTLEFIELD_NOTIFY_HP, 0x0BAA);
 #elif PACKETVER >= 20140312
 struct PACKET_ZC_BATTLEFIELD_NOTIFY_HP {
 	int16 PacketType;
@@ -5305,7 +5558,8 @@ struct PACKET_ZC_BATTLEFIELD_NOTIFY_HP {
 	int hp;
 	int maxhp;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_BATTLEFIELD_NOTIFY_HP, 0x0a0e);
+
+DEFINE_PACKET_HEADER(ZC_BATTLEFIELD_NOTIFY_HP, 0x0A0E);
 #elif PACKETVER >= 20071009
 struct PACKET_ZC_BATTLEFIELD_NOTIFY_HP {
 	int16 PacketType;
@@ -5314,8 +5568,9 @@ struct PACKET_ZC_BATTLEFIELD_NOTIFY_HP {
 	int16 hp;
 	int16 maxhp;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_BATTLEFIELD_NOTIFY_HP, 0x02e0);
-#endif  // PACKETVER >= 20071009
+
+DEFINE_PACKET_HEADER(ZC_BATTLEFIELD_NOTIFY_HP, 0x02E0);
+#endif // PACKETVER >= 20071009
 
 #if PACKETVER_ZERO_NUM >= 20210721
 struct PACKET_ZC_QUEST_DIALOG {
@@ -5324,8 +5579,9 @@ struct PACKET_ZC_QUEST_DIALOG {
 	uint32 NpcID;
 	char message[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_QUEST_DIALOG, 0x0ba6);
-#endif  // PACKETVER_ZERO_NUM >= 20210721
+
+DEFINE_PACKET_HEADER(ZC_QUEST_DIALOG, 0x0BA6);
+#endif // PACKETVER_ZERO_NUM >= 20210721
 
 #if PACKETVER_ZERO_NUM >= 20210721
 struct PACKET_ZC_MONOLOG_DIALOG {
@@ -5334,8 +5590,9 @@ struct PACKET_ZC_MONOLOG_DIALOG {
 	uint32 NpcID;
 	char message[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_MONOLOG_DIALOG, 0x0ba9);
-#endif  // PACKETVER_ZERO_NUM >= 20210721
+
+DEFINE_PACKET_HEADER(ZC_MONOLOG_DIALOG, 0x0BA9);
+#endif // PACKETVER_ZERO_NUM >= 20210721
 
 #if PACKETVER_ZERO_NUM >= 20210721
 struct PACKET_ZC_QUEST_DIALOG_MENU_LIST {
@@ -5344,8 +5601,9 @@ struct PACKET_ZC_QUEST_DIALOG_MENU_LIST {
 	uint32 NpcID;
 	char message[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_QUEST_DIALOG_MENU_LIST, 0x0ba7);
-#endif  // PACKETVER_ZERO_NUM >= 20210721
+
+DEFINE_PACKET_HEADER(ZC_QUEST_DIALOG_MENU_LIST, 0x0BA7);
+#endif // PACKETVER_ZERO_NUM >= 20210721
 
 #if PACKETVER_MAIN_NUM >= 20210317 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20210317
 struct PACKET_CZ_CHOOSE_MENU_ZERO {
@@ -5353,23 +5611,26 @@ struct PACKET_CZ_CHOOSE_MENU_ZERO {
 	uint32 NpcID;
 	uint8 menuIndex;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_CHOOSE_MENU_ZERO, 0x0ba8);
-#endif  // PACKETVER_MAIN_NUM >= 20210317 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20210317
+
+DEFINE_PACKET_HEADER(CZ_CHOOSE_MENU_ZERO, 0x0BA8);
+#endif // PACKETVER_MAIN_NUM >= 20210317 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20210317
 
 #if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 struct PACKET_ZC_DIALOG_TEXT_ALIGN {
 	int16 PacketType;
 	uint8 align;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_DIALOG_TEXT_ALIGN, 0x0ba1);
-#endif  // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
+
+DEFINE_PACKET_HEADER(ZC_DIALOG_TEXT_ALIGN, 0x0BA1);
+#endif // PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 
 #if PACKETVER_MAIN_NUM >= 20191016 || PACKETVER_RE_NUM >= 20191016 || PACKETVER_ZERO_NUM >= 20191008
 struct PACKET_CZ_GRADE_ENCHANT_SELECT_EQUIPMENT {
 	int16 PacketType;
 	int16 index;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_GRADE_ENCHANT_SELECT_EQUIPMENT, 0x0b59);
+
+DEFINE_PACKET_HEADER(CZ_GRADE_ENCHANT_SELECT_EQUIPMENT, 0x0B59);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
@@ -5398,7 +5659,8 @@ struct PACKET_ZC_GRADE_ENCHANT_MATERIAL_LIST {
 	int32 protect_amount; // used only for PACKETVER_RE_NUM >= 20200723 && PACKETVER_RE_NUM <= 20200819
 	struct GRADE_ENCHANT_MATERIAL material_info[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_GRADE_ENCHANT_MATERIAL_LIST, 0x0b5a);
+
+DEFINE_PACKET_HEADER(ZC_GRADE_ENCHANT_MATERIAL_LIST, 0x0B5A);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20191016 || PACKETVER_RE_NUM >= 20191016 || PACKETVER_ZERO_NUM >= 20191008
@@ -5410,14 +5672,16 @@ struct PACKET_CZ_GRADE_ENCHANT_REQUEST {
 	int blessing_amount;
 	int8 protect_flag; // used only for PACKETVER_RE_NUM >= 20200723 && PACKETVER_RE_NUM <= 20200819
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_GRADE_ENCHANT_REQUEST, 0x0b5b);
+
+DEFINE_PACKET_HEADER(CZ_GRADE_ENCHANT_REQUEST, 0x0B5B);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20191016 || PACKETVER_RE_NUM >= 20191016 || PACKETVER_ZERO_NUM >= 20191008
 struct PACKET_CZ_GRADE_ENCHANT_CLOSE_UI {
 	int16 PacketType;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_GRADE_ENCHANT_CLOSE_UI, 0x0b5c);
+
+DEFINE_PACKET_HEADER(CZ_GRADE_ENCHANT_CLOSE_UI, 0x0B5C);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
@@ -5427,7 +5691,8 @@ struct PACKET_ZC_GRADE_ENCHANT_ACK {
 	int16 grade;
 	int result;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_GRADE_ENCHANT_ACK, 0x0b5d);
+
+DEFINE_PACKET_HEADER(ZC_GRADE_ENCHANT_ACK, 0x0B5D);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024
@@ -5438,7 +5703,8 @@ struct PACKET_ZC_GRADE_ENCHANT_BROADCAST_RESULT {
 	int16 grade;
 	int8 status;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_GRADE_ENCHANT_BROADCAST_RESULT, 0x0b5e);
+
+DEFINE_PACKET_HEADER(ZC_GRADE_ENCHANT_BROADCAST_RESULT, 0x0B5E);
 #endif
 
 struct PACKET_ZC_SHOW_IMAGE {
@@ -5446,7 +5712,7 @@ struct PACKET_ZC_SHOW_IMAGE {
 	char image[64];
 	uint8 type;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_SHOW_IMAGE, 0x01b3)
+DEFINE_PACKET_HEADER(ZC_SHOW_IMAGE, 0x01B3)
 
 #if PACKETVER_MAIN_NUM >= 20131204 || PACKETVER_RE_NUM >= 20131120 || defined(PACKETVER_ZERO)
 struct PACKET_ZC_WHISPER {
@@ -5457,7 +5723,7 @@ struct PACKET_ZC_WHISPER {
 	uint8 isAdmin;
 	char message[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_WHISPER, 0x09de)
+DEFINE_PACKET_HEADER(ZC_WHISPER, 0x09DE)
 // [4144] unconfirmed version
 #elif PACKETVER >= 20091104
 struct PACKET_ZC_WHISPER {
@@ -5476,7 +5742,7 @@ struct PACKET_ZC_WHISPER {
 	char message[];
 } __attribute__((packed));
 DEFINE_PACKET_HEADER(ZC_WHISPER, 0x0097)
-#endif  // PACKETVER_MAIN_NUM >= 20131204 || PACKETVER_RE_NUM >= 20131120 || defined(PACKETVER_ZERO)
+#endif // PACKETVER_MAIN_NUM >= 20131204 || PACKETVER_RE_NUM >= 20131120 || defined(PACKETVER_ZERO)
 
 #if PACKETVER_MAIN_NUM >= 20220216 || PACKETVER_ZERO_NUM >= 20221024
 struct PACKET_ZC_UPDATE_GDID {
@@ -5489,7 +5755,7 @@ struct PACKET_ZC_UPDATE_GDID {
 	char guildName[NAME_LENGTH];
 	uint32 masterGID;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_UPDATE_GDID, 0x02f7)
+DEFINE_PACKET_HEADER(ZC_UPDATE_GDID, 0x02F7)
 #else  // PACKETVER_MAIN_NUM >= 20220216 || PACKETVER_ZERO_NUM >= 20221024
 struct PACKET_ZC_UPDATE_GDID {
 	int16 PacketType;
@@ -5500,8 +5766,8 @@ struct PACKET_ZC_UPDATE_GDID {
 	int32 interSid;
 	char guildName[NAME_LENGTH];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_UPDATE_GDID, 0x016c)
-#endif  // PACKETVER_MAIN_NUM >= 20220216 || PACKETVER_ZERO_NUM >= 20221024
+DEFINE_PACKET_HEADER(ZC_UPDATE_GDID, 0x016C)
+#endif // PACKETVER_MAIN_NUM >= 20220216 || PACKETVER_ZERO_NUM >= 20221024
 
 #if PACKETVER_MAIN_NUM >= 20220216 || PACKETVER_ZERO_NUM >= 20221024
 struct PACKET_CZ_APPROXIMATE_ACTOR {
@@ -5510,8 +5776,8 @@ struct PACKET_CZ_APPROXIMATE_ACTOR {
 	uint16 unused1;
 	uint8 unused2;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_APPROXIMATE_ACTOR, 0x0bb0)
-#endif  // PACKETVER_MAIN_NUM >= 20220216 || PACKETVER_ZERO_NUM >= 20221024
+DEFINE_PACKET_HEADER(CZ_APPROXIMATE_ACTOR, 0x0BB0)
+#endif // PACKETVER_MAIN_NUM >= 20220216 || PACKETVER_ZERO_NUM >= 20221024
 
 struct PACKET_CZ_CONTACTNPC {
 	int16 PacketType;
@@ -5534,13 +5800,13 @@ DEFINE_PACKET_HEADER(ZC_ATTACK_FAILURE_FOR_DISTANCE, 0x0139)
 struct PACKET_ZC_START_CAPTURE {
 	int16 PacketType;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_START_CAPTURE, 0x019e)
+DEFINE_PACKET_HEADER(ZC_START_CAPTURE, 0x019E)
 
 struct PACKET_ZC_TRYCAPTURE_MONSTER {
 	int16 PacketType;
 	int8 result;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_TRYCAPTURE_MONSTER, 0x01a0)
+DEFINE_PACKET_HEADER(ZC_TRYCAPTURE_MONSTER, 0x01A0)
 
 struct PACKET_ZC_PROPERTY_PET {
 	int16 PacketType;
@@ -5554,7 +5820,7 @@ struct PACKET_ZC_PROPERTY_PET {
 	int16 job;
 #endif
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_PROPERTY_PET, 0x01a2)
+DEFINE_PACKET_HEADER(ZC_PROPERTY_PET, 0x01A2)
 
 struct PACKET_ZC_CHANGESTATE_PET {
 	int16 PacketType;
@@ -5562,21 +5828,21 @@ struct PACKET_ZC_CHANGESTATE_PET {
 	int GID;
 	int data;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_CHANGESTATE_PET, 0x01a4)
+DEFINE_PACKET_HEADER(ZC_CHANGESTATE_PET, 0x01A4)
 
 struct PACKET_ZC_SPIRITS {
 	int16 PacketType;
 	uint32 AID;
 	int16 num;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_SPIRITS, 0x01d0)
+DEFINE_PACKET_HEADER(ZC_SPIRITS, 0x01D0)
 
 struct PACKET_ZC_SPIRITS2 {
 	int16 PacketType;
 	uint32 AID;
 	int16 num;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_SPIRITS2, 0x01e1)
+DEFINE_PACKET_HEADER(ZC_SPIRITS2, 0x01E1)
 
 #if PACKETVER_MAIN_NUM >= 20200414 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20200506
 struct PACKET_ZC_SOULENERGY {
@@ -5584,7 +5850,7 @@ struct PACKET_ZC_SOULENERGY {
 	uint32 AID;
 	uint16 num;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_SOULENERGY, 0x0b73)
+DEFINE_PACKET_HEADER(ZC_SOULENERGY, 0x0B73)
 #endif
 
 struct PACKET_ZC_SAY_DIALOG {
@@ -5593,7 +5859,7 @@ struct PACKET_ZC_SAY_DIALOG {
 	uint32 NpcID;
 	char message[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_SAY_DIALOG, 0x00b4)
+DEFINE_PACKET_HEADER(ZC_SAY_DIALOG, 0x00B4)
 
 #if PACKETVER_MAIN_NUM >= 20220504
 struct PACKET_ZC_SAY_DIALOG2 {
@@ -5611,14 +5877,14 @@ struct PACKET_ZC_SAY_DIALOG2 {
 	uint32 NpcID;
 	char message[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_SAY_DIALOG2, 0x00b4)
-#endif  // PACKETVER_MAIN_NUM >= 20220504
+DEFINE_PACKET_HEADER(ZC_SAY_DIALOG2, 0x00B4)
+#endif // PACKETVER_MAIN_NUM >= 20220504
 
 struct PACKET_ZC_WAIT_DIALOG {
 	int16 PacketType;
 	uint32 NpcID;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_WAIT_DIALOG, 0x00b5)
+DEFINE_PACKET_HEADER(ZC_WAIT_DIALOG, 0x00B5)
 
 #if PACKETVER_MAIN_NUM >= 20220504
 struct PACKET_ZC_WAIT_DIALOG2 {
@@ -5632,8 +5898,8 @@ struct PACKET_ZC_WAIT_DIALOG2 {
 	int16 PacketType;
 	uint32 NpcID;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_WAIT_DIALOG2, 0x00b5)
-#endif  // PACKETVER_MAIN_NUM >= 20220504
+DEFINE_PACKET_HEADER(ZC_WAIT_DIALOG2, 0x00B5)
+#endif // PACKETVER_MAIN_NUM >= 20220504
 
 #if PACKETVER_MAIN_NUM >= 20220504
 struct PACKET_ZC_DIALOG_WINDOW_SIZE {
@@ -5641,8 +5907,8 @@ struct PACKET_ZC_DIALOG_WINDOW_SIZE {
 	int height;
 	int width;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_DIALOG_WINDOW_SIZE, 0x0ba2)
-#endif  // PACKETVER_MAIN_NUM >= 20220504
+DEFINE_PACKET_HEADER(ZC_DIALOG_WINDOW_SIZE, 0x0BA2)
+#endif // PACKETVER_MAIN_NUM >= 20220504
 
 #if PACKETVER_MAIN_NUM >= 20220504
 struct PACKET_ZC_DIALOG_WINDOW_POS {
@@ -5650,8 +5916,8 @@ struct PACKET_ZC_DIALOG_WINDOW_POS {
 	int x;
 	int y;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_DIALOG_WINDOW_POS, 0x0ba3)
-#endif  // PACKETVER_MAIN_NUM >= 20220504
+DEFINE_PACKET_HEADER(ZC_DIALOG_WINDOW_POS, 0x0BA3)
+#endif // PACKETVER_MAIN_NUM >= 20220504
 
 #if PACKETVER_MAIN_NUM >= 20220504
 struct PACKET_ZC_DIALOG_WINDOW_POS2 {
@@ -5659,8 +5925,8 @@ struct PACKET_ZC_DIALOG_WINDOW_POS2 {
 	int x;
 	int y;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_DIALOG_WINDOW_POS2, 0x0bb5)
-#endif  // PACKETVER_MAIN_NUM >= 20220504
+DEFINE_PACKET_HEADER(ZC_DIALOG_WINDOW_POS2, 0x0BB5)
+#endif // PACKETVER_MAIN_NUM >= 20220504
 
 #if PACKETVER_MAIN_NUM >= 20220504
 struct PACKET_ZC_PLAY_NPC_BGM {
@@ -5669,14 +5935,14 @@ struct PACKET_ZC_PLAY_NPC_BGM {
 	uint8 playType;
 	char bgm[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_PLAY_NPC_BGM, 0x0b8c)
+DEFINE_PACKET_HEADER(ZC_PLAY_NPC_BGM, 0x0B8C)
 #elif PACKETVER >= 20091201
 struct PACKET_ZC_PLAY_NPC_BGM {
 	int16 PacketType;
 	char bgm[NAME_LENGTH];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_PLAY_NPC_BGM, 0x07fe)
-#endif  // PACKETVER >= 20091201
+DEFINE_PACKET_HEADER(ZC_PLAY_NPC_BGM, 0x07FE)
+#endif // PACKETVER >= 20091201
 
 struct PACKET_CZ_MOVE_ITEM_FROM_BODY_TO_CART {
 	int16 PacketType;
@@ -5692,7 +5958,7 @@ struct PACKET_ZC_SOUND {
 	uint32 term;
 	uint32 AID;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_SOUND, 0x01d3)
+DEFINE_PACKET_HEADER(ZC_SOUND, 0x01D3)
 
 #if PACKETVER >= 20100420
 struct PACKET_ZC_BUYING_STORE_ENTRY {
@@ -5700,6 +5966,7 @@ struct PACKET_ZC_BUYING_STORE_ENTRY {
 	uint32 makerAID;
 	char storeName[MESSAGE_SIZE];
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(ZC_BUYING_STORE_ENTRY, 0x0814);
 #endif
 
@@ -5708,6 +5975,7 @@ struct PACKET_ZC_STORE_ENTRY {
 	uint32 makerAID;
 	char storeName[MESSAGE_SIZE];
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(ZC_STORE_ENTRY, 0x0131);
 
 struct CZ_PURCHASE_ITEM_FROMMC {
@@ -5721,6 +5989,7 @@ struct PACKET_CZ_PC_PURCHASE_ITEMLIST_FROMMC {
 	uint32 AID;
 	struct CZ_PURCHASE_ITEM_FROMMC list[];
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(CZ_PC_PURCHASE_ITEMLIST_FROMMC, 0x0134);
 
 struct PACKET_CZ_PC_PURCHASE_ITEMLIST_FROMMC2 {
@@ -5730,6 +5999,7 @@ struct PACKET_CZ_PC_PURCHASE_ITEMLIST_FROMMC2 {
 	uint32 UniqueID;
 	struct CZ_PURCHASE_ITEM_FROMMC list[];
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(CZ_PC_PURCHASE_ITEMLIST_FROMMC2, 0x0801);
 
 #if PACKETVER >= 20100309
@@ -5737,6 +6007,7 @@ struct PACKET_ZC_DISAPPEAR_BUYING_STORE_ENTRY {
 	int16 packetType;
 	uint32 makerAID;
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(ZC_DISAPPEAR_BUYING_STORE_ENTRY, 0x0816);
 #endif
 
@@ -5745,15 +6016,17 @@ struct PACKET_ZC_OPEN_REFORM_UI {
 	int16 PacketType;
 	int32 ITID;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_OPEN_REFORM_UI, 0x0b8f);
-#endif  // PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
+
+DEFINE_PACKET_HEADER(ZC_OPEN_REFORM_UI, 0x0B8F);
+#endif // PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 struct PACKET_CZ_CLOSE_REFORM_UI {
 	int16 PacketType;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_CLOSE_REFORM_UI, 0x0b90);
-#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
+
+DEFINE_PACKET_HEADER(CZ_CLOSE_REFORM_UI, 0x0B90);
+#endif // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 struct PACKET_CZ_ITEM_REFORM {
@@ -5761,8 +6034,9 @@ struct PACKET_CZ_ITEM_REFORM {
 	int32 ITID;
 	int16 index;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_ITEM_REFORM, 0x0b91);
-#endif  // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
+
+DEFINE_PACKET_HEADER(CZ_ITEM_REFORM, 0x0B91);
+#endif // PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 
 #if PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 struct PACKET_ZC_ITEM_REFORM_ACK {
@@ -5770,8 +6044,9 @@ struct PACKET_ZC_ITEM_REFORM_ACK {
 	int16 index;
 	int8 result;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ITEM_REFORM_ACK, 0x0b92);
-#endif  // PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
+
+DEFINE_PACKET_HEADER(ZC_ITEM_REFORM_ACK, 0x0B92);
+#endif // PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 
 #if PACKETVER_MAIN_NUM >= 20220216 || PACKETVER_ZERO_NUM >= 20220316
 struct PACKET_CZ_USE_PACKAGEITEM {
@@ -5781,8 +6056,8 @@ struct PACKET_CZ_USE_PACKAGEITEM {
 	uint32 itemID;
 	uint32 BoxIndex;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_USE_PACKAGEITEM, 0x0baf)
-#endif  // PACKETVER_MAIN_NUM >= 20220216 || PACKETVER_ZERO_NUM >= 20220316
+DEFINE_PACKET_HEADER(CZ_USE_PACKAGEITEM, 0x0BAF)
+#endif // PACKETVER_MAIN_NUM >= 20220216 || PACKETVER_ZERO_NUM >= 20220316
 
 #if PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 struct PACKET_CZ_REQUEST_RANDOM_ENCHANT {
@@ -5790,7 +6065,8 @@ struct PACKET_CZ_REQUEST_RANDOM_ENCHANT {
 	int64 enchant_group;
 	int16 index;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_REQUEST_RANDOM_ENCHANT, 0x0b9b);
+
+DEFINE_PACKET_HEADER(CZ_REQUEST_RANDOM_ENCHANT, 0x0B9B);
 #endif // PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 
 #if PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
@@ -5800,7 +6076,8 @@ struct PACKET_CZ_REQUEST_PERFECT_ENCHANT {
 	int16 index;
 	int ITID;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_REQUEST_PERFECT_ENCHANT, 0x0b9c);
+
+DEFINE_PACKET_HEADER(CZ_REQUEST_PERFECT_ENCHANT, 0x0B9C);
 #endif // PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 
 #if PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
@@ -5810,7 +6087,8 @@ struct PACKET_CZ_REQUEST_UPGRADE_ENCHANT {
 	int16 index;
 	int16 slot;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_REQUEST_UPGRADE_ENCHANT, 0x0b9d);
+
+DEFINE_PACKET_HEADER(CZ_REQUEST_UPGRADE_ENCHANT, 0x0B9D);
 #endif // PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 
 #if PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
@@ -5819,7 +6097,8 @@ struct PACKET_CZ_REQUEST_RESET_ENCHANT {
 	int64 enchant_group;
 	int16 index;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_REQUEST_RESET_ENCHANT, 0x0b9e);
+
+DEFINE_PACKET_HEADER(CZ_REQUEST_RESET_ENCHANT, 0x0B9E);
 #endif // PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 
 #if PACKETVER_MAIN_NUM >= 20210203 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
@@ -5828,14 +6107,16 @@ struct PACKET_ZC_RESPONSE_ENCHANT {
 	int32 msgId;
 	int32 ITID;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_RESPONSE_ENCHANT, 0x0b9f);
+
+DEFINE_PACKET_HEADER(ZC_RESPONSE_ENCHANT, 0x0B9F);
 #endif // PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 
 #if PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 struct PACKET_CZ_CLOSE_UI_ENCHANT {
 	int16 PacketType;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_CLOSE_UI_ENCHANT, 0x0ba0);
+
+DEFINE_PACKET_HEADER(CZ_CLOSE_UI_ENCHANT, 0x0BA0);
 #endif // PACKETVER_MAIN_NUM >= 20201118 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 
 #if PACKETVER_MAIN_NUM >= 20221005
@@ -5843,8 +6124,9 @@ struct PACKET_ZC_SPECIALPOPUP {
 	int16 PacketType;
 	int32 ppId;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_SPECIALPOPUP, 0x0bbe);
-#endif  // PACKETVER_MAIN_NUM >= 20221005
+
+DEFINE_PACKET_HEADER(ZC_SPECIALPOPUP, 0x0BBE);
+#endif // PACKETVER_MAIN_NUM >= 20221005
 
 #if PACKETVER >= 20140611
 struct PACKET_ZC_GOLDPCCAFE_POINT {
@@ -5855,7 +6137,8 @@ struct PACKET_ZC_GOLDPCCAFE_POINT {
 	int32 point;
 	int32 playedTime;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_GOLDPCCAFE_POINT , 0x0a15);
+
+DEFINE_PACKET_HEADER(ZC_GOLDPCCAFE_POINT, 0x0A15);
 #endif // PACKETVER >= 20140611
 
 #if PACKETVER >= 20140430
@@ -5863,7 +6146,8 @@ struct PACKET_CZ_DYNAMICNPC_CREATE_REQUEST {
 	uint16 PacketType;
 	char name[NAME_LENGTH];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_DYNAMICNPC_CREATE_REQUEST, 0x0a16);
+
+DEFINE_PACKET_HEADER(CZ_DYNAMICNPC_CREATE_REQUEST, 0x0A16);
 #endif // PACKETVER >= 20140430
 
 #if PACKETVER >= 20140611
@@ -5871,13 +6155,15 @@ struct PACKET_ZC_DYNAMICNPC_CREATE_RESULT {
 	uint16 PacketType;
 	uint32 result; // enum dynamicnpc_create_result
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_DYNAMICNPC_CREATE_RESULT , 0x0a17);
+
+DEFINE_PACKET_HEADER(ZC_DYNAMICNPC_CREATE_RESULT, 0x0A17);
 #endif // PACKETVER >= 20140611
 
 struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG1 {
 	int16 packetType;
 	int32 guild_id;
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(CZ_REQ_GUILD_EMBLEM_IMG1, 0x0151);
 
 #if PACKETVER >= 20190724
@@ -5886,8 +6172,9 @@ struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG3 {
 	int32 guild_id;
 	int32 emblem_id;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_REQ_GUILD_EMBLEM_IMG3, 0x0b46);
-#endif  // PACKETVER >= 20190724
+
+DEFINE_PACKET_HEADER(CZ_REQ_GUILD_EMBLEM_IMG3, 0x0B46);
+#endif // PACKETVER >= 20190724
 
 #if PACKETVER_MAIN_NUM >= 20190619 || PACKETVER_RE_NUM >= 20190605 || PACKETVER_ZERO_NUM >= 20190626
 struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG2 {
@@ -5896,15 +6183,17 @@ struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG2 {
 	int32 emblem_id;
 	int32 unused;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_REQ_GUILD_EMBLEM_IMG2, 0x0b1e);
+
+DEFINE_PACKET_HEADER(CZ_REQ_GUILD_EMBLEM_IMG2, 0x0B1E);
 #elif PACKETVER_MAIN_NUM >= 20190227 || PACKETVER_RE_NUM >= 20190227 || PACKETVER_ZERO_NUM >= 20190313
 struct PACKET_CZ_REQ_GUILD_EMBLEM_IMG2 {
 	int16 packetType;
 	int32 guild_id;
 	int32 emblem_id;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_REQ_GUILD_EMBLEM_IMG2, 0x0b1e);
-#endif  // PACKETVER_MAIN_NUM >= 20190619 || PACKETVER_RE_NUM >= 20190605 || PACKETVER_ZERO_NUM >= 20190626
+
+DEFINE_PACKET_HEADER(CZ_REQ_GUILD_EMBLEM_IMG2, 0x0B1E);
+#endif // PACKETVER_MAIN_NUM >= 20190619 || PACKETVER_RE_NUM >= 20190605 || PACKETVER_ZERO_NUM >= 20190626
 
 #if PACKETVER_MAIN_NUM >= 20190807 || PACKETVER_RE_NUM >= 20190731 || PACKETVER_ZERO_NUM >= 20190814
 struct PACKET_ZC_CHANGE_GUILD {
@@ -5913,7 +6202,8 @@ struct PACKET_ZC_CHANGE_GUILD {
 	uint32 emblem_id;
 	uint32 AID;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_CHANGE_GUILD, 0x0b47);
+
+DEFINE_PACKET_HEADER(ZC_CHANGE_GUILD, 0x0B47);
 // 20190619 main exists in first versions, then removed
 // 20190605 re first versions with other packet size
 #elif PACKETVER_MAIN_NUM >= 20190703 || PACKETVER_RE_NUM >= 20190605 || PACKETVER_ZERO_NUM >= 20190709
@@ -5923,7 +6213,8 @@ struct PACKET_ZC_CHANGE_GUILD {
 	uint32 emblem_id;
 	uint32 AID;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_CHANGE_GUILD, 0x0b1f);
+
+DEFINE_PACKET_HEADER(ZC_CHANGE_GUILD, 0x0B1F);
 #else  // PACKETVER_MAIN_NUM >= 20190807 || PACKETVER_RE_NUM >= 20190731 || PACKETVER_ZERO_NUM >= 20190814
 struct PACKET_ZC_CHANGE_GUILD {
 	int16 packetType;
@@ -5931,13 +6222,14 @@ struct PACKET_ZC_CHANGE_GUILD {
 	int32 guild_id;
 	uint16 emblem_id;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_CHANGE_GUILD, 0x01b4);
-#endif  // PACKETVER_MAIN_NUM >= 20190807 || PACKETVER_RE_NUM >= 20190731 || PACKETVER_ZERO_NUM >= 20190814
+
+DEFINE_PACKET_HEADER(ZC_CHANGE_GUILD, 0x01B4);
+#endif // PACKETVER_MAIN_NUM >= 20190807 || PACKETVER_RE_NUM >= 20190731 || PACKETVER_ZERO_NUM >= 20190814
 
 #if PACKETVER_MAIN_NUM >= 20190821 || PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190710
 enum ZC_GUILD_EMBLEM_TYPE {
-	ZC_GUILD_EMBLEM_TYPE_CLEAR = 0,
-	ZC_GUILD_EMBLEM_TYPE_ADD = 1,
+	ZC_GUILD_EMBLEM_TYPE_CLEAR    = 0,
+	ZC_GUILD_EMBLEM_TYPE_ADD      = 1,
 	ZC_GUILD_EMBLEM_TYPE_COMPLETE = 2,
 };
 
@@ -5949,7 +6241,8 @@ struct PACKET_ZC_GUILD_EMBLEM_IMG {
 	uint32 emblem_id;
 	char emblem_data[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_GUILD_EMBLEM_IMG, 0x0b36);
+
+DEFINE_PACKET_HEADER(ZC_GUILD_EMBLEM_IMG, 0x0B36);
 #else  // PACKETVER_MAIN_NUM >= 20190821 || PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190710
 struct PACKET_ZC_GUILD_EMBLEM_IMG {
 	int16 packetType;
@@ -5958,8 +6251,9 @@ struct PACKET_ZC_GUILD_EMBLEM_IMG {
 	uint32 emblem_id;
 	char emblem_data[];
 } __attribute__((packed));
+
 DEFINE_PACKET_HEADER(ZC_GUILD_EMBLEM_IMG, 0x0152);
-#endif  // PACKETVER_MAIN_NUM >= 20190821 || PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190710
+#endif // PACKETVER_MAIN_NUM >= 20190821 || PACKETVER_RE_NUM >= 20190807 || PACKETVER_ZERO_NUM >= 20190710
 
 #if PACKETVER_MAIN_NUM >= 20171213 || PACKETVER_RE_NUM >= 20171213 || PACKETVER_ZERO_NUM >= 20171214
 struct PACKET_CZ_ADVENTURER_AGENCY_JOIN_REQ {
@@ -5967,8 +6261,9 @@ struct PACKET_CZ_ADVENTURER_AGENCY_JOIN_REQ {
 	int GID;
 	int AID;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_ADVENTURER_AGENCY_JOIN_REQ, 0x0ae6);
-#endif  // PACKETVER_MAIN_NUM >= 20171213 || PACKETVER_RE_NUM >= 20171213 || PACKETVER_ZERO_NUM >= 20171214
+
+DEFINE_PACKET_HEADER(CZ_ADVENTURER_AGENCY_JOIN_REQ, 0x0AE6);
+#endif // PACKETVER_MAIN_NUM >= 20171213 || PACKETVER_RE_NUM >= 20171213 || PACKETVER_ZERO_NUM >= 20171214
 
 #if PACKETVER_MAIN_NUM >= 20191218 || PACKETVER_RE_NUM >= 20191211 || PACKETVER_ZERO_NUM >= 20191224
 struct PACKET_ZC_ADVENTURER_AGENCY_JOIN_RESULT {
@@ -5978,8 +6273,9 @@ struct PACKET_ZC_ADVENTURER_AGENCY_JOIN_RESULT {
 	int AID;
 	int result;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ADVENTURER_AGENCY_JOIN_RESULT, 0x0afa);
-#endif  // PACKETVER_MAIN_NUM >= 20191218 || PACKETVER_RE_NUM >= 20191211 || PACKETVER_ZERO_NUM >= 20191224
+
+DEFINE_PACKET_HEADER(ZC_ADVENTURER_AGENCY_JOIN_RESULT, 0x0AFA);
+#endif // PACKETVER_MAIN_NUM >= 20191218 || PACKETVER_RE_NUM >= 20191211 || PACKETVER_ZERO_NUM >= 20191224
 
 #if PACKETVER_MAIN_NUM >= 20191218 || PACKETVER_RE_NUM >= 20191211 || PACKETVER_ZERO_NUM >= 20191224
 struct PACKET_ZC_ADVENTURER_AGENCY_JOIN_REQ {
@@ -5990,8 +6286,9 @@ struct PACKET_ZC_ADVENTURER_AGENCY_JOIN_REQ {
 	int16 level;
 	int16 job;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(ZC_ADVENTURER_AGENCY_JOIN_REQ, 0x0ae7);
-#endif  // PACKETVER_MAIN_NUM >= 20191218 || PACKETVER_RE_NUM >= 20191211 || PACKETVER_ZERO_NUM >= 20191224
+
+DEFINE_PACKET_HEADER(ZC_ADVENTURER_AGENCY_JOIN_REQ, 0x0AE7);
+#endif // PACKETVER_MAIN_NUM >= 20191218 || PACKETVER_RE_NUM >= 20191211 || PACKETVER_ZERO_NUM >= 20191224
 
 #if PACKETVER_MAIN_NUM >= 20191218 || PACKETVER_RE_NUM >= 20191211 || PACKETVER_ZERO_NUM >= 20191224
 struct PACKET_CZ_ADVENTURER_AGENCY_JOIN_RESULT {
@@ -6000,8 +6297,9 @@ struct PACKET_CZ_ADVENTURER_AGENCY_JOIN_RESULT {
 	int AID;
 	int8 result;
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CZ_ADVENTURER_AGENCY_JOIN_RESULT, 0x0af8);
-#endif  // PACKETVER_MAIN_NUM >= 20191218 || PACKETVER_RE_NUM >= 20191211 || PACKETVER_ZERO_NUM >= 20191224
+
+DEFINE_PACKET_HEADER(CZ_ADVENTURER_AGENCY_JOIN_RESULT, 0x0AF8);
+#endif // PACKETVER_MAIN_NUM >= 20191218 || PACKETVER_RE_NUM >= 20191211 || PACKETVER_ZERO_NUM >= 20191224
 
 PRAGMA_PACK_POP()
 
