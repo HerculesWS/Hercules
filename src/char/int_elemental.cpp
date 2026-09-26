@@ -56,7 +56,7 @@ static bool inter_elemental_create(struct s_elemental *ele)
 	Assert_retr(false, ele->elemental_id == 0);
 
 	if (SQL_ERROR == SQL->Query(inter->sql_handle,
-			"INSERT INTO `%s` (`char_id`,`class`,`mode`,`hp`,`sp`,`max_hp`,`max_sp`,`atk1`,`atk2`,`matk`,`aspd`,`def`,`mdef`,`flee`,`hit`,`life_time`)"
+			"INSERT INTO `%s` (`char_id`,`class`,`mode`,`hp`,`sp`,`max_hp`,`max_sp`,`atk1`,`atk2`,`matk`,`aspd`,`def`,`mdef`,`flee`,`hit`,`life_time`)" //
 			"VALUES ('%d','%d','%u','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d','%d')",
 			elemental_db, ele->char_id, ele->class_, ele->mode, ele->hp, ele->sp, ele->max_hp, ele->max_sp, ele->atk,
 			ele->atk2, ele->matk, ele->amotion, ele->def, ele->mdef, ele->flee, ele->hit, ele->life_time)) {
@@ -79,8 +79,8 @@ static bool inter_elemental_save(const struct s_elemental *ele)
 	Assert_retr(false, ele->elemental_id > 0);
 
 	if (SQL_ERROR == SQL->Query(inter->sql_handle,
-			"UPDATE `%s` SET `char_id` = '%d', `class` = '%d', `mode` = '%u', `hp` = '%d', `sp` = '%d',"
-			"`max_hp` = '%d', `max_sp` = '%d', `atk1` = '%d', `atk2` = '%d', `matk` = '%d', `aspd` = '%d', `def` = '%d',"
+			"UPDATE `%s` SET `char_id` = '%d', `class` = '%d', `mode` = '%u', `hp` = '%d', `sp` = '%d'," //
+			"`max_hp` = '%d', `max_sp` = '%d', `atk1` = '%d', `atk2` = '%d', `matk` = '%d', `aspd` = '%d', `def` = '%d'," //
 			"`mdef` = '%d', `flee` = '%d', `hit` = '%d', `life_time` = '%d' WHERE `ele_id` = '%d'",
 			elemental_db, ele->char_id, ele->class_, ele->mode, ele->hp, ele->sp, ele->max_hp, ele->max_sp, ele->atk, ele->atk2,
 			ele->matk, ele->amotion, ele->def, ele->mdef, ele->flee, ele->hit, ele->life_time, ele->elemental_id)) {
@@ -100,8 +100,7 @@ static bool inter_elemental_load(int ele_id, int char_id, struct s_elemental *el
 	ele->char_id = char_id;
 
 	if( SQL_ERROR == SQL->Query(inter->sql_handle,
-		"SELECT `class`, `mode`, `hp`, `sp`, `max_hp`, `max_sp`, `atk1`, `atk2`, `matk`, `aspd`,"
-		"`def`, `mdef`, `flee`, `hit`, `life_time` FROM `%s` WHERE `ele_id` = '%d' AND `char_id` = '%d'",
+		"SELECT `class`, `mode`, `hp`, `sp`, `max_hp`, `max_sp`, `atk1`, `atk2`, `matk`, `aspd`, `def`, `mdef`, `flee`, `hit`, `life_time` FROM `%s` WHERE `ele_id` = '%d' AND `char_id` = '%d'",
 		elemental_db, ele_id, char_id) )
 	{
 		Sql_ShowDebug(inter->sql_handle);

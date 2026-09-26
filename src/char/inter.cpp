@@ -239,7 +239,8 @@ static void inter_accinfo(int u_fd, int aid, int castergroup, const char *query,
 				SQL->NextRow(inter->sql_handle);
 				SQL->GetData(inter->sql_handle, 0, &data, NULL); account_id = atoi(data);
 				SQL->FreeResult(inter->sql_handle);
-			} else {// more than one, listing... [Dekamaster/Nightroad]
+			} else {
+				// more than one, listing... [Dekamaster/Nightroad]
 				inter->msg_to_fd(map_fd, u_fd, aid, "Your query returned the following %d results, please be more specific...",(int)SQL->NumRows(inter->sql_handle));
 				while ( SQL_SUCCESS == SQL->NextRow(inter->sql_handle) ) {
 					int class_;
@@ -306,7 +307,7 @@ static void inter_accinfo2(bool success, int map_fd, int u_fd, int u_aid, int ac
 	inter->msg_to_fd(map_fd, u_fd, u_aid, "This user has logged %d times, the last time were at %s", logincount, lastlogin);
 	inter->msg_to_fd(map_fd, u_fd, u_aid, "-- Character Details --");
 
-	if ( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `char_id`, `name`, `char_num`, `class`, `base_level`, `job_level`, `online` "
+	if ( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `char_id`, `name`, `char_num`, `class`, `base_level`, `job_level`, `online` " //
 	                                         "FROM `%s` WHERE `account_id` = '%d' ORDER BY `char_num` LIMIT %d", char_db, account_id, MAX_CHARS)
 	  || SQL->NumRows(inter->sql_handle) == 0 ) {
 		if (SQL->NumRows(inter->sql_handle) == 0) {
