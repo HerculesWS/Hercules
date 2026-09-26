@@ -62,18 +62,16 @@ static bool imageparser_validate_bmp_emblem(const char *emblem, uint64 emblem_le
 		BITMAPFILEHEADER_SIZE = 14, // sizeof(BITMAPFILEHEADER)
 		BITMAPINFOHEADER_SIZE = 40, // sizeof(BITMAPINFOHEADER)
 	};
-#if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
-#pragma pack(push, 1)
-#endif // not NetBSD < 6 / Solaris
+
+PRAGMA_PACK_PUSH(1)
 	struct s_bitmaptripple {
 		//uint8 b;
 		//uint8 g;
 		//uint8 r;
 		uint32 rgb:24;
 	} __attribute__((packed));
-#if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
-#pragma pack(pop)
-#endif // not NetBSD < 6 / Solaris
+PRAGMA_PACK_POP()
+
 	if ((int)emblem_len > extraconf->emblems->max_bmp_guild_emblem_size // Safe to conver it to int, we check if it's not negative
 	 || extraconf->emblems->max_bmp_guild_emblem_size < BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE
 	 || RBUFW(buf, 0) != 0x4d42 // BITMAPFILEHEADER.bfType (signature)

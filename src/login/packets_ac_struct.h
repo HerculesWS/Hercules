@@ -38,9 +38,8 @@ enum login_ac_packet_id {
 };
 
 /* Packets Structs */
-#if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
-#pragma pack(push, 1)
-#endif // not NetBSD < 6 / Solaris
+
+PRAGMA_PACK_PUSH(1)
 
 /**
  * Packet structure for SC_NOTIFY_BAN.
@@ -151,8 +150,6 @@ struct PACKET_AC_LOGIN_OTP {
 DEFINE_PACKET_HEADER(AC_LOGIN_OTP, 0x0ad1);
 #endif
 
-#if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
-#pragma pack(pop)
-#endif // not NetBSD < 6 / Solaris
+PRAGMA_PACK_POP()
 
 #endif // LOGIN_PACKETS_AC_STRUCT_H
