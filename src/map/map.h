@@ -1232,9 +1232,8 @@ struct charid2nick {
 };
 
 // New mcache file format header
-#if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
-#pragma pack(push, 1)
-#endif // not NetBSD < 6 / Solaris
+
+PRAGMA_PACK_PUSH(1)
 struct map_cache_header {
 	int16 version;
 	uint8 md5_checksum[16];
@@ -1242,9 +1241,7 @@ struct map_cache_header {
 	int16 ys;
 	int32 len;
 } __attribute__((packed));
-#if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
-#pragma pack(pop)
-#endif // not NetBSD < 6 / Solaris
+PRAGMA_PACK_POP()
 
 /*=====================================
 * Interface : map.h

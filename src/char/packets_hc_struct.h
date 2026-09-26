@@ -26,9 +26,8 @@
 #include "common/packetsmacro.h"
 
 /* Packets Structs */
-#if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
-#pragma pack(push, 1)
-#endif // not NetBSD < 6 / Solaris
+
+PRAGMA_PACK_PUSH(1)
 
 #if PACKETVER_MAIN_NUM >= 20201007 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 struct PACKET_HC_ACK_CHARINFO_PER_PAGE {
@@ -63,8 +62,6 @@ DEFINE_PACKET_ID(HC_ACK_CHANGE_CHARACTER_SLOT, 0x08d5)
 DEFINE_PACKET_ID(HC_UPDATE_CHARINFO, 0x08e3)
 #endif  // // PACKETVER_MAIN_NUM >= 20201007 || PACKETVER_RE_NUM >= 20211103 || PACKETVER_ZERO_NUM >= 20221024
 
-#if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
-#pragma pack(pop)
-#endif // not NetBSD < 6 / Solaris
+PRAGMA_PACK_POP()
 
 #endif // CHAR_PACKETS_HC_STRUCT_H

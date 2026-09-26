@@ -26,9 +26,8 @@
 #include "common/mmo.h"
 
 /* Packets Structs */
-#if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
-#pragma pack(push, 1)
-#endif // not NetBSD < 6 / Solaris
+
+PRAGMA_PACK_PUSH(1)
 
 #ifndef EMOTE_SIZE
 // 50 + end of string
@@ -300,8 +299,6 @@ struct PACKET_API_REPLY_party_info {
 #define GET_RFIFO_API_PROXY_PACKET_SIZE(fd) (RFIFOW(fd, 2) - sizeof(struct PACKET_API_PROXY))
 #define PROXY_PACKET_FLAG(packet, flag) (((packet)->flags & (flag)) != 0)
 
-#if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
-#pragma pack(pop)
-#endif // not NetBSD < 6 / Solaris
+PRAGMA_PACK_POP()
 
 #endif /* COMMON_API_PACKETS_H */
