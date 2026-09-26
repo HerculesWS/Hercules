@@ -43,22 +43,22 @@ packetLen(0x0068, 46)
 packetLen(0x0069, -1)
 
 // Packet: 0x006a
-packetLen(0x006a, 23)
+packetLen(0x006A, 23)
 
 // Packet: 0x006b
-packetLen(0x006b, -1)
+packetLen(0x006B, -1)
 
 // Packet: 0x006c
-packetLen(0x006c, 3)
+packetLen(0x006C, 3)
 
 // Packet: 0x006d
-packetLen(0x006d, 110)
+packetLen(0x006D, 110)
 
 // Packet: 0x006e
-packetLen(0x006e, 3)
+packetLen(0x006E, 3)
 
 // Packet: 0x006f
-packetLen(0x006f, 2)
+packetLen(0x006F, 2)
 
 // Packet: 0x0070
 packetLen(0x0070, 3)
@@ -286,196 +286,196 @@ packetLen(0x0079, 53)
 
 // Packet: 0x007a
 #if PACKETVER >= 20080701
-packetLen(0x007a, 2)
+packetLen(0x007A, 2)
 #elif PACKETVER >= 20080617
-packetLen(0x007a, 6)
+packetLen(0x007A, 6)
 #elif PACKETVER >= 20080610
-packetLen(0x007a, 53)
+packetLen(0x007A, 53)
 #elif PACKETVER >= 20080513
-packetLen(0x007a, -1)
+packetLen(0x007A, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x007a, 3)
+packetLen(0x007A, 3)
 #elif PACKETVER >= 20080429
-packetLen(0x007a, 8)
+packetLen(0x007A, 8)
 #elif PACKETVER >= 20080408
-packetLen(0x007a, -1)
+packetLen(0x007A, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x007a, 114)
+packetLen(0x007A, 114)
 #elif PACKETVER >= 20080325
-packetLen(0x007a, 22)
+packetLen(0x007A, 22)
 #elif PACKETVER >= 20080318
-packetLen(0x007a, 282)
+packetLen(0x007A, 282)
 #elif PACKETVER >= 20080311
-packetLen(0x007a, 5)
+packetLen(0x007A, 5)
 #elif PACKETVER >= 20080304
-packetLen(0x007a, 2)
+packetLen(0x007A, 2)
 #elif PACKETVER >= 20080226
-packetLen(0x007a, -1)
+packetLen(0x007A, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x007a, 29)
+packetLen(0x007A, 29)
 #elif PACKETVER >= 20080124
-packetLen(0x007a, 2)
+packetLen(0x007A, 2)
 #elif PACKETVER >= 20080102
-packetLen(0x007a, 58)
+packetLen(0x007A, 58)
 #endif
 
 // Packet: 0x007b
 #if PACKETVER >= 20080603
-packetLen(0x007b, -1)
+packetLen(0x007B, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x007b, 42)
+packetLen(0x007B, 42)
 #elif PACKETVER >= 20080520
-packetLen(0x007b, -1)
+packetLen(0x007B, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x007b, 11)
+packetLen(0x007B, 11)
 #elif PACKETVER >= 20080507
-packetLen(0x007b, -1)
+packetLen(0x007B, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x007b, 6)
+packetLen(0x007B, 6)
 #elif PACKETVER >= 20080415
-packetLen(0x007b, -1)
+packetLen(0x007B, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x007b, 2)
+packetLen(0x007B, 2)
 #elif PACKETVER >= 20080325
-packetLen(0x007b, 6)
+packetLen(0x007B, 6)
 #elif PACKETVER >= 20080318
-packetLen(0x007b, 11)
+packetLen(0x007B, 11)
 #elif PACKETVER >= 20080311
-packetLen(0x007b, 186)
+packetLen(0x007B, 186)
 #elif PACKETVER >= 20080304
-packetLen(0x007b, 30)
+packetLen(0x007B, 30)
 #elif PACKETVER >= 20080226
-packetLen(0x007b, 5)
+packetLen(0x007B, 5)
 #elif PACKETVER >= 20080219
-packetLen(0x007b, 2)
+packetLen(0x007B, 2)
 #elif PACKETVER >= 20080124
-packetLen(0x007b, 14)
+packetLen(0x007B, 14)
 #elif PACKETVER >= 20080102
-packetLen(0x007b, 60)
+packetLen(0x007B, 60)
 #endif
 
 // Packet: 0x007c
 #if PACKETVER >= 20080701
-packetLen(0x007c, 5)
+packetLen(0x007C, 5)
 #elif PACKETVER >= 20080624
-packetLen(0x007c, 16)
+packetLen(0x007C, 16)
 #elif PACKETVER >= 20080528
-packetLen(0x007c, -1)
+packetLen(0x007C, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x007c, 3)
+packetLen(0x007C, 3)
 #elif PACKETVER >= 20080513
-packetLen(0x007c, 7)
+packetLen(0x007C, 7)
 #elif PACKETVER >= 20080429
-packetLen(0x007c, -1)
+packetLen(0x007C, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x007c, 65)
+packetLen(0x007C, 65)
 #elif PACKETVER >= 20080415
-packetLen(0x007c, 8)
+packetLen(0x007C, 8)
 #elif PACKETVER >= 20080408
-packetLen(0x007c, 11)
+packetLen(0x007C, 11)
 #elif PACKETVER >= 20080401
-packetLen(0x007c, 8)
+packetLen(0x007C, 8)
 #elif PACKETVER >= 20080325
-packetLen(0x007c, 10)
+packetLen(0x007C, 10)
 #elif PACKETVER >= 20080318
-packetLen(0x007c, 2)
+packetLen(0x007C, 2)
 #elif PACKETVER >= 20080311
-packetLen(0x007c, -1)
+packetLen(0x007C, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x007c, 3)
+packetLen(0x007C, 3)
 #elif PACKETVER >= 20080226
-packetLen(0x007c, 8)
+packetLen(0x007C, 8)
 #elif PACKETVER >= 20080219
-packetLen(0x007c, 186)
+packetLen(0x007C, 186)
 #elif PACKETVER >= 20080124
-packetLen(0x007c, 31)
+packetLen(0x007C, 31)
 #elif PACKETVER >= 20080102
-packetLen(0x007c, 42)
+packetLen(0x007C, 42)
 #endif
 
 // Packet: 0x007d
 #if PACKETVER >= 20080617
-packetLen(0x007d, -1)
+packetLen(0x007D, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x007d, 26)
+packetLen(0x007D, 26)
 #elif PACKETVER >= 20080603
-packetLen(0x007d, 6)
+packetLen(0x007D, 6)
 #elif PACKETVER >= 20080528
-packetLen(0x007d, -1)
+packetLen(0x007D, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x007d, 9)
+packetLen(0x007D, 9)
 #elif PACKETVER >= 20080513
-packetLen(0x007d, 2)
+packetLen(0x007D, 2)
 #elif PACKETVER >= 20080507
-packetLen(0x007d, 10)
+packetLen(0x007D, 10)
 #elif PACKETVER >= 20080429
-packetLen(0x007d, 11)
+packetLen(0x007D, 11)
 #elif PACKETVER >= 20080422
-packetLen(0x007d, 2)
+packetLen(0x007D, 2)
 #elif PACKETVER >= 20080415
-packetLen(0x007d, 30)
+packetLen(0x007D, 30)
 #elif PACKETVER >= 20080401
-packetLen(0x007d, -1)
+packetLen(0x007D, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x007d, 2)
+packetLen(0x007D, 2)
 #elif PACKETVER >= 20080311
-packetLen(0x007d, -1)
+packetLen(0x007D, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x007d, 14)
+packetLen(0x007D, 14)
 #elif PACKETVER >= 20080226
-packetLen(0x007d, 26)
+packetLen(0x007D, 26)
 #elif PACKETVER >= 20080219
-packetLen(0x007d, 3)
+packetLen(0x007D, 3)
 #elif PACKETVER >= 20080124
-packetLen(0x007d, 22)
+packetLen(0x007D, 22)
 #elif PACKETVER >= 20080102
-packetLen(0x007d, 2)
+packetLen(0x007D, 2)
 #endif
 
 // Packet: 0x007e
-packetLen(0x007e, 105)
+packetLen(0x007E, 105)
 
 // Packet: 0x007f
 #if PACKETVER >= 20080624
-packetLen(0x007f, -1)
+packetLen(0x007F, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x007f, 5)
+packetLen(0x007F, 5)
 #elif PACKETVER >= 20080603
-packetLen(0x007f, -1)
+packetLen(0x007F, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x007f, 13)
+packetLen(0x007F, 13)
 #elif PACKETVER >= 20080520
-packetLen(0x007f, -1)
+packetLen(0x007F, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x007f, 10)
+packetLen(0x007F, 10)
 #elif PACKETVER >= 20080507
-packetLen(0x007f, 3)
+packetLen(0x007F, 3)
 #elif PACKETVER >= 20080429
-packetLen(0x007f, 6)
+packetLen(0x007F, 6)
 #elif PACKETVER >= 20080422
-packetLen(0x007f, -1)
+packetLen(0x007F, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x007f, 7)
+packetLen(0x007F, 7)
 #elif PACKETVER >= 20080408
-packetLen(0x007f, 3)
+packetLen(0x007F, 3)
 #elif PACKETVER >= 20080401
-packetLen(0x007f, 182)
+packetLen(0x007F, 182)
 #elif PACKETVER >= 20080325
-packetLen(0x007f, 10)
+packetLen(0x007F, 10)
 #elif PACKETVER >= 20080318
-packetLen(0x007f, -1)
+packetLen(0x007F, -1)
 #elif PACKETVER >= 20080311
-packetLen(0x007f, 10)
+packetLen(0x007F, 10)
 #elif PACKETVER >= 20080304
-packetLen(0x007f, -1)
+packetLen(0x007F, -1)
 #elif PACKETVER >= 20080226
-packetLen(0x007f, 54)
+packetLen(0x007F, 54)
 #elif PACKETVER >= 20080219
-packetLen(0x007f, 4)
+packetLen(0x007F, 4)
 #elif PACKETVER >= 20080124
-packetLen(0x007f, -1)
+packetLen(0x007F, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x007f, 6)
+packetLen(0x007F, 6)
 #endif
 
 // Packet: 0x0080
@@ -698,141 +698,141 @@ packetLen(0x0089, 11)
 
 // Packet: 0x008a
 #if PACKETVER >= 20080624
-packetLen(0x008a, 6)
+packetLen(0x008A, 6)
 #elif PACKETVER >= 20080617
-packetLen(0x008a, 2)
+packetLen(0x008A, 2)
 #elif PACKETVER >= 20080610
-packetLen(0x008a, 28)
+packetLen(0x008A, 28)
 #elif PACKETVER >= 20080603
-packetLen(0x008a, 68)
+packetLen(0x008A, 68)
 #elif PACKETVER >= 20080528
-packetLen(0x008a, 9)
+packetLen(0x008A, 9)
 #elif PACKETVER >= 20080520
-packetLen(0x008a, 29)
+packetLen(0x008A, 29)
 #elif PACKETVER >= 20080513
-packetLen(0x008a, 11)
+packetLen(0x008A, 11)
 #elif PACKETVER >= 20080507
-packetLen(0x008a, 26)
+packetLen(0x008A, 26)
 #elif PACKETVER >= 20080429
-packetLen(0x008a, 23)
+packetLen(0x008A, 23)
 #elif PACKETVER >= 20080422
-packetLen(0x008a, 6)
+packetLen(0x008A, 6)
 #elif PACKETVER >= 20080408
-packetLen(0x008a, -1)
+packetLen(0x008A, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x008a, 28)
+packetLen(0x008A, 28)
 #elif PACKETVER >= 20080325
-packetLen(0x008a, 30)
+packetLen(0x008A, 30)
 #elif PACKETVER >= 20080318
-packetLen(0x008a, 5)
+packetLen(0x008A, 5)
 #elif PACKETVER >= 20080304
-packetLen(0x008a, 6)
+packetLen(0x008A, 6)
 #elif PACKETVER >= 20080226
-packetLen(0x008a, 10)
+packetLen(0x008A, 10)
 #elif PACKETVER >= 20080219
-packetLen(0x008a, 6)
+packetLen(0x008A, 6)
 #elif PACKETVER >= 20080124
-packetLen(0x008a, -1)
+packetLen(0x008A, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x008a, 29)
+packetLen(0x008A, 29)
 #endif
 
 // Packet: 0x008b
-packetLen(0x008b, 23)
+packetLen(0x008B, 23)
 
 // Packet: 0x008c
-packetLen(0x008c, 14)
+packetLen(0x008C, 14)
 
 // Packet: 0x008d
 #if PACKETVER >= 20080701
-packetLen(0x008d, 2)
+packetLen(0x008D, 2)
 #elif PACKETVER >= 20080624
-packetLen(0x008d, 10)
+packetLen(0x008D, 10)
 #elif PACKETVER >= 20080617
-packetLen(0x008d, 282)
+packetLen(0x008D, 282)
 #elif PACKETVER >= 20080610
-packetLen(0x008d, 60)
+packetLen(0x008D, 60)
 #elif PACKETVER >= 20080603
-packetLen(0x008d, 6)
+packetLen(0x008D, 6)
 #elif PACKETVER >= 20080528
-packetLen(0x008d, 2)
+packetLen(0x008D, 2)
 #elif PACKETVER >= 20080520
-packetLen(0x008d, 4)
+packetLen(0x008D, 4)
 #elif PACKETVER >= 20080513
-packetLen(0x008d, 2)
+packetLen(0x008D, 2)
 #elif PACKETVER >= 20080507
-packetLen(0x008d, 66)
+packetLen(0x008D, 66)
 #elif PACKETVER >= 20080429
-packetLen(0x008d, 2)
+packetLen(0x008D, 2)
 #elif PACKETVER >= 20080422
-packetLen(0x008d, -1)
+packetLen(0x008D, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x008d, 2)
+packetLen(0x008D, 2)
 #elif PACKETVER >= 20080408
-packetLen(0x008d, 6)
+packetLen(0x008D, 6)
 #elif PACKETVER >= 20080401
-packetLen(0x008d, -1)
+packetLen(0x008D, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x008d, 7)
+packetLen(0x008D, 7)
 #elif PACKETVER >= 20080318
-packetLen(0x008d, 8)
+packetLen(0x008D, 8)
 #elif PACKETVER >= 20080311
-packetLen(0x008d, 7)
+packetLen(0x008D, 7)
 #elif PACKETVER >= 20080304
-packetLen(0x008d, 4)
+packetLen(0x008D, 4)
 #elif PACKETVER >= 20080226
-packetLen(0x008d, 6)
+packetLen(0x008D, 6)
 #elif PACKETVER >= 20080219
-packetLen(0x008d, 79)
+packetLen(0x008D, 79)
 #elif PACKETVER >= 20080124
-packetLen(0x008d, 6)
+packetLen(0x008D, 6)
 #elif PACKETVER >= 20080102
-packetLen(0x008d, -1)
+packetLen(0x008D, -1)
 #endif
 
 // Packet: 0x008e
 #if PACKETVER >= 20080701
-packetLen(0x008e, -1)
+packetLen(0x008E, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x008e, 5)
+packetLen(0x008E, 5)
 #elif PACKETVER >= 20080617
-packetLen(0x008e, 6)
+packetLen(0x008E, 6)
 #elif PACKETVER >= 20080610
-packetLen(0x008e, 10)
+packetLen(0x008E, 10)
 #elif PACKETVER >= 20080603
-packetLen(0x008e, -1)
+packetLen(0x008E, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x008e, 7)
+packetLen(0x008E, 7)
 #elif PACKETVER >= 20080520
-packetLen(0x008e, -1)
+packetLen(0x008E, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x008e, 282)
+packetLen(0x008E, 282)
 #elif PACKETVER >= 20080507
-packetLen(0x008e, 2)
+packetLen(0x008E, 2)
 #elif PACKETVER >= 20080429
-packetLen(0x008e, 6)
+packetLen(0x008E, 6)
 #elif PACKETVER >= 20080422
-packetLen(0x008e, 3)
+packetLen(0x008E, 3)
 #elif PACKETVER >= 20080415
-packetLen(0x008e, 2)
+packetLen(0x008E, 2)
 #elif PACKETVER >= 20080408
-packetLen(0x008e, -1)
+packetLen(0x008E, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x008e, 4)
+packetLen(0x008E, 4)
 #elif PACKETVER >= 20080325
-packetLen(0x008e, 28)
+packetLen(0x008E, 28)
 #elif PACKETVER >= 20080318
-packetLen(0x008e, 186)
+packetLen(0x008E, 186)
 #elif PACKETVER >= 20080311
-packetLen(0x008e, 7)
+packetLen(0x008E, 7)
 #elif PACKETVER >= 20080304
-packetLen(0x008e, -1)
+packetLen(0x008E, -1)
 #elif PACKETVER >= 20080226
-packetLen(0x008e, 7)
+packetLen(0x008E, 7)
 #elif PACKETVER >= 20080219
-packetLen(0x008e, 33)
+packetLen(0x008E, 33)
 #elif PACKETVER >= 20080102
-packetLen(0x008e, -1)
+packetLen(0x008E, -1)
 #endif
 
 // Packet: 0x0090
@@ -1213,3633 +1213,3633 @@ packetLen(0x0099, -1)
 
 // Packet: 0x009a
 #if PACKETVER >= 20080701
-packetLen(0x009a, 3)
+packetLen(0x009A, 3)
 #elif PACKETVER >= 20080617
-packetLen(0x009a, -1)
+packetLen(0x009A, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x009a, 90)
+packetLen(0x009A, 90)
 #elif PACKETVER >= 20080603
-packetLen(0x009a, 29)
+packetLen(0x009A, 29)
 #elif PACKETVER >= 20080528
-packetLen(0x009a, -1)
+packetLen(0x009A, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x009a, 10)
+packetLen(0x009A, 10)
 #elif PACKETVER >= 20080513
-packetLen(0x009a, 28)
+packetLen(0x009A, 28)
 #elif PACKETVER >= 20080422
-packetLen(0x009a, -1)
+packetLen(0x009A, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x009a, 33)
+packetLen(0x009A, 33)
 #elif PACKETVER >= 20080408
-packetLen(0x009a, 9)
+packetLen(0x009A, 9)
 #elif PACKETVER >= 20080325
-packetLen(0x009a, -1)
+packetLen(0x009A, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x009a, 59)
+packetLen(0x009A, 59)
 #elif PACKETVER >= 20080311
-packetLen(0x009a, 57)
+packetLen(0x009A, 57)
 #elif PACKETVER >= 20080304
-packetLen(0x009a, -1)
+packetLen(0x009A, -1)
 #elif PACKETVER >= 20080226
-packetLen(0x009a, 4)
+packetLen(0x009A, 4)
 #elif PACKETVER >= 20080219
-packetLen(0x009a, 10)
+packetLen(0x009A, 10)
 #elif PACKETVER >= 20080124
-packetLen(0x009a, 4)
+packetLen(0x009A, 4)
 #elif PACKETVER >= 20080102
-packetLen(0x009a, -1)
+packetLen(0x009A, -1)
 #endif
 
 // Packet: 0x009b
-packetLen(0x009b, 34)
+packetLen(0x009B, 34)
 
 // Packet: 0x009c
 #if PACKETVER >= 20080701
-packetLen(0x009c, 67)
+packetLen(0x009C, 67)
 #elif PACKETVER >= 20080617
-packetLen(0x009c, -1)
+packetLen(0x009C, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x009c, 6)
+packetLen(0x009C, 6)
 #elif PACKETVER >= 20080603
-packetLen(0x009c, 4)
+packetLen(0x009C, 4)
 #elif PACKETVER >= 20080528
-packetLen(0x009c, 26)
+packetLen(0x009C, 26)
 #elif PACKETVER >= 20080520
-packetLen(0x009c, 67)
+packetLen(0x009C, 67)
 #elif PACKETVER >= 20080513
-packetLen(0x009c, -1)
+packetLen(0x009C, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x009c, 6)
+packetLen(0x009C, 6)
 #elif PACKETVER >= 20080429
-packetLen(0x009c, -1)
+packetLen(0x009C, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x009c, 10)
+packetLen(0x009C, 10)
 #elif PACKETVER >= 20080415
-packetLen(0x009c, 66)
+packetLen(0x009C, 66)
 #elif PACKETVER >= 20080408
-packetLen(0x009c, -1)
+packetLen(0x009C, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x009c, 8)
+packetLen(0x009C, 8)
 #elif PACKETVER >= 20080325
-packetLen(0x009c, 3)
+packetLen(0x009C, 3)
 #elif PACKETVER >= 20080318
-packetLen(0x009c, 282)
+packetLen(0x009C, 282)
 #elif PACKETVER >= 20080311
-packetLen(0x009c, -1)
+packetLen(0x009C, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x009c, 71)
+packetLen(0x009C, 71)
 #elif PACKETVER >= 20080226
-packetLen(0x009c, 4)
+packetLen(0x009C, 4)
 #elif PACKETVER >= 20080219
-packetLen(0x009c, 7)
+packetLen(0x009C, 7)
 #elif PACKETVER >= 20080124
-packetLen(0x009c, -1)
+packetLen(0x009C, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x009c, 9)
+packetLen(0x009C, 9)
 #endif
 
 // Packet: 0x009d
 #if PACKETVER >= 20080701
-packetLen(0x009d, -1)
+packetLen(0x009D, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x009d, 10)
+packetLen(0x009D, 10)
 #elif PACKETVER >= 20080617
-packetLen(0x009d, 13)
+packetLen(0x009D, 13)
 #elif PACKETVER >= 20080610
-packetLen(0x009d, 3)
+packetLen(0x009D, 3)
 #elif PACKETVER >= 20080603
-packetLen(0x009d, 6)
+packetLen(0x009D, 6)
 #elif PACKETVER >= 20080528
-packetLen(0x009d, 8)
+packetLen(0x009D, 8)
 #elif PACKETVER >= 20080520
-packetLen(0x009d, 10)
+packetLen(0x009D, 10)
 #elif PACKETVER >= 20080513
-packetLen(0x009d, 29)
+packetLen(0x009D, 29)
 #elif PACKETVER >= 20080507
-packetLen(0x009d, 59)
+packetLen(0x009D, 59)
 #elif PACKETVER >= 20080429
-packetLen(0x009d, -1)
+packetLen(0x009D, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x009d, 6)
+packetLen(0x009D, 6)
 #elif PACKETVER >= 20080415
-packetLen(0x009d, 32)
+packetLen(0x009D, 32)
 #elif PACKETVER >= 20080408
-packetLen(0x009d, -1)
+packetLen(0x009D, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x009d, 26)
+packetLen(0x009D, 26)
 #elif PACKETVER >= 20080325
-packetLen(0x009d, 57)
+packetLen(0x009D, 57)
 #elif PACKETVER >= 20080318
-packetLen(0x009d, -1)
+packetLen(0x009D, -1)
 #elif PACKETVER >= 20080311
-packetLen(0x009d, 13)
+packetLen(0x009D, 13)
 #elif PACKETVER >= 20080304
-packetLen(0x009d, 19)
+packetLen(0x009D, 19)
 #elif PACKETVER >= 20080226
-packetLen(0x009d, 57)
+packetLen(0x009D, 57)
 #elif PACKETVER >= 20080219
-packetLen(0x009d, 10)
+packetLen(0x009D, 10)
 #elif PACKETVER >= 20080124
-packetLen(0x009d, -1)
+packetLen(0x009D, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x009d, 17)
+packetLen(0x009D, 17)
 #endif
 
 // Packet: 0x009e
 #if PACKETVER >= 20080701
-packetLen(0x009e, -1)
+packetLen(0x009E, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x009e, 3)
+packetLen(0x009E, 3)
 #elif PACKETVER >= 20080617
-packetLen(0x009e, -1)
+packetLen(0x009E, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x009e, 10)
+packetLen(0x009E, 10)
 #elif PACKETVER >= 20080603
-packetLen(0x009e, 4)
+packetLen(0x009E, 4)
 #elif PACKETVER >= 20080528
-packetLen(0x009e, 3)
+packetLen(0x009E, 3)
 #elif PACKETVER >= 20080520
-packetLen(0x009e, 186)
+packetLen(0x009E, 186)
 #elif PACKETVER >= 20080513
-packetLen(0x009e, -1)
+packetLen(0x009E, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x009e, 6)
+packetLen(0x009E, 6)
 #elif PACKETVER >= 20080429
-packetLen(0x009e, 2)
+packetLen(0x009E, 2)
 #elif PACKETVER >= 20080422
-packetLen(0x009e, 11)
+packetLen(0x009E, 11)
 #elif PACKETVER >= 20080415
-packetLen(0x009e, 9)
+packetLen(0x009E, 9)
 #elif PACKETVER >= 20080408
-packetLen(0x009e, 39)
+packetLen(0x009E, 39)
 #elif PACKETVER >= 20080401
-packetLen(0x009e, 5)
+packetLen(0x009E, 5)
 #elif PACKETVER >= 20080318
-packetLen(0x009e, 10)
+packetLen(0x009E, 10)
 #elif PACKETVER >= 20080311
-packetLen(0x009e, -1)
+packetLen(0x009E, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x009e, 282)
+packetLen(0x009E, 282)
 #elif PACKETVER >= 20080226
-packetLen(0x009e, 11)
+packetLen(0x009E, 11)
 #elif PACKETVER >= 20080219
-packetLen(0x009e, -1)
+packetLen(0x009E, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x009e, 97)
+packetLen(0x009E, 97)
 #elif PACKETVER >= 20080102
-packetLen(0x009e, 17)
+packetLen(0x009E, 17)
 #endif
 
 // Packet: 0x009f
-packetLen(0x009f, 20)
+packetLen(0x009F, 20)
 
 // Packet: 0x00a0
 #if PACKETVER >= 20080701
-packetLen(0x00a0, 30)
+packetLen(0x00A0, 30)
 #elif PACKETVER >= 20080624
-packetLen(0x00a0, -1)
+packetLen(0x00A0, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x00a0, 6)
+packetLen(0x00A0, 6)
 #elif PACKETVER >= 20080610
-packetLen(0x00a0, 26)
+packetLen(0x00A0, 26)
 #elif PACKETVER >= 20080603
-packetLen(0x00a0, 8)
+packetLen(0x00A0, 8)
 #elif PACKETVER >= 20080528
-packetLen(0x00a0, -1)
+packetLen(0x00A0, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x00a0, 3)
+packetLen(0x00A0, 3)
 #elif PACKETVER >= 20080513
-packetLen(0x00a0, 14)
+packetLen(0x00A0, 14)
 #elif PACKETVER >= 20080507
-packetLen(0x00a0, 23)
+packetLen(0x00A0, 23)
 #elif PACKETVER >= 20080429
-packetLen(0x00a0, 12)
+packetLen(0x00A0, 12)
 #elif PACKETVER >= 20080422
-packetLen(0x00a0, 8)
+packetLen(0x00A0, 8)
 #elif PACKETVER >= 20080408
-packetLen(0x00a0, -1)
+packetLen(0x00A0, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x00a0, 8)
+packetLen(0x00A0, 8)
 #elif PACKETVER >= 20080325
-packetLen(0x00a0, 6)
+packetLen(0x00A0, 6)
 #elif PACKETVER >= 20080318
-packetLen(0x00a0, 13)
+packetLen(0x00A0, 13)
 #elif PACKETVER >= 20080311
-packetLen(0x00a0, 28)
+packetLen(0x00A0, 28)
 #elif PACKETVER >= 20080226
-packetLen(0x00a0, 27)
+packetLen(0x00A0, 27)
 #elif PACKETVER >= 20080219
-packetLen(0x00a0, 39)
+packetLen(0x00A0, 39)
 #elif PACKETVER >= 20080124
-packetLen(0x00a0, 5)
+packetLen(0x00A0, 5)
 #elif PACKETVER >= 20080102
-packetLen(0x00a0, 23)
+packetLen(0x00A0, 23)
 #endif
 
 // Packet: 0x00a1
 #if PACKETVER >= 20080701
-packetLen(0x00a1, 6)
+packetLen(0x00A1, 6)
 #elif PACKETVER >= 20080624
-packetLen(0x00a1, 44)
+packetLen(0x00A1, 44)
 #elif PACKETVER >= 20080617
-packetLen(0x00a1, 60)
+packetLen(0x00A1, 60)
 #elif PACKETVER >= 20080528
-packetLen(0x00a1, -1)
+packetLen(0x00A1, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x00a1, 60)
+packetLen(0x00A1, 60)
 #elif PACKETVER >= 20080513
-packetLen(0x00a1, -1)
+packetLen(0x00A1, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x00a1, 11)
+packetLen(0x00A1, 11)
 #elif PACKETVER >= 20080422
-packetLen(0x00a1, -1)
+packetLen(0x00A1, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x00a1, 16)
+packetLen(0x00A1, 16)
 #elif PACKETVER >= 20080408
-packetLen(0x00a1, 3)
+packetLen(0x00A1, 3)
 #elif PACKETVER >= 20080401
-packetLen(0x00a1, -1)
+packetLen(0x00A1, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x00a1, 6)
+packetLen(0x00A1, 6)
 #elif PACKETVER >= 20080318
-packetLen(0x00a1, 53)
+packetLen(0x00A1, 53)
 #elif PACKETVER >= 20080311
-packetLen(0x00a1, 6)
+packetLen(0x00A1, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x00a1, 21)
+packetLen(0x00A1, 21)
 #elif PACKETVER >= 20080226
-packetLen(0x00a1, -1)
+packetLen(0x00A1, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x00a1, 60)
+packetLen(0x00A1, 60)
 #elif PACKETVER >= 20080124
-packetLen(0x00a1, 30)
+packetLen(0x00A1, 30)
 #elif PACKETVER >= 20080102
-packetLen(0x00a1, 6)
+packetLen(0x00A1, 6)
 #endif
 
 // Packet: 0x00a2
-packetLen(0x00a2, 14)
+packetLen(0x00A2, 14)
 
 // Packet: 0x00a3
 #if PACKETVER >= 20080701
-packetLen(0x00a3, 28)
+packetLen(0x00A3, 28)
 #elif PACKETVER >= 20080624
-packetLen(0x00a3, -1)
+packetLen(0x00A3, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x00a3, 3)
+packetLen(0x00A3, 3)
 #elif PACKETVER >= 20080610
-packetLen(0x00a3, 10)
+packetLen(0x00A3, 10)
 #elif PACKETVER >= 20080528
-packetLen(0x00a3, 4)
+packetLen(0x00A3, 4)
 #elif PACKETVER >= 20080520
-packetLen(0x00a3, 15)
+packetLen(0x00A3, 15)
 #elif PACKETVER >= 20080513
-packetLen(0x00a3, -1)
+packetLen(0x00A3, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x00a3, 10)
+packetLen(0x00A3, 10)
 #elif PACKETVER >= 20080429
-packetLen(0x00a3, -1)
+packetLen(0x00A3, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x00a3, 16)
+packetLen(0x00A3, 16)
 #elif PACKETVER >= 20080415
-packetLen(0x00a3, -1)
+packetLen(0x00A3, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x00a3, 8)
+packetLen(0x00A3, 8)
 #elif PACKETVER >= 20080401
-packetLen(0x00a3, 28)
+packetLen(0x00A3, 28)
 #elif PACKETVER >= 20080325
-packetLen(0x00a3, 4)
+packetLen(0x00A3, 4)
 #elif PACKETVER >= 20080318
-packetLen(0x00a3, 2)
+packetLen(0x00A3, 2)
 #elif PACKETVER >= 20080311
-packetLen(0x00a3, 65)
+packetLen(0x00A3, 65)
 #elif PACKETVER >= 20080304
-packetLen(0x00a3, 6)
+packetLen(0x00A3, 6)
 #elif PACKETVER >= 20080226
-packetLen(0x00a3, 30)
+packetLen(0x00A3, 30)
 #elif PACKETVER >= 20080219
-packetLen(0x00a3, 44)
+packetLen(0x00A3, 44)
 #elif PACKETVER >= 20080102
-packetLen(0x00a3, -1)
+packetLen(0x00A3, -1)
 #endif
 
 // Packet: 0x00a4
 #if PACKETVER >= 20080701
-packetLen(0x00a4, 86)
+packetLen(0x00A4, 86)
 #elif PACKETVER >= 20080617
-packetLen(0x00a4, -1)
+packetLen(0x00A4, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x00a4, 10)
+packetLen(0x00A4, 10)
 #elif PACKETVER >= 20080528
-packetLen(0x00a4, -1)
+packetLen(0x00A4, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x00a4, 3)
+packetLen(0x00A4, 3)
 #elif PACKETVER >= 20080513
-packetLen(0x00a4, 14)
+packetLen(0x00A4, 14)
 #elif PACKETVER >= 20080507
-packetLen(0x00a4, 33)
+packetLen(0x00A4, 33)
 #elif PACKETVER >= 20080429
-packetLen(0x00a4, -1)
+packetLen(0x00A4, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x00a4, 60)
+packetLen(0x00A4, 60)
 #elif PACKETVER >= 20080415
-packetLen(0x00a4, 22)
+packetLen(0x00A4, 22)
 #elif PACKETVER >= 20080408
-packetLen(0x00a4, 2)
+packetLen(0x00A4, 2)
 #elif PACKETVER >= 20080401
-packetLen(0x00a4, 6)
+packetLen(0x00A4, 6)
 #elif PACKETVER >= 20080325
-packetLen(0x00a4, 7)
+packetLen(0x00A4, 7)
 #elif PACKETVER >= 20080318
-packetLen(0x00a4, 27)
+packetLen(0x00A4, 27)
 #elif PACKETVER >= 20080311
-packetLen(0x00a4, 6)
+packetLen(0x00A4, 6)
 #elif PACKETVER >= 20080226
-packetLen(0x00a4, 15)
+packetLen(0x00A4, 15)
 #elif PACKETVER >= 20080219
-packetLen(0x00a4, 30)
+packetLen(0x00A4, 30)
 #elif PACKETVER >= 20080124
-packetLen(0x00a4, 10)
+packetLen(0x00A4, 10)
 #elif PACKETVER >= 20080102
-packetLen(0x00a4, -1)
+packetLen(0x00A4, -1)
 #endif
 
 // Packet: 0x00a5
 #if PACKETVER >= 20080617
-packetLen(0x00a5, -1)
+packetLen(0x00A5, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x00a5, 7)
+packetLen(0x00A5, 7)
 #elif PACKETVER >= 20080603
-packetLen(0x00a5, 9)
+packetLen(0x00A5, 9)
 #elif PACKETVER >= 20080528
-packetLen(0x00a5, 28)
+packetLen(0x00A5, 28)
 #elif PACKETVER >= 20080520
-packetLen(0x00a5, 6)
+packetLen(0x00A5, 6)
 #elif PACKETVER >= 20080513
-packetLen(0x00a5, 4)
+packetLen(0x00A5, 4)
 #elif PACKETVER >= 20080415
-packetLen(0x00a5, -1)
+packetLen(0x00A5, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x00a5, 6)
+packetLen(0x00A5, 6)
 #elif PACKETVER >= 20080401
-packetLen(0x00a5, 8)
+packetLen(0x00A5, 8)
 #elif PACKETVER >= 20080325
-packetLen(0x00a5, 9)
+packetLen(0x00A5, 9)
 #elif PACKETVER >= 20080318
-packetLen(0x00a5, 6)
+packetLen(0x00A5, 6)
 #elif PACKETVER >= 20080311
-packetLen(0x00a5, 282)
+packetLen(0x00A5, 282)
 #elif PACKETVER >= 20080304
-packetLen(0x00a5, 30)
+packetLen(0x00A5, 30)
 #elif PACKETVER >= 20080226
-packetLen(0x00a5, 28)
+packetLen(0x00A5, 28)
 #elif PACKETVER >= 20080219
-packetLen(0x00a5, 3)
+packetLen(0x00A5, 3)
 #elif PACKETVER >= 20080124
-packetLen(0x00a5, 4)
+packetLen(0x00A5, 4)
 #elif PACKETVER >= 20080102
-packetLen(0x00a5, -1)
+packetLen(0x00A5, -1)
 #endif
 
 // Packet: 0x00a6
 #if PACKETVER >= 20080701
-packetLen(0x00a6, -1)
+packetLen(0x00A6, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x00a6, 16)
+packetLen(0x00A6, 16)
 #elif PACKETVER >= 20080610
-packetLen(0x00a6, -1)
+packetLen(0x00A6, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x00a6, 10)
+packetLen(0x00A6, 10)
 #elif PACKETVER >= 20080528
-packetLen(0x00a6, 2)
+packetLen(0x00A6, 2)
 #elif PACKETVER >= 20080520
-packetLen(0x00a6, -1)
+packetLen(0x00A6, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x00a6, 30)
+packetLen(0x00A6, 30)
 #elif PACKETVER >= 20080507
-packetLen(0x00a6, 10)
+packetLen(0x00A6, 10)
 #elif PACKETVER >= 20080429
-packetLen(0x00a6, 282)
+packetLen(0x00A6, 282)
 #elif PACKETVER >= 20080415
-packetLen(0x00a6, -1)
+packetLen(0x00A6, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x00a6, 59)
+packetLen(0x00A6, 59)
 #elif PACKETVER >= 20080401
-packetLen(0x00a6, 7)
+packetLen(0x00A6, 7)
 #elif PACKETVER >= 20080325
-packetLen(0x00a6, 10)
+packetLen(0x00A6, 10)
 #elif PACKETVER >= 20080318
-packetLen(0x00a6, 3)
+packetLen(0x00A6, 3)
 #elif PACKETVER >= 20080311
-packetLen(0x00a6, 26)
+packetLen(0x00A6, 26)
 #elif PACKETVER >= 20080304
-packetLen(0x00a6, -1)
+packetLen(0x00A6, -1)
 #elif PACKETVER >= 20080226
-packetLen(0x00a6, 16)
+packetLen(0x00A6, 16)
 #elif PACKETVER >= 20080219
-packetLen(0x00a6, -1)
+packetLen(0x00A6, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x00a6, 2)
+packetLen(0x00A6, 2)
 #elif PACKETVER >= 20080102
-packetLen(0x00a6, -1)
+packetLen(0x00A6, -1)
 #endif
 
 // Packet: 0x00a7
-packetLen(0x00a7, 9)
+packetLen(0x00A7, 9)
 
 // Packet: 0x00a8
 #if PACKETVER >= 20080701
-packetLen(0x00a8, -1)
+packetLen(0x00A8, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x00a8, 6)
+packetLen(0x00A8, 6)
 #elif PACKETVER >= 20080610
-packetLen(0x00a8, -1)
+packetLen(0x00A8, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x00a8, 6)
+packetLen(0x00A8, 6)
 #elif PACKETVER >= 20080520
-packetLen(0x00a8, 10)
+packetLen(0x00A8, 10)
 #elif PACKETVER >= 20080513
-packetLen(0x00a8, 90)
+packetLen(0x00A8, 90)
 #elif PACKETVER >= 20080507
-packetLen(0x00a8, 3)
+packetLen(0x00A8, 3)
 #elif PACKETVER >= 20080429
-packetLen(0x00a8, -1)
+packetLen(0x00A8, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x00a8, 13)
+packetLen(0x00A8, 13)
 #elif PACKETVER >= 20080408
-packetLen(0x00a8, -1)
+packetLen(0x00A8, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x00a8, 4)
+packetLen(0x00A8, 4)
 #elif PACKETVER >= 20080325
-packetLen(0x00a8, 2)
+packetLen(0x00A8, 2)
 #elif PACKETVER >= 20080318
-packetLen(0x00a8, 30)
+packetLen(0x00A8, 30)
 #elif PACKETVER >= 20080311
-packetLen(0x00a8, 6)
+packetLen(0x00A8, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x00a8, 3)
+packetLen(0x00A8, 3)
 #elif PACKETVER >= 20080219
-packetLen(0x00a8, 10)
+packetLen(0x00A8, 10)
 #elif PACKETVER >= 20080124
-packetLen(0x00a8, 20)
+packetLen(0x00A8, 20)
 #elif PACKETVER >= 20080102
-packetLen(0x00a8, 7)
+packetLen(0x00A8, 7)
 #endif
 
 // Packet: 0x00a9
 #if PACKETVER >= 20080701
-packetLen(0x00a9, 6)
+packetLen(0x00A9, 6)
 #elif PACKETVER >= 20080617
-packetLen(0x00a9, -1)
+packetLen(0x00A9, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x00a9, 282)
+packetLen(0x00A9, 282)
 #elif PACKETVER >= 20080603
-packetLen(0x00a9, 114)
+packetLen(0x00A9, 114)
 #elif PACKETVER >= 20080528
-packetLen(0x00a9, 6)
+packetLen(0x00A9, 6)
 #elif PACKETVER >= 20080520
-packetLen(0x00a9, 79)
+packetLen(0x00A9, 79)
 #elif PACKETVER >= 20080513
-packetLen(0x00a9, 3)
+packetLen(0x00A9, 3)
 #elif PACKETVER >= 20080507
-packetLen(0x00a9, 26)
+packetLen(0x00A9, 26)
 #elif PACKETVER >= 20080429
-packetLen(0x00a9, 8)
+packetLen(0x00A9, 8)
 #elif PACKETVER >= 20080422
-packetLen(0x00a9, 6)
+packetLen(0x00A9, 6)
 #elif PACKETVER >= 20080415
-packetLen(0x00a9, -1)
+packetLen(0x00A9, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x00a9, 2)
+packetLen(0x00A9, 2)
 #elif PACKETVER >= 20080401
-packetLen(0x00a9, -1)
+packetLen(0x00A9, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x00a9, 8)
+packetLen(0x00A9, 8)
 #elif PACKETVER >= 20080311
-packetLen(0x00a9, -1)
+packetLen(0x00A9, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x00a9, 11)
+packetLen(0x00A9, 11)
 #elif PACKETVER >= 20080226
-packetLen(0x00a9, 26)
+packetLen(0x00A9, 26)
 #elif PACKETVER >= 20080219
-packetLen(0x00a9, 6)
+packetLen(0x00A9, 6)
 #elif PACKETVER >= 20080124
-packetLen(0x00a9, 10)
+packetLen(0x00A9, 10)
 #elif PACKETVER >= 20080102
-packetLen(0x00a9, 6)
+packetLen(0x00A9, 6)
 #endif
 
 // Packet: 0x00aa
 #if PACKETVER >= 20080624
-packetLen(0x00aa, -1)
+packetLen(0x00AA, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x00aa, 4)
+packetLen(0x00AA, 4)
 #elif PACKETVER >= 20080603
-packetLen(0x00aa, 10)
+packetLen(0x00AA, 10)
 #elif PACKETVER >= 20080528
-packetLen(0x00aa, 6)
+packetLen(0x00AA, 6)
 #elif PACKETVER >= 20080520
-packetLen(0x00aa, 2)
+packetLen(0x00AA, 2)
 #elif PACKETVER >= 20080513
-packetLen(0x00aa, 4)
+packetLen(0x00AA, 4)
 #elif PACKETVER >= 20080507
-packetLen(0x00aa, 6)
+packetLen(0x00AA, 6)
 #elif PACKETVER >= 20080429
-packetLen(0x00aa, -1)
+packetLen(0x00AA, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x00aa, 9)
+packetLen(0x00AA, 9)
 #elif PACKETVER >= 20080415
-packetLen(0x00aa, 3)
+packetLen(0x00AA, 3)
 #elif PACKETVER >= 20080408
-packetLen(0x00aa, 31)
+packetLen(0x00AA, 31)
 #elif PACKETVER >= 20080401
-packetLen(0x00aa, 16)
+packetLen(0x00AA, 16)
 #elif PACKETVER >= 20080325
-packetLen(0x00aa, 55)
+packetLen(0x00AA, 55)
 #elif PACKETVER >= 20080318
-packetLen(0x00aa, 3)
+packetLen(0x00AA, 3)
 #elif PACKETVER >= 20080311
-packetLen(0x00aa, 11)
+packetLen(0x00AA, 11)
 #elif PACKETVER >= 20080304
-packetLen(0x00aa, -1)
+packetLen(0x00AA, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x00aa, 2)
+packetLen(0x00AA, 2)
 #elif PACKETVER >= 20080124
-packetLen(0x00aa, 6)
+packetLen(0x00AA, 6)
 #elif PACKETVER >= 20080102
-packetLen(0x00aa, 7)
+packetLen(0x00AA, 7)
 #endif
 
 // Packet: 0x00ab
 #if PACKETVER >= 20080701
-packetLen(0x00ab, -1)
+packetLen(0x00AB, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x00ab, 6)
+packetLen(0x00AB, 6)
 #elif PACKETVER >= 20080610
-packetLen(0x00ab, 16)
+packetLen(0x00AB, 16)
 #elif PACKETVER >= 20080603
-packetLen(0x00ab, -1)
+packetLen(0x00AB, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x00ab, 53)
+packetLen(0x00AB, 53)
 #elif PACKETVER >= 20080520
-packetLen(0x00ab, 36)
+packetLen(0x00AB, 36)
 #elif PACKETVER >= 20080513
-packetLen(0x00ab, 26)
+packetLen(0x00AB, 26)
 #elif PACKETVER >= 20080507
-packetLen(0x00ab, 4)
+packetLen(0x00AB, 4)
 #elif PACKETVER >= 20080429
-packetLen(0x00ab, -1)
+packetLen(0x00AB, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x00ab, 4)
+packetLen(0x00AB, 4)
 #elif PACKETVER >= 20080415
-packetLen(0x00ab, 7)
+packetLen(0x00AB, 7)
 #elif PACKETVER >= 20080401
-packetLen(0x00ab, -1)
+packetLen(0x00AB, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x00ab, 8)
+packetLen(0x00AB, 8)
 #elif PACKETVER >= 20080318
-packetLen(0x00ab, 9)
+packetLen(0x00AB, 9)
 #elif PACKETVER >= 20080311
-packetLen(0x00ab, 14)
+packetLen(0x00AB, 14)
 #elif PACKETVER >= 20080304
-packetLen(0x00ab, 2)
+packetLen(0x00AB, 2)
 #elif PACKETVER >= 20080226
-packetLen(0x00ab, -1)
+packetLen(0x00AB, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x00ab, 57)
+packetLen(0x00AB, 57)
 #elif PACKETVER >= 20080124
-packetLen(0x00ab, 86)
+packetLen(0x00AB, 86)
 #elif PACKETVER >= 20080102
-packetLen(0x00ab, 4)
+packetLen(0x00AB, 4)
 #endif
 
 // Packet: 0x00ac
 #if PACKETVER >= 20080701
-packetLen(0x00ac, -1)
+packetLen(0x00AC, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x00ac, 8)
+packetLen(0x00AC, 8)
 #elif PACKETVER >= 20080617
-packetLen(0x00ac, 6)
+packetLen(0x00AC, 6)
 #elif PACKETVER >= 20080610
-packetLen(0x00ac, 7)
+packetLen(0x00AC, 7)
 #elif PACKETVER >= 20080603
-packetLen(0x00ac, 3)
+packetLen(0x00AC, 3)
 #elif PACKETVER >= 20080528
-packetLen(0x00ac, -1)
+packetLen(0x00AC, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x00ac, 10)
+packetLen(0x00AC, 10)
 #elif PACKETVER >= 20080507
-packetLen(0x00ac, 67)
+packetLen(0x00AC, 67)
 #elif PACKETVER >= 20080429
-packetLen(0x00ac, -1)
+packetLen(0x00AC, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x00ac, 6)
+packetLen(0x00AC, 6)
 #elif PACKETVER >= 20080408
-packetLen(0x00ac, 8)
+packetLen(0x00AC, 8)
 #elif PACKETVER >= 20080401
-packetLen(0x00ac, 3)
+packetLen(0x00AC, 3)
 #elif PACKETVER >= 20080325
-packetLen(0x00ac, 6)
+packetLen(0x00AC, 6)
 #elif PACKETVER >= 20080318
-packetLen(0x00ac, 10)
+packetLen(0x00AC, 10)
 #elif PACKETVER >= 20080226
-packetLen(0x00ac, 6)
+packetLen(0x00AC, 6)
 #elif PACKETVER >= 20080219
-packetLen(0x00ac, 3)
+packetLen(0x00AC, 3)
 #elif PACKETVER >= 20080124
-packetLen(0x00ac, -1)
+packetLen(0x00AC, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x00ac, 7)
+packetLen(0x00AC, 7)
 #endif
 
 // Packet: 0x00ae
-packetLen(0x00ae, -1)
+packetLen(0x00AE, -1)
 
 // Packet: 0x00af
 #if PACKETVER >= 20080701
-packetLen(0x00af, -1)
+packetLen(0x00AF, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x00af, 5)
+packetLen(0x00AF, 5)
 #elif PACKETVER >= 20080610
-packetLen(0x00af, -1)
+packetLen(0x00AF, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x00af, 10)
+packetLen(0x00AF, 10)
 #elif PACKETVER >= 20080528
-packetLen(0x00af, 29)
+packetLen(0x00AF, 29)
 #elif PACKETVER >= 20080520
-packetLen(0x00af, -1)
+packetLen(0x00AF, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x00af, 2)
+packetLen(0x00AF, 2)
 #elif PACKETVER >= 20080507
-packetLen(0x00af, -1)
+packetLen(0x00AF, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x00af, 10)
+packetLen(0x00AF, 10)
 #elif PACKETVER >= 20080422
-packetLen(0x00af, -1)
+packetLen(0x00AF, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x00af, 6)
+packetLen(0x00AF, 6)
 #elif PACKETVER >= 20080401
-packetLen(0x00af, 2)
+packetLen(0x00AF, 2)
 #elif PACKETVER >= 20080325
-packetLen(0x00af, 6)
+packetLen(0x00AF, 6)
 #elif PACKETVER >= 20080318
-packetLen(0x00af, -1)
+packetLen(0x00AF, -1)
 #elif PACKETVER >= 20080311
-packetLen(0x00af, 26)
+packetLen(0x00AF, 26)
 #elif PACKETVER >= 20080304
-packetLen(0x00af, 2)
+packetLen(0x00AF, 2)
 #elif PACKETVER >= 20080226
-packetLen(0x00af, 7)
+packetLen(0x00AF, 7)
 #elif PACKETVER >= 20080219
-packetLen(0x00af, 4)
+packetLen(0x00AF, 4)
 #elif PACKETVER >= 20080124
-packetLen(0x00af, -1)
+packetLen(0x00AF, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x00af, 6)
+packetLen(0x00AF, 6)
 #endif
 
 // Packet: 0x00b0
 #if PACKETVER >= 20080701
-packetLen(0x00b0, 7)
+packetLen(0x00B0, 7)
 #elif PACKETVER >= 20080624
-packetLen(0x00b0, 3)
+packetLen(0x00B0, 3)
 #elif PACKETVER >= 20080617
-packetLen(0x00b0, 8)
+packetLen(0x00B0, 8)
 #elif PACKETVER >= 20080610
-packetLen(0x00b0, -1)
+packetLen(0x00B0, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x00b0, 6)
+packetLen(0x00B0, 6)
 #elif PACKETVER >= 20080528
-packetLen(0x00b0, -1)
+packetLen(0x00B0, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x00b0, 3)
+packetLen(0x00B0, 3)
 #elif PACKETVER >= 20080513
-packetLen(0x00b0, 6)
+packetLen(0x00B0, 6)
 #elif PACKETVER >= 20080429
-packetLen(0x00b0, -1)
+packetLen(0x00B0, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x00b0, 28)
+packetLen(0x00B0, 28)
 #elif PACKETVER >= 20080415
-packetLen(0x00b0, 12)
+packetLen(0x00B0, 12)
 #elif PACKETVER >= 20080408
-packetLen(0x00b0, -1)
+packetLen(0x00B0, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x00b0, 4)
+packetLen(0x00B0, 4)
 #elif PACKETVER >= 20080325
-packetLen(0x00b0, 2)
+packetLen(0x00B0, 2)
 #elif PACKETVER >= 20080318
-packetLen(0x00b0, -1)
+packetLen(0x00B0, -1)
 #elif PACKETVER >= 20080311
-packetLen(0x00b0, 10)
+packetLen(0x00B0, 10)
 #elif PACKETVER >= 20080226
-packetLen(0x00b0, 11)
+packetLen(0x00B0, 11)
 #elif PACKETVER >= 20080219
-packetLen(0x00b0, 7)
+packetLen(0x00B0, 7)
 #elif PACKETVER >= 20080124
-packetLen(0x00b0, 2)
+packetLen(0x00B0, 2)
 #elif PACKETVER >= 20080102
-packetLen(0x00b0, 8)
+packetLen(0x00B0, 8)
 #endif
 
 // Packet: 0x00b1
 #if PACKETVER >= 20080701
-packetLen(0x00b1, 3)
+packetLen(0x00B1, 3)
 #elif PACKETVER >= 20080617
-packetLen(0x00b1, -1)
+packetLen(0x00B1, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x00b1, 11)
+packetLen(0x00B1, 11)
 #elif PACKETVER >= 20080603
-packetLen(0x00b1, 2)
+packetLen(0x00B1, 2)
 #elif PACKETVER >= 20080528
-packetLen(0x00b1, 6)
+packetLen(0x00B1, 6)
 #elif PACKETVER >= 20080507
-packetLen(0x00b1, -1)
+packetLen(0x00B1, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x00b1, 97)
+packetLen(0x00B1, 97)
 #elif PACKETVER >= 20080422
-packetLen(0x00b1, -1)
+packetLen(0x00B1, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x00b1, 26)
+packetLen(0x00B1, 26)
 #elif PACKETVER >= 20080401
-packetLen(0x00b1, -1)
+packetLen(0x00B1, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x00b1, 58)
+packetLen(0x00B1, 58)
 #elif PACKETVER >= 20080318
-packetLen(0x00b1, 30)
+packetLen(0x00B1, 30)
 #elif PACKETVER >= 20080311
-packetLen(0x00b1, 2)
+packetLen(0x00B1, 2)
 #elif PACKETVER >= 20080304
-packetLen(0x00b1, -1)
+packetLen(0x00B1, -1)
 #elif PACKETVER >= 20080226
-packetLen(0x00b1, 30)
+packetLen(0x00B1, 30)
 #elif PACKETVER >= 20080219
-packetLen(0x00b1, 14)
+packetLen(0x00B1, 14)
 #elif PACKETVER >= 20080124
-packetLen(0x00b1, 9)
+packetLen(0x00B1, 9)
 #elif PACKETVER >= 20080102
-packetLen(0x00b1, 8)
+packetLen(0x00B1, 8)
 #endif
 
 // Packet: 0x00b2
 #if PACKETVER >= 20080624
-packetLen(0x00b2, -1)
+packetLen(0x00B2, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x00b2, 10)
+packetLen(0x00B2, 10)
 #elif PACKETVER >= 20080610
-packetLen(0x00b2, 13)
+packetLen(0x00B2, 13)
 #elif PACKETVER >= 20080603
-packetLen(0x00b2, -1)
+packetLen(0x00B2, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x00b2, 2)
+packetLen(0x00B2, 2)
 #elif PACKETVER >= 20080520
-packetLen(0x00b2, 6)
+packetLen(0x00B2, 6)
 #elif PACKETVER >= 20080513
-packetLen(0x00b2, 58)
+packetLen(0x00B2, 58)
 #elif PACKETVER >= 20080507
-packetLen(0x00b2, 6)
+packetLen(0x00B2, 6)
 #elif PACKETVER >= 20080429
-packetLen(0x00b2, -1)
+packetLen(0x00B2, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x00b2, 3)
+packetLen(0x00B2, 3)
 #elif PACKETVER >= 20080415
-packetLen(0x00b2, 14)
+packetLen(0x00B2, 14)
 #elif PACKETVER >= 20080408
-packetLen(0x00b2, 67)
+packetLen(0x00B2, 67)
 #elif PACKETVER >= 20080401
-packetLen(0x00b2, 4)
+packetLen(0x00B2, 4)
 #elif PACKETVER >= 20080325
-packetLen(0x00b2, 5)
+packetLen(0x00B2, 5)
 #elif PACKETVER >= 20080318
-packetLen(0x00b2, 3)
+packetLen(0x00B2, 3)
 #elif PACKETVER >= 20080311
-packetLen(0x00b2, 5)
+packetLen(0x00B2, 5)
 #elif PACKETVER >= 20080304
-packetLen(0x00b2, 8)
+packetLen(0x00B2, 8)
 #elif PACKETVER >= 20080226
-packetLen(0x00b2, 9)
+packetLen(0x00B2, 9)
 #elif PACKETVER >= 20080219
-packetLen(0x00b2, -1)
+packetLen(0x00B2, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x00b2, 2)
+packetLen(0x00B2, 2)
 #elif PACKETVER >= 20080102
-packetLen(0x00b2, 3)
+packetLen(0x00B2, 3)
 #endif
 
 // Packet: 0x00b3
 #if PACKETVER >= 20080701
-packetLen(0x00b3, 14)
+packetLen(0x00B3, 14)
 #elif PACKETVER >= 20080617
-packetLen(0x00b3, -1)
+packetLen(0x00B3, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x00b3, 6)
+packetLen(0x00B3, 6)
 #elif PACKETVER >= 20080603
-packetLen(0x00b3, 30)
+packetLen(0x00B3, 30)
 #elif PACKETVER >= 20080528
-packetLen(0x00b3, 6)
+packetLen(0x00B3, 6)
 #elif PACKETVER >= 20080520
-packetLen(0x00b3, 2)
+packetLen(0x00B3, 2)
 #elif PACKETVER >= 20080513
-packetLen(0x00b3, -1)
+packetLen(0x00B3, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x00b3, 4)
+packetLen(0x00B3, 4)
 #elif PACKETVER >= 20080422
-packetLen(0x00b3, -1)
+packetLen(0x00B3, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x00b3, 6)
+packetLen(0x00B3, 6)
 #elif PACKETVER >= 20080408
-packetLen(0x00b3, 5)
+packetLen(0x00B3, 5)
 #elif PACKETVER >= 20080325
-packetLen(0x00b3, -1)
+packetLen(0x00B3, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x00b3, 35)
+packetLen(0x00B3, 35)
 #elif PACKETVER >= 20080311
-packetLen(0x00b3, -1)
+packetLen(0x00B3, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x00b3, 7)
+packetLen(0x00B3, 7)
 #elif PACKETVER >= 20080226
-packetLen(0x00b3, 10)
+packetLen(0x00B3, 10)
 #elif PACKETVER >= 20080219
-packetLen(0x00b3, 55)
+packetLen(0x00B3, 55)
 #elif PACKETVER >= 20080124
-packetLen(0x00b3, 28)
+packetLen(0x00B3, 28)
 #elif PACKETVER >= 20080102
-packetLen(0x00b3, 3)
+packetLen(0x00B3, 3)
 #endif
 
 // Packet: 0x00b4
 #if PACKETVER >= 20080617
-packetLen(0x00b4, -1)
+packetLen(0x00B4, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x00b4, 6)
+packetLen(0x00B4, 6)
 #elif PACKETVER >= 20080603
-packetLen(0x00b4, 33)
+packetLen(0x00B4, 33)
 #elif PACKETVER >= 20080528
-packetLen(0x00b4, 3)
+packetLen(0x00B4, 3)
 #elif PACKETVER >= 20080520
-packetLen(0x00b4, 10)
+packetLen(0x00B4, 10)
 #elif PACKETVER >= 20080513
-packetLen(0x00b4, 4)
+packetLen(0x00B4, 4)
 #elif PACKETVER >= 20080429
-packetLen(0x00b4, -1)
+packetLen(0x00B4, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x00b4, 6)
+packetLen(0x00B4, 6)
 #elif PACKETVER >= 20080415
-packetLen(0x00b4, -1)
+packetLen(0x00B4, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x00b4, 282)
+packetLen(0x00B4, 282)
 #elif PACKETVER >= 20080401
-packetLen(0x00b4, 34)
+packetLen(0x00B4, 34)
 #elif PACKETVER >= 20080325
-packetLen(0x00b4, 6)
+packetLen(0x00B4, 6)
 #elif PACKETVER >= 20080318
-packetLen(0x00b4, 2)
+packetLen(0x00B4, 2)
 #elif PACKETVER >= 20080311
-packetLen(0x00b4, 36)
+packetLen(0x00B4, 36)
 #elif PACKETVER >= 20080304
-packetLen(0x00b4, 2)
+packetLen(0x00B4, 2)
 #elif PACKETVER >= 20080226
-packetLen(0x00b4, 43)
+packetLen(0x00B4, 43)
 #elif PACKETVER >= 20080219
-packetLen(0x00b4, 4)
+packetLen(0x00B4, 4)
 #elif PACKETVER >= 20080102
-packetLen(0x00b4, -1)
+packetLen(0x00B4, -1)
 #endif
 
 // Packet: 0x00b5
 #if PACKETVER >= 20080701
-packetLen(0x00b5, -1)
+packetLen(0x00B5, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x00b5, 12)
+packetLen(0x00B5, 12)
 #elif PACKETVER >= 20080617
-packetLen(0x00b5, -1)
+packetLen(0x00B5, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x00b5, 3)
+packetLen(0x00B5, 3)
 #elif PACKETVER >= 20080603
-packetLen(0x00b5, 6)
+packetLen(0x00B5, 6)
 #elif PACKETVER >= 20080528
-packetLen(0x00b5, -1)
+packetLen(0x00B5, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x00b5, 2)
+packetLen(0x00B5, 2)
 #elif PACKETVER >= 20080513
-packetLen(0x00b5, -1)
+packetLen(0x00B5, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x00b5, 5)
+packetLen(0x00B5, 5)
 #elif PACKETVER >= 20080429
-packetLen(0x00b5, -1)
+packetLen(0x00B5, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x00b5, 19)
+packetLen(0x00B5, 19)
 #elif PACKETVER >= 20080415
-packetLen(0x00b5, 14)
+packetLen(0x00B5, 14)
 #elif PACKETVER >= 20080408
-packetLen(0x00b5, 90)
+packetLen(0x00B5, 90)
 #elif PACKETVER >= 20080401
-packetLen(0x00b5, 14)
+packetLen(0x00B5, 14)
 #elif PACKETVER >= 20080325
-packetLen(0x00b5, -1)
+packetLen(0x00B5, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x00b5, 11)
+packetLen(0x00B5, 11)
 #elif PACKETVER >= 20080311
-packetLen(0x00b5, 6)
+packetLen(0x00B5, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x00b5, 8)
+packetLen(0x00B5, 8)
 #elif PACKETVER >= 20080226
-packetLen(0x00b5, 4)
+packetLen(0x00B5, 4)
 #elif PACKETVER >= 20080219
-packetLen(0x00b5, 30)
+packetLen(0x00B5, 30)
 #elif PACKETVER >= 20080124
-packetLen(0x00b5, -1)
+packetLen(0x00B5, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x00b5, 6)
+packetLen(0x00B5, 6)
 #endif
 
 // Packet: 0x00b6
 #if PACKETVER >= 20080701
-packetLen(0x00b6, 8)
+packetLen(0x00B6, 8)
 #elif PACKETVER >= 20080624
-packetLen(0x00b6, 7)
+packetLen(0x00B6, 7)
 #elif PACKETVER >= 20080617
-packetLen(0x00b6, -1)
+packetLen(0x00B6, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x00b6, 3)
+packetLen(0x00B6, 3)
 #elif PACKETVER >= 20080603
-packetLen(0x00b6, 39)
+packetLen(0x00B6, 39)
 #elif PACKETVER >= 20080528
-packetLen(0x00b6, 11)
+packetLen(0x00B6, 11)
 #elif PACKETVER >= 20080429
-packetLen(0x00b6, -1)
+packetLen(0x00B6, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x00b6, 6)
+packetLen(0x00B6, 6)
 #elif PACKETVER >= 20080415
-packetLen(0x00b6, 3)
+packetLen(0x00B6, 3)
 #elif PACKETVER >= 20080408
-packetLen(0x00b6, 8)
+packetLen(0x00B6, 8)
 #elif PACKETVER >= 20080401
-packetLen(0x00b6, 3)
+packetLen(0x00B6, 3)
 #elif PACKETVER >= 20080325
-packetLen(0x00b6, 16)
+packetLen(0x00B6, 16)
 #elif PACKETVER >= 20080318
-packetLen(0x00b6, 12)
+packetLen(0x00B6, 12)
 #elif PACKETVER >= 20080311
-packetLen(0x00b6, -1)
+packetLen(0x00B6, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x00b6, 4)
+packetLen(0x00B6, 4)
 #elif PACKETVER >= 20080226
-packetLen(0x00b6, -1)
+packetLen(0x00B6, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x00b6, 3)
+packetLen(0x00B6, 3)
 #elif PACKETVER >= 20080124
-packetLen(0x00b6, 14)
+packetLen(0x00B6, 14)
 #elif PACKETVER >= 20080102
-packetLen(0x00b6, 6)
+packetLen(0x00B6, 6)
 #endif
 
 // Packet: 0x00b7
 #if PACKETVER >= 20080701
-packetLen(0x00b7, 22)
+packetLen(0x00B7, 22)
 #elif PACKETVER >= 20080617
-packetLen(0x00b7, -1)
+packetLen(0x00B7, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x00b7, 2)
+packetLen(0x00B7, 2)
 #elif PACKETVER >= 20080528
-packetLen(0x00b7, -1)
+packetLen(0x00B7, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x00b7, 58)
+packetLen(0x00B7, 58)
 #elif PACKETVER >= 20080513
-packetLen(0x00b7, 6)
+packetLen(0x00B7, 6)
 #elif PACKETVER >= 20080507
-packetLen(0x00b7, 20)
+packetLen(0x00B7, 20)
 #elif PACKETVER >= 20080429
-packetLen(0x00b7, 2)
+packetLen(0x00B7, 2)
 #elif PACKETVER >= 20080422
-packetLen(0x00b7, -1)
+packetLen(0x00B7, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x00b7, 5)
+packetLen(0x00B7, 5)
 #elif PACKETVER >= 20080408
-packetLen(0x00b7, 14)
+packetLen(0x00B7, 14)
 #elif PACKETVER >= 20080401
-packetLen(0x00b7, 8)
+packetLen(0x00B7, 8)
 #elif PACKETVER >= 20080325
-packetLen(0x00b7, 6)
+packetLen(0x00B7, 6)
 #elif PACKETVER >= 20080318
-packetLen(0x00b7, -1)
+packetLen(0x00B7, -1)
 #elif PACKETVER >= 20080311
-packetLen(0x00b7, 42)
+packetLen(0x00B7, 42)
 #elif PACKETVER >= 20080304
-packetLen(0x00b7, 13)
+packetLen(0x00B7, 13)
 #elif PACKETVER >= 20080226
-packetLen(0x00b7, 32)
+packetLen(0x00B7, 32)
 #elif PACKETVER >= 20080219
-packetLen(0x00b7, 3)
+packetLen(0x00B7, 3)
 #elif PACKETVER >= 20080124
-packetLen(0x00b7, 21)
+packetLen(0x00B7, 21)
 #elif PACKETVER >= 20080102
-packetLen(0x00b7, -1)
+packetLen(0x00B7, -1)
 #endif
 
 // Packet: 0x00b8
 #if PACKETVER >= 20080701
-packetLen(0x00b8, 20)
+packetLen(0x00B8, 20)
 #elif PACKETVER >= 20080624
-packetLen(0x00b8, -1)
+packetLen(0x00B8, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x00b8, 9)
+packetLen(0x00B8, 9)
 #elif PACKETVER >= 20080610
-packetLen(0x00b8, -1)
+packetLen(0x00B8, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x00b8, 6)
+packetLen(0x00B8, 6)
 #elif PACKETVER >= 20080528
-packetLen(0x00b8, -1)
+packetLen(0x00B8, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x00b8, 53)
+packetLen(0x00B8, 53)
 #elif PACKETVER >= 20080513
-packetLen(0x00b8, 8)
+packetLen(0x00B8, 8)
 #elif PACKETVER >= 20080507
-packetLen(0x00b8, -1)
+packetLen(0x00B8, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x00b8, 4)
+packetLen(0x00B8, 4)
 #elif PACKETVER >= 20080422
-packetLen(0x00b8, 7)
+packetLen(0x00B8, 7)
 #elif PACKETVER >= 20080415
-packetLen(0x00b8, 11)
+packetLen(0x00B8, 11)
 #elif PACKETVER >= 20080408
-packetLen(0x00b8, 9)
+packetLen(0x00B8, 9)
 #elif PACKETVER >= 20080401
-packetLen(0x00b8, 30)
+packetLen(0x00B8, 30)
 #elif PACKETVER >= 20080325
-packetLen(0x00b8, 5)
+packetLen(0x00B8, 5)
 #elif PACKETVER >= 20080318
-packetLen(0x00b8, 6)
+packetLen(0x00B8, 6)
 #elif PACKETVER >= 20080311
-packetLen(0x00b8, 16)
+packetLen(0x00B8, 16)
 #elif PACKETVER >= 20080304
-packetLen(0x00b8, 28)
+packetLen(0x00B8, 28)
 #elif PACKETVER >= 20080226
-packetLen(0x00b8, 5)
+packetLen(0x00B8, 5)
 #elif PACKETVER >= 20080219
-packetLen(0x00b8, -1)
+packetLen(0x00B8, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x00b8, 4)
+packetLen(0x00B8, 4)
 #elif PACKETVER >= 20080102
-packetLen(0x00b8, 7)
+packetLen(0x00B8, 7)
 #endif
 
 // Packet: 0x00b9
 #if PACKETVER >= 20080701
-packetLen(0x00b9, -1)
+packetLen(0x00B9, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x00b9, 2)
+packetLen(0x00B9, 2)
 #elif PACKETVER >= 20080617
-packetLen(0x00b9, 9)
+packetLen(0x00B9, 9)
 #elif PACKETVER >= 20080610
-packetLen(0x00b9, -1)
+packetLen(0x00B9, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x00b9, 66)
+packetLen(0x00B9, 66)
 #elif PACKETVER >= 20080513
-packetLen(0x00b9, -1)
+packetLen(0x00B9, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x00b9, 30)
+packetLen(0x00B9, 30)
 #elif PACKETVER >= 20080429
-packetLen(0x00b9, 26)
+packetLen(0x00B9, 26)
 #elif PACKETVER >= 20080415
-packetLen(0x00b9, 6)
+packetLen(0x00B9, 6)
 #elif PACKETVER >= 20080408
-packetLen(0x00b9, 2)
+packetLen(0x00B9, 2)
 #elif PACKETVER >= 20080401
-packetLen(0x00b9, 6)
+packetLen(0x00B9, 6)
 #elif PACKETVER >= 20080325
-packetLen(0x00b9, 9)
+packetLen(0x00B9, 9)
 #elif PACKETVER >= 20080318
-packetLen(0x00b9, 11)
+packetLen(0x00B9, 11)
 #elif PACKETVER >= 20080311
-packetLen(0x00b9, 29)
+packetLen(0x00B9, 29)
 #elif PACKETVER >= 20080304
-packetLen(0x00b9, 10)
+packetLen(0x00B9, 10)
 #elif PACKETVER >= 20080226
-packetLen(0x00b9, 58)
+packetLen(0x00B9, 58)
 #elif PACKETVER >= 20080219
-packetLen(0x00b9, 6)
+packetLen(0x00B9, 6)
 #elif PACKETVER >= 20080124
-packetLen(0x00b9, 8)
+packetLen(0x00B9, 8)
 #elif PACKETVER >= 20080102
-packetLen(0x00b9, 6)
+packetLen(0x00B9, 6)
 #endif
 
 // Packet: 0x00ba
-packetLen(0x00ba, 2)
+packetLen(0x00BA, 2)
 
 // Packet: 0x00bb
 #if PACKETVER >= 20080701
-packetLen(0x00bb, 60)
+packetLen(0x00BB, 60)
 #elif PACKETVER >= 20080624
-packetLen(0x00bb, 4)
+packetLen(0x00BB, 4)
 #elif PACKETVER >= 20080617
-packetLen(0x00bb, -1)
+packetLen(0x00BB, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x00bb, 36)
+packetLen(0x00BB, 36)
 #elif PACKETVER >= 20080603
-packetLen(0x00bb, 6)
+packetLen(0x00BB, 6)
 #elif PACKETVER >= 20080528
-packetLen(0x00bb, 10)
+packetLen(0x00BB, 10)
 #elif PACKETVER >= 20080520
-packetLen(0x00bb, 13)
+packetLen(0x00BB, 13)
 #elif PACKETVER >= 20080507
-packetLen(0x00bb, -1)
+packetLen(0x00BB, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x00bb, 55)
+packetLen(0x00BB, 55)
 #elif PACKETVER >= 20080422
-packetLen(0x00bb, 5)
+packetLen(0x00BB, 5)
 #elif PACKETVER >= 20080415
-packetLen(0x00bb, 6)
+packetLen(0x00BB, 6)
 #elif PACKETVER >= 20080408
-packetLen(0x00bb, -1)
+packetLen(0x00BB, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x00bb, 3)
+packetLen(0x00BB, 3)
 #elif PACKETVER >= 20080325
-packetLen(0x00bb, 20)
+packetLen(0x00BB, 20)
 #elif PACKETVER >= 20080318
-packetLen(0x00bb, 2)
+packetLen(0x00BB, 2)
 #elif PACKETVER >= 20080226
-packetLen(0x00bb, -1)
+packetLen(0x00BB, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x00bb, 182)
+packetLen(0x00BB, 182)
 #elif PACKETVER >= 20080124
-packetLen(0x00bb, 12)
+packetLen(0x00BB, 12)
 #elif PACKETVER >= 20080102
-packetLen(0x00bb, 5)
+packetLen(0x00BB, 5)
 #endif
 
 // Packet: 0x00bc
 #if PACKETVER >= 20080701
-packetLen(0x00bc, -1)
+packetLen(0x00BC, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x00bc, 4)
+packetLen(0x00BC, 4)
 #elif PACKETVER >= 20080617
-packetLen(0x00bc, 6)
+packetLen(0x00BC, 6)
 #elif PACKETVER >= 20080610
-packetLen(0x00bc, 2)
+packetLen(0x00BC, 2)
 #elif PACKETVER >= 20080603
-packetLen(0x00bc, 26)
+packetLen(0x00BC, 26)
 #elif PACKETVER >= 20080528
-packetLen(0x00bc, 14)
+packetLen(0x00BC, 14)
 #elif PACKETVER >= 20080520
-packetLen(0x00bc, -1)
+packetLen(0x00BC, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x00bc, 22)
+packetLen(0x00BC, 22)
 #elif PACKETVER >= 20080507
-packetLen(0x00bc, 14)
+packetLen(0x00BC, 14)
 #elif PACKETVER >= 20080429
-packetLen(0x00bc, -1)
+packetLen(0x00BC, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x00bc, 2)
+packetLen(0x00BC, 2)
 #elif PACKETVER >= 20080415
-packetLen(0x00bc, 44)
+packetLen(0x00BC, 44)
 #elif PACKETVER >= 20080408
-packetLen(0x00bc, -1)
+packetLen(0x00BC, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x00bc, 2)
+packetLen(0x00BC, 2)
 #elif PACKETVER >= 20080325
-packetLen(0x00bc, 11)
+packetLen(0x00BC, 11)
 #elif PACKETVER >= 20080318
-packetLen(0x00bc, 3)
+packetLen(0x00BC, 3)
 #elif PACKETVER >= 20080311
-packetLen(0x00bc, 2)
+packetLen(0x00BC, 2)
 #elif PACKETVER >= 20080304
-packetLen(0x00bc, 7)
+packetLen(0x00BC, 7)
 #elif PACKETVER >= 20080226
-packetLen(0x00bc, 3)
+packetLen(0x00BC, 3)
 #elif PACKETVER >= 20080219
-packetLen(0x00bc, -1)
+packetLen(0x00BC, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x00bc, 14)
+packetLen(0x00BC, 14)
 #elif PACKETVER >= 20080102
-packetLen(0x00bc, 6)
+packetLen(0x00BC, 6)
 #endif
 
 // Packet: 0x00bd
 #if PACKETVER >= 20080701
-packetLen(0x00bd, 60)
+packetLen(0x00BD, 60)
 #elif PACKETVER >= 20080624
-packetLen(0x00bd, -1)
+packetLen(0x00BD, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x00bd, 79)
+packetLen(0x00BD, 79)
 #elif PACKETVER >= 20080610
-packetLen(0x00bd, 18)
+packetLen(0x00BD, 18)
 #elif PACKETVER >= 20080603
-packetLen(0x00bd, 6)
+packetLen(0x00BD, 6)
 #elif PACKETVER >= 20080528
-packetLen(0x00bd, -1)
+packetLen(0x00BD, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x00bd, 26)
+packetLen(0x00BD, 26)
 #elif PACKETVER >= 20080513
-packetLen(0x00bd, -1)
+packetLen(0x00BD, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x00bd, 7)
+packetLen(0x00BD, 7)
 #elif PACKETVER >= 20080422
-packetLen(0x00bd, -1)
+packetLen(0x00BD, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x00bd, 6)
+packetLen(0x00BD, 6)
 #elif PACKETVER >= 20080401
-packetLen(0x00bd, 4)
+packetLen(0x00BD, 4)
 #elif PACKETVER >= 20080325
-packetLen(0x00bd, 7)
+packetLen(0x00BD, 7)
 #elif PACKETVER >= 20080318
-packetLen(0x00bd, 12)
+packetLen(0x00BD, 12)
 #elif PACKETVER >= 20080304
-packetLen(0x00bd, 2)
+packetLen(0x00BD, 2)
 #elif PACKETVER >= 20080226
-packetLen(0x00bd, 58)
+packetLen(0x00BD, 58)
 #elif PACKETVER >= 20080219
-packetLen(0x00bd, 6)
+packetLen(0x00BD, 6)
 #elif PACKETVER >= 20080124
-packetLen(0x00bd, 4)
+packetLen(0x00BD, 4)
 #elif PACKETVER >= 20080102
-packetLen(0x00bd, 44)
+packetLen(0x00BD, 44)
 #endif
 
 // Packet: 0x00be
 #if PACKETVER >= 20080701
-packetLen(0x00be, 6)
+packetLen(0x00BE, 6)
 #elif PACKETVER >= 20080624
-packetLen(0x00be, 57)
+packetLen(0x00BE, 57)
 #elif PACKETVER >= 20080617
-packetLen(0x00be, -1)
+packetLen(0x00BE, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x00be, 44)
+packetLen(0x00BE, 44)
 #elif PACKETVER >= 20080603
-packetLen(0x00be, 3)
+packetLen(0x00BE, 3)
 #elif PACKETVER >= 20080528
-packetLen(0x00be, 54)
+packetLen(0x00BE, 54)
 #elif PACKETVER >= 20080520
-packetLen(0x00be, 8)
+packetLen(0x00BE, 8)
 #elif PACKETVER >= 20080507
-packetLen(0x00be, -1)
+packetLen(0x00BE, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x00be, 30)
+packetLen(0x00BE, 30)
 #elif PACKETVER >= 20080422
-packetLen(0x00be, 4)
+packetLen(0x00BE, 4)
 #elif PACKETVER >= 20080415
-packetLen(0x00be, -1)
+packetLen(0x00BE, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x00be, 4)
+packetLen(0x00BE, 4)
 #elif PACKETVER >= 20080325
-packetLen(0x00be, -1)
+packetLen(0x00BE, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x00be, 5)
+packetLen(0x00BE, 5)
 #elif PACKETVER >= 20080311
-packetLen(0x00be, 11)
+packetLen(0x00BE, 11)
 #elif PACKETVER >= 20080304
-packetLen(0x00be, 10)
+packetLen(0x00BE, 10)
 #elif PACKETVER >= 20080124
-packetLen(0x00be, -1)
+packetLen(0x00BE, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x00be, 5)
+packetLen(0x00BE, 5)
 #endif
 
 // Packet: 0x00bf
 #if PACKETVER >= 20080610
-packetLen(0x00bf, -1)
+packetLen(0x00BF, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x00bf, 3)
+packetLen(0x00BF, 3)
 #elif PACKETVER >= 20080528
-packetLen(0x00bf, 65)
+packetLen(0x00BF, 65)
 #elif PACKETVER >= 20080520
-packetLen(0x00bf, 8)
+packetLen(0x00BF, 8)
 #elif PACKETVER >= 20080513
-packetLen(0x00bf, -1)
+packetLen(0x00BF, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x00bf, 11)
+packetLen(0x00BF, 11)
 #elif PACKETVER >= 20080429
-packetLen(0x00bf, -1)
+packetLen(0x00BF, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x00bf, 3)
+packetLen(0x00BF, 3)
 #elif PACKETVER >= 20080408
-packetLen(0x00bf, -1)
+packetLen(0x00BF, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x00bf, 32)
+packetLen(0x00BF, 32)
 #elif PACKETVER >= 20080325
-packetLen(0x00bf, 60)
+packetLen(0x00BF, 60)
 #elif PACKETVER >= 20080304
-packetLen(0x00bf, -1)
+packetLen(0x00BF, -1)
 #elif PACKETVER >= 20080226
-packetLen(0x00bf, 29)
+packetLen(0x00BF, 29)
 #elif PACKETVER >= 20080219
-packetLen(0x00bf, 12)
+packetLen(0x00BF, 12)
 #elif PACKETVER >= 20080124
-packetLen(0x00bf, 6)
+packetLen(0x00BF, 6)
 #elif PACKETVER >= 20080102
-packetLen(0x00bf, 3)
+packetLen(0x00BF, 3)
 #endif
 
 // Packet: 0x00c0
 #if PACKETVER >= 20080701
-packetLen(0x00c0, -1)
+packetLen(0x00C0, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x00c0, 10)
+packetLen(0x00C0, 10)
 #elif PACKETVER >= 20080617
-packetLen(0x00c0, 60)
+packetLen(0x00C0, 60)
 #elif PACKETVER >= 20080610
-packetLen(0x00c0, 39)
+packetLen(0x00C0, 39)
 #elif PACKETVER >= 20080603
-packetLen(0x00c0, 26)
+packetLen(0x00C0, 26)
 #elif PACKETVER >= 20080528
-packetLen(0x00c0, 30)
+packetLen(0x00C0, 30)
 #elif PACKETVER >= 20080520
-packetLen(0x00c0, 2)
+packetLen(0x00C0, 2)
 #elif PACKETVER >= 20080513
-packetLen(0x00c0, 186)
+packetLen(0x00C0, 186)
 #elif PACKETVER >= 20080507
-packetLen(0x00c0, -1)
+packetLen(0x00C0, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x00c0, 13)
+packetLen(0x00C0, 13)
 #elif PACKETVER >= 20080422
-packetLen(0x00c0, 9)
+packetLen(0x00C0, 9)
 #elif PACKETVER >= 20080415
-packetLen(0x00c0, -1)
+packetLen(0x00C0, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x00c0, 7)
+packetLen(0x00C0, 7)
 #elif PACKETVER >= 20080401
-packetLen(0x00c0, 2)
+packetLen(0x00C0, 2)
 #elif PACKETVER >= 20080325
-packetLen(0x00c0, 10)
+packetLen(0x00C0, 10)
 #elif PACKETVER >= 20080318
-packetLen(0x00c0, 26)
+packetLen(0x00C0, 26)
 #elif PACKETVER >= 20080304
-packetLen(0x00c0, -1)
+packetLen(0x00C0, -1)
 #elif PACKETVER >= 20080226
-packetLen(0x00c0, 21)
+packetLen(0x00C0, 21)
 #elif PACKETVER >= 20080219
-packetLen(0x00c0, 6)
+packetLen(0x00C0, 6)
 #elif PACKETVER >= 20080124
-packetLen(0x00c0, -1)
+packetLen(0x00C0, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x00c0, 7)
+packetLen(0x00C0, 7)
 #endif
 
 // Packet: 0x00c1
 #if PACKETVER >= 20080701
-packetLen(0x00c1, 6)
+packetLen(0x00C1, 6)
 #elif PACKETVER >= 20080610
-packetLen(0x00c1, -1)
+packetLen(0x00C1, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x00c1, 81)
+packetLen(0x00C1, 81)
 #elif PACKETVER >= 20080507
-packetLen(0x00c1, -1)
+packetLen(0x00C1, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x00c1, 2)
+packetLen(0x00C1, 2)
 #elif PACKETVER >= 20080415
-packetLen(0x00c1, 57)
+packetLen(0x00C1, 57)
 #elif PACKETVER >= 20080401
-packetLen(0x00c1, -1)
+packetLen(0x00C1, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x00c1, 2)
+packetLen(0x00C1, 2)
 #elif PACKETVER >= 20080318
-packetLen(0x00c1, 4)
+packetLen(0x00C1, 4)
 #elif PACKETVER >= 20080311
-packetLen(0x00c1, 16)
+packetLen(0x00C1, 16)
 #elif PACKETVER >= 20080304
-packetLen(0x00c1, 9)
+packetLen(0x00C1, 9)
 #elif PACKETVER >= 20080226
-packetLen(0x00c1, 6)
+packetLen(0x00C1, 6)
 #elif PACKETVER >= 20080219
-packetLen(0x00c1, -1)
+packetLen(0x00C1, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x00c1, 282)
+packetLen(0x00C1, 282)
 #elif PACKETVER >= 20080102
-packetLen(0x00c1, 2)
+packetLen(0x00C1, 2)
 #endif
 
 // Packet: 0x00c2
 #if PACKETVER >= 20080701
-packetLen(0x00c2, -1)
+packetLen(0x00C2, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x00c2, 8)
+packetLen(0x00C2, 8)
 #elif PACKETVER >= 20080617
-packetLen(0x00c2, -1)
+packetLen(0x00C2, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x00c2, 2)
+packetLen(0x00C2, 2)
 #elif PACKETVER >= 20080603
-packetLen(0x00c2, 90)
+packetLen(0x00C2, 90)
 #elif PACKETVER >= 20080507
-packetLen(0x00c2, -1)
+packetLen(0x00C2, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x00c2, 16)
+packetLen(0x00C2, 16)
 #elif PACKETVER >= 20080422
-packetLen(0x00c2, 4)
+packetLen(0x00C2, 4)
 #elif PACKETVER >= 20080415
-packetLen(0x00c2, 5)
+packetLen(0x00C2, 5)
 #elif PACKETVER >= 20080408
-packetLen(0x00c2, 2)
+packetLen(0x00C2, 2)
 #elif PACKETVER >= 20080401
-packetLen(0x00c2, 26)
+packetLen(0x00C2, 26)
 #elif PACKETVER >= 20080325
-packetLen(0x00c2, 10)
+packetLen(0x00C2, 10)
 #elif PACKETVER >= 20080318
-packetLen(0x00c2, 54)
+packetLen(0x00C2, 54)
 #elif PACKETVER >= 20080311
-packetLen(0x00c2, 4)
+packetLen(0x00C2, 4)
 #elif PACKETVER >= 20080304
-packetLen(0x00c2, 39)
+packetLen(0x00C2, 39)
 #elif PACKETVER >= 20080226
-packetLen(0x00c2, 282)
+packetLen(0x00C2, 282)
 #elif PACKETVER >= 20080219
-packetLen(0x00c2, 4)
+packetLen(0x00C2, 4)
 #elif PACKETVER >= 20080124
-packetLen(0x00c2, 3)
+packetLen(0x00C2, 3)
 #elif PACKETVER >= 20080102
-packetLen(0x00c2, 6)
+packetLen(0x00C2, 6)
 #endif
 
 // Packet: 0x00c3
 #if PACKETVER >= 20080701
-packetLen(0x00c3, -1)
+packetLen(0x00C3, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x00c3, 3)
+packetLen(0x00C3, 3)
 #elif PACKETVER >= 20080617
-packetLen(0x00c3, -1)
+packetLen(0x00C3, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x00c3, 42)
+packetLen(0x00C3, 42)
 #elif PACKETVER >= 20080603
-packetLen(0x00c3, -1)
+packetLen(0x00C3, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x00c3, 10)
+packetLen(0x00C3, 10)
 #elif PACKETVER >= 20080415
-packetLen(0x00c3, -1)
+packetLen(0x00C3, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x00c3, 4)
+packetLen(0x00C3, 4)
 #elif PACKETVER >= 20080401
-packetLen(0x00c3, 66)
+packetLen(0x00C3, 66)
 #elif PACKETVER >= 20080325
-packetLen(0x00c3, -1)
+packetLen(0x00C3, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x00c3, 3)
+packetLen(0x00C3, 3)
 #elif PACKETVER >= 20080311
-packetLen(0x00c3, 68)
+packetLen(0x00C3, 68)
 #elif PACKETVER >= 20080304
-packetLen(0x00c3, 26)
+packetLen(0x00C3, 26)
 #elif PACKETVER >= 20080226
-packetLen(0x00c3, 28)
+packetLen(0x00C3, 28)
 #elif PACKETVER >= 20080219
-packetLen(0x00c3, 8)
+packetLen(0x00C3, 8)
 #elif PACKETVER >= 20080124
-packetLen(0x00c3, 10)
+packetLen(0x00C3, 10)
 #elif PACKETVER >= 20080102
-packetLen(0x00c3, 8)
+packetLen(0x00C3, 8)
 #endif
 
 // Packet: 0x00c4
 #if PACKETVER >= 20080701
-packetLen(0x00c4, -1)
+packetLen(0x00C4, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x00c4, 14)
+packetLen(0x00C4, 14)
 #elif PACKETVER >= 20080617
-packetLen(0x00c4, -1)
+packetLen(0x00C4, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x00c4, 6)
+packetLen(0x00C4, 6)
 #elif PACKETVER >= 20080528
-packetLen(0x00c4, -1)
+packetLen(0x00C4, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x00c4, 2)
+packetLen(0x00C4, 2)
 #elif PACKETVER >= 20080513
-packetLen(0x00c4, -1)
+packetLen(0x00C4, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x00c4, 29)
+packetLen(0x00C4, 29)
 #elif PACKETVER >= 20080429
-packetLen(0x00c4, 71)
+packetLen(0x00C4, 71)
 #elif PACKETVER >= 20080422
-packetLen(0x00c4, 6)
+packetLen(0x00C4, 6)
 #elif PACKETVER >= 20080415
-packetLen(0x00c4, 11)
+packetLen(0x00C4, 11)
 #elif PACKETVER >= 20080408
-packetLen(0x00c4, 2)
+packetLen(0x00C4, 2)
 #elif PACKETVER >= 20080401
-packetLen(0x00c4, -1)
+packetLen(0x00C4, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x00c4, 3)
+packetLen(0x00C4, 3)
 #elif PACKETVER >= 20080318
-packetLen(0x00c4, -1)
+packetLen(0x00C4, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x00c4, 4)
+packetLen(0x00C4, 4)
 #elif PACKETVER >= 20080226
-packetLen(0x00c4, 114)
+packetLen(0x00C4, 114)
 #elif PACKETVER >= 20080219
-packetLen(0x00c4, 2)
+packetLen(0x00C4, 2)
 #elif PACKETVER >= 20080124
-packetLen(0x00c4, 4)
+packetLen(0x00C4, 4)
 #elif PACKETVER >= 20080102
-packetLen(0x00c4, 6)
+packetLen(0x00C4, 6)
 #endif
 
 // Packet: 0x00c5
 #if PACKETVER >= 20080624
-packetLen(0x00c5, -1)
+packetLen(0x00C5, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x00c5, 9)
+packetLen(0x00C5, 9)
 #elif PACKETVER >= 20080610
-packetLen(0x00c5, 114)
+packetLen(0x00C5, 114)
 #elif PACKETVER >= 20080603
-packetLen(0x00c5, -1)
+packetLen(0x00C5, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x00c5, 10)
+packetLen(0x00C5, 10)
 #elif PACKETVER >= 20080520
-packetLen(0x00c5, 4)
+packetLen(0x00C5, 4)
 #elif PACKETVER >= 20080513
-packetLen(0x00c5, 6)
+packetLen(0x00C5, 6)
 #elif PACKETVER >= 20080507
-packetLen(0x00c5, 8)
+packetLen(0x00C5, 8)
 #elif PACKETVER >= 20080429
-packetLen(0x00c5, -1)
+packetLen(0x00C5, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x00c5, 7)
+packetLen(0x00C5, 7)
 #elif PACKETVER >= 20080401
-packetLen(0x00c5, -1)
+packetLen(0x00C5, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x00c5, 30)
+packetLen(0x00C5, 30)
 #elif PACKETVER >= 20080318
-packetLen(0x00c5, 3)
+packetLen(0x00C5, 3)
 #elif PACKETVER >= 20080311
-packetLen(0x00c5, 9)
+packetLen(0x00C5, 9)
 #elif PACKETVER >= 20080124
-packetLen(0x00c5, -1)
+packetLen(0x00C5, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x00c5, 7)
+packetLen(0x00C5, 7)
 #endif
 
 // Packet: 0x00c6
 #if PACKETVER >= 20080617
-packetLen(0x00c6, -1)
+packetLen(0x00C6, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x00c6, 8)
+packetLen(0x00C6, 8)
 #elif PACKETVER >= 20080520
-packetLen(0x00c6, -1)
+packetLen(0x00C6, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x00c6, 8)
+packetLen(0x00C6, 8)
 #elif PACKETVER >= 20080507
-packetLen(0x00c6, -1)
+packetLen(0x00C6, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x00c6, 21)
+packetLen(0x00C6, 21)
 #elif PACKETVER >= 20080422
-packetLen(0x00c6, 4)
+packetLen(0x00C6, 4)
 #elif PACKETVER >= 20080325
-packetLen(0x00c6, -1)
+packetLen(0x00C6, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x00c6, 31)
+packetLen(0x00C6, 31)
 #elif PACKETVER >= 20080311
-packetLen(0x00c6, -1)
+packetLen(0x00C6, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x00c6, 5)
+packetLen(0x00C6, 5)
 #elif PACKETVER >= 20080226
-packetLen(0x00c6, 13)
+packetLen(0x00C6, 13)
 #elif PACKETVER >= 20080219
-packetLen(0x00c6, 3)
+packetLen(0x00C6, 3)
 #elif PACKETVER >= 20080102
-packetLen(0x00c6, -1)
+packetLen(0x00C6, -1)
 #endif
 
 // Packet: 0x00c7
 #if PACKETVER >= 20080701
-packetLen(0x00c7, 182)
+packetLen(0x00C7, 182)
 #elif PACKETVER >= 20080624
-packetLen(0x00c7, 6)
+packetLen(0x00C7, 6)
 #elif PACKETVER >= 20080603
-packetLen(0x00c7, -1)
+packetLen(0x00C7, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x00c7, 3)
+packetLen(0x00C7, 3)
 #elif PACKETVER >= 20080520
-packetLen(0x00c7, 22)
+packetLen(0x00C7, 22)
 #elif PACKETVER >= 20080513
-packetLen(0x00c7, 4)
+packetLen(0x00C7, 4)
 #elif PACKETVER >= 20080429
-packetLen(0x00c7, -1)
+packetLen(0x00C7, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x00c7, 53)
+packetLen(0x00C7, 53)
 #elif PACKETVER >= 20080415
-packetLen(0x00c7, 6)
+packetLen(0x00C7, 6)
 #elif PACKETVER >= 20080408
-packetLen(0x00c7, 26)
+packetLen(0x00C7, 26)
 #elif PACKETVER >= 20080325
-packetLen(0x00c7, -1)
+packetLen(0x00C7, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x00c7, 58)
+packetLen(0x00C7, 58)
 #elif PACKETVER >= 20080311
-packetLen(0x00c7, 90)
+packetLen(0x00C7, 90)
 #elif PACKETVER >= 20080304
-packetLen(0x00c7, 67)
+packetLen(0x00C7, 67)
 #elif PACKETVER >= 20080226
-packetLen(0x00c7, 5)
+packetLen(0x00C7, 5)
 #elif PACKETVER >= 20080219
-packetLen(0x00c7, 90)
+packetLen(0x00C7, 90)
 #elif PACKETVER >= 20080124
-packetLen(0x00c7, 6)
+packetLen(0x00C7, 6)
 #elif PACKETVER >= 20080102
-packetLen(0x00c7, -1)
+packetLen(0x00C7, -1)
 #endif
 
 // Packet: 0x00c8
 #if PACKETVER >= 20080701
-packetLen(0x00c8, 2)
+packetLen(0x00C8, 2)
 #elif PACKETVER >= 20080624
-packetLen(0x00c8, 4)
+packetLen(0x00C8, 4)
 #elif PACKETVER >= 20080617
-packetLen(0x00c8, 15)
+packetLen(0x00C8, 15)
 #elif PACKETVER >= 20080603
-packetLen(0x00c8, -1)
+packetLen(0x00C8, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x00c8, 6)
+packetLen(0x00C8, 6)
 #elif PACKETVER >= 20080507
-packetLen(0x00c8, -1)
+packetLen(0x00C8, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x00c8, 66)
+packetLen(0x00C8, 66)
 #elif PACKETVER >= 20080325
-packetLen(0x00c8, -1)
+packetLen(0x00C8, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x00c8, 2)
+packetLen(0x00C8, 2)
 #elif PACKETVER >= 20080311
-packetLen(0x00c8, 14)
+packetLen(0x00C8, 14)
 #elif PACKETVER >= 20080304
-packetLen(0x00c8, 53)
+packetLen(0x00C8, 53)
 #elif PACKETVER >= 20080226
-packetLen(0x00c8, -1)
+packetLen(0x00C8, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x00c8, 10)
+packetLen(0x00C8, 10)
 #elif PACKETVER >= 20080124
-packetLen(0x00c8, 6)
+packetLen(0x00C8, 6)
 #elif PACKETVER >= 20080102
-packetLen(0x00c8, -1)
+packetLen(0x00C8, -1)
 #endif
 
 // Packet: 0x00c9
 #if PACKETVER >= 20080701
-packetLen(0x00c9, 39)
+packetLen(0x00C9, 39)
 #elif PACKETVER >= 20080624
-packetLen(0x00c9, -1)
+packetLen(0x00C9, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x00c9, 36)
+packetLen(0x00C9, 36)
 #elif PACKETVER >= 20080610
-packetLen(0x00c9, 9)
+packetLen(0x00C9, 9)
 #elif PACKETVER >= 20080603
-packetLen(0x00c9, 30)
+packetLen(0x00C9, 30)
 #elif PACKETVER >= 20080520
-packetLen(0x00c9, -1)
+packetLen(0x00C9, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x00c9, 10)
+packetLen(0x00C9, 10)
 #elif PACKETVER >= 20080318
-packetLen(0x00c9, -1)
+packetLen(0x00C9, -1)
 #elif PACKETVER >= 20080311
-packetLen(0x00c9, 6)
+packetLen(0x00C9, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x00c9, -1)
+packetLen(0x00C9, -1)
 #elif PACKETVER >= 20080226
-packetLen(0x00c9, 6)
+packetLen(0x00C9, 6)
 #elif PACKETVER >= 20080219
-packetLen(0x00c9, 10)
+packetLen(0x00C9, 10)
 #elif PACKETVER >= 20080124
-packetLen(0x00c9, 5)
+packetLen(0x00C9, 5)
 #elif PACKETVER >= 20080102
-packetLen(0x00c9, -1)
+packetLen(0x00C9, -1)
 #endif
 
 // Packet: 0x00ca
 #if PACKETVER >= 20080610
-packetLen(0x00ca, -1)
+packetLen(0x00CA, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x00ca, 31)
+packetLen(0x00CA, 31)
 #elif PACKETVER >= 20080513
-packetLen(0x00ca, -1)
+packetLen(0x00CA, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x00ca, 3)
+packetLen(0x00CA, 3)
 #elif PACKETVER >= 20080429
-packetLen(0x00ca, 7)
+packetLen(0x00CA, 7)
 #elif PACKETVER >= 20080422
-packetLen(0x00ca, 6)
+packetLen(0x00CA, 6)
 #elif PACKETVER >= 20080415
-packetLen(0x00ca, 17)
+packetLen(0x00CA, 17)
 #elif PACKETVER >= 20080408
-packetLen(0x00ca, 14)
+packetLen(0x00CA, 14)
 #elif PACKETVER >= 20080401
-packetLen(0x00ca, 2)
+packetLen(0x00CA, 2)
 #elif PACKETVER >= 20080325
-packetLen(0x00ca, -1)
+packetLen(0x00CA, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x00ca, 4)
+packetLen(0x00CA, 4)
 #elif PACKETVER >= 20080311
-packetLen(0x00ca, 3)
+packetLen(0x00CA, 3)
 #elif PACKETVER >= 20080304
-packetLen(0x00ca, 9)
+packetLen(0x00CA, 9)
 #elif PACKETVER >= 20080226
-packetLen(0x00ca, 23)
+packetLen(0x00CA, 23)
 #elif PACKETVER >= 20080219
-packetLen(0x00ca, 86)
+packetLen(0x00CA, 86)
 #elif PACKETVER >= 20080124
-packetLen(0x00ca, 36)
+packetLen(0x00CA, 36)
 #elif PACKETVER >= 20080102
-packetLen(0x00ca, 3)
+packetLen(0x00CA, 3)
 #endif
 
 // Packet: 0x00cb
-packetLen(0x00cb, 3)
+packetLen(0x00CB, 3)
 
 // Packet: 0x00cc
 #if PACKETVER >= 20080701
-packetLen(0x00cc, 33)
+packetLen(0x00CC, 33)
 #elif PACKETVER >= 20080617
-packetLen(0x00cc, -1)
+packetLen(0x00CC, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x00cc, 28)
+packetLen(0x00CC, 28)
 #elif PACKETVER >= 20080603
-packetLen(0x00cc, 2)
+packetLen(0x00CC, 2)
 #elif PACKETVER >= 20080520
-packetLen(0x00cc, -1)
+packetLen(0x00CC, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x00cc, 26)
+packetLen(0x00CC, 26)
 #elif PACKETVER >= 20080507
-packetLen(0x00cc, -1)
+packetLen(0x00CC, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x00cc, 10)
+packetLen(0x00CC, 10)
 #elif PACKETVER >= 20080422
-packetLen(0x00cc, 6)
+packetLen(0x00CC, 6)
 #elif PACKETVER >= 20080415
-packetLen(0x00cc, 2)
+packetLen(0x00CC, 2)
 #elif PACKETVER >= 20080401
-packetLen(0x00cc, 3)
+packetLen(0x00CC, 3)
 #elif PACKETVER >= 20080325
-packetLen(0x00cc, 6)
+packetLen(0x00CC, 6)
 #elif PACKETVER >= 20080318
-packetLen(0x00cc, 10)
+packetLen(0x00CC, 10)
 #elif PACKETVER >= 20080311
-packetLen(0x00cc, 14)
+packetLen(0x00CC, 14)
 #elif PACKETVER >= 20080304
-packetLen(0x00cc, -1)
+packetLen(0x00CC, -1)
 #elif PACKETVER >= 20080226
-packetLen(0x00cc, 7)
+packetLen(0x00CC, 7)
 #elif PACKETVER >= 20080124
-packetLen(0x00cc, -1)
+packetLen(0x00CC, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x00cc, 6)
+packetLen(0x00CC, 6)
 #endif
 
 // Packet: 0x00cd
-packetLen(0x00cd, 3)
+packetLen(0x00CD, 3)
 
 // Packet: 0x00ce
 #if PACKETVER >= 20080701
-packetLen(0x00ce, -1)
+packetLen(0x00CE, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x00ce, 4)
+packetLen(0x00CE, 4)
 #elif PACKETVER >= 20080617
-packetLen(0x00ce, 11)
+packetLen(0x00CE, 11)
 #elif PACKETVER >= 20080610
-packetLen(0x00ce, 22)
+packetLen(0x00CE, 22)
 #elif PACKETVER >= 20080603
-packetLen(0x00ce, 102)
+packetLen(0x00CE, 102)
 #elif PACKETVER >= 20080528
-packetLen(0x00ce, 11)
+packetLen(0x00CE, 11)
 #elif PACKETVER >= 20080520
-packetLen(0x00ce, 3)
+packetLen(0x00CE, 3)
 #elif PACKETVER >= 20080513
-packetLen(0x00ce, 9)
+packetLen(0x00CE, 9)
 #elif PACKETVER >= 20080507
-packetLen(0x00ce, -1)
+packetLen(0x00CE, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x00ce, 114)
+packetLen(0x00CE, 114)
 #elif PACKETVER >= 20080422
-packetLen(0x00ce, 2)
+packetLen(0x00CE, 2)
 #elif PACKETVER >= 20080415
-packetLen(0x00ce, 10)
+packetLen(0x00CE, 10)
 #elif PACKETVER >= 20080408
-packetLen(0x00ce, -1)
+packetLen(0x00CE, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x00ce, 30)
+packetLen(0x00CE, 30)
 #elif PACKETVER >= 20080325
-packetLen(0x00ce, 10)
+packetLen(0x00CE, 10)
 #elif PACKETVER >= 20080318
-packetLen(0x00ce, 7)
+packetLen(0x00CE, 7)
 #elif PACKETVER >= 20080311
-packetLen(0x00ce, 10)
+packetLen(0x00CE, 10)
 #elif PACKETVER >= 20080304
-packetLen(0x00ce, 8)
+packetLen(0x00CE, 8)
 #elif PACKETVER >= 20080226
-packetLen(0x00ce, -1)
+packetLen(0x00CE, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x00ce, 6)
+packetLen(0x00CE, 6)
 #elif PACKETVER >= 20080102
-packetLen(0x00ce, 2)
+packetLen(0x00CE, 2)
 #endif
 
 // Packet: 0x00cf
 #if PACKETVER >= 20080624
-packetLen(0x00cf, -1)
+packetLen(0x00CF, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x00cf, 30)
+packetLen(0x00CF, 30)
 #elif PACKETVER >= 20080610
-packetLen(0x00cf, 57)
+packetLen(0x00CF, 57)
 #elif PACKETVER >= 20080603
-packetLen(0x00cf, 6)
+packetLen(0x00CF, 6)
 #elif PACKETVER >= 20080528
-packetLen(0x00cf, 5)
+packetLen(0x00CF, 5)
 #elif PACKETVER >= 20080520
-packetLen(0x00cf, 8)
+packetLen(0x00CF, 8)
 #elif PACKETVER >= 20080513
-packetLen(0x00cf, 2)
+packetLen(0x00CF, 2)
 #elif PACKETVER >= 20080507
-packetLen(0x00cf, -1)
+packetLen(0x00CF, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x00cf, 5)
+packetLen(0x00CF, 5)
 #elif PACKETVER >= 20080422
-packetLen(0x00cf, 27)
+packetLen(0x00CF, 27)
 #elif PACKETVER >= 20080415
-packetLen(0x00cf, -1)
+packetLen(0x00CF, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x00cf, 6)
+packetLen(0x00CF, 6)
 #elif PACKETVER >= 20080401
-packetLen(0x00cf, 60)
+packetLen(0x00CF, 60)
 #elif PACKETVER >= 20080325
-packetLen(0x00cf, 2)
+packetLen(0x00CF, 2)
 #elif PACKETVER >= 20080318
-packetLen(0x00cf, -1)
+packetLen(0x00CF, -1)
 #elif PACKETVER >= 20080311
-packetLen(0x00cf, 6)
+packetLen(0x00CF, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x00cf, -1)
+packetLen(0x00CF, -1)
 #elif PACKETVER >= 20080226
-packetLen(0x00cf, 16)
+packetLen(0x00CF, 16)
 #elif PACKETVER >= 20080219
-packetLen(0x00cf, 9)
+packetLen(0x00CF, 9)
 #elif PACKETVER >= 20080124
-packetLen(0x00cf, 11)
+packetLen(0x00CF, 11)
 #elif PACKETVER >= 20080102
-packetLen(0x00cf, 27)
+packetLen(0x00CF, 27)
 #endif
 
 // Packet: 0x00d0
 #if PACKETVER >= 20080610
-packetLen(0x00d0, -1)
+packetLen(0x00D0, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x00d0, 10)
+packetLen(0x00D0, 10)
 #elif PACKETVER >= 20080528
-packetLen(0x00d0, 3)
+packetLen(0x00D0, 3)
 #elif PACKETVER >= 20080520
-packetLen(0x00d0, 30)
+packetLen(0x00D0, 30)
 #elif PACKETVER >= 20080513
-packetLen(0x00d0, 114)
+packetLen(0x00D0, 114)
 #elif PACKETVER >= 20080507
-packetLen(0x00d0, 14)
+packetLen(0x00D0, 14)
 #elif PACKETVER >= 20080429
-packetLen(0x00d0, -1)
+packetLen(0x00D0, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x00d0, 3)
+packetLen(0x00D0, 3)
 #elif PACKETVER >= 20080415
-packetLen(0x00d0, -1)
+packetLen(0x00D0, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x00d0, 4)
+packetLen(0x00D0, 4)
 #elif PACKETVER >= 20080401
-packetLen(0x00d0, 3)
+packetLen(0x00D0, 3)
 #elif PACKETVER >= 20080325
-packetLen(0x00d0, 8)
+packetLen(0x00D0, 8)
 #elif PACKETVER >= 20080318
-packetLen(0x00d0, 14)
+packetLen(0x00D0, 14)
 #elif PACKETVER >= 20080311
-packetLen(0x00d0, 10)
+packetLen(0x00D0, 10)
 #elif PACKETVER >= 20080226
-packetLen(0x00d0, 2)
+packetLen(0x00D0, 2)
 #elif PACKETVER >= 20080219
-packetLen(0x00d0, -1)
+packetLen(0x00D0, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x00d0, 182)
+packetLen(0x00D0, 182)
 #elif PACKETVER >= 20080102
-packetLen(0x00d0, 3)
+packetLen(0x00D0, 3)
 #endif
 
 // Packet: 0x00d1
 #if PACKETVER >= 20080701
-packetLen(0x00d1, 26)
+packetLen(0x00D1, 26)
 #elif PACKETVER >= 20080624
-packetLen(0x00d1, -1)
+packetLen(0x00D1, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x00d1, 6)
+packetLen(0x00D1, 6)
 #elif PACKETVER >= 20080603
-packetLen(0x00d1, 5)
+packetLen(0x00D1, 5)
 #elif PACKETVER >= 20080528
-packetLen(0x00d1, 10)
+packetLen(0x00D1, 10)
 #elif PACKETVER >= 20080520
-packetLen(0x00d1, -1)
+packetLen(0x00D1, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x00d1, 54)
+packetLen(0x00D1, 54)
 #elif PACKETVER >= 20080507
-packetLen(0x00d1, -1)
+packetLen(0x00D1, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x00d1, 3)
+packetLen(0x00D1, 3)
 #elif PACKETVER >= 20080422
-packetLen(0x00d1, -1)
+packetLen(0x00D1, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x00d1, 43)
+packetLen(0x00D1, 43)
 #elif PACKETVER >= 20080408
-packetLen(0x00d1, 67)
+packetLen(0x00D1, 67)
 #elif PACKETVER >= 20080401
-packetLen(0x00d1, 4)
+packetLen(0x00D1, 4)
 #elif PACKETVER >= 20080325
-packetLen(0x00d1, -1)
+packetLen(0x00D1, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x00d1, 6)
+packetLen(0x00D1, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x00d1, -1)
+packetLen(0x00D1, -1)
 #elif PACKETVER >= 20080226
-packetLen(0x00d1, 10)
+packetLen(0x00D1, 10)
 #elif PACKETVER >= 20080219
-packetLen(0x00d1, 13)
+packetLen(0x00D1, 13)
 #elif PACKETVER >= 20080124
-packetLen(0x00d1, 6)
+packetLen(0x00D1, 6)
 #elif PACKETVER >= 20080102
-packetLen(0x00d1, 4)
+packetLen(0x00D1, 4)
 #endif
 
 // Packet: 0x00d2
 #if PACKETVER >= 20080701
-packetLen(0x00d2, 16)
+packetLen(0x00D2, 16)
 #elif PACKETVER >= 20080610
-packetLen(0x00d2, -1)
+packetLen(0x00D2, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x00d2, 7)
+packetLen(0x00D2, 7)
 #elif PACKETVER >= 20080528
-packetLen(0x00d2, 11)
+packetLen(0x00D2, 11)
 #elif PACKETVER >= 20080520
-packetLen(0x00d2, 9)
+packetLen(0x00D2, 9)
 #elif PACKETVER >= 20080513
-packetLen(0x00d2, 6)
+packetLen(0x00D2, 6)
 #elif PACKETVER >= 20080507
-packetLen(0x00d2, -1)
+packetLen(0x00D2, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x00d2, 10)
+packetLen(0x00D2, 10)
 #elif PACKETVER >= 20080415
-packetLen(0x00d2, 8)
+packetLen(0x00D2, 8)
 #elif PACKETVER >= 20080408
-packetLen(0x00d2, 6)
+packetLen(0x00D2, 6)
 #elif PACKETVER >= 20080401
-packetLen(0x00d2, -1)
+packetLen(0x00D2, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x00d2, 7)
+packetLen(0x00D2, 7)
 #elif PACKETVER >= 20080318
-packetLen(0x00d2, 6)
+packetLen(0x00D2, 6)
 #elif PACKETVER >= 20080311
-packetLen(0x00d2, 30)
+packetLen(0x00D2, 30)
 #elif PACKETVER >= 20080304
-packetLen(0x00d2, 16)
+packetLen(0x00D2, 16)
 #elif PACKETVER >= 20080226
-packetLen(0x00d2, 14)
+packetLen(0x00D2, 14)
 #elif PACKETVER >= 20080219
-packetLen(0x00d2, 20)
+packetLen(0x00D2, 20)
 #elif PACKETVER >= 20080102
-packetLen(0x00d2, 4)
+packetLen(0x00D2, 4)
 #endif
 
 // Packet: 0x00d3
 #if PACKETVER >= 20080701
-packetLen(0x00d3, -1)
+packetLen(0x00D3, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x00d3, 6)
+packetLen(0x00D3, 6)
 #elif PACKETVER >= 20080603
-packetLen(0x00d3, -1)
+packetLen(0x00D3, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x00d3, 6)
+packetLen(0x00D3, 6)
 #elif PACKETVER >= 20080520
-packetLen(0x00d3, 3)
+packetLen(0x00D3, 3)
 #elif PACKETVER >= 20080513
-packetLen(0x00d3, 26)
+packetLen(0x00D3, 26)
 #elif PACKETVER >= 20080429
-packetLen(0x00d3, 3)
+packetLen(0x00D3, 3)
 #elif PACKETVER >= 20080422
-packetLen(0x00d3, 2)
+packetLen(0x00D3, 2)
 #elif PACKETVER >= 20080415
-packetLen(0x00d3, 20)
+packetLen(0x00D3, 20)
 #elif PACKETVER >= 20080408
-packetLen(0x00d3, 19)
+packetLen(0x00D3, 19)
 #elif PACKETVER >= 20080401
-packetLen(0x00d3, 33)
+packetLen(0x00D3, 33)
 #elif PACKETVER >= 20080325
-packetLen(0x00d3, 6)
+packetLen(0x00D3, 6)
 #elif PACKETVER >= 20080318
-packetLen(0x00d3, 12)
+packetLen(0x00D3, 12)
 #elif PACKETVER >= 20080311
-packetLen(0x00d3, 14)
+packetLen(0x00D3, 14)
 #elif PACKETVER >= 20080226
-packetLen(0x00d3, -1)
+packetLen(0x00D3, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x00d3, 26)
+packetLen(0x00D3, 26)
 #elif PACKETVER >= 20080124
-packetLen(0x00d3, 6)
+packetLen(0x00D3, 6)
 #elif PACKETVER >= 20080102
-packetLen(0x00d3, 2)
+packetLen(0x00D3, 2)
 #endif
 
 // Packet: 0x00d4
-packetLen(0x00d4, -1)
+packetLen(0x00D4, -1)
 
 // Packet: 0x00d5
 #if PACKETVER >= 20080701
-packetLen(0x00d5, 7)
+packetLen(0x00D5, 7)
 #elif PACKETVER >= 20080603
-packetLen(0x00d5, -1)
+packetLen(0x00D5, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x00d5, 81)
+packetLen(0x00D5, 81)
 #elif PACKETVER >= 20080513
-packetLen(0x00d5, 8)
+packetLen(0x00D5, 8)
 #elif PACKETVER >= 20080507
-packetLen(0x00d5, -1)
+packetLen(0x00D5, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x00d5, 26)
+packetLen(0x00D5, 26)
 #elif PACKETVER >= 20080415
-packetLen(0x00d5, -1)
+packetLen(0x00D5, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x00d5, 60)
+packetLen(0x00D5, 60)
 #elif PACKETVER >= 20080401
-packetLen(0x00d5, 21)
+packetLen(0x00D5, 21)
 #elif PACKETVER >= 20080325
-packetLen(0x00d5, -1)
+packetLen(0x00D5, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x00d5, 114)
+packetLen(0x00D5, 114)
 #elif PACKETVER >= 20080311
-packetLen(0x00d5, 2)
+packetLen(0x00D5, 2)
 #elif PACKETVER >= 20080304
-packetLen(0x00d5, 3)
+packetLen(0x00D5, 3)
 #elif PACKETVER >= 20080226
-packetLen(0x00d5, -1)
+packetLen(0x00D5, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x00d5, 10)
+packetLen(0x00D5, 10)
 #elif PACKETVER >= 20080124
-packetLen(0x00d5, 7)
+packetLen(0x00D5, 7)
 #elif PACKETVER >= 20080102
-packetLen(0x00d5, -1)
+packetLen(0x00D5, -1)
 #endif
 
 // Packet: 0x00d6
 #if PACKETVER >= 20080701
-packetLen(0x00d6, 15)
+packetLen(0x00D6, 15)
 #elif PACKETVER >= 20080624
-packetLen(0x00d6, 6)
+packetLen(0x00D6, 6)
 #elif PACKETVER >= 20080617
-packetLen(0x00d6, -1)
+packetLen(0x00D6, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x00d6, 26)
+packetLen(0x00D6, 26)
 #elif PACKETVER >= 20080603
-packetLen(0x00d6, -1)
+packetLen(0x00D6, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x00d6, 3)
+packetLen(0x00D6, 3)
 #elif PACKETVER >= 20080520
-packetLen(0x00d6, 26)
+packetLen(0x00D6, 26)
 #elif PACKETVER >= 20080513
-packetLen(0x00d6, 16)
+packetLen(0x00D6, 16)
 #elif PACKETVER >= 20080429
-packetLen(0x00d6, -1)
+packetLen(0x00D6, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x00d6, 282)
+packetLen(0x00D6, 282)
 #elif PACKETVER >= 20080415
-packetLen(0x00d6, 21)
+packetLen(0x00D6, 21)
 #elif PACKETVER >= 20080408
-packetLen(0x00d6, -1)
+packetLen(0x00D6, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x00d6, 10)
+packetLen(0x00D6, 10)
 #elif PACKETVER >= 20080325
-packetLen(0x00d6, 58)
+packetLen(0x00D6, 58)
 #elif PACKETVER >= 20080318
-packetLen(0x00d6, 6)
+packetLen(0x00D6, 6)
 #elif PACKETVER >= 20080311
-packetLen(0x00d6, 8)
+packetLen(0x00D6, 8)
 #elif PACKETVER >= 20080304
-packetLen(0x00d6, 68)
+packetLen(0x00D6, 68)
 #elif PACKETVER >= 20080226
-packetLen(0x00d6, 30)
+packetLen(0x00D6, 30)
 #elif PACKETVER >= 20080219
-packetLen(0x00d6, 3)
+packetLen(0x00D6, 3)
 #elif PACKETVER >= 20080124
-packetLen(0x00d6, -1)
+packetLen(0x00D6, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x00d6, 3)
+packetLen(0x00D6, 3)
 #endif
 
 // Packet: 0x00d7
 #if PACKETVER >= 20080701
-packetLen(0x00d7, 10)
+packetLen(0x00D7, 10)
 #elif PACKETVER >= 20080624
-packetLen(0x00d7, 26)
+packetLen(0x00D7, 26)
 #elif PACKETVER >= 20080603
-packetLen(0x00d7, -1)
+packetLen(0x00D7, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x00d7, 8)
+packetLen(0x00D7, 8)
 #elif PACKETVER >= 20080520
-packetLen(0x00d7, 9)
+packetLen(0x00D7, 9)
 #elif PACKETVER >= 20080513
-packetLen(0x00d7, -1)
+packetLen(0x00D7, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x00d7, 39)
+packetLen(0x00D7, 39)
 #elif PACKETVER >= 20080408
-packetLen(0x00d7, -1)
+packetLen(0x00D7, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x00d7, 8)
+packetLen(0x00D7, 8)
 #elif PACKETVER >= 20080325
-packetLen(0x00d7, 5)
+packetLen(0x00D7, 5)
 #elif PACKETVER >= 20080318
-packetLen(0x00d7, 4)
+packetLen(0x00D7, 4)
 #elif PACKETVER >= 20080311
-packetLen(0x00d7, 67)
+packetLen(0x00D7, 67)
 #elif PACKETVER >= 20080304
-packetLen(0x00d7, 24)
+packetLen(0x00D7, 24)
 #elif PACKETVER >= 20080226
-packetLen(0x00d7, 28)
+packetLen(0x00D7, 28)
 #elif PACKETVER >= 20080219
-packetLen(0x00d7, 3)
+packetLen(0x00D7, 3)
 #elif PACKETVER >= 20080124
-packetLen(0x00d7, 8)
+packetLen(0x00D7, 8)
 #elif PACKETVER >= 20080102
-packetLen(0x00d7, -1)
+packetLen(0x00D7, -1)
 #endif
 
 // Packet: 0x00d8
 #if PACKETVER >= 20080617
-packetLen(0x00d8, -1)
+packetLen(0x00D8, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x00d8, 30)
+packetLen(0x00D8, 30)
 #elif PACKETVER >= 20080603
-packetLen(0x00d8, -1)
+packetLen(0x00D8, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x00d8, 5)
+packetLen(0x00D8, 5)
 #elif PACKETVER >= 20080520
-packetLen(0x00d8, 7)
+packetLen(0x00D8, 7)
 #elif PACKETVER >= 20080513
-packetLen(0x00d8, 53)
+packetLen(0x00D8, 53)
 #elif PACKETVER >= 20080507
-packetLen(0x00d8, 17)
+packetLen(0x00D8, 17)
 #elif PACKETVER >= 20080422
-packetLen(0x00d8, -1)
+packetLen(0x00D8, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x00d8, 9)
+packetLen(0x00D8, 9)
 #elif PACKETVER >= 20080408
-packetLen(0x00d8, 26)
+packetLen(0x00D8, 26)
 #elif PACKETVER >= 20080325
-packetLen(0x00d8, 2)
+packetLen(0x00D8, 2)
 #elif PACKETVER >= 20080318
-packetLen(0x00d8, 30)
+packetLen(0x00D8, 30)
 #elif PACKETVER >= 20080311
-packetLen(0x00d8, 2)
+packetLen(0x00D8, 2)
 #elif PACKETVER >= 20080304
-packetLen(0x00d8, -1)
+packetLen(0x00D8, -1)
 #elif PACKETVER >= 20080226
-packetLen(0x00d8, 16)
+packetLen(0x00D8, 16)
 #elif PACKETVER >= 20080219
-packetLen(0x00d8, 2)
+packetLen(0x00D8, 2)
 #elif PACKETVER >= 20080124
-packetLen(0x00d8, 4)
+packetLen(0x00D8, 4)
 #elif PACKETVER >= 20080102
-packetLen(0x00d8, 6)
+packetLen(0x00D8, 6)
 #endif
 
 // Packet: 0x00d9
 #if PACKETVER >= 20080603
-packetLen(0x00d9, -1)
+packetLen(0x00D9, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x00d9, 4)
+packetLen(0x00D9, 4)
 #elif PACKETVER >= 20080520
-packetLen(0x00d9, 5)
+packetLen(0x00D9, 5)
 #elif PACKETVER >= 20080513
-packetLen(0x00d9, 10)
+packetLen(0x00D9, 10)
 #elif PACKETVER >= 20080507
-packetLen(0x00d9, 3)
+packetLen(0x00D9, 3)
 #elif PACKETVER >= 20080429
-packetLen(0x00d9, 6)
+packetLen(0x00D9, 6)
 #elif PACKETVER >= 20080422
-packetLen(0x00d9, 14)
+packetLen(0x00D9, 14)
 #elif PACKETVER >= 20080401
-packetLen(0x00d9, -1)
+packetLen(0x00D9, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x00d9, 6)
+packetLen(0x00D9, 6)
 #elif PACKETVER >= 20080318
-packetLen(0x00d9, 14)
+packetLen(0x00D9, 14)
 #elif PACKETVER >= 20080311
-packetLen(0x00d9, 6)
+packetLen(0x00D9, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x00d9, 7)
+packetLen(0x00D9, 7)
 #elif PACKETVER >= 20080226
-packetLen(0x00d9, 6)
+packetLen(0x00D9, 6)
 #elif PACKETVER >= 20080219
-packetLen(0x00d9, 3)
+packetLen(0x00D9, 3)
 #elif PACKETVER >= 20080124
-packetLen(0x00d9, 282)
+packetLen(0x00D9, 282)
 #elif PACKETVER >= 20080102
-packetLen(0x00d9, 14)
+packetLen(0x00D9, 14)
 #endif
 
 // Packet: 0x00da
 #if PACKETVER >= 20080701
-packetLen(0x00da, -1)
+packetLen(0x00DA, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x00da, 53)
+packetLen(0x00DA, 53)
 #elif PACKETVER >= 20080610
-packetLen(0x00da, -1)
+packetLen(0x00DA, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x00da, 24)
+packetLen(0x00DA, 24)
 #elif PACKETVER >= 20080513
-packetLen(0x00da, -1)
+packetLen(0x00DA, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x00da, 3)
+packetLen(0x00DA, 3)
 #elif PACKETVER >= 20080422
-packetLen(0x00da, -1)
+packetLen(0x00DA, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x00da, 6)
+packetLen(0x00DA, 6)
 #elif PACKETVER >= 20080408
-packetLen(0x00da, 31)
+packetLen(0x00DA, 31)
 #elif PACKETVER >= 20080401
-packetLen(0x00da, 13)
+packetLen(0x00DA, 13)
 #elif PACKETVER >= 20080325
-packetLen(0x00da, -1)
+packetLen(0x00DA, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x00da, 30)
+packetLen(0x00DA, 30)
 #elif PACKETVER >= 20080311
-packetLen(0x00da, 8)
+packetLen(0x00DA, 8)
 #elif PACKETVER >= 20080226
-packetLen(0x00da, 14)
+packetLen(0x00DA, 14)
 #elif PACKETVER >= 20080219
-packetLen(0x00da, 54)
+packetLen(0x00DA, 54)
 #elif PACKETVER >= 20080124
-packetLen(0x00da, 18)
+packetLen(0x00DA, 18)
 #elif PACKETVER >= 20080102
-packetLen(0x00da, 3)
+packetLen(0x00DA, 3)
 #endif
 
 // Packet: 0x00db
 #if PACKETVER >= 20080701
-packetLen(0x00db, -1)
+packetLen(0x00DB, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x00db, 7)
+packetLen(0x00DB, 7)
 #elif PACKETVER >= 20080603
-packetLen(0x00db, -1)
+packetLen(0x00DB, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x00db, 3)
+packetLen(0x00DB, 3)
 #elif PACKETVER >= 20080520
-packetLen(0x00db, 4)
+packetLen(0x00DB, 4)
 #elif PACKETVER >= 20080513
-packetLen(0x00db, 30)
+packetLen(0x00DB, 30)
 #elif PACKETVER >= 20080429
-packetLen(0x00db, 2)
+packetLen(0x00DB, 2)
 #elif PACKETVER >= 20080422
-packetLen(0x00db, 67)
+packetLen(0x00DB, 67)
 #elif PACKETVER >= 20080415
-packetLen(0x00db, 33)
+packetLen(0x00DB, 33)
 #elif PACKETVER >= 20080408
-packetLen(0x00db, -1)
+packetLen(0x00DB, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x00db, 18)
+packetLen(0x00DB, 18)
 #elif PACKETVER >= 20080325
-packetLen(0x00db, 2)
+packetLen(0x00DB, 2)
 #elif PACKETVER >= 20080311
-packetLen(0x00db, 6)
+packetLen(0x00DB, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x00db, 31)
+packetLen(0x00DB, 31)
 #elif PACKETVER >= 20080226
-packetLen(0x00db, 26)
+packetLen(0x00DB, 26)
 #elif PACKETVER >= 20080219
-packetLen(0x00db, 4)
+packetLen(0x00DB, 4)
 #elif PACKETVER >= 20080102
-packetLen(0x00db, -1)
+packetLen(0x00DB, -1)
 #endif
 
 // Packet: 0x00dc
 #if PACKETVER >= 20080701
-packetLen(0x00dc, 6)
+packetLen(0x00DC, 6)
 #elif PACKETVER >= 20080617
-packetLen(0x00dc, -1)
+packetLen(0x00DC, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x00dc, 2)
+packetLen(0x00DC, 2)
 #elif PACKETVER >= 20080603
-packetLen(0x00dc, 11)
+packetLen(0x00DC, 11)
 #elif PACKETVER >= 20080528
-packetLen(0x00dc, 27)
+packetLen(0x00DC, 27)
 #elif PACKETVER >= 20080520
-packetLen(0x00dc, 30)
+packetLen(0x00DC, 30)
 #elif PACKETVER >= 20080513
-packetLen(0x00dc, 12)
+packetLen(0x00DC, 12)
 #elif PACKETVER >= 20080429
-packetLen(0x00dc, -1)
+packetLen(0x00DC, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x00dc, 32)
+packetLen(0x00DC, 32)
 #elif PACKETVER >= 20080415
-packetLen(0x00dc, 6)
+packetLen(0x00DC, 6)
 #elif PACKETVER >= 20080408
-packetLen(0x00dc, -1)
+packetLen(0x00DC, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x00dc, 30)
+packetLen(0x00DC, 30)
 #elif PACKETVER >= 20080325
-packetLen(0x00dc, -1)
+packetLen(0x00DC, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x00dc, 29)
+packetLen(0x00DC, 29)
 #elif PACKETVER >= 20080311
-packetLen(0x00dc, 6)
+packetLen(0x00DC, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x00dc, -1)
+packetLen(0x00DC, -1)
 #elif PACKETVER >= 20080226
-packetLen(0x00dc, 3)
+packetLen(0x00DC, 3)
 #elif PACKETVER >= 20080219
-packetLen(0x00dc, 29)
+packetLen(0x00DC, 29)
 #elif PACKETVER >= 20080124
-packetLen(0x00dc, 13)
+packetLen(0x00DC, 13)
 #elif PACKETVER >= 20080102
-packetLen(0x00dc, 28)
+packetLen(0x00DC, 28)
 #endif
 
 // Packet: 0x00dd
 #if PACKETVER >= 20080701
-packetLen(0x00dd, 6)
+packetLen(0x00DD, 6)
 #elif PACKETVER >= 20080610
-packetLen(0x00dd, -1)
+packetLen(0x00DD, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x00dd, 20)
+packetLen(0x00DD, 20)
 #elif PACKETVER >= 20080528
-packetLen(0x00dd, 7)
+packetLen(0x00DD, 7)
 #elif PACKETVER >= 20080520
-packetLen(0x00dd, 28)
+packetLen(0x00DD, 28)
 #elif PACKETVER >= 20080429
-packetLen(0x00dd, -1)
+packetLen(0x00DD, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x00dd, 28)
+packetLen(0x00DD, 28)
 #elif PACKETVER >= 20080415
-packetLen(0x00dd, -1)
+packetLen(0x00DD, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x00dd, 15)
+packetLen(0x00DD, 15)
 #elif PACKETVER >= 20080325
-packetLen(0x00dd, -1)
+packetLen(0x00DD, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x00dd, 22)
+packetLen(0x00DD, 22)
 #elif PACKETVER >= 20080311
-packetLen(0x00dd, 10)
+packetLen(0x00DD, 10)
 #elif PACKETVER >= 20080304
-packetLen(0x00dd, 6)
+packetLen(0x00DD, 6)
 #elif PACKETVER >= 20080226
-packetLen(0x00dd, -1)
+packetLen(0x00DD, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x00dd, 3)
+packetLen(0x00DD, 3)
 #elif PACKETVER >= 20080124
-packetLen(0x00dd, 8)
+packetLen(0x00DD, 8)
 #elif PACKETVER >= 20080102
-packetLen(0x00dd, 29)
+packetLen(0x00DD, 29)
 #endif
 
 // Packet: 0x00de
 #if PACKETVER >= 20080701
-packetLen(0x00de, 5)
+packetLen(0x00DE, 5)
 #elif PACKETVER >= 20080624
-packetLen(0x00de, 54)
+packetLen(0x00DE, 54)
 #elif PACKETVER >= 20080603
-packetLen(0x00de, -1)
+packetLen(0x00DE, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x00de, 57)
+packetLen(0x00DE, 57)
 #elif PACKETVER >= 20080520
-packetLen(0x00de, 4)
+packetLen(0x00DE, 4)
 #elif PACKETVER >= 20080513
-packetLen(0x00de, -1)
+packetLen(0x00DE, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x00de, 15)
+packetLen(0x00DE, 15)
 #elif PACKETVER >= 20080429
-packetLen(0x00de, 11)
+packetLen(0x00DE, 11)
 #elif PACKETVER >= 20080415
-packetLen(0x00de, -1)
+packetLen(0x00DE, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x00de, 18)
+packetLen(0x00DE, 18)
 #elif PACKETVER >= 20080401
-packetLen(0x00de, 5)
+packetLen(0x00DE, 5)
 #elif PACKETVER >= 20080325
-packetLen(0x00de, 6)
+packetLen(0x00DE, 6)
 #elif PACKETVER >= 20080318
-packetLen(0x00de, 8)
+packetLen(0x00DE, 8)
 #elif PACKETVER >= 20080304
-packetLen(0x00de, -1)
+packetLen(0x00DE, -1)
 #elif PACKETVER >= 20080226
-packetLen(0x00de, 6)
+packetLen(0x00DE, 6)
 #elif PACKETVER >= 20080219
-packetLen(0x00de, 34)
+packetLen(0x00DE, 34)
 #elif PACKETVER >= 20080124
-packetLen(0x00de, 3)
+packetLen(0x00DE, 3)
 #elif PACKETVER >= 20080102
-packetLen(0x00de, -1)
+packetLen(0x00DE, -1)
 #endif
 
 // Packet: 0x00df
 #if PACKETVER >= 20080701
-packetLen(0x00df, 34)
+packetLen(0x00DF, 34)
 #elif PACKETVER >= 20080624
-packetLen(0x00df, 11)
+packetLen(0x00DF, 11)
 #elif PACKETVER >= 20080617
-packetLen(0x00df, 30)
+packetLen(0x00DF, 30)
 #elif PACKETVER >= 20080610
-packetLen(0x00df, 10)
+packetLen(0x00DF, 10)
 #elif PACKETVER >= 20080603
-packetLen(0x00df, 4)
+packetLen(0x00DF, 4)
 #elif PACKETVER >= 20080528
-packetLen(0x00df, 90)
+packetLen(0x00DF, 90)
 #elif PACKETVER >= 20080520
-packetLen(0x00df, 23)
+packetLen(0x00DF, 23)
 #elif PACKETVER >= 20080513
-packetLen(0x00df, 6)
+packetLen(0x00DF, 6)
 #elif PACKETVER >= 20080507
-packetLen(0x00df, 3)
+packetLen(0x00DF, 3)
 #elif PACKETVER >= 20080429
-packetLen(0x00df, 8)
+packetLen(0x00DF, 8)
 #elif PACKETVER >= 20080422
-packetLen(0x00df, 12)
+packetLen(0x00DF, 12)
 #elif PACKETVER >= 20080415
-packetLen(0x00df, -1)
+packetLen(0x00DF, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x00df, 282)
+packetLen(0x00DF, 282)
 #elif PACKETVER >= 20080401
-packetLen(0x00df, 3)
+packetLen(0x00DF, 3)
 #elif PACKETVER >= 20080325
-packetLen(0x00df, 5)
+packetLen(0x00DF, 5)
 #elif PACKETVER >= 20080318
-packetLen(0x00df, 23)
+packetLen(0x00DF, 23)
 #elif PACKETVER >= 20080304
-packetLen(0x00df, -1)
+packetLen(0x00DF, -1)
 #elif PACKETVER >= 20080226
-packetLen(0x00df, 9)
+packetLen(0x00DF, 9)
 #elif PACKETVER >= 20080219
-packetLen(0x00df, 7)
+packetLen(0x00DF, 7)
 #elif PACKETVER >= 20080124
-packetLen(0x00df, 27)
+packetLen(0x00DF, 27)
 #elif PACKETVER >= 20080102
-packetLen(0x00df, -1)
+packetLen(0x00DF, -1)
 #endif
 
 // Packet: 0x00e0
 #if PACKETVER >= 20080701
-packetLen(0x00e0, 9)
+packetLen(0x00E0, 9)
 #elif PACKETVER >= 20080617
-packetLen(0x00e0, -1)
+packetLen(0x00E0, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x00e0, 6)
+packetLen(0x00E0, 6)
 #elif PACKETVER >= 20080603
-packetLen(0x00e0, 2)
+packetLen(0x00E0, 2)
 #elif PACKETVER >= 20080520
-packetLen(0x00e0, -1)
+packetLen(0x00E0, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x00e0, 10)
+packetLen(0x00E0, 10)
 #elif PACKETVER >= 20080429
-packetLen(0x00e0, -1)
+packetLen(0x00E0, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x00e0, 30)
+packetLen(0x00E0, 30)
 #elif PACKETVER >= 20080415
-packetLen(0x00e0, 2)
+packetLen(0x00E0, 2)
 #elif PACKETVER >= 20080408
-packetLen(0x00e0, 4)
+packetLen(0x00E0, 4)
 #elif PACKETVER >= 20080401
-packetLen(0x00e0, 21)
+packetLen(0x00E0, 21)
 #elif PACKETVER >= 20080325
-packetLen(0x00e0, 71)
+packetLen(0x00E0, 71)
 #elif PACKETVER >= 20080318
-packetLen(0x00e0, 7)
+packetLen(0x00E0, 7)
 #elif PACKETVER >= 20080311
-packetLen(0x00e0, 2)
+packetLen(0x00E0, 2)
 #elif PACKETVER >= 20080304
-packetLen(0x00e0, 43)
+packetLen(0x00E0, 43)
 #elif PACKETVER >= 20080226
-packetLen(0x00e0, 2)
+packetLen(0x00E0, 2)
 #elif PACKETVER >= 20080219
-packetLen(0x00e0, 31)
+packetLen(0x00E0, 31)
 #elif PACKETVER >= 20080124
-packetLen(0x00e0, 18)
+packetLen(0x00E0, 18)
 #elif PACKETVER >= 20080102
-packetLen(0x00e0, 30)
+packetLen(0x00E0, 30)
 #endif
 
 // Packet: 0x00e1
 #if PACKETVER >= 20080610
-packetLen(0x00e1, -1)
+packetLen(0x00E1, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x00e1, 2)
+packetLen(0x00E1, 2)
 #elif PACKETVER >= 20080520
-packetLen(0x00e1, 20)
+packetLen(0x00E1, 20)
 #elif PACKETVER >= 20080513
-packetLen(0x00e1, -1)
+packetLen(0x00E1, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x00e1, 4)
+packetLen(0x00E1, 4)
 #elif PACKETVER >= 20080429
-packetLen(0x00e1, 6)
+packetLen(0x00E1, 6)
 #elif PACKETVER >= 20080422
-packetLen(0x00e1, 43)
+packetLen(0x00E1, 43)
 #elif PACKETVER >= 20080415
-packetLen(0x00e1, -1)
+packetLen(0x00E1, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x00e1, 2)
+packetLen(0x00E1, 2)
 #elif PACKETVER >= 20080401
-packetLen(0x00e1, 60)
+packetLen(0x00E1, 60)
 #elif PACKETVER >= 20080325
-packetLen(0x00e1, 22)
+packetLen(0x00E1, 22)
 #elif PACKETVER >= 20080318
-packetLen(0x00e1, 21)
+packetLen(0x00E1, 21)
 #elif PACKETVER >= 20080311
-packetLen(0x00e1, 2)
+packetLen(0x00E1, 2)
 #elif PACKETVER >= 20080304
-packetLen(0x00e1, 60)
+packetLen(0x00E1, 60)
 #elif PACKETVER >= 20080226
-packetLen(0x00e1, -1)
+packetLen(0x00E1, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x00e1, 81)
+packetLen(0x00E1, 81)
 #elif PACKETVER >= 20080124
-packetLen(0x00e1, 12)
+packetLen(0x00E1, 12)
 #elif PACKETVER >= 20080102
-packetLen(0x00e1, 30)
+packetLen(0x00E1, 30)
 #endif
 
 // Packet: 0x00e2
 #if PACKETVER >= 20080624
-packetLen(0x00e2, -1)
+packetLen(0x00E2, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x00e2, 6)
+packetLen(0x00E2, 6)
 #elif PACKETVER >= 20080610
-packetLen(0x00e2, 282)
+packetLen(0x00E2, 282)
 #elif PACKETVER >= 20080603
-packetLen(0x00e2, -1)
+packetLen(0x00E2, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x00e2, 6)
+packetLen(0x00E2, 6)
 #elif PACKETVER >= 20080520
-packetLen(0x00e2, -1)
+packetLen(0x00E2, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x00e2, 2)
+packetLen(0x00E2, 2)
 #elif PACKETVER >= 20080507
-packetLen(0x00e2, -1)
+packetLen(0x00E2, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x00e2, 6)
+packetLen(0x00E2, 6)
 #elif PACKETVER >= 20080422
-packetLen(0x00e2, 26)
+packetLen(0x00E2, 26)
 #elif PACKETVER >= 20080415
-packetLen(0x00e2, 282)
+packetLen(0x00E2, 282)
 #elif PACKETVER >= 20080408
-packetLen(0x00e2, 11)
+packetLen(0x00E2, 11)
 #elif PACKETVER >= 20080401
-packetLen(0x00e2, 5)
+packetLen(0x00E2, 5)
 #elif PACKETVER >= 20080325
-packetLen(0x00e2, -1)
+packetLen(0x00E2, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x00e2, 79)
+packetLen(0x00E2, 79)
 #elif PACKETVER >= 20080311
-packetLen(0x00e2, -1)
+packetLen(0x00E2, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x00e2, 31)
+packetLen(0x00E2, 31)
 #elif PACKETVER >= 20080226
-packetLen(0x00e2, 26)
+packetLen(0x00E2, 26)
 #elif PACKETVER >= 20080219
-packetLen(0x00e2, 30)
+packetLen(0x00E2, 30)
 #elif PACKETVER >= 20080124
-packetLen(0x00e2, 10)
+packetLen(0x00E2, 10)
 #elif PACKETVER >= 20080102
-packetLen(0x00e2, 26)
+packetLen(0x00E2, 26)
 #endif
 
 // Packet: 0x00e3
 #if PACKETVER >= 20080701
-packetLen(0x00e3, 26)
+packetLen(0x00E3, 26)
 #elif PACKETVER >= 20080624
-packetLen(0x00e3, 6)
+packetLen(0x00E3, 6)
 #elif PACKETVER >= 20080617
-packetLen(0x00e3, 58)
+packetLen(0x00E3, 58)
 #elif PACKETVER >= 20080610
-packetLen(0x00e3, -1)
+packetLen(0x00E3, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x00e3, 30)
+packetLen(0x00E3, 30)
 #elif PACKETVER >= 20080528
-packetLen(0x00e3, 35)
+packetLen(0x00E3, 35)
 #elif PACKETVER >= 20080429
-packetLen(0x00e3, -1)
+packetLen(0x00E3, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x00e3, 2)
+packetLen(0x00E3, 2)
 #elif PACKETVER >= 20080415
-packetLen(0x00e3, 8)
+packetLen(0x00E3, 8)
 #elif PACKETVER >= 20080408
-packetLen(0x00e3, -1)
+packetLen(0x00E3, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x00e3, 58)
+packetLen(0x00E3, 58)
 #elif PACKETVER >= 20080325
-packetLen(0x00e3, 10)
+packetLen(0x00E3, 10)
 #elif PACKETVER >= 20080318
-packetLen(0x00e3, 7)
+packetLen(0x00E3, 7)
 #elif PACKETVER >= 20080311
-packetLen(0x00e3, 2)
+packetLen(0x00E3, 2)
 #elif PACKETVER >= 20080304
-packetLen(0x00e3, -1)
+packetLen(0x00E3, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x00e3, 12)
+packetLen(0x00E3, 12)
 #elif PACKETVER >= 20080124
-packetLen(0x00e3, 14)
+packetLen(0x00E3, 14)
 #elif PACKETVER >= 20080102
-packetLen(0x00e3, 2)
+packetLen(0x00E3, 2)
 #endif
 
 // Packet: 0x00e4
 #if PACKETVER >= 20080701
-packetLen(0x00e4, -1)
+packetLen(0x00E4, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x00e4, 36)
+packetLen(0x00E4, 36)
 #elif PACKETVER >= 20080617
-packetLen(0x00e4, 86)
+packetLen(0x00E4, 86)
 #elif PACKETVER >= 20080520
-packetLen(0x00e4, -1)
+packetLen(0x00E4, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x00e4, 33)
+packetLen(0x00E4, 33)
 #elif PACKETVER >= 20080507
-packetLen(0x00e4, 6)
+packetLen(0x00E4, 6)
 #elif PACKETVER >= 20080429
-packetLen(0x00e4, 58)
+packetLen(0x00E4, 58)
 #elif PACKETVER >= 20080422
-packetLen(0x00e4, 6)
+packetLen(0x00E4, 6)
 #elif PACKETVER >= 20080415
-packetLen(0x00e4, 13)
+packetLen(0x00E4, 13)
 #elif PACKETVER >= 20080408
-packetLen(0x00e4, 10)
+packetLen(0x00E4, 10)
 #elif PACKETVER >= 20080401
-packetLen(0x00e4, 14)
+packetLen(0x00E4, 14)
 #elif PACKETVER >= 20080325
-packetLen(0x00e4, -1)
+packetLen(0x00E4, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x00e4, 10)
+packetLen(0x00E4, 10)
 #elif PACKETVER >= 20080311
-packetLen(0x00e4, 54)
+packetLen(0x00E4, 54)
 #elif PACKETVER >= 20080304
-packetLen(0x00e4, 6)
+packetLen(0x00E4, 6)
 #elif PACKETVER >= 20080219
-packetLen(0x00e4, 14)
+packetLen(0x00E4, 14)
 #elif PACKETVER >= 20080124
-packetLen(0x00e4, 7)
+packetLen(0x00E4, 7)
 #elif PACKETVER >= 20080102
-packetLen(0x00e4, 6)
+packetLen(0x00E4, 6)
 #endif
 
 // Packet: 0x00e5
 #if PACKETVER >= 20080701
-packetLen(0x00e5, -1)
+packetLen(0x00E5, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x00e5, 3)
+packetLen(0x00E5, 3)
 #elif PACKETVER >= 20080617
-packetLen(0x00e5, 28)
+packetLen(0x00E5, 28)
 #elif PACKETVER >= 20080610
-packetLen(0x00e5, -1)
+packetLen(0x00E5, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x00e5, 2)
+packetLen(0x00E5, 2)
 #elif PACKETVER >= 20080528
-packetLen(0x00e5, -1)
+packetLen(0x00E5, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x00e5, 6)
+packetLen(0x00E5, 6)
 #elif PACKETVER >= 20080507
-packetLen(0x00e5, -1)
+packetLen(0x00E5, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x00e5, 28)
+packetLen(0x00E5, 28)
 #elif PACKETVER >= 20080422
-packetLen(0x00e5, 5)
+packetLen(0x00E5, 5)
 #elif PACKETVER >= 20080415
-packetLen(0x00e5, 3)
+packetLen(0x00E5, 3)
 #elif PACKETVER >= 20080408
-packetLen(0x00e5, 2)
+packetLen(0x00E5, 2)
 #elif PACKETVER >= 20080401
-packetLen(0x00e5, 10)
+packetLen(0x00E5, 10)
 #elif PACKETVER >= 20080325
-packetLen(0x00e5, 6)
+packetLen(0x00E5, 6)
 #elif PACKETVER >= 20080318
-packetLen(0x00e5, 5)
+packetLen(0x00E5, 5)
 #elif PACKETVER >= 20080311
-packetLen(0x00e5, 10)
+packetLen(0x00E5, 10)
 #elif PACKETVER >= 20080304
-packetLen(0x00e5, 6)
+packetLen(0x00E5, 6)
 #elif PACKETVER >= 20080219
-packetLen(0x00e5, 11)
+packetLen(0x00E5, 11)
 #elif PACKETVER >= 20080124
-packetLen(0x00e5, 29)
+packetLen(0x00E5, 29)
 #elif PACKETVER >= 20080102
-packetLen(0x00e5, 26)
+packetLen(0x00E5, 26)
 #endif
 
 // Packet: 0x00e6
 #if PACKETVER >= 20080701
-packetLen(0x00e6, 6)
+packetLen(0x00E6, 6)
 #elif PACKETVER >= 20080624
-packetLen(0x00e6, 14)
+packetLen(0x00E6, 14)
 #elif PACKETVER >= 20080617
-packetLen(0x00e6, 9)
+packetLen(0x00E6, 9)
 #elif PACKETVER >= 20080610
-packetLen(0x00e6, 6)
+packetLen(0x00E6, 6)
 #elif PACKETVER >= 20080603
-packetLen(0x00e6, 2)
+packetLen(0x00E6, 2)
 #elif PACKETVER >= 20080528
-packetLen(0x00e6, -1)
+packetLen(0x00E6, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x00e6, 43)
+packetLen(0x00E6, 43)
 #elif PACKETVER >= 20080513
-packetLen(0x00e6, 26)
+packetLen(0x00E6, 26)
 #elif PACKETVER >= 20080507
-packetLen(0x00e6, 79)
+packetLen(0x00E6, 79)
 #elif PACKETVER >= 20080429
-packetLen(0x00e6, 11)
+packetLen(0x00E6, 11)
 #elif PACKETVER >= 20080422
-packetLen(0x00e6, 3)
+packetLen(0x00E6, 3)
 #elif PACKETVER >= 20080408
-packetLen(0x00e6, -1)
+packetLen(0x00E6, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x00e6, 67)
+packetLen(0x00E6, 67)
 #elif PACKETVER >= 20080325
-packetLen(0x00e6, -1)
+packetLen(0x00E6, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x00e6, 15)
+packetLen(0x00E6, 15)
 #elif PACKETVER >= 20080311
-packetLen(0x00e6, 16)
+packetLen(0x00E6, 16)
 #elif PACKETVER >= 20080304
-packetLen(0x00e6, -1)
+packetLen(0x00E6, -1)
 #elif PACKETVER >= 20080226
-packetLen(0x00e6, 53)
+packetLen(0x00E6, 53)
 #elif PACKETVER >= 20080219
-packetLen(0x00e6, 10)
+packetLen(0x00E6, 10)
 #elif PACKETVER >= 20080124
-packetLen(0x00e6, 114)
+packetLen(0x00E6, 114)
 #elif PACKETVER >= 20080102
-packetLen(0x00e6, 3)
+packetLen(0x00E6, 3)
 #endif
 
 // Packet: 0x00e7
 #if PACKETVER >= 20080701
-packetLen(0x00e7, -1)
+packetLen(0x00E7, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x00e7, 30)
+packetLen(0x00E7, 30)
 #elif PACKETVER >= 20080617
-packetLen(0x00e7, -1)
+packetLen(0x00E7, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x00e7, 14)
+packetLen(0x00E7, 14)
 #elif PACKETVER >= 20080603
-packetLen(0x00e7, -1)
+packetLen(0x00E7, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x00e7, 182)
+packetLen(0x00E7, 182)
 #elif PACKETVER >= 20080520
-packetLen(0x00e7, 14)
+packetLen(0x00E7, 14)
 #elif PACKETVER >= 20080513
-packetLen(0x00e7, -1)
+packetLen(0x00E7, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x00e7, 90)
+packetLen(0x00E7, 90)
 #elif PACKETVER >= 20080429
-packetLen(0x00e7, 182)
+packetLen(0x00E7, 182)
 #elif PACKETVER >= 20080422
-packetLen(0x00e7, 3)
+packetLen(0x00E7, 3)
 #elif PACKETVER >= 20080415
-packetLen(0x00e7, -1)
+packetLen(0x00E7, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x00e7, 6)
+packetLen(0x00E7, 6)
 #elif PACKETVER >= 20080401
-packetLen(0x00e7, 4)
+packetLen(0x00E7, 4)
 #elif PACKETVER >= 20080325
-packetLen(0x00e7, 8)
+packetLen(0x00E7, 8)
 #elif PACKETVER >= 20080318
-packetLen(0x00e7, 6)
+packetLen(0x00E7, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x00e7, 3)
+packetLen(0x00E7, 3)
 #elif PACKETVER >= 20080226
-packetLen(0x00e7, 68)
+packetLen(0x00E7, 68)
 #elif PACKETVER >= 20080124
-packetLen(0x00e7, -1)
+packetLen(0x00E7, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x00e7, 3)
+packetLen(0x00E7, 3)
 #endif
 
 // Packet: 0x00e8
 #if PACKETVER >= 20080701
-packetLen(0x00e8, -1)
+packetLen(0x00E8, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x00e8, 114)
+packetLen(0x00E8, 114)
 #elif PACKETVER >= 20080610
-packetLen(0x00e8, -1)
+packetLen(0x00E8, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x00e8, 8)
+packetLen(0x00E8, 8)
 #elif PACKETVER >= 20080528
-packetLen(0x00e8, 5)
+packetLen(0x00E8, 5)
 #elif PACKETVER >= 20080520
-packetLen(0x00e8, 66)
+packetLen(0x00E8, 66)
 #elif PACKETVER >= 20080513
-packetLen(0x00e8, 10)
+packetLen(0x00E8, 10)
 #elif PACKETVER >= 20080507
-packetLen(0x00e8, 86)
+packetLen(0x00E8, 86)
 #elif PACKETVER >= 20080429
-packetLen(0x00e8, -1)
+packetLen(0x00E8, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x00e8, 8)
+packetLen(0x00E8, 8)
 #elif PACKETVER >= 20080415
-packetLen(0x00e8, 6)
+packetLen(0x00E8, 6)
 #elif PACKETVER >= 20080408
-packetLen(0x00e8, -1)
+packetLen(0x00E8, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x00e8, 2)
+packetLen(0x00E8, 2)
 #elif PACKETVER >= 20080325
-packetLen(0x00e8, 30)
+packetLen(0x00E8, 30)
 #elif PACKETVER >= 20080318
-packetLen(0x00e8, 4)
+packetLen(0x00E8, 4)
 #elif PACKETVER >= 20080311
-packetLen(0x00e8, 6)
+packetLen(0x00E8, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x00e8, -1)
+packetLen(0x00E8, -1)
 #elif PACKETVER >= 20080226
-packetLen(0x00e8, 6)
+packetLen(0x00E8, 6)
 #elif PACKETVER >= 20080219
-packetLen(0x00e8, 2)
+packetLen(0x00E8, 2)
 #elif PACKETVER >= 20080124
-packetLen(0x00e8, 26)
+packetLen(0x00E8, 26)
 #elif PACKETVER >= 20080102
-packetLen(0x00e8, 8)
+packetLen(0x00E8, 8)
 #endif
 
 // Packet: 0x00e9
 #if PACKETVER >= 20080617
-packetLen(0x00e9, -1)
+packetLen(0x00E9, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x00e9, 8)
+packetLen(0x00E9, 8)
 #elif PACKETVER >= 20080603
-packetLen(0x00e9, 4)
+packetLen(0x00E9, 4)
 #elif PACKETVER >= 20080520
-packetLen(0x00e9, -1)
+packetLen(0x00E9, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x00e9, 2)
+packetLen(0x00E9, 2)
 #elif PACKETVER >= 20080422
-packetLen(0x00e9, -1)
+packetLen(0x00E9, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x00e9, 7)
+packetLen(0x00E9, 7)
 #elif PACKETVER >= 20080408
-packetLen(0x00e9, 4)
+packetLen(0x00E9, 4)
 #elif PACKETVER >= 20080401
-packetLen(0x00e9, 8)
+packetLen(0x00E9, 8)
 #elif PACKETVER >= 20080325
-packetLen(0x00e9, 2)
+packetLen(0x00E9, 2)
 #elif PACKETVER >= 20080318
-packetLen(0x00e9, 6)
+packetLen(0x00E9, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x00e9, -1)
+packetLen(0x00E9, -1)
 #elif PACKETVER >= 20080226
-packetLen(0x00e9, 30)
+packetLen(0x00E9, 30)
 #elif PACKETVER >= 20080219
-packetLen(0x00e9, 2)
+packetLen(0x00E9, 2)
 #elif PACKETVER >= 20080124
-packetLen(0x00e9, 21)
+packetLen(0x00E9, 21)
 #elif PACKETVER >= 20080102
-packetLen(0x00e9, 19)
+packetLen(0x00E9, 19)
 #endif
 
 // Packet: 0x00ea
 #if PACKETVER >= 20080701
-packetLen(0x00ea, -1)
+packetLen(0x00EA, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x00ea, 39)
+packetLen(0x00EA, 39)
 #elif PACKETVER >= 20080617
-packetLen(0x00ea, 90)
+packetLen(0x00EA, 90)
 #elif PACKETVER >= 20080603
-packetLen(0x00ea, -1)
+packetLen(0x00EA, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x00ea, 30)
+packetLen(0x00EA, 30)
 #elif PACKETVER >= 20080520
-packetLen(0x00ea, 3)
+packetLen(0x00EA, 3)
 #elif PACKETVER >= 20080513
-packetLen(0x00ea, -1)
+packetLen(0x00EA, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x00ea, 26)
+packetLen(0x00EA, 26)
 #elif PACKETVER >= 20080429
-packetLen(0x00ea, 6)
+packetLen(0x00EA, 6)
 #elif PACKETVER >= 20080422
-packetLen(0x00ea, -1)
+packetLen(0x00EA, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x00ea, 4)
+packetLen(0x00EA, 4)
 #elif PACKETVER >= 20080408
-packetLen(0x00ea, -1)
+packetLen(0x00EA, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x00ea, 15)
+packetLen(0x00EA, 15)
 #elif PACKETVER >= 20080325
-packetLen(0x00ea, 3)
+packetLen(0x00EA, 3)
 #elif PACKETVER >= 20080318
-packetLen(0x00ea, 2)
+packetLen(0x00EA, 2)
 #elif PACKETVER >= 20080311
-packetLen(0x00ea, 10)
+packetLen(0x00EA, 10)
 #elif PACKETVER >= 20080304
-packetLen(0x00ea, 6)
+packetLen(0x00EA, 6)
 #elif PACKETVER >= 20080219
-packetLen(0x00ea, -1)
+packetLen(0x00EA, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x00ea, 14)
+packetLen(0x00EA, 14)
 #elif PACKETVER >= 20080102
-packetLen(0x00ea, 5)
+packetLen(0x00EA, 5)
 #endif
 
 // Packet: 0x00eb
 #if PACKETVER >= 20080624
-packetLen(0x00eb, -1)
+packetLen(0x00EB, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x00eb, 5)
+packetLen(0x00EB, 5)
 #elif PACKETVER >= 20080610
-packetLen(0x00eb, -1)
+packetLen(0x00EB, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x00eb, 54)
+packetLen(0x00EB, 54)
 #elif PACKETVER >= 20080528
-packetLen(0x00eb, -1)
+packetLen(0x00EB, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x00eb, 11)
+packetLen(0x00EB, 11)
 #elif PACKETVER >= 20080513
-packetLen(0x00eb, 6)
+packetLen(0x00EB, 6)
 #elif PACKETVER >= 20080507
-packetLen(0x00eb, 36)
+packetLen(0x00EB, 36)
 #elif PACKETVER >= 20080429
-packetLen(0x00eb, -1)
+packetLen(0x00EB, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x00eb, 2)
+packetLen(0x00EB, 2)
 #elif PACKETVER >= 20080415
-packetLen(0x00eb, 5)
+packetLen(0x00EB, 5)
 #elif PACKETVER >= 20080408
-packetLen(0x00eb, 15)
+packetLen(0x00EB, 15)
 #elif PACKETVER >= 20080325
-packetLen(0x00eb, -1)
+packetLen(0x00EB, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x00eb, 86)
+packetLen(0x00EB, 86)
 #elif PACKETVER >= 20080311
-packetLen(0x00eb, 12)
+packetLen(0x00EB, 12)
 #elif PACKETVER >= 20080304
-packetLen(0x00eb, 6)
+packetLen(0x00EB, 6)
 #elif PACKETVER >= 20080226
-packetLen(0x00eb, 19)
+packetLen(0x00EB, 19)
 #elif PACKETVER >= 20080219
-packetLen(0x00eb, 17)
+packetLen(0x00EB, 17)
 #elif PACKETVER >= 20080124
-packetLen(0x00eb, 6)
+packetLen(0x00EB, 6)
 #elif PACKETVER >= 20080102
-packetLen(0x00eb, 2)
+packetLen(0x00EB, 2)
 #endif
 
 // Packet: 0x00ec
 #if PACKETVER >= 20080701
-packetLen(0x00ec, 55)
+packetLen(0x00EC, 55)
 #elif PACKETVER >= 20080624
-packetLen(0x00ec, 4)
+packetLen(0x00EC, 4)
 #elif PACKETVER >= 20080610
-packetLen(0x00ec, 6)
+packetLen(0x00EC, 6)
 #elif PACKETVER >= 20080603
-packetLen(0x00ec, -1)
+packetLen(0x00EC, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x00ec, 14)
+packetLen(0x00EC, 14)
 #elif PACKETVER >= 20080520
-packetLen(0x00ec, 81)
+packetLen(0x00EC, 81)
 #elif PACKETVER >= 20080513
-packetLen(0x00ec, 11)
+packetLen(0x00EC, 11)
 #elif PACKETVER >= 20080507
-packetLen(0x00ec, 3)
+packetLen(0x00EC, 3)
 #elif PACKETVER >= 20080429
-packetLen(0x00ec, 34)
+packetLen(0x00EC, 34)
 #elif PACKETVER >= 20080422
-packetLen(0x00ec, 10)
+packetLen(0x00EC, 10)
 #elif PACKETVER >= 20080415
-packetLen(0x00ec, 14)
+packetLen(0x00EC, 14)
 #elif PACKETVER >= 20080408
-packetLen(0x00ec, -1)
+packetLen(0x00EC, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x00ec, 11)
+packetLen(0x00EC, 11)
 #elif PACKETVER >= 20080325
-packetLen(0x00ec, 9)
+packetLen(0x00EC, 9)
 #elif PACKETVER >= 20080318
-packetLen(0x00ec, 30)
+packetLen(0x00EC, 30)
 #elif PACKETVER >= 20080311
-packetLen(0x00ec, 20)
+packetLen(0x00EC, 20)
 #elif PACKETVER >= 20080304
-packetLen(0x00ec, 2)
+packetLen(0x00EC, 2)
 #elif PACKETVER >= 20080226
-packetLen(0x00ec, 11)
+packetLen(0x00EC, 11)
 #elif PACKETVER >= 20080219
-packetLen(0x00ec, -1)
+packetLen(0x00EC, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x00ec, 9)
+packetLen(0x00EC, 9)
 #elif PACKETVER >= 20080102
-packetLen(0x00ec, 3)
+packetLen(0x00EC, 3)
 #endif
 
 // Packet: 0x00ed
 #if PACKETVER >= 20080701
-packetLen(0x00ed, -1)
+packetLen(0x00ED, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x00ed, 20)
+packetLen(0x00ED, 20)
 #elif PACKETVER >= 20080610
-packetLen(0x00ed, -1)
+packetLen(0x00ED, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x00ed, 7)
+packetLen(0x00ED, 7)
 #elif PACKETVER >= 20080528
-packetLen(0x00ed, -1)
+packetLen(0x00ED, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x00ed, 3)
+packetLen(0x00ED, 3)
 #elif PACKETVER >= 20080513
-packetLen(0x00ed, 8)
+packetLen(0x00ED, 8)
 #elif PACKETVER >= 20080507
-packetLen(0x00ed, 6)
+packetLen(0x00ED, 6)
 #elif PACKETVER >= 20080429
-packetLen(0x00ed, -1)
+packetLen(0x00ED, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x00ed, 2)
+packetLen(0x00ED, 2)
 #elif PACKETVER >= 20080415
-packetLen(0x00ed, 3)
+packetLen(0x00ED, 3)
 #elif PACKETVER >= 20080408
-packetLen(0x00ed, 5)
+packetLen(0x00ED, 5)
 #elif PACKETVER >= 20080401
-packetLen(0x00ed, 3)
+packetLen(0x00ED, 3)
 #elif PACKETVER >= 20080325
-packetLen(0x00ed, 7)
+packetLen(0x00ED, 7)
 #elif PACKETVER >= 20080318
-packetLen(0x00ed, 4)
+packetLen(0x00ED, 4)
 #elif PACKETVER >= 20080311
-packetLen(0x00ed, -1)
+packetLen(0x00ED, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x00ed, 86)
+packetLen(0x00ED, 86)
 #elif PACKETVER >= 20080226
-packetLen(0x00ed, 30)
+packetLen(0x00ED, 30)
 #elif PACKETVER >= 20080124
-packetLen(0x00ed, -1)
+packetLen(0x00ED, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x00ed, 2)
+packetLen(0x00ED, 2)
 #endif
 
 // Packet: 0x00ee
 #if PACKETVER >= 20080701
-packetLen(0x00ee, 14)
+packetLen(0x00EE, 14)
 #elif PACKETVER >= 20080624
-packetLen(0x00ee, -1)
+packetLen(0x00EE, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x00ee, 81)
+packetLen(0x00EE, 81)
 #elif PACKETVER >= 20080610
-packetLen(0x00ee, 2)
+packetLen(0x00EE, 2)
 #elif PACKETVER >= 20080603
-packetLen(0x00ee, 6)
+packetLen(0x00EE, 6)
 #elif PACKETVER >= 20080528
-packetLen(0x00ee, 18)
+packetLen(0x00EE, 18)
 #elif PACKETVER >= 20080520
-packetLen(0x00ee, 3)
+packetLen(0x00EE, 3)
 #elif PACKETVER >= 20080429
-packetLen(0x00ee, -1)
+packetLen(0x00EE, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x00ee, 3)
+packetLen(0x00EE, 3)
 #elif PACKETVER >= 20080415
-packetLen(0x00ee, 30)
+packetLen(0x00EE, 30)
 #elif PACKETVER >= 20080408
-packetLen(0x00ee, 8)
+packetLen(0x00EE, 8)
 #elif PACKETVER >= 20080401
-packetLen(0x00ee, 26)
+packetLen(0x00EE, 26)
 #elif PACKETVER >= 20080325
-packetLen(0x00ee, -1)
+packetLen(0x00EE, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x00ee, 5)
+packetLen(0x00EE, 5)
 #elif PACKETVER >= 20080311
-packetLen(0x00ee, 11)
+packetLen(0x00EE, 11)
 #elif PACKETVER >= 20080304
-packetLen(0x00ee, 10)
+packetLen(0x00EE, 10)
 #elif PACKETVER >= 20080226
-packetLen(0x00ee, 90)
+packetLen(0x00EE, 90)
 #elif PACKETVER >= 20080219
-packetLen(0x00ee, -1)
+packetLen(0x00EE, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x00ee, 4)
+packetLen(0x00EE, 4)
 #elif PACKETVER >= 20080102
-packetLen(0x00ee, 2)
+packetLen(0x00EE, 2)
 #endif
 
 // Packet: 0x00ef
 #if PACKETVER >= 20080701
-packetLen(0x00ef, -1)
+packetLen(0x00EF, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x00ef, 10)
+packetLen(0x00EF, 10)
 #elif PACKETVER >= 20080617
-packetLen(0x00ef, 30)
+packetLen(0x00EF, 30)
 #elif PACKETVER >= 20080610
-packetLen(0x00ef, 9)
+packetLen(0x00EF, 9)
 #elif PACKETVER >= 20080603
-packetLen(0x00ef, 11)
+packetLen(0x00EF, 11)
 #elif PACKETVER >= 20080528
-packetLen(0x00ef, 30)
+packetLen(0x00EF, 30)
 #elif PACKETVER >= 20080520
-packetLen(0x00ef, 26)
+packetLen(0x00EF, 26)
 #elif PACKETVER >= 20080513
-packetLen(0x00ef, 28)
+packetLen(0x00EF, 28)
 #elif PACKETVER >= 20080507
-packetLen(0x00ef, 4)
+packetLen(0x00EF, 4)
 #elif PACKETVER >= 20080429
-packetLen(0x00ef, 7)
+packetLen(0x00EF, 7)
 #elif PACKETVER >= 20080422
-packetLen(0x00ef, 2)
+packetLen(0x00EF, 2)
 #elif PACKETVER >= 20080408
-packetLen(0x00ef, -1)
+packetLen(0x00EF, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x00ef, 57)
+packetLen(0x00EF, 57)
 #elif PACKETVER >= 20080325
-packetLen(0x00ef, 10)
+packetLen(0x00EF, 10)
 #elif PACKETVER >= 20080318
-packetLen(0x00ef, 90)
+packetLen(0x00EF, 90)
 #elif PACKETVER >= 20080311
-packetLen(0x00ef, -1)
+packetLen(0x00EF, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x00ef, 6)
+packetLen(0x00EF, 6)
 #elif PACKETVER >= 20080226
-packetLen(0x00ef, -1)
+packetLen(0x00EF, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x00ef, 7)
+packetLen(0x00EF, 7)
 #elif PACKETVER >= 20080102
-packetLen(0x00ef, 2)
+packetLen(0x00EF, 2)
 #endif
 
 // Packet: 0x00f0
 #if PACKETVER >= 20080701
-packetLen(0x00f0, 11)
+packetLen(0x00F0, 11)
 #elif PACKETVER >= 20080617
-packetLen(0x00f0, -1)
+packetLen(0x00F0, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x00f0, 60)
+packetLen(0x00F0, 60)
 #elif PACKETVER >= 20080603
-packetLen(0x00f0, 6)
+packetLen(0x00F0, 6)
 #elif PACKETVER >= 20080528
-packetLen(0x00f0, -1)
+packetLen(0x00F0, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x00f0, 14)
+packetLen(0x00F0, 14)
 #elif PACKETVER >= 20080513
-packetLen(0x00f0, 43)
+packetLen(0x00F0, 43)
 #elif PACKETVER >= 20080429
-packetLen(0x00f0, -1)
+packetLen(0x00F0, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x00f0, 30)
+packetLen(0x00F0, 30)
 #elif PACKETVER >= 20080415
-packetLen(0x00f0, 2)
+packetLen(0x00F0, 2)
 #elif PACKETVER >= 20080408
-packetLen(0x00f0, -1)
+packetLen(0x00F0, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x00f0, 90)
+packetLen(0x00F0, 90)
 #elif PACKETVER >= 20080325
-packetLen(0x00f0, 24)
+packetLen(0x00F0, 24)
 #elif PACKETVER >= 20080318
-packetLen(0x00f0, 6)
+packetLen(0x00F0, 6)
 #elif PACKETVER >= 20080311
-packetLen(0x00f0, 3)
+packetLen(0x00F0, 3)
 #elif PACKETVER >= 20080304
-packetLen(0x00f0, 7)
+packetLen(0x00F0, 7)
 #elif PACKETVER >= 20080226
-packetLen(0x00f0, 3)
+packetLen(0x00F0, 3)
 #elif PACKETVER >= 20080219
-packetLen(0x00f0, 27)
+packetLen(0x00F0, 27)
 #elif PACKETVER >= 20080124
-packetLen(0x00f0, 6)
+packetLen(0x00F0, 6)
 #elif PACKETVER >= 20080102
-packetLen(0x00f0, 3)
+packetLen(0x00F0, 3)
 #endif
 
 // Packet: 0x00f1
-packetLen(0x00f1, 2)
+packetLen(0x00F1, 2)
 
 // Packet: 0x00f2
 #if PACKETVER >= 20080701
-packetLen(0x00f2, 4)
+packetLen(0x00F2, 4)
 #elif PACKETVER >= 20080624
-packetLen(0x00f2, -1)
+packetLen(0x00F2, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x00f2, 10)
+packetLen(0x00F2, 10)
 #elif PACKETVER >= 20080610
-packetLen(0x00f2, 39)
+packetLen(0x00F2, 39)
 #elif PACKETVER >= 20080603
-packetLen(0x00f2, -1)
+packetLen(0x00F2, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x00f2, 6)
+packetLen(0x00F2, 6)
 #elif PACKETVER >= 20080520
-packetLen(0x00f2, -1)
+packetLen(0x00F2, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x00f2, 39)
+packetLen(0x00F2, 39)
 #elif PACKETVER >= 20080507
-packetLen(0x00f2, 54)
+packetLen(0x00F2, 54)
 #elif PACKETVER >= 20080429
-packetLen(0x00f2, -1)
+packetLen(0x00F2, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x00f2, 31)
+packetLen(0x00F2, 31)
 #elif PACKETVER >= 20080415
-packetLen(0x00f2, 10)
+packetLen(0x00F2, 10)
 #elif PACKETVER >= 20080408
-packetLen(0x00f2, -1)
+packetLen(0x00F2, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x00f2, 86)
+packetLen(0x00F2, 86)
 #elif PACKETVER >= 20080325
-packetLen(0x00f2, 60)
+packetLen(0x00F2, 60)
 #elif PACKETVER >= 20080318
-packetLen(0x00f2, -1)
+packetLen(0x00F2, -1)
 #elif PACKETVER >= 20080311
-packetLen(0x00f2, 26)
+packetLen(0x00F2, 26)
 #elif PACKETVER >= 20080304
-packetLen(0x00f2, -1)
+packetLen(0x00F2, -1)
 #elif PACKETVER >= 20080226
-packetLen(0x00f2, 14)
+packetLen(0x00F2, 14)
 #elif PACKETVER >= 20080219
-packetLen(0x00f2, 6)
+packetLen(0x00F2, 6)
 #elif PACKETVER >= 20080124
-packetLen(0x00f2, 13)
+packetLen(0x00F2, 13)
 #elif PACKETVER >= 20080102
-packetLen(0x00f2, 6)
+packetLen(0x00F2, 6)
 #endif
 
 // Packet: 0x00f3
-packetLen(0x00f3, -1)
+packetLen(0x00F3, -1)
 
 // Packet: 0x00f4
 #if PACKETVER >= 20080624
-packetLen(0x00f4, -1)
+packetLen(0x00F4, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x00f4, 11)
+packetLen(0x00F4, 11)
 #elif PACKETVER >= 20080528
-packetLen(0x00f4, -1)
+packetLen(0x00F4, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x00f4, 3)
+packetLen(0x00F4, 3)
 #elif PACKETVER >= 20080507
-packetLen(0x00f4, 8)
+packetLen(0x00F4, 8)
 #elif PACKETVER >= 20080429
-packetLen(0x00f4, 2)
+packetLen(0x00F4, 2)
 #elif PACKETVER >= 20080422
-packetLen(0x00f4, 3)
+packetLen(0x00F4, 3)
 #elif PACKETVER >= 20080415
-packetLen(0x00f4, -1)
+packetLen(0x00F4, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x00f4, 35)
+packetLen(0x00F4, 35)
 #elif PACKETVER >= 20080401
-packetLen(0x00f4, 282)
+packetLen(0x00F4, 282)
 #elif PACKETVER >= 20080325
-packetLen(0x00f4, 6)
+packetLen(0x00F4, 6)
 #elif PACKETVER >= 20080318
-packetLen(0x00f4, 8)
+packetLen(0x00F4, 8)
 #elif PACKETVER >= 20080311
-packetLen(0x00f4, 2)
+packetLen(0x00F4, 2)
 #elif PACKETVER >= 20080304
-packetLen(0x00f4, 8)
+packetLen(0x00F4, 8)
 #elif PACKETVER >= 20080226
-packetLen(0x00f4, 6)
+packetLen(0x00F4, 6)
 #elif PACKETVER >= 20080219
-packetLen(0x00f4, -1)
+packetLen(0x00F4, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x00f4, 10)
+packetLen(0x00F4, 10)
 #elif PACKETVER >= 20080102
-packetLen(0x00f4, 21)
+packetLen(0x00F4, 21)
 #endif
 
 // Packet: 0x00f5
-packetLen(0x00f5, 11)
+packetLen(0x00F5, 11)
 
 // Packet: 0x00f6
 #if PACKETVER >= 20080701
-packetLen(0x00f6, 11)
+packetLen(0x00F6, 11)
 #elif PACKETVER >= 20080624
-packetLen(0x00f6, 6)
+packetLen(0x00F6, 6)
 #elif PACKETVER >= 20080617
-packetLen(0x00f6, 26)
+packetLen(0x00F6, 26)
 #elif PACKETVER >= 20080610
-packetLen(0x00f6, 6)
+packetLen(0x00F6, 6)
 #elif PACKETVER >= 20080603
-packetLen(0x00f6, -1)
+packetLen(0x00F6, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x00f6, 10)
+packetLen(0x00F6, 10)
 #elif PACKETVER >= 20080520
-packetLen(0x00f6, 8)
+packetLen(0x00F6, 8)
 #elif PACKETVER >= 20080513
-packetLen(0x00f6, 6)
+packetLen(0x00F6, 6)
 #elif PACKETVER >= 20080422
-packetLen(0x00f6, -1)
+packetLen(0x00F6, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x00f6, 4)
+packetLen(0x00F6, 4)
 #elif PACKETVER >= 20080408
-packetLen(0x00f6, 65)
+packetLen(0x00F6, 65)
 #elif PACKETVER >= 20080401
-packetLen(0x00f6, 7)
+packetLen(0x00F6, 7)
 #elif PACKETVER >= 20080325
-packetLen(0x00f6, 6)
+packetLen(0x00F6, 6)
 #elif PACKETVER >= 20080318
-packetLen(0x00f6, 2)
+packetLen(0x00F6, 2)
 #elif PACKETVER >= 20080311
-packetLen(0x00f6, 7)
+packetLen(0x00F6, 7)
 #elif PACKETVER >= 20080304
-packetLen(0x00f6, 65)
+packetLen(0x00F6, 65)
 #elif PACKETVER >= 20080226
-packetLen(0x00f6, -1)
+packetLen(0x00F6, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x00f6, 23)
+packetLen(0x00F6, 23)
 #elif PACKETVER >= 20080124
-packetLen(0x00f6, 39)
+packetLen(0x00F6, 39)
 #elif PACKETVER >= 20080102
-packetLen(0x00f6, 8)
+packetLen(0x00F6, 8)
 #endif
 
 // Packet: 0x00f7
-packetLen(0x00f7, 17)
+packetLen(0x00F7, 17)
 
 // Packet: 0x00f8
 #if PACKETVER >= 20080701
-packetLen(0x00f8, -1)
+packetLen(0x00F8, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x00f8, 26)
+packetLen(0x00F8, 26)
 #elif PACKETVER >= 20080617
-packetLen(0x00f8, 17)
+packetLen(0x00F8, 17)
 #elif PACKETVER >= 20080610
-packetLen(0x00f8, 30)
+packetLen(0x00F8, 30)
 #elif PACKETVER >= 20080603
-packetLen(0x00f8, 10)
+packetLen(0x00F8, 10)
 #elif PACKETVER >= 20080528
-packetLen(0x00f8, 2)
+packetLen(0x00F8, 2)
 #elif PACKETVER >= 20080513
-packetLen(0x00f8, -1)
+packetLen(0x00F8, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x00f8, 6)
+packetLen(0x00F8, 6)
 #elif PACKETVER >= 20080422
-packetLen(0x00f8, -1)
+packetLen(0x00F8, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x00f8, 6)
+packetLen(0x00F8, 6)
 #elif PACKETVER >= 20080408
-packetLen(0x00f8, -1)
+packetLen(0x00F8, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x00f8, 3)
+packetLen(0x00F8, 3)
 #elif PACKETVER >= 20080325
-packetLen(0x00f8, 6)
+packetLen(0x00F8, 6)
 #elif PACKETVER >= 20080318
-packetLen(0x00f8, -1)
+packetLen(0x00F8, -1)
 #elif PACKETVER >= 20080311
-packetLen(0x00f8, 12)
+packetLen(0x00F8, 12)
 #elif PACKETVER >= 20080304
-packetLen(0x00f8, -1)
+packetLen(0x00F8, -1)
 #elif PACKETVER >= 20080226
-packetLen(0x00f8, 2)
+packetLen(0x00F8, 2)
 #elif PACKETVER >= 20080219
-packetLen(0x00f8, 12)
+packetLen(0x00F8, 12)
 #elif PACKETVER >= 20080124
-packetLen(0x00f8, 43)
+packetLen(0x00F8, 43)
 #elif PACKETVER >= 20080102
-packetLen(0x00f8, 2)
+packetLen(0x00F8, 2)
 #endif
 
 // Packet: 0x00f9
 #if PACKETVER >= 20080701
-packetLen(0x00f9, 6)
+packetLen(0x00F9, 6)
 #elif PACKETVER >= 20080610
-packetLen(0x00f9, -1)
+packetLen(0x00F9, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x00f9, 10)
+packetLen(0x00F9, 10)
 #elif PACKETVER >= 20080528
-packetLen(0x00f9, 6)
+packetLen(0x00F9, 6)
 #elif PACKETVER >= 20080520
-packetLen(0x00f9, 3)
+packetLen(0x00F9, 3)
 #elif PACKETVER >= 20080513
-packetLen(0x00f9, -1)
+packetLen(0x00F9, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x00f9, 5)
+packetLen(0x00F9, 5)
 #elif PACKETVER >= 20080429
-packetLen(0x00f9, -1)
+packetLen(0x00F9, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x00f9, 26)
+packetLen(0x00F9, 26)
 #elif PACKETVER >= 20080415
-packetLen(0x00f9, 13)
+packetLen(0x00F9, 13)
 #elif PACKETVER >= 20080408
-packetLen(0x00f9, 6)
+packetLen(0x00F9, 6)
 #elif PACKETVER >= 20080401
-packetLen(0x00f9, 8)
+packetLen(0x00F9, 8)
 #elif PACKETVER >= 20080325
-packetLen(0x00f9, -1)
+packetLen(0x00F9, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x00f9, 10)
+packetLen(0x00F9, 10)
 #elif PACKETVER >= 20080311
-packetLen(0x00f9, 114)
+packetLen(0x00F9, 114)
 #elif PACKETVER >= 20080304
-packetLen(0x00f9, 12)
+packetLen(0x00F9, 12)
 #elif PACKETVER >= 20080226
-packetLen(0x00f9, 4)
+packetLen(0x00F9, 4)
 #elif PACKETVER >= 20080219
-packetLen(0x00f9, 8)
+packetLen(0x00F9, 8)
 #elif PACKETVER >= 20080124
-packetLen(0x00f9, 10)
+packetLen(0x00F9, 10)
 #elif PACKETVER >= 20080102
-packetLen(0x00f9, 26)
+packetLen(0x00F9, 26)
 #endif
 
 // Packet: 0x00fa
 #if PACKETVER >= 20080603
-packetLen(0x00fa, -1)
+packetLen(0x00FA, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x00fa, 8)
+packetLen(0x00FA, 8)
 #elif PACKETVER >= 20080520
-packetLen(0x00fa, -1)
+packetLen(0x00FA, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x00fa, 4)
+packetLen(0x00FA, 4)
 #elif PACKETVER >= 20080507
-packetLen(0x00fa, 30)
+packetLen(0x00FA, 30)
 #elif PACKETVER >= 20080429
-packetLen(0x00fa, 26)
+packetLen(0x00FA, 26)
 #elif PACKETVER >= 20080422
-packetLen(0x00fa, -1)
+packetLen(0x00FA, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x00fa, 15)
+packetLen(0x00FA, 15)
 #elif PACKETVER >= 20080408
-packetLen(0x00fa, 30)
+packetLen(0x00FA, 30)
 #elif PACKETVER >= 20080401
-packetLen(0x00fa, 29)
+packetLen(0x00FA, 29)
 #elif PACKETVER >= 20080325
-packetLen(0x00fa, 30)
+packetLen(0x00FA, 30)
 #elif PACKETVER >= 20080318
-packetLen(0x00fa, 10)
+packetLen(0x00FA, 10)
 #elif PACKETVER >= 20080311
-packetLen(0x00fa, -1)
+packetLen(0x00FA, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x00fa, 20)
+packetLen(0x00FA, 20)
 #elif PACKETVER >= 20080226
-packetLen(0x00fa, 3)
+packetLen(0x00FA, 3)
 #elif PACKETVER >= 20080219
-packetLen(0x00fa, 10)
+packetLen(0x00FA, 10)
 #elif PACKETVER >= 20080124
-packetLen(0x00fa, 6)
+packetLen(0x00FA, 6)
 #elif PACKETVER >= 20080102
-packetLen(0x00fa, 3)
+packetLen(0x00FA, 3)
 #endif
 
 // Packet: 0x00fb
 #if PACKETVER >= 20080701
-packetLen(0x00fb, -1)
+packetLen(0x00FB, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x00fb, 26)
+packetLen(0x00FB, 26)
 #elif PACKETVER >= 20080617
-packetLen(0x00fb, 3)
+packetLen(0x00FB, 3)
 #elif PACKETVER >= 20080610
-packetLen(0x00fb, 4)
+packetLen(0x00FB, 4)
 #elif PACKETVER >= 20080603
-packetLen(0x00fb, 17)
+packetLen(0x00FB, 17)
 #elif PACKETVER >= 20080528
-packetLen(0x00fb, 4)
+packetLen(0x00FB, 4)
 #elif PACKETVER >= 20080520
-packetLen(0x00fb, 29)
+packetLen(0x00FB, 29)
 #elif PACKETVER >= 20080513
-packetLen(0x00fb, -1)
+packetLen(0x00FB, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x00fb, 28)
+packetLen(0x00FB, 28)
 #elif PACKETVER >= 20080429
-packetLen(0x00fb, 6)
+packetLen(0x00FB, 6)
 #elif PACKETVER >= 20080408
-packetLen(0x00fb, -1)
+packetLen(0x00FB, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x00fb, 3)
+packetLen(0x00FB, 3)
 #elif PACKETVER >= 20080318
-packetLen(0x00fb, 26)
+packetLen(0x00FB, 26)
 #elif PACKETVER >= 20080311
-packetLen(0x00fb, 2)
+packetLen(0x00FB, 2)
 #elif PACKETVER >= 20080304
-packetLen(0x00fb, 4)
+packetLen(0x00FB, 4)
 #elif PACKETVER >= 20080226
-packetLen(0x00fb, 5)
+packetLen(0x00FB, 5)
 #elif PACKETVER >= 20080219
-packetLen(0x00fb, 10)
+packetLen(0x00FB, 10)
 #elif PACKETVER >= 20080124
-packetLen(0x00fb, 5)
+packetLen(0x00FB, 5)
 #elif PACKETVER >= 20080102
-packetLen(0x00fb, -1)
+packetLen(0x00FB, -1)
 #endif
 
 // Packet: 0x00fc
 #if PACKETVER >= 20080701
-packetLen(0x00fc, 22)
+packetLen(0x00FC, 22)
 #elif PACKETVER >= 20080610
-packetLen(0x00fc, -1)
+packetLen(0x00FC, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x00fc, 18)
+packetLen(0x00FC, 18)
 #elif PACKETVER >= 20080528
-packetLen(0x00fc, -1)
+packetLen(0x00FC, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x00fc, 6)
+packetLen(0x00FC, 6)
 #elif PACKETVER >= 20080507
-packetLen(0x00fc, -1)
+packetLen(0x00FC, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x00fc, 53)
+packetLen(0x00FC, 53)
 #elif PACKETVER >= 20080422
-packetLen(0x00fc, 6)
+packetLen(0x00FC, 6)
 #elif PACKETVER >= 20080401
-packetLen(0x00fc, -1)
+packetLen(0x00FC, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x00fc, 17)
+packetLen(0x00FC, 17)
 #elif PACKETVER >= 20080318
-packetLen(0x00fc, 27)
+packetLen(0x00FC, 27)
 #elif PACKETVER >= 20080311
-packetLen(0x00fc, 24)
+packetLen(0x00FC, 24)
 #elif PACKETVER >= 20080304
-packetLen(0x00fc, 30)
+packetLen(0x00FC, 30)
 #elif PACKETVER >= 20080226
-packetLen(0x00fc, 6)
+packetLen(0x00FC, 6)
 #elif PACKETVER >= 20080219
-packetLen(0x00fc, 19)
+packetLen(0x00FC, 19)
 #elif PACKETVER >= 20080124
-packetLen(0x00fc, 2)
+packetLen(0x00FC, 2)
 #elif PACKETVER >= 20080102
-packetLen(0x00fc, 6)
+packetLen(0x00FC, 6)
 #endif
 
 // Packet: 0x00fd
 #if PACKETVER >= 20080617
-packetLen(0x00fd, -1)
+packetLen(0x00FD, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x00fd, 6)
+packetLen(0x00FD, 6)
 #elif PACKETVER >= 20080603
-packetLen(0x00fd, 97)
+packetLen(0x00FD, 97)
 #elif PACKETVER >= 20080528
-packetLen(0x00fd, 3)
+packetLen(0x00FD, 3)
 #elif PACKETVER >= 20080520
-packetLen(0x00fd, -1)
+packetLen(0x00FD, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x00fd, 2)
+packetLen(0x00FD, 2)
 #elif PACKETVER >= 20080507
-packetLen(0x00fd, 8)
+packetLen(0x00FD, 8)
 #elif PACKETVER >= 20080415
-packetLen(0x00fd, -1)
+packetLen(0x00FD, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x00fd, 2)
+packetLen(0x00FD, 2)
 #elif PACKETVER >= 20080401
-packetLen(0x00fd, -1)
+packetLen(0x00FD, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x00fd, 8)
+packetLen(0x00FD, 8)
 #elif PACKETVER >= 20080318
-packetLen(0x00fd, 18)
+packetLen(0x00FD, 18)
 #elif PACKETVER >= 20080311
-packetLen(0x00fd, 3)
+packetLen(0x00FD, 3)
 #elif PACKETVER >= 20080304
-packetLen(0x00fd, -1)
+packetLen(0x00FD, -1)
 #elif PACKETVER >= 20080226
-packetLen(0x00fd, 20)
+packetLen(0x00FD, 20)
 #elif PACKETVER >= 20080219
-packetLen(0x00fd, 11)
+packetLen(0x00FD, 11)
 #elif PACKETVER >= 20080124
-packetLen(0x00fd, 42)
+packetLen(0x00FD, 42)
 #elif PACKETVER >= 20080102
-packetLen(0x00fd, 27)
+packetLen(0x00FD, 27)
 #endif
 
 // Packet: 0x00fe
 #if PACKETVER >= 20080617
-packetLen(0x00fe, -1)
+packetLen(0x00FE, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x00fe, 2)
+packetLen(0x00FE, 2)
 #elif PACKETVER >= 20080520
-packetLen(0x00fe, -1)
+packetLen(0x00FE, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x00fe, 6)
+packetLen(0x00FE, 6)
 #elif PACKETVER >= 20080429
-packetLen(0x00fe, -1)
+packetLen(0x00FE, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x00fe, 30)
+packetLen(0x00FE, 30)
 #elif PACKETVER >= 20080415
-packetLen(0x00fe, -1)
+packetLen(0x00FE, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x00fe, 6)
+packetLen(0x00FE, 6)
 #elif PACKETVER >= 20080401
-packetLen(0x00fe, 186)
+packetLen(0x00FE, 186)
 #elif PACKETVER >= 20080325
-packetLen(0x00fe, 4)
+packetLen(0x00FE, 4)
 #elif PACKETVER >= 20080318
-packetLen(0x00fe, 32)
+packetLen(0x00FE, 32)
 #elif PACKETVER >= 20080311
-packetLen(0x00fe, 4)
+packetLen(0x00FE, 4)
 #elif PACKETVER >= 20080304
-packetLen(0x00fe, 186)
+packetLen(0x00FE, 186)
 #elif PACKETVER >= 20080226
-packetLen(0x00fe, 7)
+packetLen(0x00FE, 7)
 #elif PACKETVER >= 20080219
-packetLen(0x00fe, 6)
+packetLen(0x00FE, 6)
 #elif PACKETVER >= 20080124
-packetLen(0x00fe, 4)
+packetLen(0x00FE, 4)
 #elif PACKETVER >= 20080102
-packetLen(0x00fe, 30)
+packetLen(0x00FE, 30)
 #endif
 
 // Packet: 0x00ff
 #if PACKETVER >= 20080701
-packetLen(0x00ff, 5)
+packetLen(0x00FF, 5)
 #elif PACKETVER >= 20080610
-packetLen(0x00ff, -1)
+packetLen(0x00FF, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x00ff, 7)
+packetLen(0x00FF, 7)
 #elif PACKETVER >= 20080528
-packetLen(0x00ff, -1)
+packetLen(0x00FF, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x00ff, 4)
+packetLen(0x00FF, 4)
 #elif PACKETVER >= 20080513
-packetLen(0x00ff, 22)
+packetLen(0x00FF, 22)
 #elif PACKETVER >= 20080507
-packetLen(0x00ff, 282)
+packetLen(0x00FF, 282)
 #elif PACKETVER >= 20080429
-packetLen(0x00ff, 6)
+packetLen(0x00FF, 6)
 #elif PACKETVER >= 20080422
-packetLen(0x00ff, 10)
+packetLen(0x00FF, 10)
 #elif PACKETVER >= 20080408
-packetLen(0x00ff, -1)
+packetLen(0x00FF, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x00ff, 79)
+packetLen(0x00FF, 79)
 #elif PACKETVER >= 20080325
-packetLen(0x00ff, 2)
+packetLen(0x00FF, 2)
 #elif PACKETVER >= 20080318
-packetLen(0x00ff, 10)
+packetLen(0x00FF, 10)
 #elif PACKETVER >= 20080311
-packetLen(0x00ff, 3)
+packetLen(0x00FF, 3)
 #elif PACKETVER >= 20080304
-packetLen(0x00ff, 59)
+packetLen(0x00FF, 59)
 #elif PACKETVER >= 20080226
-packetLen(0x00ff, 282)
+packetLen(0x00FF, 282)
 #elif PACKETVER >= 20080219
-packetLen(0x00ff, 6)
+packetLen(0x00FF, 6)
 #elif PACKETVER >= 20080124
-packetLen(0x00ff, 32)
+packetLen(0x00FF, 32)
 #elif PACKETVER >= 20080102
-packetLen(0x00ff, 10)
+packetLen(0x00FF, 10)
 #endif
 
 // Packet: 0x0100
@@ -5238,216 +5238,216 @@ packetLen(0x0109, -1)
 
 // Packet: 0x010a
 #if PACKETVER >= 20080610
-packetLen(0x010a, -1)
+packetLen(0x010A, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x010a, 34)
+packetLen(0x010A, 34)
 #elif PACKETVER >= 20080528
-packetLen(0x010a, 102)
+packetLen(0x010A, 102)
 #elif PACKETVER >= 20080520
-packetLen(0x010a, 3)
+packetLen(0x010A, 3)
 #elif PACKETVER >= 20080513
-packetLen(0x010a, 30)
+packetLen(0x010A, 30)
 #elif PACKETVER >= 20080507
-packetLen(0x010a, 31)
+packetLen(0x010A, 31)
 #elif PACKETVER >= 20080429
-packetLen(0x010a, -1)
+packetLen(0x010A, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x010a, 6)
+packetLen(0x010A, 6)
 #elif PACKETVER >= 20080408
-packetLen(0x010a, 114)
+packetLen(0x010A, 114)
 #elif PACKETVER >= 20080401
-packetLen(0x010a, 27)
+packetLen(0x010A, 27)
 #elif PACKETVER >= 20080325
-packetLen(0x010a, 12)
+packetLen(0x010A, 12)
 #elif PACKETVER >= 20080318
-packetLen(0x010a, 8)
+packetLen(0x010A, 8)
 #elif PACKETVER >= 20080311
-packetLen(0x010a, 4)
+packetLen(0x010A, 4)
 #elif PACKETVER >= 20080304
-packetLen(0x010a, -1)
+packetLen(0x010A, -1)
 #elif PACKETVER >= 20080226
-packetLen(0x010a, 6)
+packetLen(0x010A, 6)
 #elif PACKETVER >= 20080219
-packetLen(0x010a, -1)
+packetLen(0x010A, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x010a, 6)
+packetLen(0x010A, 6)
 #elif PACKETVER >= 20080102
-packetLen(0x010a, 4)
+packetLen(0x010A, 4)
 #endif
 
 // Packet: 0x010b
 #if PACKETVER >= 20080701
-packetLen(0x010b, 3)
+packetLen(0x010B, 3)
 #elif PACKETVER >= 20080624
-packetLen(0x010b, -1)
+packetLen(0x010B, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x010b, 8)
+packetLen(0x010B, 8)
 #elif PACKETVER >= 20080610
-packetLen(0x010b, 26)
+packetLen(0x010B, 26)
 #elif PACKETVER >= 20080603
-packetLen(0x010b, 6)
+packetLen(0x010B, 6)
 #elif PACKETVER >= 20080520
-packetLen(0x010b, -1)
+packetLen(0x010B, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x010b, 4)
+packetLen(0x010B, 4)
 #elif PACKETVER >= 20080429
-packetLen(0x010b, 3)
+packetLen(0x010B, 3)
 #elif PACKETVER >= 20080422
-packetLen(0x010b, -1)
+packetLen(0x010B, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x010b, 6)
+packetLen(0x010B, 6)
 #elif PACKETVER >= 20080408
-packetLen(0x010b, -1)
+packetLen(0x010B, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x010b, 28)
+packetLen(0x010B, 28)
 #elif PACKETVER >= 20080325
-packetLen(0x010b, -1)
+packetLen(0x010B, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x010b, 17)
+packetLen(0x010B, 17)
 #elif PACKETVER >= 20080311
-packetLen(0x010b, 3)
+packetLen(0x010B, 3)
 #elif PACKETVER >= 20080304
-packetLen(0x010b, 114)
+packetLen(0x010B, 114)
 #elif PACKETVER >= 20080226
-packetLen(0x010b, 9)
+packetLen(0x010B, 9)
 #elif PACKETVER >= 20080219
-packetLen(0x010b, 24)
+packetLen(0x010B, 24)
 #elif PACKETVER >= 20080102
-packetLen(0x010b, 6)
+packetLen(0x010B, 6)
 #endif
 
 // Packet: 0x010c
 #if PACKETVER >= 20080701
-packetLen(0x010c, 7)
+packetLen(0x010C, 7)
 #elif PACKETVER >= 20080624
-packetLen(0x010c, 23)
+packetLen(0x010C, 23)
 #elif PACKETVER >= 20080610
-packetLen(0x010c, -1)
+packetLen(0x010C, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x010c, 31)
+packetLen(0x010C, 31)
 #elif PACKETVER >= 20080528
-packetLen(0x010c, 30)
+packetLen(0x010C, 30)
 #elif PACKETVER >= 20080520
-packetLen(0x010c, 8)
+packetLen(0x010C, 8)
 #elif PACKETVER >= 20080507
-packetLen(0x010c, 2)
+packetLen(0x010C, 2)
 #elif PACKETVER >= 20080429
-packetLen(0x010c, -1)
+packetLen(0x010C, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x010c, 26)
+packetLen(0x010C, 26)
 #elif PACKETVER >= 20080408
-packetLen(0x010c, -1)
+packetLen(0x010C, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x010c, 6)
+packetLen(0x010C, 6)
 #elif PACKETVER >= 20080325
-packetLen(0x010c, 11)
+packetLen(0x010C, 11)
 #elif PACKETVER >= 20080318
-packetLen(0x010c, -1)
+packetLen(0x010C, -1)
 #elif PACKETVER >= 20080311
-packetLen(0x010c, 282)
+packetLen(0x010C, 282)
 #elif PACKETVER >= 20080304
-packetLen(0x010c, 2)
+packetLen(0x010C, 2)
 #elif PACKETVER >= 20080226
-packetLen(0x010c, 14)
+packetLen(0x010C, 14)
 #elif PACKETVER >= 20080219
-packetLen(0x010c, -1)
+packetLen(0x010C, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x010c, 4)
+packetLen(0x010C, 4)
 #elif PACKETVER >= 20080102
-packetLen(0x010c, 6)
+packetLen(0x010C, 6)
 #endif
 
 // Packet: 0x010d
-packetLen(0x010d, 2)
+packetLen(0x010D, 2)
 
 // Packet: 0x010e
 #if PACKETVER >= 20080701
-packetLen(0x010e, -1)
+packetLen(0x010E, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x010e, 33)
+packetLen(0x010E, 33)
 #elif PACKETVER >= 20080617
-packetLen(0x010e, 11)
+packetLen(0x010E, 11)
 #elif PACKETVER >= 20080610
-packetLen(0x010e, 8)
+packetLen(0x010E, 8)
 #elif PACKETVER >= 20080603
-packetLen(0x010e, 6)
+packetLen(0x010E, 6)
 #elif PACKETVER >= 20080528
-packetLen(0x010e, 2)
+packetLen(0x010E, 2)
 #elif PACKETVER >= 20080520
-packetLen(0x010e, 6)
+packetLen(0x010E, 6)
 #elif PACKETVER >= 20080513
-packetLen(0x010e, 14)
+packetLen(0x010E, 14)
 #elif PACKETVER >= 20080507
-packetLen(0x010e, 10)
+packetLen(0x010E, 10)
 #elif PACKETVER >= 20080429
-packetLen(0x010e, 67)
+packetLen(0x010E, 67)
 #elif PACKETVER >= 20080415
-packetLen(0x010e, -1)
+packetLen(0x010E, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x010e, 12)
+packetLen(0x010E, 12)
 #elif PACKETVER >= 20080401
-packetLen(0x010e, -1)
+packetLen(0x010E, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x010e, 30)
+packetLen(0x010E, 30)
 #elif PACKETVER >= 20080318
-packetLen(0x010e, 53)
+packetLen(0x010E, 53)
 #elif PACKETVER >= 20080311
-packetLen(0x010e, 71)
+packetLen(0x010E, 71)
 #elif PACKETVER >= 20080304
-packetLen(0x010e, 26)
+packetLen(0x010E, 26)
 #elif PACKETVER >= 20080226
-packetLen(0x010e, 7)
+packetLen(0x010E, 7)
 #elif PACKETVER >= 20080219
-packetLen(0x010e, -1)
+packetLen(0x010E, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x010e, 6)
+packetLen(0x010E, 6)
 #elif PACKETVER >= 20080102
-packetLen(0x010e, 11)
+packetLen(0x010E, 11)
 #endif
 
 // Packet: 0x010f
 #if PACKETVER >= 20080701
-packetLen(0x010f, -1)
+packetLen(0x010F, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x010f, 2)
+packetLen(0x010F, 2)
 #elif PACKETVER >= 20080617
-packetLen(0x010f, -1)
+packetLen(0x010F, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x010f, 30)
+packetLen(0x010F, 30)
 #elif PACKETVER >= 20080603
-packetLen(0x010f, 5)
+packetLen(0x010F, 5)
 #elif PACKETVER >= 20080528
-packetLen(0x010f, -1)
+packetLen(0x010F, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x010f, 6)
+packetLen(0x010F, 6)
 #elif PACKETVER >= 20080513
-packetLen(0x010f, 17)
+packetLen(0x010F, 17)
 #elif PACKETVER >= 20080507
-packetLen(0x010f, -1)
+packetLen(0x010F, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x010f, 11)
+packetLen(0x010F, 11)
 #elif PACKETVER >= 20080422
-packetLen(0x010f, -1)
+packetLen(0x010F, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x010f, 4)
+packetLen(0x010F, 4)
 #elif PACKETVER >= 20080408
-packetLen(0x010f, 8)
+packetLen(0x010F, 8)
 #elif PACKETVER >= 20080325
-packetLen(0x010f, -1)
+packetLen(0x010F, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x010f, 6)
+packetLen(0x010F, 6)
 #elif PACKETVER >= 20080311
-packetLen(0x010f, 2)
+packetLen(0x010F, 2)
 #elif PACKETVER >= 20080304
-packetLen(0x010f, 17)
+packetLen(0x010F, 17)
 #elif PACKETVER >= 20080226
-packetLen(0x010f, -1)
+packetLen(0x010F, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x010f, 30)
+packetLen(0x010F, 30)
 #elif PACKETVER >= 20080124
-packetLen(0x010f, 11)
+packetLen(0x010F, 11)
 #elif PACKETVER >= 20080102
-packetLen(0x010f, -1)
+packetLen(0x010F, -1)
 #endif
 
 // Packet: 0x0110
@@ -5736,248 +5736,248 @@ packetLen(0x0119, 13)
 
 // Packet: 0x011a
 #if PACKETVER >= 20080701
-packetLen(0x011a, 11)
+packetLen(0x011A, 11)
 #elif PACKETVER >= 20080624
-packetLen(0x011a, 3)
+packetLen(0x011A, 3)
 #elif PACKETVER >= 20080617
-packetLen(0x011a, 6)
+packetLen(0x011A, 6)
 #elif PACKETVER >= 20080610
-packetLen(0x011a, 26)
+packetLen(0x011A, 26)
 #elif PACKETVER >= 20080603
-packetLen(0x011a, -1)
+packetLen(0x011A, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x011a, 8)
+packetLen(0x011A, 8)
 #elif PACKETVER >= 20080520
-packetLen(0x011a, 6)
+packetLen(0x011A, 6)
 #elif PACKETVER >= 20080513
-packetLen(0x011a, -1)
+packetLen(0x011A, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x011a, 3)
+packetLen(0x011A, 3)
 #elif PACKETVER >= 20080429
-packetLen(0x011a, 17)
+packetLen(0x011A, 17)
 #elif PACKETVER >= 20080408
-packetLen(0x011a, 4)
+packetLen(0x011A, 4)
 #elif PACKETVER >= 20080401
-packetLen(0x011a, 8)
+packetLen(0x011A, 8)
 #elif PACKETVER >= 20080325
-packetLen(0x011a, 36)
+packetLen(0x011A, 36)
 #elif PACKETVER >= 20080318
-packetLen(0x011a, -1)
+packetLen(0x011A, -1)
 #elif PACKETVER >= 20080311
-packetLen(0x011a, 6)
+packetLen(0x011A, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x011a, 2)
+packetLen(0x011A, 2)
 #elif PACKETVER >= 20080226
-packetLen(0x011a, 10)
+packetLen(0x011A, 10)
 #elif PACKETVER >= 20080219
-packetLen(0x011a, 11)
+packetLen(0x011A, 11)
 #elif PACKETVER >= 20080124
-packetLen(0x011a, 2)
+packetLen(0x011A, 2)
 #elif PACKETVER >= 20080102
-packetLen(0x011a, 15)
+packetLen(0x011A, 15)
 #endif
 
 // Packet: 0x011b
 #if PACKETVER >= 20080528
-packetLen(0x011b, -1)
+packetLen(0x011B, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x011b, 2)
+packetLen(0x011B, 2)
 #elif PACKETVER >= 20080513
-packetLen(0x011b, 58)
+packetLen(0x011B, 58)
 #elif PACKETVER >= 20080507
-packetLen(0x011b, -1)
+packetLen(0x011B, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x011b, 10)
+packetLen(0x011B, 10)
 #elif PACKETVER >= 20080422
-packetLen(0x011b, 20)
+packetLen(0x011B, 20)
 #elif PACKETVER >= 20080415
-packetLen(0x011b, -1)
+packetLen(0x011B, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x011b, 4)
+packetLen(0x011B, 4)
 #elif PACKETVER >= 20080401
-packetLen(0x011b, -1)
+packetLen(0x011B, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x011b, 39)
+packetLen(0x011B, 39)
 #elif PACKETVER >= 20080311
-packetLen(0x011b, -1)
+packetLen(0x011B, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x011b, 58)
+packetLen(0x011B, 58)
 #elif PACKETVER >= 20080226
-packetLen(0x011b, 2)
+packetLen(0x011B, 2)
 #elif PACKETVER >= 20080124
-packetLen(0x011b, -1)
+packetLen(0x011B, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x011b, 20)
+packetLen(0x011B, 20)
 #endif
 
 // Packet: 0x011c
 #if PACKETVER >= 20080617
-packetLen(0x011c, -1)
+packetLen(0x011C, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x011c, 14)
+packetLen(0x011C, 14)
 #elif PACKETVER >= 20080603
-packetLen(0x011c, 8)
+packetLen(0x011C, 8)
 #elif PACKETVER >= 20080528
-packetLen(0x011c, -1)
+packetLen(0x011C, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x011c, 2)
+packetLen(0x011C, 2)
 #elif PACKETVER >= 20080513
-packetLen(0x011c, 8)
+packetLen(0x011C, 8)
 #elif PACKETVER >= 20080507
-packetLen(0x011c, 282)
+packetLen(0x011C, 282)
 #elif PACKETVER >= 20080429
-packetLen(0x011c, 5)
+packetLen(0x011C, 5)
 #elif PACKETVER >= 20080422
-packetLen(0x011c, -1)
+packetLen(0x011C, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x011c, 31)
+packetLen(0x011C, 31)
 #elif PACKETVER >= 20080408
-packetLen(0x011c, 3)
+packetLen(0x011C, 3)
 #elif PACKETVER >= 20080401
-packetLen(0x011c, 7)
+packetLen(0x011C, 7)
 #elif PACKETVER >= 20080325
-packetLen(0x011c, 26)
+packetLen(0x011C, 26)
 #elif PACKETVER >= 20080318
-packetLen(0x011c, 6)
+packetLen(0x011C, 6)
 #elif PACKETVER >= 20080311
-packetLen(0x011c, 3)
+packetLen(0x011C, 3)
 #elif PACKETVER >= 20080304
-packetLen(0x011c, 32)
+packetLen(0x011C, 32)
 #elif PACKETVER >= 20080226
-packetLen(0x011c, 6)
+packetLen(0x011C, 6)
 #elif PACKETVER >= 20080219
-packetLen(0x011c, 4)
+packetLen(0x011C, 4)
 #elif PACKETVER >= 20080124
-packetLen(0x011c, 2)
+packetLen(0x011C, 2)
 #elif PACKETVER >= 20080102
-packetLen(0x011c, 68)
+packetLen(0x011C, 68)
 #endif
 
 // Packet: 0x011d
 #if PACKETVER >= 20080624
-packetLen(0x011d, -1)
+packetLen(0x011D, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x011d, 10)
+packetLen(0x011D, 10)
 #elif PACKETVER >= 20080610
-packetLen(0x011d, 28)
+packetLen(0x011D, 28)
 #elif PACKETVER >= 20080603
-packetLen(0x011d, 3)
+packetLen(0x011D, 3)
 #elif PACKETVER >= 20080528
-packetLen(0x011d, 14)
+packetLen(0x011D, 14)
 #elif PACKETVER >= 20080520
-packetLen(0x011d, 23)
+packetLen(0x011D, 23)
 #elif PACKETVER >= 20080513
-packetLen(0x011d, -1)
+packetLen(0x011D, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x011d, 81)
+packetLen(0x011D, 81)
 #elif PACKETVER >= 20080422
-packetLen(0x011d, 2)
+packetLen(0x011D, 2)
 #elif PACKETVER >= 20080415
-packetLen(0x011d, 6)
+packetLen(0x011D, 6)
 #elif PACKETVER >= 20080408
-packetLen(0x011d, 4)
+packetLen(0x011D, 4)
 #elif PACKETVER >= 20080325
-packetLen(0x011d, 10)
+packetLen(0x011D, 10)
 #elif PACKETVER >= 20080318
-packetLen(0x011d, 7)
+packetLen(0x011D, 7)
 #elif PACKETVER >= 20080311
-packetLen(0x011d, 3)
+packetLen(0x011D, 3)
 #elif PACKETVER >= 20080304
-packetLen(0x011d, 7)
+packetLen(0x011D, 7)
 #elif PACKETVER >= 20080219
-packetLen(0x011d, -1)
+packetLen(0x011D, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x011d, 26)
+packetLen(0x011D, 26)
 #elif PACKETVER >= 20080102
-packetLen(0x011d, 2)
+packetLen(0x011D, 2)
 #endif
 
 // Packet: 0x011e
 #if PACKETVER >= 20080624
-packetLen(0x011e, -1)
+packetLen(0x011E, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x011e, 33)
+packetLen(0x011E, 33)
 #elif PACKETVER >= 20080610
-packetLen(0x011e, 5)
+packetLen(0x011E, 5)
 #elif PACKETVER >= 20080603
-packetLen(0x011e, -1)
+packetLen(0x011E, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x011e, 6)
+packetLen(0x011E, 6)
 #elif PACKETVER >= 20080513
-packetLen(0x011e, -1)
+packetLen(0x011E, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x011e, 9)
+packetLen(0x011E, 9)
 #elif PACKETVER >= 20080429
-packetLen(0x011e, 10)
+packetLen(0x011E, 10)
 #elif PACKETVER >= 20080422
-packetLen(0x011e, 282)
+packetLen(0x011E, 282)
 #elif PACKETVER >= 20080415
-packetLen(0x011e, 30)
+packetLen(0x011E, 30)
 #elif PACKETVER >= 20080408
-packetLen(0x011e, 32)
+packetLen(0x011E, 32)
 #elif PACKETVER >= 20080401
-packetLen(0x011e, 9)
+packetLen(0x011E, 9)
 #elif PACKETVER >= 20080325
-packetLen(0x011e, 18)
+packetLen(0x011E, 18)
 #elif PACKETVER >= 20080318
-packetLen(0x011e, -1)
+packetLen(0x011E, -1)
 #elif PACKETVER >= 20080311
-packetLen(0x011e, 6)
+packetLen(0x011E, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x011e, 18)
+packetLen(0x011E, 18)
 #elif PACKETVER >= 20080219
-packetLen(0x011e, -1)
+packetLen(0x011E, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x011e, 7)
+packetLen(0x011E, 7)
 #elif PACKETVER >= 20080102
-packetLen(0x011e, 3)
+packetLen(0x011E, 3)
 #endif
 
 // Packet: 0x011f
 #if PACKETVER >= 20080701
-packetLen(0x011f, 11)
+packetLen(0x011F, 11)
 #elif PACKETVER >= 20080624
-packetLen(0x011f, -1)
+packetLen(0x011F, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x011f, 30)
+packetLen(0x011F, 30)
 #elif PACKETVER >= 20080610
-packetLen(0x011f, 10)
+packetLen(0x011F, 10)
 #elif PACKETVER >= 20080603
-packetLen(0x011f, 3)
+packetLen(0x011F, 3)
 #elif PACKETVER >= 20080528
-packetLen(0x011f, 282)
+packetLen(0x011F, 282)
 #elif PACKETVER >= 20080520
-packetLen(0x011f, -1)
+packetLen(0x011F, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x011f, 30)
+packetLen(0x011F, 30)
 #elif PACKETVER >= 20080507
-packetLen(0x011f, 6)
+packetLen(0x011F, 6)
 #elif PACKETVER >= 20080429
-packetLen(0x011f, -1)
+packetLen(0x011F, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x011f, 12)
+packetLen(0x011F, 12)
 #elif PACKETVER >= 20080415
-packetLen(0x011f, 2)
+packetLen(0x011F, 2)
 #elif PACKETVER >= 20080408
-packetLen(0x011f, 6)
+packetLen(0x011F, 6)
 #elif PACKETVER >= 20080401
-packetLen(0x011f, -1)
+packetLen(0x011F, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x011f, 10)
+packetLen(0x011F, 10)
 #elif PACKETVER >= 20080318
-packetLen(0x011f, -1)
+packetLen(0x011F, -1)
 #elif PACKETVER >= 20080311
-packetLen(0x011f, 60)
+packetLen(0x011F, 60)
 #elif PACKETVER >= 20080304
-packetLen(0x011f, 2)
+packetLen(0x011F, 2)
 #elif PACKETVER >= 20080226
-packetLen(0x011f, 8)
+packetLen(0x011F, 8)
 #elif PACKETVER >= 20080219
-packetLen(0x011f, 5)
+packetLen(0x011F, 5)
 #elif PACKETVER >= 20080124
-packetLen(0x011f, 2)
+packetLen(0x011F, 2)
 #elif PACKETVER >= 20080102
-packetLen(0x011f, 16)
+packetLen(0x011F, 16)
 #endif
 
 // Packet: 0x0120
@@ -6410,173 +6410,173 @@ packetLen(0x0129, 8)
 
 // Packet: 0x012a
 #if PACKETVER >= 20080624
-packetLen(0x012a, -1)
+packetLen(0x012A, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x012a, 6)
+packetLen(0x012A, 6)
 #elif PACKETVER >= 20080610
-packetLen(0x012a, -1)
+packetLen(0x012A, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x012a, 11)
+packetLen(0x012A, 11)
 #elif PACKETVER >= 20080528
-packetLen(0x012a, 8)
+packetLen(0x012A, 8)
 #elif PACKETVER >= 20080520
-packetLen(0x012a, 9)
+packetLen(0x012A, 9)
 #elif PACKETVER >= 20080513
-packetLen(0x012a, 6)
+packetLen(0x012A, 6)
 #elif PACKETVER >= 20080507
-packetLen(0x012a, 14)
+packetLen(0x012A, 14)
 #elif PACKETVER >= 20080429
-packetLen(0x012a, 22)
+packetLen(0x012A, 22)
 #elif PACKETVER >= 20080422
-packetLen(0x012a, 2)
+packetLen(0x012A, 2)
 #elif PACKETVER >= 20080415
-packetLen(0x012a, 3)
+packetLen(0x012A, 3)
 #elif PACKETVER >= 20080408
-packetLen(0x012a, 282)
+packetLen(0x012A, 282)
 #elif PACKETVER >= 20080401
-packetLen(0x012a, -1)
+packetLen(0x012A, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x012a, 3)
+packetLen(0x012A, 3)
 #elif PACKETVER >= 20080318
-packetLen(0x012a, 4)
+packetLen(0x012A, 4)
 #elif PACKETVER >= 20080304
-packetLen(0x012a, 8)
+packetLen(0x012A, 8)
 #elif PACKETVER >= 20080226
-packetLen(0x012a, 3)
+packetLen(0x012A, 3)
 #elif PACKETVER >= 20080219
-packetLen(0x012a, 5)
+packetLen(0x012A, 5)
 #elif PACKETVER >= 20080102
-packetLen(0x012a, 2)
+packetLen(0x012A, 2)
 #endif
 
 // Packet: 0x012b
-packetLen(0x012b, 2)
+packetLen(0x012B, 2)
 
 // Packet: 0x012c
 #if PACKETVER >= 20080610
-packetLen(0x012c, -1)
+packetLen(0x012C, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x012c, 5)
+packetLen(0x012C, 5)
 #elif PACKETVER >= 20080528
-packetLen(0x012c, 58)
+packetLen(0x012C, 58)
 #elif PACKETVER >= 20080520
-packetLen(0x012c, -1)
+packetLen(0x012C, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x012c, 2)
+packetLen(0x012C, 2)
 #elif PACKETVER >= 20080507
-packetLen(0x012c, 10)
+packetLen(0x012C, 10)
 #elif PACKETVER >= 20080429
-packetLen(0x012c, 39)
+packetLen(0x012C, 39)
 #elif PACKETVER >= 20080422
-packetLen(0x012c, 8)
+packetLen(0x012C, 8)
 #elif PACKETVER >= 20080415
-packetLen(0x012c, -1)
+packetLen(0x012C, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x012c, 30)
+packetLen(0x012C, 30)
 #elif PACKETVER >= 20080401
-packetLen(0x012c, 8)
+packetLen(0x012C, 8)
 #elif PACKETVER >= 20080325
-packetLen(0x012c, 4)
+packetLen(0x012C, 4)
 #elif PACKETVER >= 20080318
-packetLen(0x012c, 10)
+packetLen(0x012C, 10)
 #elif PACKETVER >= 20080311
-packetLen(0x012c, 14)
+packetLen(0x012C, 14)
 #elif PACKETVER >= 20080304
-packetLen(0x012c, 30)
+packetLen(0x012C, 30)
 #elif PACKETVER >= 20080226
-packetLen(0x012c, 20)
+packetLen(0x012C, 20)
 #elif PACKETVER >= 20080219
-packetLen(0x012c, 9)
+packetLen(0x012C, 9)
 #elif PACKETVER >= 20080124
-packetLen(0x012c, 19)
+packetLen(0x012C, 19)
 #elif PACKETVER >= 20080102
-packetLen(0x012c, 3)
+packetLen(0x012C, 3)
 #endif
 
 // Packet: 0x012d
 #if PACKETVER >= 20080701
-packetLen(0x012d, -1)
+packetLen(0x012D, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x012d, 26)
+packetLen(0x012D, 26)
 #elif PACKETVER >= 20080617
-packetLen(0x012d, 3)
+packetLen(0x012D, 3)
 #elif PACKETVER >= 20080610
-packetLen(0x012d, 8)
+packetLen(0x012D, 8)
 #elif PACKETVER >= 20080603
-packetLen(0x012d, -1)
+packetLen(0x012D, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x012d, 30)
+packetLen(0x012D, 30)
 #elif PACKETVER >= 20080520
-packetLen(0x012d, -1)
+packetLen(0x012D, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x012d, 34)
+packetLen(0x012D, 34)
 #elif PACKETVER >= 20080507
-packetLen(0x012d, -1)
+packetLen(0x012D, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x012d, 4)
+packetLen(0x012D, 4)
 #elif PACKETVER >= 20080422
-packetLen(0x012d, 81)
+packetLen(0x012D, 81)
 #elif PACKETVER >= 20080415
-packetLen(0x012d, -1)
+packetLen(0x012D, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x012d, 33)
+packetLen(0x012D, 33)
 #elif PACKETVER >= 20080401
-packetLen(0x012d, 3)
+packetLen(0x012D, 3)
 #elif PACKETVER >= 20080325
-packetLen(0x012d, 6)
+packetLen(0x012D, 6)
 #elif PACKETVER >= 20080318
-packetLen(0x012d, 2)
+packetLen(0x012D, 2)
 #elif PACKETVER >= 20080311
-packetLen(0x012d, 30)
+packetLen(0x012D, 30)
 #elif PACKETVER >= 20080304
-packetLen(0x012d, -1)
+packetLen(0x012D, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x012d, 14)
+packetLen(0x012D, 14)
 #elif PACKETVER >= 20080124
-packetLen(0x012d, 26)
+packetLen(0x012D, 26)
 #elif PACKETVER >= 20080102
-packetLen(0x012d, 4)
+packetLen(0x012D, 4)
 #endif
 
 // Packet: 0x012e
 #if PACKETVER >= 20080701
-packetLen(0x012e, -1)
+packetLen(0x012E, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x012e, 6)
+packetLen(0x012E, 6)
 #elif PACKETVER >= 20080617
-packetLen(0x012e, 31)
+packetLen(0x012E, 31)
 #elif PACKETVER >= 20080520
-packetLen(0x012e, -1)
+packetLen(0x012E, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x012e, 5)
+packetLen(0x012E, 5)
 #elif PACKETVER >= 20080507
-packetLen(0x012e, 102)
+packetLen(0x012E, 102)
 #elif PACKETVER >= 20080429
-packetLen(0x012e, 3)
+packetLen(0x012E, 3)
 #elif PACKETVER >= 20080422
-packetLen(0x012e, 2)
+packetLen(0x012E, 2)
 #elif PACKETVER >= 20080415
-packetLen(0x012e, -1)
+packetLen(0x012E, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x012e, 26)
+packetLen(0x012E, 26)
 #elif PACKETVER >= 20080401
-packetLen(0x012e, 7)
+packetLen(0x012E, 7)
 #elif PACKETVER >= 20080325
-packetLen(0x012e, 2)
+packetLen(0x012E, 2)
 #elif PACKETVER >= 20080318
-packetLen(0x012e, 4)
+packetLen(0x012E, 4)
 #elif PACKETVER >= 20080311
-packetLen(0x012e, 14)
+packetLen(0x012E, 14)
 #elif PACKETVER >= 20080304
-packetLen(0x012e, 6)
+packetLen(0x012E, 6)
 #elif PACKETVER >= 20080219
-packetLen(0x012e, -1)
+packetLen(0x012E, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x012e, 2)
+packetLen(0x012E, 2)
 #endif
 
 // Packet: 0x012f
-packetLen(0x012f, -1)
+packetLen(0x012F, -1)
 
 // Packet: 0x0130
 #if PACKETVER >= 20080617
@@ -6940,270 +6940,270 @@ packetLen(0x0139, 16)
 
 // Packet: 0x013a
 #if PACKETVER >= 20080701
-packetLen(0x013a, -1)
+packetLen(0x013A, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x013a, 2)
+packetLen(0x013A, 2)
 #elif PACKETVER >= 20080617
-packetLen(0x013a, 3)
+packetLen(0x013A, 3)
 #elif PACKETVER >= 20080610
-packetLen(0x013a, 30)
+packetLen(0x013A, 30)
 #elif PACKETVER >= 20080603
-packetLen(0x013a, 39)
+packetLen(0x013A, 39)
 #elif PACKETVER >= 20080513
-packetLen(0x013a, -1)
+packetLen(0x013A, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x013a, 182)
+packetLen(0x013A, 182)
 #elif PACKETVER >= 20080429
-packetLen(0x013a, 6)
+packetLen(0x013A, 6)
 #elif PACKETVER >= 20080422
-packetLen(0x013a, -1)
+packetLen(0x013A, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x013a, 6)
+packetLen(0x013A, 6)
 #elif PACKETVER >= 20080408
-packetLen(0x013a, 55)
+packetLen(0x013A, 55)
 #elif PACKETVER >= 20080401
-packetLen(0x013a, 12)
+packetLen(0x013A, 12)
 #elif PACKETVER >= 20080325
-packetLen(0x013a, 3)
+packetLen(0x013A, 3)
 #elif PACKETVER >= 20080318
-packetLen(0x013a, -1)
+packetLen(0x013A, -1)
 #elif PACKETVER >= 20080311
-packetLen(0x013a, 6)
+packetLen(0x013A, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x013a, 32)
+packetLen(0x013A, 32)
 #elif PACKETVER >= 20080226
-packetLen(0x013a, 58)
+packetLen(0x013A, 58)
 #elif PACKETVER >= 20080124
-packetLen(0x013a, -1)
+packetLen(0x013A, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x013a, 4)
+packetLen(0x013A, 4)
 #endif
 
 // Packet: 0x013b
 #if PACKETVER >= 20080701
-packetLen(0x013b, 4)
+packetLen(0x013B, 4)
 #elif PACKETVER >= 20080624
-packetLen(0x013b, 22)
+packetLen(0x013B, 22)
 #elif PACKETVER >= 20080617
-packetLen(0x013b, -1)
+packetLen(0x013B, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x013b, 22)
+packetLen(0x013B, 22)
 #elif PACKETVER >= 20080603
-packetLen(0x013b, -1)
+packetLen(0x013B, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x013b, 5)
+packetLen(0x013B, 5)
 #elif PACKETVER >= 20080520
-packetLen(0x013b, 10)
+packetLen(0x013B, 10)
 #elif PACKETVER >= 20080513
-packetLen(0x013b, 18)
+packetLen(0x013B, 18)
 #elif PACKETVER >= 20080507
-packetLen(0x013b, 2)
+packetLen(0x013B, 2)
 #elif PACKETVER >= 20080429
-packetLen(0x013b, -1)
+packetLen(0x013B, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x013b, 15)
+packetLen(0x013B, 15)
 #elif PACKETVER >= 20080415
-packetLen(0x013b, 7)
+packetLen(0x013B, 7)
 #elif PACKETVER >= 20080408
-packetLen(0x013b, 30)
+packetLen(0x013B, 30)
 #elif PACKETVER >= 20080401
-packetLen(0x013b, 6)
+packetLen(0x013B, 6)
 #elif PACKETVER >= 20080325
-packetLen(0x013b, 4)
+packetLen(0x013B, 4)
 #elif PACKETVER >= 20080318
-packetLen(0x013b, 6)
+packetLen(0x013B, 6)
 #elif PACKETVER >= 20080311
-packetLen(0x013b, 23)
+packetLen(0x013B, 23)
 #elif PACKETVER >= 20080304
-packetLen(0x013b, 22)
+packetLen(0x013B, 22)
 #elif PACKETVER >= 20080226
-packetLen(0x013b, 6)
+packetLen(0x013B, 6)
 #elif PACKETVER >= 20080219
-packetLen(0x013b, 16)
+packetLen(0x013B, 16)
 #elif PACKETVER >= 20080124
-packetLen(0x013b, 2)
+packetLen(0x013B, 2)
 #elif PACKETVER >= 20080102
-packetLen(0x013b, 4)
+packetLen(0x013B, 4)
 #endif
 
 // Packet: 0x013c
 #if PACKETVER >= 20080701
-packetLen(0x013c, 6)
+packetLen(0x013C, 6)
 #elif PACKETVER >= 20080624
-packetLen(0x013c, -1)
+packetLen(0x013C, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x013c, 12)
+packetLen(0x013C, 12)
 #elif PACKETVER >= 20080610
-packetLen(0x013c, -1)
+packetLen(0x013C, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x013c, 53)
+packetLen(0x013C, 53)
 #elif PACKETVER >= 20080528
-packetLen(0x013c, 8)
+packetLen(0x013C, 8)
 #elif PACKETVER >= 20080520
-packetLen(0x013c, 4)
+packetLen(0x013C, 4)
 #elif PACKETVER >= 20080513
-packetLen(0x013c, 11)
+packetLen(0x013C, 11)
 #elif PACKETVER >= 20080507
-packetLen(0x013c, 6)
+packetLen(0x013C, 6)
 #elif PACKETVER >= 20080429
-packetLen(0x013c, -1)
+packetLen(0x013C, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x013c, 33)
+packetLen(0x013C, 33)
 #elif PACKETVER >= 20080415
-packetLen(0x013c, 8)
+packetLen(0x013C, 8)
 #elif PACKETVER >= 20080408
-packetLen(0x013c, 6)
+packetLen(0x013C, 6)
 #elif PACKETVER >= 20080401
-packetLen(0x013c, 12)
+packetLen(0x013C, 12)
 #elif PACKETVER >= 20080325
-packetLen(0x013c, 3)
+packetLen(0x013C, 3)
 #elif PACKETVER >= 20080318
-packetLen(0x013c, -1)
+packetLen(0x013C, -1)
 #elif PACKETVER >= 20080311
-packetLen(0x013c, 6)
+packetLen(0x013C, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x013c, 66)
+packetLen(0x013C, 66)
 #elif PACKETVER >= 20080226
-packetLen(0x013c, -1)
+packetLen(0x013C, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x013c, 4)
+packetLen(0x013C, 4)
 #elif PACKETVER >= 20080124
-packetLen(0x013c, 11)
+packetLen(0x013C, 11)
 #elif PACKETVER >= 20080102
-packetLen(0x013c, 4)
+packetLen(0x013C, 4)
 #endif
 
 // Packet: 0x013d
 #if PACKETVER >= 20080701
-packetLen(0x013d, -1)
+packetLen(0x013D, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x013d, 3)
+packetLen(0x013D, 3)
 #elif PACKETVER >= 20080617
-packetLen(0x013d, -1)
+packetLen(0x013D, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x013d, 7)
+packetLen(0x013D, 7)
 #elif PACKETVER >= 20080603
-packetLen(0x013d, 2)
+packetLen(0x013D, 2)
 #elif PACKETVER >= 20080528
-packetLen(0x013d, -1)
+packetLen(0x013D, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x013d, 8)
+packetLen(0x013D, 8)
 #elif PACKETVER >= 20080513
-packetLen(0x013d, 31)
+packetLen(0x013D, 31)
 #elif PACKETVER >= 20080507
-packetLen(0x013d, -1)
+packetLen(0x013D, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x013d, 10)
+packetLen(0x013D, 10)
 #elif PACKETVER >= 20080422
-packetLen(0x013d, -1)
+packetLen(0x013D, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x013d, 26)
+packetLen(0x013D, 26)
 #elif PACKETVER >= 20080408
-packetLen(0x013d, -1)
+packetLen(0x013D, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x013d, 6)
+packetLen(0x013D, 6)
 #elif PACKETVER >= 20080325
-packetLen(0x013d, 3)
+packetLen(0x013D, 3)
 #elif PACKETVER >= 20080318
-packetLen(0x013d, 282)
+packetLen(0x013D, 282)
 #elif PACKETVER >= 20080311
-packetLen(0x013d, 6)
+packetLen(0x013D, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x013d, 3)
+packetLen(0x013D, 3)
 #elif PACKETVER >= 20080226
-packetLen(0x013d, 2)
+packetLen(0x013D, 2)
 #elif PACKETVER >= 20080219
-packetLen(0x013d, 6)
+packetLen(0x013D, 6)
 #elif PACKETVER >= 20080124
-packetLen(0x013d, -1)
+packetLen(0x013D, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x013d, 6)
+packetLen(0x013D, 6)
 #endif
 
 // Packet: 0x013e
 #if PACKETVER >= 20080701
-packetLen(0x013e, 26)
+packetLen(0x013E, 26)
 #elif PACKETVER >= 20080624
-packetLen(0x013e, 3)
+packetLen(0x013E, 3)
 #elif PACKETVER >= 20080603
-packetLen(0x013e, -1)
+packetLen(0x013E, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x013e, 6)
+packetLen(0x013E, 6)
 #elif PACKETVER >= 20080520
-packetLen(0x013e, 20)
+packetLen(0x013E, 20)
 #elif PACKETVER >= 20080513
-packetLen(0x013e, 7)
+packetLen(0x013E, 7)
 #elif PACKETVER >= 20080507
-packetLen(0x013e, 21)
+packetLen(0x013E, 21)
 #elif PACKETVER >= 20080429
-packetLen(0x013e, 8)
+packetLen(0x013E, 8)
 #elif PACKETVER >= 20080422
-packetLen(0x013e, 7)
+packetLen(0x013E, 7)
 #elif PACKETVER >= 20080408
-packetLen(0x013e, 6)
+packetLen(0x013E, 6)
 #elif PACKETVER >= 20080401
-packetLen(0x013e, -1)
+packetLen(0x013E, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x013e, 15)
+packetLen(0x013E, 15)
 #elif PACKETVER >= 20080318
-packetLen(0x013e, 11)
+packetLen(0x013E, 11)
 #elif PACKETVER >= 20080311
-packetLen(0x013e, 2)
+packetLen(0x013E, 2)
 #elif PACKETVER >= 20080304
-packetLen(0x013e, 4)
+packetLen(0x013E, 4)
 #elif PACKETVER >= 20080226
-packetLen(0x013e, -1)
+packetLen(0x013E, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x013e, 30)
+packetLen(0x013E, 30)
 #elif PACKETVER >= 20080124
-packetLen(0x013e, -1)
+packetLen(0x013E, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x013e, 24)
+packetLen(0x013E, 24)
 #endif
 
 // Packet: 0x013f
 #if PACKETVER >= 20080701
-packetLen(0x013f, 30)
+packetLen(0x013F, 30)
 #elif PACKETVER >= 20080624
-packetLen(0x013f, -1)
+packetLen(0x013F, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x013f, 2)
+packetLen(0x013F, 2)
 #elif PACKETVER >= 20080610
-packetLen(0x013f, 7)
+packetLen(0x013F, 7)
 #elif PACKETVER >= 20080603
-packetLen(0x013f, 11)
+packetLen(0x013F, 11)
 #elif PACKETVER >= 20080528
-packetLen(0x013f, 2)
+packetLen(0x013F, 2)
 #elif PACKETVER >= 20080520
-packetLen(0x013f, -1)
+packetLen(0x013F, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x013f, 29)
+packetLen(0x013F, 29)
 #elif PACKETVER >= 20080507
-packetLen(0x013f, 20)
+packetLen(0x013F, 20)
 #elif PACKETVER >= 20080422
-packetLen(0x013f, 26)
+packetLen(0x013F, 26)
 #elif PACKETVER >= 20080415
-packetLen(0x013f, -1)
+packetLen(0x013F, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x013f, 8)
+packetLen(0x013F, 8)
 #elif PACKETVER >= 20080401
-packetLen(0x013f, -1)
+packetLen(0x013F, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x013f, 28)
+packetLen(0x013F, 28)
 #elif PACKETVER >= 20080318
-packetLen(0x013f, 54)
+packetLen(0x013F, 54)
 #elif PACKETVER >= 20080311
-packetLen(0x013f, 282)
+packetLen(0x013F, 282)
 #elif PACKETVER >= 20080304
-packetLen(0x013f, 6)
+packetLen(0x013F, 6)
 #elif PACKETVER >= 20080226
-packetLen(0x013f, 5)
+packetLen(0x013F, 5)
 #elif PACKETVER >= 20080219
-packetLen(0x013f, 58)
+packetLen(0x013F, 58)
 #elif PACKETVER >= 20080124
-packetLen(0x013f, 9)
+packetLen(0x013F, 9)
 #elif PACKETVER >= 20080102
-packetLen(0x013f, 26)
+packetLen(0x013F, 26)
 #endif
 
 // Packet: 0x0140
@@ -7585,121 +7585,121 @@ packetLen(0x0149, 9)
 #endif
 
 // Packet: 0x014a
-packetLen(0x014a, 6)
+packetLen(0x014A, 6)
 
 // Packet: 0x014b
-packetLen(0x014b, 27)
+packetLen(0x014B, 27)
 
 // Packet: 0x014c
 #if PACKETVER >= 20080701
-packetLen(0x014c, 26)
+packetLen(0x014C, 26)
 #elif PACKETVER >= 20080624
-packetLen(0x014c, -1)
+packetLen(0x014C, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x014c, 17)
+packetLen(0x014C, 17)
 #elif PACKETVER >= 20080610
-packetLen(0x014c, 4)
+packetLen(0x014C, 4)
 #elif PACKETVER >= 20080603
-packetLen(0x014c, -1)
+packetLen(0x014C, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x014c, 16)
+packetLen(0x014C, 16)
 #elif PACKETVER >= 20080507
-packetLen(0x014c, -1)
+packetLen(0x014C, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x014c, 12)
+packetLen(0x014C, 12)
 #elif PACKETVER >= 20080415
-packetLen(0x014c, -1)
+packetLen(0x014C, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x014c, 4)
+packetLen(0x014C, 4)
 #elif PACKETVER >= 20080401
-packetLen(0x014c, 55)
+packetLen(0x014C, 55)
 #elif PACKETVER >= 20080325
-packetLen(0x014c, 10)
+packetLen(0x014C, 10)
 #elif PACKETVER >= 20080318
-packetLen(0x014c, 9)
+packetLen(0x014C, 9)
 #elif PACKETVER >= 20080311
-packetLen(0x014c, 17)
+packetLen(0x014C, 17)
 #elif PACKETVER >= 20080226
-packetLen(0x014c, -1)
+packetLen(0x014C, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x014c, 4)
+packetLen(0x014C, 4)
 #elif PACKETVER >= 20080102
-packetLen(0x014c, -1)
+packetLen(0x014C, -1)
 #endif
 
 // Packet: 0x014d
 #if PACKETVER >= 20080701
-packetLen(0x014d, -1)
+packetLen(0x014D, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x014d, 9)
+packetLen(0x014D, 9)
 #elif PACKETVER >= 20080603
-packetLen(0x014d, 2)
+packetLen(0x014D, 2)
 #elif PACKETVER >= 20080528
-packetLen(0x014d, 30)
+packetLen(0x014D, 30)
 #elif PACKETVER >= 20080520
-packetLen(0x014d, 282)
+packetLen(0x014D, 282)
 #elif PACKETVER >= 20080513
-packetLen(0x014d, -1)
+packetLen(0x014D, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x014d, 3)
+packetLen(0x014D, 3)
 #elif PACKETVER >= 20080429
-packetLen(0x014d, 4)
+packetLen(0x014D, 4)
 #elif PACKETVER >= 20080422
-packetLen(0x014d, 2)
+packetLen(0x014D, 2)
 #elif PACKETVER >= 20080415
-packetLen(0x014d, 6)
+packetLen(0x014D, 6)
 #elif PACKETVER >= 20080401
-packetLen(0x014d, 2)
+packetLen(0x014D, 2)
 #elif PACKETVER >= 20080318
-packetLen(0x014d, 10)
+packetLen(0x014D, 10)
 #elif PACKETVER >= 20080311
-packetLen(0x014d, 9)
+packetLen(0x014D, 9)
 #elif PACKETVER >= 20080304
-packetLen(0x014d, 11)
+packetLen(0x014D, 11)
 #elif PACKETVER >= 20080226
-packetLen(0x014d, 8)
+packetLen(0x014D, 8)
 #elif PACKETVER >= 20080219
-packetLen(0x014d, 10)
+packetLen(0x014D, 10)
 #elif PACKETVER >= 20080124
-packetLen(0x014d, 8)
+packetLen(0x014D, 8)
 #elif PACKETVER >= 20080102
-packetLen(0x014d, 2)
+packetLen(0x014D, 2)
 #endif
 
 // Packet: 0x014e
-packetLen(0x014e, 6)
+packetLen(0x014E, 6)
 
 // Packet: 0x014f
 #if PACKETVER >= 20080617
-packetLen(0x014f, -1)
+packetLen(0x014F, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x014f, 3)
+packetLen(0x014F, 3)
 #elif PACKETVER >= 20080528
-packetLen(0x014f, 13)
+packetLen(0x014F, 13)
 #elif PACKETVER >= 20080507
-packetLen(0x014f, -1)
+packetLen(0x014F, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x014f, 23)
+packetLen(0x014F, 23)
 #elif PACKETVER >= 20080422
-packetLen(0x014f, 6)
+packetLen(0x014F, 6)
 #elif PACKETVER >= 20080408
-packetLen(0x014f, -1)
+packetLen(0x014F, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x014f, 58)
+packetLen(0x014F, 58)
 #elif PACKETVER >= 20080325
-packetLen(0x014f, 4)
+packetLen(0x014F, 4)
 #elif PACKETVER >= 20080318
-packetLen(0x014f, 3)
+packetLen(0x014F, 3)
 #elif PACKETVER >= 20080304
-packetLen(0x014f, -1)
+packetLen(0x014F, -1)
 #elif PACKETVER >= 20080226
-packetLen(0x014f, 97)
+packetLen(0x014F, 97)
 #elif PACKETVER >= 20080219
-packetLen(0x014f, -1)
+packetLen(0x014F, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x014f, 30)
+packetLen(0x014F, 30)
 #elif PACKETVER >= 20080102
-packetLen(0x014f, 6)
+packetLen(0x014F, 6)
 #endif
 
 // Packet: 0x0150
@@ -7840,175 +7840,175 @@ packetLen(0x0159, 54)
 
 // Packet: 0x015a
 #if PACKETVER >= 20080617
-packetLen(0x015a, -1)
+packetLen(0x015A, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x015a, 24)
+packetLen(0x015A, 24)
 #elif PACKETVER >= 20080603
-packetLen(0x015a, 2)
+packetLen(0x015A, 2)
 #elif PACKETVER >= 20080528
-packetLen(0x015a, 31)
+packetLen(0x015A, 31)
 #elif PACKETVER >= 20080520
-packetLen(0x015a, -1)
+packetLen(0x015A, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x015a, 15)
+packetLen(0x015A, 15)
 #elif PACKETVER >= 20080429
-packetLen(0x015a, -1)
+packetLen(0x015A, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x015a, 4)
+packetLen(0x015A, 4)
 #elif PACKETVER >= 20080415
-packetLen(0x015a, -1)
+packetLen(0x015A, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x015a, 14)
+packetLen(0x015A, 14)
 #elif PACKETVER >= 20080401
-packetLen(0x015a, 23)
+packetLen(0x015A, 23)
 #elif PACKETVER >= 20080325
-packetLen(0x015a, 33)
+packetLen(0x015A, 33)
 #elif PACKETVER >= 20080318
-packetLen(0x015a, 26)
+packetLen(0x015A, 26)
 #elif PACKETVER >= 20080311
-packetLen(0x015a, 27)
+packetLen(0x015A, 27)
 #elif PACKETVER >= 20080304
-packetLen(0x015a, 3)
+packetLen(0x015A, 3)
 #elif PACKETVER >= 20080226
-packetLen(0x015a, 6)
+packetLen(0x015A, 6)
 #elif PACKETVER >= 20080219
-packetLen(0x015a, 8)
+packetLen(0x015A, 8)
 #elif PACKETVER >= 20080124
-packetLen(0x015a, 26)
+packetLen(0x015A, 26)
 #elif PACKETVER >= 20080102
-packetLen(0x015a, 66)
+packetLen(0x015A, 66)
 #endif
 
 // Packet: 0x015b
 #if PACKETVER >= 20080701
-packetLen(0x015b, 6)
+packetLen(0x015B, 6)
 #elif PACKETVER >= 20080624
-packetLen(0x015b, -1)
+packetLen(0x015B, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x015b, 20)
+packetLen(0x015B, 20)
 #elif PACKETVER >= 20080610
-packetLen(0x015b, 54)
+packetLen(0x015B, 54)
 #elif PACKETVER >= 20080603
-packetLen(0x015b, 32)
+packetLen(0x015B, 32)
 #elif PACKETVER >= 20080528
-packetLen(0x015b, -1)
+packetLen(0x015B, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x015b, 59)
+packetLen(0x015B, 59)
 #elif PACKETVER >= 20080513
-packetLen(0x015b, 79)
+packetLen(0x015B, 79)
 #elif PACKETVER >= 20080507
-packetLen(0x015b, 4)
+packetLen(0x015B, 4)
 #elif PACKETVER >= 20080429
-packetLen(0x015b, -1)
+packetLen(0x015B, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x015b, 54)
+packetLen(0x015B, 54)
 #elif PACKETVER >= 20080415
-packetLen(0x015b, 97)
+packetLen(0x015B, 97)
 #elif PACKETVER >= 20080408
-packetLen(0x015b, 26)
+packetLen(0x015B, 26)
 #elif PACKETVER >= 20080401
-packetLen(0x015b, 30)
+packetLen(0x015B, 30)
 #elif PACKETVER >= 20080325
-packetLen(0x015b, 2)
+packetLen(0x015B, 2)
 #elif PACKETVER >= 20080318
-packetLen(0x015b, 24)
+packetLen(0x015B, 24)
 #elif PACKETVER >= 20080311
-packetLen(0x015b, 4)
+packetLen(0x015B, 4)
 #elif PACKETVER >= 20080304
-packetLen(0x015b, 33)
+packetLen(0x015B, 33)
 #elif PACKETVER >= 20080226
-packetLen(0x015b, 22)
+packetLen(0x015B, 22)
 #elif PACKETVER >= 20080219
-packetLen(0x015b, 6)
+packetLen(0x015B, 6)
 #elif PACKETVER >= 20080124
-packetLen(0x015b, -1)
+packetLen(0x015B, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x015b, 54)
+packetLen(0x015B, 54)
 #endif
 
 // Packet: 0x015c
 #if PACKETVER >= 20080624
-packetLen(0x015c, -1)
+packetLen(0x015C, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x015c, 6)
+packetLen(0x015C, 6)
 #elif PACKETVER >= 20080528
-packetLen(0x015c, -1)
+packetLen(0x015C, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x015c, 7)
+packetLen(0x015C, 7)
 #elif PACKETVER >= 20080507
-packetLen(0x015c, 6)
+packetLen(0x015C, 6)
 #elif PACKETVER >= 20080429
-packetLen(0x015c, 2)
+packetLen(0x015C, 2)
 #elif PACKETVER >= 20080415
-packetLen(0x015c, 8)
+packetLen(0x015C, 8)
 #elif PACKETVER >= 20080401
-packetLen(0x015c, -1)
+packetLen(0x015C, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x015c, 18)
+packetLen(0x015C, 18)
 #elif PACKETVER >= 20080318
-packetLen(0x015c, 57)
+packetLen(0x015C, 57)
 #elif PACKETVER >= 20080311
-packetLen(0x015c, 30)
+packetLen(0x015C, 30)
 #elif PACKETVER >= 20080304
-packetLen(0x015c, 15)
+packetLen(0x015C, 15)
 #elif PACKETVER >= 20080226
-packetLen(0x015c, 3)
+packetLen(0x015C, 3)
 #elif PACKETVER >= 20080219
-packetLen(0x015c, 5)
+packetLen(0x015C, 5)
 #elif PACKETVER >= 20080124
-packetLen(0x015c, 14)
+packetLen(0x015C, 14)
 #elif PACKETVER >= 20080102
-packetLen(0x015c, 90)
+packetLen(0x015C, 90)
 #endif
 
 // Packet: 0x015d
-packetLen(0x015d, 42)
+packetLen(0x015D, 42)
 
 // Packet: 0x015e
 #if PACKETVER >= 20080701
-packetLen(0x015e, -1)
+packetLen(0x015E, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x015e, 30)
+packetLen(0x015E, 30)
 #elif PACKETVER >= 20080610
-packetLen(0x015e, -1)
+packetLen(0x015E, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x015e, 4)
+packetLen(0x015E, 4)
 #elif PACKETVER >= 20080520
-packetLen(0x015e, 3)
+packetLen(0x015E, 3)
 #elif PACKETVER >= 20080513
-packetLen(0x015e, 2)
+packetLen(0x015E, 2)
 #elif PACKETVER >= 20080507
-packetLen(0x015e, 9)
+packetLen(0x015E, 9)
 #elif PACKETVER >= 20080429
-packetLen(0x015e, 10)
+packetLen(0x015E, 10)
 #elif PACKETVER >= 20080422
-packetLen(0x015e, -1)
+packetLen(0x015E, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x015e, 32)
+packetLen(0x015E, 32)
 #elif PACKETVER >= 20080408
-packetLen(0x015e, 30)
+packetLen(0x015E, 30)
 #elif PACKETVER >= 20080401
-packetLen(0x015e, 10)
+packetLen(0x015E, 10)
 #elif PACKETVER >= 20080325
-packetLen(0x015e, 15)
+packetLen(0x015E, 15)
 #elif PACKETVER >= 20080318
-packetLen(0x015e, 28)
+packetLen(0x015E, 28)
 #elif PACKETVER >= 20080311
-packetLen(0x015e, 6)
+packetLen(0x015E, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x015e, 3)
+packetLen(0x015E, 3)
 #elif PACKETVER >= 20080226
-packetLen(0x015e, 54)
+packetLen(0x015E, 54)
 #elif PACKETVER >= 20080219
-packetLen(0x015e, -1)
+packetLen(0x015E, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x015e, 16)
+packetLen(0x015E, 16)
 #elif PACKETVER >= 20080102
-packetLen(0x015e, 6)
+packetLen(0x015E, 6)
 #endif
 
 // Packet: 0x015f
-packetLen(0x015f, 42)
+packetLen(0x015F, 42)
 
 // Packet: 0x0160
 #if PACKETVER >= 20080701
@@ -8384,246 +8384,246 @@ packetLen(0x0169, 3)
 
 // Packet: 0x016a
 #if PACKETVER >= 20080701
-packetLen(0x016a, -1)
+packetLen(0x016A, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x016a, 6)
+packetLen(0x016A, 6)
 #elif PACKETVER >= 20080617
-packetLen(0x016a, 10)
+packetLen(0x016A, 10)
 #elif PACKETVER >= 20080610
-packetLen(0x016a, 4)
+packetLen(0x016A, 4)
 #elif PACKETVER >= 20080603
-packetLen(0x016a, -1)
+packetLen(0x016A, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x016a, 6)
+packetLen(0x016A, 6)
 #elif PACKETVER >= 20080520
-packetLen(0x016a, 24)
+packetLen(0x016A, 24)
 #elif PACKETVER >= 20080513
-packetLen(0x016a, 6)
+packetLen(0x016A, 6)
 #elif PACKETVER >= 20080429
-packetLen(0x016a, -1)
+packetLen(0x016A, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x016a, 22)
+packetLen(0x016A, 22)
 #elif PACKETVER >= 20080415
-packetLen(0x016a, -1)
+packetLen(0x016A, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x016a, 97)
+packetLen(0x016A, 97)
 #elif PACKETVER >= 20080401
-packetLen(0x016a, 7)
+packetLen(0x016A, 7)
 #elif PACKETVER >= 20080325
-packetLen(0x016a, -1)
+packetLen(0x016A, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x016a, 44)
+packetLen(0x016A, 44)
 #elif PACKETVER >= 20080311
-packetLen(0x016a, 32)
+packetLen(0x016A, 32)
 #elif PACKETVER >= 20080304
-packetLen(0x016a, 26)
+packetLen(0x016A, 26)
 #elif PACKETVER >= 20080226
-packetLen(0x016a, 2)
+packetLen(0x016A, 2)
 #elif PACKETVER >= 20080219
-packetLen(0x016a, 4)
+packetLen(0x016A, 4)
 #elif PACKETVER >= 20080124
-packetLen(0x016a, 3)
+packetLen(0x016A, 3)
 #elif PACKETVER >= 20080102
-packetLen(0x016a, 30)
+packetLen(0x016A, 30)
 #endif
 
 // Packet: 0x016b
 #if PACKETVER >= 20080624
-packetLen(0x016b, -1)
+packetLen(0x016B, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x016b, 6)
+packetLen(0x016B, 6)
 #elif PACKETVER >= 20080429
-packetLen(0x016b, -1)
+packetLen(0x016B, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x016b, 10)
+packetLen(0x016B, 10)
 #elif PACKETVER >= 20080415
-packetLen(0x016b, 4)
+packetLen(0x016B, 4)
 #elif PACKETVER >= 20080408
-packetLen(0x016b, 8)
+packetLen(0x016B, 8)
 #elif PACKETVER >= 20080401
-packetLen(0x016b, -1)
+packetLen(0x016B, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x016b, 27)
+packetLen(0x016B, 27)
 #elif PACKETVER >= 20080318
-packetLen(0x016b, -1)
+packetLen(0x016B, -1)
 #elif PACKETVER >= 20080311
-packetLen(0x016b, 22)
+packetLen(0x016B, 22)
 #elif PACKETVER >= 20080304
-packetLen(0x016b, 20)
+packetLen(0x016B, 20)
 #elif PACKETVER >= 20080226
-packetLen(0x016b, 6)
+packetLen(0x016B, 6)
 #elif PACKETVER >= 20080219
-packetLen(0x016b, -1)
+packetLen(0x016B, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x016b, 11)
+packetLen(0x016B, 11)
 #elif PACKETVER >= 20080102
-packetLen(0x016b, 10)
+packetLen(0x016B, 10)
 #endif
 
 // Packet: 0x016c
 #if PACKETVER >= 20080701
-packetLen(0x016c, 7)
+packetLen(0x016C, 7)
 #elif PACKETVER >= 20080624
-packetLen(0x016c, 6)
+packetLen(0x016C, 6)
 #elif PACKETVER >= 20080617
-packetLen(0x016c, 10)
+packetLen(0x016C, 10)
 #elif PACKETVER >= 20080610
-packetLen(0x016c, 28)
+packetLen(0x016C, 28)
 #elif PACKETVER >= 20080603
-packetLen(0x016c, -1)
+packetLen(0x016C, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x016c, 54)
+packetLen(0x016C, 54)
 #elif PACKETVER >= 20080520
-packetLen(0x016c, 30)
+packetLen(0x016C, 30)
 #elif PACKETVER >= 20080513
-packetLen(0x016c, 14)
+packetLen(0x016C, 14)
 #elif PACKETVER >= 20080507
-packetLen(0x016c, -1)
+packetLen(0x016C, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x016c, 57)
+packetLen(0x016C, 57)
 #elif PACKETVER >= 20080422
-packetLen(0x016c, 10)
+packetLen(0x016C, 10)
 #elif PACKETVER >= 20080408
-packetLen(0x016c, -1)
+packetLen(0x016C, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x016c, 6)
+packetLen(0x016C, 6)
 #elif PACKETVER >= 20080325
-packetLen(0x016c, 32)
+packetLen(0x016C, 32)
 #elif PACKETVER >= 20080318
-packetLen(0x016c, 22)
+packetLen(0x016C, 22)
 #elif PACKETVER >= 20080311
-packetLen(0x016c, 4)
+packetLen(0x016C, 4)
 #elif PACKETVER >= 20080304
-packetLen(0x016c, 2)
+packetLen(0x016C, 2)
 #elif PACKETVER >= 20080226
-packetLen(0x016c, 8)
+packetLen(0x016C, 8)
 #elif PACKETVER >= 20080219
-packetLen(0x016c, 6)
+packetLen(0x016C, 6)
 #elif PACKETVER >= 20080124
-packetLen(0x016c, 9)
+packetLen(0x016C, 9)
 #elif PACKETVER >= 20080102
-packetLen(0x016c, 43)
+packetLen(0x016C, 43)
 #endif
 
 // Packet: 0x016d
 #if PACKETVER >= 20080701
-packetLen(0x016d, 3)
+packetLen(0x016D, 3)
 #elif PACKETVER >= 20080617
-packetLen(0x016d, -1)
+packetLen(0x016D, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x016d, 3)
+packetLen(0x016D, 3)
 #elif PACKETVER >= 20080603
-packetLen(0x016d, 14)
+packetLen(0x016D, 14)
 #elif PACKETVER >= 20080528
-packetLen(0x016d, -1)
+packetLen(0x016D, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x016d, 13)
+packetLen(0x016D, 13)
 #elif PACKETVER >= 20080507
-packetLen(0x016d, -1)
+packetLen(0x016D, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x016d, 10)
+packetLen(0x016D, 10)
 #elif PACKETVER >= 20080422
-packetLen(0x016d, -1)
+packetLen(0x016D, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x016d, 4)
+packetLen(0x016D, 4)
 #elif PACKETVER >= 20080408
-packetLen(0x016d, 3)
+packetLen(0x016D, 3)
 #elif PACKETVER >= 20080401
-packetLen(0x016d, 4)
+packetLen(0x016D, 4)
 #elif PACKETVER >= 20080325
-packetLen(0x016d, 6)
+packetLen(0x016D, 6)
 #elif PACKETVER >= 20080318
-packetLen(0x016d, 19)
+packetLen(0x016D, 19)
 #elif PACKETVER >= 20080311
-packetLen(0x016d, 22)
+packetLen(0x016D, 22)
 #elif PACKETVER >= 20080304
-packetLen(0x016d, 8)
+packetLen(0x016D, 8)
 #elif PACKETVER >= 20080226
-packetLen(0x016d, 3)
+packetLen(0x016D, 3)
 #elif PACKETVER >= 20080219
-packetLen(0x016d, 30)
+packetLen(0x016D, 30)
 #elif PACKETVER >= 20080124
-packetLen(0x016d, 2)
+packetLen(0x016D, 2)
 #elif PACKETVER >= 20080102
-packetLen(0x016d, 14)
+packetLen(0x016D, 14)
 #endif
 
 // Packet: 0x016e
 #if PACKETVER >= 20080701
-packetLen(0x016e, -1)
+packetLen(0x016E, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x016e, 2)
+packetLen(0x016E, 2)
 #elif PACKETVER >= 20080617
-packetLen(0x016e, 39)
+packetLen(0x016E, 39)
 #elif PACKETVER >= 20080520
-packetLen(0x016e, -1)
+packetLen(0x016E, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x016e, 15)
+packetLen(0x016E, 15)
 #elif PACKETVER >= 20080429
-packetLen(0x016e, -1)
+packetLen(0x016E, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x016e, 186)
+packetLen(0x016E, 186)
 #elif PACKETVER >= 20080415
-packetLen(0x016e, 42)
+packetLen(0x016E, 42)
 #elif PACKETVER >= 20080401
-packetLen(0x016e, -1)
+packetLen(0x016E, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x016e, 2)
+packetLen(0x016E, 2)
 #elif PACKETVER >= 20080318
-packetLen(0x016e, 3)
+packetLen(0x016E, 3)
 #elif PACKETVER >= 20080311
-packetLen(0x016e, 4)
+packetLen(0x016E, 4)
 #elif PACKETVER >= 20080304
-packetLen(0x016e, 30)
+packetLen(0x016E, 30)
 #elif PACKETVER >= 20080226
-packetLen(0x016e, 4)
+packetLen(0x016E, 4)
 #elif PACKETVER >= 20080219
-packetLen(0x016e, 3)
+packetLen(0x016E, 3)
 #elif PACKETVER >= 20080124
-packetLen(0x016e, -1)
+packetLen(0x016E, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x016e, 186)
+packetLen(0x016E, 186)
 #endif
 
 // Packet: 0x016f
 #if PACKETVER >= 20080701
-packetLen(0x016f, 44)
+packetLen(0x016F, 44)
 #elif PACKETVER >= 20080624
-packetLen(0x016f, -1)
+packetLen(0x016F, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x016f, 2)
+packetLen(0x016F, 2)
 #elif PACKETVER >= 20080603
-packetLen(0x016f, -1)
+packetLen(0x016F, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x016f, 2)
+packetLen(0x016F, 2)
 #elif PACKETVER >= 20080507
-packetLen(0x016f, -1)
+packetLen(0x016F, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x016f, 14)
+packetLen(0x016F, 14)
 #elif PACKETVER >= 20080422
-packetLen(0x016f, -1)
+packetLen(0x016F, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x016f, 6)
+packetLen(0x016F, 6)
 #elif PACKETVER >= 20080408
-packetLen(0x016f, 7)
+packetLen(0x016F, 7)
 #elif PACKETVER >= 20080401
-packetLen(0x016f, -1)
+packetLen(0x016F, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x016f, 22)
+packetLen(0x016F, 22)
 #elif PACKETVER >= 20080318
-packetLen(0x016f, 9)
+packetLen(0x016F, 9)
 #elif PACKETVER >= 20080311
-packetLen(0x016f, 182)
+packetLen(0x016F, 182)
 #elif PACKETVER >= 20080304
-packetLen(0x016f, 12)
+packetLen(0x016F, 12)
 #elif PACKETVER >= 20080226
-packetLen(0x016f, 6)
+packetLen(0x016F, 6)
 #elif PACKETVER >= 20080219
-packetLen(0x016f, 4)
+packetLen(0x016F, 4)
 #elif PACKETVER >= 20080124
-packetLen(0x016f, 29)
+packetLen(0x016F, 29)
 #elif PACKETVER >= 20080102
-packetLen(0x016f, 182)
+packetLen(0x016F, 182)
 #endif
 
 // Packet: 0x0170
@@ -8886,238 +8886,238 @@ packetLen(0x0179, 5)
 
 // Packet: 0x017a
 #if PACKETVER >= 20080701
-packetLen(0x017a, 29)
+packetLen(0x017A, 29)
 #elif PACKETVER >= 20080610
-packetLen(0x017a, -1)
+packetLen(0x017A, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x017a, 28)
+packetLen(0x017A, 28)
 #elif PACKETVER >= 20080528
-packetLen(0x017a, 4)
+packetLen(0x017A, 4)
 #elif PACKETVER >= 20080520
-packetLen(0x017a, 6)
+packetLen(0x017A, 6)
 #elif PACKETVER >= 20080513
-packetLen(0x017a, -1)
+packetLen(0x017A, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x017a, 6)
+packetLen(0x017A, 6)
 #elif PACKETVER >= 20080429
-packetLen(0x017a, 5)
+packetLen(0x017A, 5)
 #elif PACKETVER >= 20080415
-packetLen(0x017a, 4)
+packetLen(0x017A, 4)
 #elif PACKETVER >= 20080408
-packetLen(0x017a, 2)
+packetLen(0x017A, 2)
 #elif PACKETVER >= 20080401
-packetLen(0x017a, 31)
+packetLen(0x017A, 31)
 #elif PACKETVER >= 20080325
-packetLen(0x017a, 4)
+packetLen(0x017A, 4)
 #elif PACKETVER >= 20080318
-packetLen(0x017a, 8)
+packetLen(0x017A, 8)
 #elif PACKETVER >= 20080311
-packetLen(0x017a, 6)
+packetLen(0x017A, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x017a, 13)
+packetLen(0x017A, 13)
 #elif PACKETVER >= 20080219
-packetLen(0x017a, 30)
+packetLen(0x017A, 30)
 #elif PACKETVER >= 20080124
-packetLen(0x017a, 7)
+packetLen(0x017A, 7)
 #elif PACKETVER >= 20080102
-packetLen(0x017a, 4)
+packetLen(0x017A, 4)
 #endif
 
 // Packet: 0x017b
 #if PACKETVER >= 20080701
-packetLen(0x017b, 2)
+packetLen(0x017B, 2)
 #elif PACKETVER >= 20080617
-packetLen(0x017b, -1)
+packetLen(0x017B, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x017b, 2)
+packetLen(0x017B, 2)
 #elif PACKETVER >= 20080603
-packetLen(0x017b, -1)
+packetLen(0x017B, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x017b, 4)
+packetLen(0x017B, 4)
 #elif PACKETVER >= 20080520
-packetLen(0x017b, 68)
+packetLen(0x017B, 68)
 #elif PACKETVER >= 20080513
-packetLen(0x017b, -1)
+packetLen(0x017B, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x017b, 53)
+packetLen(0x017B, 53)
 #elif PACKETVER >= 20080429
-packetLen(0x017b, 8)
+packetLen(0x017B, 8)
 #elif PACKETVER >= 20080415
-packetLen(0x017b, 6)
+packetLen(0x017B, 6)
 #elif PACKETVER >= 20080408
-packetLen(0x017b, -1)
+packetLen(0x017B, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x017b, 6)
+packetLen(0x017B, 6)
 #elif PACKETVER >= 20080325
-packetLen(0x017b, -1)
+packetLen(0x017B, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x017b, 11)
+packetLen(0x017B, 11)
 #elif PACKETVER >= 20080311
-packetLen(0x017b, 3)
+packetLen(0x017B, 3)
 #elif PACKETVER >= 20080304
-packetLen(0x017b, 4)
+packetLen(0x017B, 4)
 #elif PACKETVER >= 20080226
-packetLen(0x017b, 9)
+packetLen(0x017B, 9)
 #elif PACKETVER >= 20080219
-packetLen(0x017b, 18)
+packetLen(0x017B, 18)
 #elif PACKETVER >= 20080124
-packetLen(0x017b, 3)
+packetLen(0x017B, 3)
 #elif PACKETVER >= 20080102
-packetLen(0x017b, -1)
+packetLen(0x017B, -1)
 #endif
 
 // Packet: 0x017c
 #if PACKETVER >= 20080701
-packetLen(0x017c, -1)
+packetLen(0x017C, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x017c, 55)
+packetLen(0x017C, 55)
 #elif PACKETVER >= 20080617
-packetLen(0x017c, 26)
+packetLen(0x017C, 26)
 #elif PACKETVER >= 20080610
-packetLen(0x017c, -1)
+packetLen(0x017C, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x017c, 6)
+packetLen(0x017C, 6)
 #elif PACKETVER >= 20080528
-packetLen(0x017c, 21)
+packetLen(0x017C, 21)
 #elif PACKETVER >= 20080520
-packetLen(0x017c, 39)
+packetLen(0x017C, 39)
 #elif PACKETVER >= 20080513
-packetLen(0x017c, 7)
+packetLen(0x017C, 7)
 #elif PACKETVER >= 20080422
-packetLen(0x017c, 6)
+packetLen(0x017C, 6)
 #elif PACKETVER >= 20080408
-packetLen(0x017c, -1)
+packetLen(0x017C, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x017c, 31)
+packetLen(0x017C, 31)
 #elif PACKETVER >= 20080311
-packetLen(0x017c, -1)
+packetLen(0x017C, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x017c, 6)
+packetLen(0x017C, 6)
 #elif PACKETVER >= 20080226
-packetLen(0x017c, -1)
+packetLen(0x017C, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x017c, 6)
+packetLen(0x017C, 6)
 #elif PACKETVER >= 20080124
-packetLen(0x017c, -1)
+packetLen(0x017C, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x017c, 6)
+packetLen(0x017C, 6)
 #endif
 
 // Packet: 0x017d
 #if PACKETVER >= 20080701
-packetLen(0x017d, 33)
+packetLen(0x017D, 33)
 #elif PACKETVER >= 20080610
-packetLen(0x017d, -1)
+packetLen(0x017D, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x017d, 3)
+packetLen(0x017D, 3)
 #elif PACKETVER >= 20080528
-packetLen(0x017d, -1)
+packetLen(0x017D, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x017d, 4)
+packetLen(0x017D, 4)
 #elif PACKETVER >= 20080422
-packetLen(0x017d, -1)
+packetLen(0x017D, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x017d, 11)
+packetLen(0x017D, 11)
 #elif PACKETVER >= 20080408
-packetLen(0x017d, 6)
+packetLen(0x017D, 6)
 #elif PACKETVER >= 20080401
-packetLen(0x017d, 8)
+packetLen(0x017D, 8)
 #elif PACKETVER >= 20080325
-packetLen(0x017d, -1)
+packetLen(0x017D, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x017d, 28)
+packetLen(0x017D, 28)
 #elif PACKETVER >= 20080311
-packetLen(0x017d, 34)
+packetLen(0x017D, 34)
 #elif PACKETVER >= 20080304
-packetLen(0x017d, 30)
+packetLen(0x017D, 30)
 #elif PACKETVER >= 20080219
-packetLen(0x017d, 8)
+packetLen(0x017D, 8)
 #elif PACKETVER >= 20080124
-packetLen(0x017d, 10)
+packetLen(0x017D, 10)
 #elif PACKETVER >= 20080102
-packetLen(0x017d, 7)
+packetLen(0x017D, 7)
 #endif
 
 // Packet: 0x017e
 #if PACKETVER >= 20080701
-packetLen(0x017e, 4)
+packetLen(0x017E, 4)
 #elif PACKETVER >= 20080624
-packetLen(0x017e, 6)
+packetLen(0x017E, 6)
 #elif PACKETVER >= 20080617
-packetLen(0x017e, -1)
+packetLen(0x017E, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x017e, 2)
+packetLen(0x017E, 2)
 #elif PACKETVER >= 20080603
-packetLen(0x017e, -1)
+packetLen(0x017E, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x017e, 29)
+packetLen(0x017E, 29)
 #elif PACKETVER >= 20080520
-packetLen(0x017e, -1)
+packetLen(0x017E, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x017e, 3)
+packetLen(0x017E, 3)
 #elif PACKETVER >= 20080507
-packetLen(0x017e, 32)
+packetLen(0x017E, 32)
 #elif PACKETVER >= 20080429
-packetLen(0x017e, 3)
+packetLen(0x017E, 3)
 #elif PACKETVER >= 20080422
-packetLen(0x017e, -1)
+packetLen(0x017E, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x017e, 14)
+packetLen(0x017E, 14)
 #elif PACKETVER >= 20080408
-packetLen(0x017e, -1)
+packetLen(0x017E, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x017e, 4)
+packetLen(0x017E, 4)
 #elif PACKETVER >= 20080325
-packetLen(0x017e, 14)
+packetLen(0x017E, 14)
 #elif PACKETVER >= 20080318
-packetLen(0x017e, 3)
+packetLen(0x017E, 3)
 #elif PACKETVER >= 20080311
-packetLen(0x017e, 31)
+packetLen(0x017E, 31)
 #elif PACKETVER >= 20080304
-packetLen(0x017e, 10)
+packetLen(0x017E, 10)
 #elif PACKETVER >= 20080226
-packetLen(0x017e, 7)
+packetLen(0x017E, 7)
 #elif PACKETVER >= 20080219
-packetLen(0x017e, 28)
+packetLen(0x017E, 28)
 #elif PACKETVER >= 20080124
-packetLen(0x017e, 7)
+packetLen(0x017E, 7)
 #elif PACKETVER >= 20080102
-packetLen(0x017e, -1)
+packetLen(0x017E, -1)
 #endif
 
 // Packet: 0x017f
 #if PACKETVER >= 20080624
-packetLen(0x017f, 2)
+packetLen(0x017F, 2)
 #elif PACKETVER >= 20080520
-packetLen(0x017f, -1)
+packetLen(0x017F, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x017f, 54)
+packetLen(0x017F, 54)
 #elif PACKETVER >= 20080507
-packetLen(0x017f, 11)
+packetLen(0x017F, 11)
 #elif PACKETVER >= 20080429
-packetLen(0x017f, 4)
+packetLen(0x017F, 4)
 #elif PACKETVER >= 20080415
-packetLen(0x017f, -1)
+packetLen(0x017F, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x017f, 20)
+packetLen(0x017F, 20)
 #elif PACKETVER >= 20080401
-packetLen(0x017f, 6)
+packetLen(0x017F, 6)
 #elif PACKETVER >= 20080325
-packetLen(0x017f, -1)
+packetLen(0x017F, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x017f, 4)
+packetLen(0x017F, 4)
 #elif PACKETVER >= 20080311
-packetLen(0x017f, 35)
+packetLen(0x017F, 35)
 #elif PACKETVER >= 20080304
-packetLen(0x017f, 14)
+packetLen(0x017F, 14)
 #elif PACKETVER >= 20080226
-packetLen(0x017f, 30)
+packetLen(0x017F, 30)
 #elif PACKETVER >= 20080219
-packetLen(0x017f, -1)
+packetLen(0x017F, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x017f, 30)
+packetLen(0x017F, 30)
 #elif PACKETVER >= 20080102
-packetLen(0x017f, -1)
+packetLen(0x017F, -1)
 #endif
 
 // Packet: 0x0180
@@ -9221,246 +9221,246 @@ packetLen(0x0189, 4)
 
 // Packet: 0x018a
 #if PACKETVER >= 20080701
-packetLen(0x018a, 6)
+packetLen(0x018A, 6)
 #elif PACKETVER >= 20080624
-packetLen(0x018a, 14)
+packetLen(0x018A, 14)
 #elif PACKETVER >= 20080617
-packetLen(0x018a, 18)
+packetLen(0x018A, 18)
 #elif PACKETVER >= 20080610
-packetLen(0x018a, -1)
+packetLen(0x018A, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x018a, 2)
+packetLen(0x018A, 2)
 #elif PACKETVER >= 20080528
-packetLen(0x018a, -1)
+packetLen(0x018A, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x018a, 4)
+packetLen(0x018A, 4)
 #elif PACKETVER >= 20080429
-packetLen(0x018a, -1)
+packetLen(0x018A, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x018a, 4)
+packetLen(0x018A, 4)
 #elif PACKETVER >= 20080415
-packetLen(0x018a, 2)
+packetLen(0x018A, 2)
 #elif PACKETVER >= 20080408
-packetLen(0x018a, -1)
+packetLen(0x018A, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x018a, 32)
+packetLen(0x018A, 32)
 #elif PACKETVER >= 20080325
-packetLen(0x018a, 6)
+packetLen(0x018A, 6)
 #elif PACKETVER >= 20080318
-packetLen(0x018a, 14)
+packetLen(0x018A, 14)
 #elif PACKETVER >= 20080311
-packetLen(0x018a, -1)
+packetLen(0x018A, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x018a, 7)
+packetLen(0x018A, 7)
 #elif PACKETVER >= 20080226
-packetLen(0x018a, 2)
+packetLen(0x018A, 2)
 #elif PACKETVER >= 20080219
-packetLen(0x018a, 7)
+packetLen(0x018A, 7)
 #elif PACKETVER >= 20080124
-packetLen(0x018a, 5)
+packetLen(0x018A, 5)
 #elif PACKETVER >= 20080102
-packetLen(0x018a, 4)
+packetLen(0x018A, 4)
 #endif
 
 // Packet: 0x018b
 #if PACKETVER >= 20080701
-packetLen(0x018b, 66)
+packetLen(0x018B, 66)
 #elif PACKETVER >= 20080610
-packetLen(0x018b, -1)
+packetLen(0x018B, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x018b, 182)
+packetLen(0x018B, 182)
 #elif PACKETVER >= 20080528
-packetLen(0x018b, 12)
+packetLen(0x018B, 12)
 #elif PACKETVER >= 20080520
-packetLen(0x018b, -1)
+packetLen(0x018B, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x018b, 3)
+packetLen(0x018B, 3)
 #elif PACKETVER >= 20080507
-packetLen(0x018b, -1)
+packetLen(0x018B, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x018b, 102)
+packetLen(0x018B, 102)
 #elif PACKETVER >= 20080408
-packetLen(0x018b, -1)
+packetLen(0x018B, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x018b, 3)
+packetLen(0x018B, 3)
 #elif PACKETVER >= 20080325
-packetLen(0x018b, 6)
+packetLen(0x018B, 6)
 #elif PACKETVER >= 20080318
-packetLen(0x018b, 30)
+packetLen(0x018B, 30)
 #elif PACKETVER >= 20080311
-packetLen(0x018b, 7)
+packetLen(0x018B, 7)
 #elif PACKETVER >= 20080304
-packetLen(0x018b, -1)
+packetLen(0x018B, -1)
 #elif PACKETVER >= 20080226
-packetLen(0x018b, 10)
+packetLen(0x018B, 10)
 #elif PACKETVER >= 20080124
-packetLen(0x018b, 6)
+packetLen(0x018B, 6)
 #elif PACKETVER >= 20080102
-packetLen(0x018b, 4)
+packetLen(0x018B, 4)
 #endif
 
 // Packet: 0x018c
 #if PACKETVER >= 20080701
-packetLen(0x018c, 14)
+packetLen(0x018C, 14)
 #elif PACKETVER >= 20080624
-packetLen(0x018c, 8)
+packetLen(0x018C, 8)
 #elif PACKETVER >= 20080617
-packetLen(0x018c, 31)
+packetLen(0x018C, 31)
 #elif PACKETVER >= 20080610
-packetLen(0x018c, 282)
+packetLen(0x018C, 282)
 #elif PACKETVER >= 20080603
-packetLen(0x018c, 8)
+packetLen(0x018C, 8)
 #elif PACKETVER >= 20080528
-packetLen(0x018c, -1)
+packetLen(0x018C, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x018c, 102)
+packetLen(0x018C, 102)
 #elif PACKETVER >= 20080513
-packetLen(0x018c, -1)
+packetLen(0x018C, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x018c, 21)
+packetLen(0x018C, 21)
 #elif PACKETVER >= 20080401
-packetLen(0x018c, -1)
+packetLen(0x018C, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x018c, 8)
+packetLen(0x018C, 8)
 #elif PACKETVER >= 20080318
-packetLen(0x018c, 6)
+packetLen(0x018C, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x018c, -1)
+packetLen(0x018C, -1)
 #elif PACKETVER >= 20080226
-packetLen(0x018c, 2)
+packetLen(0x018C, 2)
 #elif PACKETVER >= 20080219
-packetLen(0x018c, -1)
+packetLen(0x018C, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x018c, 6)
+packetLen(0x018C, 6)
 #elif PACKETVER >= 20080102
-packetLen(0x018c, 29)
+packetLen(0x018C, 29)
 #endif
 
 // Packet: 0x018d
 #if PACKETVER >= 20080701
-packetLen(0x018d, 2)
+packetLen(0x018D, 2)
 #elif PACKETVER >= 20080624
-packetLen(0x018d, 8)
+packetLen(0x018D, 8)
 #elif PACKETVER >= 20080617
-packetLen(0x018d, -1)
+packetLen(0x018D, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x018d, 65)
+packetLen(0x018D, 65)
 #elif PACKETVER >= 20080603
-packetLen(0x018d, 9)
+packetLen(0x018D, 9)
 #elif PACKETVER >= 20080520
-packetLen(0x018d, -1)
+packetLen(0x018D, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x018d, 2)
+packetLen(0x018D, 2)
 #elif PACKETVER >= 20080507
-packetLen(0x018d, 6)
+packetLen(0x018D, 6)
 #elif PACKETVER >= 20080429
-packetLen(0x018d, -1)
+packetLen(0x018D, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x018d, 59)
+packetLen(0x018D, 59)
 #elif PACKETVER >= 20080415
-packetLen(0x018d, 79)
+packetLen(0x018D, 79)
 #elif PACKETVER >= 20080408
-packetLen(0x018d, 7)
+packetLen(0x018D, 7)
 #elif PACKETVER >= 20080401
-packetLen(0x018d, -1)
+packetLen(0x018D, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x018d, 6)
+packetLen(0x018D, 6)
 #elif PACKETVER >= 20080311
-packetLen(0x018d, 8)
+packetLen(0x018D, 8)
 #elif PACKETVER >= 20080304
-packetLen(0x018d, 39)
+packetLen(0x018D, 39)
 #elif PACKETVER >= 20080226
-packetLen(0x018d, 22)
+packetLen(0x018D, 22)
 #elif PACKETVER >= 20080219
-packetLen(0x018d, 4)
+packetLen(0x018D, 4)
 #elif PACKETVER >= 20080102
-packetLen(0x018d, -1)
+packetLen(0x018D, -1)
 #endif
 
 // Packet: 0x018e
 #if PACKETVER >= 20080701
-packetLen(0x018e, -1)
+packetLen(0x018E, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x018e, 14)
+packetLen(0x018E, 14)
 #elif PACKETVER >= 20080617
-packetLen(0x018e, -1)
+packetLen(0x018E, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x018e, 59)
+packetLen(0x018E, 59)
 #elif PACKETVER >= 20080603
-packetLen(0x018e, 10)
+packetLen(0x018E, 10)
 #elif PACKETVER >= 20080528
-packetLen(0x018e, 5)
+packetLen(0x018E, 5)
 #elif PACKETVER >= 20080520
-packetLen(0x018e, 11)
+packetLen(0x018E, 11)
 #elif PACKETVER >= 20080513
-packetLen(0x018e, 2)
+packetLen(0x018E, 2)
 #elif PACKETVER >= 20080429
-packetLen(0x018e, -1)
+packetLen(0x018E, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x018e, 10)
+packetLen(0x018E, 10)
 #elif PACKETVER >= 20080415
-packetLen(0x018e, -1)
+packetLen(0x018E, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x018e, 27)
+packetLen(0x018E, 27)
 #elif PACKETVER >= 20080401
-packetLen(0x018e, 3)
+packetLen(0x018E, 3)
 #elif PACKETVER >= 20080325
-packetLen(0x018e, -1)
+packetLen(0x018E, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x018e, 65)
+packetLen(0x018E, 65)
 #elif PACKETVER >= 20080311
-packetLen(0x018e, -1)
+packetLen(0x018E, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x018e, 58)
+packetLen(0x018E, 58)
 #elif PACKETVER >= 20080226
-packetLen(0x018e, 4)
+packetLen(0x018E, 4)
 #elif PACKETVER >= 20080219
-packetLen(0x018e, 39)
+packetLen(0x018E, 39)
 #elif PACKETVER >= 20080124
-packetLen(0x018e, 3)
+packetLen(0x018E, 3)
 #elif PACKETVER >= 20080102
-packetLen(0x018e, 10)
+packetLen(0x018E, 10)
 #endif
 
 // Packet: 0x018f
 #if PACKETVER >= 20080617
-packetLen(0x018f, -1)
+packetLen(0x018F, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x018f, 6)
+packetLen(0x018F, 6)
 #elif PACKETVER >= 20080603
-packetLen(0x018f, 12)
+packetLen(0x018F, 12)
 #elif PACKETVER >= 20080520
-packetLen(0x018f, -1)
+packetLen(0x018F, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x018f, 6)
+packetLen(0x018F, 6)
 #elif PACKETVER >= 20080507
-packetLen(0x018f, 7)
+packetLen(0x018F, 7)
 #elif PACKETVER >= 20080429
-packetLen(0x018f, 14)
+packetLen(0x018F, 14)
 #elif PACKETVER >= 20080422
-packetLen(0x018f, 10)
+packetLen(0x018F, 10)
 #elif PACKETVER >= 20080415
-packetLen(0x018f, 30)
+packetLen(0x018F, 30)
 #elif PACKETVER >= 20080408
-packetLen(0x018f, -1)
+packetLen(0x018F, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x018f, 11)
+packetLen(0x018F, 11)
 #elif PACKETVER >= 20080325
-packetLen(0x018f, 6)
+packetLen(0x018F, 6)
 #elif PACKETVER >= 20080318
-packetLen(0x018f, 7)
+packetLen(0x018F, 7)
 #elif PACKETVER >= 20080311
-packetLen(0x018f, 11)
+packetLen(0x018F, 11)
 #elif PACKETVER >= 20080304
-packetLen(0x018f, 3)
+packetLen(0x018F, 3)
 #elif PACKETVER >= 20080226
-packetLen(0x018f, -1)
+packetLen(0x018F, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x018f, 6)
+packetLen(0x018F, 6)
 #elif PACKETVER >= 20080124
-packetLen(0x018f, 8)
+packetLen(0x018F, 8)
 #elif PACKETVER >= 20080102
-packetLen(0x018f, 6)
+packetLen(0x018F, 6)
 #endif
 
 // Packet: 0x0190
@@ -9657,2591 +9657,2591 @@ packetLen(0x0199, 4)
 
 // Packet: 0x019a
 #if PACKETVER >= 20080701
-packetLen(0x019a, 58)
+packetLen(0x019A, 58)
 #elif PACKETVER >= 20080624
-packetLen(0x019a, -1)
+packetLen(0x019A, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x019a, 11)
+packetLen(0x019A, 11)
 #elif PACKETVER >= 20080610
-packetLen(0x019a, 6)
+packetLen(0x019A, 6)
 #elif PACKETVER >= 20080603
-packetLen(0x019a, -1)
+packetLen(0x019A, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x019a, 6)
+packetLen(0x019A, 6)
 #elif PACKETVER >= 20080520
-packetLen(0x019a, 17)
+packetLen(0x019A, 17)
 #elif PACKETVER >= 20080513
-packetLen(0x019a, 3)
+packetLen(0x019A, 3)
 #elif PACKETVER >= 20080507
-packetLen(0x019a, 8)
+packetLen(0x019A, 8)
 #elif PACKETVER >= 20080429
-packetLen(0x019a, 2)
+packetLen(0x019A, 2)
 #elif PACKETVER >= 20080415
-packetLen(0x019a, -1)
+packetLen(0x019A, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x019a, 3)
+packetLen(0x019A, 3)
 #elif PACKETVER >= 20080401
-packetLen(0x019a, 6)
+packetLen(0x019A, 6)
 #elif PACKETVER >= 20080325
-packetLen(0x019a, 11)
+packetLen(0x019A, 11)
 #elif PACKETVER >= 20080318
-packetLen(0x019a, 4)
+packetLen(0x019A, 4)
 #elif PACKETVER >= 20080311
-packetLen(0x019a, 30)
+packetLen(0x019A, 30)
 #elif PACKETVER >= 20080304
-packetLen(0x019a, 35)
+packetLen(0x019A, 35)
 #elif PACKETVER >= 20080226
-packetLen(0x019a, 42)
+packetLen(0x019A, 42)
 #elif PACKETVER >= 20080219
-packetLen(0x019a, 10)
+packetLen(0x019A, 10)
 #elif PACKETVER >= 20080124
-packetLen(0x019a, 57)
+packetLen(0x019A, 57)
 #elif PACKETVER >= 20080102
-packetLen(0x019a, 14)
+packetLen(0x019A, 14)
 #endif
 
 // Packet: 0x019b
 #if PACKETVER >= 20080624
-packetLen(0x019b, -1)
+packetLen(0x019B, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x019b, 4)
+packetLen(0x019B, 4)
 #elif PACKETVER >= 20080610
-packetLen(0x019b, -1)
+packetLen(0x019B, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x019b, 2)
+packetLen(0x019B, 2)
 #elif PACKETVER >= 20080528
-packetLen(0x019b, 27)
+packetLen(0x019B, 27)
 #elif PACKETVER >= 20080520
-packetLen(0x019b, 18)
+packetLen(0x019B, 18)
 #elif PACKETVER >= 20080513
-packetLen(0x019b, 68)
+packetLen(0x019B, 68)
 #elif PACKETVER >= 20080507
-packetLen(0x019b, -1)
+packetLen(0x019B, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x019b, 17)
+packetLen(0x019B, 17)
 #elif PACKETVER >= 20080415
-packetLen(0x019b, -1)
+packetLen(0x019B, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x019b, 29)
+packetLen(0x019B, 29)
 #elif PACKETVER >= 20080401
-packetLen(0x019b, 54)
+packetLen(0x019B, 54)
 #elif PACKETVER >= 20080318
-packetLen(0x019b, 8)
+packetLen(0x019B, 8)
 #elif PACKETVER >= 20080311
-packetLen(0x019b, 6)
+packetLen(0x019B, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x019b, 2)
+packetLen(0x019B, 2)
 #elif PACKETVER >= 20080226
-packetLen(0x019b, 65)
+packetLen(0x019B, 65)
 #elif PACKETVER >= 20080219
-packetLen(0x019b, 2)
+packetLen(0x019B, 2)
 #elif PACKETVER >= 20080124
-packetLen(0x019b, 30)
+packetLen(0x019B, 30)
 #elif PACKETVER >= 20080102
-packetLen(0x019b, 10)
+packetLen(0x019B, 10)
 #endif
 
 // Packet: 0x019c
 #if PACKETVER >= 20080701
-packetLen(0x019c, 282)
+packetLen(0x019C, 282)
 #elif PACKETVER >= 20080624
-packetLen(0x019c, 29)
+packetLen(0x019C, 29)
 #elif PACKETVER >= 20080617
-packetLen(0x019c, -1)
+packetLen(0x019C, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x019c, 6)
+packetLen(0x019C, 6)
 #elif PACKETVER >= 20080603
-packetLen(0x019c, -1)
+packetLen(0x019C, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x019c, 55)
+packetLen(0x019C, 55)
 #elif PACKETVER >= 20080520
-packetLen(0x019c, -1)
+packetLen(0x019C, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x019c, 81)
+packetLen(0x019C, 81)
 #elif PACKETVER >= 20080507
-packetLen(0x019c, 18)
+packetLen(0x019C, 18)
 #elif PACKETVER >= 20080429
-packetLen(0x019c, 79)
+packetLen(0x019C, 79)
 #elif PACKETVER >= 20080422
-packetLen(0x019c, -1)
+packetLen(0x019C, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x019c, 8)
+packetLen(0x019C, 8)
 #elif PACKETVER >= 20080408
-packetLen(0x019c, -1)
+packetLen(0x019C, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x019c, 54)
+packetLen(0x019C, 54)
 #elif PACKETVER >= 20080325
-packetLen(0x019c, 23)
+packetLen(0x019C, 23)
 #elif PACKETVER >= 20080318
-packetLen(0x019c, 43)
+packetLen(0x019C, 43)
 #elif PACKETVER >= 20080311
-packetLen(0x019c, 8)
+packetLen(0x019C, 8)
 #elif PACKETVER >= 20080226
-packetLen(0x019c, -1)
+packetLen(0x019C, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x019c, 2)
+packetLen(0x019C, 2)
 #elif PACKETVER >= 20080124
-packetLen(0x019c, 186)
+packetLen(0x019C, 186)
 #elif PACKETVER >= 20080102
-packetLen(0x019c, -1)
+packetLen(0x019C, -1)
 #endif
 
 // Packet: 0x019d
 #if PACKETVER >= 20080701
-packetLen(0x019d, -1)
+packetLen(0x019D, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x019d, 30)
+packetLen(0x019D, 30)
 #elif PACKETVER >= 20080603
-packetLen(0x019d, -1)
+packetLen(0x019D, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x019d, 2)
+packetLen(0x019D, 2)
 #elif PACKETVER >= 20080520
-packetLen(0x019d, 8)
+packetLen(0x019D, 8)
 #elif PACKETVER >= 20080513
-packetLen(0x019d, 11)
+packetLen(0x019D, 11)
 #elif PACKETVER >= 20080429
-packetLen(0x019d, -1)
+packetLen(0x019D, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x019d, 6)
+packetLen(0x019D, 6)
 #elif PACKETVER >= 20080415
-packetLen(0x019d, 18)
+packetLen(0x019D, 18)
 #elif PACKETVER >= 20080408
-packetLen(0x019d, -1)
+packetLen(0x019D, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x019d, 68)
+packetLen(0x019D, 68)
 #elif PACKETVER >= 20080325
-packetLen(0x019d, 4)
+packetLen(0x019D, 4)
 #elif PACKETVER >= 20080318
-packetLen(0x019d, 14)
+packetLen(0x019D, 14)
 #elif PACKETVER >= 20080311
-packetLen(0x019d, 4)
+packetLen(0x019D, 4)
 #elif PACKETVER >= 20080226
-packetLen(0x019d, -1)
+packetLen(0x019D, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x019d, 18)
+packetLen(0x019D, 18)
 #elif PACKETVER >= 20080124
-packetLen(0x019d, 22)
+packetLen(0x019D, 22)
 #elif PACKETVER >= 20080102
-packetLen(0x019d, 6)
+packetLen(0x019D, 6)
 #endif
 
 // Packet: 0x019e
-packetLen(0x019e, 2)
+packetLen(0x019E, 2)
 
 // Packet: 0x019f
 #if PACKETVER >= 20080701
-packetLen(0x019f, 36)
+packetLen(0x019F, 36)
 #elif PACKETVER >= 20080610
-packetLen(0x019f, -1)
+packetLen(0x019F, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x019f, 6)
+packetLen(0x019F, 6)
 #elif PACKETVER >= 20080528
-packetLen(0x019f, 20)
+packetLen(0x019F, 20)
 #elif PACKETVER >= 20080520
-packetLen(0x019f, 18)
+packetLen(0x019F, 18)
 #elif PACKETVER >= 20080513
-packetLen(0x019f, -1)
+packetLen(0x019F, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x019f, 26)
+packetLen(0x019F, 26)
 #elif PACKETVER >= 20080429
-packetLen(0x019f, 3)
+packetLen(0x019F, 3)
 #elif PACKETVER >= 20080422
-packetLen(0x019f, 6)
+packetLen(0x019F, 6)
 #elif PACKETVER >= 20080415
-packetLen(0x019f, 8)
+packetLen(0x019F, 8)
 #elif PACKETVER >= 20080408
-packetLen(0x019f, -1)
+packetLen(0x019F, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x019f, 6)
+packetLen(0x019F, 6)
 #elif PACKETVER >= 20080325
-packetLen(0x019f, 34)
+packetLen(0x019F, 34)
 #elif PACKETVER >= 20080318
-packetLen(0x019f, 10)
+packetLen(0x019F, 10)
 #elif PACKETVER >= 20080311
-packetLen(0x019f, -1)
+packetLen(0x019F, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x019f, 23)
+packetLen(0x019F, 23)
 #elif PACKETVER >= 20080226
-packetLen(0x019f, 79)
+packetLen(0x019F, 79)
 #elif PACKETVER >= 20080124
-packetLen(0x019f, 2)
+packetLen(0x019F, 2)
 #elif PACKETVER >= 20080102
-packetLen(0x019f, 6)
+packetLen(0x019F, 6)
 #endif
 
 // Packet: 0x01a0
 #if PACKETVER >= 20080701
-packetLen(0x01a0, -1)
+packetLen(0x01A0, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x01a0, 5)
+packetLen(0x01A0, 5)
 #elif PACKETVER >= 20080617
-packetLen(0x01a0, -1)
+packetLen(0x01A0, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x01a0, 11)
+packetLen(0x01A0, 11)
 #elif PACKETVER >= 20080603
-packetLen(0x01a0, 29)
+packetLen(0x01A0, 29)
 #elif PACKETVER >= 20080528
-packetLen(0x01a0, 4)
+packetLen(0x01A0, 4)
 #elif PACKETVER >= 20080520
-packetLen(0x01a0, 42)
+packetLen(0x01A0, 42)
 #elif PACKETVER >= 20080513
-packetLen(0x01a0, 24)
+packetLen(0x01A0, 24)
 #elif PACKETVER >= 20080507
-packetLen(0x01a0, 23)
+packetLen(0x01A0, 23)
 #elif PACKETVER >= 20080429
-packetLen(0x01a0, 11)
+packetLen(0x01A0, 11)
 #elif PACKETVER >= 20080408
-packetLen(0x01a0, -1)
+packetLen(0x01A0, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x01a0, 30)
+packetLen(0x01A0, 30)
 #elif PACKETVER >= 20080325
-packetLen(0x01a0, -1)
+packetLen(0x01A0, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x01a0, 17)
+packetLen(0x01A0, 17)
 #elif PACKETVER >= 20080311
-packetLen(0x01a0, -1)
+packetLen(0x01A0, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x01a0, 22)
+packetLen(0x01A0, 22)
 #elif PACKETVER >= 20080226
-packetLen(0x01a0, 8)
+packetLen(0x01A0, 8)
 #elif PACKETVER >= 20080219
-packetLen(0x01a0, 3)
+packetLen(0x01A0, 3)
 #elif PACKETVER >= 20080124
-packetLen(0x01a0, 7)
+packetLen(0x01A0, 7)
 #elif PACKETVER >= 20080102
-packetLen(0x01a0, 3)
+packetLen(0x01A0, 3)
 #endif
 
 // Packet: 0x01a1
 #if PACKETVER >= 20080701
-packetLen(0x01a1, 3)
+packetLen(0x01A1, 3)
 #elif PACKETVER >= 20080617
-packetLen(0x01a1, -1)
+packetLen(0x01A1, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x01a1, 10)
+packetLen(0x01A1, 10)
 #elif PACKETVER >= 20080603
-packetLen(0x01a1, -1)
+packetLen(0x01A1, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x01a1, 7)
+packetLen(0x01A1, 7)
 #elif PACKETVER >= 20080520
-packetLen(0x01a1, 21)
+packetLen(0x01A1, 21)
 #elif PACKETVER >= 20080507
-packetLen(0x01a1, -1)
+packetLen(0x01A1, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x01a1, 7)
+packetLen(0x01A1, 7)
 #elif PACKETVER >= 20080422
-packetLen(0x01a1, 3)
+packetLen(0x01A1, 3)
 #elif PACKETVER >= 20080415
-packetLen(0x01a1, 28)
+packetLen(0x01A1, 28)
 #elif PACKETVER >= 20080408
-packetLen(0x01a1, 282)
+packetLen(0x01A1, 282)
 #elif PACKETVER >= 20080401
-packetLen(0x01a1, 30)
+packetLen(0x01A1, 30)
 #elif PACKETVER >= 20080325
-packetLen(0x01a1, 7)
+packetLen(0x01A1, 7)
 #elif PACKETVER >= 20080318
-packetLen(0x01a1, 4)
+packetLen(0x01A1, 4)
 #elif PACKETVER >= 20080311
-packetLen(0x01a1, 53)
+packetLen(0x01A1, 53)
 #elif PACKETVER >= 20080304
-packetLen(0x01a1, 26)
+packetLen(0x01A1, 26)
 #elif PACKETVER >= 20080226
-packetLen(0x01a1, -1)
+packetLen(0x01A1, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x01a1, 6)
+packetLen(0x01A1, 6)
 #elif PACKETVER >= 20080124
-packetLen(0x01a1, 5)
+packetLen(0x01A1, 5)
 #elif PACKETVER >= 20080102
-packetLen(0x01a1, 3)
+packetLen(0x01A1, 3)
 #endif
 
 // Packet: 0x01a2
 #if PACKETVER >= 20080701
-packetLen(0x01a2, 2)
+packetLen(0x01A2, 2)
 #elif PACKETVER >= 20080624
-packetLen(0x01a2, 3)
+packetLen(0x01A2, 3)
 #elif PACKETVER >= 20080610
-packetLen(0x01a2, -1)
+packetLen(0x01A2, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x01a2, 28)
+packetLen(0x01A2, 28)
 #elif PACKETVER >= 20080520
-packetLen(0x01a2, -1)
+packetLen(0x01A2, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x01a2, 54)
+packetLen(0x01A2, 54)
 #elif PACKETVER >= 20080507
-packetLen(0x01a2, 27)
+packetLen(0x01A2, 27)
 #elif PACKETVER >= 20080429
-packetLen(0x01a2, 2)
+packetLen(0x01A2, 2)
 #elif PACKETVER >= 20080422
-packetLen(0x01a2, 30)
+packetLen(0x01A2, 30)
 #elif PACKETVER >= 20080415
-packetLen(0x01a2, 68)
+packetLen(0x01A2, 68)
 #elif PACKETVER >= 20080408
-packetLen(0x01a2, 6)
+packetLen(0x01A2, 6)
 #elif PACKETVER >= 20080401
-packetLen(0x01a2, -1)
+packetLen(0x01A2, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x01a2, 2)
+packetLen(0x01A2, 2)
 #elif PACKETVER >= 20080311
-packetLen(0x01a2, 4)
+packetLen(0x01A2, 4)
 #elif PACKETVER >= 20080304
-packetLen(0x01a2, 6)
+packetLen(0x01A2, 6)
 #elif PACKETVER >= 20080226
-packetLen(0x01a2, 7)
+packetLen(0x01A2, 7)
 #elif PACKETVER >= 20080219
-packetLen(0x01a2, 8)
+packetLen(0x01A2, 8)
 #elif PACKETVER >= 20080124
-packetLen(0x01a2, 6)
+packetLen(0x01A2, 6)
 #elif PACKETVER >= 20080102
-packetLen(0x01a2, 35)
+packetLen(0x01A2, 35)
 #endif
 
 // Packet: 0x01a3
 #if PACKETVER >= 20080701
-packetLen(0x01a3, 31)
+packetLen(0x01A3, 31)
 #elif PACKETVER >= 20080624
-packetLen(0x01a3, 8)
+packetLen(0x01A3, 8)
 #elif PACKETVER >= 20080610
-packetLen(0x01a3, -1)
+packetLen(0x01A3, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x01a3, 26)
+packetLen(0x01A3, 26)
 #elif PACKETVER >= 20080528
-packetLen(0x01a3, -1)
+packetLen(0x01A3, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x01a3, 26)
+packetLen(0x01A3, 26)
 #elif PACKETVER >= 20080513
-packetLen(0x01a3, -1)
+packetLen(0x01A3, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x01a3, 5)
+packetLen(0x01A3, 5)
 #elif PACKETVER >= 20080429
-packetLen(0x01a3, 9)
+packetLen(0x01A3, 9)
 #elif PACKETVER >= 20080422
-packetLen(0x01a3, 30)
+packetLen(0x01A3, 30)
 #elif PACKETVER >= 20080415
-packetLen(0x01a3, 3)
+packetLen(0x01A3, 3)
 #elif PACKETVER >= 20080318
-packetLen(0x01a3, -1)
+packetLen(0x01A3, -1)
 #elif PACKETVER >= 20080311
-packetLen(0x01a3, 32)
+packetLen(0x01A3, 32)
 #elif PACKETVER >= 20080304
-packetLen(0x01a3, 6)
+packetLen(0x01A3, 6)
 #elif PACKETVER >= 20080226
-packetLen(0x01a3, 4)
+packetLen(0x01A3, 4)
 #elif PACKETVER >= 20080219
-packetLen(0x01a3, 11)
+packetLen(0x01A3, 11)
 #elif PACKETVER >= 20080124
-packetLen(0x01a3, -1)
+packetLen(0x01A3, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x01a3, 5)
+packetLen(0x01A3, 5)
 #endif
 
 // Packet: 0x01a4
 #if PACKETVER >= 20080617
-packetLen(0x01a4, -1)
+packetLen(0x01A4, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x01a4, 4)
+packetLen(0x01A4, 4)
 #elif PACKETVER >= 20080603
-packetLen(0x01a4, 10)
+packetLen(0x01A4, 10)
 #elif PACKETVER >= 20080528
-packetLen(0x01a4, -1)
+packetLen(0x01A4, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x01a4, 34)
+packetLen(0x01A4, 34)
 #elif PACKETVER >= 20080513
-packetLen(0x01a4, 2)
+packetLen(0x01A4, 2)
 #elif PACKETVER >= 20080507
-packetLen(0x01a4, 11)
+packetLen(0x01A4, 11)
 #elif PACKETVER >= 20080429
-packetLen(0x01a4, -1)
+packetLen(0x01A4, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x01a4, 102)
+packetLen(0x01A4, 102)
 #elif PACKETVER >= 20080415
-packetLen(0x01a4, -1)
+packetLen(0x01A4, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x01a4, 16)
+packetLen(0x01A4, 16)
 #elif PACKETVER >= 20080401
-packetLen(0x01a4, 36)
+packetLen(0x01A4, 36)
 #elif PACKETVER >= 20080325
-packetLen(0x01a4, 8)
+packetLen(0x01A4, 8)
 #elif PACKETVER >= 20080318
-packetLen(0x01a4, 2)
+packetLen(0x01A4, 2)
 #elif PACKETVER >= 20080311
-packetLen(0x01a4, -1)
+packetLen(0x01A4, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x01a4, 4)
+packetLen(0x01A4, 4)
 #elif PACKETVER >= 20080226
-packetLen(0x01a4, 10)
+packetLen(0x01A4, 10)
 #elif PACKETVER >= 20080124
-packetLen(0x01a4, 8)
+packetLen(0x01A4, 8)
 #elif PACKETVER >= 20080102
-packetLen(0x01a4, 11)
+packetLen(0x01A4, 11)
 #endif
 
 // Packet: 0x01a5
-packetLen(0x01a5, 26)
+packetLen(0x01A5, 26)
 
 // Packet: 0x01a6
 #if PACKETVER >= 20080701
-packetLen(0x01a6, 4)
+packetLen(0x01A6, 4)
 #elif PACKETVER >= 20080617
-packetLen(0x01a6, -1)
+packetLen(0x01A6, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x01a6, 3)
+packetLen(0x01A6, 3)
 #elif PACKETVER >= 20080603
-packetLen(0x01a6, 10)
+packetLen(0x01A6, 10)
 #elif PACKETVER >= 20080520
-packetLen(0x01a6, 6)
+packetLen(0x01A6, 6)
 #elif PACKETVER >= 20080513
-packetLen(0x01a6, 4)
+packetLen(0x01A6, 4)
 #elif PACKETVER >= 20080507
-packetLen(0x01a6, 6)
+packetLen(0x01A6, 6)
 #elif PACKETVER >= 20080429
-packetLen(0x01a6, 30)
+packetLen(0x01A6, 30)
 #elif PACKETVER >= 20080422
-packetLen(0x01a6, -1)
+packetLen(0x01A6, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x01a6, 6)
+packetLen(0x01A6, 6)
 #elif PACKETVER >= 20080401
-packetLen(0x01a6, 2)
+packetLen(0x01A6, 2)
 #elif PACKETVER >= 20080325
-packetLen(0x01a6, 3)
+packetLen(0x01A6, 3)
 #elif PACKETVER >= 20080318
-packetLen(0x01a6, 26)
+packetLen(0x01A6, 26)
 #elif PACKETVER >= 20080311
-packetLen(0x01a6, 2)
+packetLen(0x01A6, 2)
 #elif PACKETVER >= 20080304
-packetLen(0x01a6, -1)
+packetLen(0x01A6, -1)
 #elif PACKETVER >= 20080226
-packetLen(0x01a6, 10)
+packetLen(0x01A6, 10)
 #elif PACKETVER >= 20080219
-packetLen(0x01a6, -1)
+packetLen(0x01A6, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x01a6, 27)
+packetLen(0x01A6, 27)
 #elif PACKETVER >= 20080102
-packetLen(0x01a6, -1)
+packetLen(0x01A6, -1)
 #endif
 
 // Packet: 0x01a7
 #if PACKETVER >= 20080701
-packetLen(0x01a7, 2)
+packetLen(0x01A7, 2)
 #elif PACKETVER >= 20080617
-packetLen(0x01a7, 6)
+packetLen(0x01A7, 6)
 #elif PACKETVER >= 20080603
-packetLen(0x01a7, -1)
+packetLen(0x01A7, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x01a7, 30)
+packetLen(0x01A7, 30)
 #elif PACKETVER >= 20080520
-packetLen(0x01a7, -1)
+packetLen(0x01A7, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x01a7, 18)
+packetLen(0x01A7, 18)
 #elif PACKETVER >= 20080507
-packetLen(0x01a7, -1)
+packetLen(0x01A7, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x01a7, 6)
+packetLen(0x01A7, 6)
 #elif PACKETVER >= 20080422
-packetLen(0x01a7, 4)
+packetLen(0x01A7, 4)
 #elif PACKETVER >= 20080415
-packetLen(0x01a7, 18)
+packetLen(0x01A7, 18)
 #elif PACKETVER >= 20080408
-packetLen(0x01a7, 4)
+packetLen(0x01A7, 4)
 #elif PACKETVER >= 20080401
-packetLen(0x01a7, 22)
+packetLen(0x01A7, 22)
 #elif PACKETVER >= 20080325
-packetLen(0x01a7, 16)
+packetLen(0x01A7, 16)
 #elif PACKETVER >= 20080318
-packetLen(0x01a7, 26)
+packetLen(0x01A7, 26)
 #elif PACKETVER >= 20080311
-packetLen(0x01a7, 6)
+packetLen(0x01A7, 6)
 #elif PACKETVER >= 20080226
-packetLen(0x01a7, 2)
+packetLen(0x01A7, 2)
 #elif PACKETVER >= 20080219
-packetLen(0x01a7, 6)
+packetLen(0x01A7, 6)
 #elif PACKETVER >= 20080124
-packetLen(0x01a7, 3)
+packetLen(0x01A7, 3)
 #elif PACKETVER >= 20080102
-packetLen(0x01a7, 4)
+packetLen(0x01A7, 4)
 #endif
 
 // Packet: 0x01a8
-packetLen(0x01a8, 4)
+packetLen(0x01A8, 4)
 
 // Packet: 0x01a9
-packetLen(0x01a9, 6)
+packetLen(0x01A9, 6)
 
 // Packet: 0x01aa
 #if PACKETVER >= 20080624
-packetLen(0x01aa, -1)
+packetLen(0x01AA, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x01aa, 6)
+packetLen(0x01AA, 6)
 #elif PACKETVER >= 20080603
-packetLen(0x01aa, 43)
+packetLen(0x01AA, 43)
 #elif PACKETVER >= 20080528
-packetLen(0x01aa, -1)
+packetLen(0x01AA, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x01aa, 28)
+packetLen(0x01AA, 28)
 #elif PACKETVER >= 20080513
-packetLen(0x01aa, 60)
+packetLen(0x01AA, 60)
 #elif PACKETVER >= 20080507
-packetLen(0x01aa, 6)
+packetLen(0x01AA, 6)
 #elif PACKETVER >= 20080422
-packetLen(0x01aa, -1)
+packetLen(0x01AA, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x01aa, 8)
+packetLen(0x01AA, 8)
 #elif PACKETVER >= 20080408
-packetLen(0x01aa, 28)
+packetLen(0x01AA, 28)
 #elif PACKETVER >= 20080401
-packetLen(0x01aa, 7)
+packetLen(0x01AA, 7)
 #elif PACKETVER >= 20080318
-packetLen(0x01aa, -1)
+packetLen(0x01AA, -1)
 #elif PACKETVER >= 20080311
-packetLen(0x01aa, 9)
+packetLen(0x01AA, 9)
 #elif PACKETVER >= 20080304
-packetLen(0x01aa, 67)
+packetLen(0x01AA, 67)
 #elif PACKETVER >= 20080219
-packetLen(0x01aa, 6)
+packetLen(0x01AA, 6)
 #elif PACKETVER >= 20080124
-packetLen(0x01aa, 54)
+packetLen(0x01AA, 54)
 #elif PACKETVER >= 20080102
-packetLen(0x01aa, 10)
+packetLen(0x01AA, 10)
 #endif
 
 // Packet: 0x01ab
 #if PACKETVER >= 20080701
-packetLen(0x01ab, 10)
+packetLen(0x01AB, 10)
 #elif PACKETVER >= 20080624
-packetLen(0x01ab, 60)
+packetLen(0x01AB, 60)
 #elif PACKETVER >= 20080617
-packetLen(0x01ab, -1)
+packetLen(0x01AB, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x01ab, 11)
+packetLen(0x01AB, 11)
 #elif PACKETVER >= 20080528
-packetLen(0x01ab, 6)
+packetLen(0x01AB, 6)
 #elif PACKETVER >= 20080520
-packetLen(0x01ab, -1)
+packetLen(0x01AB, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x01ab, 30)
+packetLen(0x01AB, 30)
 #elif PACKETVER >= 20080507
-packetLen(0x01ab, -1)
+packetLen(0x01AB, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x01ab, 10)
+packetLen(0x01AB, 10)
 #elif PACKETVER >= 20080422
-packetLen(0x01ab, -1)
+packetLen(0x01AB, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x01ab, 35)
+packetLen(0x01AB, 35)
 #elif PACKETVER >= 20080408
-packetLen(0x01ab, 79)
+packetLen(0x01AB, 79)
 #elif PACKETVER >= 20080401
-packetLen(0x01ab, 18)
+packetLen(0x01AB, 18)
 #elif PACKETVER >= 20080325
-packetLen(0x01ab, 10)
+packetLen(0x01AB, 10)
 #elif PACKETVER >= 20080311
-packetLen(0x01ab, -1)
+packetLen(0x01AB, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x01ab, 4)
+packetLen(0x01AB, 4)
 #elif PACKETVER >= 20080226
-packetLen(0x01ab, 10)
+packetLen(0x01AB, 10)
 #elif PACKETVER >= 20080219
-packetLen(0x01ab, 3)
+packetLen(0x01AB, 3)
 #elif PACKETVER >= 20080124
-packetLen(0x01ab, -1)
+packetLen(0x01AB, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x01ab, 12)
+packetLen(0x01AB, 12)
 #endif
 
 // Packet: 0x01ac
 #if PACKETVER >= 20080610
-packetLen(0x01ac, -1)
+packetLen(0x01AC, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x01ac, 59)
+packetLen(0x01AC, 59)
 #elif PACKETVER >= 20080528
-packetLen(0x01ac, -1)
+packetLen(0x01AC, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x01ac, 6)
+packetLen(0x01AC, 6)
 #elif PACKETVER >= 20080513
-packetLen(0x01ac, 44)
+packetLen(0x01AC, 44)
 #elif PACKETVER >= 20080507
-packetLen(0x01ac, 10)
+packetLen(0x01AC, 10)
 #elif PACKETVER >= 20080429
-packetLen(0x01ac, 14)
+packetLen(0x01AC, 14)
 #elif PACKETVER >= 20080422
-packetLen(0x01ac, 3)
+packetLen(0x01AC, 3)
 #elif PACKETVER >= 20080415
-packetLen(0x01ac, -1)
+packetLen(0x01AC, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x01ac, 29)
+packetLen(0x01AC, 29)
 #elif PACKETVER >= 20080325
-packetLen(0x01ac, -1)
+packetLen(0x01AC, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x01ac, 97)
+packetLen(0x01AC, 97)
 #elif PACKETVER >= 20080311
-packetLen(0x01ac, 6)
+packetLen(0x01AC, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x01ac, 2)
+packetLen(0x01AC, 2)
 #elif PACKETVER >= 20080226
-packetLen(0x01ac, 4)
+packetLen(0x01AC, 4)
 #elif PACKETVER >= 20080219
-packetLen(0x01ac, 26)
+packetLen(0x01AC, 26)
 #elif PACKETVER >= 20080124
-packetLen(0x01ac, 17)
+packetLen(0x01AC, 17)
 #elif PACKETVER >= 20080102
-packetLen(0x01ac, 6)
+packetLen(0x01AC, 6)
 #endif
 
 // Packet: 0x01ad
 #if PACKETVER >= 20080624
-packetLen(0x01ad, 2)
+packetLen(0x01AD, 2)
 #elif PACKETVER >= 20080617
-packetLen(0x01ad, -1)
+packetLen(0x01AD, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x01ad, 10)
+packetLen(0x01AD, 10)
 #elif PACKETVER >= 20080603
-packetLen(0x01ad, 4)
+packetLen(0x01AD, 4)
 #elif PACKETVER >= 20080528
-packetLen(0x01ad, 8)
+packetLen(0x01AD, 8)
 #elif PACKETVER >= 20080429
-packetLen(0x01ad, -1)
+packetLen(0x01AD, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x01ad, 6)
+packetLen(0x01AD, 6)
 #elif PACKETVER >= 20080415
-packetLen(0x01ad, 26)
+packetLen(0x01AD, 26)
 #elif PACKETVER >= 20080408
-packetLen(0x01ad, 4)
+packetLen(0x01AD, 4)
 #elif PACKETVER >= 20080401
-packetLen(0x01ad, 14)
+packetLen(0x01AD, 14)
 #elif PACKETVER >= 20080325
-packetLen(0x01ad, 39)
+packetLen(0x01AD, 39)
 #elif PACKETVER >= 20080318
-packetLen(0x01ad, 6)
+packetLen(0x01AD, 6)
 #elif PACKETVER >= 20080311
-packetLen(0x01ad, -1)
+packetLen(0x01AD, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x01ad, 10)
+packetLen(0x01AD, 10)
 #elif PACKETVER >= 20080226
-packetLen(0x01ad, 4)
+packetLen(0x01AD, 4)
 #elif PACKETVER >= 20080219
-packetLen(0x01ad, 54)
+packetLen(0x01AD, 54)
 #elif PACKETVER >= 20080124
-packetLen(0x01ad, 5)
+packetLen(0x01AD, 5)
 #elif PACKETVER >= 20080102
-packetLen(0x01ad, -1)
+packetLen(0x01AD, -1)
 #endif
 
 // Packet: 0x01ae
 #if PACKETVER >= 20080701
-packetLen(0x01ae, 7)
+packetLen(0x01AE, 7)
 #elif PACKETVER >= 20080624
-packetLen(0x01ae, -1)
+packetLen(0x01AE, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x01ae, 2)
+packetLen(0x01AE, 2)
 #elif PACKETVER >= 20080610
-packetLen(0x01ae, 43)
+packetLen(0x01AE, 43)
 #elif PACKETVER >= 20080528
-packetLen(0x01ae, -1)
+packetLen(0x01AE, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x01ae, 8)
+packetLen(0x01AE, 8)
 #elif PACKETVER >= 20080429
-packetLen(0x01ae, -1)
+packetLen(0x01AE, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x01ae, 4)
+packetLen(0x01AE, 4)
 #elif PACKETVER >= 20080415
-packetLen(0x01ae, 6)
+packetLen(0x01AE, 6)
 #elif PACKETVER >= 20080408
-packetLen(0x01ae, -1)
+packetLen(0x01AE, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x01ae, 14)
+packetLen(0x01AE, 14)
 #elif PACKETVER >= 20080318
-packetLen(0x01ae, -1)
+packetLen(0x01AE, -1)
 #elif PACKETVER >= 20080311
-packetLen(0x01ae, 26)
+packetLen(0x01AE, 26)
 #elif PACKETVER >= 20080304
-packetLen(0x01ae, 15)
+packetLen(0x01AE, 15)
 #elif PACKETVER >= 20080226
-packetLen(0x01ae, 2)
+packetLen(0x01AE, 2)
 #elif PACKETVER >= 20080219
-packetLen(0x01ae, 4)
+packetLen(0x01AE, 4)
 #elif PACKETVER >= 20080124
-packetLen(0x01ae, -1)
+packetLen(0x01AE, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x01ae, 4)
+packetLen(0x01AE, 4)
 #endif
 
 // Packet: 0x01af
-packetLen(0x01af, 4)
+packetLen(0x01AF, 4)
 
 // Packet: 0x01b0
 #if PACKETVER >= 20080701
-packetLen(0x01b0, 8)
+packetLen(0x01B0, 8)
 #elif PACKETVER >= 20080617
-packetLen(0x01b0, -1)
+packetLen(0x01B0, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x01b0, 4)
+packetLen(0x01B0, 4)
 #elif PACKETVER >= 20080603
-packetLen(0x01b0, -1)
+packetLen(0x01B0, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x01b0, 8)
+packetLen(0x01B0, 8)
 #elif PACKETVER >= 20080520
-packetLen(0x01b0, -1)
+packetLen(0x01B0, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x01b0, 6)
+packetLen(0x01B0, 6)
 #elif PACKETVER >= 20080429
-packetLen(0x01b0, 11)
+packetLen(0x01B0, 11)
 #elif PACKETVER >= 20080422
-packetLen(0x01b0, 21)
+packetLen(0x01B0, 21)
 #elif PACKETVER >= 20080415
-packetLen(0x01b0, -1)
+packetLen(0x01B0, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x01b0, 3)
+packetLen(0x01B0, 3)
 #elif PACKETVER >= 20080401
-packetLen(0x01b0, 6)
+packetLen(0x01B0, 6)
 #elif PACKETVER >= 20080325
-packetLen(0x01b0, 16)
+packetLen(0x01B0, 16)
 #elif PACKETVER >= 20080318
-packetLen(0x01b0, 6)
+packetLen(0x01B0, 6)
 #elif PACKETVER >= 20080311
-packetLen(0x01b0, 2)
+packetLen(0x01B0, 2)
 #elif PACKETVER >= 20080304
-packetLen(0x01b0, 3)
+packetLen(0x01B0, 3)
 #elif PACKETVER >= 20080226
-packetLen(0x01b0, 6)
+packetLen(0x01B0, 6)
 #elif PACKETVER >= 20080219
-packetLen(0x01b0, 2)
+packetLen(0x01B0, 2)
 #elif PACKETVER >= 20080124
-packetLen(0x01b0, 3)
+packetLen(0x01B0, 3)
 #elif PACKETVER >= 20080102
-packetLen(0x01b0, 11)
+packetLen(0x01B0, 11)
 #endif
 
 // Packet: 0x01b1
-packetLen(0x01b1, 7)
+packetLen(0x01B1, 7)
 
 // Packet: 0x01b2
 #if PACKETVER >= 20080624
-packetLen(0x01b2, 6)
+packetLen(0x01B2, 6)
 #elif PACKETVER >= 20080617
-packetLen(0x01b2, 3)
+packetLen(0x01B2, 3)
 #elif PACKETVER >= 20080610
-packetLen(0x01b2, 2)
+packetLen(0x01B2, 2)
 #elif PACKETVER >= 20080603
-packetLen(0x01b2, 57)
+packetLen(0x01B2, 57)
 #elif PACKETVER >= 20080528
-packetLen(0x01b2, -1)
+packetLen(0x01B2, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x01b2, 54)
+packetLen(0x01B2, 54)
 #elif PACKETVER >= 20080507
-packetLen(0x01b2, -1)
+packetLen(0x01B2, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x01b2, 14)
+packetLen(0x01B2, 14)
 #elif PACKETVER >= 20080401
-packetLen(0x01b2, -1)
+packetLen(0x01B2, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x01b2, 14)
+packetLen(0x01B2, 14)
 #elif PACKETVER >= 20080318
-packetLen(0x01b2, 28)
+packetLen(0x01B2, 28)
 #elif PACKETVER >= 20080311
-packetLen(0x01b2, -1)
+packetLen(0x01B2, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x01b2, 10)
+packetLen(0x01B2, 10)
 #elif PACKETVER >= 20080226
-packetLen(0x01b2, 282)
+packetLen(0x01B2, 282)
 #elif PACKETVER >= 20080219
-packetLen(0x01b2, 26)
+packetLen(0x01B2, 26)
 #elif PACKETVER >= 20080124
-packetLen(0x01b2, 11)
+packetLen(0x01B2, 11)
 #elif PACKETVER >= 20080102
-packetLen(0x01b2, -1)
+packetLen(0x01B2, -1)
 #endif
 
 // Packet: 0x01b3
 #if PACKETVER >= 20080610
-packetLen(0x01b3, -1)
+packetLen(0x01B3, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x01b3, 2)
+packetLen(0x01B3, 2)
 #elif PACKETVER >= 20080528
-packetLen(0x01b3, 60)
+packetLen(0x01B3, 60)
 #elif PACKETVER >= 20080520
-packetLen(0x01b3, 71)
+packetLen(0x01B3, 71)
 #elif PACKETVER >= 20080513
-packetLen(0x01b3, -1)
+packetLen(0x01B3, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x01b3, 2)
+packetLen(0x01B3, 2)
 #elif PACKETVER >= 20080422
-packetLen(0x01b3, -1)
+packetLen(0x01B3, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x01b3, 22)
+packetLen(0x01B3, 22)
 #elif PACKETVER >= 20080408
-packetLen(0x01b3, 6)
+packetLen(0x01B3, 6)
 #elif PACKETVER >= 20080401
-packetLen(0x01b3, 4)
+packetLen(0x01B3, 4)
 #elif PACKETVER >= 20080325
-packetLen(0x01b3, -1)
+packetLen(0x01B3, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x01b3, 33)
+packetLen(0x01B3, 33)
 #elif PACKETVER >= 20080311
-packetLen(0x01b3, -1)
+packetLen(0x01B3, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x01b3, 9)
+packetLen(0x01B3, 9)
 #elif PACKETVER >= 20080226
-packetLen(0x01b3, 2)
+packetLen(0x01B3, 2)
 #elif PACKETVER >= 20080219
-packetLen(0x01b3, -1)
+packetLen(0x01B3, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x01b3, 20)
+packetLen(0x01B3, 20)
 #elif PACKETVER >= 20080102
-packetLen(0x01b3, 67)
+packetLen(0x01B3, 67)
 #endif
 
 // Packet: 0x01b4
-packetLen(0x01b4, 12)
+packetLen(0x01B4, 12)
 
 // Packet: 0x01b5
-packetLen(0x01b5, 18)
+packetLen(0x01B5, 18)
 
 // Packet: 0x01b6
 #if PACKETVER >= 20080701
-packetLen(0x01b6, 12)
+packetLen(0x01B6, 12)
 #elif PACKETVER >= 20080624
-packetLen(0x01b6, 31)
+packetLen(0x01B6, 31)
 #elif PACKETVER >= 20080617
-packetLen(0x01b6, 26)
+packetLen(0x01B6, 26)
 #elif PACKETVER >= 20080610
-packetLen(0x01b6, 55)
+packetLen(0x01B6, 55)
 #elif PACKETVER >= 20080603
-packetLen(0x01b6, -1)
+packetLen(0x01B6, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x01b6, 33)
+packetLen(0x01B6, 33)
 #elif PACKETVER >= 20080513
-packetLen(0x01b6, -1)
+packetLen(0x01B6, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x01b6, 7)
+packetLen(0x01B6, 7)
 #elif PACKETVER >= 20080429
-packetLen(0x01b6, 86)
+packetLen(0x01B6, 86)
 #elif PACKETVER >= 20080422
-packetLen(0x01b6, 23)
+packetLen(0x01B6, 23)
 #elif PACKETVER >= 20080408
-packetLen(0x01b6, -1)
+packetLen(0x01B6, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x01b6, 60)
+packetLen(0x01B6, 60)
 #elif PACKETVER >= 20080325
-packetLen(0x01b6, 12)
+packetLen(0x01B6, 12)
 #elif PACKETVER >= 20080318
-packetLen(0x01b6, -1)
+packetLen(0x01B6, -1)
 #elif PACKETVER >= 20080311
-packetLen(0x01b6, 3)
+packetLen(0x01B6, 3)
 #elif PACKETVER >= 20080304
-packetLen(0x01b6, 2)
+packetLen(0x01B6, 2)
 #elif PACKETVER >= 20080226
-packetLen(0x01b6, 18)
+packetLen(0x01B6, 18)
 #elif PACKETVER >= 20080219
-packetLen(0x01b6, 22)
+packetLen(0x01B6, 22)
 #elif PACKETVER >= 20080124
-packetLen(0x01b6, 6)
+packetLen(0x01B6, 6)
 #elif PACKETVER >= 20080102
-packetLen(0x01b6, 114)
+packetLen(0x01B6, 114)
 #endif
 
 // Packet: 0x01b7
-packetLen(0x01b7, 6)
+packetLen(0x01B7, 6)
 
 // Packet: 0x01b8
-packetLen(0x01b8, 3)
+packetLen(0x01B8, 3)
 
 // Packet: 0x01b9
 #if PACKETVER >= 20080701
-packetLen(0x01b9, 14)
+packetLen(0x01B9, 14)
 #elif PACKETVER >= 20080617
-packetLen(0x01b9, -1)
+packetLen(0x01B9, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x01b9, 6)
+packetLen(0x01B9, 6)
 #elif PACKETVER >= 20080603
-packetLen(0x01b9, 8)
+packetLen(0x01B9, 8)
 #elif PACKETVER >= 20080429
-packetLen(0x01b9, -1)
+packetLen(0x01B9, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x01b9, 7)
+packetLen(0x01B9, 7)
 #elif PACKETVER >= 20080415
-packetLen(0x01b9, -1)
+packetLen(0x01B9, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x01b9, 4)
+packetLen(0x01B9, 4)
 #elif PACKETVER >= 20080401
-packetLen(0x01b9, 10)
+packetLen(0x01B9, 10)
 #elif PACKETVER >= 20080325
-packetLen(0x01b9, 26)
+packetLen(0x01B9, 26)
 #elif PACKETVER >= 20080318
-packetLen(0x01b9, 9)
+packetLen(0x01B9, 9)
 #elif PACKETVER >= 20080311
-packetLen(0x01b9, 3)
+packetLen(0x01B9, 3)
 #elif PACKETVER >= 20080304
-packetLen(0x01b9, 30)
+packetLen(0x01B9, 30)
 #elif PACKETVER >= 20080226
-packetLen(0x01b9, 60)
+packetLen(0x01B9, 60)
 #elif PACKETVER >= 20080219
-packetLen(0x01b9, 2)
+packetLen(0x01B9, 2)
 #elif PACKETVER >= 20080124
-packetLen(0x01b9, -1)
+packetLen(0x01B9, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x01b9, 6)
+packetLen(0x01B9, 6)
 #endif
 
 // Packet: 0x01ba
 #if PACKETVER >= 20080701
-packetLen(0x01ba, -1)
+packetLen(0x01BA, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x01ba, 6)
+packetLen(0x01BA, 6)
 #elif PACKETVER >= 20080617
-packetLen(0x01ba, 3)
+packetLen(0x01BA, 3)
 #elif PACKETVER >= 20080528
-packetLen(0x01ba, -1)
+packetLen(0x01BA, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x01ba, 7)
+packetLen(0x01BA, 7)
 #elif PACKETVER >= 20080513
-packetLen(0x01ba, 22)
+packetLen(0x01BA, 22)
 #elif PACKETVER >= 20080507
-packetLen(0x01ba, -1)
+packetLen(0x01BA, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x01ba, 3)
+packetLen(0x01BA, 3)
 #elif PACKETVER >= 20080415
-packetLen(0x01ba, 26)
+packetLen(0x01BA, 26)
 #elif PACKETVER >= 20080408
-packetLen(0x01ba, 6)
+packetLen(0x01BA, 6)
 #elif PACKETVER >= 20080401
-packetLen(0x01ba, 4)
+packetLen(0x01BA, 4)
 #elif PACKETVER >= 20080325
-packetLen(0x01ba, 81)
+packetLen(0x01BA, 81)
 #elif PACKETVER >= 20080311
-packetLen(0x01ba, -1)
+packetLen(0x01BA, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x01ba, 8)
+packetLen(0x01BA, 8)
 #elif PACKETVER >= 20080226
-packetLen(0x01ba, -1)
+packetLen(0x01BA, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x01ba, 14)
+packetLen(0x01BA, 14)
 #elif PACKETVER >= 20080124
-packetLen(0x01ba, 60)
+packetLen(0x01BA, 60)
 #elif PACKETVER >= 20080102
-packetLen(0x01ba, 26)
+packetLen(0x01BA, 26)
 #endif
 
 // Packet: 0x01bb
 #if PACKETVER >= 20080603
-packetLen(0x01bb, -1)
+packetLen(0x01BB, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x01bb, 16)
+packetLen(0x01BB, 16)
 #elif PACKETVER >= 20080513
-packetLen(0x01bb, -1)
+packetLen(0x01BB, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x01bb, 2)
+packetLen(0x01BB, 2)
 #elif PACKETVER >= 20080422
-packetLen(0x01bb, 26)
+packetLen(0x01BB, 26)
 #elif PACKETVER >= 20080415
-packetLen(0x01bb, -1)
+packetLen(0x01BB, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x01bb, 3)
+packetLen(0x01BB, 3)
 #elif PACKETVER >= 20080401
-packetLen(0x01bb, 4)
+packetLen(0x01BB, 4)
 #elif PACKETVER >= 20080325
-packetLen(0x01bb, 43)
+packetLen(0x01BB, 43)
 #elif PACKETVER >= 20080318
-packetLen(0x01bb, 31)
+packetLen(0x01BB, 31)
 #elif PACKETVER >= 20080311
-packetLen(0x01bb, 4)
+packetLen(0x01BB, 4)
 #elif PACKETVER >= 20080304
-packetLen(0x01bb, 8)
+packetLen(0x01BB, 8)
 #elif PACKETVER >= 20080226
-packetLen(0x01bb, 6)
+packetLen(0x01BB, 6)
 #elif PACKETVER >= 20080219
-packetLen(0x01bb, 3)
+packetLen(0x01BB, 3)
 #elif PACKETVER >= 20080124
-packetLen(0x01bb, 81)
+packetLen(0x01BB, 81)
 #elif PACKETVER >= 20080102
-packetLen(0x01bb, 26)
+packetLen(0x01BB, 26)
 #endif
 
 // Packet: 0x01bc
 #if PACKETVER >= 20080617
-packetLen(0x01bc, -1)
+packetLen(0x01BC, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x01bc, 2)
+packetLen(0x01BC, 2)
 #elif PACKETVER >= 20080603
-packetLen(0x01bc, 282)
+packetLen(0x01BC, 282)
 #elif PACKETVER >= 20080528
-packetLen(0x01bc, 7)
+packetLen(0x01BC, 7)
 #elif PACKETVER >= 20080520
-packetLen(0x01bc, 10)
+packetLen(0x01BC, 10)
 #elif PACKETVER >= 20080513
-packetLen(0x01bc, 20)
+packetLen(0x01BC, 20)
 #elif PACKETVER >= 20080507
-packetLen(0x01bc, 39)
+packetLen(0x01BC, 39)
 #elif PACKETVER >= 20080429
-packetLen(0x01bc, -1)
+packetLen(0x01BC, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x01bc, 26)
+packetLen(0x01BC, 26)
 #elif PACKETVER >= 20080415
-packetLen(0x01bc, -1)
+packetLen(0x01BC, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x01bc, 8)
+packetLen(0x01BC, 8)
 #elif PACKETVER >= 20080401
-packetLen(0x01bc, 4)
+packetLen(0x01BC, 4)
 #elif PACKETVER >= 20080325
-packetLen(0x01bc, 26)
+packetLen(0x01BC, 26)
 #elif PACKETVER >= 20080318
-packetLen(0x01bc, 4)
+packetLen(0x01BC, 4)
 #elif PACKETVER >= 20080311
-packetLen(0x01bc, 9)
+packetLen(0x01BC, 9)
 #elif PACKETVER >= 20080304
-packetLen(0x01bc, 6)
+packetLen(0x01BC, 6)
 #elif PACKETVER >= 20080226
-packetLen(0x01bc, 86)
+packetLen(0x01BC, 86)
 #elif PACKETVER >= 20080219
-packetLen(0x01bc, 9)
+packetLen(0x01BC, 9)
 #elif PACKETVER >= 20080124
-packetLen(0x01bc, 10)
+packetLen(0x01BC, 10)
 #elif PACKETVER >= 20080102
-packetLen(0x01bc, 26)
+packetLen(0x01BC, 26)
 #endif
 
 // Packet: 0x01bd
 #if PACKETVER >= 20080701
-packetLen(0x01bd, 6)
+packetLen(0x01BD, 6)
 #elif PACKETVER >= 20080624
-packetLen(0x01bd, 22)
+packetLen(0x01BD, 22)
 #elif PACKETVER >= 20080617
-packetLen(0x01bd, 44)
+packetLen(0x01BD, 44)
 #elif PACKETVER >= 20080610
-packetLen(0x01bd, 3)
+packetLen(0x01BD, 3)
 #elif PACKETVER >= 20080603
-packetLen(0x01bd, -1)
+packetLen(0x01BD, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x01bd, 9)
+packetLen(0x01BD, 9)
 #elif PACKETVER >= 20080520
-packetLen(0x01bd, 35)
+packetLen(0x01BD, 35)
 #elif PACKETVER >= 20080507
-packetLen(0x01bd, 4)
+packetLen(0x01BD, 4)
 #elif PACKETVER >= 20080429
-packetLen(0x01bd, -1)
+packetLen(0x01BD, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x01bd, 26)
+packetLen(0x01BD, 26)
 #elif PACKETVER >= 20080415
-packetLen(0x01bd, -1)
+packetLen(0x01BD, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x01bd, 102)
+packetLen(0x01BD, 102)
 #elif PACKETVER >= 20080401
-packetLen(0x01bd, -1)
+packetLen(0x01BD, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x01bd, 21)
+packetLen(0x01BD, 21)
 #elif PACKETVER >= 20080311
-packetLen(0x01bd, 6)
+packetLen(0x01BD, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x01bd, 102)
+packetLen(0x01BD, 102)
 #elif PACKETVER >= 20080226
-packetLen(0x01bd, -1)
+packetLen(0x01BD, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x01bd, 6)
+packetLen(0x01BD, 6)
 #elif PACKETVER >= 20080124
-packetLen(0x01bd, 2)
+packetLen(0x01BD, 2)
 #elif PACKETVER >= 20080102
-packetLen(0x01bd, 26)
+packetLen(0x01BD, 26)
 #endif
 
 // Packet: 0x01be
-packetLen(0x01be, 2)
+packetLen(0x01BE, 2)
 
 // Packet: 0x01bf
-packetLen(0x01bf, 3)
+packetLen(0x01BF, 3)
 
 // Packet: 0x01c0
-packetLen(0x01c0, 2)
+packetLen(0x01C0, 2)
 
 // Packet: 0x01c1
-packetLen(0x01c1, 14)
+packetLen(0x01C1, 14)
 
 // Packet: 0x01c2
-packetLen(0x01c2, 10)
+packetLen(0x01C2, 10)
 
 // Packet: 0x01c3
 #if PACKETVER >= 20080701
-packetLen(0x01c3, 10)
+packetLen(0x01C3, 10)
 #elif PACKETVER >= 20080624
-packetLen(0x01c3, -1)
+packetLen(0x01C3, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x01c3, 6)
+packetLen(0x01C3, 6)
 #elif PACKETVER >= 20080610
-packetLen(0x01c3, -1)
+packetLen(0x01C3, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x01c3, 58)
+packetLen(0x01C3, 58)
 #elif PACKETVER >= 20080520
-packetLen(0x01c3, -1)
+packetLen(0x01C3, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x01c3, 66)
+packetLen(0x01C3, 66)
 #elif PACKETVER >= 20080507
-packetLen(0x01c3, 7)
+packetLen(0x01C3, 7)
 #elif PACKETVER >= 20080429
-packetLen(0x01c3, 3)
+packetLen(0x01C3, 3)
 #elif PACKETVER >= 20080422
-packetLen(0x01c3, -1)
+packetLen(0x01C3, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x01c3, 30)
+packetLen(0x01C3, 30)
 #elif PACKETVER >= 20080408
-packetLen(0x01c3, 6)
+packetLen(0x01C3, 6)
 #elif PACKETVER >= 20080401
-packetLen(0x01c3, 14)
+packetLen(0x01C3, 14)
 #elif PACKETVER >= 20080325
-packetLen(0x01c3, 30)
+packetLen(0x01C3, 30)
 #elif PACKETVER >= 20080318
-packetLen(0x01c3, 9)
+packetLen(0x01C3, 9)
 #elif PACKETVER >= 20080311
-packetLen(0x01c3, 58)
+packetLen(0x01C3, 58)
 #elif PACKETVER >= 20080304
-packetLen(0x01c3, 4)
+packetLen(0x01C3, 4)
 #elif PACKETVER >= 20080226
-packetLen(0x01c3, -1)
+packetLen(0x01C3, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x01c3, 14)
+packetLen(0x01C3, 14)
 #elif PACKETVER >= 20080124
-packetLen(0x01c3, 3)
+packetLen(0x01C3, 3)
 #elif PACKETVER >= 20080102
-packetLen(0x01c3, -1)
+packetLen(0x01C3, -1)
 #endif
 
 // Packet: 0x01c4
 #if PACKETVER >= 20080617
-packetLen(0x01c4, -1)
+packetLen(0x01C4, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x01c4, 33)
+packetLen(0x01C4, 33)
 #elif PACKETVER >= 20080528
-packetLen(0x01c4, 6)
+packetLen(0x01C4, 6)
 #elif PACKETVER >= 20080520
-packetLen(0x01c4, -1)
+packetLen(0x01C4, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x01c4, 3)
+packetLen(0x01C4, 3)
 #elif PACKETVER >= 20080507
-packetLen(0x01c4, 31)
+packetLen(0x01C4, 31)
 #elif PACKETVER >= 20080429
-packetLen(0x01c4, 53)
+packetLen(0x01C4, 53)
 #elif PACKETVER >= 20080422
-packetLen(0x01c4, 34)
+packetLen(0x01C4, 34)
 #elif PACKETVER >= 20080415
-packetLen(0x01c4, 11)
+packetLen(0x01C4, 11)
 #elif PACKETVER >= 20080408
-packetLen(0x01c4, -1)
+packetLen(0x01C4, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x01c4, 2)
+packetLen(0x01C4, 2)
 #elif PACKETVER >= 20080325
-packetLen(0x01c4, 21)
+packetLen(0x01C4, 21)
 #elif PACKETVER >= 20080311
-packetLen(0x01c4, 2)
+packetLen(0x01C4, 2)
 #elif PACKETVER >= 20080219
-packetLen(0x01c4, -1)
+packetLen(0x01C4, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x01c4, 28)
+packetLen(0x01C4, 28)
 #elif PACKETVER >= 20080102
-packetLen(0x01c4, 22)
+packetLen(0x01C4, 22)
 #endif
 
 // Packet: 0x01c5
 #if PACKETVER >= 20080624
-packetLen(0x01c5, -1)
+packetLen(0x01C5, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x01c5, 8)
+packetLen(0x01C5, 8)
 #elif PACKETVER >= 20080610
-packetLen(0x01c5, 26)
+packetLen(0x01C5, 26)
 #elif PACKETVER >= 20080603
-packetLen(0x01c5, 30)
+packetLen(0x01C5, 30)
 #elif PACKETVER >= 20080528
-packetLen(0x01c5, -1)
+packetLen(0x01C5, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x01c5, 11)
+packetLen(0x01C5, 11)
 #elif PACKETVER >= 20080513
-packetLen(0x01c5, 3)
+packetLen(0x01C5, 3)
 #elif PACKETVER >= 20080429
-packetLen(0x01c5, -1)
+packetLen(0x01C5, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x01c5, 4)
+packetLen(0x01C5, 4)
 #elif PACKETVER >= 20080415
-packetLen(0x01c5, -1)
+packetLen(0x01C5, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x01c5, 7)
+packetLen(0x01C5, 7)
 #elif PACKETVER >= 20080401
-packetLen(0x01c5, -1)
+packetLen(0x01C5, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x01c5, 31)
+packetLen(0x01C5, 31)
 #elif PACKETVER >= 20080318
-packetLen(0x01c5, -1)
+packetLen(0x01C5, -1)
 #elif PACKETVER >= 20080311
-packetLen(0x01c5, 10)
+packetLen(0x01C5, 10)
 #elif PACKETVER >= 20080226
-packetLen(0x01c5, -1)
+packetLen(0x01C5, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x01c5, 28)
+packetLen(0x01C5, 28)
 #elif PACKETVER >= 20080124
-packetLen(0x01c5, 90)
+packetLen(0x01C5, 90)
 #elif PACKETVER >= 20080102
-packetLen(0x01c5, 22)
+packetLen(0x01C5, 22)
 #endif
 
 // Packet: 0x01c6
-packetLen(0x01c6, 4)
+packetLen(0x01C6, 4)
 
 // Packet: 0x01c7
-packetLen(0x01c7, 2)
+packetLen(0x01C7, 2)
 
 // Packet: 0x01c8
 #if PACKETVER >= 20080624
-packetLen(0x01c8, -1)
+packetLen(0x01C8, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x01c8, 65)
+packetLen(0x01C8, 65)
 #elif PACKETVER >= 20080610
-packetLen(0x01c8, -1)
+packetLen(0x01C8, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x01c8, 8)
+packetLen(0x01C8, 8)
 #elif PACKETVER >= 20080513
-packetLen(0x01c8, -1)
+packetLen(0x01C8, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x01c8, 29)
+packetLen(0x01C8, 29)
 #elif PACKETVER >= 20080429
-packetLen(0x01c8, 8)
+packetLen(0x01C8, 8)
 #elif PACKETVER >= 20080415
-packetLen(0x01c8, -1)
+packetLen(0x01C8, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x01c8, 26)
+packetLen(0x01C8, 26)
 #elif PACKETVER >= 20080401
-packetLen(0x01c8, 2)
+packetLen(0x01C8, 2)
 #elif PACKETVER >= 20080325
-packetLen(0x01c8, 4)
+packetLen(0x01C8, 4)
 #elif PACKETVER >= 20080318
-packetLen(0x01c8, 6)
+packetLen(0x01C8, 6)
 #elif PACKETVER >= 20080311
-packetLen(0x01c8, 4)
+packetLen(0x01C8, 4)
 #elif PACKETVER >= 20080304
-packetLen(0x01c8, 11)
+packetLen(0x01C8, 11)
 #elif PACKETVER >= 20080226
-packetLen(0x01c8, 8)
+packetLen(0x01C8, 8)
 #elif PACKETVER >= 20080219
-packetLen(0x01c8, 6)
+packetLen(0x01C8, 6)
 #elif PACKETVER >= 20080124
-packetLen(0x01c8, 5)
+packetLen(0x01C8, 5)
 #elif PACKETVER >= 20080102
-packetLen(0x01c8, 13)
+packetLen(0x01C8, 13)
 #endif
 
 // Packet: 0x01c9
 #if PACKETVER >= 20080701
-packetLen(0x01c9, -1)
+packetLen(0x01C9, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x01c9, 11)
+packetLen(0x01C9, 11)
 #elif PACKETVER >= 20080617
-packetLen(0x01c9, 3)
+packetLen(0x01C9, 3)
 #elif PACKETVER >= 20080610
-packetLen(0x01c9, -1)
+packetLen(0x01C9, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x01c9, 4)
+packetLen(0x01C9, 4)
 #elif PACKETVER >= 20080528
-packetLen(0x01c9, 14)
+packetLen(0x01C9, 14)
 #elif PACKETVER >= 20080513
-packetLen(0x01c9, -1)
+packetLen(0x01C9, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x01c9, 6)
+packetLen(0x01C9, 6)
 #elif PACKETVER >= 20080429
-packetLen(0x01c9, 4)
+packetLen(0x01C9, 4)
 #elif PACKETVER >= 20080415
-packetLen(0x01c9, 58)
+packetLen(0x01C9, 58)
 #elif PACKETVER >= 20080408
-packetLen(0x01c9, -1)
+packetLen(0x01C9, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x01c9, 7)
+packetLen(0x01C9, 7)
 #elif PACKETVER >= 20080325
-packetLen(0x01c9, 2)
+packetLen(0x01C9, 2)
 #elif PACKETVER >= 20080318
-packetLen(0x01c9, -1)
+packetLen(0x01C9, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x01c9, 2)
+packetLen(0x01C9, 2)
 #elif PACKETVER >= 20080226
-packetLen(0x01c9, 22)
+packetLen(0x01C9, 22)
 #elif PACKETVER >= 20080219
-packetLen(0x01c9, 26)
+packetLen(0x01C9, 26)
 #elif PACKETVER >= 20080124
-packetLen(0x01c9, -1)
+packetLen(0x01C9, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x01c9, 97)
+packetLen(0x01C9, 97)
 #endif
 
 // Packet: 0x01ca
-packetLen(0x01ca, 3)
+packetLen(0x01CA, 3)
 
 // Packet: 0x01cb
-packetLen(0x01cb, 9)
+packetLen(0x01CB, 9)
 
 // Packet: 0x01cc
-packetLen(0x01cc, 9)
+packetLen(0x01CC, 9)
 
 // Packet: 0x01cd
 #if PACKETVER >= 20080701
-packetLen(0x01cd, 10)
+packetLen(0x01CD, 10)
 #elif PACKETVER >= 20080617
-packetLen(0x01cd, -1)
+packetLen(0x01CD, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x01cd, 102)
+packetLen(0x01CD, 102)
 #elif PACKETVER >= 20080603
-packetLen(0x01cd, 4)
+packetLen(0x01CD, 4)
 #elif PACKETVER >= 20080513
-packetLen(0x01cd, -1)
+packetLen(0x01CD, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x01cd, 10)
+packetLen(0x01CD, 10)
 #elif PACKETVER >= 20080429
-packetLen(0x01cd, 3)
+packetLen(0x01CD, 3)
 #elif PACKETVER >= 20080422
-packetLen(0x01cd, 10)
+packetLen(0x01CD, 10)
 #elif PACKETVER >= 20080415
-packetLen(0x01cd, -1)
+packetLen(0x01CD, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x01cd, 12)
+packetLen(0x01CD, 12)
 #elif PACKETVER >= 20080401
-packetLen(0x01cd, 6)
+packetLen(0x01CD, 6)
 #elif PACKETVER >= 20080325
-packetLen(0x01cd, 14)
+packetLen(0x01CD, 14)
 #elif PACKETVER >= 20080318
-packetLen(0x01cd, 2)
+packetLen(0x01CD, 2)
 #elif PACKETVER >= 20080311
-packetLen(0x01cd, 6)
+packetLen(0x01CD, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x01cd, 5)
+packetLen(0x01CD, 5)
 #elif PACKETVER >= 20080226
-packetLen(0x01cd, -1)
+packetLen(0x01CD, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x01cd, 8)
+packetLen(0x01CD, 8)
 #elif PACKETVER >= 20080124
-packetLen(0x01cd, 10)
+packetLen(0x01CD, 10)
 #elif PACKETVER >= 20080102
-packetLen(0x01cd, 30)
+packetLen(0x01CD, 30)
 #endif
 
 // Packet: 0x01ce
 #if PACKETVER >= 20080624
-packetLen(0x01ce, -1)
+packetLen(0x01CE, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x01ce, 27)
+packetLen(0x01CE, 27)
 #elif PACKETVER >= 20080610
-packetLen(0x01ce, 3)
+packetLen(0x01CE, 3)
 #elif PACKETVER >= 20080603
-packetLen(0x01ce, -1)
+packetLen(0x01CE, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x01ce, 22)
+packetLen(0x01CE, 22)
 #elif PACKETVER >= 20080520
-packetLen(0x01ce, 53)
+packetLen(0x01CE, 53)
 #elif PACKETVER >= 20080513
-packetLen(0x01ce, 4)
+packetLen(0x01CE, 4)
 #elif PACKETVER >= 20080507
-packetLen(0x01ce, 65)
+packetLen(0x01CE, 65)
 #elif PACKETVER >= 20080429
-packetLen(0x01ce, 2)
+packetLen(0x01CE, 2)
 #elif PACKETVER >= 20080422
-packetLen(0x01ce, 6)
+packetLen(0x01CE, 6)
 #elif PACKETVER >= 20080408
-packetLen(0x01ce, -1)
+packetLen(0x01CE, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x01ce, 26)
+packetLen(0x01CE, 26)
 #elif PACKETVER >= 20080325
-packetLen(0x01ce, 3)
+packetLen(0x01CE, 3)
 #elif PACKETVER >= 20080318
-packetLen(0x01ce, 21)
+packetLen(0x01CE, 21)
 #elif PACKETVER >= 20080304
-packetLen(0x01ce, 6)
+packetLen(0x01CE, 6)
 #elif PACKETVER >= 20080226
-packetLen(0x01ce, 2)
+packetLen(0x01CE, 2)
 #elif PACKETVER >= 20080219
-packetLen(0x01ce, 28)
+packetLen(0x01CE, 28)
 #elif PACKETVER >= 20080102
-packetLen(0x01ce, 6)
+packetLen(0x01CE, 6)
 #endif
 
 // Packet: 0x01cf
 #if PACKETVER >= 20080701
-packetLen(0x01cf, 3)
+packetLen(0x01CF, 3)
 #elif PACKETVER >= 20080624
-packetLen(0x01cf, 11)
+packetLen(0x01CF, 11)
 #elif PACKETVER >= 20080617
-packetLen(0x01cf, -1)
+packetLen(0x01CF, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x01cf, 2)
+packetLen(0x01CF, 2)
 #elif PACKETVER >= 20080603
-packetLen(0x01cf, -1)
+packetLen(0x01CF, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x01cf, 15)
+packetLen(0x01CF, 15)
 #elif PACKETVER >= 20080520
-packetLen(0x01cf, 26)
+packetLen(0x01CF, 26)
 #elif PACKETVER >= 20080513
-packetLen(0x01cf, -1)
+packetLen(0x01CF, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x01cf, 2)
+packetLen(0x01CF, 2)
 #elif PACKETVER >= 20080415
-packetLen(0x01cf, -1)
+packetLen(0x01CF, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x01cf, 39)
+packetLen(0x01CF, 39)
 #elif PACKETVER >= 20080401
-packetLen(0x01cf, -1)
+packetLen(0x01CF, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x01cf, 186)
+packetLen(0x01CF, 186)
 #elif PACKETVER >= 20080318
-packetLen(0x01cf, 6)
+packetLen(0x01CF, 6)
 #elif PACKETVER >= 20080311
-packetLen(0x01cf, 23)
+packetLen(0x01CF, 23)
 #elif PACKETVER >= 20080304
-packetLen(0x01cf, -1)
+packetLen(0x01CF, -1)
 #elif PACKETVER >= 20080226
-packetLen(0x01cf, 102)
+packetLen(0x01CF, 102)
 #elif PACKETVER >= 20080124
-packetLen(0x01cf, 5)
+packetLen(0x01CF, 5)
 #elif PACKETVER >= 20080102
-packetLen(0x01cf, 28)
+packetLen(0x01CF, 28)
 #endif
 
 // Packet: 0x01d0
 #if PACKETVER >= 20080701
-packetLen(0x01d0, 3)
+packetLen(0x01D0, 3)
 #elif PACKETVER >= 20080624
-packetLen(0x01d0, 9)
+packetLen(0x01D0, 9)
 #elif PACKETVER >= 20080617
-packetLen(0x01d0, 53)
+packetLen(0x01D0, 53)
 #elif PACKETVER >= 20080610
-packetLen(0x01d0, 7)
+packetLen(0x01D0, 7)
 #elif PACKETVER >= 20080603
-packetLen(0x01d0, 2)
+packetLen(0x01D0, 2)
 #elif PACKETVER >= 20080528
-packetLen(0x01d0, -1)
+packetLen(0x01D0, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x01d0, 2)
+packetLen(0x01D0, 2)
 #elif PACKETVER >= 20080513
-packetLen(0x01d0, 10)
+packetLen(0x01D0, 10)
 #elif PACKETVER >= 20080422
-packetLen(0x01d0, -1)
+packetLen(0x01D0, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x01d0, 2)
+packetLen(0x01D0, 2)
 #elif PACKETVER >= 20080408
-packetLen(0x01d0, -1)
+packetLen(0x01D0, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x01d0, 2)
+packetLen(0x01D0, 2)
 #elif PACKETVER >= 20080325
-packetLen(0x01d0, 65)
+packetLen(0x01D0, 65)
 #elif PACKETVER >= 20080318
-packetLen(0x01d0, 39)
+packetLen(0x01D0, 39)
 #elif PACKETVER >= 20080304
-packetLen(0x01d0, -1)
+packetLen(0x01D0, -1)
 #elif PACKETVER >= 20080226
-packetLen(0x01d0, 26)
+packetLen(0x01D0, 26)
 #elif PACKETVER >= 20080219
-packetLen(0x01d0, 2)
+packetLen(0x01D0, 2)
 #elif PACKETVER >= 20080124
-packetLen(0x01d0, 6)
+packetLen(0x01D0, 6)
 #elif PACKETVER >= 20080102
-packetLen(0x01d0, 8)
+packetLen(0x01D0, 8)
 #endif
 
 // Packet: 0x01d1
-packetLen(0x01d1, 14)
+packetLen(0x01D1, 14)
 
 // Packet: 0x01d2
 #if PACKETVER >= 20080701
-packetLen(0x01d2, 2)
+packetLen(0x01D2, 2)
 #elif PACKETVER >= 20080624
-packetLen(0x01d2, -1)
+packetLen(0x01D2, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x01d2, 7)
+packetLen(0x01D2, 7)
 #elif PACKETVER >= 20080603
-packetLen(0x01d2, 4)
+packetLen(0x01D2, 4)
 #elif PACKETVER >= 20080520
-packetLen(0x01d2, -1)
+packetLen(0x01D2, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x01d2, 8)
+packetLen(0x01D2, 8)
 #elif PACKETVER >= 20080507
-packetLen(0x01d2, 58)
+packetLen(0x01D2, 58)
 #elif PACKETVER >= 20080415
-packetLen(0x01d2, -1)
+packetLen(0x01D2, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x01d2, 18)
+packetLen(0x01D2, 18)
 #elif PACKETVER >= 20080401
-packetLen(0x01d2, 6)
+packetLen(0x01D2, 6)
 #elif PACKETVER >= 20080325
-packetLen(0x01d2, 12)
+packetLen(0x01D2, 12)
 #elif PACKETVER >= 20080318
-packetLen(0x01d2, 30)
+packetLen(0x01D2, 30)
 #elif PACKETVER >= 20080311
-packetLen(0x01d2, 19)
+packetLen(0x01D2, 19)
 #elif PACKETVER >= 20080304
-packetLen(0x01d2, 6)
+packetLen(0x01D2, 6)
 #elif PACKETVER >= 20080226
-packetLen(0x01d2, 8)
+packetLen(0x01D2, 8)
 #elif PACKETVER >= 20080219
-packetLen(0x01d2, -1)
+packetLen(0x01D2, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x01d2, 53)
+packetLen(0x01D2, 53)
 #elif PACKETVER >= 20080102
-packetLen(0x01d2, 10)
+packetLen(0x01D2, 10)
 #endif
 
 // Packet: 0x01d3
-packetLen(0x01d3, 35)
+packetLen(0x01D3, 35)
 
 // Packet: 0x01d4
 #if PACKETVER >= 20080701
-packetLen(0x01d4, 8)
+packetLen(0x01D4, 8)
 #elif PACKETVER >= 20080624
-packetLen(0x01d4, 54)
+packetLen(0x01D4, 54)
 #elif PACKETVER >= 20080617
-packetLen(0x01d4, -1)
+packetLen(0x01D4, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x01d4, 20)
+packetLen(0x01D4, 20)
 #elif PACKETVER >= 20080520
-packetLen(0x01d4, -1)
+packetLen(0x01D4, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x01d4, 6)
+packetLen(0x01D4, 6)
 #elif PACKETVER >= 20080401
-packetLen(0x01d4, -1)
+packetLen(0x01D4, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x01d4, 19)
+packetLen(0x01D4, 19)
 #elif PACKETVER >= 20080318
-packetLen(0x01d4, 60)
+packetLen(0x01D4, 60)
 #elif PACKETVER >= 20080311
-packetLen(0x01d4, 6)
+packetLen(0x01D4, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x01d4, 3)
+packetLen(0x01D4, 3)
 #elif PACKETVER >= 20080226
-packetLen(0x01d4, -1)
+packetLen(0x01D4, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x01d4, 6)
+packetLen(0x01D4, 6)
 #elif PACKETVER >= 20080124
-packetLen(0x01d4, 15)
+packetLen(0x01D4, 15)
 #elif PACKETVER >= 20080102
-packetLen(0x01d4, 6)
+packetLen(0x01D4, 6)
 #endif
 
 // Packet: 0x01d5
 #if PACKETVER >= 20080701
-packetLen(0x01d5, 3)
+packetLen(0x01D5, 3)
 #elif PACKETVER >= 20080624
-packetLen(0x01d5, 27)
+packetLen(0x01D5, 27)
 #elif PACKETVER >= 20080610
-packetLen(0x01d5, -1)
+packetLen(0x01D5, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x01d5, 9)
+packetLen(0x01D5, 9)
 #elif PACKETVER >= 20080528
-packetLen(0x01d5, -1)
+packetLen(0x01D5, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x01d5, 6)
+packetLen(0x01D5, 6)
 #elif PACKETVER >= 20080507
-packetLen(0x01d5, -1)
+packetLen(0x01D5, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x01d5, 4)
+packetLen(0x01D5, 4)
 #elif PACKETVER >= 20080408
-packetLen(0x01d5, -1)
+packetLen(0x01D5, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x01d5, 97)
+packetLen(0x01D5, 97)
 #elif PACKETVER >= 20080325
-packetLen(0x01d5, 6)
+packetLen(0x01D5, 6)
 #elif PACKETVER >= 20080318
-packetLen(0x01d5, 34)
+packetLen(0x01D5, 34)
 #elif PACKETVER >= 20080311
-packetLen(0x01d5, 13)
+packetLen(0x01D5, 13)
 #elif PACKETVER >= 20080304
-packetLen(0x01d5, 5)
+packetLen(0x01D5, 5)
 #elif PACKETVER >= 20080226
-packetLen(0x01d5, 6)
+packetLen(0x01D5, 6)
 #elif PACKETVER >= 20080219
-packetLen(0x01d5, 16)
+packetLen(0x01D5, 16)
 #elif PACKETVER >= 20080102
-packetLen(0x01d5, -1)
+packetLen(0x01D5, -1)
 #endif
 
 // Packet: 0x01d6
 #if PACKETVER >= 20080701
-packetLen(0x01d6, 30)
+packetLen(0x01D6, 30)
 #elif PACKETVER >= 20080624
-packetLen(0x01d6, 3)
+packetLen(0x01D6, 3)
 #elif PACKETVER >= 20080617
-packetLen(0x01d6, -1)
+packetLen(0x01D6, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x01d6, 6)
+packetLen(0x01D6, 6)
 #elif PACKETVER >= 20080603
-packetLen(0x01d6, -1)
+packetLen(0x01D6, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x01d6, 8)
+packetLen(0x01D6, 8)
 #elif PACKETVER >= 20080520
-packetLen(0x01d6, 2)
+packetLen(0x01D6, 2)
 #elif PACKETVER >= 20080513
-packetLen(0x01d6, 35)
+packetLen(0x01D6, 35)
 #elif PACKETVER >= 20080507
-packetLen(0x01d6, -1)
+packetLen(0x01D6, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x01d6, 6)
+packetLen(0x01D6, 6)
 #elif PACKETVER >= 20080422
-packetLen(0x01d6, -1)
+packetLen(0x01D6, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x01d6, 4)
+packetLen(0x01D6, 4)
 #elif PACKETVER >= 20080408
-packetLen(0x01d6, 54)
+packetLen(0x01D6, 54)
 #elif PACKETVER >= 20080401
-packetLen(0x01d6, 11)
+packetLen(0x01D6, 11)
 #elif PACKETVER >= 20080325
-packetLen(0x01d6, 54)
+packetLen(0x01D6, 54)
 #elif PACKETVER >= 20080318
-packetLen(0x01d6, 58)
+packetLen(0x01D6, 58)
 #elif PACKETVER >= 20080311
-packetLen(0x01d6, 5)
+packetLen(0x01D6, 5)
 #elif PACKETVER >= 20080304
-packetLen(0x01d6, 6)
+packetLen(0x01D6, 6)
 #elif PACKETVER >= 20080226
-packetLen(0x01d6, 10)
+packetLen(0x01D6, 10)
 #elif PACKETVER >= 20080219
-packetLen(0x01d6, 6)
+packetLen(0x01D6, 6)
 #elif PACKETVER >= 20080124
-packetLen(0x01d6, 16)
+packetLen(0x01D6, 16)
 #elif PACKETVER >= 20080102
-packetLen(0x01d6, 4)
+packetLen(0x01D6, 4)
 #endif
 
 // Packet: 0x01d7
 #if PACKETVER >= 20080701
-packetLen(0x01d7, 14)
+packetLen(0x01D7, 14)
 #elif PACKETVER >= 20080624
-packetLen(0x01d7, -1)
+packetLen(0x01D7, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x01d7, 8)
+packetLen(0x01D7, 8)
 #elif PACKETVER >= 20080610
-packetLen(0x01d7, -1)
+packetLen(0x01D7, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x01d7, 5)
+packetLen(0x01D7, 5)
 #elif PACKETVER >= 20080528
-packetLen(0x01d7, 9)
+packetLen(0x01D7, 9)
 #elif PACKETVER >= 20080520
-packetLen(0x01d7, 282)
+packetLen(0x01D7, 282)
 #elif PACKETVER >= 20080513
-packetLen(0x01d7, -1)
+packetLen(0x01D7, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x01d7, 2)
+packetLen(0x01D7, 2)
 #elif PACKETVER >= 20080408
-packetLen(0x01d7, -1)
+packetLen(0x01D7, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x01d7, 3)
+packetLen(0x01D7, 3)
 #elif PACKETVER >= 20080325
-packetLen(0x01d7, -1)
+packetLen(0x01D7, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x01d7, 4)
+packetLen(0x01D7, 4)
 #elif PACKETVER >= 20080311
-packetLen(0x01d7, 28)
+packetLen(0x01D7, 28)
 #elif PACKETVER >= 20080304
-packetLen(0x01d7, 54)
+packetLen(0x01D7, 54)
 #elif PACKETVER >= 20080226
-packetLen(0x01d7, 2)
+packetLen(0x01D7, 2)
 #elif PACKETVER >= 20080219
-packetLen(0x01d7, 35)
+packetLen(0x01D7, 35)
 #elif PACKETVER >= 20080124
-packetLen(0x01d7, 2)
+packetLen(0x01D7, 2)
 #elif PACKETVER >= 20080102
-packetLen(0x01d7, 11)
+packetLen(0x01D7, 11)
 #endif
 
 // Packet: 0x01d8
 #if PACKETVER >= 20080701
-packetLen(0x01d8, 6)
+packetLen(0x01D8, 6)
 #elif PACKETVER >= 20080624
-packetLen(0x01d8, -1)
+packetLen(0x01D8, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x01d8, 6)
+packetLen(0x01D8, 6)
 #elif PACKETVER >= 20080610
-packetLen(0x01d8, -1)
+packetLen(0x01D8, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x01d8, 11)
+packetLen(0x01D8, 11)
 #elif PACKETVER >= 20080528
-packetLen(0x01d8, 3)
+packetLen(0x01D8, 3)
 #elif PACKETVER >= 20080520
-packetLen(0x01d8, 6)
+packetLen(0x01D8, 6)
 #elif PACKETVER >= 20080513
-packetLen(0x01d8, -1)
+packetLen(0x01D8, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x01d8, 6)
+packetLen(0x01D8, 6)
 #elif PACKETVER >= 20080429
-packetLen(0x01d8, 186)
+packetLen(0x01D8, 186)
 #elif PACKETVER >= 20080415
-packetLen(0x01d8, -1)
+packetLen(0x01D8, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x01d8, 4)
+packetLen(0x01D8, 4)
 #elif PACKETVER >= 20080401
-packetLen(0x01d8, 27)
+packetLen(0x01D8, 27)
 #elif PACKETVER >= 20080325
-packetLen(0x01d8, -1)
+packetLen(0x01D8, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x01d8, 5)
+packetLen(0x01D8, 5)
 #elif PACKETVER >= 20080311
-packetLen(0x01d8, 2)
+packetLen(0x01D8, 2)
 #elif PACKETVER >= 20080304
-packetLen(0x01d8, 10)
+packetLen(0x01D8, 10)
 #elif PACKETVER >= 20080226
-packetLen(0x01d8, 15)
+packetLen(0x01D8, 15)
 #elif PACKETVER >= 20080219
-packetLen(0x01d8, -1)
+packetLen(0x01D8, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x01d8, 3)
+packetLen(0x01D8, 3)
 #elif PACKETVER >= 20080102
-packetLen(0x01d8, 54)
+packetLen(0x01D8, 54)
 #endif
 
 // Packet: 0x01d9
 #if PACKETVER >= 20080701
-packetLen(0x01d9, 39)
+packetLen(0x01D9, 39)
 #elif PACKETVER >= 20080624
-packetLen(0x01d9, 15)
+packetLen(0x01D9, 15)
 #elif PACKETVER >= 20080617
-packetLen(0x01d9, 22)
+packetLen(0x01D9, 22)
 #elif PACKETVER >= 20080610
-packetLen(0x01d9, 8)
+packetLen(0x01D9, 8)
 #elif PACKETVER >= 20080528
-packetLen(0x01d9, -1)
+packetLen(0x01D9, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x01d9, 4)
+packetLen(0x01D9, 4)
 #elif PACKETVER >= 20080513
-packetLen(0x01d9, -1)
+packetLen(0x01D9, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x01d9, 60)
+packetLen(0x01D9, 60)
 #elif PACKETVER >= 20080429
-packetLen(0x01d9, -1)
+packetLen(0x01D9, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x01d9, 6)
+packetLen(0x01D9, 6)
 #elif PACKETVER >= 20080415
-packetLen(0x01d9, 26)
+packetLen(0x01D9, 26)
 #elif PACKETVER >= 20080408
-packetLen(0x01d9, 2)
+packetLen(0x01D9, 2)
 #elif PACKETVER >= 20080325
-packetLen(0x01d9, -1)
+packetLen(0x01D9, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x01d9, 282)
+packetLen(0x01D9, 282)
 #elif PACKETVER >= 20080311
-packetLen(0x01d9, 28)
+packetLen(0x01D9, 28)
 #elif PACKETVER >= 20080304
-packetLen(0x01d9, 42)
+packetLen(0x01D9, 42)
 #elif PACKETVER >= 20080226
-packetLen(0x01d9, 8)
+packetLen(0x01D9, 8)
 #elif PACKETVER >= 20080219
-packetLen(0x01d9, 282)
+packetLen(0x01D9, 282)
 #elif PACKETVER >= 20080124
-packetLen(0x01d9, 8)
+packetLen(0x01D9, 8)
 #elif PACKETVER >= 20080102
-packetLen(0x01d9, 53)
+packetLen(0x01D9, 53)
 #endif
 
 // Packet: 0x01da
 #if PACKETVER >= 20080701
-packetLen(0x01da, 32)
+packetLen(0x01DA, 32)
 #elif PACKETVER >= 20080624
-packetLen(0x01da, -1)
+packetLen(0x01DA, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x01da, 2)
+packetLen(0x01DA, 2)
 #elif PACKETVER >= 20080610
-packetLen(0x01da, 12)
+packetLen(0x01DA, 12)
 #elif PACKETVER >= 20080603
-packetLen(0x01da, 10)
+packetLen(0x01DA, 10)
 #elif PACKETVER >= 20080528
-packetLen(0x01da, -1)
+packetLen(0x01DA, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x01da, 60)
+packetLen(0x01DA, 60)
 #elif PACKETVER >= 20080513
-packetLen(0x01da, 5)
+packetLen(0x01DA, 5)
 #elif PACKETVER >= 20080507
-packetLen(0x01da, 10)
+packetLen(0x01DA, 10)
 #elif PACKETVER >= 20080429
-packetLen(0x01da, 6)
+packetLen(0x01DA, 6)
 #elif PACKETVER >= 20080422
-packetLen(0x01da, 2)
+packetLen(0x01DA, 2)
 #elif PACKETVER >= 20080415
-packetLen(0x01da, 6)
+packetLen(0x01DA, 6)
 #elif PACKETVER >= 20080408
-packetLen(0x01da, 8)
+packetLen(0x01DA, 8)
 #elif PACKETVER >= 20080401
-packetLen(0x01da, 9)
+packetLen(0x01DA, 9)
 #elif PACKETVER >= 20080325
-packetLen(0x01da, 6)
+packetLen(0x01DA, 6)
 #elif PACKETVER >= 20080318
-packetLen(0x01da, 2)
+packetLen(0x01DA, 2)
 #elif PACKETVER >= 20080311
-packetLen(0x01da, 79)
+packetLen(0x01DA, 79)
 #elif PACKETVER >= 20080226
-packetLen(0x01da, 6)
+packetLen(0x01DA, 6)
 #elif PACKETVER >= 20080219
-packetLen(0x01da, 2)
+packetLen(0x01DA, 2)
 #elif PACKETVER >= 20080124
-packetLen(0x01da, 12)
+packetLen(0x01DA, 12)
 #elif PACKETVER >= 20080102
-packetLen(0x01da, 60)
+packetLen(0x01DA, 60)
 #endif
 
 // Packet: 0x01db
-packetLen(0x01db, 2)
+packetLen(0x01DB, 2)
 
 // Packet: 0x01dc
-packetLen(0x01dc, -1)
+packetLen(0x01DC, -1)
 
 // Packet: 0x01dd
-packetLen(0x01dd, 47)
+packetLen(0x01DD, 47)
 
 // Packet: 0x01de
 #if PACKETVER >= 20080701
-packetLen(0x01de, -1)
+packetLen(0x01DE, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x01de, 22)
+packetLen(0x01DE, 22)
 #elif PACKETVER >= 20080617
-packetLen(0x01de, 14)
+packetLen(0x01DE, 14)
 #elif PACKETVER >= 20080603
-packetLen(0x01de, 6)
+packetLen(0x01DE, 6)
 #elif PACKETVER >= 20080528
-packetLen(0x01de, 14)
+packetLen(0x01DE, 14)
 #elif PACKETVER >= 20080520
-packetLen(0x01de, -1)
+packetLen(0x01DE, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x01de, 8)
+packetLen(0x01DE, 8)
 #elif PACKETVER >= 20080507
-packetLen(0x01de, -1)
+packetLen(0x01DE, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x01de, 3)
+packetLen(0x01DE, 3)
 #elif PACKETVER >= 20080422
-packetLen(0x01de, -1)
+packetLen(0x01DE, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x01de, 30)
+packetLen(0x01DE, 30)
 #elif PACKETVER >= 20080408
-packetLen(0x01de, 2)
+packetLen(0x01DE, 2)
 #elif PACKETVER >= 20080401
-packetLen(0x01de, 15)
+packetLen(0x01DE, 15)
 #elif PACKETVER >= 20080325
-packetLen(0x01de, -1)
+packetLen(0x01DE, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x01de, 15)
+packetLen(0x01DE, 15)
 #elif PACKETVER >= 20080311
-packetLen(0x01de, -1)
+packetLen(0x01DE, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x01de, 7)
+packetLen(0x01DE, 7)
 #elif PACKETVER >= 20080226
-packetLen(0x01de, -1)
+packetLen(0x01DE, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x01de, 3)
+packetLen(0x01DE, 3)
 #elif PACKETVER >= 20080124
-packetLen(0x01de, 2)
+packetLen(0x01DE, 2)
 #elif PACKETVER >= 20080102
-packetLen(0x01de, 33)
+packetLen(0x01DE, 33)
 #endif
 
 // Packet: 0x01df
-packetLen(0x01df, 6)
+packetLen(0x01DF, 6)
 
 // Packet: 0x01e0
-packetLen(0x01e0, 30)
+packetLen(0x01E0, 30)
 
 // Packet: 0x01e1
 #if PACKETVER >= 20080701
-packetLen(0x01e1, -1)
+packetLen(0x01E1, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x01e1, 6)
+packetLen(0x01E1, 6)
 #elif PACKETVER >= 20080603
-packetLen(0x01e1, -1)
+packetLen(0x01E1, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x01e1, 43)
+packetLen(0x01E1, 43)
 #elif PACKETVER >= 20080520
-packetLen(0x01e1, 32)
+packetLen(0x01E1, 32)
 #elif PACKETVER >= 20080513
-packetLen(0x01e1, -1)
+packetLen(0x01E1, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x01e1, 3)
+packetLen(0x01E1, 3)
 #elif PACKETVER >= 20080429
-packetLen(0x01e1, -1)
+packetLen(0x01E1, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x01e1, 6)
+packetLen(0x01E1, 6)
 #elif PACKETVER >= 20080415
-packetLen(0x01e1, 8)
+packetLen(0x01E1, 8)
 #elif PACKETVER >= 20080408
-packetLen(0x01e1, 71)
+packetLen(0x01E1, 71)
 #elif PACKETVER >= 20080401
-packetLen(0x01e1, 2)
+packetLen(0x01E1, 2)
 #elif PACKETVER >= 20080325
-packetLen(0x01e1, 17)
+packetLen(0x01E1, 17)
 #elif PACKETVER >= 20080318
-packetLen(0x01e1, 60)
+packetLen(0x01E1, 60)
 #elif PACKETVER >= 20080304
-packetLen(0x01e1, -1)
+packetLen(0x01E1, -1)
 #elif PACKETVER >= 20080226
-packetLen(0x01e1, 32)
+packetLen(0x01E1, 32)
 #elif PACKETVER >= 20080219
-packetLen(0x01e1, -1)
+packetLen(0x01E1, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x01e1, 11)
+packetLen(0x01E1, 11)
 #elif PACKETVER >= 20080102
-packetLen(0x01e1, 8)
+packetLen(0x01E1, 8)
 #endif
 
 // Packet: 0x01e2
-packetLen(0x01e2, 34)
+packetLen(0x01E2, 34)
 
 // Packet: 0x01e3
-packetLen(0x01e3, 14)
+packetLen(0x01E3, 14)
 
 // Packet: 0x01e4
-packetLen(0x01e4, 2)
+packetLen(0x01E4, 2)
 
 // Packet: 0x01e5
-packetLen(0x01e5, 6)
+packetLen(0x01E5, 6)
 
 // Packet: 0x01e6
-packetLen(0x01e6, 26)
+packetLen(0x01E6, 26)
 
 // Packet: 0x01e7
 #if PACKETVER >= 20080624
-packetLen(0x01e7, -1)
+packetLen(0x01E7, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x01e7, 6)
+packetLen(0x01E7, 6)
 #elif PACKETVER >= 20080610
-packetLen(0x01e7, 4)
+packetLen(0x01E7, 4)
 #elif PACKETVER >= 20080603
-packetLen(0x01e7, 14)
+packetLen(0x01E7, 14)
 #elif PACKETVER >= 20080528
-packetLen(0x01e7, 39)
+packetLen(0x01E7, 39)
 #elif PACKETVER >= 20080520
-packetLen(0x01e7, 22)
+packetLen(0x01E7, 22)
 #elif PACKETVER >= 20080513
-packetLen(0x01e7, 6)
+packetLen(0x01E7, 6)
 #elif PACKETVER >= 20080507
-packetLen(0x01e7, 54)
+packetLen(0x01E7, 54)
 #elif PACKETVER >= 20080429
-packetLen(0x01e7, -1)
+packetLen(0x01E7, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x01e7, 2)
+packetLen(0x01E7, 2)
 #elif PACKETVER >= 20080415
-packetLen(0x01e7, -1)
+packetLen(0x01E7, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x01e7, 60)
+packetLen(0x01E7, 60)
 #elif PACKETVER >= 20080401
-packetLen(0x01e7, 5)
+packetLen(0x01E7, 5)
 #elif PACKETVER >= 20080325
-packetLen(0x01e7, 20)
+packetLen(0x01E7, 20)
 #elif PACKETVER >= 20080318
-packetLen(0x01e7, 18)
+packetLen(0x01E7, 18)
 #elif PACKETVER >= 20080311
-packetLen(0x01e7, 55)
+packetLen(0x01E7, 55)
 #elif PACKETVER >= 20080304
-packetLen(0x01e7, 26)
+packetLen(0x01E7, 26)
 #elif PACKETVER >= 20080219
-packetLen(0x01e7, 2)
+packetLen(0x01E7, 2)
 #elif PACKETVER >= 20080124
-packetLen(0x01e7, -1)
+packetLen(0x01E7, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x01e7, 2)
+packetLen(0x01E7, 2)
 #endif
 
 // Packet: 0x01e8
 #if PACKETVER >= 20080701
-packetLen(0x01e8, -1)
+packetLen(0x01E8, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x01e8, 22)
+packetLen(0x01E8, 22)
 #elif PACKETVER >= 20080617
-packetLen(0x01e8, 14)
+packetLen(0x01E8, 14)
 #elif PACKETVER >= 20080610
-packetLen(0x01e8, 27)
+packetLen(0x01E8, 27)
 #elif PACKETVER >= 20080603
-packetLen(0x01e8, -1)
+packetLen(0x01E8, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x01e8, 53)
+packetLen(0x01E8, 53)
 #elif PACKETVER >= 20080520
-packetLen(0x01e8, 3)
+packetLen(0x01E8, 3)
 #elif PACKETVER >= 20080513
-packetLen(0x01e8, 10)
+packetLen(0x01E8, 10)
 #elif PACKETVER >= 20080507
-packetLen(0x01e8, 14)
+packetLen(0x01E8, 14)
 #elif PACKETVER >= 20080429
-packetLen(0x01e8, 10)
+packetLen(0x01E8, 10)
 #elif PACKETVER >= 20080422
-packetLen(0x01e8, 28)
+packetLen(0x01E8, 28)
 #elif PACKETVER >= 20080415
-packetLen(0x01e8, -1)
+packetLen(0x01E8, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x01e8, 16)
+packetLen(0x01E8, 16)
 #elif PACKETVER >= 20080401
-packetLen(0x01e8, 10)
+packetLen(0x01E8, 10)
 #elif PACKETVER >= 20080318
-packetLen(0x01e8, 4)
+packetLen(0x01E8, 4)
 #elif PACKETVER >= 20080311
-packetLen(0x01e8, 6)
+packetLen(0x01E8, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x01e8, 4)
+packetLen(0x01E8, 4)
 #elif PACKETVER >= 20080226
-packetLen(0x01e8, -1)
+packetLen(0x01E8, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x01e8, 6)
+packetLen(0x01E8, 6)
 #elif PACKETVER >= 20080124
-packetLen(0x01e8, 44)
+packetLen(0x01E8, 44)
 #elif PACKETVER >= 20080102
-packetLen(0x01e8, 28)
+packetLen(0x01E8, 28)
 #endif
 
 // Packet: 0x01e9
 #if PACKETVER >= 20080701
-packetLen(0x01e9, -1)
+packetLen(0x01E9, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x01e9, 282)
+packetLen(0x01E9, 282)
 #elif PACKETVER >= 20080617
-packetLen(0x01e9, 6)
+packetLen(0x01E9, 6)
 #elif PACKETVER >= 20080610
-packetLen(0x01e9, -1)
+packetLen(0x01E9, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x01e9, 3)
+packetLen(0x01E9, 3)
 #elif PACKETVER >= 20080507
-packetLen(0x01e9, -1)
+packetLen(0x01E9, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x01e9, 5)
+packetLen(0x01E9, 5)
 #elif PACKETVER >= 20080422
-packetLen(0x01e9, 3)
+packetLen(0x01E9, 3)
 #elif PACKETVER >= 20080415
-packetLen(0x01e9, 2)
+packetLen(0x01E9, 2)
 #elif PACKETVER >= 20080408
-packetLen(0x01e9, 34)
+packetLen(0x01E9, 34)
 #elif PACKETVER >= 20080401
-packetLen(0x01e9, 8)
+packetLen(0x01E9, 8)
 #elif PACKETVER >= 20080325
-packetLen(0x01e9, -1)
+packetLen(0x01E9, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x01e9, 8)
+packetLen(0x01E9, 8)
 #elif PACKETVER >= 20080311
-packetLen(0x01e9, 2)
+packetLen(0x01E9, 2)
 #elif PACKETVER >= 20080304
-packetLen(0x01e9, 4)
+packetLen(0x01E9, 4)
 #elif PACKETVER >= 20080226
-packetLen(0x01e9, 12)
+packetLen(0x01E9, 12)
 #elif PACKETVER >= 20080219
-packetLen(0x01e9, -1)
+packetLen(0x01E9, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x01e9, 6)
+packetLen(0x01E9, 6)
 #elif PACKETVER >= 20080102
-packetLen(0x01e9, 81)
+packetLen(0x01E9, 81)
 #endif
 
 // Packet: 0x01ea
 #if PACKETVER >= 20080701
-packetLen(0x01ea, 97)
+packetLen(0x01EA, 97)
 #elif PACKETVER >= 20080624
-packetLen(0x01ea, 79)
+packetLen(0x01EA, 79)
 #elif PACKETVER >= 20080617
-packetLen(0x01ea, -1)
+packetLen(0x01EA, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x01ea, 4)
+packetLen(0x01EA, 4)
 #elif PACKETVER >= 20080603
-packetLen(0x01ea, -1)
+packetLen(0x01EA, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x01ea, 2)
+packetLen(0x01EA, 2)
 #elif PACKETVER >= 20080513
-packetLen(0x01ea, -1)
+packetLen(0x01EA, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x01ea, 12)
+packetLen(0x01EA, 12)
 #elif PACKETVER >= 20080429
-packetLen(0x01ea, 22)
+packetLen(0x01EA, 22)
 #elif PACKETVER >= 20080422
-packetLen(0x01ea, -1)
+packetLen(0x01EA, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x01ea, 282)
+packetLen(0x01EA, 282)
 #elif PACKETVER >= 20080401
-packetLen(0x01ea, -1)
+packetLen(0x01EA, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x01ea, 27)
+packetLen(0x01EA, 27)
 #elif PACKETVER >= 20080318
-packetLen(0x01ea, -1)
+packetLen(0x01EA, -1)
 #elif PACKETVER >= 20080311
-packetLen(0x01ea, 6)
+packetLen(0x01EA, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x01ea, 60)
+packetLen(0x01EA, 60)
 #elif PACKETVER >= 20080219
-packetLen(0x01ea, 6)
+packetLen(0x01EA, 6)
 #elif PACKETVER >= 20080124
-packetLen(0x01ea, 10)
+packetLen(0x01EA, 10)
 #elif PACKETVER >= 20080102
-packetLen(0x01ea, 6)
+packetLen(0x01EA, 6)
 #endif
 
 // Packet: 0x01eb
 #if PACKETVER >= 20080624
-packetLen(0x01eb, -1)
+packetLen(0x01EB, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x01eb, 7)
+packetLen(0x01EB, 7)
 #elif PACKETVER >= 20080610
-packetLen(0x01eb, 4)
+packetLen(0x01EB, 4)
 #elif PACKETVER >= 20080528
-packetLen(0x01eb, -1)
+packetLen(0x01EB, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x01eb, 4)
+packetLen(0x01EB, 4)
 #elif PACKETVER >= 20080513
-packetLen(0x01eb, 30)
+packetLen(0x01EB, 30)
 #elif PACKETVER >= 20080507
-packetLen(0x01eb, 114)
+packetLen(0x01EB, 114)
 #elif PACKETVER >= 20080429
-packetLen(0x01eb, 27)
+packetLen(0x01EB, 27)
 #elif PACKETVER >= 20080422
-packetLen(0x01eb, 30)
+packetLen(0x01EB, 30)
 #elif PACKETVER >= 20080415
-packetLen(0x01eb, 9)
+packetLen(0x01EB, 9)
 #elif PACKETVER >= 20080408
-packetLen(0x01eb, 13)
+packetLen(0x01EB, 13)
 #elif PACKETVER >= 20080401
-packetLen(0x01eb, 5)
+packetLen(0x01EB, 5)
 #elif PACKETVER >= 20080311
-packetLen(0x01eb, -1)
+packetLen(0x01EB, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x01eb, 30)
+packetLen(0x01EB, 30)
 #elif PACKETVER >= 20080226
-packetLen(0x01eb, 11)
+packetLen(0x01EB, 11)
 #elif PACKETVER >= 20080219
-packetLen(0x01eb, 26)
+packetLen(0x01EB, 26)
 #elif PACKETVER >= 20080124
-packetLen(0x01eb, 53)
+packetLen(0x01EB, 53)
 #elif PACKETVER >= 20080102
-packetLen(0x01eb, 10)
+packetLen(0x01EB, 10)
 #endif
 
 // Packet: 0x01ec
-packetLen(0x01ec, 26)
+packetLen(0x01EC, 26)
 
 // Packet: 0x01ed
 #if PACKETVER >= 20080701
-packetLen(0x01ed, 14)
+packetLen(0x01ED, 14)
 #elif PACKETVER >= 20080624
-packetLen(0x01ed, 6)
+packetLen(0x01ED, 6)
 #elif PACKETVER >= 20080610
-packetLen(0x01ed, -1)
+packetLen(0x01ED, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x01ed, 30)
+packetLen(0x01ED, 30)
 #elif PACKETVER >= 20080528
-packetLen(0x01ed, 4)
+packetLen(0x01ED, 4)
 #elif PACKETVER >= 20080520
-packetLen(0x01ed, -1)
+packetLen(0x01ED, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x01ed, 14)
+packetLen(0x01ED, 14)
 #elif PACKETVER >= 20080507
-packetLen(0x01ed, -1)
+packetLen(0x01ED, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x01ed, 30)
+packetLen(0x01ED, 30)
 #elif PACKETVER >= 20080422
-packetLen(0x01ed, 2)
+packetLen(0x01ED, 2)
 #elif PACKETVER >= 20080415
-packetLen(0x01ed, 3)
+packetLen(0x01ED, 3)
 #elif PACKETVER >= 20080408
-packetLen(0x01ed, 22)
+packetLen(0x01ED, 22)
 #elif PACKETVER >= 20080325
-packetLen(0x01ed, -1)
+packetLen(0x01ED, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x01ed, 10)
+packetLen(0x01ED, 10)
 #elif PACKETVER >= 20080311
-packetLen(0x01ed, 5)
+packetLen(0x01ED, 5)
 #elif PACKETVER >= 20080304
-packetLen(0x01ed, 4)
+packetLen(0x01ED, 4)
 #elif PACKETVER >= 20080226
-packetLen(0x01ed, 10)
+packetLen(0x01ED, 10)
 #elif PACKETVER >= 20080219
-packetLen(0x01ed, 22)
+packetLen(0x01ED, 22)
 #elif PACKETVER >= 20080124
-packetLen(0x01ed, 6)
+packetLen(0x01ED, 6)
 #elif PACKETVER >= 20080102
-packetLen(0x01ed, 2)
+packetLen(0x01ED, 2)
 #endif
 
 // Packet: 0x01ee
 #if PACKETVER >= 20080701
-packetLen(0x01ee, 8)
+packetLen(0x01EE, 8)
 #elif PACKETVER >= 20080624
-packetLen(0x01ee, 6)
+packetLen(0x01EE, 6)
 #elif PACKETVER >= 20080617
-packetLen(0x01ee, 23)
+packetLen(0x01EE, 23)
 #elif PACKETVER >= 20080610
-packetLen(0x01ee, 8)
+packetLen(0x01EE, 8)
 #elif PACKETVER >= 20080528
-packetLen(0x01ee, -1)
+packetLen(0x01EE, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x01ee, 26)
+packetLen(0x01EE, 26)
 #elif PACKETVER >= 20080513
-packetLen(0x01ee, -1)
+packetLen(0x01EE, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x01ee, 2)
+packetLen(0x01EE, 2)
 #elif PACKETVER >= 20080408
-packetLen(0x01ee, -1)
+packetLen(0x01EE, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x01ee, 2)
+packetLen(0x01EE, 2)
 #elif PACKETVER >= 20080325
-packetLen(0x01ee, 6)
+packetLen(0x01EE, 6)
 #elif PACKETVER >= 20080318
-packetLen(0x01ee, 71)
+packetLen(0x01EE, 71)
 #elif PACKETVER >= 20080311
-packetLen(0x01ee, -1)
+packetLen(0x01EE, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x01ee, 6)
+packetLen(0x01EE, 6)
 #elif PACKETVER >= 20080226
-packetLen(0x01ee, 11)
+packetLen(0x01EE, 11)
 #elif PACKETVER >= 20080219
-packetLen(0x01ee, 8)
+packetLen(0x01EE, 8)
 #elif PACKETVER >= 20080124
-packetLen(0x01ee, 6)
+packetLen(0x01EE, 6)
 #elif PACKETVER >= 20080102
-packetLen(0x01ee, -1)
+packetLen(0x01EE, -1)
 #endif
 
 // Packet: 0x01ef
 #if PACKETVER >= 20080701
-packetLen(0x01ef, 7)
+packetLen(0x01EF, 7)
 #elif PACKETVER >= 20080624
-packetLen(0x01ef, -1)
+packetLen(0x01EF, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x01ef, 10)
+packetLen(0x01EF, 10)
 #elif PACKETVER >= 20080603
-packetLen(0x01ef, -1)
+packetLen(0x01EF, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x01ef, 6)
+packetLen(0x01EF, 6)
 #elif PACKETVER >= 20080520
-packetLen(0x01ef, 14)
+packetLen(0x01EF, 14)
 #elif PACKETVER >= 20080513
-packetLen(0x01ef, 8)
+packetLen(0x01EF, 8)
 #elif PACKETVER >= 20080507
-packetLen(0x01ef, 7)
+packetLen(0x01EF, 7)
 #elif PACKETVER >= 20080429
-packetLen(0x01ef, 30)
+packetLen(0x01EF, 30)
 #elif PACKETVER >= 20080422
-packetLen(0x01ef, 16)
+packetLen(0x01EF, 16)
 #elif PACKETVER >= 20080415
-packetLen(0x01ef, 3)
+packetLen(0x01EF, 3)
 #elif PACKETVER >= 20080401
-packetLen(0x01ef, 6)
+packetLen(0x01EF, 6)
 #elif PACKETVER >= 20080325
-packetLen(0x01ef, 29)
+packetLen(0x01EF, 29)
 #elif PACKETVER >= 20080318
-packetLen(0x01ef, -1)
+packetLen(0x01EF, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x01ef, 8)
+packetLen(0x01EF, 8)
 #elif PACKETVER >= 20080226
-packetLen(0x01ef, 35)
+packetLen(0x01EF, 35)
 #elif PACKETVER >= 20080124
-packetLen(0x01ef, 6)
+packetLen(0x01EF, 6)
 #elif PACKETVER >= 20080102
-packetLen(0x01ef, -1)
+packetLen(0x01EF, -1)
 #endif
 
 // Packet: 0x01f0
 #if PACKETVER >= 20080701
-packetLen(0x01f0, -1)
+packetLen(0x01F0, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x01f0, 8)
+packetLen(0x01F0, 8)
 #elif PACKETVER >= 20080617
-packetLen(0x01f0, 16)
+packetLen(0x01F0, 16)
 #elif PACKETVER >= 20080603
-packetLen(0x01f0, -1)
+packetLen(0x01F0, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x01f0, 8)
+packetLen(0x01F0, 8)
 #elif PACKETVER >= 20080520
-packetLen(0x01f0, -1)
+packetLen(0x01F0, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x01f0, 26)
+packetLen(0x01F0, 26)
 #elif PACKETVER >= 20080507
-packetLen(0x01f0, -1)
+packetLen(0x01F0, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x01f0, 7)
+packetLen(0x01F0, 7)
 #elif PACKETVER >= 20080422
-packetLen(0x01f0, -1)
+packetLen(0x01F0, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x01f0, 53)
+packetLen(0x01F0, 53)
 #elif PACKETVER >= 20080408
-packetLen(0x01f0, 22)
+packetLen(0x01F0, 22)
 #elif PACKETVER >= 20080401
-packetLen(0x01f0, 44)
+packetLen(0x01F0, 44)
 #elif PACKETVER >= 20080325
-packetLen(0x01f0, 13)
+packetLen(0x01F0, 13)
 #elif PACKETVER >= 20080318
-packetLen(0x01f0, 39)
+packetLen(0x01F0, 39)
 #elif PACKETVER >= 20080311
-packetLen(0x01f0, 4)
+packetLen(0x01F0, 4)
 #elif PACKETVER >= 20080304
-packetLen(0x01f0, 2)
+packetLen(0x01F0, 2)
 #elif PACKETVER >= 20080219
-packetLen(0x01f0, -1)
+packetLen(0x01F0, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x01f0, 30)
+packetLen(0x01F0, 30)
 #elif PACKETVER >= 20080102
-packetLen(0x01f0, -1)
+packetLen(0x01F0, -1)
 #endif
 
 // Packet: 0x01f1
-packetLen(0x01f1, -1)
+packetLen(0x01F1, -1)
 
 // Packet: 0x01f2
 #if PACKETVER >= 20080701
-packetLen(0x01f2, 12)
+packetLen(0x01F2, 12)
 #elif PACKETVER >= 20080603
-packetLen(0x01f2, -1)
+packetLen(0x01F2, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x01f2, 20)
+packetLen(0x01F2, 20)
 #elif PACKETVER >= 20080513
-packetLen(0x01f2, -1)
+packetLen(0x01F2, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x01f2, 22)
+packetLen(0x01F2, 22)
 #elif PACKETVER >= 20080429
-packetLen(0x01f2, -1)
+packetLen(0x01F2, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x01f2, 20)
+packetLen(0x01F2, 20)
 #elif PACKETVER >= 20080415
-packetLen(0x01f2, 8)
+packetLen(0x01F2, 8)
 #elif PACKETVER >= 20080408
-packetLen(0x01f2, 186)
+packetLen(0x01F2, 186)
 #elif PACKETVER >= 20080401
-packetLen(0x01f2, -1)
+packetLen(0x01F2, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x01f2, 6)
+packetLen(0x01F2, 6)
 #elif PACKETVER >= 20080318
-packetLen(0x01f2, 2)
+packetLen(0x01F2, 2)
 #elif PACKETVER >= 20080311
-packetLen(0x01f2, 28)
+packetLen(0x01F2, 28)
 #elif PACKETVER >= 20080304
-packetLen(0x01f2, 26)
+packetLen(0x01F2, 26)
 #elif PACKETVER >= 20080226
-packetLen(0x01f2, 27)
+packetLen(0x01F2, 27)
 #elif PACKETVER >= 20080219
-packetLen(0x01f2, 31)
+packetLen(0x01F2, 31)
 #elif PACKETVER >= 20080124
-packetLen(0x01f2, 14)
+packetLen(0x01F2, 14)
 #elif PACKETVER >= 20080102
-packetLen(0x01f2, 20)
+packetLen(0x01F2, 20)
 #endif
 
 // Packet: 0x01f3
-packetLen(0x01f3, 10)
+packetLen(0x01F3, 10)
 
 // Packet: 0x01f4
 #if PACKETVER >= 20080701
-packetLen(0x01f4, -1)
+packetLen(0x01F4, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x01f4, 54)
+packetLen(0x01F4, 54)
 #elif PACKETVER >= 20080610
-packetLen(0x01f4, -1)
+packetLen(0x01F4, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x01f4, 7)
+packetLen(0x01F4, 7)
 #elif PACKETVER >= 20080520
-packetLen(0x01f4, -1)
+packetLen(0x01F4, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x01f4, 67)
+packetLen(0x01F4, 67)
 #elif PACKETVER >= 20080507
-packetLen(0x01f4, -1)
+packetLen(0x01F4, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x01f4, 28)
+packetLen(0x01F4, 28)
 #elif PACKETVER >= 20080422
-packetLen(0x01f4, 22)
+packetLen(0x01F4, 22)
 #elif PACKETVER >= 20080415
-packetLen(0x01f4, 6)
+packetLen(0x01F4, 6)
 #elif PACKETVER >= 20080408
-packetLen(0x01f4, 14)
+packetLen(0x01F4, 14)
 #elif PACKETVER >= 20080401
-packetLen(0x01f4, 6)
+packetLen(0x01F4, 6)
 #elif PACKETVER >= 20080325
-packetLen(0x01f4, 3)
+packetLen(0x01F4, 3)
 #elif PACKETVER >= 20080318
-packetLen(0x01f4, 10)
+packetLen(0x01F4, 10)
 #elif PACKETVER >= 20080311
-packetLen(0x01f4, 7)
+packetLen(0x01F4, 7)
 #elif PACKETVER >= 20080304
-packetLen(0x01f4, 12)
+packetLen(0x01F4, 12)
 #elif PACKETVER >= 20080226
-packetLen(0x01f4, -1)
+packetLen(0x01F4, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x01f4, 6)
+packetLen(0x01F4, 6)
 #elif PACKETVER >= 20080102
-packetLen(0x01f4, 32)
+packetLen(0x01F4, 32)
 #endif
 
 // Packet: 0x01f5
 #if PACKETVER >= 20080624
-packetLen(0x01f5, -1)
+packetLen(0x01F5, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x01f5, 6)
+packetLen(0x01F5, 6)
 #elif PACKETVER >= 20080603
-packetLen(0x01f5, -1)
+packetLen(0x01F5, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x01f5, 60)
+packetLen(0x01F5, 60)
 #elif PACKETVER >= 20080520
-packetLen(0x01f5, 5)
+packetLen(0x01F5, 5)
 #elif PACKETVER >= 20080513
-packetLen(0x01f5, 60)
+packetLen(0x01F5, 60)
 #elif PACKETVER >= 20080507
-packetLen(0x01f5, 4)
+packetLen(0x01F5, 4)
 #elif PACKETVER >= 20080429
-packetLen(0x01f5, -1)
+packetLen(0x01F5, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x01f5, 11)
+packetLen(0x01F5, 11)
 #elif PACKETVER >= 20080415
-packetLen(0x01f5, 4)
+packetLen(0x01F5, 4)
 #elif PACKETVER >= 20080408
-packetLen(0x01f5, -1)
+packetLen(0x01F5, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x01f5, 6)
+packetLen(0x01F5, 6)
 #elif PACKETVER >= 20080325
-packetLen(0x01f5, 14)
+packetLen(0x01F5, 14)
 #elif PACKETVER >= 20080318
-packetLen(0x01f5, 55)
+packetLen(0x01F5, 55)
 #elif PACKETVER >= 20080311
-packetLen(0x01f5, 30)
+packetLen(0x01F5, 30)
 #elif PACKETVER >= 20080304
-packetLen(0x01f5, 3)
+packetLen(0x01F5, 3)
 #elif PACKETVER >= 20080226
-packetLen(0x01f5, 10)
+packetLen(0x01F5, 10)
 #elif PACKETVER >= 20080219
-packetLen(0x01f5, 114)
+packetLen(0x01F5, 114)
 #elif PACKETVER >= 20080124
-packetLen(0x01f5, 7)
+packetLen(0x01F5, 7)
 #elif PACKETVER >= 20080102
-packetLen(0x01f5, 9)
+packetLen(0x01F5, 9)
 #endif
 
 // Packet: 0x01f6
-packetLen(0x01f6, 34)
+packetLen(0x01F6, 34)
 
 // Packet: 0x01f7
-packetLen(0x01f7, 14)
+packetLen(0x01F7, 14)
 
 // Packet: 0x01f8
-packetLen(0x01f8, 2)
+packetLen(0x01F8, 2)
 
 // Packet: 0x01f9
-packetLen(0x01f9, 6)
+packetLen(0x01F9, 6)
 
 // Packet: 0x01fa
-packetLen(0x01fa, 48)
+packetLen(0x01FA, 48)
 
 // Packet: 0x01fb
-packetLen(0x01fb, 56)
+packetLen(0x01FB, 56)
 
 // Packet: 0x01fc
 #if PACKETVER >= 20080701
-packetLen(0x01fc, -1)
+packetLen(0x01FC, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x01fc, 7)
+packetLen(0x01FC, 7)
 #elif PACKETVER >= 20080617
-packetLen(0x01fc, 186)
+packetLen(0x01FC, 186)
 #elif PACKETVER >= 20080610
-packetLen(0x01fc, 10)
+packetLen(0x01FC, 10)
 #elif PACKETVER >= 20080603
-packetLen(0x01fc, 71)
+packetLen(0x01FC, 71)
 #elif PACKETVER >= 20080528
-packetLen(0x01fc, 4)
+packetLen(0x01FC, 4)
 #elif PACKETVER >= 20080520
-packetLen(0x01fc, -1)
+packetLen(0x01FC, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x01fc, 26)
+packetLen(0x01FC, 26)
 #elif PACKETVER >= 20080507
-packetLen(0x01fc, 10)
+packetLen(0x01FC, 10)
 #elif PACKETVER >= 20080429
-packetLen(0x01fc, 4)
+packetLen(0x01FC, 4)
 #elif PACKETVER >= 20080422
-packetLen(0x01fc, -1)
+packetLen(0x01FC, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x01fc, 10)
+packetLen(0x01FC, 10)
 #elif PACKETVER >= 20080408
-packetLen(0x01fc, -1)
+packetLen(0x01FC, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x01fc, 10)
+packetLen(0x01FC, 10)
 #elif PACKETVER >= 20080325
-packetLen(0x01fc, 59)
+packetLen(0x01FC, 59)
 #elif PACKETVER >= 20080318
-packetLen(0x01fc, 7)
+packetLen(0x01FC, 7)
 #elif PACKETVER >= 20080311
-packetLen(0x01fc, -1)
+packetLen(0x01FC, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x01fc, 6)
+packetLen(0x01FC, 6)
 #elif PACKETVER >= 20080226
-packetLen(0x01fc, 4)
+packetLen(0x01FC, 4)
 #elif PACKETVER >= 20080219
-packetLen(0x01fc, 282)
+packetLen(0x01FC, 282)
 #elif PACKETVER >= 20080124
-packetLen(0x01fc, 10)
+packetLen(0x01FC, 10)
 #elif PACKETVER >= 20080102
-packetLen(0x01fc, -1)
+packetLen(0x01FC, -1)
 #endif
 
 // Packet: 0x01fd
 #if PACKETVER >= 20080701
-packetLen(0x01fd, 13)
+packetLen(0x01FD, 13)
 #elif PACKETVER >= 20080617
-packetLen(0x01fd, -1)
+packetLen(0x01FD, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x01fd, 10)
+packetLen(0x01FD, 10)
 #elif PACKETVER >= 20080603
-packetLen(0x01fd, -1)
+packetLen(0x01FD, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x01fd, 26)
+packetLen(0x01FD, 26)
 #elif PACKETVER >= 20080520
-packetLen(0x01fd, 8)
+packetLen(0x01FD, 8)
 #elif PACKETVER >= 20080513
-packetLen(0x01fd, -1)
+packetLen(0x01FD, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x01fd, 6)
+packetLen(0x01FD, 6)
 #elif PACKETVER >= 20080429
-packetLen(0x01fd, -1)
+packetLen(0x01FD, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x01fd, 15)
+packetLen(0x01FD, 15)
 #elif PACKETVER >= 20080415
-packetLen(0x01fd, 54)
+packetLen(0x01FD, 54)
 #elif PACKETVER >= 20080408
-packetLen(0x01fd, -1)
+packetLen(0x01FD, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x01fd, 6)
+packetLen(0x01FD, 6)
 #elif PACKETVER >= 20080325
-packetLen(0x01fd, 8)
+packetLen(0x01FD, 8)
 #elif PACKETVER >= 20080318
-packetLen(0x01fd, 6)
+packetLen(0x01FD, 6)
 #elif PACKETVER >= 20080311
-packetLen(0x01fd, 39)
+packetLen(0x01FD, 39)
 #elif PACKETVER >= 20080304
-packetLen(0x01fd, 6)
+packetLen(0x01FD, 6)
 #elif PACKETVER >= 20080226
-packetLen(0x01fd, 8)
+packetLen(0x01FD, 8)
 #elif PACKETVER >= 20080219
-packetLen(0x01fd, 26)
+packetLen(0x01FD, 26)
 #elif PACKETVER >= 20080124
-packetLen(0x01fd, -1)
+packetLen(0x01FD, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x01fd, 15)
+packetLen(0x01FD, 15)
 #endif
 
 // Packet: 0x01fe
 #if PACKETVER >= 20080701
-packetLen(0x01fe, 30)
+packetLen(0x01FE, 30)
 #elif PACKETVER >= 20080624
-packetLen(0x01fe, -1)
+packetLen(0x01FE, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x01fe, 11)
+packetLen(0x01FE, 11)
 #elif PACKETVER >= 20080610
-packetLen(0x01fe, -1)
+packetLen(0x01FE, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x01fe, 4)
+packetLen(0x01FE, 4)
 #elif PACKETVER >= 20080513
-packetLen(0x01fe, -1)
+packetLen(0x01FE, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x01fe, 7)
+packetLen(0x01FE, 7)
 #elif PACKETVER >= 20080415
-packetLen(0x01fe, -1)
+packetLen(0x01FE, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x01fe, 8)
+packetLen(0x01FE, 8)
 #elif PACKETVER >= 20080401
-packetLen(0x01fe, 54)
+packetLen(0x01FE, 54)
 #elif PACKETVER >= 20080325
-packetLen(0x01fe, -1)
+packetLen(0x01FE, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x01fe, 20)
+packetLen(0x01FE, 20)
 #elif PACKETVER >= 20080311
-packetLen(0x01fe, 18)
+packetLen(0x01FE, 18)
 #elif PACKETVER >= 20080304
-packetLen(0x01fe, 22)
+packetLen(0x01FE, 22)
 #elif PACKETVER >= 20080226
-packetLen(0x01fe, 2)
+packetLen(0x01FE, 2)
 #elif PACKETVER >= 20080219
-packetLen(0x01fe, 13)
+packetLen(0x01FE, 13)
 #elif PACKETVER >= 20080124
-packetLen(0x01fe, 16)
+packetLen(0x01FE, 16)
 #elif PACKETVER >= 20080102
-packetLen(0x01fe, 5)
+packetLen(0x01FE, 5)
 #endif
 
 // Packet: 0x01ff
-packetLen(0x01ff, 10)
+packetLen(0x01FF, 10)
 
 // Packet: 0x0200
 packetLen(0x0200, 26)
@@ -12551,93 +12551,93 @@ packetLen(0x0209, 36)
 
 // Packet: 0x020a
 #if PACKETVER >= 20080701
-packetLen(0x020a, -1)
+packetLen(0x020A, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x020a, 68)
+packetLen(0x020A, 68)
 #elif PACKETVER >= 20080617
-packetLen(0x020a, -1)
+packetLen(0x020A, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x020a, 186)
+packetLen(0x020A, 186)
 #elif PACKETVER >= 20080603
-packetLen(0x020a, 11)
+packetLen(0x020A, 11)
 #elif PACKETVER >= 20080528
-packetLen(0x020a, 32)
+packetLen(0x020A, 32)
 #elif PACKETVER >= 20080520
-packetLen(0x020a, 30)
+packetLen(0x020A, 30)
 #elif PACKETVER >= 20080513
-packetLen(0x020a, 2)
+packetLen(0x020A, 2)
 #elif PACKETVER >= 20080507
-packetLen(0x020a, 71)
+packetLen(0x020A, 71)
 #elif PACKETVER >= 20080422
-packetLen(0x020a, -1)
+packetLen(0x020A, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x020a, 6)
+packetLen(0x020A, 6)
 #elif PACKETVER >= 20080408
-packetLen(0x020a, -1)
+packetLen(0x020A, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x020a, 14)
+packetLen(0x020A, 14)
 #elif PACKETVER >= 20080325
-packetLen(0x020a, 13)
+packetLen(0x020A, 13)
 #elif PACKETVER >= 20080318
-packetLen(0x020a, 7)
+packetLen(0x020A, 7)
 #elif PACKETVER >= 20080311
-packetLen(0x020a, 6)
+packetLen(0x020A, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x020a, 11)
+packetLen(0x020A, 11)
 #elif PACKETVER >= 20080226
-packetLen(0x020a, -1)
+packetLen(0x020A, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x020a, 20)
+packetLen(0x020A, 20)
 #elif PACKETVER >= 20080124
-packetLen(0x020a, 2)
+packetLen(0x020A, 2)
 #elif PACKETVER >= 20080102
-packetLen(0x020a, 10)
+packetLen(0x020A, 10)
 #endif
 
 // Packet: 0x020d
-packetLen(0x020d, -1)
+packetLen(0x020D, -1)
 
 // Packet: 0x020e
 #if PACKETVER >= 20080701
-packetLen(0x020e, 10)
+packetLen(0x020E, 10)
 #elif PACKETVER >= 20080624
-packetLen(0x020e, 5)
+packetLen(0x020E, 5)
 #elif PACKETVER >= 20080603
-packetLen(0x020e, -1)
+packetLen(0x020E, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x020e, 7)
+packetLen(0x020E, 7)
 #elif PACKETVER >= 20080520
-packetLen(0x020e, -1)
+packetLen(0x020E, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x020e, 32)
+packetLen(0x020E, 32)
 #elif PACKETVER >= 20080507
-packetLen(0x020e, -1)
+packetLen(0x020E, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x020e, 54)
+packetLen(0x020E, 54)
 #elif PACKETVER >= 20080415
-packetLen(0x020e, 4)
+packetLen(0x020E, 4)
 #elif PACKETVER >= 20080408
-packetLen(0x020e, 3)
+packetLen(0x020E, 3)
 #elif PACKETVER >= 20080401
-packetLen(0x020e, 6)
+packetLen(0x020E, 6)
 #elif PACKETVER >= 20080318
-packetLen(0x020e, -1)
+packetLen(0x020E, -1)
 #elif PACKETVER >= 20080311
-packetLen(0x020e, 6)
+packetLen(0x020E, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x020e, 27)
+packetLen(0x020E, 27)
 #elif PACKETVER >= 20080226
-packetLen(0x020e, -1)
+packetLen(0x020E, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x020e, 8)
+packetLen(0x020E, 8)
 #elif PACKETVER >= 20080124
-packetLen(0x020e, 102)
+packetLen(0x020E, 102)
 #elif PACKETVER >= 20080102
-packetLen(0x020e, 32)
+packetLen(0x020E, 32)
 #endif
 
 // Packet: 0x020f
-packetLen(0x020f, 10)
+packetLen(0x020F, 10)
 
 // Packet: 0x0210
 packetLen(0x0210, 22)
@@ -12790,143 +12790,143 @@ packetLen(0x0219, 282)
 
 // Packet: 0x021a
 #if PACKETVER >= 20080701
-packetLen(0x021a, 6)
+packetLen(0x021A, 6)
 #elif PACKETVER >= 20080624
-packetLen(0x021a, 11)
+packetLen(0x021A, 11)
 #elif PACKETVER >= 20080617
-packetLen(0x021a, 97)
+packetLen(0x021A, 97)
 #elif PACKETVER >= 20080610
-packetLen(0x021a, 23)
+packetLen(0x021A, 23)
 #elif PACKETVER >= 20080603
-packetLen(0x021a, 30)
+packetLen(0x021A, 30)
 #elif PACKETVER >= 20080528
-packetLen(0x021a, 26)
+packetLen(0x021A, 26)
 #elif PACKETVER >= 20080513
-packetLen(0x021a, -1)
+packetLen(0x021A, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x021a, 3)
+packetLen(0x021A, 3)
 #elif PACKETVER >= 20080429
-packetLen(0x021a, -1)
+packetLen(0x021A, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x021a, 16)
+packetLen(0x021A, 16)
 #elif PACKETVER >= 20080408
-packetLen(0x021a, -1)
+packetLen(0x021A, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x021a, 11)
+packetLen(0x021A, 11)
 #elif PACKETVER >= 20080325
-packetLen(0x021a, 8)
+packetLen(0x021A, 8)
 #elif PACKETVER >= 20080318
-packetLen(0x021a, 6)
+packetLen(0x021A, 6)
 #elif PACKETVER >= 20080311
-packetLen(0x021a, 8)
+packetLen(0x021A, 8)
 #elif PACKETVER >= 20080304
-packetLen(0x021a, 5)
+packetLen(0x021A, 5)
 #elif PACKETVER >= 20080226
-packetLen(0x021a, 30)
+packetLen(0x021A, 30)
 #elif PACKETVER >= 20080219
-packetLen(0x021a, -1)
+packetLen(0x021A, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x021a, 10)
+packetLen(0x021A, 10)
 #elif PACKETVER >= 20080102
-packetLen(0x021a, 282)
+packetLen(0x021A, 282)
 #endif
 
 // Packet: 0x021b
 #if PACKETVER >= 20080701
-packetLen(0x021b, -1)
+packetLen(0x021B, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x021b, 4)
+packetLen(0x021B, 4)
 #elif PACKETVER >= 20080617
-packetLen(0x021b, 10)
+packetLen(0x021B, 10)
 #elif PACKETVER >= 20080610
-packetLen(0x021b, -1)
+packetLen(0x021B, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x021b, 10)
+packetLen(0x021B, 10)
 #elif PACKETVER >= 20080520
-packetLen(0x021b, -1)
+packetLen(0x021B, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x021b, 4)
+packetLen(0x021B, 4)
 #elif PACKETVER >= 20080507
-packetLen(0x021b, 8)
+packetLen(0x021B, 8)
 #elif PACKETVER >= 20080429
-packetLen(0x021b, 2)
+packetLen(0x021B, 2)
 #elif PACKETVER >= 20080422
-packetLen(0x021b, 44)
+packetLen(0x021B, 44)
 #elif PACKETVER >= 20080415
-packetLen(0x021b, -1)
+packetLen(0x021B, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x021b, 9)
+packetLen(0x021B, 9)
 #elif PACKETVER >= 20080401
-packetLen(0x021b, 6)
+packetLen(0x021B, 6)
 #elif PACKETVER >= 20080325
-packetLen(0x021b, 11)
+packetLen(0x021B, 11)
 #elif PACKETVER >= 20080318
-packetLen(0x021b, 3)
+packetLen(0x021B, 3)
 #elif PACKETVER >= 20080311
-packetLen(0x021b, 15)
+packetLen(0x021B, 15)
 #elif PACKETVER >= 20080304
-packetLen(0x021b, 14)
+packetLen(0x021B, 14)
 #elif PACKETVER >= 20080226
-packetLen(0x021b, 6)
+packetLen(0x021B, 6)
 #elif PACKETVER >= 20080219
-packetLen(0x021b, 15)
+packetLen(0x021B, 15)
 #elif PACKETVER >= 20080124
-packetLen(0x021b, 54)
+packetLen(0x021B, 54)
 #elif PACKETVER >= 20080102
-packetLen(0x021b, 10)
+packetLen(0x021B, 10)
 #endif
 
 // Packet: 0x021c
 #if PACKETVER >= 20080617
-packetLen(0x021c, -1)
+packetLen(0x021C, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x021c, 8)
+packetLen(0x021C, 8)
 #elif PACKETVER >= 20080603
-packetLen(0x021c, 13)
+packetLen(0x021C, 13)
 #elif PACKETVER >= 20080528
-packetLen(0x021c, -1)
+packetLen(0x021C, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x021c, 2)
+packetLen(0x021C, 2)
 #elif PACKETVER >= 20080513
-packetLen(0x021c, 5)
+packetLen(0x021C, 5)
 #elif PACKETVER >= 20080507
-packetLen(0x021c, 8)
+packetLen(0x021C, 8)
 #elif PACKETVER >= 20080429
-packetLen(0x021c, 18)
+packetLen(0x021C, 18)
 #elif PACKETVER >= 20080422
-packetLen(0x021c, 3)
+packetLen(0x021C, 3)
 #elif PACKETVER >= 20080415
-packetLen(0x021c, 5)
+packetLen(0x021C, 5)
 #elif PACKETVER >= 20080408
-packetLen(0x021c, -1)
+packetLen(0x021C, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x021c, 4)
+packetLen(0x021C, 4)
 #elif PACKETVER >= 20080325
-packetLen(0x021c, 102)
+packetLen(0x021C, 102)
 #elif PACKETVER >= 20080318
-packetLen(0x021c, -1)
+packetLen(0x021C, -1)
 #elif PACKETVER >= 20080311
-packetLen(0x021c, 6)
+packetLen(0x021C, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x021c, 10)
+packetLen(0x021C, 10)
 #elif PACKETVER >= 20080226
-packetLen(0x021c, 4)
+packetLen(0x021C, 4)
 #elif PACKETVER >= 20080219
-packetLen(0x021c, -1)
+packetLen(0x021C, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x021c, 30)
+packetLen(0x021C, 30)
 #elif PACKETVER >= 20080102
-packetLen(0x021c, 10)
+packetLen(0x021C, 10)
 #endif
 
 // Packet: 0x021d
-packetLen(0x021d, 6)
+packetLen(0x021D, 6)
 
 // Packet: 0x021e
-packetLen(0x021e, 6)
+packetLen(0x021E, 6)
 
 // Packet: 0x021f
-packetLen(0x021f, 66)
+packetLen(0x021F, 66)
 
 // Packet: 0x0220
 packetLen(0x0220, 10)
@@ -13156,236 +13156,236 @@ packetLen(0x0229, 15)
 
 // Packet: 0x022a
 #if PACKETVER >= 20080701
-packetLen(0x022a, -1)
+packetLen(0x022A, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x022a, 2)
+packetLen(0x022A, 2)
 #elif PACKETVER >= 20080617
-packetLen(0x022a, 8)
+packetLen(0x022A, 8)
 #elif PACKETVER >= 20080520
-packetLen(0x022a, -1)
+packetLen(0x022A, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x022a, 5)
+packetLen(0x022A, 5)
 #elif PACKETVER >= 20080507
-packetLen(0x022a, -1)
+packetLen(0x022A, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x022a, 3)
+packetLen(0x022A, 3)
 #elif PACKETVER >= 20080422
-packetLen(0x022a, 23)
+packetLen(0x022A, 23)
 #elif PACKETVER >= 20080415
-packetLen(0x022a, 3)
+packetLen(0x022A, 3)
 #elif PACKETVER >= 20080408
-packetLen(0x022a, 10)
+packetLen(0x022A, 10)
 #elif PACKETVER >= 20080401
-packetLen(0x022a, 8)
+packetLen(0x022A, 8)
 #elif PACKETVER >= 20080325
-packetLen(0x022a, 114)
+packetLen(0x022A, 114)
 #elif PACKETVER >= 20080318
-packetLen(0x022a, 2)
+packetLen(0x022A, 2)
 #elif PACKETVER >= 20080311
-packetLen(0x022a, 10)
+packetLen(0x022A, 10)
 #elif PACKETVER >= 20080304
-packetLen(0x022a, 2)
+packetLen(0x022A, 2)
 #elif PACKETVER >= 20080226
-packetLen(0x022a, -1)
+packetLen(0x022A, -1)
 #elif PACKETVER >= 20080219
-packetLen(0x022a, 2)
+packetLen(0x022A, 2)
 #elif PACKETVER >= 20080124
-packetLen(0x022a, 8)
+packetLen(0x022A, 8)
 #elif PACKETVER >= 20080102
-packetLen(0x022a, 58)
+packetLen(0x022A, 58)
 #endif
 
 // Packet: 0x022b
 #if PACKETVER >= 20080701
-packetLen(0x022b, -1)
+packetLen(0x022B, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x022b, 90)
+packetLen(0x022B, 90)
 #elif PACKETVER >= 20080617
-packetLen(0x022b, 6)
+packetLen(0x022B, 6)
 #elif PACKETVER >= 20080610
-packetLen(0x022b, 2)
+packetLen(0x022B, 2)
 #elif PACKETVER >= 20080603
-packetLen(0x022b, 18)
+packetLen(0x022B, 18)
 #elif PACKETVER >= 20080528
-packetLen(0x022b, 7)
+packetLen(0x022B, 7)
 #elif PACKETVER >= 20080520
-packetLen(0x022b, 10)
+packetLen(0x022B, 10)
 #elif PACKETVER >= 20080513
-packetLen(0x022b, -1)
+packetLen(0x022B, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x022b, 6)
+packetLen(0x022B, 6)
 #elif PACKETVER >= 20080429
-packetLen(0x022b, 26)
+packetLen(0x022B, 26)
 #elif PACKETVER >= 20080415
-packetLen(0x022b, -1)
+packetLen(0x022B, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x022b, 27)
+packetLen(0x022B, 27)
 #elif PACKETVER >= 20080401
-packetLen(0x022b, 6)
+packetLen(0x022B, 6)
 #elif PACKETVER >= 20080325
-packetLen(0x022b, 282)
+packetLen(0x022B, 282)
 #elif PACKETVER >= 20080318
-packetLen(0x022b, 102)
+packetLen(0x022B, 102)
 #elif PACKETVER >= 20080311
-packetLen(0x022b, 10)
+packetLen(0x022B, 10)
 #elif PACKETVER >= 20080304
-packetLen(0x022b, 8)
+packetLen(0x022B, 8)
 #elif PACKETVER >= 20080219
-packetLen(0x022b, -1)
+packetLen(0x022B, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x022b, 23)
+packetLen(0x022B, 23)
 #elif PACKETVER >= 20080102
-packetLen(0x022b, 57)
+packetLen(0x022B, 57)
 #endif
 
 // Packet: 0x022c
 #if PACKETVER >= 20080603
-packetLen(0x022c, -1)
+packetLen(0x022C, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x022c, 6)
+packetLen(0x022C, 6)
 #elif PACKETVER >= 20080513
-packetLen(0x022c, 8)
+packetLen(0x022C, 8)
 #elif PACKETVER >= 20080507
-packetLen(0x022c, 6)
+packetLen(0x022C, 6)
 #elif PACKETVER >= 20080429
-packetLen(0x022c, -1)
+packetLen(0x022C, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x022c, 33)
+packetLen(0x022C, 33)
 #elif PACKETVER >= 20080415
-packetLen(0x022c, 6)
+packetLen(0x022C, 6)
 #elif PACKETVER >= 20080408
-packetLen(0x022c, -1)
+packetLen(0x022C, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x022c, 4)
+packetLen(0x022C, 4)
 #elif PACKETVER >= 20080325
-packetLen(0x022c, 68)
+packetLen(0x022C, 68)
 #elif PACKETVER >= 20080318
-packetLen(0x022c, 6)
+packetLen(0x022C, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x022c, 10)
+packetLen(0x022C, 10)
 #elif PACKETVER >= 20080226
-packetLen(0x022c, 31)
+packetLen(0x022C, 31)
 #elif PACKETVER >= 20080219
-packetLen(0x022c, 53)
+packetLen(0x022C, 53)
 #elif PACKETVER >= 20080124
-packetLen(0x022c, 22)
+packetLen(0x022C, 22)
 #elif PACKETVER >= 20080102
-packetLen(0x022c, 65)
+packetLen(0x022C, 65)
 #endif
 
 // Packet: 0x022d
 #if PACKETVER >= 20080701
-packetLen(0x022d, 10)
+packetLen(0x022D, 10)
 #elif PACKETVER >= 20080520
-packetLen(0x022d, -1)
+packetLen(0x022D, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x022d, 2)
+packetLen(0x022D, 2)
 #elif PACKETVER >= 20080507
-packetLen(0x022d, 29)
+packetLen(0x022D, 29)
 #elif PACKETVER >= 20080429
-packetLen(0x022d, 2)
+packetLen(0x022D, 2)
 #elif PACKETVER >= 20080422
-packetLen(0x022d, 5)
+packetLen(0x022D, 5)
 #elif PACKETVER >= 20080408
-packetLen(0x022d, -1)
+packetLen(0x022D, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x022d, 30)
+packetLen(0x022D, 30)
 #elif PACKETVER >= 20080325
-packetLen(0x022d, 11)
+packetLen(0x022D, 11)
 #elif PACKETVER >= 20080318
-packetLen(0x022d, 10)
+packetLen(0x022D, 10)
 #elif PACKETVER >= 20080311
-packetLen(0x022d, -1)
+packetLen(0x022D, -1)
 #elif PACKETVER >= 20080226
-packetLen(0x022d, 10)
+packetLen(0x022D, 10)
 #elif PACKETVER >= 20080219
-packetLen(0x022d, 9)
+packetLen(0x022D, 9)
 #elif PACKETVER >= 20080124
-packetLen(0x022d, 10)
+packetLen(0x022D, 10)
 #elif PACKETVER >= 20080102
-packetLen(0x022d, 5)
+packetLen(0x022D, 5)
 #endif
 
 // Packet: 0x022e
 #if PACKETVER >= 20080701
-packetLen(0x022e, 30)
+packetLen(0x022E, 30)
 #elif PACKETVER >= 20080624
-packetLen(0x022e, 4)
+packetLen(0x022E, 4)
 #elif PACKETVER >= 20080610
-packetLen(0x022e, -1)
+packetLen(0x022E, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x022e, 10)
+packetLen(0x022E, 10)
 #elif PACKETVER >= 20080520
-packetLen(0x022e, -1)
+packetLen(0x022E, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x022e, 4)
+packetLen(0x022E, 4)
 #elif PACKETVER >= 20080507
-packetLen(0x022e, 8)
+packetLen(0x022E, 8)
 #elif PACKETVER >= 20080429
-packetLen(0x022e, 3)
+packetLen(0x022E, 3)
 #elif PACKETVER >= 20080422
-packetLen(0x022e, 7)
+packetLen(0x022E, 7)
 #elif PACKETVER >= 20080415
-packetLen(0x022e, 30)
+packetLen(0x022E, 30)
 #elif PACKETVER >= 20080408
-packetLen(0x022e, 9)
+packetLen(0x022E, 9)
 #elif PACKETVER >= 20080401
-packetLen(0x022e, 2)
+packetLen(0x022E, 2)
 #elif PACKETVER >= 20080325
-packetLen(0x022e, 4)
+packetLen(0x022E, 4)
 #elif PACKETVER >= 20080318
-packetLen(0x022e, 28)
+packetLen(0x022E, 28)
 #elif PACKETVER >= 20080311
-packetLen(0x022e, 5)
+packetLen(0x022E, 5)
 #elif PACKETVER >= 20080304
-packetLen(0x022e, 55)
+packetLen(0x022E, 55)
 #elif PACKETVER >= 20080226
-packetLen(0x022e, 9)
+packetLen(0x022E, 9)
 #elif PACKETVER >= 20080219
-packetLen(0x022e, -1)
+packetLen(0x022E, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x022e, 4)
+packetLen(0x022E, 4)
 #elif PACKETVER >= 20080102
-packetLen(0x022e, 71)
+packetLen(0x022E, 71)
 #endif
 
 // Packet: 0x022f
 #if PACKETVER >= 20080701
-packetLen(0x022f, -1)
+packetLen(0x022F, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x022f, 10)
+packetLen(0x022F, 10)
 #elif PACKETVER >= 20080617
-packetLen(0x022f, 4)
+packetLen(0x022F, 4)
 #elif PACKETVER >= 20080610
-packetLen(0x022f, -1)
+packetLen(0x022F, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x022f, 22)
+packetLen(0x022F, 22)
 #elif PACKETVER >= 20080528
-packetLen(0x022f, -1)
+packetLen(0x022F, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x022f, 26)
+packetLen(0x022F, 26)
 #elif PACKETVER >= 20080429
-packetLen(0x022f, -1)
+packetLen(0x022F, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x022f, 7)
+packetLen(0x022F, 7)
 #elif PACKETVER >= 20080415
-packetLen(0x022f, 3)
+packetLen(0x022F, 3)
 #elif PACKETVER >= 20080401
-packetLen(0x022f, 10)
+packetLen(0x022F, 10)
 #elif PACKETVER >= 20080325
-packetLen(0x022f, 67)
+packetLen(0x022F, 67)
 #elif PACKETVER >= 20080318
-packetLen(0x022f, 7)
+packetLen(0x022F, 7)
 #elif PACKETVER >= 20080304
-packetLen(0x022f, -1)
+packetLen(0x022F, -1)
 #elif PACKETVER >= 20080226
-packetLen(0x022f, 26)
+packetLen(0x022F, 26)
 #elif PACKETVER >= 20080219
-packetLen(0x022f, 282)
+packetLen(0x022F, 282)
 #elif PACKETVER >= 20080124
-packetLen(0x022f, 6)
+packetLen(0x022F, 6)
 #elif PACKETVER >= 20080102
-packetLen(0x022f, 5)
+packetLen(0x022F, 5)
 #endif
 
 // Packet: 0x0230
@@ -13718,89 +13718,89 @@ packetLen(0x0239, 11)
 
 // Packet: 0x023a
 #if PACKETVER >= 20080701
-packetLen(0x023a, 13)
+packetLen(0x023A, 13)
 #elif PACKETVER >= 20080624
-packetLen(0x023a, -1)
+packetLen(0x023A, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x023a, 10)
+packetLen(0x023A, 10)
 #elif PACKETVER >= 20080513
-packetLen(0x023a, -1)
+packetLen(0x023A, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x023a, 28)
+packetLen(0x023A, 28)
 #elif PACKETVER >= 20080429
-packetLen(0x023a, 4)
+packetLen(0x023A, 4)
 #elif PACKETVER >= 20080422
-packetLen(0x023a, -1)
+packetLen(0x023A, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x023a, 2)
+packetLen(0x023A, 2)
 #elif PACKETVER >= 20080401
-packetLen(0x023a, 6)
+packetLen(0x023A, 6)
 #elif PACKETVER >= 20080325
-packetLen(0x023a, -1)
+packetLen(0x023A, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x023a, 8)
+packetLen(0x023A, 8)
 #elif PACKETVER >= 20080311
-packetLen(0x023a, 10)
+packetLen(0x023A, 10)
 #elif PACKETVER >= 20080304
-packetLen(0x023a, 2)
+packetLen(0x023A, 2)
 #elif PACKETVER >= 20080226
-packetLen(0x023a, 6)
+packetLen(0x023A, 6)
 #elif PACKETVER >= 20080219
-packetLen(0x023a, 11)
+packetLen(0x023A, 11)
 #elif PACKETVER >= 20080124
-packetLen(0x023a, 71)
+packetLen(0x023A, 71)
 #elif PACKETVER >= 20080102
-packetLen(0x023a, 4)
+packetLen(0x023A, 4)
 #endif
 
 // Packet: 0x023b
-packetLen(0x023b, 36)
+packetLen(0x023B, 36)
 
 // Packet: 0x023c
 #if PACKETVER >= 20080701
-packetLen(0x023c, 60)
+packetLen(0x023C, 60)
 #elif PACKETVER >= 20080617
-packetLen(0x023c, -1)
+packetLen(0x023C, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x023c, 4)
+packetLen(0x023C, 4)
 #elif PACKETVER >= 20080513
-packetLen(0x023c, -1)
+packetLen(0x023C, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x023c, 30)
+packetLen(0x023C, 30)
 #elif PACKETVER >= 20080429
-packetLen(0x023c, 3)
+packetLen(0x023C, 3)
 #elif PACKETVER >= 20080422
-packetLen(0x023c, -1)
+packetLen(0x023C, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x023c, 10)
+packetLen(0x023C, 10)
 #elif PACKETVER >= 20080408
-packetLen(0x023c, 6)
+packetLen(0x023C, 6)
 #elif PACKETVER >= 20080401
-packetLen(0x023c, 12)
+packetLen(0x023C, 12)
 #elif PACKETVER >= 20080325
-packetLen(0x023c, 79)
+packetLen(0x023C, 79)
 #elif PACKETVER >= 20080318
-packetLen(0x023c, 10)
+packetLen(0x023C, 10)
 #elif PACKETVER >= 20080311
-packetLen(0x023c, 21)
+packetLen(0x023C, 21)
 #elif PACKETVER >= 20080226
-packetLen(0x023c, 6)
+packetLen(0x023C, 6)
 #elif PACKETVER >= 20080219
-packetLen(0x023c, 5)
+packetLen(0x023C, 5)
 #elif PACKETVER >= 20080124
-packetLen(0x023c, -1)
+packetLen(0x023C, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x023c, 6)
+packetLen(0x023C, 6)
 #endif
 
 // Packet: 0x023d
-packetLen(0x023d, 6)
+packetLen(0x023D, 6)
 
 // Packet: 0x023e
-packetLen(0x023e, 8)
+packetLen(0x023E, 8)
 
 // Packet: 0x023f
-packetLen(0x023f, 2)
+packetLen(0x023F, 2)
 
 // Packet: 0x0240
 packetLen(0x0240, -1)
@@ -13833,22 +13833,22 @@ packetLen(0x0248, -1)
 packetLen(0x0249, 3)
 
 // Packet: 0x024a
-packetLen(0x024a, 70)
+packetLen(0x024A, 70)
 
 // Packet: 0x024b
-packetLen(0x024b, 4)
+packetLen(0x024B, 4)
 
 // Packet: 0x024c
-packetLen(0x024c, 8)
+packetLen(0x024C, 8)
 
 // Packet: 0x024d
-packetLen(0x024d, 12)
+packetLen(0x024D, 12)
 
 // Packet: 0x024e
-packetLen(0x024e, 6)
+packetLen(0x024E, 6)
 
 // Packet: 0x024f
-packetLen(0x024f, 10)
+packetLen(0x024F, 10)
 
 // Packet: 0x0250
 packetLen(0x0250, 3)
@@ -13881,22 +13881,22 @@ packetLen(0x0258, 2)
 packetLen(0x0259, 3)
 
 // Packet: 0x025a
-packetLen(0x025a, -1)
+packetLen(0x025A, -1)
 
 // Packet: 0x025b
-packetLen(0x025b, 6)
+packetLen(0x025B, 6)
 
 // Packet: 0x025c
-packetLen(0x025c, 4)
+packetLen(0x025C, 4)
 
 // Packet: 0x025d
-packetLen(0x025d, 6)
+packetLen(0x025D, 6)
 
 // Packet: 0x025e
-packetLen(0x025e, 4)
+packetLen(0x025E, 4)
 
 // Packet: 0x025f
-packetLen(0x025f, 6)
+packetLen(0x025F, 6)
 
 // Packet: 0x0260
 packetLen(0x0260, 6)
@@ -13929,19 +13929,19 @@ packetLen(0x0268, 4)
 packetLen(0x0269, 4)
 
 // Packet: 0x026a
-packetLen(0x026a, 4)
+packetLen(0x026A, 4)
 
 // Packet: 0x026b
-packetLen(0x026b, 4)
+packetLen(0x026B, 4)
 
 // Packet: 0x026c
-packetLen(0x026c, 4)
+packetLen(0x026C, 4)
 
 // Packet: 0x026d
-packetLen(0x026d, 4)
+packetLen(0x026D, 4)
 
 // Packet: 0x026f
-packetLen(0x026f, 2)
+packetLen(0x026F, 2)
 
 // Packet: 0x0270
 packetLen(0x0270, 2)
@@ -14008,22 +14008,22 @@ packetLen(0x0278, 2)
 packetLen(0x0279, 2)
 
 // Packet: 0x027a
-packetLen(0x027a, -1)
+packetLen(0x027A, -1)
 
 // Packet: 0x027b
-packetLen(0x027b, 14)
+packetLen(0x027B, 14)
 
 // Packet: 0x027c
-packetLen(0x027c, 60)
+packetLen(0x027C, 60)
 
 // Packet: 0x027d
-packetLen(0x027d, 62)
+packetLen(0x027D, 62)
 
 // Packet: 0x027e
-packetLen(0x027e, -1)
+packetLen(0x027E, -1)
 
 // Packet: 0x027f
-packetLen(0x027f, 8)
+packetLen(0x027F, 8)
 
 // Packet: 0x0280
 packetLen(0x0280, 12)
@@ -14092,22 +14092,22 @@ packetLen(0x0288, 10)
 packetLen(0x0289, 12)
 
 // Packet: 0x028a
-packetLen(0x028a, 18)
+packetLen(0x028A, 18)
 
 // Packet: 0x028b
-packetLen(0x028b, -1)
+packetLen(0x028B, -1)
 
 // Packet: 0x028c
-packetLen(0x028c, 46)
+packetLen(0x028C, 46)
 
 // Packet: 0x028d
-packetLen(0x028d, 34)
+packetLen(0x028D, 34)
 
 // Packet: 0x028e
-packetLen(0x028e, 4)
+packetLen(0x028E, 4)
 
 // Packet: 0x028f
-packetLen(0x028f, 6)
+packetLen(0x028F, 6)
 
 // Packet: 0x0290
 packetLen(0x0290, 4)
@@ -14251,809 +14251,809 @@ packetLen(0x0299, 6)
 
 // Packet: 0x029a
 #if PACKETVER >= 20080610
-packetLen(0x029a, -1)
+packetLen(0x029A, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x029a, 28)
+packetLen(0x029A, 28)
 #elif PACKETVER >= 20080528
-packetLen(0x029a, 7)
+packetLen(0x029A, 7)
 #elif PACKETVER >= 20080520
-packetLen(0x029a, 55)
+packetLen(0x029A, 55)
 #elif PACKETVER >= 20080513
-packetLen(0x029a, -1)
+packetLen(0x029A, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x029a, 12)
+packetLen(0x029A, 12)
 #elif PACKETVER >= 20080429
-packetLen(0x029a, 44)
+packetLen(0x029A, 44)
 #elif PACKETVER >= 20080422
-packetLen(0x029a, 11)
+packetLen(0x029A, 11)
 #elif PACKETVER >= 20080408
-packetLen(0x029a, -1)
+packetLen(0x029A, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x029a, 14)
+packetLen(0x029A, 14)
 #elif PACKETVER >= 20080325
-packetLen(0x029a, 2)
+packetLen(0x029A, 2)
 #elif PACKETVER >= 20080318
-packetLen(0x029a, 16)
+packetLen(0x029A, 16)
 #elif PACKETVER >= 20080311
-packetLen(0x029a, 8)
+packetLen(0x029A, 8)
 #elif PACKETVER >= 20080304
-packetLen(0x029a, 21)
+packetLen(0x029A, 21)
 #elif PACKETVER >= 20080226
-packetLen(0x029a, 3)
+packetLen(0x029A, 3)
 #elif PACKETVER >= 20080219
-packetLen(0x029a, -1)
+packetLen(0x029A, -1)
 #elif PACKETVER >= 20080124
-packetLen(0x029a, 30)
+packetLen(0x029A, 30)
 #elif PACKETVER >= 20080102
-packetLen(0x029a, 27)
+packetLen(0x029A, 27)
 #endif
 
 // Packet: 0x029b
-packetLen(0x029b, 80)
+packetLen(0x029B, 80)
 
 // Packet: 0x029c
-packetLen(0x029c, 66)
+packetLen(0x029C, 66)
 
 // Packet: 0x029d
-packetLen(0x029d, -1)
+packetLen(0x029D, -1)
 
 // Packet: 0x029e
-packetLen(0x029e, 11)
+packetLen(0x029E, 11)
 
 // Packet: 0x029f
-packetLen(0x029f, 3)
+packetLen(0x029F, 3)
 
 // Packet: 0x02a2
-packetLen(0x02a2, 8)
+packetLen(0x02A2, 8)
 
 // Packet: 0x02a5
-packetLen(0x02a5, 8)
+packetLen(0x02A5, 8)
 
 // Packet: 0x02a6
 #if PACKETVER >= 20080122
 // removed
 #elif PACKETVER >= 20080108
-packetLen(0x02a6, 204)
+packetLen(0x02A6, 204)
 #elif PACKETVER >= 20080102
-packetLen(0x02a6, 22)
+packetLen(0x02A6, 22)
 #endif
 
 // Packet: 0x02a7
 #if PACKETVER >= 20080122
 // removed
 #elif PACKETVER >= 20080108
-packetLen(0x02a7, 204)
+packetLen(0x02A7, 204)
 #elif PACKETVER >= 20080102
-packetLen(0x02a7, 22)
+packetLen(0x02A7, 22)
 #endif
 
 // Packet: 0x02a8
 #if PACKETVER >= 20080108
 // removed
 #elif PACKETVER >= 20080102
-packetLen(0x02a8, 162)
+packetLen(0x02A8, 162)
 #endif
 
 // Packet: 0x02a9
 #if PACKETVER >= 20080108
 // removed
 #elif PACKETVER >= 20080102
-packetLen(0x02a9, 58)
+packetLen(0x02A9, 58)
 #endif
 
 // Packet: 0x02aa
-packetLen(0x02aa, 4)
+packetLen(0x02AA, 4)
 
 // Packet: 0x02ab
-packetLen(0x02ab, 36)
+packetLen(0x02AB, 36)
 
 // Packet: 0x02ac
-packetLen(0x02ac, 6)
+packetLen(0x02AC, 6)
 
 // Packet: 0x02ad
-packetLen(0x02ad, 8)
+packetLen(0x02AD, 8)
 
 // Packet: 0x02b0
-packetLen(0x02b0, 85)
+packetLen(0x02B0, 85)
 
 // Packet: 0x02b1
-packetLen(0x02b1, -1)
+packetLen(0x02B1, -1)
 
 // Packet: 0x02b2
-packetLen(0x02b2, -1)
+packetLen(0x02B2, -1)
 
 // Packet: 0x02b3
-packetLen(0x02b3, 107)
+packetLen(0x02B3, 107)
 
 // Packet: 0x02b4
-packetLen(0x02b4, 6)
+packetLen(0x02B4, 6)
 
 // Packet: 0x02b5
-packetLen(0x02b5, -1)
+packetLen(0x02B5, -1)
 
 // Packet: 0x02b6
-packetLen(0x02b6, 7)
+packetLen(0x02B6, 7)
 
 // Packet: 0x02b7
-packetLen(0x02b7, 7)
+packetLen(0x02B7, 7)
 
 // Packet: 0x02b8
-packetLen(0x02b8, 22)
+packetLen(0x02B8, 22)
 
 // Packet: 0x02b9
-packetLen(0x02b9, 191)
+packetLen(0x02B9, 191)
 
 // Packet: 0x02ba
-packetLen(0x02ba, 11)
+packetLen(0x02BA, 11)
 
 // Packet: 0x02bb
-packetLen(0x02bb, 8)
+packetLen(0x02BB, 8)
 
 // Packet: 0x02bc
-packetLen(0x02bc, 6)
+packetLen(0x02BC, 6)
 
 // Packet: 0x02bf
 #if PACKETVER >= 20080318
 // removed
 #elif PACKETVER >= 20080102
-packetLen(0x02bf, 10)
+packetLen(0x02BF, 10)
 #endif
 
 // Packet: 0x02c0
 #if PACKETVER >= 20080318
 // removed
 #elif PACKETVER >= 20080102
-packetLen(0x02c0, 2)
+packetLen(0x02C0, 2)
 #endif
 
 // Packet: 0x02c1
-packetLen(0x02c1, -1)
+packetLen(0x02C1, -1)
 
 // Packet: 0x02c2
-packetLen(0x02c2, -1)
+packetLen(0x02C2, -1)
 
 // Packet: 0x02c4
-packetLen(0x02c4, 26)
+packetLen(0x02C4, 26)
 
 // Packet: 0x02c5
-packetLen(0x02c5, 30)
+packetLen(0x02C5, 30)
 
 // Packet: 0x02c6
-packetLen(0x02c6, 30)
+packetLen(0x02C6, 30)
 
 // Packet: 0x02c7
-packetLen(0x02c7, 7)
+packetLen(0x02C7, 7)
 
 // Packet: 0x02c8
-packetLen(0x02c8, 3)
+packetLen(0x02C8, 3)
 
 // Packet: 0x02c9
-packetLen(0x02c9, 3)
+packetLen(0x02C9, 3)
 
 // Packet: 0x02ca
-packetLen(0x02ca, 3)
+packetLen(0x02CA, 3)
 
 // Packet: 0x02cb
-packetLen(0x02cb, 65)
+packetLen(0x02CB, 65)
 
 // Packet: 0x02cc
-packetLen(0x02cc, 4)
+packetLen(0x02CC, 4)
 
 // Packet: 0x02cd
-packetLen(0x02cd, 71)
+packetLen(0x02CD, 71)
 
 // Packet: 0x02ce
-packetLen(0x02ce, 10)
+packetLen(0x02CE, 10)
 
 // Packet: 0x02cf
-packetLen(0x02cf, 6)
+packetLen(0x02CF, 6)
 
 // Packet: 0x02d0
-packetLen(0x02d0, -1)
+packetLen(0x02D0, -1)
 
 // Packet: 0x02d1
-packetLen(0x02d1, -1)
+packetLen(0x02D1, -1)
 
 // Packet: 0x02d2
-packetLen(0x02d2, -1)
+packetLen(0x02D2, -1)
 
 // Packet: 0x02d3
-packetLen(0x02d3, 4)
+packetLen(0x02D3, 4)
 
 // Packet: 0x02d4
 #if PACKETVER >= 20080304
-packetLen(0x02d4, 29)
+packetLen(0x02D4, 29)
 #elif PACKETVER >= 20080226
-packetLen(0x02d4, 30)
+packetLen(0x02D4, 30)
 #elif PACKETVER >= 20080219
-packetLen(0x02d4, 29)
+packetLen(0x02D4, 29)
 #elif PACKETVER >= 20080124
-packetLen(0x02d4, 32)
+packetLen(0x02D4, 32)
 #elif PACKETVER >= 20080102
-packetLen(0x02d4, 29)
+packetLen(0x02D4, 29)
 #endif
 
 // Packet: 0x02d5
-packetLen(0x02d5, 2)
+packetLen(0x02D5, 2)
 
 // Packet: 0x02d6
-packetLen(0x02d6, 6)
+packetLen(0x02D6, 6)
 
 // Packet: 0x02d7
-packetLen(0x02d7, -1)
+packetLen(0x02D7, -1)
 
 // Packet: 0x02d8
-packetLen(0x02d8, 10)
+packetLen(0x02D8, 10)
 
 // Packet: 0x02d9
-packetLen(0x02d9, 10)
+packetLen(0x02D9, 10)
 
 // Packet: 0x02da
-packetLen(0x02da, 3)
+packetLen(0x02DA, 3)
 
 // Packet: 0x02db
-packetLen(0x02db, -1)
+packetLen(0x02DB, -1)
 
 // Packet: 0x02dc
-packetLen(0x02dc, -1)
+packetLen(0x02DC, -1)
 
 // Packet: 0x02dd
-packetLen(0x02dd, 32)
+packetLen(0x02DD, 32)
 
 // Packet: 0x02de
-packetLen(0x02de, 6)
+packetLen(0x02DE, 6)
 
 // Packet: 0x02df
-packetLen(0x02df, 36)
+packetLen(0x02DF, 36)
 
 // Packet: 0x02e0
-packetLen(0x02e0, 34)
+packetLen(0x02E0, 34)
 
 // Packet: 0x02e1
 #if PACKETVER >= 20080617
-packetLen(0x02e1, -1)
+packetLen(0x02E1, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x02e1, 26)
+packetLen(0x02E1, 26)
 #elif PACKETVER >= 20080603
-packetLen(0x02e1, 8)
+packetLen(0x02E1, 8)
 #elif PACKETVER >= 20080528
-packetLen(0x02e1, 10)
+packetLen(0x02E1, 10)
 #elif PACKETVER >= 20080520
-packetLen(0x02e1, 6)
+packetLen(0x02E1, 6)
 #elif PACKETVER >= 20080513
-packetLen(0x02e1, 55)
+packetLen(0x02E1, 55)
 #elif PACKETVER >= 20080507
-packetLen(0x02e1, 22)
+packetLen(0x02E1, 22)
 #elif PACKETVER >= 20080408
-packetLen(0x02e1, -1)
+packetLen(0x02E1, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x02e1, 9)
+packetLen(0x02E1, 9)
 #elif PACKETVER >= 20080325
-packetLen(0x02e1, 26)
+packetLen(0x02E1, 26)
 #elif PACKETVER >= 20080311
-packetLen(0x02e1, -1)
+packetLen(0x02E1, -1)
 #elif PACKETVER >= 20080304
-packetLen(0x02e1, 8)
+packetLen(0x02E1, 8)
 #elif PACKETVER >= 20080102
-packetLen(0x02e1, 33)
+packetLen(0x02E1, 33)
 #endif
 
 // Packet: 0x02e2
-packetLen(0x02e2, 20)
+packetLen(0x02E2, 20)
 
 // Packet: 0x02e3
-packetLen(0x02e3, 22)
+packetLen(0x02E3, 22)
 
 // Packet: 0x02e4
-packetLen(0x02e4, 11)
+packetLen(0x02E4, 11)
 
 // Packet: 0x02e5
-packetLen(0x02e5, 9)
+packetLen(0x02E5, 9)
 
 // Packet: 0x02e6
-packetLen(0x02e6, 6)
+packetLen(0x02E6, 6)
 
 // Packet: 0x02e7
-packetLen(0x02e7, -1)
+packetLen(0x02E7, -1)
 
 // Packet: 0x02e8
-packetLen(0x02e8, -1)
+packetLen(0x02E8, -1)
 
 // Packet: 0x02e9
-packetLen(0x02e9, -1)
+packetLen(0x02E9, -1)
 
 // Packet: 0x02ea
-packetLen(0x02ea, -1)
+packetLen(0x02EA, -1)
 
 // Packet: 0x02eb
-packetLen(0x02eb, 13)
+packetLen(0x02EB, 13)
 
 // Packet: 0x02ec
 #if PACKETVER >= 20080624
-packetLen(0x02ec, -1)
+packetLen(0x02EC, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x02ec, 42)
+packetLen(0x02EC, 42)
 #elif PACKETVER >= 20080610
-packetLen(0x02ec, 6)
+packetLen(0x02EC, 6)
 #elif PACKETVER >= 20080603
-packetLen(0x02ec, 4)
+packetLen(0x02EC, 4)
 #elif PACKETVER >= 20080528
-packetLen(0x02ec, 6)
+packetLen(0x02EC, 6)
 #elif PACKETVER >= 20080520
-packetLen(0x02ec, 14)
+packetLen(0x02EC, 14)
 #elif PACKETVER >= 20080513
-packetLen(0x02ec, 11)
+packetLen(0x02EC, 11)
 #elif PACKETVER >= 20080507
-packetLen(0x02ec, -1)
+packetLen(0x02EC, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x02ec, 43)
+packetLen(0x02EC, 43)
 #elif PACKETVER >= 20080422
-packetLen(0x02ec, 60)
+packetLen(0x02EC, 60)
 #elif PACKETVER >= 20080415
-packetLen(0x02ec, 3)
+packetLen(0x02EC, 3)
 #elif PACKETVER >= 20080408
-packetLen(0x02ec, 6)
+packetLen(0x02EC, 6)
 #elif PACKETVER >= 20080401
-packetLen(0x02ec, 17)
+packetLen(0x02EC, 17)
 #elif PACKETVER >= 20080325
-packetLen(0x02ec, 29)
+packetLen(0x02EC, 29)
 #elif PACKETVER >= 20080318
-packetLen(0x02ec, 10)
+packetLen(0x02EC, 10)
 #elif PACKETVER >= 20080311
-packetLen(0x02ec, 12)
+packetLen(0x02EC, 12)
 #elif PACKETVER >= 20080304
-packetLen(0x02ec, 60)
+packetLen(0x02EC, 60)
 #elif PACKETVER >= 20080102
-packetLen(0x02ec, 67)
+packetLen(0x02EC, 67)
 #endif
 
 // Packet: 0x02ed
 #if PACKETVER >= 20080624
-packetLen(0x02ed, -1)
+packetLen(0x02ED, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x02ed, 60)
+packetLen(0x02ED, 60)
 #elif PACKETVER >= 20080610
-packetLen(0x02ed, 7)
+packetLen(0x02ED, 7)
 #elif PACKETVER >= 20080603
-packetLen(0x02ed, -1)
+packetLen(0x02ED, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x02ed, 97)
+packetLen(0x02ED, 97)
 #elif PACKETVER >= 20080520
-packetLen(0x02ed, 11)
+packetLen(0x02ED, 11)
 #elif PACKETVER >= 20080513
-packetLen(0x02ed, 21)
+packetLen(0x02ED, 21)
 #elif PACKETVER >= 20080507
-packetLen(0x02ed, 10)
+packetLen(0x02ED, 10)
 #elif PACKETVER >= 20080429
-packetLen(0x02ed, -1)
+packetLen(0x02ED, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x02ed, 30)
+packetLen(0x02ED, 30)
 #elif PACKETVER >= 20080415
-packetLen(0x02ed, 53)
+packetLen(0x02ED, 53)
 #elif PACKETVER >= 20080408
-packetLen(0x02ed, 7)
+packetLen(0x02ED, 7)
 #elif PACKETVER >= 20080401
-packetLen(0x02ed, 11)
+packetLen(0x02ED, 11)
 #elif PACKETVER >= 20080325
-packetLen(0x02ed, -1)
+packetLen(0x02ED, -1)
 #elif PACKETVER >= 20080318
-packetLen(0x02ed, 6)
+packetLen(0x02ED, 6)
 #elif PACKETVER >= 20080304
-packetLen(0x02ed, -1)
+packetLen(0x02ED, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x02ed, 59)
+packetLen(0x02ED, 59)
 #endif
 
 // Packet: 0x02ee
 #if PACKETVER >= 20080610
-packetLen(0x02ee, -1)
+packetLen(0x02EE, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x02ee, 2)
+packetLen(0x02EE, 2)
 #elif PACKETVER >= 20080528
-packetLen(0x02ee, 3)
+packetLen(0x02EE, 3)
 #elif PACKETVER >= 20080520
-packetLen(0x02ee, 28)
+packetLen(0x02EE, 28)
 #elif PACKETVER >= 20080507
-packetLen(0x02ee, -1)
+packetLen(0x02EE, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x02ee, 4)
+packetLen(0x02EE, 4)
 #elif PACKETVER >= 20080422
-packetLen(0x02ee, 97)
+packetLen(0x02EE, 97)
 #elif PACKETVER >= 20080415
-packetLen(0x02ee, 60)
+packetLen(0x02EE, 60)
 #elif PACKETVER >= 20080408
-packetLen(0x02ee, -1)
+packetLen(0x02EE, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x02ee, 42)
+packetLen(0x02EE, 42)
 #elif PACKETVER >= 20080325
-packetLen(0x02ee, 4)
+packetLen(0x02EE, 4)
 #elif PACKETVER >= 20080318
-packetLen(0x02ee, 13)
+packetLen(0x02EE, 13)
 #elif PACKETVER >= 20080311
-packetLen(0x02ee, 81)
+packetLen(0x02EE, 81)
 #elif PACKETVER >= 20080304
-packetLen(0x02ee, -1)
+packetLen(0x02EE, -1)
 #elif PACKETVER >= 20080102
-packetLen(0x02ee, 60)
+packetLen(0x02EE, 60)
 #endif
 
 // Packet: 0x02ef
-packetLen(0x02ef, 8)
+packetLen(0x02EF, 8)
 
 // Packet: 0x02f0
 #if PACKETVER >= 20080318
-packetLen(0x02f0, 10)
+packetLen(0x02F0, 10)
 #endif
 
 // Packet: 0x02f1
 #if PACKETVER >= 20080318
-packetLen(0x02f1, 2)
+packetLen(0x02F1, 2)
 #endif
 
 // Packet: 0x02f2
 #if PACKETVER >= 20080318
-packetLen(0x02f2, 2)
+packetLen(0x02F2, 2)
 #endif
 
 // Packet: 0x02f3
 #if PACKETVER >= 20080701
-packetLen(0x02f3, -1)
+packetLen(0x02F3, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x02f3, 2)
+packetLen(0x02F3, 2)
 #elif PACKETVER >= 20080617
-packetLen(0x02f3, -1)
+packetLen(0x02F3, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x02f3, 30)
+packetLen(0x02F3, 30)
 #elif PACKETVER >= 20080603
-packetLen(0x02f3, 9)
+packetLen(0x02F3, 9)
 #elif PACKETVER >= 20080528
-packetLen(0x02f3, 26)
+packetLen(0x02F3, 26)
 #elif PACKETVER >= 20080520
-packetLen(0x02f3, 5)
+packetLen(0x02F3, 5)
 #elif PACKETVER >= 20080513
-packetLen(0x02f3, 3)
+packetLen(0x02F3, 3)
 #elif PACKETVER >= 20080507
-packetLen(0x02f3, -1)
+packetLen(0x02F3, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x02f3, 7)
+packetLen(0x02F3, 7)
 #elif PACKETVER >= 20080422
-packetLen(0x02f3, 3)
+packetLen(0x02F3, 3)
 #elif PACKETVER >= 20080415
-packetLen(0x02f3, 67)
+packetLen(0x02F3, 67)
 #elif PACKETVER >= 20080408
-packetLen(0x02f3, 23)
+packetLen(0x02F3, 23)
 #elif PACKETVER >= 20080401
-packetLen(0x02f3, 71)
+packetLen(0x02F3, 71)
 #elif PACKETVER >= 20080325
-packetLen(0x02f3, 2)
+packetLen(0x02F3, 2)
 #endif
 
 // Packet: 0x02f4
 #if PACKETVER >= 20080617
-packetLen(0x02f4, -1)
+packetLen(0x02F4, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x02f4, 30)
+packetLen(0x02F4, 30)
 #elif PACKETVER >= 20080507
-packetLen(0x02f4, -1)
+packetLen(0x02F4, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x02f4, 29)
+packetLen(0x02F4, 29)
 #elif PACKETVER >= 20080422
-packetLen(0x02f4, 6)
+packetLen(0x02F4, 6)
 #elif PACKETVER >= 20080408
-packetLen(0x02f4, -1)
+packetLen(0x02F4, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x02f4, 9)
+packetLen(0x02F4, 9)
 #elif PACKETVER >= 20080325
-packetLen(0x02f4, 4)
+packetLen(0x02F4, 4)
 #endif
 
 // Packet: 0x02f5
 #if PACKETVER >= 20080701
-packetLen(0x02f5, 8)
+packetLen(0x02F5, 8)
 #elif PACKETVER >= 20080624
-packetLen(0x02f5, 7)
+packetLen(0x02F5, 7)
 #elif PACKETVER >= 20080617
-packetLen(0x02f5, 26)
+packetLen(0x02F5, 26)
 #elif PACKETVER >= 20080610
-packetLen(0x02f5, -1)
+packetLen(0x02F5, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x02f5, 28)
+packetLen(0x02F5, 28)
 #elif PACKETVER >= 20080528
-packetLen(0x02f5, -1)
+packetLen(0x02F5, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x02f5, 2)
+packetLen(0x02F5, 2)
 #elif PACKETVER >= 20080513
-packetLen(0x02f5, 3)
+packetLen(0x02F5, 3)
 #elif PACKETVER >= 20080507
-packetLen(0x02f5, 5)
+packetLen(0x02F5, 5)
 #elif PACKETVER >= 20080429
-packetLen(0x02f5, 8)
+packetLen(0x02F5, 8)
 #elif PACKETVER >= 20080422
-packetLen(0x02f5, -1)
+packetLen(0x02F5, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x02f5, 60)
+packetLen(0x02F5, 60)
 #elif PACKETVER >= 20080401
-packetLen(0x02f5, -1)
+packetLen(0x02F5, -1)
 #elif PACKETVER >= 20080325
-packetLen(0x02f5, 86)
+packetLen(0x02F5, 86)
 #endif
 
 // Packet: 0x02f6
 #if PACKETVER >= 20080624
-packetLen(0x02f6, 8)
+packetLen(0x02F6, 8)
 #elif PACKETVER >= 20080617
-packetLen(0x02f6, -1)
+packetLen(0x02F6, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x02f6, 5)
+packetLen(0x02F6, 5)
 #elif PACKETVER >= 20080603
-packetLen(0x02f6, -1)
+packetLen(0x02F6, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x02f6, 2)
+packetLen(0x02F6, 2)
 #elif PACKETVER >= 20080520
-packetLen(0x02f6, 12)
+packetLen(0x02F6, 12)
 #elif PACKETVER >= 20080513
-packetLen(0x02f6, -1)
+packetLen(0x02F6, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x02f6, 5)
+packetLen(0x02F6, 5)
 #elif PACKETVER >= 20080429
-packetLen(0x02f6, 22)
+packetLen(0x02F6, 22)
 #elif PACKETVER >= 20080422
-packetLen(0x02f6, 5)
+packetLen(0x02F6, 5)
 #elif PACKETVER >= 20080415
-packetLen(0x02f6, 2)
+packetLen(0x02F6, 2)
 #elif PACKETVER >= 20080408
-packetLen(0x02f6, 8)
+packetLen(0x02F6, 8)
 #elif PACKETVER >= 20080401
-packetLen(0x02f6, 6)
+packetLen(0x02F6, 6)
 #elif PACKETVER >= 20080325
-packetLen(0x02f6, 4)
+packetLen(0x02F6, 4)
 #endif
 
 // Packet: 0x02f7
 #if PACKETVER >= 20080624
-packetLen(0x02f7, -1)
+packetLen(0x02F7, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x02f7, 26)
+packetLen(0x02F7, 26)
 #elif PACKETVER >= 20080610
-packetLen(0x02f7, 12)
+packetLen(0x02F7, 12)
 #elif PACKETVER >= 20080603
-packetLen(0x02f7, 22)
+packetLen(0x02F7, 22)
 #elif PACKETVER >= 20080528
-packetLen(0x02f7, 8)
+packetLen(0x02F7, 8)
 #elif PACKETVER >= 20080520
-packetLen(0x02f7, 6)
+packetLen(0x02F7, 6)
 #elif PACKETVER >= 20080513
-packetLen(0x02f7, 10)
+packetLen(0x02F7, 10)
 #elif PACKETVER >= 20080507
-packetLen(0x02f7, 30)
+packetLen(0x02F7, 30)
 #elif PACKETVER >= 20080429
-packetLen(0x02f7, 7)
+packetLen(0x02F7, 7)
 #elif PACKETVER >= 20080422
-packetLen(0x02f7, -1)
+packetLen(0x02F7, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x02f7, 6)
+packetLen(0x02F7, 6)
 #elif PACKETVER >= 20080408
-packetLen(0x02f7, -1)
+packetLen(0x02F7, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x02f7, 26)
+packetLen(0x02F7, 26)
 #elif PACKETVER >= 20080325
-packetLen(0x02f7, -1)
+packetLen(0x02F7, -1)
 #endif
 
 // Packet: 0x02f8
 #if PACKETVER >= 20080701
-packetLen(0x02f8, -1)
+packetLen(0x02F8, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x02f8, 12)
+packetLen(0x02F8, 12)
 #elif PACKETVER >= 20080617
-packetLen(0x02f8, 3)
+packetLen(0x02F8, 3)
 #elif PACKETVER >= 20080610
-packetLen(0x02f8, 2)
+packetLen(0x02F8, 2)
 #elif PACKETVER >= 20080520
-packetLen(0x02f8, -1)
+packetLen(0x02F8, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x02f8, 30)
+packetLen(0x02F8, 30)
 #elif PACKETVER >= 20080422
-packetLen(0x02f8, -1)
+packetLen(0x02F8, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x02f8, 3)
+packetLen(0x02F8, 3)
 #elif PACKETVER >= 20080408
-packetLen(0x02f8, 10)
+packetLen(0x02F8, 10)
 #elif PACKETVER >= 20080401
-packetLen(0x02f8, 29)
+packetLen(0x02F8, 29)
 #elif PACKETVER >= 20080325
-packetLen(0x02f8, 7)
+packetLen(0x02F8, 7)
 #endif
 
 // Packet: 0x02f9
 #if PACKETVER >= 20080701
-packetLen(0x02f9, -1)
+packetLen(0x02F9, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x02f9, 43)
+packetLen(0x02F9, 43)
 #elif PACKETVER >= 20080617
-packetLen(0x02f9, 2)
+packetLen(0x02F9, 2)
 #elif PACKETVER >= 20080610
-packetLen(0x02f9, 71)
+packetLen(0x02F9, 71)
 #elif PACKETVER >= 20080528
-packetLen(0x02f9, -1)
+packetLen(0x02F9, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x02f9, 4)
+packetLen(0x02F9, 4)
 #elif PACKETVER >= 20080513
-packetLen(0x02f9, 28)
+packetLen(0x02F9, 28)
 #elif PACKETVER >= 20080507
-packetLen(0x02f9, 26)
+packetLen(0x02F9, 26)
 #elif PACKETVER >= 20080429
-packetLen(0x02f9, -1)
+packetLen(0x02F9, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x02f9, 5)
+packetLen(0x02F9, 5)
 #elif PACKETVER >= 20080415
-packetLen(0x02f9, -1)
+packetLen(0x02F9, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x02f9, 8)
+packetLen(0x02F9, 8)
 #elif PACKETVER >= 20080325
-packetLen(0x02f9, 6)
+packetLen(0x02F9, 6)
 #endif
 
 // Packet: 0x02fa
 #if PACKETVER >= 20080701
-packetLen(0x02fa, 8)
+packetLen(0x02FA, 8)
 #elif PACKETVER >= 20080617
-packetLen(0x02fa, -1)
+packetLen(0x02FA, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x02fa, 6)
+packetLen(0x02FA, 6)
 #elif PACKETVER >= 20080603
-packetLen(0x02fa, 65)
+packetLen(0x02FA, 65)
 #elif PACKETVER >= 20080528
-packetLen(0x02fa, -1)
+packetLen(0x02FA, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x02fa, 6)
+packetLen(0x02FA, 6)
 #elif PACKETVER >= 20080513
-packetLen(0x02fa, 27)
+packetLen(0x02FA, 27)
 #elif PACKETVER >= 20080507
-packetLen(0x02fa, 33)
+packetLen(0x02FA, 33)
 #elif PACKETVER >= 20080429
-packetLen(0x02fa, 68)
+packetLen(0x02FA, 68)
 #elif PACKETVER >= 20080422
-packetLen(0x02fa, -1)
+packetLen(0x02FA, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x02fa, 54)
+packetLen(0x02FA, 54)
 #elif PACKETVER >= 20080408
-packetLen(0x02fa, 2)
+packetLen(0x02FA, 2)
 #elif PACKETVER >= 20080401
-packetLen(0x02fa, 16)
+packetLen(0x02FA, 16)
 #elif PACKETVER >= 20080325
-packetLen(0x02fa, 3)
+packetLen(0x02FA, 3)
 #endif
 
 // Packet: 0x02fb
 #if PACKETVER >= 20080701
-packetLen(0x02fb, 4)
+packetLen(0x02FB, 4)
 #elif PACKETVER >= 20080624
-packetLen(0x02fb, 11)
+packetLen(0x02FB, 11)
 #elif PACKETVER >= 20080617
-packetLen(0x02fb, -1)
+packetLen(0x02FB, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x02fb, 29)
+packetLen(0x02FB, 29)
 #elif PACKETVER >= 20080603
-packetLen(0x02fb, 8)
+packetLen(0x02FB, 8)
 #elif PACKETVER >= 20080528
-packetLen(0x02fb, -1)
+packetLen(0x02FB, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x02fb, 6)
+packetLen(0x02FB, 6)
 #elif PACKETVER >= 20080507
-packetLen(0x02fb, 8)
+packetLen(0x02FB, 8)
 #elif PACKETVER >= 20080422
-packetLen(0x02fb, -1)
+packetLen(0x02FB, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x02fb, 10)
+packetLen(0x02FB, 10)
 #elif PACKETVER >= 20080408
-packetLen(0x02fb, 4)
+packetLen(0x02FB, 4)
 #elif PACKETVER >= 20080401
-packetLen(0x02fb, 10)
+packetLen(0x02FB, 10)
 #elif PACKETVER >= 20080325
-packetLen(0x02fb, 3)
+packetLen(0x02FB, 3)
 #endif
 
 // Packet: 0x02fc
 #if PACKETVER >= 20080701
-packetLen(0x02fc, -1)
+packetLen(0x02FC, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x02fc, 8)
+packetLen(0x02FC, 8)
 #elif PACKETVER >= 20080617
-packetLen(0x02fc, 5)
+packetLen(0x02FC, 5)
 #elif PACKETVER >= 20080520
-packetLen(0x02fc, -1)
+packetLen(0x02FC, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x02fc, 2)
+packetLen(0x02FC, 2)
 #elif PACKETVER >= 20080507
-packetLen(0x02fc, -1)
+packetLen(0x02FC, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x02fc, 4)
+packetLen(0x02FC, 4)
 #elif PACKETVER >= 20080408
-packetLen(0x02fc, -1)
+packetLen(0x02FC, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x02fc, 3)
+packetLen(0x02FC, 3)
 #elif PACKETVER >= 20080325
-packetLen(0x02fc, -1)
+packetLen(0x02FC, -1)
 #endif
 
 // Packet: 0x02fd
 #if PACKETVER >= 20080701
-packetLen(0x02fd, 30)
+packetLen(0x02FD, 30)
 #elif PACKETVER >= 20080624
-packetLen(0x02fd, 18)
+packetLen(0x02FD, 18)
 #elif PACKETVER >= 20080617
-packetLen(0x02fd, -1)
+packetLen(0x02FD, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x02fd, 54)
+packetLen(0x02FD, 54)
 #elif PACKETVER >= 20080528
-packetLen(0x02fd, -1)
+packetLen(0x02FD, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x02fd, 8)
+packetLen(0x02FD, 8)
 #elif PACKETVER >= 20080507
-packetLen(0x02fd, -1)
+packetLen(0x02FD, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x02fd, 2)
+packetLen(0x02FD, 2)
 #elif PACKETVER >= 20080415
-packetLen(0x02fd, -1)
+packetLen(0x02FD, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x02fd, 30)
+packetLen(0x02FD, 30)
 #elif PACKETVER >= 20080401
-packetLen(0x02fd, 29)
+packetLen(0x02FD, 29)
 #elif PACKETVER >= 20080325
-packetLen(0x02fd, 3)
+packetLen(0x02FD, 3)
 #endif
 
 // Packet: 0x02fe
 #if PACKETVER >= 20080617
-packetLen(0x02fe, -1)
+packetLen(0x02FE, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x02fe, 2)
+packetLen(0x02FE, 2)
 #elif PACKETVER >= 20080528
-packetLen(0x02fe, 6)
+packetLen(0x02FE, 6)
 #elif PACKETVER >= 20080513
-packetLen(0x02fe, -1)
+packetLen(0x02FE, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x02fe, 4)
+packetLen(0x02FE, 4)
 #elif PACKETVER >= 20080429
-packetLen(0x02fe, 8)
+packetLen(0x02FE, 8)
 #elif PACKETVER >= 20080422
-packetLen(0x02fe, 11)
+packetLen(0x02FE, 11)
 #elif PACKETVER >= 20080415
-packetLen(0x02fe, 28)
+packetLen(0x02FE, 28)
 #elif PACKETVER >= 20080408
-packetLen(0x02fe, -1)
+packetLen(0x02FE, -1)
 #elif PACKETVER >= 20080401
-packetLen(0x02fe, 2)
+packetLen(0x02FE, 2)
 #elif PACKETVER >= 20080325
-packetLen(0x02fe, -1)
+packetLen(0x02FE, -1)
 #endif
 
 // Packet: 0x02ff
 #if PACKETVER >= 20080624
-packetLen(0x02ff, 2)
+packetLen(0x02FF, 2)
 #elif PACKETVER >= 20080617
-packetLen(0x02ff, -1)
+packetLen(0x02FF, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x02ff, 11)
+packetLen(0x02FF, 11)
 #elif PACKETVER >= 20080603
-packetLen(0x02ff, -1)
+packetLen(0x02FF, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x02ff, 6)
+packetLen(0x02FF, 6)
 #elif PACKETVER >= 20080520
-packetLen(0x02ff, 12)
+packetLen(0x02FF, 12)
 #elif PACKETVER >= 20080507
-packetLen(0x02ff, -1)
+packetLen(0x02FF, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x02ff, 4)
+packetLen(0x02FF, 4)
 #elif PACKETVER >= 20080422
-packetLen(0x02ff, 8)
+packetLen(0x02FF, 8)
 #elif PACKETVER >= 20080415
-packetLen(0x02ff, -1)
+packetLen(0x02FF, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x02ff, 30)
+packetLen(0x02FF, 30)
 #elif PACKETVER >= 20080325
-packetLen(0x02ff, 6)
+packetLen(0x02FF, 6)
 #endif
 
 // Packet: 0x0300
@@ -15322,152 +15322,152 @@ packetLen(0x0309, 6)
 
 // Packet: 0x030a
 #if PACKETVER >= 20080701
-packetLen(0x030a, 6)
+packetLen(0x030A, 6)
 #elif PACKETVER >= 20080624
-packetLen(0x030a, -1)
+packetLen(0x030A, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x030a, 35)
+packetLen(0x030A, 35)
 #elif PACKETVER >= 20080610
-packetLen(0x030a, 10)
+packetLen(0x030A, 10)
 #elif PACKETVER >= 20080528
-packetLen(0x030a, -1)
+packetLen(0x030A, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x030a, 16)
+packetLen(0x030A, 16)
 #elif PACKETVER >= 20080513
-packetLen(0x030a, 6)
+packetLen(0x030A, 6)
 #elif PACKETVER >= 20080507
-packetLen(0x030a, -1)
+packetLen(0x030A, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x030a, 9)
+packetLen(0x030A, 9)
 #elif PACKETVER >= 20080408
-packetLen(0x030a, -1)
+packetLen(0x030A, -1)
 #endif
 
 // Packet: 0x030b
 #if PACKETVER >= 20080701
-packetLen(0x030b, 6)
+packetLen(0x030B, 6)
 #elif PACKETVER >= 20080624
-packetLen(0x030b, 7)
+packetLen(0x030B, 7)
 #elif PACKETVER >= 20080610
-packetLen(0x030b, -1)
+packetLen(0x030B, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x030b, 10)
+packetLen(0x030B, 10)
 #elif PACKETVER >= 20080528
-packetLen(0x030b, 6)
+packetLen(0x030B, 6)
 #elif PACKETVER >= 20080520
-packetLen(0x030b, 65)
+packetLen(0x030B, 65)
 #elif PACKETVER >= 20080513
-packetLen(0x030b, 16)
+packetLen(0x030B, 16)
 #elif PACKETVER >= 20080507
-packetLen(0x030b, 15)
+packetLen(0x030B, 15)
 #elif PACKETVER >= 20080429
-packetLen(0x030b, -1)
+packetLen(0x030B, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x030b, 17)
+packetLen(0x030B, 17)
 #elif PACKETVER >= 20080408
-packetLen(0x030b, 10)
+packetLen(0x030B, 10)
 #endif
 
 // Packet: 0x030c
 #if PACKETVER >= 20080701
-packetLen(0x030c, -1)
+packetLen(0x030C, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x030c, 2)
+packetLen(0x030C, 2)
 #elif PACKETVER >= 20080617
-packetLen(0x030c, 6)
+packetLen(0x030C, 6)
 #elif PACKETVER >= 20080610
-packetLen(0x030c, 282)
+packetLen(0x030C, 282)
 #elif PACKETVER >= 20080603
-packetLen(0x030c, 36)
+packetLen(0x030C, 36)
 #elif PACKETVER >= 20080520
-packetLen(0x030c, 2)
+packetLen(0x030C, 2)
 #elif PACKETVER >= 20080513
-packetLen(0x030c, 12)
+packetLen(0x030C, 12)
 #elif PACKETVER >= 20080422
-packetLen(0x030c, -1)
+packetLen(0x030C, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x030c, 10)
+packetLen(0x030C, 10)
 #elif PACKETVER >= 20080408
-packetLen(0x030c, 66)
+packetLen(0x030C, 66)
 #endif
 
 // Packet: 0x030d
 #if PACKETVER >= 20080701
-packetLen(0x030d, 16)
+packetLen(0x030D, 16)
 #elif PACKETVER >= 20080624
-packetLen(0x030d, -1)
+packetLen(0x030D, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x030d, 282)
+packetLen(0x030D, 282)
 #elif PACKETVER >= 20080610
-packetLen(0x030d, 10)
+packetLen(0x030D, 10)
 #elif PACKETVER >= 20080603
-packetLen(0x030d, -1)
+packetLen(0x030D, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x030d, 71)
+packetLen(0x030D, 71)
 #elif PACKETVER >= 20080520
-packetLen(0x030d, 4)
+packetLen(0x030D, 4)
 #elif PACKETVER >= 20080513
-packetLen(0x030d, 6)
+packetLen(0x030D, 6)
 #elif PACKETVER >= 20080422
-packetLen(0x030d, -1)
+packetLen(0x030D, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x030d, 19)
+packetLen(0x030D, 19)
 #elif PACKETVER >= 20080408
-packetLen(0x030d, 10)
+packetLen(0x030D, 10)
 #endif
 
 // Packet: 0x030e
 #if PACKETVER >= 20080701
-packetLen(0x030e, -1)
+packetLen(0x030E, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x030e, 13)
+packetLen(0x030E, 13)
 #elif PACKETVER >= 20080617
-packetLen(0x030e, -1)
+packetLen(0x030E, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x030e, 2)
+packetLen(0x030E, 2)
 #elif PACKETVER >= 20080603
-packetLen(0x030e, 21)
+packetLen(0x030E, 21)
 #elif PACKETVER >= 20080528
-packetLen(0x030e, 10)
+packetLen(0x030E, 10)
 #elif PACKETVER >= 20080520
-packetLen(0x030e, 2)
+packetLen(0x030E, 2)
 #elif PACKETVER >= 20080513
-packetLen(0x030e, 10)
+packetLen(0x030E, 10)
 #elif PACKETVER >= 20080507
-packetLen(0x030e, -1)
+packetLen(0x030E, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x030e, 6)
+packetLen(0x030E, 6)
 #elif PACKETVER >= 20080415
-packetLen(0x030e, 2)
+packetLen(0x030E, 2)
 #elif PACKETVER >= 20080408
-packetLen(0x030e, 3)
+packetLen(0x030E, 3)
 #endif
 
 // Packet: 0x030f
 #if PACKETVER >= 20080701
-packetLen(0x030f, -1)
+packetLen(0x030F, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x030f, 17)
+packetLen(0x030F, 17)
 #elif PACKETVER >= 20080617
-packetLen(0x030f, 10)
+packetLen(0x030F, 10)
 #elif PACKETVER >= 20080603
-packetLen(0x030f, -1)
+packetLen(0x030F, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x030f, 2)
+packetLen(0x030F, 2)
 #elif PACKETVER >= 20080520
-packetLen(0x030f, -1)
+packetLen(0x030F, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x030f, 67)
+packetLen(0x030F, 67)
 #elif PACKETVER >= 20080507
-packetLen(0x030f, 2)
+packetLen(0x030F, 2)
 #elif PACKETVER >= 20080429
-packetLen(0x030f, 6)
+packetLen(0x030F, 6)
 #elif PACKETVER >= 20080422
-packetLen(0x030f, -1)
+packetLen(0x030F, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x030f, 14)
+packetLen(0x030F, 14)
 #elif PACKETVER >= 20080408
-packetLen(0x030f, -1)
+packetLen(0x030F, -1)
 #endif
 
 // Packet: 0x0310
@@ -15716,144 +15716,144 @@ packetLen(0x0319, 17)
 
 // Packet: 0x031a
 #if PACKETVER >= 20080701
-packetLen(0x031a, -1)
+packetLen(0x031A, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x031a, 4)
+packetLen(0x031A, 4)
 #elif PACKETVER >= 20080617
-packetLen(0x031a, 5)
+packetLen(0x031A, 5)
 #elif PACKETVER >= 20080610
-packetLen(0x031a, 6)
+packetLen(0x031A, 6)
 #elif PACKETVER >= 20080603
-packetLen(0x031a, -1)
+packetLen(0x031A, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x031a, 6)
+packetLen(0x031A, 6)
 #elif PACKETVER >= 20080520
-packetLen(0x031a, -1)
+packetLen(0x031A, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x031a, 86)
+packetLen(0x031A, 86)
 #elif PACKETVER >= 20080507
-packetLen(0x031a, -1)
+packetLen(0x031A, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x031a, 4)
+packetLen(0x031A, 4)
 #elif PACKETVER >= 20080422
-packetLen(0x031a, -1)
+packetLen(0x031A, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x031a, 7)
+packetLen(0x031A, 7)
 #elif PACKETVER >= 20080408
-packetLen(0x031a, 4)
+packetLen(0x031A, 4)
 #endif
 
 // Packet: 0x031b
 #if PACKETVER >= 20080610
-packetLen(0x031b, -1)
+packetLen(0x031B, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x031b, 2)
+packetLen(0x031B, 2)
 #elif PACKETVER >= 20080528
-packetLen(0x031b, 10)
+packetLen(0x031B, 10)
 #elif PACKETVER >= 20080520
-packetLen(0x031b, -1)
+packetLen(0x031B, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x031b, 2)
+packetLen(0x031B, 2)
 #elif PACKETVER >= 20080507
-packetLen(0x031b, 42)
+packetLen(0x031B, 42)
 #elif PACKETVER >= 20080429
-packetLen(0x031b, 6)
+packetLen(0x031B, 6)
 #elif PACKETVER >= 20080422
-packetLen(0x031b, -1)
+packetLen(0x031B, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x031b, 6)
+packetLen(0x031B, 6)
 #elif PACKETVER >= 20080408
-packetLen(0x031b, 10)
+packetLen(0x031B, 10)
 #endif
 
 // Packet: 0x031c
 #if PACKETVER >= 20080701
-packetLen(0x031c, 6)
+packetLen(0x031C, 6)
 #elif PACKETVER >= 20080624
-packetLen(0x031c, 7)
+packetLen(0x031C, 7)
 #elif PACKETVER >= 20080617
-packetLen(0x031c, 54)
+packetLen(0x031C, 54)
 #elif PACKETVER >= 20080610
-packetLen(0x031c, 6)
+packetLen(0x031C, 6)
 #elif PACKETVER >= 20080603
-packetLen(0x031c, -1)
+packetLen(0x031C, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x031c, 44)
+packetLen(0x031C, 44)
 #elif PACKETVER >= 20080513
-packetLen(0x031c, -1)
+packetLen(0x031C, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x031c, 17)
+packetLen(0x031C, 17)
 #elif PACKETVER >= 20080429
-packetLen(0x031c, 4)
+packetLen(0x031C, 4)
 #elif PACKETVER >= 20080422
-packetLen(0x031c, 9)
+packetLen(0x031C, 9)
 #elif PACKETVER >= 20080415
-packetLen(0x031c, -1)
+packetLen(0x031C, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x031c, 23)
+packetLen(0x031C, 23)
 #endif
 
 // Packet: 0x031d
 #if PACKETVER >= 20080701
-packetLen(0x031d, -1)
+packetLen(0x031D, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x031d, 28)
+packetLen(0x031D, 28)
 #elif PACKETVER >= 20080507
-packetLen(0x031d, -1)
+packetLen(0x031D, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x031d, 35)
+packetLen(0x031D, 35)
 #elif PACKETVER >= 20080422
-packetLen(0x031d, 12)
+packetLen(0x031D, 12)
 #elif PACKETVER >= 20080415
-packetLen(0x031d, -1)
+packetLen(0x031D, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x031d, 2)
+packetLen(0x031D, 2)
 #endif
 
 // Packet: 0x031e
 #if PACKETVER >= 20080701
-packetLen(0x031e, 4)
+packetLen(0x031E, 4)
 #elif PACKETVER >= 20080610
-packetLen(0x031e, -1)
+packetLen(0x031E, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x031e, 26)
+packetLen(0x031E, 26)
 #elif PACKETVER >= 20080507
-packetLen(0x031e, -1)
+packetLen(0x031E, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x031e, 7)
+packetLen(0x031E, 7)
 #elif PACKETVER >= 20080422
-packetLen(0x031e, 11)
+packetLen(0x031E, 11)
 #elif PACKETVER >= 20080415
-packetLen(0x031e, 30)
+packetLen(0x031E, 30)
 #elif PACKETVER >= 20080408
-packetLen(0x031e, -1)
+packetLen(0x031E, -1)
 #endif
 
 // Packet: 0x031f
 #if PACKETVER >= 20080701
-packetLen(0x031f, 4)
+packetLen(0x031F, 4)
 #elif PACKETVER >= 20080624
-packetLen(0x031f, 32)
+packetLen(0x031F, 32)
 #elif PACKETVER >= 20080617
-packetLen(0x031f, -1)
+packetLen(0x031F, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x031f, 54)
+packetLen(0x031F, 54)
 #elif PACKETVER >= 20080603
-packetLen(0x031f, 26)
+packetLen(0x031F, 26)
 #elif PACKETVER >= 20080528
-packetLen(0x031f, -1)
+packetLen(0x031F, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x031f, 2)
+packetLen(0x031F, 2)
 #elif PACKETVER >= 20080513
-packetLen(0x031f, 4)
+packetLen(0x031F, 4)
 #elif PACKETVER >= 20080507
-packetLen(0x031f, 8)
+packetLen(0x031F, 8)
 #elif PACKETVER >= 20080429
-packetLen(0x031f, 282)
+packetLen(0x031F, 282)
 #elif PACKETVER >= 20080415
-packetLen(0x031f, -1)
+packetLen(0x031F, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x031f, 30)
+packetLen(0x031F, 30)
 #endif
 
 // Packet: 0x0320
@@ -16100,160 +16100,160 @@ packetLen(0x0329, -1)
 
 // Packet: 0x032a
 #if PACKETVER >= 20080701
-packetLen(0x032a, 17)
+packetLen(0x032A, 17)
 #elif PACKETVER >= 20080624
-packetLen(0x032a, 10)
+packetLen(0x032A, 10)
 #elif PACKETVER >= 20080617
-packetLen(0x032a, 9)
+packetLen(0x032A, 9)
 #elif PACKETVER >= 20080610
-packetLen(0x032a, 14)
+packetLen(0x032A, 14)
 #elif PACKETVER >= 20080603
-packetLen(0x032a, -1)
+packetLen(0x032A, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x032a, 5)
+packetLen(0x032A, 5)
 #elif PACKETVER >= 20080520
-packetLen(0x032a, 32)
+packetLen(0x032A, 32)
 #elif PACKETVER >= 20080507
-packetLen(0x032a, -1)
+packetLen(0x032A, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x032a, 6)
+packetLen(0x032A, 6)
 #elif PACKETVER >= 20080422
-packetLen(0x032a, 11)
+packetLen(0x032A, 11)
 #elif PACKETVER >= 20080415
-packetLen(0x032a, -1)
+packetLen(0x032A, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x032a, 8)
+packetLen(0x032A, 8)
 #endif
 
 // Packet: 0x032b
 #if PACKETVER >= 20080701
-packetLen(0x032b, -1)
+packetLen(0x032B, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x032b, 3)
+packetLen(0x032B, 3)
 #elif PACKETVER >= 20080610
-packetLen(0x032b, -1)
+packetLen(0x032B, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x032b, 6)
+packetLen(0x032B, 6)
 #elif PACKETVER >= 20080528
-packetLen(0x032b, 3)
+packetLen(0x032B, 3)
 #elif PACKETVER >= 20080520
-packetLen(0x032b, -1)
+packetLen(0x032B, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x032b, 7)
+packetLen(0x032B, 7)
 #elif PACKETVER >= 20080507
-packetLen(0x032b, 44)
+packetLen(0x032B, 44)
 #elif PACKETVER >= 20080429
-packetLen(0x032b, 14)
+packetLen(0x032B, 14)
 #elif PACKETVER >= 20080422
-packetLen(0x032b, -1)
+packetLen(0x032B, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x032b, 4)
+packetLen(0x032B, 4)
 #elif PACKETVER >= 20080408
-packetLen(0x032b, -1)
+packetLen(0x032B, -1)
 #endif
 
 // Packet: 0x032c
 #if PACKETVER >= 20080701
-packetLen(0x032c, 27)
+packetLen(0x032C, 27)
 #elif PACKETVER >= 20080624
-packetLen(0x032c, 18)
+packetLen(0x032C, 18)
 #elif PACKETVER >= 20080617
-packetLen(0x032c, 2)
+packetLen(0x032C, 2)
 #elif PACKETVER >= 20080603
-packetLen(0x032c, -1)
+packetLen(0x032C, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x032c, 12)
+packetLen(0x032C, 12)
 #elif PACKETVER >= 20080520
-packetLen(0x032c, -1)
+packetLen(0x032C, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x032c, 3)
+packetLen(0x032C, 3)
 #elif PACKETVER >= 20080429
-packetLen(0x032c, -1)
+packetLen(0x032C, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x032c, 8)
+packetLen(0x032C, 8)
 #elif PACKETVER >= 20080415
-packetLen(0x032c, 6)
+packetLen(0x032C, 6)
 #elif PACKETVER >= 20080408
-packetLen(0x032c, -1)
+packetLen(0x032C, -1)
 #endif
 
 // Packet: 0x032d
 #if PACKETVER >= 20080701
-packetLen(0x032d, 10)
+packetLen(0x032D, 10)
 #elif PACKETVER >= 20080624
-packetLen(0x032d, 32)
+packetLen(0x032D, 32)
 #elif PACKETVER >= 20080617
-packetLen(0x032d, -1)
+packetLen(0x032D, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x032d, 4)
+packetLen(0x032D, 4)
 #elif PACKETVER >= 20080603
-packetLen(0x032d, 3)
+packetLen(0x032D, 3)
 #elif PACKETVER >= 20080528
-packetLen(0x032d, 10)
+packetLen(0x032D, 10)
 #elif PACKETVER >= 20080520
-packetLen(0x032d, 6)
+packetLen(0x032D, 6)
 #elif PACKETVER >= 20080513
-packetLen(0x032d, 30)
+packetLen(0x032D, 30)
 #elif PACKETVER >= 20080429
-packetLen(0x032d, 3)
+packetLen(0x032D, 3)
 #elif PACKETVER >= 20080422
-packetLen(0x032d, 90)
+packetLen(0x032D, 90)
 #elif PACKETVER >= 20080415
-packetLen(0x032d, 8)
+packetLen(0x032D, 8)
 #elif PACKETVER >= 20080408
-packetLen(0x032d, -1)
+packetLen(0x032D, -1)
 #endif
 
 // Packet: 0x032e
 #if PACKETVER >= 20080701
-packetLen(0x032e, 26)
+packetLen(0x032E, 26)
 #elif PACKETVER >= 20080624
-packetLen(0x032e, -1)
+packetLen(0x032E, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x032e, 10)
+packetLen(0x032E, 10)
 #elif PACKETVER >= 20080610
-packetLen(0x032e, -1)
+packetLen(0x032E, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x032e, 3)
+packetLen(0x032E, 3)
 #elif PACKETVER >= 20080520
-packetLen(0x032e, -1)
+packetLen(0x032E, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x032e, 20)
+packetLen(0x032E, 20)
 #elif PACKETVER >= 20080507
-packetLen(0x032e, 24)
+packetLen(0x032E, 24)
 #elif PACKETVER >= 20080429
-packetLen(0x032e, 42)
+packetLen(0x032E, 42)
 #elif PACKETVER >= 20080422
-packetLen(0x032e, -1)
+packetLen(0x032E, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x032e, 10)
+packetLen(0x032E, 10)
 #elif PACKETVER >= 20080408
-packetLen(0x032e, 27)
+packetLen(0x032E, 27)
 #endif
 
 // Packet: 0x032f
 #if PACKETVER >= 20080701
-packetLen(0x032f, -1)
+packetLen(0x032F, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x032f, 53)
+packetLen(0x032F, 53)
 #elif PACKETVER >= 20080603
-packetLen(0x032f, -1)
+packetLen(0x032F, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x032f, 58)
+packetLen(0x032F, 58)
 #elif PACKETVER >= 20080520
-packetLen(0x032f, 10)
+packetLen(0x032F, 10)
 #elif PACKETVER >= 20080513
-packetLen(0x032f, 26)
+packetLen(0x032F, 26)
 #elif PACKETVER >= 20080507
-packetLen(0x032f, -1)
+packetLen(0x032F, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x032f, 8)
+packetLen(0x032F, 8)
 #elif PACKETVER >= 20080422
-packetLen(0x032f, -1)
+packetLen(0x032F, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x032f, 27)
+packetLen(0x032F, 27)
 #elif PACKETVER >= 20080408
-packetLen(0x032f, -1)
+packetLen(0x032F, -1)
 #endif
 
 // Packet: 0x0330
@@ -16490,156 +16490,156 @@ packetLen(0x0339, 7)
 
 // Packet: 0x033a
 #if PACKETVER >= 20080701
-packetLen(0x033a, 3)
+packetLen(0x033A, 3)
 #elif PACKETVER >= 20080610
-packetLen(0x033a, -1)
+packetLen(0x033A, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x033a, 5)
+packetLen(0x033A, 5)
 #elif PACKETVER >= 20080528
-packetLen(0x033a, 67)
+packetLen(0x033A, 67)
 #elif PACKETVER >= 20080520
-packetLen(0x033a, 33)
+packetLen(0x033A, 33)
 #elif PACKETVER >= 20080513
-packetLen(0x033a, 39)
+packetLen(0x033A, 39)
 #elif PACKETVER >= 20080507
-packetLen(0x033a, -1)
+packetLen(0x033A, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x033a, 6)
+packetLen(0x033A, 6)
 #elif PACKETVER >= 20080422
-packetLen(0x033a, 4)
+packetLen(0x033A, 4)
 #elif PACKETVER >= 20080415
-packetLen(0x033a, 6)
+packetLen(0x033A, 6)
 #elif PACKETVER >= 20080408
-packetLen(0x033a, 32)
+packetLen(0x033A, 32)
 #endif
 
 // Packet: 0x033b
 #if PACKETVER >= 20080701
-packetLen(0x033b, 6)
+packetLen(0x033B, 6)
 #elif PACKETVER >= 20080617
-packetLen(0x033b, -1)
+packetLen(0x033B, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x033b, 14)
+packetLen(0x033B, 14)
 #elif PACKETVER >= 20080603
-packetLen(0x033b, -1)
+packetLen(0x033B, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x033b, 4)
+packetLen(0x033B, 4)
 #elif PACKETVER >= 20080520
-packetLen(0x033b, -1)
+packetLen(0x033B, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x033b, 182)
+packetLen(0x033B, 182)
 #elif PACKETVER >= 20080507
-packetLen(0x033b, -1)
+packetLen(0x033B, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x033b, 20)
+packetLen(0x033B, 20)
 #elif PACKETVER >= 20080422
-packetLen(0x033b, 6)
+packetLen(0x033B, 6)
 #elif PACKETVER >= 20080415
-packetLen(0x033b, -1)
+packetLen(0x033B, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x033b, 3)
+packetLen(0x033B, 3)
 #endif
 
 // Packet: 0x033c
 #if PACKETVER >= 20080701
-packetLen(0x033c, 53)
+packetLen(0x033C, 53)
 #elif PACKETVER >= 20080624
-packetLen(0x033c, 12)
+packetLen(0x033C, 12)
 #elif PACKETVER >= 20080610
-packetLen(0x033c, -1)
+packetLen(0x033C, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x033c, 4)
+packetLen(0x033C, 4)
 #elif PACKETVER >= 20080528
-packetLen(0x033c, -1)
+packetLen(0x033C, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x033c, 10)
+packetLen(0x033C, 10)
 #elif PACKETVER >= 20080513
-packetLen(0x033c, -1)
+packetLen(0x033C, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x033c, 30)
+packetLen(0x033C, 30)
 #elif PACKETVER >= 20080429
-packetLen(0x033c, -1)
+packetLen(0x033C, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x033c, 10)
+packetLen(0x033C, 10)
 #elif PACKETVER >= 20080415
-packetLen(0x033c, 21)
+packetLen(0x033C, 21)
 #elif PACKETVER >= 20080408
-packetLen(0x033c, 86)
+packetLen(0x033C, 86)
 #endif
 
 // Packet: 0x033d
 #if PACKETVER >= 20080701
-packetLen(0x033d, 32)
+packetLen(0x033D, 32)
 #elif PACKETVER >= 20080624
-packetLen(0x033d, -1)
+packetLen(0x033D, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x033d, 28)
+packetLen(0x033D, 28)
 #elif PACKETVER >= 20080528
-packetLen(0x033d, -1)
+packetLen(0x033D, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x033d, 11)
+packetLen(0x033D, 11)
 #elif PACKETVER >= 20080513
-packetLen(0x033d, -1)
+packetLen(0x033D, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x033d, 10)
+packetLen(0x033D, 10)
 #elif PACKETVER >= 20080429
-packetLen(0x033d, 21)
+packetLen(0x033D, 21)
 #elif PACKETVER >= 20080415
-packetLen(0x033d, -1)
+packetLen(0x033D, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x033d, 10)
+packetLen(0x033D, 10)
 #endif
 
 // Packet: 0x033e
 #if PACKETVER >= 20080624
-packetLen(0x033e, 6)
+packetLen(0x033E, 6)
 #elif PACKETVER >= 20080603
-packetLen(0x033e, -1)
+packetLen(0x033E, -1)
 #elif PACKETVER >= 20080528
-packetLen(0x033e, 11)
+packetLen(0x033E, 11)
 #elif PACKETVER >= 20080520
-packetLen(0x033e, 33)
+packetLen(0x033E, 33)
 #elif PACKETVER >= 20080513
-packetLen(0x033e, 6)
+packetLen(0x033E, 6)
 #elif PACKETVER >= 20080507
-packetLen(0x033e, 4)
+packetLen(0x033E, 4)
 #elif PACKETVER >= 20080429
-packetLen(0x033e, 33)
+packetLen(0x033E, 33)
 #elif PACKETVER >= 20080422
-packetLen(0x033e, -1)
+packetLen(0x033E, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x033e, 3)
+packetLen(0x033E, 3)
 #elif PACKETVER >= 20080408
-packetLen(0x033e, 9)
+packetLen(0x033E, 9)
 #endif
 
 // Packet: 0x033f
 #if PACKETVER >= 20080701
-packetLen(0x033f, 3)
+packetLen(0x033F, 3)
 #elif PACKETVER >= 20080624
-packetLen(0x033f, -1)
+packetLen(0x033F, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x033f, 3)
+packetLen(0x033F, 3)
 #elif PACKETVER >= 20080610
-packetLen(0x033f, -1)
+packetLen(0x033F, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x033f, 8)
+packetLen(0x033F, 8)
 #elif PACKETVER >= 20080528
-packetLen(0x033f, 5)
+packetLen(0x033F, 5)
 #elif PACKETVER >= 20080520
-packetLen(0x033f, -1)
+packetLen(0x033F, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x033f, 282)
+packetLen(0x033F, 282)
 #elif PACKETVER >= 20080507
-packetLen(0x033f, 27)
+packetLen(0x033F, 27)
 #elif PACKETVER >= 20080429
-packetLen(0x033f, 3)
+packetLen(0x033F, 3)
 #elif PACKETVER >= 20080422
-packetLen(0x033f, -1)
+packetLen(0x033F, -1)
 #elif PACKETVER >= 20080415
-packetLen(0x033f, 2)
+packetLen(0x033F, 2)
 #elif PACKETVER >= 20080408
-packetLen(0x033f, -1)
+packetLen(0x033F, -1)
 #endif
 
 // Packet: 0x0340
@@ -16872,140 +16872,140 @@ packetLen(0x0349, 4)
 
 // Packet: 0x034a
 #if PACKETVER >= 20080701
-packetLen(0x034a, 57)
+packetLen(0x034A, 57)
 #elif PACKETVER >= 20080624
-packetLen(0x034a, 34)
+packetLen(0x034A, 34)
 #elif PACKETVER >= 20080617
-packetLen(0x034a, 10)
+packetLen(0x034A, 10)
 #elif PACKETVER >= 20080610
-packetLen(0x034a, -1)
+packetLen(0x034A, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x034a, 26)
+packetLen(0x034A, 26)
 #elif PACKETVER >= 20080528
-packetLen(0x034a, 9)
+packetLen(0x034A, 9)
 #elif PACKETVER >= 20080520
-packetLen(0x034a, -1)
+packetLen(0x034A, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x034a, 59)
+packetLen(0x034A, 59)
 #elif PACKETVER >= 20080429
-packetLen(0x034a, -1)
+packetLen(0x034A, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x034a, 6)
+packetLen(0x034A, 6)
 #elif PACKETVER >= 20080408
-packetLen(0x034a, -1)
+packetLen(0x034A, -1)
 #endif
 
 // Packet: 0x034b
 #if PACKETVER >= 20080701
-packetLen(0x034b, 24)
+packetLen(0x034B, 24)
 #elif PACKETVER >= 20080624
-packetLen(0x034b, 33)
+packetLen(0x034B, 33)
 #elif PACKETVER >= 20080617
-packetLen(0x034b, 26)
+packetLen(0x034B, 26)
 #elif PACKETVER >= 20080610
-packetLen(0x034b, -1)
+packetLen(0x034B, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x034b, 10)
+packetLen(0x034B, 10)
 #elif PACKETVER >= 20080513
-packetLen(0x034b, -1)
+packetLen(0x034B, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x034b, 60)
+packetLen(0x034B, 60)
 #elif PACKETVER >= 20080422
-packetLen(0x034b, 14)
+packetLen(0x034B, 14)
 #elif PACKETVER >= 20080415
-packetLen(0x034b, 65)
+packetLen(0x034B, 65)
 #elif PACKETVER >= 20080408
-packetLen(0x034b, 7)
+packetLen(0x034B, 7)
 #endif
 
 // Packet: 0x034c
 #if PACKETVER >= 20080701
-packetLen(0x034c, 10)
+packetLen(0x034C, 10)
 #elif PACKETVER >= 20080624
-packetLen(0x034c, 6)
+packetLen(0x034C, 6)
 #elif PACKETVER >= 20080610
-packetLen(0x034c, -1)
+packetLen(0x034C, -1)
 #elif PACKETVER >= 20080603
-packetLen(0x034c, 10)
+packetLen(0x034C, 10)
 #elif PACKETVER >= 20080528
-packetLen(0x034c, 86)
+packetLen(0x034C, 86)
 #elif PACKETVER >= 20080520
-packetLen(0x034c, -1)
+packetLen(0x034C, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x034c, 14)
+packetLen(0x034C, 14)
 #elif PACKETVER >= 20080507
-packetLen(0x034c, -1)
+packetLen(0x034C, -1)
 #elif PACKETVER >= 20080429
-packetLen(0x034c, 16)
+packetLen(0x034C, 16)
 #elif PACKETVER >= 20080408
-packetLen(0x034c, -1)
+packetLen(0x034C, -1)
 #endif
 
 // Packet: 0x034d
 #if PACKETVER >= 20080624
-packetLen(0x034d, -1)
+packetLen(0x034D, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x034d, 2)
+packetLen(0x034D, 2)
 #elif PACKETVER >= 20080603
-packetLen(0x034d, -1)
+packetLen(0x034D, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x034d, 6)
+packetLen(0x034D, 6)
 #elif PACKETVER >= 20080429
-packetLen(0x034d, -1)
+packetLen(0x034D, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x034d, 36)
+packetLen(0x034D, 36)
 #elif PACKETVER >= 20080415
-packetLen(0x034d, 23)
+packetLen(0x034D, 23)
 #elif PACKETVER >= 20080408
-packetLen(0x034d, 2)
+packetLen(0x034D, 2)
 #endif
 
 // Packet: 0x034e
 #if PACKETVER >= 20080624
-packetLen(0x034e, -1)
+packetLen(0x034E, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x034e, 2)
+packetLen(0x034E, 2)
 #elif PACKETVER >= 20080603
-packetLen(0x034e, 6)
+packetLen(0x034E, 6)
 #elif PACKETVER >= 20080528
-packetLen(0x034e, 59)
+packetLen(0x034E, 59)
 #elif PACKETVER >= 20080520
-packetLen(0x034e, 7)
+packetLen(0x034E, 7)
 #elif PACKETVER >= 20080429
-packetLen(0x034e, -1)
+packetLen(0x034E, -1)
 #elif PACKETVER >= 20080422
-packetLen(0x034e, 27)
+packetLen(0x034E, 27)
 #elif PACKETVER >= 20080415
-packetLen(0x034e, 90)
+packetLen(0x034E, 90)
 #elif PACKETVER >= 20080408
-packetLen(0x034e, 11)
+packetLen(0x034E, 11)
 #endif
 
 // Packet: 0x034f
 #if PACKETVER >= 20080701
-packetLen(0x034f, 6)
+packetLen(0x034F, 6)
 #elif PACKETVER >= 20080624
-packetLen(0x034f, 71)
+packetLen(0x034F, 71)
 #elif PACKETVER >= 20080617
-packetLen(0x034f, -1)
+packetLen(0x034F, -1)
 #elif PACKETVER >= 20080610
-packetLen(0x034f, 2)
+packetLen(0x034F, 2)
 #elif PACKETVER >= 20080603
-packetLen(0x034f, 8)
+packetLen(0x034F, 8)
 #elif PACKETVER >= 20080528
-packetLen(0x034f, 27)
+packetLen(0x034F, 27)
 #elif PACKETVER >= 20080520
-packetLen(0x034f, -1)
+packetLen(0x034F, -1)
 #elif PACKETVER >= 20080513
-packetLen(0x034f, 8)
+packetLen(0x034F, 8)
 #elif PACKETVER >= 20080429
-packetLen(0x034f, 4)
+packetLen(0x034F, 4)
 #elif PACKETVER >= 20080422
-packetLen(0x034f, 18)
+packetLen(0x034F, 18)
 #elif PACKETVER >= 20080415
-packetLen(0x034f, 11)
+packetLen(0x034F, 11)
 #elif PACKETVER >= 20080408
-packetLen(0x034f, 2)
+packetLen(0x034F, 2)
 #endif
 
 // Packet: 0x0350
@@ -17272,82 +17272,82 @@ packetLen(0x0359, -1)
 
 // Packet: 0x035a
 #if PACKETVER >= 20080624
-packetLen(0x035a, -1)
+packetLen(0x035A, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x035a, 28)
+packetLen(0x035A, 28)
 #elif PACKETVER >= 20080603
-packetLen(0x035a, 3)
+packetLen(0x035A, 3)
 #elif PACKETVER >= 20080528
-packetLen(0x035a, 4)
+packetLen(0x035A, 4)
 #elif PACKETVER >= 20080520
-packetLen(0x035a, 31)
+packetLen(0x035A, 31)
 #elif PACKETVER >= 20080513
-packetLen(0x035a, -1)
+packetLen(0x035A, -1)
 #elif PACKETVER >= 20080507
-packetLen(0x035a, 282)
+packetLen(0x035A, 282)
 #elif PACKETVER >= 20080429
-packetLen(0x035a, 8)
+packetLen(0x035A, 8)
 #elif PACKETVER >= 20080422
-packetLen(0x035a, 79)
+packetLen(0x035A, 79)
 #elif PACKETVER >= 20080415
-packetLen(0x035a, 3)
+packetLen(0x035A, 3)
 #elif PACKETVER >= 20080408
-packetLen(0x035a, -1)
+packetLen(0x035A, -1)
 #endif
 
 // Packet: 0x035b
 #if PACKETVER >= 20080701
-packetLen(0x035b, 6)
+packetLen(0x035B, 6)
 #elif PACKETVER >= 20080624
-packetLen(0x035b, 30)
+packetLen(0x035B, 30)
 #elif PACKETVER >= 20080617
-packetLen(0x035b, 29)
+packetLen(0x035B, 29)
 #elif PACKETVER >= 20080610
-packetLen(0x035b, 6)
+packetLen(0x035B, 6)
 #elif PACKETVER >= 20080603
-packetLen(0x035b, 14)
+packetLen(0x035B, 14)
 #elif PACKETVER >= 20080528
-packetLen(0x035b, 16)
+packetLen(0x035B, 16)
 #elif PACKETVER >= 20080520
-packetLen(0x035b, 6)
+packetLen(0x035B, 6)
 #elif PACKETVER >= 20080513
-packetLen(0x035b, 11)
+packetLen(0x035B, 11)
 #elif PACKETVER >= 20080507
-packetLen(0x035b, 9)
+packetLen(0x035B, 9)
 #elif PACKETVER >= 20080429
-packetLen(0x035b, 5)
+packetLen(0x035B, 5)
 #elif PACKETVER >= 20080415
-packetLen(0x035b, -1)
+packetLen(0x035B, -1)
 #elif PACKETVER >= 20080408
-packetLen(0x035b, 3)
+packetLen(0x035B, 3)
 #endif
 
 // Packet: 0x035c
 #if PACKETVER >= 20080520
-packetLen(0x035c, 2)
+packetLen(0x035C, 2)
 #endif
 
 // Packet: 0x035d
 #if PACKETVER >= 20080521
-packetLen(0x035d, -1)
+packetLen(0x035D, -1)
 #elif PACKETVER >= 20080520
-packetLen(0x035d, 10)
+packetLen(0x035D, 10)
 #endif
 
 // Packet: 0x035e
 #if PACKETVER >= 20080521
-packetLen(0x035e, 2)
+packetLen(0x035E, 2)
 #elif PACKETVER >= 20080520
-packetLen(0x035e, -1)
+packetLen(0x035E, -1)
 #endif
 
 // Packet: 0x035f
 #if PACKETVER >= 20080624
-packetLen(0x035f, -1)
+packetLen(0x035F, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x035f, 4)
+packetLen(0x035F, 4)
 #elif PACKETVER >= 20080528
-packetLen(0x035f, -1)
+packetLen(0x035F, -1)
 #endif
 
 // Packet: 0x0360
@@ -17442,60 +17442,60 @@ packetLen(0x0369, -1)
 
 // Packet: 0x036a
 #if PACKETVER >= 20080701
-packetLen(0x036a, -1)
+packetLen(0x036A, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x036a, 2)
+packetLen(0x036A, 2)
 #elif PACKETVER >= 20080528
-packetLen(0x036a, -1)
+packetLen(0x036A, -1)
 #endif
 
 // Packet: 0x036b
 #if PACKETVER >= 20080701
-packetLen(0x036b, 6)
+packetLen(0x036B, 6)
 #elif PACKETVER >= 20080624
-packetLen(0x036b, -1)
+packetLen(0x036B, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x036b, 28)
+packetLen(0x036B, 28)
 #elif PACKETVER >= 20080528
-packetLen(0x036b, -1)
+packetLen(0x036B, -1)
 #endif
 
 // Packet: 0x036c
 #if PACKETVER >= 20080701
-packetLen(0x036c, 4)
+packetLen(0x036C, 4)
 #elif PACKETVER >= 20080624
-packetLen(0x036c, 6)
+packetLen(0x036C, 6)
 #elif PACKETVER >= 20080528
-packetLen(0x036c, -1)
+packetLen(0x036C, -1)
 #endif
 
 // Packet: 0x036d
 #if PACKETVER >= 20080701
-packetLen(0x036d, 5)
+packetLen(0x036D, 5)
 #elif PACKETVER >= 20080624
-packetLen(0x036d, 21)
+packetLen(0x036D, 21)
 #elif PACKETVER >= 20080617
-packetLen(0x036d, 6)
+packetLen(0x036D, 6)
 #elif PACKETVER >= 20080528
-packetLen(0x036d, -1)
+packetLen(0x036D, -1)
 #endif
 
 // Packet: 0x036e
 #if PACKETVER >= 20080624
-packetLen(0x036e, -1)
+packetLen(0x036E, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x036e, 3)
+packetLen(0x036E, 3)
 #elif PACKETVER >= 20080528
-packetLen(0x036e, -1)
+packetLen(0x036E, -1)
 #endif
 
 // Packet: 0x036f
 #if PACKETVER >= 20080701
-packetLen(0x036f, 3)
+packetLen(0x036F, 3)
 #elif PACKETVER >= 20080624
-packetLen(0x036f, 8)
+packetLen(0x036F, 8)
 #elif PACKETVER >= 20080528
-packetLen(0x036f, -1)
+packetLen(0x036F, -1)
 #endif
 
 // Packet: 0x0370
@@ -17576,54 +17576,54 @@ packetLen(0x0379, -1)
 
 // Packet: 0x037a
 #if PACKETVER >= 20080528
-packetLen(0x037a, -1)
+packetLen(0x037A, -1)
 #endif
 
 // Packet: 0x037b
 #if PACKETVER >= 20080701
-packetLen(0x037b, 6)
+packetLen(0x037B, 6)
 #elif PACKETVER >= 20080624
-packetLen(0x037b, -1)
+packetLen(0x037B, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x037b, 11)
+packetLen(0x037B, 11)
 #elif PACKETVER >= 20080528
-packetLen(0x037b, -1)
+packetLen(0x037B, -1)
 #endif
 
 // Packet: 0x037c
 #if PACKETVER >= 20080701
-packetLen(0x037c, -1)
+packetLen(0x037C, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x037c, 10)
+packetLen(0x037C, 10)
 #elif PACKETVER >= 20080617
-packetLen(0x037c, 53)
+packetLen(0x037C, 53)
 #elif PACKETVER >= 20080528
-packetLen(0x037c, -1)
+packetLen(0x037C, -1)
 #endif
 
 // Packet: 0x037d
 #if PACKETVER >= 20080701
-packetLen(0x037d, 3)
+packetLen(0x037D, 3)
 #elif PACKETVER >= 20080528
-packetLen(0x037d, -1)
+packetLen(0x037D, -1)
 #endif
 
 // Packet: 0x037e
 #if PACKETVER >= 20080701
-packetLen(0x037e, 8)
+packetLen(0x037E, 8)
 #elif PACKETVER >= 20080624
-packetLen(0x037e, 6)
+packetLen(0x037E, 6)
 #elif PACKETVER >= 20080528
-packetLen(0x037e, -1)
+packetLen(0x037E, -1)
 #endif
 
 // Packet: 0x037f
 #if PACKETVER >= 20080701
-packetLen(0x037f, -1)
+packetLen(0x037F, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x037f, 8)
+packetLen(0x037F, 8)
 #elif PACKETVER >= 20080528
-packetLen(0x037f, -1)
+packetLen(0x037F, -1)
 #endif
 
 // Packet: 0x0380
@@ -17722,64 +17722,64 @@ packetLen(0x0389, -1)
 
 // Packet: 0x038a
 #if PACKETVER >= 20080701
-packetLen(0x038a, 102)
+packetLen(0x038A, 102)
 #elif PACKETVER >= 20080624
-packetLen(0x038a, 26)
+packetLen(0x038A, 26)
 #elif PACKETVER >= 20080617
-packetLen(0x038a, 6)
+packetLen(0x038A, 6)
 #elif PACKETVER >= 20080528
-packetLen(0x038a, -1)
+packetLen(0x038A, -1)
 #endif
 
 // Packet: 0x038b
 #if PACKETVER >= 20080701
-packetLen(0x038b, 2)
+packetLen(0x038B, 2)
 #elif PACKETVER >= 20080624
-packetLen(0x038b, 11)
+packetLen(0x038B, 11)
 #elif PACKETVER >= 20080617
-packetLen(0x038b, 4)
+packetLen(0x038B, 4)
 #elif PACKETVER >= 20080528
-packetLen(0x038b, -1)
+packetLen(0x038B, -1)
 #endif
 
 // Packet: 0x038c
 #if PACKETVER >= 20080701
-packetLen(0x038c, 4)
+packetLen(0x038C, 4)
 #elif PACKETVER >= 20080624
-packetLen(0x038c, 30)
+packetLen(0x038C, 30)
 #elif PACKETVER >= 20080617
-packetLen(0x038c, 8)
+packetLen(0x038C, 8)
 #elif PACKETVER >= 20080528
-packetLen(0x038c, -1)
+packetLen(0x038C, -1)
 #endif
 
 // Packet: 0x038d
 #if PACKETVER >= 20080701
-packetLen(0x038d, -1)
+packetLen(0x038D, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x038d, 10)
+packetLen(0x038D, 10)
 #elif PACKETVER >= 20080617
-packetLen(0x038d, 8)
+packetLen(0x038D, 8)
 #elif PACKETVER >= 20080528
-packetLen(0x038d, -1)
+packetLen(0x038D, -1)
 #endif
 
 // Packet: 0x038e
 #if PACKETVER >= 20080701
-packetLen(0x038e, -1)
+packetLen(0x038E, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x038e, 6)
+packetLen(0x038E, 6)
 #elif PACKETVER >= 20080528
-packetLen(0x038e, -1)
+packetLen(0x038E, -1)
 #endif
 
 // Packet: 0x038f
 #if PACKETVER >= 20080701
-packetLen(0x038f, -1)
+packetLen(0x038F, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x038f, 2)
+packetLen(0x038F, 2)
 #elif PACKETVER >= 20080528
-packetLen(0x038f, -1)
+packetLen(0x038F, -1)
 #endif
 
 // Packet: 0x0390
@@ -17876,612 +17876,611 @@ packetLen(0x0399, -1)
 
 // Packet: 0x039a
 #if PACKETVER >= 20080701
-packetLen(0x039a, -1)
+packetLen(0x039A, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x039a, 6)
+packetLen(0x039A, 6)
 #elif PACKETVER >= 20080528
-packetLen(0x039a, -1)
+packetLen(0x039A, -1)
 #endif
 
 // Packet: 0x039b
 #if PACKETVER >= 20080624
-packetLen(0x039b, -1)
+packetLen(0x039B, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x039b, 6)
+packetLen(0x039B, 6)
 #elif PACKETVER >= 20080528
-packetLen(0x039b, -1)
+packetLen(0x039B, -1)
 #endif
 
 // Packet: 0x039c
 #if PACKETVER >= 20080701
-packetLen(0x039c, -1)
+packetLen(0x039C, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x039c, 6)
+packetLen(0x039C, 6)
 #elif PACKETVER >= 20080617
-packetLen(0x039c, 26)
+packetLen(0x039C, 26)
 #elif PACKETVER >= 20080528
-packetLen(0x039c, -1)
+packetLen(0x039C, -1)
 #endif
 
 // Packet: 0x039d
 #if PACKETVER >= 20080701
-packetLen(0x039d, 6)
+packetLen(0x039D, 6)
 #elif PACKETVER >= 20080624
-packetLen(0x039d, 3)
+packetLen(0x039D, 3)
 #elif PACKETVER >= 20080617
-packetLen(0x039d, 7)
+packetLen(0x039D, 7)
 #elif PACKETVER >= 20080528
-packetLen(0x039d, -1)
+packetLen(0x039D, -1)
 #endif
 
 // Packet: 0x039e
 #if PACKETVER >= 20080701
-packetLen(0x039e, -1)
+packetLen(0x039E, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x039e, 6)
+packetLen(0x039E, 6)
 #elif PACKETVER >= 20080617
-packetLen(0x039e, 10)
+packetLen(0x039E, 10)
 #elif PACKETVER >= 20080528
-packetLen(0x039e, -1)
+packetLen(0x039E, -1)
 #endif
 
 // Packet: 0x039f
 #if PACKETVER >= 20080701
-packetLen(0x039f, -1)
+packetLen(0x039F, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x039f, 6)
+packetLen(0x039F, 6)
 #elif PACKETVER >= 20080528
-packetLen(0x039f, -1)
+packetLen(0x039F, -1)
 #endif
 
 // Packet: 0x03a0
 #if PACKETVER >= 20080624
-packetLen(0x03a0, -1)
+packetLen(0x03A0, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x03a0, 2)
+packetLen(0x03A0, 2)
 #elif PACKETVER >= 20080528
-packetLen(0x03a0, -1)
+packetLen(0x03A0, -1)
 #endif
 
 // Packet: 0x03a1
 #if PACKETVER >= 20080701
-packetLen(0x03a1, 6)
+packetLen(0x03A1, 6)
 #elif PACKETVER >= 20080624
-packetLen(0x03a1, 30)
+packetLen(0x03A1, 30)
 #elif PACKETVER >= 20080528
-packetLen(0x03a1, -1)
+packetLen(0x03A1, -1)
 #endif
 
 // Packet: 0x03a2
 #if PACKETVER >= 20080528
-packetLen(0x03a2, -1)
+packetLen(0x03A2, -1)
 #endif
 
 // Packet: 0x03a3
 #if PACKETVER >= 20080701
-packetLen(0x03a3, 21)
+packetLen(0x03A3, 21)
 #elif PACKETVER >= 20080624
-packetLen(0x03a3, -1)
+packetLen(0x03A3, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x03a3, 8)
+packetLen(0x03A3, 8)
 #elif PACKETVER >= 20080528
-packetLen(0x03a3, -1)
+packetLen(0x03A3, -1)
 #endif
 
 // Packet: 0x03a4
 #if PACKETVER >= 20080701
-packetLen(0x03a4, -1)
+packetLen(0x03A4, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x03a4, 2)
+packetLen(0x03A4, 2)
 #elif PACKETVER >= 20080528
-packetLen(0x03a4, -1)
+packetLen(0x03A4, -1)
 #endif
 
 // Packet: 0x03a5
 #if PACKETVER >= 20080701
-packetLen(0x03a5, -1)
+packetLen(0x03A5, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x03a5, 28)
+packetLen(0x03A5, 28)
 #elif PACKETVER >= 20080617
-packetLen(0x03a5, 5)
+packetLen(0x03A5, 5)
 #elif PACKETVER >= 20080528
-packetLen(0x03a5, -1)
+packetLen(0x03A5, -1)
 #endif
 
 // Packet: 0x03a6
 #if PACKETVER >= 20080701
-packetLen(0x03a6, -1)
+packetLen(0x03A6, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x03a6, 59)
+packetLen(0x03A6, 59)
 #elif PACKETVER >= 20080528
-packetLen(0x03a6, -1)
+packetLen(0x03A6, -1)
 #endif
 
 // Packet: 0x03a7
 #if PACKETVER >= 20080701
-packetLen(0x03a7, 68)
+packetLen(0x03A7, 68)
 #elif PACKETVER >= 20080624
-packetLen(0x03a7, 11)
+packetLen(0x03A7, 11)
 #elif PACKETVER >= 20080528
-packetLen(0x03a7, -1)
+packetLen(0x03A7, -1)
 #endif
 
 // Packet: 0x03a8
 #if PACKETVER >= 20080701
-packetLen(0x03a8, 3)
+packetLen(0x03A8, 3)
 #elif PACKETVER >= 20080624
-packetLen(0x03a8, 6)
+packetLen(0x03A8, 6)
 #elif PACKETVER >= 20080617
-packetLen(0x03a8, 4)
+packetLen(0x03A8, 4)
 #elif PACKETVER >= 20080528
-packetLen(0x03a8, -1)
+packetLen(0x03A8, -1)
 #endif
 
 // Packet: 0x03a9
 #if PACKETVER >= 20080624
-packetLen(0x03a9, -1)
+packetLen(0x03A9, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x03a9, 67)
+packetLen(0x03A9, 67)
 #elif PACKETVER >= 20080528
-packetLen(0x03a9, -1)
+packetLen(0x03A9, -1)
 #endif
 
 // Packet: 0x03aa
 #if PACKETVER >= 20080701
-packetLen(0x03aa, 11)
+packetLen(0x03AA, 11)
 #elif PACKETVER >= 20080528
-packetLen(0x03aa, -1)
+packetLen(0x03AA, -1)
 #endif
 
 // Packet: 0x03ab
 #if PACKETVER >= 20080624
-packetLen(0x03ab, -1)
+packetLen(0x03AB, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x03ab, 14)
+packetLen(0x03AB, 14)
 #elif PACKETVER >= 20080528
-packetLen(0x03ab, -1)
+packetLen(0x03AB, -1)
 #endif
 
 // Packet: 0x03ac
 #if PACKETVER >= 20080624
-packetLen(0x03ac, -1)
+packetLen(0x03AC, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x03ac, 282)
+packetLen(0x03AC, 282)
 #elif PACKETVER >= 20080528
-packetLen(0x03ac, -1)
+packetLen(0x03AC, -1)
 #endif
 
 // Packet: 0x03ad
 #if PACKETVER >= 20080701
-packetLen(0x03ad, -1)
+packetLen(0x03AD, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x03ad, 2)
+packetLen(0x03AD, 2)
 #elif PACKETVER >= 20080617
-packetLen(0x03ad, 21)
+packetLen(0x03AD, 21)
 #elif PACKETVER >= 20080528
-packetLen(0x03ad, -1)
+packetLen(0x03AD, -1)
 #endif
 
 // Packet: 0x03ae
 #if PACKETVER >= 20080701
-packetLen(0x03ae, 8)
+packetLen(0x03AE, 8)
 #elif PACKETVER >= 20080624
-packetLen(0x03ae, -1)
+packetLen(0x03AE, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x03ae, 57)
+packetLen(0x03AE, 57)
 #elif PACKETVER >= 20080528
-packetLen(0x03ae, -1)
+packetLen(0x03AE, -1)
 #endif
 
 // Packet: 0x03af
 #if PACKETVER >= 20080701
-packetLen(0x03af, 2)
+packetLen(0x03AF, 2)
 #elif PACKETVER >= 20080624
-packetLen(0x03af, 10)
+packetLen(0x03AF, 10)
 #elif PACKETVER >= 20080617
-packetLen(0x03af, 14)
+packetLen(0x03AF, 14)
 #elif PACKETVER >= 20080528
-packetLen(0x03af, -1)
+packetLen(0x03AF, -1)
 #endif
 
 // Packet: 0x03b0
 #if PACKETVER >= 20080701
-packetLen(0x03b0, 8)
+packetLen(0x03B0, 8)
 #elif PACKETVER >= 20080528
-packetLen(0x03b0, -1)
+packetLen(0x03B0, -1)
 #endif
 
 // Packet: 0x03b1
 #if PACKETVER >= 20080528
-packetLen(0x03b1, -1)
+packetLen(0x03B1, -1)
 #endif
 
 // Packet: 0x03b2
 #if PACKETVER >= 20080624
-packetLen(0x03b2, -1)
+packetLen(0x03B2, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x03b2, 6)
+packetLen(0x03B2, 6)
 #elif PACKETVER >= 20080528
-packetLen(0x03b2, -1)
+packetLen(0x03B2, -1)
 #endif
 
 // Packet: 0x03b3
 #if PACKETVER >= 20080624
-packetLen(0x03b3, -1)
+packetLen(0x03B3, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x03b3, 32)
+packetLen(0x03B3, 32)
 #elif PACKETVER >= 20080528
-packetLen(0x03b3, -1)
+packetLen(0x03B3, -1)
 #endif
 
 // Packet: 0x03b4
 #if PACKETVER >= 20080701
-packetLen(0x03b4, -1)
+packetLen(0x03B4, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x03b4, 27)
+packetLen(0x03B4, 27)
 #elif PACKETVER >= 20080617
-packetLen(0x03b4, 29)
+packetLen(0x03B4, 29)
 #elif PACKETVER >= 20080528
-packetLen(0x03b4, -1)
+packetLen(0x03B4, -1)
 #endif
 
 // Packet: 0x03b5
 #if PACKETVER >= 20080528
-packetLen(0x03b5, -1)
+packetLen(0x03B5, -1)
 #endif
 
 // Packet: 0x03b6
 #if PACKETVER >= 20080701
-packetLen(0x03b6, 10)
+packetLen(0x03B6, 10)
 #elif PACKETVER >= 20080624
-packetLen(0x03b6, -1)
+packetLen(0x03B6, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x03b6, 114)
+packetLen(0x03B6, 114)
 #elif PACKETVER >= 20080528
-packetLen(0x03b6, -1)
+packetLen(0x03B6, -1)
 #endif
 
 // Packet: 0x03b7
 #if PACKETVER >= 20080701
-packetLen(0x03b7, 2)
+packetLen(0x03B7, 2)
 #elif PACKETVER >= 20080624
-packetLen(0x03b7, 4)
+packetLen(0x03B7, 4)
 #elif PACKETVER >= 20080617
-packetLen(0x03b7, 8)
+packetLen(0x03B7, 8)
 #elif PACKETVER >= 20080528
-packetLen(0x03b7, -1)
+packetLen(0x03B7, -1)
 #endif
 
 // Packet: 0x03b8
 #if PACKETVER >= 20080528
-packetLen(0x03b8, -1)
+packetLen(0x03B8, -1)
 #endif
 
 // Packet: 0x03b9
 #if PACKETVER >= 20080701
-packetLen(0x03b9, 28)
+packetLen(0x03B9, 28)
 #elif PACKETVER >= 20080624
-packetLen(0x03b9, 19)
+packetLen(0x03B9, 19)
 #elif PACKETVER >= 20080528
-packetLen(0x03b9, -1)
+packetLen(0x03B9, -1)
 #endif
 
 // Packet: 0x03ba
 #if PACKETVER >= 20080701
-packetLen(0x03ba, 14)
+packetLen(0x03BA, 14)
 #elif PACKETVER >= 20080624
-packetLen(0x03ba, -1)
+packetLen(0x03BA, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x03ba, 26)
+packetLen(0x03BA, 26)
 #elif PACKETVER >= 20080528
-packetLen(0x03ba, -1)
+packetLen(0x03BA, -1)
 #endif
 
 // Packet: 0x03bb
 #if PACKETVER >= 20080701
-packetLen(0x03bb, -1)
+packetLen(0x03BB, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x03bb, 28)
+packetLen(0x03BB, 28)
 #elif PACKETVER >= 20080528
-packetLen(0x03bb, -1)
+packetLen(0x03BB, -1)
 #endif
 
 // Packet: 0x03bc
 #if PACKETVER >= 20080701
-packetLen(0x03bc, 54)
+packetLen(0x03BC, 54)
 #elif PACKETVER >= 20080624
-packetLen(0x03bc, -1)
+packetLen(0x03BC, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x03bc, 182)
+packetLen(0x03BC, 182)
 #elif PACKETVER >= 20080528
-packetLen(0x03bc, -1)
+packetLen(0x03BC, -1)
 #endif
 
 // Packet: 0x03bd
 #if PACKETVER >= 20080701
-packetLen(0x03bd, 29)
+packetLen(0x03BD, 29)
 #elif PACKETVER >= 20080528
-packetLen(0x03bd, -1)
+packetLen(0x03BD, -1)
 #endif
 
 // Packet: 0x03be
 #if PACKETVER >= 20080701
-packetLen(0x03be, 282)
+packetLen(0x03BE, 282)
 #elif PACKETVER >= 20080624
-packetLen(0x03be, 3)
+packetLen(0x03BE, 3)
 #elif PACKETVER >= 20080528
-packetLen(0x03be, -1)
+packetLen(0x03BE, -1)
 #endif
 
 // Packet: 0x03bf
 #if PACKETVER >= 20080701
-packetLen(0x03bf, 22)
+packetLen(0x03BF, 22)
 #elif PACKETVER >= 20080528
-packetLen(0x03bf, -1)
+packetLen(0x03BF, -1)
 #endif
 
 // Packet: 0x03c0
 #if PACKETVER >= 20080701
-packetLen(0x03c0, 2)
+packetLen(0x03C0, 2)
 #elif PACKETVER >= 20080528
-packetLen(0x03c0, -1)
+packetLen(0x03C0, -1)
 #endif
 
 // Packet: 0x03c1
 #if PACKETVER >= 20080624
-packetLen(0x03c1, -1)
+packetLen(0x03C1, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x03c1, 7)
+packetLen(0x03C1, 7)
 #elif PACKETVER >= 20080528
-packetLen(0x03c1, -1)
+packetLen(0x03C1, -1)
 #endif
 
 // Packet: 0x03c2
 #if PACKETVER >= 20080701
-packetLen(0x03c2, 10)
+packetLen(0x03C2, 10)
 #elif PACKETVER >= 20080624
-packetLen(0x03c2, -1)
+packetLen(0x03C2, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x03c2, 67)
+packetLen(0x03C2, 67)
 #elif PACKETVER >= 20080528
-packetLen(0x03c2, -1)
+packetLen(0x03C2, -1)
 #endif
 
 // Packet: 0x03c3
 #if PACKETVER >= 20080528
-packetLen(0x03c3, -1)
+packetLen(0x03C3, -1)
 #endif
 
 // Packet: 0x03c4
 #if PACKETVER >= 20080528
-packetLen(0x03c4, -1)
+packetLen(0x03C4, -1)
 #endif
 
 // Packet: 0x03c5
 #if PACKETVER >= 20080701
-packetLen(0x03c5, 35)
+packetLen(0x03C5, 35)
 #elif PACKETVER >= 20080624
-packetLen(0x03c5, -1)
+packetLen(0x03C5, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x03c5, 2)
+packetLen(0x03C5, 2)
 #elif PACKETVER >= 20080528
-packetLen(0x03c5, -1)
+packetLen(0x03C5, -1)
 #endif
 
 // Packet: 0x03c6
 #if PACKETVER >= 20080624
-packetLen(0x03c6, 6)
+packetLen(0x03C6, 6)
 #elif PACKETVER >= 20080617
-packetLen(0x03c6, 7)
+packetLen(0x03C6, 7)
 #elif PACKETVER >= 20080528
-packetLen(0x03c6, -1)
+packetLen(0x03C6, -1)
 #endif
 
 // Packet: 0x03c7
 #if PACKETVER >= 20080624
-packetLen(0x03c7, -1)
+packetLen(0x03C7, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x03c7, 5)
+packetLen(0x03C7, 5)
 #elif PACKETVER >= 20080528
-packetLen(0x03c7, -1)
+packetLen(0x03C7, -1)
 #endif
 
 // Packet: 0x03c8
 #if PACKETVER >= 20080528
-packetLen(0x03c8, -1)
+packetLen(0x03C8, -1)
 #endif
 
 // Packet: 0x03c9
 #if PACKETVER >= 20080528
-packetLen(0x03c9, -1)
+packetLen(0x03C9, -1)
 #endif
 
 // Packet: 0x03ca
 #if PACKETVER >= 20080528
-packetLen(0x03ca, -1)
+packetLen(0x03CA, -1)
 #endif
 
 // Packet: 0x03cb
 #if PACKETVER >= 20080701
-packetLen(0x03cb, 7)
+packetLen(0x03CB, 7)
 #elif PACKETVER >= 20080528
-packetLen(0x03cb, -1)
+packetLen(0x03CB, -1)
 #endif
 
 // Packet: 0x03cc
 #if PACKETVER >= 20080701
-packetLen(0x03cc, -1)
+packetLen(0x03CC, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x03cc, 35)
+packetLen(0x03CC, 35)
 #elif PACKETVER >= 20080617
-packetLen(0x03cc, 7)
+packetLen(0x03CC, 7)
 #elif PACKETVER >= 20080528
-packetLen(0x03cc, -1)
+packetLen(0x03CC, -1)
 #endif
 
 // Packet: 0x03cd
 #if PACKETVER >= 20080701
-packetLen(0x03cd, 65)
+packetLen(0x03CD, 65)
 #elif PACKETVER >= 20080624
-packetLen(0x03cd, 7)
+packetLen(0x03CD, 7)
 #elif PACKETVER >= 20080528
-packetLen(0x03cd, -1)
+packetLen(0x03CD, -1)
 #endif
 
 // Packet: 0x03ce
 #if PACKETVER >= 20080701
-packetLen(0x03ce, -1)
+packetLen(0x03CE, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x03ce, 7)
+packetLen(0x03CE, 7)
 #elif PACKETVER >= 20080617
-packetLen(0x03ce, 39)
+packetLen(0x03CE, 39)
 #elif PACKETVER >= 20080528
-packetLen(0x03ce, -1)
+packetLen(0x03CE, -1)
 #endif
 
 // Packet: 0x03cf
 #if PACKETVER >= 20080701
-packetLen(0x03cf, -1)
+packetLen(0x03CF, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x03cf, 67)
+packetLen(0x03CF, 67)
 #elif PACKETVER >= 20080617
-packetLen(0x03cf, 27)
+packetLen(0x03CF, 27)
 #elif PACKETVER >= 20080528
-packetLen(0x03cf, -1)
+packetLen(0x03CF, -1)
 #endif
 
 // Packet: 0x03d0
 #if PACKETVER >= 20080701
-packetLen(0x03d0, 8)
+packetLen(0x03D0, 8)
 #elif PACKETVER >= 20080624
-packetLen(0x03d0, -1)
+packetLen(0x03D0, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x03d0, 4)
+packetLen(0x03D0, 4)
 #elif PACKETVER >= 20080528
-packetLen(0x03d0, -1)
+packetLen(0x03D0, -1)
 #endif
 
 // Packet: 0x03d1
 #if PACKETVER >= 20080701
-packetLen(0x03d1, 6)
+packetLen(0x03D1, 6)
 #elif PACKETVER >= 20080624
-packetLen(0x03d1, 81)
+packetLen(0x03D1, 81)
 #elif PACKETVER >= 20080617
-packetLen(0x03d1, 7)
+packetLen(0x03D1, 7)
 #elif PACKETVER >= 20080528
-packetLen(0x03d1, -1)
+packetLen(0x03D1, -1)
 #endif
 
 // Packet: 0x03d2
 #if PACKETVER >= 20080701
-packetLen(0x03d2, 90)
+packetLen(0x03D2, 90)
 #elif PACKETVER >= 20080624
-packetLen(0x03d2, -1)
+packetLen(0x03D2, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x03d2, 6)
+packetLen(0x03D2, 6)
 #elif PACKETVER >= 20080528
-packetLen(0x03d2, -1)
+packetLen(0x03D2, -1)
 #endif
 
 // Packet: 0x03d3
 #if PACKETVER >= 20080701
-packetLen(0x03d3, -1)
+packetLen(0x03D3, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x03d3, 2)
+packetLen(0x03D3, 2)
 #elif PACKETVER >= 20080528
-packetLen(0x03d3, -1)
+packetLen(0x03D3, -1)
 #endif
 
 // Packet: 0x03d4
 #if PACKETVER >= 20080701
-packetLen(0x03d4, 12)
+packetLen(0x03D4, 12)
 #elif PACKETVER >= 20080624
-packetLen(0x03d4, 14)
+packetLen(0x03D4, 14)
 #elif PACKETVER >= 20080617
-packetLen(0x03d4, 27)
+packetLen(0x03D4, 27)
 #elif PACKETVER >= 20080528
-packetLen(0x03d4, -1)
+packetLen(0x03D4, -1)
 #endif
 
 // Packet: 0x03d5
 #if PACKETVER >= 20080624
-packetLen(0x03d5, -1)
+packetLen(0x03D5, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x03d5, 4)
+packetLen(0x03D5, 4)
 #elif PACKETVER >= 20080528
-packetLen(0x03d5, -1)
+packetLen(0x03D5, -1)
 #endif
 
 // Packet: 0x03d6
 #if PACKETVER >= 20080701
-packetLen(0x03d6, 114)
+packetLen(0x03D6, 114)
 #elif PACKETVER >= 20080528
-packetLen(0x03d6, -1)
+packetLen(0x03D6, -1)
 #endif
 
 // Packet: 0x03d7
 #if PACKETVER >= 20080701
-packetLen(0x03d7, 23)
+packetLen(0x03D7, 23)
 #elif PACKETVER >= 20080528
-packetLen(0x03d7, -1)
+packetLen(0x03D7, -1)
 #endif
 
 // Packet: 0x03d8
 #if PACKETVER >= 20080701
-packetLen(0x03d8, -1)
+packetLen(0x03D8, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x03d8, 3)
+packetLen(0x03D8, 3)
 #elif PACKETVER >= 20080617
-packetLen(0x03d8, 2)
+packetLen(0x03D8, 2)
 #elif PACKETVER >= 20080528
-packetLen(0x03d8, -1)
+packetLen(0x03D8, -1)
 #endif
 
 // Packet: 0x03d9
 #if PACKETVER >= 20080701
-packetLen(0x03d9, 6)
+packetLen(0x03D9, 6)
 #elif PACKETVER >= 20080624
-packetLen(0x03d9, 30)
+packetLen(0x03D9, 30)
 #elif PACKETVER >= 20080528
-packetLen(0x03d9, -1)
+packetLen(0x03D9, -1)
 #endif
 
 // Packet: 0x03da
 #if PACKETVER >= 20080528
-packetLen(0x03da, -1)
+packetLen(0x03DA, -1)
 #endif
 
 // Packet: 0x03db
 #if PACKETVER >= 20080701
-packetLen(0x03db, 79)
+packetLen(0x03DB, 79)
 #elif PACKETVER >= 20080624
-packetLen(0x03db, -1)
+packetLen(0x03DB, -1)
 #elif PACKETVER >= 20080617
-packetLen(0x03db, 6)
+packetLen(0x03DB, 6)
 #elif PACKETVER >= 20080528
-packetLen(0x03db, -1)
+packetLen(0x03DB, -1)
 #endif
 
 // Packet: 0x03dc
 #if PACKETVER >= 20080701
-packetLen(0x03dc, -1)
+packetLen(0x03DC, -1)
 #elif PACKETVER >= 20080624
-packetLen(0x03dc, 10)
+packetLen(0x03DC, 10)
 #elif PACKETVER >= 20080617
-packetLen(0x03dc, 54)
+packetLen(0x03DC, 54)
 #elif PACKETVER >= 20080528
-packetLen(0x03dc, -1)
+packetLen(0x03DC, -1)
 #endif
 
 // Packet: 0x03dd
 #if PACKETVER >= 20080624
-packetLen(0x03dd, 18)
+packetLen(0x03DD, 18)
 #endif
 
 // Packet: 0x03de
 #if PACKETVER >= 20080624
-packetLen(0x03de, 18)
+packetLen(0x03DE, 18)
 #endif
-
 
 #endif /* COMMON_PACKETS2008_LEN_AD_H */
