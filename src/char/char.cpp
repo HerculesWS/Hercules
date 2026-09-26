@@ -133,16 +133,24 @@ static uint32 bind_ip = INADDR_ANY;
 static int char_maintenance_min_group_id = 0;
 static bool enable_char_creation = true; ///< Whether to allow character creation.
 
-static bool name_ignoring_case = false; // Allow or not identical name for characters but with a different case by [Yor]
-int char_name_option = 0; // Option to know which letters/symbols are authorized in the name of a character (0: all, 1: only those in char_name_letters, 2: all EXCEPT those in char_name_letters) by [Yor]
-static char unknown_char_name[NAME_LENGTH] = "Unknown"; // Name to use when the requested name cannot be determined
-#define TRIM_CHARS "\255\xA0\032\t\x0A\x0D " //The following characters are trimmed regardless because they cause confusion and problems on the servers. [Skotlex]
-char char_name_letters[1024] = ""; // list of letters/symbols allowed (or not) in a character name. by [Yor]
+/// Allow or not identical name for characters but with a different case by [Yor]
+static bool name_ignoring_case = false;
+/// Option to know which letters/symbols are authorized in the name of a character (0: all, 1: only those in char_name_letters, 2: all EXCEPT those in char_name_letters) by [Yor]
+int char_name_option = 0;
+/// Name to use when the requested name cannot be determined
+static char unknown_char_name[NAME_LENGTH] = "Unknown";
+///The following characters are trimmed regardless because they cause confusion and problems on the servers. [Skotlex]
+#define TRIM_CHARS "\255\xA0\032\t\x0A\x0D "
+/// list of letters/symbols allowed (or not) in a character name. by [Yor]
+char char_name_letters[1024] = "";
 
-static int char_del_level = 0; ///< From which level you can delete character [Lupus]
+/// From which level you can delete character [Lupus]
+static int char_del_level = 0;
 static int char_del_delay = 86400;
-static bool char_aegis_delete = false; ///< Verify if char is in guild/party or char and reacts as Aegis does (disallow deletion), @see chr->delete2_req.
-static bool char_aegis_rename = false; // whether or not the player can be renamed while in party/guild
+/// Verify if char is in guild/party or char and reacts as Aegis does (disallow deletion), @see chr->delete2_req.
+static bool char_aegis_delete = false;
+/// whether or not the player can be renamed while in party/guild
+static bool char_aegis_rename = false;
 
 static int max_connect_user = -1;
 static int gm_allow_group = -1;
@@ -483,17 +491,17 @@ static int char_mmo_char_tosql(int char_id, struct mmo_charstatus *p)
 		if (p->allow_call)
 			opt |= OPT_ALLOW_CALL;
 
-		if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `base_level`='%d', `job_level`='%d',"
-			"`base_exp`='%" PRIu64 "', `job_exp`='%" PRIu64 "', `zeny`='%d',"
-			"`max_hp`='%d',`hp`='%d',`max_sp`='%d',`sp`='%d',`status_point`='%d',`skill_point`='%d',"
-			"`str`='%d',`agi`='%d',`vit`='%d',`int`='%d',`dex`='%d',`luk`='%d',"
-			"`option`='%u',`party_id`='%d',`guild_id`='%d',`pet_id`='%d',`homun_id`='%d',`elemental_id`='%d',"
-			"`weapon`='%d',`shield`='%d',`head_top`='%d',`head_mid`='%d',`head_bottom`='%d',"
-			"`last_map`='%s',`last_x`='%d',`last_y`='%d',`save_map`='%s',`save_x`='%d',`save_y`='%d', `rename`='%d',"
-			"`delete_date`='%lu',`robe`='%d',`slotchange`='%d', `char_opt`='%u', `font`='%u', `uniqueitem_counter` ='%u',"
-			"`hotkey_rowshift`='%d',`hotkey_rowshift2`='%d',`clan_id`='%d',`last_login`='%" PRId64 "',"
-			"`title_id`='%d', `inventory_size`='%d'"
-			" WHERE  `account_id`='%d' AND `char_id` = '%d'",
+		if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `base_level`='%d', `job_level`='%d'," //
+			"`base_exp`='%" PRIu64 "', `job_exp`='%" PRIu64 "', `zeny`='%d'," //
+			"`max_hp`='%d',`hp`='%d',`max_sp`='%d',`sp`='%d',`status_point`='%d',`skill_point`='%d'," //
+			"`str`='%d',`agi`='%d',`vit`='%d',`int`='%d',`dex`='%d',`luk`='%d'," //
+			"`option`='%u',`party_id`='%d',`guild_id`='%d',`pet_id`='%d',`homun_id`='%d',`elemental_id`='%d'," //
+			"`weapon`='%d',`shield`='%d',`head_top`='%d',`head_mid`='%d',`head_bottom`='%d'," //
+			"`last_map`='%s',`last_x`='%d',`last_y`='%d',`save_map`='%s',`save_x`='%d',`save_y`='%d', `rename`='%d'," //
+			"`delete_date`='%lu',`robe`='%d',`slotchange`='%d', `char_opt`='%u', `font`='%u', `uniqueitem_counter` ='%u'," //
+			"`hotkey_rowshift`='%d',`hotkey_rowshift2`='%d',`clan_id`='%d',`last_login`='%" PRId64 "'," //
+			"`title_id`='%d', `inventory_size`='%d'" //
+			" WHERE  `account_id`='%d' AND `char_id` = '%d'", //
 			char_db, p->base_level, p->job_level,
 			p->base_exp, p->job_exp, p->zeny,
 			p->max_hp, p->hp, p->max_sp, p->sp, p->status_point, p->skill_point,
@@ -502,7 +510,7 @@ static int char_mmo_char_tosql(int char_id, struct mmo_charstatus *p)
 			p->look.weapon, p->look.shield, p->look.head_top, p->look.head_mid, p->look.head_bottom,
 			mapindex_id2name(p->last_point.map), p->last_point.x, p->last_point.y,
 			mapindex_id2name(p->save_point.map), p->save_point.x, p->save_point.y, p->rename,
-			(unsigned long)p->delete_date,  // FIXME: platform-dependent size
+			(unsigned long)p->delete_date /* FIXME: platform-dependent size */,
 			p->look.robe,p->slotchange,opt,p->font,p->uniqueitem_counter,
 			p->hotkey_rowshift, p->hotkey_rowshift2, p->clan_id, p->last_login,
 			p->title_id, p->inventorySize,
@@ -533,11 +541,10 @@ static int char_mmo_char_tosql(int char_id, struct mmo_charstatus *p)
 		(p->fame != cp->fame)
 	)
 	{
-		if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `class`='%d',"
-			"`hair`='%d', `hair_color`='%d', `clothes_color`='%d', `body`='%d',"
-			"`partner_id`='%d', `father`='%d', `mother`='%d', `child`='%d',"
-			"`karma`='%d', `manner`='%d', `fame`='%d'"
-			" WHERE  `account_id`='%d' AND `char_id` = '%d'",
+		if( SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `class`='%d',`hair`='%d', " //
+			"`hair_color`='%d', `clothes_color`='%d', `body`='%d',`partner_id`='%d', `father`='%d', `mother`='%d', " //
+			"`child`='%d',`karma`='%d', `manner`='%d', `fame`='%d'" //
+			" WHERE  `account_id`='%d' AND `char_id` = '%d'", //
 			char_db, p->class_,
 			p->hair, p->hair_color, p->clothes_color, p->body,
 			p->partner_id, p->father, p->mother, p->child,
@@ -629,7 +636,7 @@ static int char_mmo_char_tosql(int char_id, struct mmo_charstatus *p)
 			if (count != 0)
 				StrBuf->AppendStr(&buf, ",");
 			int saved_lv = (p->skill[i].flag > SKILL_FLAG_REPLACED_LV_0) ? p->skill[i].flag - SKILL_FLAG_REPLACED_LV_0 : p->skill[i].lv;
-			int saved_flag = p->skill[i].flag == SKILL_FLAG_PERM_GRANTED ? p->skill[i].flag : 0; // other flags do not need to be saved
+			int saved_flag = p->skill[i].flag == SKILL_FLAG_PERM_GRANTED ? p->skill[i].flag : 0 /* other flags do not need to be saved */;
 			StrBuf->Printf(&buf, "('%d','%d','%d','%d')", char_id, p->skill[i].id, saved_lv, saved_flag);
 
 			++count;
@@ -1090,13 +1097,14 @@ static int char_mmo_chars_fromsql(struct char_session_data *sd, uint8 *buf, int 
 	}
 
 	// read char data
-	if (SQL_ERROR == SQL->StmtPrepare(stmt, "SELECT "
-		"`char_id`,`char_num`,`name`,`class`,`base_level`,`job_level`,`base_exp`,`job_exp`,`zeny`,"
-		"`str`,`agi`,`vit`,`int`,`dex`,`luk`,`max_hp`,`hp`,`max_sp`,`sp`,"
-		"`status_point`,`skill_point`,`option`,`karma`,`manner`,`hair`,`hair_color`,"
-		"`clothes_color`,`body`,`weapon`,`shield`,`head_top`,`head_mid`,`head_bottom`,`last_map`,`rename`,`delete_date`,"
-		"`robe`,`slotchange`,`unban_time`,`sex`,`title_id`,`inventory_size`"
-		" FROM `%s` WHERE `account_id`='%d' AND `char_num` < '%d'", char_db, sd->account_id, MAX_CHARS)
+	if (SQL_ERROR == SQL->StmtPrepare(stmt, "SELECT " //
+		"`char_id`, `char_num`, `name`, `class`, `base_level`, `job_level`, `base_exp`, `job_exp`, `zeny`, `str`, " //
+		"`agi`, `vit`, `int`, `dex`, `luk`, `max_hp`, `hp`, `max_sp`, `sp`, `status_point`, `skill_point`, " //
+		"`option`, `karma`, `manner`, `hair`, `hair_color`, `clothes_color`, `body`, `weapon`, `shield`, " //
+		"`head_top`, `head_mid`, `head_bottom`, `last_map`, `rename`, `delete_date`, `robe`, `slotchange`, " //
+		"`unban_time`, `sex`, `title_id`,` inventory_size`" //
+		" FROM `%s` WHERE `account_id`='%d' AND `char_num` < '%d'", //
+		char_db, sd->account_id, MAX_CHARS)
 	 || SQL_ERROR == SQL->StmtExecute(stmt)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 0,  SQLDT_INT,    &p.char_id,          sizeof p.char_id,          NULL, NULL)
 	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 1,  SQLDT_UCHAR,  &p.slot,             sizeof p.slot,             NULL, NULL)
@@ -1208,14 +1216,14 @@ static int char_mmo_char_fromsql(int char_id, struct mmo_charstatus *p, bool loa
 	}
 
 	// read char data
-	if (SQL_ERROR == SQL->StmtPrepare(stmt, "SELECT "
-		"`char_id`,`account_id`,`char_num`,`name`,`class`,`base_level`,`job_level`,`base_exp`,`job_exp`,`zeny`,"
-		"`str`,`agi`,`vit`,`int`,`dex`,`luk`,`max_hp`,`hp`,`max_sp`,`sp`,"
-		"`status_point`,`skill_point`,`option`,`karma`,`manner`,`party_id`,`guild_id`,`pet_id`,`homun_id`,`elemental_id`,`hair`,"
-		"`hair_color`,`clothes_color`,`body`,`weapon`,`shield`,`head_top`,`head_mid`,`head_bottom`,`last_map`,`last_x`,`last_y`,"
-		"`save_map`,`save_x`,`save_y`,`partner_id`,`father`,`mother`,`child`,`fame`,`rename`,`delete_date`,`robe`,`slotchange`,"
-		"`char_opt`,`font`,`uniqueitem_counter`,`sex`,`hotkey_rowshift`,`hotkey_rowshift2`,`clan_id`,`last_login`,"
-		"`title_id`, `inventory_size`"
+	if (SQL_ERROR == SQL->StmtPrepare(stmt, "SELECT " //
+		"`char_id`, `account_id`, `char_num`, `name`, `class`, `base_level`, `job_level`, `base_exp`, `job_exp`, " //
+		"`zeny`, `str`, `agi`, `vit`, `int`, `dex`, `luk`, `max_hp`, `hp`, `max_sp`, `sp`, `status_point`, " //
+		"`skill_point`, `option`, `karma`, `manner`, `party_id`, `guild_id`, `pet_id`, `homun_id`, `elemental_id`, " //
+		"`hair`, `hair_color`, `clothes_color`, `body`, `weapon`, `shield`, `head_top`, `head_mid`, `head_bottom`, " //
+		"`last_map`, `last_x`, `last_y`, `save_map`, `save_x`, `save_y`, `partner_id`, `father`, `mother`, `child`, " //
+		"`fame`, `rename`, `delete_date`, `robe`, `slotchange`, `char_opt`, `font`, `uniqueitem_counter`, `sex`, " //
+		"`hotkey_rowshift`, `hotkey_rowshift2`, `clan_id`, `last_login`, `title_id`, `inventory_size`" //
 		" FROM `%s` WHERE `char_id`=? LIMIT 1", char_db)
 	 || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT, &char_id, sizeof char_id)
 	 || SQL_ERROR == SQL->StmtExecute(stmt)
@@ -1585,14 +1593,12 @@ static int char_rename_char_sql(struct char_session_data *sd, int char_id)
 	// log change
 	if (chr->enable_logs) {
 		if (SQL_ERROR == SQL->Query(inter->sql_handle,
-					"INSERT INTO `%s` ("
-					" `time`, `char_msg`, `account_id`, `char_id`, `char_num`, `class`, `name`,"
-					" `str`, `agi`, `vit`, `int`, `dex`, `luk`,"
-					" `hair`, `hair_color`"
-					") VALUES ("
-					" NOW(), 'change char name', '%d', '%d', '%d', '%d', '%s',"
-					" '%d', '%d', '%d', '%d', '%d', '%d',"
-					" '%d', '%d'"
+					"INSERT INTO `%s` (" //
+					" `time`, `char_msg`, `account_id`, `char_id`, `char_num`, `class`, `name`," //
+					" `str`, `agi`, `vit`, `int`, `dex`, `luk`, `hair`, `hair_color`" //
+					") VALUES (" //
+					" NOW(), 'change char name', '%d', '%d', '%d', '%d', '%s'," //
+					" '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d'" //
 					")",
 					charlog_db,
 					sd->account_id, char_dat.char_id, char_dat.slot, char_dat.class_, esc_name,
@@ -1736,18 +1742,19 @@ static int char_make_new_char_sql(struct char_session_data *sd, const char *name
 
 	//check other inputs
 #if PACKETVER >= 20120307
-	if(slot < 0 || slot >= sd->char_slots)
+	if(slot < 0 || slot >= sd->char_slots) {
 #else
-	if((slot < 0 || slot >= sd->char_slots) // slots
-	|| (str + agi + vit + int_ + dex + luk != 6*5 ) // stats
-	|| (str < 1 || str > 9 || agi < 1 || agi > 9 || vit < 1 || vit > 9 || int_ < 1 || int_ > 9 || dex < 1 || dex > 9 || luk < 1 || luk > 9) // individual stat values
-	|| (str + int_ != 10 || agi + luk != 10 || vit + dex != 10) ) // pairs
+	if((slot < 0 || slot >= sd->char_slots) /* slots */
+	|| (str + agi + vit + int_ + dex + luk != 6*5 ) /* stats */
+	|| (str < 1 || str > 9 || agi < 1 || agi > 9 || vit < 1 || vit > 9 || int_ < 1 || int_ > 9 || dex < 1 || dex > 9 || luk < 1 || luk > 9) /* individual stat values */
+	|| (str + int_ != 10 || agi + luk != 10 || vit + dex != 10) /* pairs */) {
 #endif
 #if PACKETVER >= 20100413
 		return -4; // invalid slot
 #else
 		return -2; // invalid input
 #endif
+	}
 
 	// check char slot
 	if( sd->found_char[slot] != -1 )
@@ -1756,8 +1763,8 @@ static int char_make_new_char_sql(struct char_session_data *sd, const char *name
 
 #if PACKETVER >= 20120307
 	// Insert the new char entry to the database
-	if (SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` (`account_id`, `char_num`, `name`, `class`, `zeny`, `status_point`,`str`, `agi`, `vit`, `int`, `dex`, `luk`, `max_hp`, `hp`,"
-		"`max_sp`, `sp`, `hair`, `hair_color`, `last_map`, `last_x`, `last_y`, `save_map`, `save_x`, `save_y`, `sex`, `inventory_size`) VALUES ("
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` (`account_id`, `char_num`, `name`, `class`, `zeny`, `status_point`,`str`, `agi`, `vit`, `int`, `dex`, `luk`, `max_hp`, `hp`," //
+		"`max_sp`, `sp`, `hair`, `hair_color`, `last_map`, `last_x`, `last_y`, `save_map`, `save_x`, `save_y`, `sex`, `inventory_size`) VALUES (" //
 		"'%d', '%d', '%s', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d','%d', '%d','%d', '%d', '%s', '%d', '%d', '%s', '%d', '%d', '%c', '%d')",
 		char_db, sd->account_id , slot, esc_name, starting_class, start_zeny, 48, str, agi, vit, int_, dex, luk,
 		(40 * (100 + vit)/100) , (40 * (100 + vit)/100 ),  (11 * (100 + int_)/100), (11 * (100 + int_)/100), hair_style, hair_color,
@@ -1767,8 +1774,8 @@ static int char_make_new_char_sql(struct char_session_data *sd, const char *name
 	}
 #else
 	//Insert the new char entry to the database
-	if( SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` (`account_id`, `char_num`, `name`, `class`, `zeny`, `str`, `agi`, `vit`, `int`, `dex`, `luk`, `max_hp`, `hp`,"
-							   "`max_sp`, `sp`, `hair`, `hair_color`, `last_map`, `last_x`, `last_y`, `save_map`, `save_x`, `save_y`, `inventory_size`) VALUES ("
+	if( SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` (`account_id`, `char_num`, `name`, `class`, `zeny`, `str`, `agi`, `vit`, `int`, `dex`, `luk`, `max_hp`, `hp`," //
+							   "`max_sp`, `sp`, `hair`, `hair_color`, `last_map`, `last_x`, `last_y`, `save_map`, `save_x`, `save_y`, `inventory_size`) VALUES (" //
 							   "'%d', '%d', '%s', '%d',  '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d','%d', '%d','%d', '%d', '%s', '%d', '%d', '%s', '%d', '%d', '%d')",
 							   char_db, sd->account_id , slot, esc_name, starting_class, start_zeny, str, agi, vit, int_, dex, luk,
 							   (40 * (100 + vit)/100) , (40 * (100 + vit)/100 ),  (11 * (100 + int_)/100), (11 * (100 + int_)/100), hair_style, hair_color,
@@ -1787,7 +1794,7 @@ static int char_make_new_char_sql(struct char_session_data *sd, const char *name
 	// Validation success, log result
 	if (chr->enable_logs) {
 		if (SQL_ERROR == SQL->Query(inter->sql_handle,
-					"INSERT INTO `%s` (`time`, `char_msg`, `account_id`, `char_id`, `char_num`, `class`, `name`, `str`, `agi`, `vit`, `int`, `dex`, `luk`, `hair`, `hair_color`)"
+					"INSERT INTO `%s` (`time`, `char_msg`, `account_id`, `char_id`, `char_num`, `class`, `name`, `str`, `agi`, `vit`, `int`, `dex`, `luk`, `hair`, `hair_color`)" //
 					"VALUES (NOW(), '%s', '%d', '%d', '%d', '%d', '%s', '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d')",
 					charlog_db, "make new char", sd->account_id, char_id, slot, starting_class, esc_name, str, agi, vit, int_, dex, luk, hair_style, hair_color))
 			Sql_ShowDebug(inter->sql_handle);
@@ -2034,7 +2041,8 @@ static int char_mmo_char_tobuf(uint8 *buffer, struct mmo_charstatus *p)
 	offset += 4;
 	buf = WBUFP(uint8 *, buffer, offset);
 #else
-	WBUFL(buf,4) = std::min((uint32)(p->base_exp), (uint32)INT32_MAX); // FIXME: This should run on the larger type and be cast to uint32 after the clamping
+	// FIXME: This min() should run on the larger type and be cast to uint32 after the clamping
+	WBUFL(buf,4) = std::min((uint32)(p->base_exp), (uint32)INT32_MAX);
 #endif
 	WBUFL(buf,8) = p->zeny;
 #if PACKETVER >= 20170830
@@ -2042,7 +2050,8 @@ static int char_mmo_char_tobuf(uint8 *buffer, struct mmo_charstatus *p)
 	offset += 4;
 	buf = WBUFP(uint8 *, buffer, offset);
 #else
-	WBUFL(buf,12) = std::min((uint32)(p->job_exp), (uint32)INT32_MAX); // FIXME: This should run on the larger type and be cast to uint32 after the clamping
+	// FIXME: This min() should run on the larger type and be cast to uint32 after the clamping
+	WBUFL(buf,12) = std::min((uint32)(p->job_exp), (uint32)INT32_MAX);
 #endif
 	WBUFL(buf,16) = p->job_level;
 	WBUFL(buf,20) = 0; // probably opt1
@@ -2246,9 +2255,12 @@ static int char_mmo_char_send_characters(int fd, struct char_session_data *sd)
 	WFIFOHEAD(fd,j + MAX_CHARS*MAX_CHAR_BUF);
 	WFIFOW(fd,0) = 0x6b;
 #if PACKETVER >= 20100413
-	WFIFOB(fd,4) = MAX_CHARS; // Max slots.
-	WFIFOB(fd,5) = sd->char_slots; // Available slots. (aka PremiumStartSlot)
-	WFIFOB(fd,6) = MAX_CHARS; // Premium slots. AKA any existent chars past sd->char_slots but within MAX_CHARS will show a 'Premium Service' in red
+	// Max slots.
+	WFIFOB(fd,4) = MAX_CHARS;
+	// Available slots. (aka PremiumStartSlot)
+	WFIFOB(fd,5) = sd->char_slots;
+	// Premium slots. AKA any existent chars past sd->char_slots but within MAX_CHARS will show a 'Premium Service' in red
+	WFIFOB(fd,6) = MAX_CHARS;
 #endif
 	memset(WFIFOP(void *, fd,4 + offset), 0, 20); // unknown bytes
 	j += chr->mmo_chars_fromsql(sd, WFIFOP(uint8 *, fd, j), NULL);
@@ -2279,8 +2291,10 @@ static int char_char_married(int pl1, int pl2)
 
 static int char_char_child(int parent_id, int child_id)
 {
-	if (parent_id == 0 || child_id == 0) // Failsafe, avoild querys and fix EXP bug dividing with lower level chars
+	if (parent_id == 0 || child_id == 0) {
+		// Failsafe, avoild querys and fix EXP bug dividing with lower level chars
 		return 0;
+	}
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `child` FROM `%s` WHERE `char_id` = '%d'", char_db, parent_id) )
 		Sql_ShowDebug(inter->sql_handle);
 	else if( SQL_SUCCESS == SQL->NextRow(inter->sql_handle) )
@@ -2766,11 +2780,14 @@ static int char_parse_fromlogin(int fd)
 		chr->login_fd = -1;
 		loginif->on_disconnect();
 		return 0;
-	} else if ( sockt->session[fd]->flag.ping ) {/* we've reached stall time */
-		if( DIFF_TICK(sockt->last_tick, sockt->session[fd]->rdata_tick) > (sockt->stall_time * 2) ) {/* we can't wait any longer */
+	} else if ( sockt->session[fd]->flag.ping ) {
+		/* we've reached stall time */
+		if( DIFF_TICK(sockt->last_tick, sockt->session[fd]->rdata_tick) > (sockt->stall_time * 2) ) {
+			/* we can't wait any longer */
 			sockt->eof(fd);
 			return 0;
-		} else if( sockt->session[fd]->flag.ping != 2 ) { /* we haven't sent ping out yet */
+		} else if( sockt->session[fd]->flag.ping != 2 ) {
+			/* we haven't sent ping out yet */
 			chr->ping_login_server(fd);
 			sockt->session[fd]->flag.ping = 2;
 		}
@@ -2800,17 +2817,13 @@ static int char_parse_fromlogin(int fd)
 			case 0x2713:
 				if (RFIFOREST(fd) < 33)
 					return 0;
-			{
 				chr->parse_fromlogin_auth_state(fd);
-			}
 			break;
 
 			case 0x2717: // account data
-			{
 				if (RFIFOREST(fd) < 72)
 					return 0;
 				chr->parse_fromlogin_account_data(fd);
-			}
 			break;
 
 			// login-server alive packet
@@ -2824,10 +2837,8 @@ static int char_parse_fromlogin(int fd)
 			case 0x2723:
 				if (RFIFOREST(fd) < 7)
 					return 0;
-			{
 				if (chr->parse_fromlogin_changesex_reply(fd))
 					return 0;
-			}
 			break;
 
 			// reply to an account_reg2 registry request
@@ -2848,16 +2859,12 @@ static int char_parse_fromlogin(int fd)
 			case 0x2734:
 				if (RFIFOREST(fd) < 6)
 					return 0;
-			{
 				chr->parse_fromlogin_kick(fd);
-			}
 			break;
 
 			// ip address update signal from login server
 			case 0x2735:
-			{
 				chr->parse_fromlogin_update_ip(fd);
-			}
 			break;
 
 			case 0x2736: // Failed accinfo lookup to forward to mapserver
@@ -3229,7 +3236,8 @@ static void char_parse_frommap_set_users(int fd)
 {
 	//TODO: When data mismatches memory, update guild/party online/offline states.
 	chr->map_server.users = RFIFOW(fd,4);
-	chr->online_char_db->foreach(chr->online_char_db, chr->db_setoffline); //Set all chars from this server as 'unknown'
+	//Set all chars from this server as 'unknown'
+	chr->online_char_db->foreach(chr->online_char_db, chr->db_setoffline);
 	for (int i = 0; i < chr->map_server.users; i++) {
 		int aid = RFIFOL(fd,6+i*8);
 		int cid = RFIFOL(fd,6+i*8+4);
@@ -3365,7 +3373,8 @@ static void char_parse_frommap_change_email(int fd)
 {
 	if (chr->login_fd > 0) { // don't send request if no login-server
 		WFIFOHEAD(chr->login_fd,86);
-		memcpy(WFIFOP(void *, chr->login_fd, 0), RFIFOP(void *, fd, 0), 86); // 0x2722 <account_id>.L <actual_e-mail>.40B <new_e-mail>.40B
+		// 0x2722 <account_id>.L <actual_e-mail>.40B <new_e-mail>.40B
+		memcpy(WFIFOP(void *, chr->login_fd, 0), RFIFOP(void *, fd, 0), 86);
 		WFIFOW(chr->login_fd,0) = 0x2722;
 		WFIFOSET(chr->login_fd,86);
 	}
@@ -3507,9 +3516,12 @@ static void char_parse_frommap_change_account(int fd)
 	int result = 0; // 0-login-server request done, 1-player not found, 2-gm level too low, 3-login-server offline
 	char esc_name[NAME_LENGTH*2+1];
 
-	int acc = RFIFOL(fd,2); // account_id of who ask (-1 if server itself made this request)
-	const char *name = RFIFOP(char *, fd, 6); // name of the target character
-	enum zh_char_ask_name_type type = (enum zh_char_ask_name_type)RFIFOW(fd,30); // type of operation: 1-block, 2-ban, 3-unblock, 4-unban, 5 changesex, 6 charban, 7 charunban
+	// account_id of who ask (-1 if server itself made this request)
+	int acc = RFIFOL(fd,2);
+	// name of the target character
+	const char *name = RFIFOP(char *, fd, 6);
+	// type of operation: 1-block, 2-ban, 3-unblock, 4-unban, 5 changesex, 6 charban, 7 charunban
+	enum zh_char_ask_name_type type = (enum zh_char_ask_name_type)RFIFOW(fd,30);
 	short year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0;
 	int sex = SEX_MALE;
 	if (type == CHAR_ASK_NAME_BAN || type == CHAR_ASK_NAME_CHARBAN) {
@@ -3583,7 +3595,8 @@ static void char_parse_frommap_change_account(int fd)
 	}
 
 	// send answer if a player ask, not if the server ask
-	if (acc != -1 && type != CHAR_ASK_NAME_CHANGESEX && type != CHAR_ASK_NAME_CHANGECHARSEX) { // Don't send answer for changesex
+	if (acc != -1 && type != CHAR_ASK_NAME_CHANGESEX && type != CHAR_ASK_NAME_CHANGECHARSEX) {
+		// Don't send answer for changesex
 		chr->ask_name_ack(fd, acc, name, type, result);
 	}
 }
@@ -3612,9 +3625,9 @@ static void char_parse_frommap_fame_list(int fd)
 	ARR_FIND(0, size, player_pos, list[player_pos].id == cid);// position of the player
 	ARR_FIND(0, size, fame_pos, list[fame_pos].fame <= fame);// where the player should be
 
-	if( player_pos == size && fame_pos == size )
-		;// not on list and not enough fame to get on it
-	else if( fame_pos == player_pos ) {
+	if( player_pos == size && fame_pos == size ) {
+		; // not on list and not enough fame to get on it
+	} else if( fame_pos == player_pos ) {
 		// same position
 		list[player_pos].fame = fame;
 		chr->update_fame_list(type, player_pos, fame);
@@ -3743,7 +3756,8 @@ static void char_map_auth_ok(int fd, int account_id, struct char_auth_node *node
 	{
 		WFIFOL(fd,8) = node->login_id1;
 		WFIFOL(fd,12) = node->login_id2;
-		WFIFOL(fd,16) = (uint32)node->expiration_time; // FIXME: will wrap to negative after "19-Jan-2038, 03:14:07 AM GMT"
+		// FIXME: will wrap to negative after "19-Jan-2038, 03:14:07 AM GMT"
+		WFIFOL(fd,16) = (uint32)node->expiration_time;
 		WFIFOL(fd,20) = node->group_id;
 		WFIFOB(fd,24) = node->changing_mapservers;
 	}
@@ -3807,10 +3821,11 @@ static void char_parse_frommap_auth_request(int fd)
 		node != NULL &&
 		node->account_id == account_id &&
 		node->char_id == char_id &&
-		node->login_id1 == login_id1 /*&&
-		node->sex == sex &&
-		node->ip == ip*/ )
-	{// auth ok
+		node->login_id1 == login_id1
+		/* && node->sex == sex */
+		/* && node->ip == ip */ )
+	{
+		// auth ok
 		if( cd->sex == 99 )
 			cd->sex = sex;
 
@@ -3842,8 +3857,8 @@ static void char_parse_frommap_scdata_update(int fd)
 	int val4 = RFIFOL(fd, 24);
 	short type = RFIFOW(fd, 10);
 
-	if (SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s`"
-			" (`account_id`,`char_id`,`type`,`tick`,`total_tick`,`val1`,`val2`,`val3`,`val4`)"
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s`" //
+			" (`account_id`,`char_id`,`type`,`tick`,`total_tick`,`val1`,`val2`,`val3`,`val4`)" //
 			" VALUES ('%d','%d','%d','%d','%d','%d','%d','%d','%d')",
 			scdata_db, account_id, char_id, type, INFINITE_DURATION, INFINITE_DURATION, val1, val2, val3, val4)
 	) {
@@ -3914,9 +3929,7 @@ static int char_parse_frommap(int fd)
 			case 0x2afc: //Packet command is now used for sc_data request. [Skotlex]
 				if (RFIFOREST(fd) < 10)
 					return 0;
-			{
 				chr->parse_frommap_request_scdata(fd);
-			}
 			break;
 
 			case 0x2afe: //set MAP user count
@@ -3928,34 +3941,26 @@ static int char_parse_frommap(int fd)
 			case 0x2aff: //set MAP users
 				if (RFIFOREST(fd) < 6 || RFIFOREST(fd) < RFIFOW(fd,2))
 					return 0;
-			{
 				chr->parse_frommap_set_users(fd);
-			}
 			break;
 
 			case 0x2b01: // Receive character data from map-server for saving
 				if (RFIFOREST(fd) < 4 || RFIFOREST(fd) < RFIFOW(fd,2))
 					return 0;
-			{
 				chr->parse_frommap_save_character(fd);
 
-			}
 			break;
 
 			case 0x2b02: // req char selection
 				if( RFIFOREST(fd) < 22 )
 					return 0;
-			{
 				chr->parse_frommap_char_select_req(fd);
-			}
 			break;
 
 			case 0x2b07: // Remove RFIFOL(fd,6) (friend_id) from RFIFOL(fd,2) (char_id) friend list [Ind]
 				if (RFIFOREST(fd) < 10)
 					return 0;
-				{
-					chr->parse_frommap_remove_friend(fd);
-				}
+				chr->parse_frommap_remove_friend(fd);
 			break;
 
 			case 0x2b08: // char name request
@@ -3974,17 +3979,13 @@ static int char_parse_frommap(int fd)
 			case 0x2b0e: // Request from map-server to change an account's or character's status (accounts will just be forwarded to login server)
 				if (RFIFOREST(fd) < 44)
 					return 0;
-			{
 				chr->parse_frommap_change_account(fd);
-			}
 			break;
 
 			case 0x2b10: // Update and send fame ranking list
 				if (RFIFOREST(fd) < 11)
 					return 0;
-			{
 				chr->parse_frommap_fame_list(fd);
-			}
 			break;
 
 			// Divorce chars
@@ -3998,9 +3999,7 @@ static int char_parse_frommap(int fd)
 			case 0x2b16: // Receive rates [Wizputer]
 				if( RFIFOREST(fd) < 14 )
 					return 0;
-			{
 				chr->parse_frommap_ragsrvinfo(fd);
-			}
 			break;
 
 			case 0x2b17: // Character disconnected set online 0 [Wizputer]
@@ -4028,9 +4027,7 @@ static int char_parse_frommap(int fd)
 			case 0x2b1c: //Request to save status change data. [Skotlex]
 				if (RFIFOREST(fd) < 4 || RFIFOREST(fd) < RFIFOW(fd,2))
 					return 0;
-			{
 				chr->parse_frommap_save_status_change_data(fd);
-			}
 			break;
 
 			case 0x2b23: // map-server alive packet
@@ -4041,9 +4038,7 @@ static int char_parse_frommap(int fd)
 				if (RFIFOREST(fd) < sizeof(struct PACKET_MAPCHAR_AUTH_REQ))
 					return 0;
 
-			{
 				chr->parse_frommap_auth_request(fd);
-			}
 			break;
 
 			case 0x2736: // ip address update
@@ -4055,18 +4050,14 @@ static int char_parse_frommap(int fd)
 			case 0x2740:
 				if( RFIFOREST(fd) < 28 )
 					return 0;
-				else {
-					chr->parse_frommap_scdata_update(fd);
-				}
+				chr->parse_frommap_scdata_update(fd);
 				break;
 
 			/* individual sc data delete */
 			case 0x2741:
 				if( RFIFOREST(fd) < 12 )
 					return 0;
-				else {
-					chr->parse_frommap_scdata_delete(fd);
-				}
+				chr->parse_frommap_scdata_delete(fd);
 				break;
 
 			case HEADER_API_PROXY_REPLY:
@@ -4153,7 +4144,8 @@ static uint32 char_lan_subnet_check(uint32 ip)
 /// 5 (0x71b): To delete a character you must withdraw from the party.
 /// Any (0x718): An unknown error has occurred.
 static void char_delete2_ack(int fd, int char_id, uint32 result, time_t delete_date)
-{// HC: <0828>.W <char id>.L <Msg:0-5>.L <deleteDate>.L
+{
+	// HC: <0828>.W <char id>.L <Msg:0-5>.L <deleteDate>.L
 	WFIFOHEAD(fd,14);
 	WFIFOW(fd,0) = 0x828;
 	WFIFOL(fd,2) = char_id;
@@ -4185,7 +4177,8 @@ static void char_delete2_accept_actual_ack(int fd, int char_id, uint32 result)
 /// 5 (0x71e): Date of birth do not match.
 /// Any (0x718): An unknown error has occurred.
 static void char_delete2_accept_ack(int fd, int char_id, uint32 result)
-{// HC: <082a>.W <char id>.L <Msg:0-5>.L
+{
+	// HC: <082a>.W <char id>.L <Msg:0-5>.L
 #if PACKETVER_MAIN_NUM >= 20130522 || PACKETVER_RE_NUM >= 20130327 || defined(PACKETVER_ZERO)
 	if( result == 1 ) {
 		struct char_session_data *sd = (struct char_session_data *)sockt->session[fd]->session_data;
@@ -4200,7 +4193,8 @@ static void char_delete2_accept_ack(int fd, int char_id, uint32 result)
 /// 2 (0x719): A database error occurred.
 /// Any (0x718): An unknown error has occurred.
 static void char_delete2_cancel_ack(int fd, int char_id, uint32 result)
-{// HC: <082c>.W <char id>.L <Msg:1-2>.L
+{
+	// HC: <082c>.W <char id>.L <Msg:1-2>.L
 	WFIFOHEAD(fd,10);
 	WFIFOW(fd,0) = 0x82c;
 	WFIFOL(fd,2) = char_id;
@@ -4209,7 +4203,8 @@ static void char_delete2_cancel_ack(int fd, int char_id, uint32 result)
 }
 
 static void char_delete2_req(int fd, struct char_session_data *sd)
-{// CH: <0827>.W <char id>.L
+{
+	// CH: <0827>.W <char id>.L
 	int char_id, i;
 	char* data;
 	time_t delete_date;
@@ -4219,7 +4214,8 @@ static void char_delete2_req(int fd, struct char_session_data *sd)
 
 	ARR_FIND( 0, MAX_CHARS, i, sd->found_char[i] == char_id );
 	if( i == MAX_CHARS )
-	{// character not found
+	{
+		// character not found
 		chr->delete2_ack(fd, char_id, 3, 0); // 3: A database error occurred
 		return;
 	}
@@ -4233,7 +4229,8 @@ static void char_delete2_req(int fd, struct char_session_data *sd)
 
 	SQL->GetData(inter->sql_handle, 0, &data, NULL); delete_date = strtoul(data, NULL, 10);
 
-	if( delete_date ) {// character already queued for deletion
+	if( delete_date ) {
+		// character already queued for deletion
 		chr->delete2_ack(fd, char_id, 0, 0); // 0: An unknown error occurred
 		return;
 	}
@@ -4280,7 +4277,8 @@ static void char_delete2_req(int fd, struct char_session_data *sd)
 }
 
 static void char_delete2_accept(int fd, struct char_session_data *sd)
-{// CH: <0829>.W <char id>.L <birth date:YYMMDD>.6B
+{
+	// CH: <0829>.W <char id>.L <birth date:YYMMDD>.6B
 	char birthdate[8+1];
 	int char_id, i;
 	int base_level;
@@ -4305,13 +4303,15 @@ static void char_delete2_accept(int fd, struct char_session_data *sd)
 
 	ARR_FIND( 0, MAX_CHARS, i, sd->found_char[i] == char_id );
 	if( i == MAX_CHARS )
-	{// character not found
+	{
+		// character not found
 		chr->delete2_accept_ack(fd, char_id, 3); // 3: A database error occurred
 		return;
 	}
 
 	if( SQL_SUCCESS != SQL->Query(inter->sql_handle, "SELECT `base_level`,`delete_date` FROM `%s` WHERE `char_id`='%d'", char_db, char_id) || SQL_SUCCESS != SQL->NextRow(inter->sql_handle) )
-	{// data error
+	{
+		// data error
 		Sql_ShowDebug(inter->sql_handle);
 		chr->delete2_accept_ack(fd, char_id, 3); // 3: A database error occurred
 		return;
@@ -4321,13 +4321,15 @@ static void char_delete2_accept(int fd, struct char_session_data *sd)
 	SQL->GetData(inter->sql_handle, 1, &data, NULL); delete_date = strtoul(data, NULL, 10);
 
 	if( !delete_date || delete_date>time(NULL) )
-	{// not queued or delay not yet passed
+	{
+		// not queued or delay not yet passed
 		chr->delete2_accept_ack(fd, char_id, 4); // 4: Deleting not yet possible time
 		return;
 	}
 
 	if( strcmp(sd->birthdate+2, birthdate) )  // +2 to cut off the century
-	{// birth date is wrong
+	{
+		// birth date is wrong
 		chr->delete2_accept_ack(fd, char_id, 5); // 5: Date of birth do not match
 		return;
 	}
@@ -4352,7 +4354,8 @@ static void char_delete2_accept(int fd, struct char_session_data *sd)
 }
 
 static void char_delete2_cancel(int fd, struct char_session_data *sd)
-{// CH: <082b>.W <char id>.L
+{
+	// CH: <082b>.W <char id>.L
 	int char_id, i;
 
 	nullpo_retv(sd);
@@ -4360,7 +4363,8 @@ static void char_delete2_cancel(int fd, struct char_session_data *sd)
 
 	ARR_FIND( 0, MAX_CHARS, i, sd->found_char[i] == char_id );
 	if( i == MAX_CHARS )
-	{// character not found
+	{
+		// character not found
 		chr->delete2_cancel_ack(fd, char_id, 2); // 2: A database error occurred
 		return;
 	}
@@ -4425,9 +4429,11 @@ static void char_parse_char_connect(int fd, struct char_session_data *sd, uint32
 	if( node != NULL &&
 		node->account_id == account_id &&
 		node->login_id1  == login_id1 &&
-		node->login_id2  == login_id2 /*&&
-		node->ip         == ipl*/ )
-	{// authentication found (coming from map server)
+		node->login_id2  == login_id2
+		/*&& node->ip         == ipl*/
+	) {
+		// authentication found (coming from map server)
+
 		/* restrictions apply */
 		if( chr->server_type == CST_MAINTENANCE && node->group_id < char_maintenance_min_group_id ) {
 			chr->auth_error(fd, 0);
@@ -4444,7 +4450,9 @@ static void char_parse_char_connect(int fd, struct char_session_data *sd, uint32
 		chr->auth_ok(fd, sd);
 	}
 	else
-	{// authentication not found (coming from login server)
+	{
+		// authentication not found (coming from login server)
+
 		if (chr->login_fd > 0) { // don't send request if no login-server
 			loginif->auth(fd, sd, ipl);
 		} else { // if no login-server, we must refuse connection
@@ -4498,12 +4506,12 @@ static bool char_find_available_map_fallback(struct mmo_charstatus *cd)
 		int16 x;
 		int16 y;
 	} default_maps[] = {
-		{ MAP_PRONTERA, 273, 354, },
-		{ MAP_GEFFEN, 120, 100, },
-		{ MAP_MORROC, 160, 94, },
-		{ MAP_ALBERTA, 116, 57, },
-		{ MAP_PAYON, 87, 117, },
-		{ MAP_IZLUDE, 94, 103, },
+		{ MAP_PRONTERA, 273, 354 },
+		{ MAP_GEFFEN, 120, 100 },
+		{ MAP_MORROC, 160, 94 },
+		{ MAP_ALBERTA, 116, 57 },
+		{ MAP_PAYON, 87, 117 },
+		{ MAP_IZLUDE, 94, 103 },
 	};
 
 	for (int i = 0; i < ARRAYLENGTH(default_maps); i++) {
@@ -4569,7 +4577,7 @@ static void char_parse_char_select(int fd, struct char_session_data *sd, uint32 
 		return;
 	}
 
-	/* set char as online prior to loading its data so 3rd party applications will realize the sql data is not reliable */
+	// set char as online prior to loading its data so 3rd party applications will realize the sql data is not reliable
 	chr->set_char_online(true, char_id, sd->account_id, false);
 	loginif->set_char_online(char_id, sd->account_id);
 	if (!chr->mmo_char_fromsql(char_id, &char_dat, true)) { /* failed? set it back offline */
@@ -4590,14 +4598,12 @@ static void char_parse_char_select(int fd, struct char_session_data *sd, uint32 
 		// FIXME: Why are we re-escaping the name if it was already escaped in rename/make_new_char? [Panikon]
 		SQL->EscapeStringLen(inter->sql_handle, esc_name, char_dat.name, strnlen(char_dat.name, NAME_LENGTH));
 		if (SQL_ERROR == SQL->Query(inter->sql_handle,
-					"INSERT INTO `%s`("
-					" `time`, `char_msg`, `account_id`, `char_id`, `char_num`, `class`, `name`,"
-					" `str`, `agi`, `vit`, `int`, `dex`, `luk`,"
-					" `hair`, `hair_color`"
-					") VALUES ("
-					" NOW(), 'char select', '%d', '%d', '%d', '%d', '%s',"
-					" '%d', '%d', '%d', '%d', '%d', '%d',"
-					" '%d', '%d')",
+					"INSERT INTO `%s`(" //
+					" `time`, `char_msg`, `account_id`, `char_id`, `char_num`, `class`, `name`," //
+					" `str`, `agi`, `vit`, `int`, `dex`, `luk`, `hair`, `hair_color`" //
+					") VALUES (" //
+					" NOW(), 'char select', '%d', '%d', '%d', '%d', '%s'," //
+					" '%d', '%d', '%d', '%d', '%d', '%d', '%d', '%d')",
 					charlog_db,
 					sd->account_id, cd->char_id, slot, char_dat.class_, esc_name,
 					char_dat.str, char_dat.agi, char_dat.vit, char_dat.int_, char_dat.dex, char_dat.luk,
@@ -4660,11 +4666,16 @@ static void char_creation_failed(int fd, int result)
 	/* 0x0B = This service is only available for premium users. */
 	/* 0x0C = Character name is invalid. */
 	switch (result) {
-		case -1: WFIFOB(fd,2) = 0x00; break; // 'Charname already exists'
-		case -2: WFIFOB(fd,2) = 0xFF; break; // 'Char creation denied'
-		case -3: WFIFOB(fd,2) = 0x01; break; // 'You are underaged'
-		case -4: WFIFOB(fd,2) = 0x03; break; // 'You are not eligible to open the Character Slot.'
-		case -5: WFIFOB(fd,2) = 0x02; break; // 'Symbols in Character Names are forbidden'
+		case -1: // 'Charname already exists'
+		WFIFOB(fd,2) = 0x00; break;
+		case -2: // 'Char creation denied'
+		WFIFOB(fd,2) = 0xFF; break;
+		case -3: // 'You are underaged'
+		WFIFOB(fd,2) = 0x01; break;
+		case -4: // 'You are not eligible to open the Character Slot.'
+		WFIFOB(fd,2) = 0x03; break;
+		case -5: // 'Symbols in Character Names are forbidden'
+		WFIFOB(fd,2) = 0x02; break;
 
 		default:
 			ShowWarning("chr->parse_char: Unknown result received from chr->make_new_char_sql!\n");
@@ -5091,40 +5102,35 @@ static int char_parse_char(int fd)
 			case 0x65:
 				if( RFIFOREST(fd) < 17 )
 					return 0;
-			{
 				chr->parse_char_connect(fd, sd, ipl);
-			}
 			break;
 
 			// char select
 			case 0x66:
 				FIFOSD_CHECK(3);
-			{
 				chr->parse_char_select(fd, sd, ipl);
-			}
 			break;
 
 			// create new char
 #if PACKETVER >= 20151001
 			// S 0a39 <name>.24B <slot>.B <hair color>.W <hair style>.W <starting job class ID>.W <Unknown>.(W or 2 B's)??? <sex>.B
 			case 0xa39:
-			{
 				FIFOSD_CHECK(36);
+				chr->parse_char_create_new_char(fd, sd);
+			break;
 #elif PACKETVER >= 20120307
 			// S 0970 <name>.24B <slot>.B <hair color>.W <hair style>.W
 			case 0x970:
-			{
 				FIFOSD_CHECK(31);
+				chr->parse_char_create_new_char(fd, sd);
+			break;
 #else
 			// S 0067 <name>.24B <str>.B <agi>.B <vit>.B <int>.B <dex>.B <luk>.B <slot>.B <hair color>.W <hair style>.W
 			case 0x67:
-			{
 				FIFOSD_CHECK(37);
-#endif
-
 				chr->parse_char_create_new_char(fd, sd);
-			}
 			break;
+#endif
 
 			// delete char
 			case 0x68:
@@ -5132,9 +5138,7 @@ static int char_parse_char(int fd)
 			case 0x1fb:
 				if (cmd == 0x68) FIFOSD_CHECK(46);
 				if (cmd == 0x1fb) FIFOSD_CHECK(56);
-			{
 				chr->parse_char_delete_char(fd, sd, cmd);
-			}
 			break;
 
 			// client keep-alive packet (every 12 seconds)
@@ -5148,18 +5152,14 @@ static int char_parse_char(int fd)
 			// R 08fc <char ID>.l <new name>.24B
 			case 0x8fc:
 				FIFOSD_CHECK(30);
-				{
 					chr->parse_char_rename_char(fd, sd);
-				}
 				break;
 
 			// char rename request
 			// R 028d <account ID>.l <char ID>.l <new name>.24B
 			case 0x28d:
 				FIFOSD_CHECK(34);
-				{
 					chr->parse_char_rename_char2(fd, sd);
-				}
 				break;
 			//Confirm change name.
 			// 0x28f <char_id>.L
@@ -5170,9 +5170,7 @@ static int char_parse_char(int fd)
 				// 3: You have failed to change this character's name.
 				// 4: Another user is using this character name, so please select another one.
 				FIFOSD_CHECK(6);
-				{
-					chr->parse_char_rename_char_confirm(fd, sd);
-				}
+				chr->parse_char_rename_char_confirm(fd, sd);
 				break;
 
 			// captcha code request (not implemented)
@@ -5209,9 +5207,7 @@ static int char_parse_char(int fd)
 			case 0x2af8:
 				if (RFIFOREST(fd) < 60)
 					return 0;
-			{
 				chr->parse_char_login_map_server(fd, ipl);
-			}
 			return 0; // avoid processing of follow-up packets here
 
 			// checks the entered pin
@@ -5246,9 +5242,7 @@ static int char_parse_char(int fd)
 			/* 0x8d4 <from>.W <to>.W <unused>.W (2+2+2+2) */
 			case 0x8d4:
 				FIFOSD_CHECK(8);
-				{
-					chr->parse_char_move_character(fd, sd);
-				}
+				chr->parse_char_move_character(fd, sd);
 			break;
 
 			// unknown packet received
@@ -5370,10 +5364,14 @@ static int char_online_data_cleanup_sub(union DBKey key, struct DBData *data, va
 {
 	struct online_char_data *character = (struct online_char_data *)DB->data2ptr(data);
 	nullpo_ret(character);
-	if (character->fd != -1)
-		return 0; //Character still connected
-	if (character->mapserver_connection == OCS_UNKNOWN) //Unknown server.. set them offline
+	if (character->fd != -1) {
+		//Character still connected
+		return 0;
+	}
+	if (character->mapserver_connection == OCS_UNKNOWN) {
+		//Unknown server.. set them offline
 		chr->set_char_offline(character->char_id, character->account_id);
+	}
 	if (character->mapserver_connection != OCS_CONNECTED) {
 		//Free data from players that have not been online for a while.
 		chr->online_char_destroy(character);
@@ -6053,7 +6051,8 @@ static bool char_config_read_permission(const char *filename, const struct confi
  * @param type[in]           String containing the type of IP being set (for logging purposes).
  * @param value[in]          New ip value to parse.
  * @param out_ip[in]         Pointer to numeric value that will be changed.
- * @param out_ip_str[in,out] Pointer to str value that will be changed (expected to be already initialized, to display previous value, if any).
+ * @param out_ip_str[in,out] Pointer to str value that will be changed (expected to be already initialized, to display
+ *                           previous value, if any).
  *
  * @retval false in case of error.
  */

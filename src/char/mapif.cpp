@@ -90,7 +90,8 @@ static void mapif_server_reset(void)
 {
 	if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `index`='%d'", ragsrvinfo_db, chr->map_server.fd))
 		Sql_ShowDebug(inter->sql_handle);
-	chr->online_char_db->foreach(chr->online_char_db, chr->db_setoffline); //Tag relevant chars as 'in disconnected' server.
+	//Tag relevant chars as 'in disconnected' server.
+	chr->online_char_db->foreach(chr->online_char_db, chr->db_setoffline);
 	mapif->server_destroy();
 	mapif->server_init();
 }
@@ -187,7 +188,8 @@ static void mapif_parse_auction_requestlist(int fd)
 	char searchtext[NAME_LENGTH];
 	int char_id = RFIFOL(fd, 4), len = sizeof(struct auction_data);
 	int price = RFIFOL(fd, 10);
-	short type = RFIFOW(fd, 8), page = std::max((short)1, (short)RFIFOW(fd, 14)); // FIXME: There's no need for these vars to be smaller than int
+	// FIXME: There's no need for these vars to be smaller than int
+	short type = RFIFOW(fd, 8), page = std::max((short)1, (short)RFIFOW(fd, 14));
 	unsigned char buf[5 * sizeof(struct auction_data)];
 	struct DBIterator *iter = db_iterator(inter_auction->db);
 	short i = 0, j = 0, pages = 1;
@@ -739,7 +741,8 @@ static int mapif_parse_CreateGuild(int fd, int account_id, const char *name, con
 // Return guild info to client
 static int mapif_parse_GuildInfo(int fd, int guild_id)
 {
-	struct guild * g = inter_guild->fromsql(guild_id); //We use this because on start-up the info of castle-owned guilds is required. [Skotlex]
+	//We use this because on start-up the info of castle-owned guilds is required. [Skotlex]
+	struct guild * g = inter_guild->fromsql(guild_id);
 	if (g != NULL) {
 		if (!inter_guild->calcinfo(g))
 			mapif->guild_info(g);
