@@ -336,6 +336,16 @@ typedef uintptr_t uintptr;
 #define GCC11ATTR(str)
 #endif // defined(__GNUC__) && !defined(__clang__)
 
+// Pragma pack macro for platforms that support it (excluding Solaris and NetBSD < 6, which accept the packed attribute)
+#if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000)
+  #define PRAGMA_PACK_(x)     _Pragma(#x)
+  #define PRAGMA_PACK_PUSH(n) PRAGMA_PACK_(pack(push, n))
+  #define PRAGMA_PACK_POP()   PRAGMA_PACK_(pack(pop))
+#else
+  #define PRAGMA_PACK_PUSH(n)
+  #define PRAGMA_PACK_POP()
+#endif
+
 //////////////////////////////////////////////////////////////////////////
 // Additional printf specifiers
 #if defined(_MSC_VER)
