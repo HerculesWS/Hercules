@@ -1,23 +1,23 @@
 /**
-* This file is part of Hercules.
-* http://herc.ws - http://github.com/HerculesWS/Hercules
-*
-* Copyright (C) 2017-2026 Hercules Dev Team
-* Copyright (C) Smokexyz
-*
-* Hercules is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2017-2026 Hercules Dev Team
+ * Copyright (C) Smokexyz
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #define HERCULES_CORE
 
 #include "int_achievement.h"
@@ -58,14 +58,16 @@ static int inter_achievement_tosql(int char_id, struct char_achievements *cp, co
 	Assert_ret(char_id > 0);
 
 	StrBuf->Init(&buf);
-	StrBuf->Printf(&buf, "REPLACE INTO `%s` (`char_id`, `ach_id`, `completed_at`, `rewarded_at`", char_achievement_db);
+	StrBuf->Printf(
+	    &buf, "REPLACE INTO `%s` (`char_id`, `ach_id`, `completed_at`, `rewarded_at`", char_achievement_db
+	);
 	for (i = 0; i < MAX_ACHIEVEMENT_OBJECTIVES; i++)
 		StrBuf->Printf(&buf, ", `obj_%d`", i);
 	StrBuf->AppendStr(&buf, ") VALUES ");
 
 	for (i = 0; i < VECTOR_LENGTH(*p); i++) {
-		int j = 0;
-		bool save = false;
+		int j                  = 0;
+		bool save              = false;
 		struct achievement *pa = &VECTOR_INDEX(*p, i), *cpa = NULL;
 
 		ARR_FIND(0, VECTOR_LENGTH(*cp), j, ((cpa = &VECTOR_INDEX(*cp, j)) && cpa->id == pa->id));
@@ -76,7 +78,10 @@ static int inter_achievement_tosql(int char_id, struct char_achievements *cp, co
 			save = true;
 
 		if (save) {
-			StrBuf->Printf(&buf, "%s('%d', '%d', '%" PRId64 "', '%" PRId64 "'", rows ?", ":"", char_id, pa->id, (int64)pa->completed_at, (int64)pa->rewarded_at);
+			StrBuf->Printf(
+			    &buf, "%s('%d', '%d', '%" PRId64 "', '%" PRId64 "'", rows ? ", " : "", char_id, pa->id,
+			    (int64)pa->completed_at, (int64)pa->rewarded_at
+			);
 			for (j = 0; j < MAX_ACHIEVEMENT_OBJECTIVES; j++)
 				StrBuf->Printf(&buf, ", '%d'", pa->objective[j]);
 			StrBuf->AppendStr(&buf, ")");
@@ -135,16 +140,19 @@ static bool inter_achievement_fromsql(int char_id, struct char_achievements *cp)
 
 	VECTOR_CLEAR(*cp);
 
-	if ((num_rows = (int) SQL->NumRows(inter->sql_handle)) != 0) {
+	if ((num_rows = (int)SQL->NumRows(inter->sql_handle)) != 0) {
 		int j = 0;
 
 		VECTOR_ENSURE(*cp, num_rows, 1);
 
 		for (i = 0; i < num_rows && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); i++) {
 			struct achievement t_ach{};
-			SQL->GetData(inter->sql_handle, 0, &data, NULL); t_ach.id = atoi(data);
-			SQL->GetData(inter->sql_handle, 1, &data, NULL); t_ach.completed_at = atoi(data);
-			SQL->GetData(inter->sql_handle, 2, &data, NULL); t_ach.rewarded_at = atoi(data);
+			SQL->GetData(inter->sql_handle, 0, &data, NULL);
+			t_ach.id = atoi(data);
+			SQL->GetData(inter->sql_handle, 1, &data, NULL);
+			t_ach.completed_at = atoi(data);
+			SQL->GetData(inter->sql_handle, 2, &data, NULL);
+			t_ach.rewarded_at = atoi(data);
 			/* Objectives */
 			for (j = 0; j < MAX_ACHIEVEMENT_OBJECTIVES; j++) {
 				SQL->GetData(inter->sql_handle, j + 3, &data, NULL);
@@ -174,15 +182,15 @@ static int inter_achievement_parse_frommap(int fd)
 {
 	RFIFOHEAD(fd);
 
-	switch (RFIFOW(fd,0)) {
-		case 0x3012:
-			mapif->pLoadAchievements(fd);
-			break;
-		case 0x3013:
-			mapif->pSaveAchievements(fd);
-			break;
-		default:
-			return 0;
+	switch (RFIFOW(fd, 0)) {
+	case 0x3012:
+		mapif->pLoadAchievements(fd);
+		break;
+	case 0x3013:
+		mapif->pSaveAchievements(fd);
+		break;
+	default:
+		return 0;
 	}
 
 	return 1;
@@ -229,7 +237,9 @@ static int inter_achievement_char_achievements_clear(union DBKey key, struct DBD
  */
 static void inter_achievement_sql_final(void)
 {
-	inter_achievement->char_achievements->destroy(inter_achievement->char_achievements, inter_achievement->char_achievements_clear);
+	inter_achievement->char_achievements->destroy(
+	    inter_achievement->char_achievements, inter_achievement->char_achievements_clear
+	);
 }
 
 /**
@@ -237,16 +247,16 @@ static void inter_achievement_sql_final(void)
  */
 void inter_achievement_defaults(void)
 {
-	inter_achievement = &inter_achievement_s;
+	inter_achievement                           = &inter_achievement_s;
 	/* */
 	inter_achievement->ensure_char_achievements = inter_achievement_ensure_char_achievements;
 	/* */
-	inter_achievement->sql_init = inter_achievement_sql_init;
-	inter_achievement->sql_final = inter_achievement_sql_final;
+	inter_achievement->sql_init                 = inter_achievement_sql_init;
+	inter_achievement->sql_final                = inter_achievement_sql_final;
 	/* */
-	inter_achievement->tosql = inter_achievement_tosql;
-	inter_achievement->fromsql = inter_achievement_fromsql;
+	inter_achievement->tosql                    = inter_achievement_tosql;
+	inter_achievement->fromsql                  = inter_achievement_fromsql;
 	/* */
-	inter_achievement->parse_frommap = inter_achievement_parse_frommap;
-	inter_achievement->char_achievements_clear = inter_achievement_char_achievements_clear;
+	inter_achievement->parse_frommap            = inter_achievement_parse_frommap;
+	inter_achievement->char_achievements_clear  = inter_achievement_char_achievements_clear;
 }

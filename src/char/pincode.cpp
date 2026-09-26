@@ -42,7 +42,6 @@ struct pincode_interface *pincode;
 
 static void pincode_handle(int fd, struct char_session_data *sd)
 {
-
 	nullpo_retv(sd);
 
 	struct online_char_data *character = (struct online_char_data *)idb_get(chr->online_char_db, sd->account_id);
@@ -208,7 +207,7 @@ static void pincode_makestate(int fd, struct char_session_data *sd, enum pincode
 	nullpo_retv(sd);
 
 	WFIFOHEAD(fd, 8);
-	WFIFOW(fd, 0) = 0x8bb;
+	WFIFOW(fd, 0) = 0x8BB;
 	WFIFOW(fd, 2) = state;
 	WFIFOL(fd, 4) = sd->pincode_seed;
 	WFIFOSET(fd, 8);
@@ -226,7 +225,7 @@ static void pincode_editstate(int fd, struct char_session_data *sd, enum pincode
 	nullpo_retv(sd);
 
 	WFIFOHEAD(fd, 8);
-	WFIFOW(fd, 0) = 0x8bf;
+	WFIFOW(fd, 0) = 0x8BF;
 	WFIFOW(fd, 2) = state;
 	WFIFOL(fd, 4) = sd->pincode_seed = rnd() % 0xFFFF;
 	WFIFOSET(fd, 8);
@@ -246,10 +245,10 @@ static void pincode_loginstate(int fd, struct char_session_data *sd, enum pincod
 	nullpo_retv(sd);
 
 	WFIFOHEAD(fd, 12);
-	WFIFOW(fd, 0) = 0x8b9;
+	WFIFOW(fd, 0) = 0x8B9;
 	WFIFOL(fd, 2) = sd->pincode_seed = rnd() % 0xFFFF;
-	WFIFOL(fd, 6) = sd->account_id;
-	WFIFOW(fd, 10) = state;
+	WFIFOL(fd, 6)                    = sd->account_id;
+	WFIFOW(fd, 10)                   = state;
 	WFIFOSET(fd, 12);
 }
 
@@ -264,17 +263,19 @@ static void pincode_loginstate(int fd, struct char_session_data *sd, enum pincod
 // 8 = pincode was incorrect
 // [4144] pincode_loginstate2 can replace pincode_loginstate,
 // but kro using pincode_loginstate2 only for send wrong pin error or locked after 3 pins wrong
-static void pincode_loginstate2(int fd, struct char_session_data *sd, enum pincode_login_response state, enum pincode_login_response2 flag)
+static void pincode_loginstate2(
+    int fd, struct char_session_data *sd, enum pincode_login_response state, enum pincode_login_response2 flag
+)
 {
 #if PACKETVER_MAIN_NUM >= 20180124 || PACKETVER_RE_NUM >= 20180124 || PACKETVER_ZERO_NUM >= 20180131
 	nullpo_retv(sd);
 
 	WFIFOHEAD(fd, 13);
-	WFIFOW(fd, 0) = 0xae9;
+	WFIFOW(fd, 0) = 0xAE9;
 	WFIFOL(fd, 2) = sd->pincode_seed = rnd() % 0xFFFF;
-	WFIFOL(fd, 6) = sd->account_id;
-	WFIFOW(fd, 10) = state;
-	WFIFOW(fd, 12) = flag;
+	WFIFOL(fd, 6)                    = sd->account_id;
+	WFIFOW(fd, 10)                   = state;
+	WFIFOW(fd, 12)                   = flag;
 	WFIFOSET(fd, 13);
 #endif
 }
@@ -303,16 +304,16 @@ static void pincode_decrypt(unsigned int userSeed, char *pin)
 {
 	nullpo_retv(pin);
 
-	unsigned char tab[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+	unsigned char tab[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
 	for (int i = 1; i < 10; i++) {
 		int pos;
 		userSeed = pincode->baseSeed + userSeed * pincode->multiplier;
-		pos = userSeed % (i + 1);
+		pos      = userSeed % (i + 1);
 		if (i != pos) {
-			tab[i] ^= tab[pos];
+			tab[i]   ^= tab[pos];
 			tab[pos] ^= tab[i];
-			tab[i] ^= tab[pos];
+			tab[i]   ^= tab[pos];
 		}
 	}
 
@@ -338,7 +339,7 @@ static void pincode_decrypt(unsigned int userSeed, char *pin)
 static bool pincode_config_read(const char *filename, const struct config_t *config, bool imported)
 {
 	const struct config_setting_t *setting = NULL;
-	const struct config_setting_t *temp = NULL;
+	const struct config_setting_t *temp    = NULL;
 
 	nullpo_retr(false, filename);
 	nullpo_retr(false, config);
@@ -364,7 +365,9 @@ static bool pincode_config_read(const char *filename, const struct config_t *con
 
 	if (libconfig->setting_lookup_int(setting, "max_tries", &pincode->maxtry) == CONFIG_TRUE) {
 		if (pincode->maxtry > 3) {
-			ShowWarning("pincode_maxtry is too high (%d); Maximum allowed: 3! Capping to 3...\n",pincode->maxtry);
+			ShowWarning(
+			    "pincode_maxtry is too high (%d); Maximum allowed: 3! Capping to 3...\n", pincode->maxtry
+			);
 			pincode->maxtry = 3;
 		}
 	}
@@ -376,7 +379,8 @@ static bool pincode_config_read(const char *filename, const struct config_t *con
 		}
 	}
 
-	if (libconfig->setting_lookup_bool_real(setting, "check_blacklisted", &pincode->check_blacklist) == CONFIG_FALSE) {
+	if (libconfig->setting_lookup_bool_real(setting, "check_blacklisted", &pincode->check_blacklist)
+	    == CONFIG_FALSE) {
 		if (!imported) {
 			ShowWarning("pincode 'check_blaclisted' not found, defaulting to false...\n");
 			pincode->check_blacklist = false;
@@ -396,7 +400,10 @@ static bool pincode_config_read(const char *filename, const struct config_t *con
 					continue;
 
 				if (strlen(pin) != 4) {
-					ShowError("Wrong size on element %d of blacklist. Desired size = 4, received = %d\n", i, (int)strlen(pin));
+					ShowError(
+					    "Wrong size on element %d of blacklist. Desired size = 4, received = %d\n",
+					    i, (int)strlen(pin)
+					);
 					continue;
 				}
 
@@ -416,7 +423,9 @@ static bool pincode_config_read(const char *filename, const struct config_t *con
 			}
 			VECTOR_CLEAR(duplicate);
 		} else if (!imported) {
-			ShowError("Pincode Blacklist Check is enabled but there's no blacklist setting! Disabling check.\n");
+			ShowError(
+			    "Pincode Blacklist Check is enabled but there's no blacklist setting! Disabling check.\n"
+			);
 			pincode->check_blacklist = false;
 		}
 	}
@@ -441,29 +450,29 @@ void pincode_defaults(void)
 {
 	pincode = &pincode_s;
 
-	pincode->enabled = 0;
-	pincode->changetime = 0;
-	pincode->maxtry = 3;
-	pincode->charselect = 0;
+	pincode->enabled         = 0;
+	pincode->changetime      = 0;
+	pincode->maxtry          = 3;
+	pincode->charselect      = 0;
 	pincode->check_blacklist = false;
-	pincode->multiplier = 0x3498;
-	pincode->baseSeed = 0x881234;
+	pincode->multiplier      = 0x3498;
+	pincode->baseSeed        = 0x881234;
 
-	pincode->init = do_pincode_init;
+	pincode->init  = do_pincode_init;
 	pincode->final = do_pincode_final;
 
-	pincode->handle = pincode_handle;
-	pincode->decrypt = pincode_decrypt;
-	pincode->error = pincode_notifyLoginPinError;
-	pincode->update = pincode_notifyLoginPinUpdate;
-	pincode->makestate = pincode_makestate;
-	pincode->editstate = pincode_editstate;
-	pincode->loginstate = pincode_loginstate;
-	pincode->loginstate2 = pincode_loginstate2;
-	pincode->setnew = pincode_setnew;
-	pincode->change = pincode_change;
+	pincode->handle        = pincode_handle;
+	pincode->decrypt       = pincode_decrypt;
+	pincode->error         = pincode_notifyLoginPinError;
+	pincode->update        = pincode_notifyLoginPinUpdate;
+	pincode->makestate     = pincode_makestate;
+	pincode->editstate     = pincode_editstate;
+	pincode->loginstate    = pincode_loginstate;
+	pincode->loginstate2   = pincode_loginstate2;
+	pincode->setnew        = pincode_setnew;
+	pincode->change        = pincode_change;
 	pincode->isBlacklisted = pincode_isBlacklisted;
-	pincode->compare = pincode_compare;
-	pincode->check = pincode_check;
-	pincode->config_read = pincode_config_read;
+	pincode->compare       = pincode_compare;
+	pincode->check         = pincode_check;
+	pincode->config_read   = pincode_config_read;
 }

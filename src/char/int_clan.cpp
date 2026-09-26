@@ -64,10 +64,12 @@ static int inter_clan_kick_inactive_members(int clan_id, int kick_interval)
 	}
 
 	// Kick Inactive members
-	if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET "
-		"`clan_id` = 0 WHERE `clan_id` = '%d' AND `online` = 0 AND `last_login` < %" PRId64,
-		char_db, clan_id, (int64)(time(NULL) - kick_interval)))
-	{
+	if (SQL_ERROR
+	    == SQL->Query(
+	        inter->sql_handle,
+	        "UPDATE `%s` SET " "`clan_id` = 0 WHERE `clan_id` = '%d' AND `online` = 0 AND `last_login` < %" PRId64,
+	        char_db, clan_id, (int64)(time(NULL) - kick_interval)
+	    )) {
 		Sql_ShowDebug(inter->sql_handle);
 		return 0;
 	}
@@ -103,11 +105,14 @@ static int inter_clan_count_members(int clan_id, int kick_interval)
 	}
 
 	// Count members
-	if (SQL_ERROR == SQL->StmtPrepare(stmt, "SELECT COUNT(*) FROM `%s` WHERE `clan_id` = ? AND `last_login` >= %" PRId64, char_db, (int64)(time(NULL) - kick_interval))
-	 || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT, &clan_id, sizeof(clan_id))
-	 || SQL_ERROR == SQL->StmtExecute(stmt)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_INT, &count, sizeof(count), NULL, NULL)
-	) {
+	if (SQL_ERROR
+	        == SQL->StmtPrepare(
+	            stmt, "SELECT COUNT(*) FROM `%s` WHERE `clan_id` = ? AND `last_login` >= %" PRId64, char_db,
+	            (int64)(time(NULL) - kick_interval)
+	        )
+	    || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT, &clan_id, sizeof(clan_id))
+	    || SQL_ERROR == SQL->StmtExecute(stmt)
+	    || SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_INT, &count, sizeof(count), NULL, NULL)) {
 		SqlStmt_ShowDebug(stmt);
 		SQL->StmtFree(stmt);
 		return 0;
@@ -134,9 +139,13 @@ static int inter_clan_parse_frommap(int fd)
 {
 	RFIFOHEAD(fd);
 
-	switch(RFIFOW(fd, 0)) {
-	case 0x3044: mapif->parse_ClanMemberCount(fd, RFIFOL(fd, 2), RFIFOL(fd, 6)); break;
-	case 0x3045: mapif->parse_ClanMemberKick(fd, RFIFOL(fd, 2), RFIFOL(fd, 6)); break;
+	switch (RFIFOW(fd, 0)) {
+	case 0x3044:
+		mapif->parse_ClanMemberCount(fd, RFIFOL(fd, 2), RFIFOL(fd, 6));
+		break;
+	case 0x3045:
+		mapif->parse_ClanMemberKick(fd, RFIFOL(fd, 2), RFIFOL(fd, 6));
+		break;
 
 	default:
 		return 0;
@@ -150,6 +159,6 @@ void inter_clan_defaults(void)
 	inter_clan = &inter_clan_s;
 
 	inter_clan->kick_inactive_members = inter_clan_kick_inactive_members;
-	inter_clan->count_members = inter_clan_count_members;
-	inter_clan->parse_frommap = inter_clan_parse_frommap;
+	inter_clan->count_members         = inter_clan_count_members;
+	inter_clan->parse_frommap         = inter_clan_parse_frommap;
 }

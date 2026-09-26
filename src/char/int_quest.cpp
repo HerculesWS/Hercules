@@ -55,7 +55,7 @@ static struct quest *inter_quest_fromsql(int char_id, int *count)
 	struct SqlStmt *stmt;
 	StringBuf buf;
 	int i;
-	int sqlerror = SQL_SUCCESS;
+	int sqlerror    = SQL_SUCCESS;
 	int quest_state = 0;
 
 	if (!count)
@@ -71,26 +71,31 @@ static struct quest *inter_quest_fromsql(int char_id, int *count)
 	StrBuf->Init(&buf);
 	StrBuf->AppendStr(&buf, "SELECT `quest_id`, `state`, `time`");
 	for (i = 0; i < MAX_QUEST_OBJECTIVES; i++) {
-		StrBuf->Printf(&buf, ", `count%d`", i+1);
+		StrBuf->Printf(&buf, ", `count%d`", i + 1);
 	}
 	StrBuf->Printf(&buf, " FROM `%s` WHERE `char_id`=?", quest_db);
 
 	memset(&tmp_quest, 0, sizeof(struct quest));
 
 	if (SQL_ERROR == SQL->StmtPrepareStr(stmt, StrBuf->Value(&buf))
-	 || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT, &char_id, sizeof char_id)
-	 || SQL_ERROR == SQL->StmtExecute(stmt)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_INT,  &tmp_quest.quest_id, sizeof tmp_quest.quest_id, NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 1, SQLDT_INT,  &quest_state,        sizeof quest_state,        NULL, NULL)
-	 || SQL_ERROR == SQL->StmtBindColumn(stmt, 2, SQLDT_UINT, &tmp_quest.time,     sizeof tmp_quest.time,     NULL, NULL)
-	) {
+	    || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT, &char_id, sizeof char_id)
+	    || SQL_ERROR == SQL->StmtExecute(stmt)
+	    || SQL_ERROR
+	           == SQL->StmtBindColumn(
+	               stmt, 0, SQLDT_INT, &tmp_quest.quest_id, sizeof tmp_quest.quest_id, NULL, NULL
+	           )
+	    || SQL_ERROR == SQL->StmtBindColumn(stmt, 1, SQLDT_INT, &quest_state, sizeof quest_state, NULL, NULL)
+	    || SQL_ERROR
+	           == SQL->StmtBindColumn(stmt, 2, SQLDT_UINT, &tmp_quest.time, sizeof tmp_quest.time, NULL, NULL)) {
 		sqlerror = SQL_ERROR;
 	}
 
 	StrBuf->Destroy(&buf);
 
 	for (i = 0; sqlerror != SQL_ERROR && i < MAX_QUEST_OBJECTIVES; i++) { // Stop on the first error
-		sqlerror = SQL->StmtBindColumn(stmt, 3+i, SQLDT_INT,  &tmp_quest.count[i], sizeof tmp_quest.count[i], NULL, NULL);
+		sqlerror = SQL->StmtBindColumn(
+		    stmt, 3 + i, SQLDT_INT, &tmp_quest.count[i], sizeof tmp_quest.count[i], NULL, NULL
+		);
 	}
 
 	if (sqlerror == SQL_ERROR) {
@@ -102,7 +107,7 @@ static struct quest *inter_quest_fromsql(int char_id, int *count)
 
 	*count = (int)SQL->StmtNumRows(stmt);
 	if (*count > 0) {
-		i = 0;
+		i        = 0;
 		questlog = (struct quest *)aCalloc(*count, sizeof(struct quest));
 
 		while (SQL_SUCCESS == SQL->StmtNextRow(stmt)) {
@@ -113,8 +118,8 @@ static struct quest *inter_quest_fromsql(int char_id, int *count)
 		}
 		if (i < *count) {
 			// Should never happen. Compact array
-			*count = i;
-			questlog = (struct quest *)aRealloc(questlog, sizeof(struct quest)*i);
+			*count   = i;
+			questlog = (struct quest *)aRealloc(questlog, sizeof(struct quest) * i);
 		}
 	}
 
@@ -131,7 +136,11 @@ static struct quest *inter_quest_fromsql(int char_id, int *count)
  */
 static bool inter_quest_delete(int char_id, int quest_id)
 {
-	if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `quest_id` = '%d' AND `char_id` = '%d'", quest_db, quest_id, char_id)) {
+	if (SQL_ERROR
+	    == SQL->Query(
+	        inter->sql_handle, "DELETE FROM `%s` WHERE `quest_id` = '%d' AND `char_id` = '%d'", quest_db, quest_id,
+	        char_id
+	    )) {
 		Sql_ShowDebug(inter->sql_handle);
 		return false;
 	}
@@ -154,7 +163,7 @@ static bool inter_quest_add(int char_id, struct quest qd)
 	StrBuf->Init(&buf);
 	StrBuf->Printf(&buf, "INSERT INTO `%s`(`quest_id`, `char_id`, `state`, `time`", quest_db);
 	for (i = 0; i < MAX_QUEST_OBJECTIVES; i++) {
-		StrBuf->Printf(&buf, ", `count%d`", i+1);
+		StrBuf->Printf(&buf, ", `count%d`", i + 1);
 	}
 	StrBuf->Printf(&buf, ") VALUES ('%d', '%d', '%u', '%u'", qd.quest_id, char_id, (unsigned int)qd.state, qd.time);
 	for (i = 0; i < MAX_QUEST_OBJECTIVES; i++) {
@@ -186,7 +195,7 @@ static bool inter_quest_update(int char_id, struct quest qd)
 	StrBuf->Init(&buf);
 	StrBuf->Printf(&buf, "UPDATE `%s` SET `state`='%u', `time`='%u'", quest_db, (unsigned int)qd.state, qd.time);
 	for (i = 0; i < MAX_QUEST_OBJECTIVES; i++) {
-		StrBuf->Printf(&buf, ", `count%d`='%d'", i+1, qd.count[i]);
+		StrBuf->Printf(&buf, ", `count%d`='%d'", i + 1, qd.count[i]);
 	}
 	StrBuf->Printf(&buf, " WHERE `quest_id` = '%d' AND `char_id` = '%d'", qd.quest_id, char_id);
 
@@ -204,23 +213,23 @@ static bool inter_quest_save(int char_id, const struct quest *new_qd, int new_n)
 {
 	int i, j, k, old_n;
 	struct quest *old_qd = NULL;
-	bool success = true;
+	bool success         = true;
 
 	old_qd = inter_quest->fromsql(char_id, &old_n);
 
 	for (i = 0; i < new_n; i++) {
-		ARR_FIND( 0, old_n, j, new_qd[i].quest_id == old_qd[j].quest_id );
+		ARR_FIND(0, old_n, j, new_qd[i].quest_id == old_qd[j].quest_id);
 		if (j < old_n) {
 			// Update existing quests
 
 			// Only states and counts are changeable.
-			ARR_FIND( 0, MAX_QUEST_OBJECTIVES, k, new_qd[i].count[k] != old_qd[j].count[k] );
+			ARR_FIND(0, MAX_QUEST_OBJECTIVES, k, new_qd[i].count[k] != old_qd[j].count[k]);
 			if (k != MAX_QUEST_OBJECTIVES || new_qd[i].state != old_qd[j].state)
 				success &= inter_quest->update(char_id, new_qd[i]);
 
 			if (j < (--old_n)) {
 				// Compact array
-				memmove(&old_qd[j],&old_qd[j+1],sizeof(struct quest)*(old_n-j));
+				memmove(&old_qd[j], &old_qd[j + 1], sizeof(struct quest) * (old_n - j));
 				memset(&old_qd[old_n], 0, sizeof(struct quest));
 			}
 		} else {
@@ -245,11 +254,15 @@ static bool inter_quest_save(int char_id, const struct quest *new_qd, int new_n)
  */
 static int inter_quest_parse_frommap(int fd)
 {
-	switch(RFIFOW(fd,0)) {
-		case 0x3060: mapif->parse_quest_load(fd); break;
-		case 0x3061: mapif->parse_quest_save(fd); break;
-		default:
-			return 0;
+	switch (RFIFOW(fd, 0)) {
+	case 0x3060:
+		mapif->parse_quest_load(fd);
+		break;
+	case 0x3061:
+		mapif->parse_quest_save(fd);
+		break;
+	default:
+		return 0;
 	}
 	return 1;
 }
@@ -259,9 +272,9 @@ void inter_quest_defaults(void)
 	inter_quest = &inter_quest_s;
 
 	inter_quest->parse_frommap = inter_quest_parse_frommap;
-	inter_quest->fromsql = inter_quest_fromsql;
-	inter_quest->delete_ = inter_quest_delete;
-	inter_quest->add = inter_quest_add;
-	inter_quest->update = inter_quest_update;
-	inter_quest->save = inter_quest_save;
+	inter_quest->fromsql       = inter_quest_fromsql;
+	inter_quest->delete_       = inter_quest_delete;
+	inter_quest->add           = inter_quest_add;
+	inter_quest->update        = inter_quest_update;
+	inter_quest->save          = inter_quest_save;
 }

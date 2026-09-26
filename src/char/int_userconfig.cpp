@@ -42,7 +42,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//#define DEBUG_EMOTES
+// #define DEBUG_EMOTES
 
 static struct inter_userconfig_interface inter_userconfig_s;
 struct inter_userconfig_interface *inter_userconfig;
@@ -62,9 +62,12 @@ static bool inter_userconfig_load_emotes(int account_id, struct userconfig_emote
 	return true;
 }
 
-static enum userconfig_from_sql_result inter_userconfig_emotes_from_sql(int account_id, struct userconfig_emotes *emotes)
+static enum userconfig_from_sql_result
+    inter_userconfig_emotes_from_sql(int account_id, struct userconfig_emotes *emotes)
 {
-	nullpo_retr(USERCONFIG_FROM_SQL_SUCCESS, emotes); // FIXME: We're preserving old behavior here but probably a failure should be returned
+	nullpo_retr(
+	    USERCONFIG_FROM_SQL_SUCCESS, emotes
+	); // FIXME: We're preserving old behavior here but probably a failure should be returned
 
 	StringBuf buf;
 	StrBuf->Init(&buf);
@@ -83,7 +86,7 @@ static enum userconfig_from_sql_result inter_userconfig_emotes_from_sql(int acco
 	}
 
 	char *data = NULL;
-	for (int index = 0; index < MAX_EMOTES; index ++) {
+	for (int index = 0; index < MAX_EMOTES; index++) {
 		SQL->GetData(inter->sql_handle, index, &data, NULL);
 		safestrncpy(emotes->emote[index], data, EMOTE_SIZE);
 	}
@@ -97,7 +100,7 @@ static void inter_userconfig_use_default_emotes(int account_id, struct userconfi
 {
 	nullpo_retv(emotes);
 
-	for (int i = 0; i < MAX_EMOTES; i ++) {
+	for (int i = 0; i < MAX_EMOTES; i++) {
 		safestrncpy(emotes->emote[i], inter_userconfig->dbs->default_emotes[i], EMOTE_SIZE);
 	}
 }
@@ -130,7 +133,10 @@ static bool inter_userconfig_emotes_to_sql(int account_id, const struct userconf
 		return false;
 	}
 	for (int i = 0; i < MAX_EMOTES; i++) {
-		if (SQL_SUCCESS != SQL->StmtBindParam(stmt, i, SQLDT_STRING, emotes->emote[i], strnlen(emotes->emote[i], EMOTE_SIZE - 1))) {
+		if (SQL_SUCCESS
+		    != SQL->StmtBindParam(
+		        stmt, i, SQLDT_STRING, emotes->emote[i], strnlen(emotes->emote[i], EMOTE_SIZE - 1)
+		    )) {
 			SqlStmt_ShowDebug(stmt);
 			SQL->StmtFree(stmt);
 			StrBuf->Destroy(&buf);
@@ -159,7 +165,7 @@ void inter_userconfig_hotkey_tab_tosql(int account_id, const struct userconfig_u
 #ifdef DEBUG_EMOTES
 	ShowError("tab: %d\n", hotkeys->tab);
 #endif
-	for (int i = 0; i < hotkeys->count; i ++) {
+	for (int i = 0; i < hotkeys->count; i++) {
 #ifdef DEBUG_EMOTES
 		ShowError("desc: %s\n", hotkeys->keys[i].desc);
 		ShowError("index: %d\n", hotkeys->keys[i].index);
@@ -167,9 +173,13 @@ void inter_userconfig_hotkey_tab_tosql(int account_id, const struct userconfig_u
 		ShowError("key2: %d\n", hotkeys->keys[i].key2);
 #endif
 		SQL->EscapeString(inter->sql_handle, desc_esc, hotkeys->keys[i].desc);
-		if (SQL_ERROR == SQL->Query(inter->sql_handle,
-		    "INSERT INTO `%s` (`account_id`,`tab`,`desc`,`index`,`key1`,`key2`) VALUES ('%d','%d','%s','%d','%d','%d')",
-		    hotkeys_db, account_id, hotkeys->tab, desc_esc, hotkeys->keys[i].index, hotkeys->keys[i].key1, hotkeys->keys[i].key2)) {
+		if (SQL_ERROR
+		    == SQL->Query(
+		        inter->sql_handle,
+		        "INSERT INTO `%s` (`account_id`,`tab`,`desc`,`index`,`key1`,`key2`) VALUES ('%d','%d','%s','%d','%d','%d')",
+		        hotkeys_db, account_id, hotkeys->tab, desc_esc, hotkeys->keys[i].index, hotkeys->keys[i].key1,
+		        hotkeys->keys[i].key2
+		    )) {
 			Sql_ShowDebug(inter->sql_handle);
 			return;
 		}
@@ -178,8 +188,11 @@ void inter_userconfig_hotkey_tab_tosql(int account_id, const struct userconfig_u
 
 void inter_userconfig_hotkey_tab_clear(int account_id, int tab_id)
 {
-	if (SQL_ERROR == SQL->Query(inter->sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' and `tab` = '%d'",
-	    hotkeys_db, account_id, tab_id)) {
+	if (SQL_ERROR
+	    == SQL->Query(
+	        inter->sql_handle, "DELETE FROM `%s` WHERE `account_id` = '%d' and `tab` = '%d'", hotkeys_db,
+	        account_id, tab_id
+	    )) {
 		Sql_ShowDebug(inter->sql_handle);
 	}
 }
@@ -188,16 +201,19 @@ bool inter_userconfig_hotkey_tab_fromsql(int account_id, struct userconfig_userh
 {
 	hotkeys->tab = tab_id;
 
-	if (SQL_SUCCESS != SQL->Query(inter->sql_handle,
-	    "SELECT `desc`, `index`, `key1`, `key2` FROM `%s` WHERE `account_id` = '%d' AND `tab` = '%d'",
-	    hotkeys_db, account_id, tab_id)) {
+	if (SQL_SUCCESS
+	    != SQL->Query(
+	        inter->sql_handle,
+	        "SELECT `desc`, `index`, `key1`, `key2` FROM `%s` WHERE `account_id` = '%d' AND `tab` = '%d'",
+	        hotkeys_db, account_id, tab_id
+	    )) {
 		Sql_ShowDebug(inter->sql_handle);
 		return false;
 	}
 
 	char *data = NULL;
-	int index = 0;
-	for (index = 0; index < MAX_USERHOTKEYS && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); index ++) {
+	int index  = 0;
+	for (index = 0; index < MAX_USERHOTKEYS && SQL_SUCCESS == SQL->NextRow(inter->sql_handle); index++) {
 		SQL->GetData(inter->sql_handle, 0, &data, NULL);
 		safestrncpy(hotkeys->keys[index].desc, data, HOTKEY_DESCRIPTION_SIZE);
 		SQL->GetData(inter->sql_handle, 1, &data, NULL);
@@ -228,9 +244,11 @@ static bool inter_userconfig_config_read(const char *filename, const struct conf
 	}
 
 	const struct config_setting_t *t = libconfig->setting_get_member(setting, "default_emotes");
-	const int len = libconfig->setting_length(t);
+	const int len                    = libconfig->setting_length(t);
 	if (len != MAX_EMOTES) {
-		ShowError("inter_userconfig_config_read: wrong number of default emotes found: %d vs %d\n", len, MAX_EMOTES);
+		ShowError(
+		    "inter_userconfig_config_read: wrong number of default emotes found: %d vs %d\n", len, MAX_EMOTES
+		);
 		return false;
 	}
 
@@ -243,7 +261,9 @@ static bool inter_userconfig_config_read(const char *filename, const struct conf
 	for (int i = 0; i < len; ++i) {
 		const char *emote_str = libconfig->setting_get_string_elem(t, i);
 		if (emote_str == NULL || strlen(emote_str) >= EMOTE_SIZE) {
-			ShowError("inter_userconfig_config_read: default_emotes[%d] size too big: '%s'\n", i, emote_str);
+			ShowError(
+			    "inter_userconfig_config_read: default_emotes[%d] size too big: '%s'\n", i, emote_str
+			);
 			return false;
 		}
 		safestrncpy(inter_userconfig->dbs->default_emotes[i], emote_str, EMOTE_SIZE);
@@ -268,17 +288,17 @@ static void inter_userconfig_init(void)
 
 void inter_userconfig_defaults(void)
 {
-	inter_userconfig = &inter_userconfig_s;
+	inter_userconfig      = &inter_userconfig_s;
 	inter_userconfig->dbs = &inter_userconfigdbs;
 
-	inter_userconfig->init = inter_userconfig_init;
-	inter_userconfig->config_read = inter_userconfig_config_read;
-	inter_userconfig->load_emotes = inter_userconfig_load_emotes;
-	inter_userconfig->save_emotes = inter_userconfig_save_emotes;
+	inter_userconfig->init               = inter_userconfig_init;
+	inter_userconfig->config_read        = inter_userconfig_config_read;
+	inter_userconfig->load_emotes        = inter_userconfig_load_emotes;
+	inter_userconfig->save_emotes        = inter_userconfig_save_emotes;
 	inter_userconfig->use_default_emotes = inter_userconfig_use_default_emotes;
-	inter_userconfig->emotes_from_sql = inter_userconfig_emotes_from_sql;
-	inter_userconfig->emotes_to_sql = inter_userconfig_emotes_to_sql;
-	inter_userconfig->hotkey_tab_tosql = inter_userconfig_hotkey_tab_tosql;
-	inter_userconfig->hotkey_tab_clear = inter_userconfig_hotkey_tab_clear;
+	inter_userconfig->emotes_from_sql    = inter_userconfig_emotes_from_sql;
+	inter_userconfig->emotes_to_sql      = inter_userconfig_emotes_to_sql;
+	inter_userconfig->hotkey_tab_tosql   = inter_userconfig_hotkey_tab_tosql;
+	inter_userconfig->hotkey_tab_clear   = inter_userconfig_hotkey_tab_clear;
 	inter_userconfig->hotkey_tab_fromsql = inter_userconfig_hotkey_tab_fromsql;
 }
