@@ -31,7 +31,7 @@
  * The base62 interface
  **/
 struct base62_interface {
-	bool (*encode_int_padded) (int value, char *buf, int min_len, int buf_len);
+	bool (*encode_int_padded)(int value, char *buf, int min_len, int buf_len);
 };
 
 #ifdef HERCULES_CORE

@@ -25,19 +25,19 @@
 #include "common/db.h"
 
 #ifdef WIN32
-#	include "common/winapi.h"
-	typedef long in_addr_t;
+  #include "common/winapi.h"
+typedef long in_addr_t;
 #else
-#	include <netinet/in.h>
-#	include <sys/socket.h>
-#	include <sys/types.h>
+  #include <netinet/in.h>
+  #include <sys/socket.h>
+  #include <sys/types.h>
 #endif
 
 /* Forward Declarations */
 struct hplugin_data_store;
 struct config_setting_t;
 
-#define FIFOSIZE_SERVERLINK 256*1024
+#define FIFOSIZE_SERVERLINK 256 * 1024
 
 // socket I/O macros
 #define RFIFOHEAD(fd)
@@ -46,84 +46,91 @@ struct config_setting_t;
 #define RFIFOP(T, fd, pos) ((const T)(const void *)(sockt->session[fd]->rdata + sockt->session[fd]->rdata_pos + (pos)))
 #define WFIFOP(T, fd, pos) ((T)(void *)(sockt->session[fd]->wdata + sockt->session[fd]->wdata_size + (pos)))
 
-#define RFIFOB(fd,pos) (*RFIFOP(uint8 *, (fd),(pos)))
-#define RFIFOSB(fd,pos) (*RFIFOP(int8 *, (fd),(pos)))
-#define WFIFOB(fd,pos) (*WFIFOP(uint8 *, (fd),(pos)))
-#define WFIFOSB(fd,pos) (*WFIFOP(int8 *, (fd),(pos)))
-#define RFIFOW(fd,pos) (*RFIFOP(uint16 *, (fd),(pos)))
-#define RFIFOSW(fd,pos) (*RFIFOP(int16 *, (fd),(pos)))
-#define WFIFOW(fd,pos) (*WFIFOP(uint16 *, (fd),(pos)))
-#define WFIFOSW(fd,pos) (*WFIFOP(int16 *, (fd),(pos)))
-#define RFIFOL(fd,pos) (*RFIFOP(uint32 *, (fd),(pos)))
-#define RFIFOSL(fd,pos) (*RFIFOP(int32 *, (fd),(pos)))
-#define WFIFOL(fd,pos) (*WFIFOP(uint32 *, (fd),(pos)))
-#define WFIFOSL(fd,pos) (*WFIFOP(int32 *, (fd),(pos)))
-#define RFIFOQ(fd,pos) (*RFIFOP(uint64 *, (fd),(pos)))
-#define RFIFOSQ(fd,pos) (*RFIFOP(int64 *, (fd),(pos)))
-#define WFIFOQ(fd,pos) (*WFIFOP(uint64 *, (fd),(pos)))
-#define WFIFOSQ(fd,pos) (*WFIFOP(int64 *, (fd),(pos)))
-#define RFIFOSPACE(fd) (sockt->session[fd]->max_rdata - sockt->session[fd]->rdata_size)
-#define WFIFOSPACE(fd) (sockt->session[fd]->max_wdata - sockt->session[fd]->wdata_size)
+#define RFIFOB(fd, pos)  (*RFIFOP(uint8 *, (fd), (pos)))
+#define RFIFOSB(fd, pos) (*RFIFOP(int8 *, (fd), (pos)))
+#define WFIFOB(fd, pos)  (*WFIFOP(uint8 *, (fd), (pos)))
+#define WFIFOSB(fd, pos) (*WFIFOP(int8 *, (fd), (pos)))
+#define RFIFOW(fd, pos)  (*RFIFOP(uint16 *, (fd), (pos)))
+#define RFIFOSW(fd, pos) (*RFIFOP(int16 *, (fd), (pos)))
+#define WFIFOW(fd, pos)  (*WFIFOP(uint16 *, (fd), (pos)))
+#define WFIFOSW(fd, pos) (*WFIFOP(int16 *, (fd), (pos)))
+#define RFIFOL(fd, pos)  (*RFIFOP(uint32 *, (fd), (pos)))
+#define RFIFOSL(fd, pos) (*RFIFOP(int32 *, (fd), (pos)))
+#define WFIFOL(fd, pos)  (*WFIFOP(uint32 *, (fd), (pos)))
+#define WFIFOSL(fd, pos) (*WFIFOP(int32 *, (fd), (pos)))
+#define RFIFOQ(fd, pos)  (*RFIFOP(uint64 *, (fd), (pos)))
+#define RFIFOSQ(fd, pos) (*RFIFOP(int64 *, (fd), (pos)))
+#define WFIFOQ(fd, pos)  (*WFIFOP(uint64 *, (fd), (pos)))
+#define WFIFOSQ(fd, pos) (*WFIFOP(int64 *, (fd), (pos)))
+#define RFIFOSPACE(fd)   (sockt->session[fd]->max_rdata - sockt->session[fd]->rdata_size)
+#define WFIFOSPACE(fd)   (sockt->session[fd]->max_wdata - sockt->session[fd]->wdata_size)
 
-#define RFIFOREST(fd)  (sockt->session[fd]->flag.eof ? 0 : sockt->session[fd]->rdata_size - sockt->session[fd]->rdata_pos)
+#define RFIFOREST(fd) \
+	(sockt->session[fd]->flag.eof ? 0 : sockt->session[fd]->rdata_size - sockt->session[fd]->rdata_pos)
 #define RFIFOFLUSH(fd) \
 	do { \
-		if(sockt->session[fd]->rdata_size == sockt->session[fd]->rdata_pos){ \
+		if (sockt->session[fd]->rdata_size == sockt->session[fd]->rdata_pos) { \
 			sockt->session[fd]->rdata_size = sockt->session[fd]->rdata_pos = 0; \
 		} else { \
 			sockt->session[fd]->rdata_size -= sockt->session[fd]->rdata_pos; \
-			memmove(sockt->session[fd]->rdata, sockt->session[fd]->rdata+sockt->session[fd]->rdata_pos, sockt->session[fd]->rdata_size); \
+			memmove( \
+			    sockt->session[fd]->rdata, sockt->session[fd]->rdata + sockt->session[fd]->rdata_pos, \
+			    sockt->session[fd]->rdata_size \
+			); \
 			sockt->session[fd]->rdata_pos = 0; \
 		} \
-	} while(0)
+	} while (0)
 
 #define WFIFOSET(fd, len)  (sockt->wfifoset(fd, len, true))
-#define WFIFOSET2(fd, len)  (sockt->wfifoset(fd, len, false))
+#define WFIFOSET2(fd, len) (sockt->wfifoset(fd, len, false))
 #define RFIFOSKIP(fd, len) (sockt->rfifoskip(fd, len))
 
 /* [Ind/Hercules] */
 #define RFIFO2PTR(T, fd) ((const T)(const void *)(sockt->session[fd]->rdata + sockt->session[fd]->rdata_pos))
-#define RP2PTR(T, fd) RFIFO2PTR(T, fd)
+#define RP2PTR(T, fd)    RFIFO2PTR(T, fd)
 
 /* [Hemagx/Hercules] */
 #define WFIFO2PTR(T, fd) ((T)(void *)(sockt->session[fd]->wdata + sockt->session[fd]->wdata_size))
-#define WP2PTR(T, fd) WFIFO2PTR(T, fd)
+#define WP2PTR(T, fd)    WFIFO2PTR(T, fd)
 
 // buffer I/O macros
 static inline const void *RBUFP_(const void *p, int pos) __attribute__((const, unused));
+
 static inline const void *RBUFP_(const void *p, int pos)
 {
 	return ((const uint8 *)p) + pos;
 }
-#define RBUFP(T, p,pos) ((const T)RBUFP_(p, (int)(pos)))
-#define RBUFB(p,pos) (*RBUFP(uint8 *, (p),(pos)))
-#define RBUFW(p,pos) (*RBUFP(uint16 *, (p),(pos)))
-#define RBUFL(p,pos) (*RBUFP(uint32 *, (p),(pos)))
-#define RBUFQ(p,pos) (*RBUFP(uint64 *, (p),(pos)))
-#define RBUFSB(p,pos) (*RBUFP(int8 *, (p),(pos)))
-#define RBUFSW(p,pos) (*RBUFP(int16 *, (p),(pos)))
-#define RBUFSL(p,pos) (*RBUFP(int32 *, (p),(pos)))
-#define RBUFSQ(p,pos) (*RBUFP(int64 *, (p),(pos)))
+
+#define RBUFP(T, p, pos) ((const T)RBUFP_(p, (int)(pos)))
+#define RBUFB(p, pos)    (*RBUFP(uint8 *, (p), (pos)))
+#define RBUFW(p, pos)    (*RBUFP(uint16 *, (p), (pos)))
+#define RBUFL(p, pos)    (*RBUFP(uint32 *, (p), (pos)))
+#define RBUFQ(p, pos)    (*RBUFP(uint64 *, (p), (pos)))
+#define RBUFSB(p, pos)   (*RBUFP(int8 *, (p), (pos)))
+#define RBUFSW(p, pos)   (*RBUFP(int16 *, (p), (pos)))
+#define RBUFSL(p, pos)   (*RBUFP(int32 *, (p), (pos)))
+#define RBUFSQ(p, pos)   (*RBUFP(int64 *, (p), (pos)))
 
 static inline void *WBUFP_(void *p, int pos) __attribute__((const, unused));
+
 static inline void *WBUFP_(void *p, int pos)
 {
 	return ((uint8 *)p) + pos;
 }
+
 #define WBUFP(T, p, pos) ((T)WBUFP_(p, (int)(pos)))
-#define WBUFB(p,pos) (*WBUFP(uint8 *, (p),(pos)))
-#define WBUFW(p,pos) (*WBUFP(uint16 *, (p),(pos)))
-#define WBUFL(p,pos) (*WBUFP(uint32 *, (p),(pos)))
-#define WBUFQ(p,pos) (*WBUFP(uint64 *, (p),(pos)))
-#define WBUFSB(p,pos) (*WBUFP(int8 *, (p),(pos)))
-#define WBUFSW(p,pos) (*WBUFP(int16 *, (p),(pos)))
-#define WBUFSL(p,pos) (*WBUFP(int32 *, (p),(pos)))
-#define WBUFSQ(p,pos) (*WBUFP(int64 *, (p),(pos)))
+#define WBUFB(p, pos)    (*WBUFP(uint8 *, (p), (pos)))
+#define WBUFW(p, pos)    (*WBUFP(uint16 *, (p), (pos)))
+#define WBUFL(p, pos)    (*WBUFP(uint32 *, (p), (pos)))
+#define WBUFQ(p, pos)    (*WBUFP(uint64 *, (p), (pos)))
+#define WBUFSB(p, pos)   (*WBUFP(int8 *, (p), (pos)))
+#define WBUFSW(p, pos)   (*WBUFP(int16 *, (p), (pos)))
+#define WBUFSL(p, pos)   (*WBUFP(int32 *, (p), (pos)))
+#define WBUFSQ(p, pos)   (*WBUFP(int64 *, (p), (pos)))
 
-#define TOB(n) ((uint8)((n)&UINT8_MAX))
-#define TOW(n) ((uint16)((n)&UINT16_MAX))
-#define TOL(n) ((uint32)((n)&UINT32_MAX))
-
+#define TOB(n) ((uint8)((n) & UINT8_MAX))
+#define TOW(n) ((uint16)((n) & UINT16_MAX))
+#define TOL(n) ((uint32)((n) & UINT32_MAX))
 
 // Struct declaration
 typedef int (*RecvFunc)(int fd);
@@ -134,9 +141,9 @@ typedef int (*DeleteFunc)(int fd);
 
 struct socket_data {
 	struct {
-		unsigned char eof : 1;
-		unsigned char server : 1;
-		unsigned char ping : 2;
+		unsigned char eof      : 1;
+		unsigned char server   : 1;
+		unsigned char ping     : 2;
 		unsigned char validate : 1;
 	} flag;
 
@@ -156,12 +163,12 @@ struct socket_data {
 	ConnectedFunc func_client_connected;
 	DeleteFunc func_delete;
 
-	void* session_data; // stores application-specific data related to the session
+	void *session_data;               // stores application-specific data related to the session
 	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store.
 };
 
 struct hSockOpt {
-	unsigned int silent : 1;
+	unsigned int silent   : 1;
 	unsigned int setTimeo : 1;
 };
 
@@ -182,11 +189,12 @@ VECTOR_STRUCT_DECL(s_subnet_vector, struct s_subnet);
 #define SEND_SHORTLIST
 
 // Note: purposely returns four comma-separated arguments
-#define CONVIP(ip) ((ip)>>24)&0xFF,((ip)>>16)&0xFF,((ip)>>8)&0xFF,((ip)>>0)&0xFF
-#define MAKEIP(a,b,c,d) ((uint32)( ( ( (a)&0xFF ) << 24 ) | ( ( (b)&0xFF ) << 16 ) | ( ( (c)&0xFF ) << 8 ) | ( ( (d)&0xFF ) << 0 ) ))
+#define CONVIP(ip) ((ip) >> 24) & 0xFF, ((ip) >> 16) & 0xFF, ((ip) >> 8) & 0xFF, ((ip) >> 0) & 0xFF
+#define MAKEIP(a, b, c, d) \
+	((uint32)((((a) & 0xFF) << 24) | (((b) & 0xFF) << 16) | (((c) & 0xFF) << 8) | (((d) & 0xFF) << 0)))
 
 /// Applies a subnet mask to an IP
-#define APPLY_MASK(ip, mask) ((ip)&(mask))
+#define APPLY_MASK(ip, mask)         ((ip) & (mask))
 /// Verifies the match between two IPs, with a subnet mask applied
 #define SUBNET_MATCH(ip1, ip2, mask) (APPLY_MASK((ip1), (mask)) == APPLY_MASK((ip2), (mask)))
 
@@ -201,8 +209,8 @@ struct socket_interface {
 
 	const char *SOCKET_CONF_FILENAME;
 	/* */
-	uint32 addr_[16];   // ip addresses of local host (host byte order)
-	int naddr_;   // # of ip addresses
+	uint32 addr_[16]; // ip addresses of local host (host byte order)
+	int naddr_;       // # of ip addresses
 	bool validate;
 
 	struct socket_data **session;
@@ -212,51 +220,56 @@ struct socket_interface {
 	struct s_subnet_vector allowed_ips; ///< Allowed server IP ranges
 
 	/* */
-	void (*init) (void);
-	void (*final) (void);
+	void (*init)(void);
+	void (*final)(void);
 	/* */
-	int (*perform) (int next);
+	int (*perform)(int next);
 	/* [Ind/Hercules] - socket_datasync */
-	void (*datasync) (int fd, bool send);
+	void (*datasync)(int fd, bool send);
 	/* */
-	int (*make_listen_bind) (uint32 ip, uint16 port);
-	int (*make_connection) (uint32 ip, uint16 port, struct hSockOpt *opt);
-	int (*realloc_fifo) (int fd, unsigned int rfifo_size, unsigned int wfifo_size);
-	int (*realloc_writefifo) (int fd, size_t addition);
-	int (*wfifoset) (int fd, size_t len, bool validate);
-	void (*wfifohead) (int fd, size_t len);
-	int (*rfifoskip) (int fd, size_t len);
-	void (*close) (int fd);
-	void (*validateWfifo) (int fd, size_t len);
+	int (*make_listen_bind)(uint32 ip, uint16 port);
+	int (*make_connection)(uint32 ip, uint16 port, struct hSockOpt *opt);
+	int (*realloc_fifo)(int fd, unsigned int rfifo_size, unsigned int wfifo_size);
+	int (*realloc_writefifo)(int fd, size_t addition);
+	int (*wfifoset)(int fd, size_t len, bool validate);
+	void (*wfifohead)(int fd, size_t len);
+	int (*rfifoskip)(int fd, size_t len);
+	void (*close)(int fd);
+	void (*validateWfifo)(int fd, size_t len);
 	/* */
-	bool (*session_is_valid) (int fd);
-	bool (*session_is_active) (int fd);
-	int (*create_session) (int fd, RecvFunc func_recv, SendFunc func_send, ParseFunc func_parse, ConnectedFunc func_client_connected, DeleteFunc func_delete);
-	void (*delete_session) (int fd);
+	bool (*session_is_valid)(int fd);
+	bool (*session_is_active)(int fd);
+	int (*create_session)(
+	    int fd, RecvFunc func_recv, SendFunc func_send, ParseFunc func_parse, ConnectedFunc func_client_connected,
+	    DeleteFunc func_delete
+	);
+	void (*delete_session)(int fd);
 	/* */
-	void (*flush) (int fd);
-	void (*flush_fifos) (void);
-	int (*connect_client) (int listen_fd);
-	void (*set_nonblocking) (int fd, unsigned long yes);
-	void (*set_defaultparse) (ParseFunc defaultparse);
-	void (*set_default_client_connected) (ConnectedFunc defaultparse);
-	void (*set_default_delete) (DeleteFunc defaultdelete);
+	void (*flush)(int fd);
+	void (*flush_fifos)(void);
+	int (*connect_client)(int listen_fd);
+	void (*set_nonblocking)(int fd, unsigned long yes);
+	void (*set_defaultparse)(ParseFunc defaultparse);
+	void (*set_default_client_connected)(ConnectedFunc defaultparse);
+	void (*set_default_delete)(DeleteFunc defaultdelete);
 	/* hostname/ip conversion functions */
-	uint32 (*host2ip) (const char* hostname);
-	const char * (*ip2str) (uint32 ip, char *ip_str);
-	uint32 (*str2ip) (const char* ip_str);
+	uint32 (*host2ip)(const char *hostname);
+	const char *(*ip2str)(uint32 ip, char *ip_str);
+	uint32 (*str2ip)(const char *ip_str);
 	/* */
-	uint16 (*ntows) (uint16 netshort);
+	uint16 (*ntows)(uint16 netshort);
 	/* */
-	int (*getips) (uint32* ips, int max);
+	int (*getips)(uint32 *ips, int max);
 	/* */
-	void (*eof) (int fd);
+	void (*eof)(int fd);
 
-	uint32 (*lan_subnet_check) (uint32 ip, struct s_subnet *info);
-	bool (*allowed_ip_check) (uint32 ip);
-	bool (*trusted_ip_check) (uint32 ip);
-	int (*net_config_read_sub) (struct config_setting_t *t, struct s_subnet_vector *list, const char *filename, const char *groupname);
-	void (*net_config_read) (const char *filename);
+	uint32 (*lan_subnet_check)(uint32 ip, struct s_subnet *info);
+	bool (*allowed_ip_check)(uint32 ip);
+	bool (*trusted_ip_check)(uint32 ip);
+	int (*net_config_read_sub)(
+	    struct config_setting_t *t, struct s_subnet_vector *list, const char *filename, const char *groupname
+	);
+	void (*net_config_read)(const char *filename);
 };
 
 #ifdef HERCULES_CORE

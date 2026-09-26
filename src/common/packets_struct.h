@@ -18,7 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef COMMON_PACKETS_STRUCT_H
 #define COMMON_PACKETS_STRUCT_H
 
@@ -42,6 +41,7 @@ struct PACKET_INTER_CREATE_PET {
 	char incubate;
 	char pet_name[NAME_LENGTH];
 };
+
 DEFINE_PACKET_ID(INTER_CREATE_PET, 0x3080);
 
 PRAGMA_PACK_POP()

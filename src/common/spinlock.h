@@ -33,22 +33,22 @@
 #include "common/thread.h"
 
 #ifdef WIN32
-#include "common/winapi.h"
+  #include "common/winapi.h"
 #endif
 
 #ifdef WIN32
-#ifdef _MSC_VER
-#pragma warning (push)
-#pragma warning (disable: 4324)
-#endif
+  #ifdef _MSC_VER
+    #pragma warning(push)
+    #pragma warning(disable : 4324)
+  #endif
 struct __declspec(align(64)) spin_lock {
 	volatile LONG lock;
 	volatile LONG nest;
 	volatile LONG sync_lock;
 };
-#ifdef _MSC_VER
-#pragma warning (pop)
-#endif
+  #ifdef _MSC_VER
+    #pragma warning(pop)
+  #endif
 #else
 struct spin_lock {
 	volatile int32 lock;
@@ -60,19 +60,26 @@ struct spin_lock {
 #ifdef HERCULES_CORE
 static forceinline void InitializeSpinLock(struct spin_lock *lck)
 {
-	lck->lock = 0;
-	lck->nest = 0;
+	lck->lock      = 0;
+	lck->nest      = 0;
 	lck->sync_lock = 0;
 }
 
 static forceinline void FinalizeSpinLock(struct spin_lock *lck)
 {
-		return;
+	return;
 }
 
-
-#define getsynclock(l) do { if(InterlockedCompareExchange((l), 1, 0) == 0) break; thread->yield(); } while(/*always*/1)
-#define dropsynclock(l) do { InterlockedExchange((l), 0); } while(0)
+  #define getsynclock(l) \
+	  do { \
+		  if (InterlockedCompareExchange((l), 1, 0) == 0) \
+			  break; \
+		  thread->yield(); \
+	  } while (/*always*/ 1)
+  #define dropsynclock(l) \
+	  do { \
+		  InterlockedExchange((l), 0); \
+	  } while (0)
 
 static forceinline void EnterSpinLock(struct spin_lock *lck)
 {
@@ -97,9 +104,7 @@ static forceinline void EnterSpinLock(struct spin_lock *lck)
 		}
 		thread->yield(); // Force ctxswitch to another thread.
 	}
-
 }
-
 
 static forceinline void LeaveSpinLock(struct spin_lock *lck)
 {

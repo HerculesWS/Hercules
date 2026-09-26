@@ -36,15 +36,15 @@ struct config_setting_t;
 // \033[0m : reset color parameter
 // \033[1m : use bold for font
 
-#define CL_RESET      "\033[0m"
-#define CL_CLS        "\033[2J"
-#define CL_CLL        "\033[K"
+#define CL_RESET "\033[0m"
+#define CL_CLS   "\033[2J"
+#define CL_CLL   "\033[K"
 
 // font settings
-#define CL_BOLD       "\033[1m"
-#define CL_NORM       CL_RESET
-#define CL_NORMAL     CL_RESET
-#define CL_NONE       CL_RESET
+#define CL_BOLD   "\033[1m"
+#define CL_NORM   CL_RESET
+#define CL_NORMAL CL_RESET
+#define CL_NONE   CL_RESET
 
 // background color
 #define CL_BG_BLACK   "\033[40m"
@@ -84,7 +84,7 @@ struct config_setting_t;
 #define CL_MAGENTA CL_BT_MAGENTA
 #define CL_CYAN    CL_BT_CYAN
 
-#define CL_SPACE   "           "   // space equivalent of the print messages
+#define CL_SPACE "           " // space equivalent of the print messages
 
 enum msg_type {
 	MSG_NONE,
@@ -99,46 +99,47 @@ enum msg_type {
 };
 
 struct showmsg_interface {
-	bool stdout_with_ansisequence; //If the color ANSI sequences are to be used. [flaviojs]
-	int silent; //Specifies how silent the console is. [Skotlex]
-	int console_log; //Specifies what error messages to log. [Ind]
-	char timestamp_format[20]; //For displaying Timestamps [Skotlex]
+	bool stdout_with_ansisequence; // If the color ANSI sequences are to be used. [flaviojs]
+	int silent;                    // Specifies how silent the console is. [Skotlex]
+	int console_log;               // Specifies what error messages to log. [Ind]
+	char timestamp_format[20];     // For displaying Timestamps [Skotlex]
 
-	void (*init) (void);
-	void (*final) (void);
+	void (*init)(void);
+	void (*final)(void);
 
-	void (*clearScreen) (void);
-	int (*showMessageV) (const char *string, va_list ap) __attribute__((format(printf, 1, 0)));
+	void (*clearScreen)(void);
+	int (*showMessageV)(const char *string, va_list ap) __attribute__((format(printf, 1, 0)));
 
-	void (*showMessage) (const char *, ...) __attribute__((format(printf, 1, 2)));
-	void (*showStatus) (const char *, ...) __attribute__((format(printf, 1, 2)));
-	void (*showSQL) (const char *, ...) __attribute__((format(printf, 1, 2)));
-	void (*showInfo) (const char *, ...) __attribute__((format(printf, 1, 2)));
-	void (*showNotice) (const char *, ...) __attribute__((format(printf, 1, 2)));
-	void (*showWarning) (const char *, ...) __attribute__((format(printf, 1, 2)));
-	void (*showDebug) (const char *, ...) __attribute__((format(printf, 1, 2)));
-	void (*showError) (const char *, ...) __attribute__((format(printf, 1, 2)));
-	void (*showFatalError) (const char *, ...) __attribute__((format(printf, 1, 2)));
-	void (*showConfigWarning) (struct config_setting_t *config, const char *string, ...) __attribute__((format(printf, 2, 3)));
-	const char *(*getLogFileName) (void);
+	void (*showMessage)(const char *, ...) __attribute__((format(printf, 1, 2)));
+	void (*showStatus)(const char *, ...) __attribute__((format(printf, 1, 2)));
+	void (*showSQL)(const char *, ...) __attribute__((format(printf, 1, 2)));
+	void (*showInfo)(const char *, ...) __attribute__((format(printf, 1, 2)));
+	void (*showNotice)(const char *, ...) __attribute__((format(printf, 1, 2)));
+	void (*showWarning)(const char *, ...) __attribute__((format(printf, 1, 2)));
+	void (*showDebug)(const char *, ...) __attribute__((format(printf, 1, 2)));
+	void (*showError)(const char *, ...) __attribute__((format(printf, 1, 2)));
+	void (*showFatalError)(const char *, ...) __attribute__((format(printf, 1, 2)));
+	void (*showConfigWarning)(struct config_setting_t *config, const char *string, ...)
+	    __attribute__((format(printf, 2, 3)));
+	const char *(*getLogFileName)(void);
 };
 
 /* the purpose of these macros is simply to not make calling them be an annoyance */
-#define ClearScreen() (showmsg->clearScreen())
+#define ClearScreen()           (showmsg->clearScreen())
 #define vShowMessage(fmt, list) (showmsg->showMessageV((fmt), (list)))
-#define ShowMessage(fmt, ...) (showmsg->showMessage((fmt), ##__VA_ARGS__))
-#define ShowStatus(fmt, ...) (showmsg->showStatus((fmt), ##__VA_ARGS__))
-#define ShowSQL(fmt, ...) (showmsg->showSQL((fmt), ##__VA_ARGS__))
-#define ShowInfo(fmt, ...) (showmsg->showInfo((fmt), ##__VA_ARGS__))
-#define ShowNotice(fmt, ...) (showmsg->showNotice((fmt), ##__VA_ARGS__))
+#define ShowMessage(fmt, ...)   (showmsg->showMessage((fmt), ##__VA_ARGS__))
+#define ShowStatus(fmt, ...)    (showmsg->showStatus((fmt), ##__VA_ARGS__))
+#define ShowSQL(fmt, ...)       (showmsg->showSQL((fmt), ##__VA_ARGS__))
+#define ShowInfo(fmt, ...)      (showmsg->showInfo((fmt), ##__VA_ARGS__))
+#define ShowNotice(fmt, ...)    (showmsg->showNotice((fmt), ##__VA_ARGS__))
 #ifdef BUILDBOT
-#define ShowWarning(fmt, ...) (showmsg->showError((fmt), ##__VA_ARGS__))
-#else  // BUILDBOT
-#define ShowWarning(fmt, ...) (showmsg->showWarning((fmt), ##__VA_ARGS__))
-#endif  // BUILDBOT
-#define ShowDebug(fmt, ...) (showmsg->showDebug((fmt), ##__VA_ARGS__))
-#define ShowError(fmt, ...) (showmsg->showError((fmt), ##__VA_ARGS__))
-#define ShowFatalError(fmt, ...) (showmsg->showFatalError((fmt), ##__VA_ARGS__))
+  #define ShowWarning(fmt, ...) (showmsg->showError((fmt), ##__VA_ARGS__))
+#else // BUILDBOT
+  #define ShowWarning(fmt, ...) (showmsg->showWarning((fmt), ##__VA_ARGS__))
+#endif // BUILDBOT
+#define ShowDebug(fmt, ...)                 (showmsg->showDebug((fmt), ##__VA_ARGS__))
+#define ShowError(fmt, ...)                 (showmsg->showError((fmt), ##__VA_ARGS__))
+#define ShowFatalError(fmt, ...)            (showmsg->showFatalError((fmt), ##__VA_ARGS__))
 #define ShowConfigWarning(config, fmt, ...) (showmsg->showConfigWarning((config), (fmt), ##__VA_ARGS__))
 
 #ifdef HERCULES_CORE

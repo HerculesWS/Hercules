@@ -23,10 +23,10 @@
 #include "conf.h"
 
 #include "common/core.h"
-#include "common/nullpo.h" // nullpo_retv
+#include "common/nullpo.h"  // nullpo_retv
 #include "common/showmsg.h" // ShowError
-#include "common/strlib.h" // safestrncpy
-#include "common/utils.h" // exists
+#include "common/strlib.h"  // safestrncpy
+#include "common/utils.h"   // exists
 
 #include <libconfig/libconfig.h>
 
@@ -88,8 +88,9 @@ static int config_load_file(struct config_t *config, const char *config_filename
 		return CONFIG_FALSE;
 	}
 	if (libconfig->read_file_src(config, config_filename) != CONFIG_TRUE) {
-		ShowError("%s:%d - %s\n", config_error_file(config),
-		          config_error_line(config), config_error_text(config));
+		ShowError(
+		    "%s:%d - %s\n", config_error_file(config), config_error_line(config), config_error_text(config)
+		);
 		libconfig->destroy(config);
 		return CONFIG_FALSE;
 	}
@@ -106,7 +107,7 @@ static void config_setting_copy_simple(struct config_setting_t *parent, const st
 	} else {
 		struct config_setting_t *set;
 
-		if( libconfig->setting_get_member(parent, config_setting_name(src)) != NULL )
+		if (libconfig->setting_get_member(parent, config_setting_name(src)) != NULL)
 			return;
 
 		if ((set = libconfig->setting_add(parent, config_setting_name(src), config_setting_type(src))) == NULL)
@@ -154,7 +155,7 @@ static void config_setting_copy_aggregate(struct config_setting_t *parent, const
 	struct config_setting_t *newAgg;
 	int i, n;
 
-	if( libconfig->setting_get_member(parent, config_setting_name(src)) != NULL )
+	if (libconfig->setting_get_member(parent, config_setting_name(src)) != NULL)
 		return;
 
 	newAgg = libconfig->setting_add(parent, config_setting_name(src), config_setting_type(src));
@@ -364,7 +365,8 @@ static int config_setting_lookup_int16(const struct config_setting_t *setting, c
 }
 
 /**
- * Looks up a configuration entry of type CONFIG_TYPE_STRING inside a struct config_setting_t and copies it into a (non-const) char buffer.
+ * Looks up a configuration entry of type CONFIG_TYPE_STRING inside a struct config_setting_t and copies it into a
+ * (non-const) char buffer.
  *
  * @param[in]  setting  The setting to read.
  * @param[in]  name     The setting name to lookup.
@@ -374,7 +376,9 @@ static int config_setting_lookup_int16(const struct config_setting_t *setting, c
  * @retval CONFIG_TRUE  in case of success.
  * @retval CONFIG_FALSE in case of failure.
  */
-static int config_setting_lookup_mutable_string(const struct config_setting_t *setting, const char *name, char *out, size_t out_size)
+static int config_setting_lookup_mutable_string(
+    const struct config_setting_t *setting, const char *name, char *out, size_t out_size
+)
 {
 	const char *str = NULL;
 
@@ -387,7 +391,8 @@ static int config_setting_lookup_mutable_string(const struct config_setting_t *s
 }
 
 /**
- * Looks up a configuration entry of type CONFIG_TYPE_STRING inside a struct config_t and copies it into a (non-const) char buffer.
+ * Looks up a configuration entry of type CONFIG_TYPE_STRING inside a struct config_t and copies it into a (non-const)
+ * char buffer.
  *
  * @param[in]  config   The configuration to read.
  * @param[in]  name     The setting name to lookup.
@@ -461,7 +466,8 @@ static int64 config_setting_get_int64_elem_real(const struct config_setting_t *s
  *
  * @see config_setting_set_int64_elem()
  */
-static struct config_setting_t *config_setting_set_int64_elem_real(struct config_setting_t *setting, int idx, int64 value)
+static struct config_setting_t *
+    config_setting_set_int64_elem_real(struct config_setting_t *setting, int idx, int64 value)
 {
 	return config_setting_set_int64_elem(setting, idx, (long long int)value);
 }
@@ -483,100 +489,101 @@ static int config_lookup_int64_real(const struct config_t *config, const char *f
 	return CONFIG_TRUE;
 }
 
-void libconfig_defaults(void) {
+void libconfig_defaults(void)
+{
 	libconfig = &libconfig_s;
 
 	snprintf(libconfig->db_path, sizeof(libconfig->db_path), "db");
-	libconfig->set_db_path = config_set_db_path;
-	libconfig->format_db_path = config_format_db_path;
+	libconfig->set_db_path             = config_set_db_path;
+	libconfig->format_db_path          = config_format_db_path;
 	/* */
-	libconfig->read = config_read;
-	libconfig->write = config_write;
+	libconfig->read                    = config_read;
+	libconfig->write                   = config_write;
 	/* */
-	libconfig->set_options = config_set_options;
-	libconfig->get_options = config_get_options;
+	libconfig->set_options             = config_set_options;
+	libconfig->get_options             = config_get_options;
 	/* */
-	libconfig->read_string = config_read_string;
-	libconfig->read_file_src = config_read_file;
-	libconfig->write_file = config_write_file;
+	libconfig->read_string             = config_read_string;
+	libconfig->read_file_src           = config_read_file;
+	libconfig->write_file              = config_write_file;
 	/* */
-	libconfig->set_destructor = config_set_destructor;
-	libconfig->set_include_dir = config_set_include_dir;
+	libconfig->set_destructor          = config_set_destructor;
+	libconfig->set_include_dir         = config_set_include_dir;
 	/* */
-	libconfig->init = config_init;
-	libconfig->destroy = config_destroy;
+	libconfig->init                    = config_init;
+	libconfig->destroy                 = config_destroy;
 	/* */
-	libconfig->setting_get_int = config_setting_get_int;
-	libconfig->setting_get_int64 = config_setting_get_int64_real;
-	libconfig->setting_get_float = config_setting_get_float;
-	libconfig->setting_get_bool = config_setting_get_bool;
-	libconfig->setting_get_string = config_setting_get_string;
+	libconfig->setting_get_int         = config_setting_get_int;
+	libconfig->setting_get_int64       = config_setting_get_int64_real;
+	libconfig->setting_get_float       = config_setting_get_float;
+	libconfig->setting_get_bool        = config_setting_get_bool;
+	libconfig->setting_get_string      = config_setting_get_string;
 	/* */
-	libconfig->setting_lookup = config_setting_lookup;
-	libconfig->setting_lookup_int = config_setting_lookup_int;
-	libconfig->setting_lookup_int64 = config_setting_lookup_int64_real;
-	libconfig->setting_lookup_float = config_setting_lookup_float;
-	libconfig->setting_lookup_bool = config_setting_lookup_bool;
-	libconfig->setting_lookup_string = config_setting_lookup_string;
+	libconfig->setting_lookup          = config_setting_lookup;
+	libconfig->setting_lookup_int      = config_setting_lookup_int;
+	libconfig->setting_lookup_int64    = config_setting_lookup_int64_real;
+	libconfig->setting_lookup_float    = config_setting_lookup_float;
+	libconfig->setting_lookup_bool     = config_setting_lookup_bool;
+	libconfig->setting_lookup_string   = config_setting_lookup_string;
 	/* */
-	libconfig->setting_set_int = config_setting_set_int;
-	libconfig->setting_set_int64 = config_setting_set_int64_real;
-	libconfig->setting_set_float = config_setting_set_float;
-	libconfig->setting_set_bool = config_setting_set_bool;
-	libconfig->setting_set_string = config_setting_set_string;
+	libconfig->setting_set_int         = config_setting_set_int;
+	libconfig->setting_set_int64       = config_setting_set_int64_real;
+	libconfig->setting_set_float       = config_setting_set_float;
+	libconfig->setting_set_bool        = config_setting_set_bool;
+	libconfig->setting_set_string      = config_setting_set_string;
 	/* */
-	libconfig->setting_set_format = config_setting_set_format;
-	libconfig->setting_get_format = config_setting_get_format;
+	libconfig->setting_set_format      = config_setting_set_format;
+	libconfig->setting_get_format      = config_setting_get_format;
 	/* */
-	libconfig->setting_get_int_elem = config_setting_get_int_elem;
-	libconfig->setting_get_int64_elem = config_setting_get_int64_elem_real;
-	libconfig->setting_get_float_elem = config_setting_get_float_elem;
-	libconfig->setting_get_bool_elem = config_setting_get_bool_elem;
+	libconfig->setting_get_int_elem    = config_setting_get_int_elem;
+	libconfig->setting_get_int64_elem  = config_setting_get_int64_elem_real;
+	libconfig->setting_get_float_elem  = config_setting_get_float_elem;
+	libconfig->setting_get_bool_elem   = config_setting_get_bool_elem;
 	libconfig->setting_get_string_elem = config_setting_get_string_elem;
 	/* */
-	libconfig->setting_set_int_elem = config_setting_set_int_elem;
-	libconfig->setting_set_int64_elem = config_setting_set_int64_elem_real;
-	libconfig->setting_set_float_elem = config_setting_set_float_elem;
-	libconfig->setting_set_bool_elem = config_setting_set_bool_elem;
+	libconfig->setting_set_int_elem    = config_setting_set_int_elem;
+	libconfig->setting_set_int64_elem  = config_setting_set_int64_elem_real;
+	libconfig->setting_set_float_elem  = config_setting_set_float_elem;
+	libconfig->setting_set_bool_elem   = config_setting_set_bool_elem;
 	libconfig->setting_set_string_elem = config_setting_set_string_elem;
 	/* */
-	libconfig->setting_index = config_setting_index;
-	libconfig->setting_length = config_setting_length;
+	libconfig->setting_index           = config_setting_index;
+	libconfig->setting_length          = config_setting_length;
 	/* */
-	libconfig->setting_get_elem = config_setting_get_elem;
-	libconfig->setting_get_member = config_setting_get_member;
+	libconfig->setting_get_elem        = config_setting_get_elem;
+	libconfig->setting_get_member      = config_setting_get_member;
 	/* */
-	libconfig->setting_add = config_setting_add;
-	libconfig->setting_remove = config_setting_remove;
-	libconfig->setting_remove_elem = config_setting_remove_elem;
+	libconfig->setting_add             = config_setting_add;
+	libconfig->setting_remove          = config_setting_remove;
+	libconfig->setting_remove_elem     = config_setting_remove_elem;
 	/* */
-	libconfig->setting_set_hook = config_setting_set_hook;
+	libconfig->setting_set_hook        = config_setting_set_hook;
 	/* */
-	libconfig->lookup = config_lookup;
+	libconfig->lookup                  = config_lookup;
 	/* */
-	libconfig->lookup_int = config_lookup_int;
-	libconfig->lookup_int64 = config_lookup_int64_real;
-	libconfig->lookup_float = config_lookup_float;
-	libconfig->lookup_bool = config_lookup_bool;
-	libconfig->lookup_string = config_lookup_string;
+	libconfig->lookup_int              = config_lookup_int;
+	libconfig->lookup_int64            = config_lookup_int64_real;
+	libconfig->lookup_float            = config_lookup_float;
+	libconfig->lookup_bool             = config_lookup_bool;
+	libconfig->lookup_string           = config_lookup_string;
 	/* those are custom and are from src/common/conf.cpp */
-	libconfig->load_file = config_load_file;
-	libconfig->setting_copy_simple = config_setting_copy_simple;
-	libconfig->setting_copy_elem = config_setting_copy_elem;
-	libconfig->setting_copy_aggregate = config_setting_copy_aggregate;
-	libconfig->setting_copy = config_setting_copy;
+	libconfig->load_file               = config_load_file;
+	libconfig->setting_copy_simple     = config_setting_copy_simple;
+	libconfig->setting_copy_elem       = config_setting_copy_elem;
+	libconfig->setting_copy_aggregate  = config_setting_copy_aggregate;
+	libconfig->setting_copy            = config_setting_copy;
 
 	/* Functions to get different types */
 	libconfig->setting_get_bool_real = config_setting_get_bool_real;
-	libconfig->setting_get_uint32 = config_setting_get_uint32;
-	libconfig->setting_get_uint16 = config_setting_get_uint16;
-	libconfig->setting_get_int16 = config_setting_get_int16;
+	libconfig->setting_get_uint32    = config_setting_get_uint32;
+	libconfig->setting_get_uint16    = config_setting_get_uint16;
+	libconfig->setting_get_int16     = config_setting_get_int16;
 
 	/* Functions to lookup different types */
-	libconfig->setting_lookup_int16 = config_setting_lookup_int16;
-	libconfig->setting_lookup_bool_real = config_setting_lookup_bool_real;
-	libconfig->setting_lookup_uint32 = config_setting_lookup_uint32;
-	libconfig->setting_lookup_uint16 = config_setting_lookup_uint16;
+	libconfig->setting_lookup_int16          = config_setting_lookup_int16;
+	libconfig->setting_lookup_bool_real      = config_setting_lookup_bool_real;
+	libconfig->setting_lookup_uint32         = config_setting_lookup_uint32;
+	libconfig->setting_lookup_uint16         = config_setting_lookup_uint16;
 	libconfig->setting_lookup_mutable_string = config_setting_lookup_mutable_string;
-	libconfig->lookup_mutable_string = config_lookup_mutable_string;
+	libconfig->lookup_mutable_string         = config_lookup_mutable_string;
 }

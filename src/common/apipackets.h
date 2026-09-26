@@ -30,36 +30,35 @@
 PRAGMA_PACK_PUSH(1)
 
 #ifndef EMOTE_SIZE
-// 50 + end of string
-#define EMOTE_SIZE 51
+  // 50 + end of string
+  #define EMOTE_SIZE 51
 #endif
 
 #ifndef MAX_EMOTES
-#define MAX_EMOTES 10
+  #define MAX_EMOTES 10
 #endif
 
 #ifndef HOTKEY_DESCRIPTION_SIZE
-#define HOTKEY_DESCRIPTION_SIZE 116
+  #define HOTKEY_DESCRIPTION_SIZE 116
 #endif
 
 // [4144] for now using number of hotkeys bit bigger than actual amount
 #ifndef MAX_USERHOTKEYS
-#define MAX_USERHOTKEYS 50
+  #define MAX_USERHOTKEYS 50
 #endif
 
 #ifndef ADVENTURER_AGENCY_PAGE_SIZE
-#define ADVENTURER_AGENCY_PAGE_SIZE 10
+  #define ADVENTURER_AGENCY_PAGE_SIZE 10
 #endif
 
 #define HEADER_API_PROXY_REQUEST 0x2842
-#define HEADER_API_PROXY_REPLY 0x2818
+#define HEADER_API_PROXY_REPLY   0x2818
 
-enum UserHotKey_v2
-{
+enum UserHotKey_v2 {
 	UserHotKey_v2_SkillBar_1Tab = 0,
 	UserHotKey_v2_SkillBar_2Tab = 1,
-	UserHotKey_v2_InterfaceTab = 2,
-	UserHotKey_v2_EmotionTab = 3,
+	UserHotKey_v2_InterfaceTab  = 2,
+	UserHotKey_v2_EmotionTab    = 3,
 	UserHotKey_v2_max
 };
 
@@ -92,12 +91,14 @@ struct PACKET_API_PROXY0 {
 
 enum proxy_flag {
 	proxy_flag_login = 1,
-	proxy_flag_char = 2,
-	proxy_flag_map = 4
+	proxy_flag_char  = 2,
+	proxy_flag_map   = 4
 };
 
-static_assert(sizeof(struct PACKET_API_PROXY) == sizeof(struct PACKET_API_PROXY0),
-		"Structs PACKET_API_PROXY and PACKET_API_PROXY0 must be same");
+static_assert(
+    sizeof(struct PACKET_API_PROXY) == sizeof(struct PACKET_API_PROXY0),
+    "Structs PACKET_API_PROXY and PACKET_API_PROXY0 must be same"
+);
 
 struct PACKET_API_PROXY_CHUNKED {
 	struct PACKET_API_PROXY base;
@@ -138,7 +139,7 @@ struct PACKET_API_userconfig_save_userhotkey_v2_data {
 
 struct PACKET_API_userconfig_save_userhotkey_v2 {
 	struct PACKET_API_userconfig_save_userhotkey_v2_data data;
-}  __attribute__((packed));
+} __attribute__((packed));
 
 #if 0  // empty structs not supported by visual studio. left for future usage
 struct PACKET_API_userconfig_load {
@@ -188,7 +189,6 @@ struct PACKET_API_party_add_data {
 struct PACKET_API_party_add {
 	struct PACKET_API_party_add_data data;
 } __attribute__((packed));
-
 
 struct PACKET_API_party_list_data {
 	int page;
@@ -241,7 +241,6 @@ struct PACKET_API_REPLY_emblem_upload {
 	int result; // 0 = error, 1 = success
 } __attribute__((packed));
 
-
 struct PACKET_API_REPLY_emblem_download {
 	uint8 flag;
 	char data[];
@@ -286,14 +285,16 @@ struct PACKET_API_REPLY_party_info {
 } __attribute__((packed));
 
 #define WFIFO_APICHAR_SIZE sizeof(struct PACKET_API_PROXY)
-#define CHUNKED_FLAG_SIZE 1
+#define CHUNKED_FLAG_SIZE  1
 
 #define RFIFO_DATA_PTR(T) RFIFOP(T, fd, WFIFO_APICHAR_SIZE)
-#define RFIFO_API_DATA(var, type) const struct PACKET_API_ ## type ## _data *var = RFIFO_DATA_PTR(struct PACKET_API_ ## type ## _data *)
+#define RFIFO_API_DATA(var, type) \
+	const struct PACKET_API_##type##_data *var = RFIFO_DATA_PTR(struct PACKET_API_##type##_data *)
 #define RFIFO_API_PROXY_PACKET(var) const struct PACKET_API_PROXY *var = RP2PTR(struct PACKET_API_PROXY *, fd)
-#define RFIFO_API_PROXY_PACKET_CHUNKED(var) const struct PACKET_API_PROXY_CHUNKED *var = RP2PTR(struct PACKET_API_PROXY_CHUNKED *, fd)
+#define RFIFO_API_PROXY_PACKET_CHUNKED(var) \
+	const struct PACKET_API_PROXY_CHUNKED *var = RP2PTR(struct PACKET_API_PROXY_CHUNKED *, fd)
 #define GET_RFIFO_API_PROXY_PACKET_SIZE(fd) (RFIFOW(fd, 2) - sizeof(struct PACKET_API_PROXY))
-#define PROXY_PACKET_FLAG(packet, flag) (((packet)->flags & (flag)) != 0)
+#define PROXY_PACKET_FLAG(packet, flag)     (((packet)->flags & (flag)) != 0)
 
 PRAGMA_PACK_POP()
 

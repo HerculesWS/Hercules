@@ -23,7 +23,8 @@
 // - JOB_CONSTANT - The name of the constant representing this job ID. This will generate JOB_ and MAPID_ constants
 //                  (e.g. NOVICE --> generates JOB_NOVICE and MAPID_NOVICE)
 // - JOB_ID - Official numerical ID value of the job, as expected by the client
-// - MSGTBL_CONSTANT - Constant for the Job name in messages.conf, should be a msgtable.h enum value WITHOUT MSGTBL_ prefix.
+// - MSGTBL_CONSTANT - Constant for the Job name in messages.conf, should be a msgtable.h enum value WITHOUT MSGTBL_
+// prefix.
 //                  (e.g. JOB_NOVICE --> becomes MSGTBL_JOB_NOVICE)
 
 JOB_ENUM_VALUE(NOVICE, 0, JOB_NOVICE)
@@ -93,7 +94,7 @@ JOB_ENUM_VALUE(SOUL_LINKER, 4049, JOB_SOUL_LINKER)
 JOB_ENUM_VALUE(GANGSI, 4050, JOB_GANGSI)
 JOB_ENUM_VALUE(DEATH_KNIGHT, 4051, JOB_DEATH_KNIGHT)
 JOB_ENUM_VALUE(DARK_COLLECTOR, 4052, JOB_DARK_COLLECTOR)
-//JOB_ENUM_VALUE(THIRDJOB_BEGIN, 4053, UNKNOWN_JOB)
+// JOB_ENUM_VALUE(THIRDJOB_BEGIN, 4053, UNKNOWN_JOB)
 JOB_ENUM_VALUE(RUNE_KNIGHT, 4054, JOB_RUNE_KNIGHT)
 JOB_ENUM_VALUE(WARLOCK, 4055, JOB_WARLOCK)
 JOB_ENUM_VALUE(RANGER, 4056, JOB_RANGER)

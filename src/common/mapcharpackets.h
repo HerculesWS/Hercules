@@ -38,7 +38,7 @@ struct PACKET_MAPCHAR_AUTH_REQ {
 	int client_addr;
 	uint8 standalone; // 0 - real player (false) / 1 - standalone/server generated (true)
 } __attribute__((packed));
-DEFINE_PACKET_ID(MAPCHAR_AUTH_REQ, 0x2b26)
+DEFINE_PACKET_ID(MAPCHAR_AUTH_REQ, 0x2B26)
 
 struct PACKET_MAPCHAR_AGENCY_JOIN_PARTY_REQ {
 	int16 packetType;
@@ -55,7 +55,7 @@ struct PACKET_MAPCHAR_GUILD_EMBLEM {
 	uint8 flag;
 	char data[];
 } __attribute__((packed));
-DEFINE_PACKET_ID(MAPCHAR_GUILD_EMBLEM, 0x303f)
+DEFINE_PACKET_ID(MAPCHAR_GUILD_EMBLEM, 0x303F)
 
 PRAGMA_PACK_POP()
 

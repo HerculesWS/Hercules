@@ -31,7 +31,7 @@
 
 #include <string.h>
 
-//#define CONFIG_DEBUG
+// #define CONFIG_DEBUG
 
 // defines for vars
 #include "common/config/defc.h"
@@ -50,7 +50,8 @@ CONFIG_END
 static struct extraconf_interface extraconf_s;
 struct extraconf_interface *extraconf;
 
-static bool extraconf_read_conf_file(const char *filename, bool imported, const char *node, const struct config_data *conf_vars)
+static bool
+    extraconf_read_conf_file(const char *filename, bool imported, const char *node, const struct config_data *conf_vars)
 {
 	nullpo_retr(false, filename);
 	nullpo_retr(false, node);
@@ -66,7 +67,9 @@ static bool extraconf_read_conf_file(const char *filename, bool imported, const 
 	return retval;
 }
 
-static bool extraconf_read_conf(const char *filename, bool imported, struct config_t *config, const char *node, const struct config_data *conf_vars)
+static bool extraconf_read_conf(
+    const char *filename, bool imported, struct config_t *config, const char *node, const struct config_data *conf_vars
+)
 {
 	nullpo_retr(false, filename);
 	nullpo_retr(false, node);
@@ -97,7 +100,9 @@ static bool extraconf_read_conf(const char *filename, bool imported, struct conf
 	return retval;
 }
 
-static bool extraconf_read_vars(const char *filename, bool imported, struct config_t *config, const char *node, const struct config_data *conf_vars)
+static bool extraconf_read_vars(
+    const char *filename, bool imported, struct config_t *config, const char *node, const struct config_data *conf_vars
+)
 {
 	nullpo_retr(false, filename);
 	nullpo_retr(false, config);
@@ -120,8 +125,8 @@ static bool extraconf_read_vars(const char *filename, bool imported, struct conf
 			continue;
 		}
 
-		const int type = config_setting_type(setting);
-		int val = 0;
+		const int type     = config_setting_type(setting);
+		int val            = 0;
 		const char *valStr = NULL;
 		switch (type) {
 		case CONFIG_TYPE_INT:
@@ -163,8 +168,10 @@ static bool extraconf_set_var(const struct config_data *conf_var, int value)
 	}
 
 	if (value < conf_var->min || value > conf_var->max) {
-		ShowWarning("Value for setting '%s': %d is invalid (min:%d max:%d)! Defaulting to %d...\n",
-				conf_var->str, value, conf_var->min, conf_var->max, conf_var->defval);
+		ShowWarning(
+		    "Value for setting '%s': %d is invalid (min:%d max:%d)! Defaulting to %d...\n", conf_var->str,
+		    value, conf_var->min, conf_var->max, conf_var->defval
+		);
 		value = conf_var->defval;
 	}
 #ifdef CONFIG_DEBUG
@@ -181,14 +188,18 @@ static bool extraconf_set_var_str(const struct config_data *conf_var, const char
 
 	const enum config_type varType = conf_var->type;
 	if (varType != config_type_str) {
-		ShowWarning("Setting %s has wrong type %d, but need string, ignoring...\n", conf_var->str, (int)varType);
+		ShowWarning(
+		    "Setting %s has wrong type %d, but need string, ignoring...\n", conf_var->str, (int)varType
+		);
 		return false;
 	}
 
 	const int len = (int)strlen(val);
 	if ((conf_var->min != 0 && len < conf_var->min) || (conf_var->max != 0 && len > conf_var->max)) {
-		ShowWarning("Value for setting '%s': '%s' is invalid (min:%d max:%d)! Defaulting to '%s'...\n",
-				conf_var->str, val, conf_var->min, conf_var->max, conf_var->defval_str);
+		ShowWarning(
+		    "Value for setting '%s': '%s' is invalid (min:%d max:%d)! Defaulting to '%s'...\n", conf_var->str,
+		    val, conf_var->min, conf_var->max, conf_var->defval_str
+		);
 		val = conf_var->defval_str;
 	}
 #ifdef CONFIG_DEBUG
@@ -200,10 +211,7 @@ static bool extraconf_set_var_str(const struct config_data *conf_var, const char
 
 static bool extraconf_read_emblems(void)
 {
-	return extraconf->read_conf_file(extraconf->EMBLEMS_CONF_NAME,
-		false,
-		"emblem_configuration",
-		emblems_data);
+	return extraconf->read_conf_file(extraconf->EMBLEMS_CONF_NAME, false, "emblem_configuration", emblems_data);
 }
 
 static void extraconf_init(void)
@@ -216,18 +224,19 @@ static void extraconf_final(void)
 	aFree(extraconf->EMBLEMS_CONF_NAME);
 }
 
-void extraconf_defaults(void) {
+void extraconf_defaults(void)
+{
 	extraconf = &extraconf_s;
 
 	extraconf->emblems = &emblems_vars;
 
-	extraconf->init = extraconf_init;
+	extraconf->init  = extraconf_init;
 	extraconf->final = extraconf_final;
 
 	extraconf->read_conf_file = extraconf_read_conf_file;
-	extraconf->read_conf = extraconf_read_conf;
-	extraconf->read_vars = extraconf_read_vars;
-	extraconf->set_var = extraconf_set_var;
-	extraconf->set_var_str = extraconf_set_var_str;
-	extraconf->read_emblems = extraconf_read_emblems;
+	extraconf->read_conf      = extraconf_read_conf;
+	extraconf->read_vars      = extraconf_read_vars;
+	extraconf->set_var        = extraconf_set_var;
+	extraconf->set_var_str    = extraconf_set_var_str;
+	extraconf->read_emblems   = extraconf_read_emblems;
 }

@@ -49,19 +49,19 @@
 #include "common/utils.h"
 
 #ifndef _WIN32
-#	include <unistd.h>
+  #include <unistd.h>
 #else
-#	include "common/winapi.h" // Console close event handling
+  #include "common/winapi.h" // Console close event handling
 #endif
 #if defined(__sun)
-#	include <limits.h>
+  #include <limits.h>
 #elif defined(__linux) || defined(__linux__)
-#	include <limits.h>
+  #include <limits.h>
 #elif defined(__APPLE__) && defined(__MACH__)
-#	include <mach-o/dyld.h>
+  #include <mach-o/dyld.h>
 #elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__bsdi__) || defined(__DragonFly__)
-#	include <sys/types.h>
-#	include <sys/sysctl.h>
+  #include <sys/types.h>
+  #include <sys/sysctl.h>
 #endif
 
 #include <signal.h>
@@ -86,9 +86,9 @@
  * since it is a very bad idea.
  * Please note that NO SUPPORT will be given if you uncomment the following line.
  */
-//#define I_AM_AWARE_OF_THE_RISK_AND_STILL_WANT_TO_RUN_HERCULES_AS_ROOT
-// And don't complain to us if the XYZ plugin you installed wiped your hard disk, or worse.
-// Note: This feature is deprecated, and should not be used.
+// #define I_AM_AWARE_OF_THE_RISK_AND_STILL_WANT_TO_RUN_HERCULES_AS_ROOT
+//  And don't complain to us if the XYZ plugin you installed wiped your hard disk, or worse.
+//  Note: This feature is deprecated, and should not be used.
 
 static struct core_interface core_s;
 struct core_interface *core = &core_s;
@@ -105,11 +105,11 @@ static char executable_path[PATH_MAX];
 // Programming in the UNIX Environment_.
 //
 #ifdef WIN32 // windows don't have SIGPIPE
-#define SIGPIPE SIGINT
+  #define SIGPIPE SIGINT
 #endif
 
 #ifndef POSIX
-#define compat_signal(signo, func) signal((signo), (func))
+  #define compat_signal(signo, func) signal((signo), (func))
 #else
 static sigfunc *compat_signal(int signo, sigfunc *func)
 {
@@ -118,9 +118,9 @@ static sigfunc *compat_signal(int signo, sigfunc *func)
 	sact.sa_handler = func;
 	sigemptyset(&sact.sa_mask);
 	sact.sa_flags = 0;
-#ifdef SA_INTERRUPT
+  #ifdef SA_INTERRUPT
 	sact.sa_flags |= SA_INTERRUPT; /* SunOS */
-#endif
+  #endif
 
 	if (sigaction(signo, &sact, &oact) < 0)
 		return (SIG_ERR);
@@ -135,25 +135,25 @@ static sigfunc *compat_signal(int signo, sigfunc *func)
 #ifdef _WIN32
 static BOOL WINAPI console_handler(DWORD c_event)
 {
-	switch(c_event) {
-		case CTRL_CLOSE_EVENT:
-		case CTRL_LOGOFF_EVENT:
-		case CTRL_SHUTDOWN_EVENT:
-			if (core->shutdown_callback != NULL)
-				core->shutdown_callback();
-			else
-				core->runflag = CORE_ST_STOP;// auto-shutdown
-			break;
-		default:
-			return FALSE;
+	switch (c_event) {
+	case CTRL_CLOSE_EVENT:
+	case CTRL_LOGOFF_EVENT:
+	case CTRL_SHUTDOWN_EVENT:
+		if (core->shutdown_callback != NULL)
+			core->shutdown_callback();
+		else
+			core->runflag = CORE_ST_STOP; // auto-shutdown
+		break;
+	default:
+		return FALSE;
 	}
 	return TRUE;
 }
 
 static void cevents_init(void)
 {
-	if (SetConsoleCtrlHandler(console_handler,TRUE)==FALSE)
-		ShowWarning ("Unable to install the console handler!\n");
+	if (SetConsoleCtrlHandler(console_handler, TRUE) == FALSE)
+		ShowWarning("Unable to install the console handler!\n");
 }
 #endif
 
@@ -165,32 +165,32 @@ static void sig_proc(int sn)
 	static int is_called = 0;
 
 	switch (sn) {
-		case SIGINT:
-		case SIGTERM:
-			if (++is_called > 3)
-				exit(EXIT_SUCCESS);
-			if (core->shutdown_callback != NULL)
-				core->shutdown_callback();
-			else
-				core->runflag = CORE_ST_STOP;// auto-shutdown
-			break;
-		case SIGSEGV:
-		case SIGFPE:
-			do_abort();
-			// Pass the signal to the system's default handler
-			compat_signal(sn, SIG_DFL);
-			raise(sn);
-			break;
-	#ifndef _WIN32
-		case SIGXFSZ:
-			// ignore and allow it to set errno to EFBIG
-			ShowWarning ("Max file size reached!\n");
-			//run_flag = 0; // should we quit?
-			break;
-		case SIGPIPE:
-			//ShowInfo ("Broken pipe found... closing socket\n"); // set to eof in socket.cpp
-			break; // does nothing here
-	#endif
+	case SIGINT:
+	case SIGTERM:
+		if (++is_called > 3)
+			exit(EXIT_SUCCESS);
+		if (core->shutdown_callback != NULL)
+			core->shutdown_callback();
+		else
+			core->runflag = CORE_ST_STOP; // auto-shutdown
+		break;
+	case SIGSEGV:
+	case SIGFPE:
+		do_abort();
+		// Pass the signal to the system's default handler
+		compat_signal(sn, SIG_DFL);
+		raise(sn);
+		break;
+#ifndef _WIN32
+	case SIGXFSZ:
+		// ignore and allow it to set errno to EFBIG
+		ShowWarning("Max file size reached!\n");
+		// run_flag = 0; // should we quit?
+		break;
+	case SIGPIPE:
+		// ShowInfo ("Broken pipe found... closing socket\n"); // set to eof in socket.cpp
+		break; // does nothing here
+#endif
 	}
 }
 
@@ -221,26 +221,30 @@ static bool usercheck(void)
 #ifndef _WIN32
 	if (sysinfo->is_superuser()) {
 		if (!isatty(fileno(stdin))) {
-#ifdef BUILDBOT
+  #ifdef BUILDBOT
 			return true;
-#else  // BUILDBOT
-			ShowFatalError("You are running Hercules with root privileges, it is not necessary, nor recommended. "
-					"Aborting.\n");
+  #else  // BUILDBOT
+			ShowFatalError(
+			    "You are running Hercules with root privileges, it is not necessary, nor recommended. " "Aborting.\n"
+			);
 			return false; // Don't allow noninteractive execution regardless.
-#endif  // BUILDBOT
+  #endif // BUILDBOT
 		}
 		ShowError("You are running Hercules with root privileges, it is not necessary, nor recommended.\n");
-#ifdef I_AM_AWARE_OF_THE_RISK_AND_STILL_WANT_TO_RUN_HERCULES_AS_ROOT
-#ifndef BUILDBOT
-#warning This Hercules build is not eligible to obtain support by the developers.
-#warning The setting I_AM_AWARE_OF_THE_RISK_AND_STILL_WANT_TO_RUN_HERCULES_AS_ROOT is deprecated and should not be used.
-#endif  // BUILDBOT
-#else // not I_AM_AWARE_OF_THE_RISK_AND_STILL_WANT_TO_RUN_HERCULES_AS_ROOT
+  #ifdef I_AM_AWARE_OF_THE_RISK_AND_STILL_WANT_TO_RUN_HERCULES_AS_ROOT
+    #ifndef BUILDBOT
+      #warning This Hercules build is not eligible to obtain support by the developers.
+      #warning The setting I_AM_AWARE_OF_THE_RISK_AND_STILL_WANT_TO_RUN_HERCULES_AS_ROOT is deprecated and should not be used.
+    #endif // BUILDBOT
+  #else    // not I_AM_AWARE_OF_THE_RISK_AND_STILL_WANT_TO_RUN_HERCULES_AS_ROOT
 		ShowNotice("Execution will be paused for 60 seconds. Press Ctrl-C if you wish to quit.\n");
-		ShowNotice("If you want to get rid of this message, please open %s and uncomment, near the top, the line saying:\n"
-				"\t\"//#define I_AM_AWARE_OF_THE_RISK_AND_STILL_WANT_TO_RUN_HERCULES_AS_ROOT\"\n", __FILE__);
-		ShowNotice("Note: In a near future, this courtesy notice will go away. "
-				"Please update your infrastructure not to require root privileges before then.\n");
+		ShowNotice(
+		    "If you want to get rid of this message, please open %s and uncomment, near the top, the line saying:\n" "\t\"//#define I_AM_AWARE_OF_THE_RISK_AND_STILL_WANT_TO_RUN_HERCULES_AS_ROOT\"\n",
+		    __FILE__
+		);
+		ShowNotice(
+		    "Note: In a near future, this courtesy notice will go away. " "Please update your infrastructure not to require root privileges before then.\n"
+		);
 		ShowWarning("It's recommended that you " CL_WHITE "press CTRL-C now!" CL_RESET "\n");
 		{
 			int i;
@@ -250,11 +254,12 @@ static bool usercheck(void)
 			}
 		}
 		ShowMessage("\n");
-		ShowNotice("Resuming operations with root privileges. "
-				CL_RED "If anything breaks, you get to keep the pieces, "
-				"and the Hercules developers won't be able to help you."
-				CL_RESET "\n");
-#endif // I_AM_AWARE_OF_THE_RISK_AND_STILL_WANT_TO_RUN_HERCULES_AS_ROOT
+		ShowNotice(
+		    "Resuming operations with root privileges. " CL_RED
+		    "If anything breaks, you get to keep the pieces, " "and the Hercules developers won't be able to help you." CL_RESET
+		    "\n"
+		);
+  #endif   // I_AM_AWARE_OF_THE_RISK_AND_STILL_WANT_TO_RUN_HERCULES_AS_ROOT
 	}
 #endif // not _WIN32
 	return true;
@@ -353,18 +358,21 @@ static const char *cmdline_arg_source(struct CmdlineArgData *arg)
  * @param options   options associated to the command-line argument. @see enum cmdline_options.
  * @return the success status.
  */
-static bool cmdline_arg_add(unsigned int pluginID, const char *name, char shortname, CmdlineExecFunc func, const char *help, unsigned int options)
+static bool cmdline_arg_add(
+    unsigned int pluginID, const char *name, char shortname, CmdlineExecFunc func, const char *help,
+    unsigned int options
+)
 {
 	struct CmdlineArgData *data = NULL;
 
 	nullpo_retr(false, name);
 	VECTOR_ENSURE(cmdline->args_data, 1, 1);
 	VECTOR_PUSHZEROED(cmdline->args_data);
-	data = &VECTOR_LAST(cmdline->args_data);
-	data->pluginID = pluginID;
-	data->name = aStrdup(name);
+	data            = &VECTOR_LAST(cmdline->args_data);
+	data->pluginID  = pluginID;
+	data->name      = aStrdup(name);
 	data->shortname = shortname;
-	data->func = func;
+	data->func      = func;
 	if (help)
 		data->help = aStrdup(help);
 	else
@@ -392,8 +400,14 @@ static CMDLINEARG(help)
 		} else {
 			*altname = '\0';
 		}
-		snprintf(paramnames, sizeof(paramnames), "%s%s%s", data->name, altname, (data->options&CMDLINE_OPT_PARAM) ? " <name>" : "");
-		ShowInfo("  %-30s %s [%s]\n", paramnames, data->help ? data->help : "<no description provided>", cmdline->arg_source(data));
+		snprintf(
+		    paramnames, sizeof(paramnames), "%s%s%s", data->name, altname,
+		    (data->options & CMDLINE_OPT_PARAM) ? " <name>" : ""
+		);
+		ShowInfo(
+		    "  %-30s %s [%s]\n", paramnames, data->help ? data->help : "<no description provided>",
+		    cmdline->arg_source(data)
+		);
 	}
 	return false;
 }
@@ -419,7 +433,7 @@ static CMDLINEARG(version)
  */
 static bool cmdline_arg_next_value(const char *name, int current_arg, int argc)
 {
-	if (current_arg >= argc-1) {
+	if (current_arg >= argc - 1) {
 		ShowError("Missing value for option '%s'.\n", name);
 		return false;
 	}
@@ -453,38 +467,44 @@ static int cmdline_exec(int argc, char **argv, unsigned int options)
 	for (i = 1; i < argc; i++) {
 		int j;
 		struct CmdlineArgData *data = NULL;
-		const char *arg = argv[i];
+		const char *arg             = argv[i];
 		if (arg[0] != '-') { // All arguments must begin with '-'
-			if ((options&(CMDLINE_OPT_SILENT|CMDLINE_OPT_PREINIT)) != 0)
+			if ((options & (CMDLINE_OPT_SILENT | CMDLINE_OPT_PREINIT)) != 0)
 				continue;
 			ShowError("Invalid option '%s'.\n", argv[i]);
 			exit(EXIT_FAILURE);
 		}
 		if (arg[1] != '-' && strlen(arg) == 2) {
-			ARR_FIND(0, VECTOR_LENGTH(cmdline->args_data), j, VECTOR_INDEX(cmdline->args_data, j).shortname == arg[1]);
+			ARR_FIND(
+			    0, VECTOR_LENGTH(cmdline->args_data), j,
+			    VECTOR_INDEX(cmdline->args_data, j).shortname == arg[1]
+			);
 		} else {
-			ARR_FIND(0, VECTOR_LENGTH(cmdline->args_data), j, strcmpi(VECTOR_INDEX(cmdline->args_data, j).name, arg) == 0);
+			ARR_FIND(
+			    0, VECTOR_LENGTH(cmdline->args_data), j,
+			    strcmpi(VECTOR_INDEX(cmdline->args_data, j).name, arg) == 0
+			);
 		}
 		if (j == VECTOR_LENGTH(cmdline->args_data)) {
-			if (options&(CMDLINE_OPT_SILENT|CMDLINE_OPT_PREINIT))
+			if (options & (CMDLINE_OPT_SILENT | CMDLINE_OPT_PREINIT))
 				continue;
 			ShowError("Unknown option '%s'.\n", arg);
 			exit(EXIT_FAILURE);
 		}
 		data = &VECTOR_INDEX(cmdline->args_data, j);
-		if (data->options&CMDLINE_OPT_PARAM) {
+		if (data->options & CMDLINE_OPT_PARAM) {
 			if (!cmdline->arg_next_value(arg, i, argc))
 				exit(EXIT_FAILURE);
 			i++;
 		}
-		if (options&CMDLINE_OPT_SILENT) {
-			if (data->options&CMDLINE_OPT_SILENT) {
+		if (options & CMDLINE_OPT_SILENT) {
+			if (data->options & CMDLINE_OPT_SILENT) {
 				showmsg->silent = 0x7; // silence information and status messages
 				break;
 			}
-		} else if ((data->options&CMDLINE_OPT_PREINIT) == (options&CMDLINE_OPT_PREINIT)) {
+		} else if ((data->options & CMDLINE_OPT_PREINIT) == (options & CMDLINE_OPT_PREINIT)) {
 			const char *param = NULL;
-			if (data->options&CMDLINE_OPT_PARAM) {
+			if (data->options & CMDLINE_OPT_PARAM) {
 				param = argv[i]; // Already incremented above
 			}
 			if (!data->func(arg, param))
@@ -502,7 +522,10 @@ static void cmdline_init(void)
 {
 	CMDLINEARG_DEF(help, 'h', "Displays this help screen", CMDLINE_OPT_NORMAL);
 	CMDLINEARG_DEF(version, 'v', "Displays the server's version.", CMDLINE_OPT_NORMAL);
-	CMDLINEARG_DEF2("load-plugin", loadplugin, "Loads an additional plugin (can be repeated).", CMDLINE_OPT_PARAM|CMDLINE_OPT_PREINIT);
+	CMDLINEARG_DEF2(
+	    "load-plugin", loadplugin, "Loads an additional plugin (can be repeated).",
+	    CMDLINE_OPT_PARAM | CMDLINE_OPT_PREINIT
+	);
 	cmdline_args_init_local();
 }
 
@@ -525,12 +548,12 @@ void cmdline_defaults(void)
 
 	VECTOR_INIT(cmdline->args_data);
 
-	cmdline->init = cmdline_init;
-	cmdline->final = cmdline_final;
-	cmdline->arg_add = cmdline_arg_add;
-	cmdline->exec = cmdline_exec;
+	cmdline->init           = cmdline_init;
+	cmdline->final          = cmdline_final;
+	cmdline->arg_add        = cmdline_arg_add;
+	cmdline->exec           = cmdline_exec;
 	cmdline->arg_next_value = cmdline_arg_next_value;
-	cmdline->arg_source = cmdline_arg_source;
+	cmdline->arg_source     = cmdline_arg_source;
 }
 
 /*======================================
@@ -539,15 +562,15 @@ void cmdline_defaults(void)
 int main(int argc, char **argv)
 {
 	int retval = EXIT_SUCCESS;
-	{// initialize program arguments
+	{ // initialize program arguments
 		char *p1 = SERVER_NAME = argv[0];
-		char *p2 = p1;
+		char *p2               = p1;
 		while ((p1 = strchr(p2, '/')) != NULL || (p1 = strchr(p2, '\\')) != NULL) {
 			SERVER_NAME = ++p1;
-			p2 = p1;
+			p2          = p1;
 		}
-		core->arg_c = argc;
-		core->arg_v = argv;
+		core->arg_c   = argc;
+		core->arg_v   = argv;
 		core->runflag = CORE_ST_RUN;
 	}
 	core->executable_path = executable_path;
@@ -558,7 +581,7 @@ int main(int argc, char **argv)
 		safestrncpy(executable_path, "hercules", sizeof executable_path);
 	}
 
-	iMalloc->init();// needed for Show* in display_title() [FlavioJS]
+	iMalloc->init(); // needed for Show* in display_title() [FlavioJS]
 	showmsg->init();
 	nullpo->init();
 
@@ -570,7 +593,7 @@ int main(int argc, char **argv)
 
 	sysinfo->init();
 
-	if (!(showmsg->silent&0x1)) {
+	if (!(showmsg->silent & 0x1)) {
 		console->display_title();
 		timer->check_timers();
 	}
@@ -604,7 +627,7 @@ int main(int argc, char **argv)
 
 	packets->init();
 
-	do_init(argc,argv);
+	do_init(argc, argv);
 
 	// Main runtime cycle
 	while (core->runflag != CORE_ST_STOP) {
@@ -624,7 +647,7 @@ int main(int argc, char **argv)
 	ers_final();
 	rnd->final();
 	cmdline->final();
-	//sysinfo->final(); Called by iMalloc->final()
+	// sysinfo->final(); Called by iMalloc->final()
 
 	nullpo->final();
 	iMalloc->final();

@@ -28,48 +28,55 @@ struct fifo_chunk_buf {
 	int data_size;
 };
 
-#define fifo_chunk_buf_init(dataVar) do { \
-		(dataVar).data = NULL; \
+#define fifo_chunk_buf_init(dataVar) \
+	do { \
+		(dataVar).data      = NULL; \
 		(dataVar).data_size = 0; \
 	} while (false)
 
-#define fifo_chunk_buf_clear(dataVar) do { \
+#define fifo_chunk_buf_clear(dataVar) \
+	do { \
 		aFree((dataVar).data); \
-		(dataVar).data = NULL; \
+		(dataVar).data      = NULL; \
 		(dataVar).data_size = 0; \
 	} while (false)
-
 
 #define RFIFO_CHUNKED_INIT(p, src_data_size, dst_data) \
-	const int p ## _flag = (p)->flag; \
-	char **p ## _dst_data_ptr = &((dst_data).data); \
-	int *p ## _dst_data_size_ptr = &((dst_data).data_size); \
-	const char *p ## _src_data = (p)->data; \
-	const size_t p ## _src_data_size = src_data_size
+	const int p##_flag             = (p)->flag; \
+	char **p##_dst_data_ptr        = &((dst_data).data); \
+	int *p##_dst_data_size_ptr     = &((dst_data).data_size); \
+	const char *p##_src_data       = (p)->data; \
+	const size_t p##_src_data_size = src_data_size
 
 #define RFIFO_CHUNKED_ERROR(p) \
-	if (p ## _flag > 2 || p ## _flag < 0 || (p ## _flag == 0 && *p ## _dst_data_ptr != NULL) || (p ## _flag == 1 && *p ## _dst_data_ptr == NULL))
+	if (p##_flag > 2 \
+	    || p##_flag < 0 \
+	    || (p##_flag == 0 && *p##_dst_data_ptr != NULL) \
+	    || (p##_flag == 1 && *p##_dst_data_ptr == NULL))
 
 #define RFIFO_CHUNKED_COMPLETE(p) \
-	if (p ## _flag == 0 || (p ## _flag == 2 && *p ## _dst_data_ptr == NULL)) { \
-		*p ## _dst_data_ptr = static_cast<std::remove_reference_t<decltype(*p ## _dst_data_ptr)>>(aMalloc(p ## _src_data_size)); \
-		memcpy(*p ## _dst_data_ptr, p ## _src_data, p ## _src_data_size); \
-		*p ## _dst_data_size_ptr = (int)p ## _src_data_size; \
-	} else if (p ## _flag == 1 || p ## _flag == 2) { \
-		*p ## _dst_data_ptr = static_cast<std::remove_reference_t<decltype(*p ## _dst_data_ptr)>>(aRealloc(*p ## _dst_data_ptr, *p ## _dst_data_size_ptr + p ## _src_data_size)); \
-		memcpy(*p ## _dst_data_ptr + *p ## _dst_data_size_ptr, p ## _src_data, p ## _src_data_size); \
-		*p ## _dst_data_size_ptr += p ## _src_data_size; \
+	if (p##_flag == 0 || (p##_flag == 2 && *p##_dst_data_ptr == NULL)) { \
+		*p##_dst_data_ptr \
+		    = static_cast<std::remove_reference_t<decltype(*p##_dst_data_ptr)>>(aMalloc(p##_src_data_size)); \
+		memcpy(*p##_dst_data_ptr, p##_src_data, p##_src_data_size); \
+		*p##_dst_data_size_ptr = (int)p##_src_data_size; \
+	} else if (p##_flag == 1 || p##_flag == 2) { \
+		*p##_dst_data_ptr = static_cast<std::remove_reference_t<decltype(*p##_dst_data_ptr)>>( \
+		    aRealloc(*p##_dst_data_ptr, *p##_dst_data_size_ptr + p##_src_data_size) \
+		); \
+		memcpy(*p##_dst_data_ptr + *p##_dst_data_size_ptr, p##_src_data, p##_src_data_size); \
+		*p##_dst_data_size_ptr += p##_src_data_size; \
 	} \
-	if (p ## _flag == 2)
+	if (p##_flag == 2)
 
-#define RFIFO_CHUNKED_FREE(p) do { \
-		aFree(*p ## _dst_data_ptr); \
-		*p ## _dst_data_ptr = NULL; \
+#define RFIFO_CHUNKED_FREE(p) \
+	do { \
+		aFree(*p##_dst_data_ptr); \
+		*p##_dst_data_ptr = NULL; \
 	} while (false)
 
-
-#define GET_RFIFO_PACKET_CHUNKED_SIZE(fd, pname) (RFIFOW((fd), 2) - sizeof(struct pname))
-#define GET_RBUF_PACKET_CHUNKED_SIZE(fd, pname) (RBUFW((fd), 2) - sizeof(struct pname))
+#define GET_RFIFO_PACKET_CHUNKED_SIZE(fd, pname)    (RFIFOW((fd), 2) - sizeof(struct pname))
+#define GET_RBUF_PACKET_CHUNKED_SIZE(fd, pname)     (RBUFW((fd), 2) - sizeof(struct pname))
 #define GET_RFIFO_API_PROXY_PACKET_CHUNKED_SIZE(fd) GET_RFIFO_PACKET_CHUNKED_SIZE((fd), PACKET_API_PROXY_CHUNKED)
 
 #endif /* COMMON_CHUNKED_RFIFO_H */

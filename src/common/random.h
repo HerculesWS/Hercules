@@ -34,22 +34,22 @@ struct rnd_interface {
 	 *
 	 * During initialization, the RNG is seeded with a random seed.
 	 */
-	void (*init) (void);
+	void (*init)(void);
 
 	/// Interface finalization.
-	void (*final) (void);
+	void (*final)(void);
 
 	/**
 	 * Re-seeds the random number generator.
 	 *
 	 * @param seed The new seed.
 	 */
-	void (*seed) (uint32 seed);
+	void (*seed)(uint32 seed);
 
 	/**
 	 * Generates a random number in the interval [0, SINT32_MAX].
 	 */
-	int32 (*random) (void);
+	int32 (*random)(void);
 
 	/**
 	 * Generates a random number in the interval [0, dice_faces).
@@ -57,14 +57,14 @@ struct rnd_interface {
 	 * @remark
 	 *  interval is open ended, so dice_faces is excluded (unless it's 0)
 	 */
-	uint32 (*roll) (uint32 dice_faces);
+	uint32 (*roll)(uint32 dice_faces);
 
 	/**
 	 * Generates a random number in the interval [min, max].
 	 *
 	 * @retval min if range is invalid.
 	 */
-	int32 (*value) (int32 min, int32 max);
+	int32 (*value)(int32 min, int32 max);
 
 	/**
 	 * Generates a random number in the interval [0.0, 1.0)
@@ -72,7 +72,7 @@ struct rnd_interface {
 	 * @remark
 	 *  interval is open ended, so 1.0 is excluded
 	 */
-	double (*uniform) (void);
+	double (*uniform)(void);
 
 	/**
 	 * Generates a random number in the interval [0.0, 1.0) with 53-bit resolution.
@@ -82,7 +82,7 @@ struct rnd_interface {
 	 * @remark
 	 *   interval is open ended, so 1.0 is excluded
 	 */
-	double (*uniform53) (void);
+	double (*uniform53)(void);
 };
 
 /**

@@ -91,7 +91,7 @@ enum DBReleaseOption {
 	DB_RELEASE_NOTHING = 0x0,
 	DB_RELEASE_KEY     = 0x1,
 	DB_RELEASE_DATA    = 0x2,
-	DB_RELEASE_BOTH    = DB_RELEASE_KEY|DB_RELEASE_DATA,
+	DB_RELEASE_BOTH    = DB_RELEASE_KEY | DB_RELEASE_DATA,
 };
 
 /**
@@ -150,7 +150,7 @@ enum DBOptions {
 	DB_OPT_DUP_KEY         = 0x01,
 	DB_OPT_RELEASE_KEY     = 0x02,
 	DB_OPT_RELEASE_DATA    = 0x04,
-	DB_OPT_RELEASE_BOTH    = DB_OPT_RELEASE_KEY|DB_OPT_RELEASE_DATA,
+	DB_OPT_RELEASE_BOTH    = DB_OPT_RELEASE_KEY | DB_OPT_RELEASE_DATA,
 	DB_OPT_ALLOW_NULL_KEY  = 0x08,
 	DB_OPT_ALLOW_NULL_DATA = 0x10,
 };
@@ -200,6 +200,7 @@ enum DBDataType {
  */
 struct DBData {
 	enum DBDataType type;
+
 	union {
 		int i;
 		unsigned int ui;
@@ -377,7 +378,6 @@ struct DBIterator {
 	 * @protected
 	 */
 	void (*destroy)(struct DBIterator *self);
-
 };
 
 /**
@@ -387,7 +387,6 @@ struct DBIterator {
  * @see #db_alloc()
  */
 struct DBMap {
-
 	/**
 	 * Returns a new iterator for this database.
 	 * The iterator keeps the database locked until it is destroyed.
@@ -453,7 +452,9 @@ struct DBMap {
 	 * @protected
 	 * @see struct DBMap#getall()
 	 */
-	unsigned int (*vgetall)(struct DBMap *self, struct DBData **buf, unsigned int max, DBMatcher match, va_list args);
+	unsigned int (*vgetall)(
+	    struct DBMap *self, struct DBData **buf, unsigned int max, DBMatcher match, va_list args
+	);
 
 	/**
 	 * Just calls struct DBMap#vensure().
@@ -621,102 +622,101 @@ struct DBMap {
 	 * @protected
 	 */
 	enum DBOptions (*options)(struct DBMap *self);
-
 };
 
 // For easy access to the common functions.
 
-#define db_exists(db,k)     ( (db)->exists((db),(k)) )
-#define idb_exists(db,k)    ( (db)->exists((db),DB->i2key(k)) )
-#define uidb_exists(db,k)   ( (db)->exists((db),DB->ui2key(k)) )
-#define strdb_exists(db,k)  ( (db)->exists((db),DB->str2key(k)) )
-#define i64db_exists(db,k)  ( (db)->exists((db),DB->i642key(k)) )
-#define ui64db_exists(db,k) ( (db)->exists((db),DB->ui642key(k)) )
+#define db_exists(db, k)     ((db)->exists((db), (k)))
+#define idb_exists(db, k)    ((db)->exists((db), DB->i2key(k)))
+#define uidb_exists(db, k)   ((db)->exists((db), DB->ui2key(k)))
+#define strdb_exists(db, k)  ((db)->exists((db), DB->str2key(k)))
+#define i64db_exists(db, k)  ((db)->exists((db), DB->i642key(k)))
+#define ui64db_exists(db, k) ((db)->exists((db), DB->ui642key(k)))
 
 // Get pointer-type data from DBMaps of various key types
-#define db_get(db,k)     ( DB->data2ptr((db)->get((db),(k))) )
-#define idb_get(db,k)    ( DB->data2ptr((db)->get((db),DB->i2key(k))) )
-#define uidb_get(db,k)   ( DB->data2ptr((db)->get((db),DB->ui2key(k))) )
-#define strdb_get(db,k)  ( DB->data2ptr((db)->get((db),DB->str2key(k))) )
-#define i64db_get(db,k)  ( DB->data2ptr((db)->get((db),DB->i642key(k))) )
-#define ui64db_get(db,k) ( DB->data2ptr((db)->get((db),DB->ui642key(k))) )
+#define db_get(db, k)     (DB->data2ptr((db)->get((db), (k))))
+#define idb_get(db, k)    (DB->data2ptr((db)->get((db), DB->i2key(k))))
+#define uidb_get(db, k)   (DB->data2ptr((db)->get((db), DB->ui2key(k))))
+#define strdb_get(db, k)  (DB->data2ptr((db)->get((db), DB->str2key(k))))
+#define i64db_get(db, k)  (DB->data2ptr((db)->get((db), DB->i642key(k))))
+#define ui64db_get(db, k) (DB->data2ptr((db)->get((db), DB->ui642key(k))))
 
 // Get int-type data from DBMaps of various key types
-#define db_iget(db,k)     ( DB->data2i((db)->get((db),(k))) )
-#define idb_iget(db,k)    ( DB->data2i((db)->get((db),DB->i2key(k))) )
-#define uidb_iget(db,k)   ( DB->data2i((db)->get((db),DB->ui2key(k))) )
-#define strdb_iget(db,k)  ( DB->data2i((db)->get((db),DB->str2key(k))) )
-#define i64db_iget(db,k)  ( DB->data2i((db)->get((db),DB->i642key(k))) )
-#define ui64db_iget(db,k) ( DB->data2i((db)->get((db),DB->ui642key(k))) )
+#define db_iget(db, k)     (DB->data2i((db)->get((db), (k))))
+#define idb_iget(db, k)    (DB->data2i((db)->get((db), DB->i2key(k))))
+#define uidb_iget(db, k)   (DB->data2i((db)->get((db), DB->ui2key(k))))
+#define strdb_iget(db, k)  (DB->data2i((db)->get((db), DB->str2key(k))))
+#define i64db_iget(db, k)  (DB->data2i((db)->get((db), DB->i642key(k))))
+#define ui64db_iget(db, k) (DB->data2i((db)->get((db), DB->ui642key(k))))
 
 // Get uint-type data from DBMaps of various key types
-#define db_uiget(db,k)     ( DB->data2ui((db)->get((db),(k))) )
-#define idb_uiget(db,k)    ( DB->data2ui((db)->get((db),DB->i2key(k))) )
-#define uidb_uiget(db,k)   ( DB->data2ui((db)->get((db),DB->ui2key(k))) )
-#define strdb_uiget(db,k)  ( DB->data2ui((db)->get((db),DB->str2key(k))) )
-#define i64db_uiget(db,k)  ( DB->data2ui((db)->get((db),DB->i642key(k))) )
-#define ui64db_uiget(db,k) ( DB->data2ui((db)->get((db),DB->ui642key(k))) )
+#define db_uiget(db, k)     (DB->data2ui((db)->get((db), (k))))
+#define idb_uiget(db, k)    (DB->data2ui((db)->get((db), DB->i2key(k))))
+#define uidb_uiget(db, k)   (DB->data2ui((db)->get((db), DB->ui2key(k))))
+#define strdb_uiget(db, k)  (DB->data2ui((db)->get((db), DB->str2key(k))))
+#define i64db_uiget(db, k)  (DB->data2ui((db)->get((db), DB->i642key(k))))
+#define ui64db_uiget(db, k) (DB->data2ui((db)->get((db), DB->ui642key(k))))
 
 // Put pointer-type data into DBMaps of various key types
-#define db_put(db,k,d)     ( (db)->put((db),(k),DB->ptr2data(d),NULL) )
-#define idb_put(db,k,d)    ( (db)->put((db),DB->i2key(k),DB->ptr2data(d),NULL) )
-#define uidb_put(db,k,d)   ( (db)->put((db),DB->ui2key(k),DB->ptr2data(d),NULL) )
-#define strdb_put(db,k,d)  ( (db)->put((db),DB->str2key(k),DB->ptr2data(d),NULL) )
-#define i64db_put(db,k,d)  ( (db)->put((db),DB->i642key(k),DB->ptr2data(d),NULL) )
-#define ui64db_put(db,k,d) ( (db)->put((db),DB->ui642key(k),DB->ptr2data(d),NULL) )
+#define db_put(db, k, d)     ((db)->put((db), (k), DB->ptr2data(d), NULL))
+#define idb_put(db, k, d)    ((db)->put((db), DB->i2key(k), DB->ptr2data(d), NULL))
+#define uidb_put(db, k, d)   ((db)->put((db), DB->ui2key(k), DB->ptr2data(d), NULL))
+#define strdb_put(db, k, d)  ((db)->put((db), DB->str2key(k), DB->ptr2data(d), NULL))
+#define i64db_put(db, k, d)  ((db)->put((db), DB->i642key(k), DB->ptr2data(d), NULL))
+#define ui64db_put(db, k, d) ((db)->put((db), DB->ui642key(k), DB->ptr2data(d), NULL))
 
 // Put int-type data into DBMaps of various key types
-#define db_iput(db,k,d)     ( (db)->put((db),(k),DB->i2data(d),NULL) )
-#define idb_iput(db,k,d)    ( (db)->put((db),DB->i2key(k),DB->i2data(d),NULL) )
-#define uidb_iput(db,k,d)   ( (db)->put((db),DB->ui2key(k),DB->i2data(d),NULL) )
-#define strdb_iput(db,k,d)  ( (db)->put((db),DB->str2key(k),DB->i2data(d),NULL) )
-#define i64db_iput(db,k,d)  ( (db)->put((db),DB->i642key(k),DB->i2data(d),NULL) )
-#define ui64db_iput(db,k,d) ( (db)->put((db),DB->ui642key(k),DB->i2data(d),NULL) )
+#define db_iput(db, k, d)     ((db)->put((db), (k), DB->i2data(d), NULL))
+#define idb_iput(db, k, d)    ((db)->put((db), DB->i2key(k), DB->i2data(d), NULL))
+#define uidb_iput(db, k, d)   ((db)->put((db), DB->ui2key(k), DB->i2data(d), NULL))
+#define strdb_iput(db, k, d)  ((db)->put((db), DB->str2key(k), DB->i2data(d), NULL))
+#define i64db_iput(db, k, d)  ((db)->put((db), DB->i642key(k), DB->i2data(d), NULL))
+#define ui64db_iput(db, k, d) ((db)->put((db), DB->ui642key(k), DB->i2data(d), NULL))
 
 // Put uint-type data into DBMaps of various key types
-#define db_uiput(db,k,d)     ( (db)->put((db),(k),DB->ui2data(d),NULL) )
-#define idb_uiput(db,k,d)    ( (db)->put((db),DB->i2key(k),DB->ui2data(d),NULL) )
-#define uidb_uiput(db,k,d)   ( (db)->put((db),DB->ui2key(k),DB->ui2data(d),NULL) )
-#define strdb_uiput(db,k,d)  ( (db)->put((db),DB->str2key(k),DB->ui2data(d),NULL) )
-#define i64db_uiput(db,k,d)  ( (db)->put((db),DB->i642key(k),DB->ui2data(d),NULL) )
-#define ui64db_uiput(db,k,d) ( (db)->put((db),DB->ui642key(k),DB->ui2data(d),NULL) )
+#define db_uiput(db, k, d)     ((db)->put((db), (k), DB->ui2data(d), NULL))
+#define idb_uiput(db, k, d)    ((db)->put((db), DB->i2key(k), DB->ui2data(d), NULL))
+#define uidb_uiput(db, k, d)   ((db)->put((db), DB->ui2key(k), DB->ui2data(d), NULL))
+#define strdb_uiput(db, k, d)  ((db)->put((db), DB->str2key(k), DB->ui2data(d), NULL))
+#define i64db_uiput(db, k, d)  ((db)->put((db), DB->i642key(k), DB->ui2data(d), NULL))
+#define ui64db_uiput(db, k, d) ((db)->put((db), DB->ui642key(k), DB->ui2data(d), NULL))
 
 // Remove entry from DBMaps of various key types
-#define db_remove(db,k)     ( (db)->remove((db),(k),NULL) )
-#define idb_remove(db,k)    ( (db)->remove((db),DB->i2key(k),NULL) )
-#define uidb_remove(db,k)   ( (db)->remove((db),DB->ui2key(k),NULL) )
-#define strdb_remove(db,k)  ( (db)->remove((db),DB->str2key(k),NULL) )
-#define i64db_remove(db,k)  ( (db)->remove((db),DB->i642key(k),NULL) )
-#define ui64db_remove(db,k) ( (db)->remove((db),DB->ui642key(k),NULL) )
+#define db_remove(db, k)     ((db)->remove((db), (k), NULL))
+#define idb_remove(db, k)    ((db)->remove((db), DB->i2key(k), NULL))
+#define uidb_remove(db, k)   ((db)->remove((db), DB->ui2key(k), NULL))
+#define strdb_remove(db, k)  ((db)->remove((db), DB->str2key(k), NULL))
+#define i64db_remove(db, k)  ((db)->remove((db), DB->i642key(k), NULL))
+#define ui64db_remove(db, k) ((db)->remove((db), DB->ui642key(k), NULL))
 
-//These are discarding the possible vargs you could send to the function, so those
-//that require vargs must not use these defines.
-#define db_ensure(db,k,f)     ( DB->data2ptr((db)->ensure((db),(k),(f))) )
-#define idb_ensure(db,k,f)    ( DB->data2ptr((db)->ensure((db),DB->i2key(k),(f))) )
-#define uidb_ensure(db,k,f)   ( DB->data2ptr((db)->ensure((db),DB->ui2key(k),(f))) )
-#define strdb_ensure(db,k,f)  ( DB->data2ptr((db)->ensure((db),DB->str2key(k),(f))) )
-#define i64db_ensure(db,k,f)  ( DB->data2ptr((db)->ensure((db),DB->i642key(k),(f))) )
-#define ui64db_ensure(db,k,f) ( DB->data2ptr((db)->ensure((db),DB->ui642key(k),(f))) )
+// These are discarding the possible vargs you could send to the function, so those
+// that require vargs must not use these defines.
+#define db_ensure(db, k, f)     (DB->data2ptr((db)->ensure((db), (k), (f))))
+#define idb_ensure(db, k, f)    (DB->data2ptr((db)->ensure((db), DB->i2key(k), (f))))
+#define uidb_ensure(db, k, f)   (DB->data2ptr((db)->ensure((db), DB->ui2key(k), (f))))
+#define strdb_ensure(db, k, f)  (DB->data2ptr((db)->ensure((db), DB->str2key(k), (f))))
+#define i64db_ensure(db, k, f)  (DB->data2ptr((db)->ensure((db), DB->i642key(k), (f))))
+#define ui64db_ensure(db, k, f) (DB->data2ptr((db)->ensure((db), DB->ui642key(k), (f))))
 
 // Database creation and destruction macros
-#define idb_alloc(opt)            DB->alloc(__FILE__,__func__,__LINE__,DB_INT,(opt),sizeof(int))
-#define uidb_alloc(opt)           DB->alloc(__FILE__,__func__,__LINE__,DB_UINT,(opt),sizeof(unsigned int))
-#define strdb_alloc(opt,maxlen)   DB->alloc(__FILE__,__func__,__LINE__,DB_STRING,(opt),(maxlen))
-#define stridb_alloc(opt,maxlen)  DB->alloc(__FILE__,__func__,__LINE__,DB_ISTRING,(opt),(maxlen))
-#define i64db_alloc(opt)          DB->alloc(__FILE__,__func__,__LINE__,DB_INT64,(opt),sizeof(int64))
-#define ui64db_alloc(opt)         DB->alloc(__FILE__,__func__,__LINE__,DB_UINT64,(opt),sizeof(uint64))
-#define db_destroy(db)            ( (db)->destroy((db),NULL) )
+#define idb_alloc(opt)            DB->alloc(__FILE__, __func__, __LINE__, DB_INT, (opt), sizeof(int))
+#define uidb_alloc(opt)           DB->alloc(__FILE__, __func__, __LINE__, DB_UINT, (opt), sizeof(unsigned int))
+#define strdb_alloc(opt, maxlen)  DB->alloc(__FILE__, __func__, __LINE__, DB_STRING, (opt), (maxlen))
+#define stridb_alloc(opt, maxlen) DB->alloc(__FILE__, __func__, __LINE__, DB_ISTRING, (opt), (maxlen))
+#define i64db_alloc(opt)          DB->alloc(__FILE__, __func__, __LINE__, DB_INT64, (opt), sizeof(int64))
+#define ui64db_alloc(opt)         DB->alloc(__FILE__, __func__, __LINE__, DB_UINT64, (opt), sizeof(uint64))
+#define db_destroy(db)            ((db)->destroy((db), NULL))
 // Other macros
-#define db_clear(db)        ( (db)->clear((db),NULL) )
-#define db_size(db)         ( (db)->size(db) )
-#define db_iterator(db)     ( (db)->iterator(db) )
-#define dbi_first(dbi)      ( DB->data2ptr((dbi)->first((dbi),NULL)) )
-#define dbi_last(dbi)       ( DB->data2ptr((dbi)->last((dbi),NULL)) )
-#define dbi_next(dbi)       ( DB->data2ptr((dbi)->next((dbi),NULL)) )
-#define dbi_prev(dbi)       ( DB->data2ptr((dbi)->prev((dbi),NULL)) )
-#define dbi_remove(dbi)     ( (dbi)->remove((dbi),NULL) )
-#define dbi_exists(dbi)     ( (dbi)->exists(dbi) )
-#define dbi_destroy(dbi)    ( (dbi)->destroy(dbi) )
+#define db_clear(db)              ((db)->clear((db), NULL))
+#define db_size(db)               ((db)->size(db))
+#define db_iterator(db)           ((db)->iterator(db))
+#define dbi_first(dbi)            (DB->data2ptr((dbi)->first((dbi), NULL)))
+#define dbi_last(dbi)             (DB->data2ptr((dbi)->last((dbi), NULL)))
+#define dbi_next(dbi)             (DB->data2ptr((dbi)->next((dbi), NULL)))
+#define dbi_prev(dbi)             (DB->data2ptr((dbi)->prev((dbi), NULL)))
+#define dbi_remove(dbi)           ((dbi)->remove((dbi), NULL))
+#define dbi_exists(dbi)           ((dbi)->exists(dbi))
+#define dbi_destroy(dbi)          ((dbi)->destroy(dbi))
 
 /*****************************************************************************
  *  (2) Section with public functions.                                       *
@@ -743,221 +743,224 @@ struct DBMap {
  *****************************************************************************/
 
 struct db_interface {
-/**
- * Returns the fixed options according to the database type.
- * Sets required options and unsets unsupported options.
- * For numeric databases DB_OPT_DUP_KEY and DB_OPT_RELEASE_KEY are unset.
- * @param type Type of the database
- * @param options Original options of the database
- * @return Fixed options of the database
- * @private
- * @see enum DBType
- * @see enum DBOptions
- * @see #db_default_release()
- */
-enum DBOptions (*fix_options) (enum DBType type, enum DBOptions options);
+	/**
+	 * Returns the fixed options according to the database type.
+	 * Sets required options and unsets unsupported options.
+	 * For numeric databases DB_OPT_DUP_KEY and DB_OPT_RELEASE_KEY are unset.
+	 * @param type Type of the database
+	 * @param options Original options of the database
+	 * @return Fixed options of the database
+	 * @private
+	 * @see enum DBType
+	 * @see enum DBOptions
+	 * @see #db_default_release()
+	 */
+	enum DBOptions (*fix_options)(enum DBType type, enum DBOptions options);
 
-/**
- * Returns the default comparator for the type of database.
- * @param type Type of database
- * @return Comparator for the type of database or NULL if unknown database
- * @public
- * @see enum DBType
- * @see #DBComparator
- */
-DBComparator (*default_cmp) (enum DBType type);
+	/**
+	 * Returns the default comparator for the type of database.
+	 * @param type Type of database
+	 * @return Comparator for the type of database or NULL if unknown database
+	 * @public
+	 * @see enum DBType
+	 * @see #DBComparator
+	 */
+	DBComparator (*default_cmp)(enum DBType type);
 
-/**
- * Returns the default hasher for the specified type of database.
- * @param type Type of database
- * @return Hasher of the type of database or NULL if unknown database
- * @public
- * @see enum DBType
- * @see #DBHasher
- */
-DBHasher (*default_hash) (enum DBType type);
+	/**
+	 * Returns the default hasher for the specified type of database.
+	 * @param type Type of database
+	 * @return Hasher of the type of database or NULL if unknown database
+	 * @public
+	 * @see enum DBType
+	 * @see #DBHasher
+	 */
+	DBHasher (*default_hash)(enum DBType type);
 
-/**
- * Returns the default releaser for the specified type of database with the
- * specified options.
- *
- * NOTE: the options are fixed by #db_fix_options() before choosing the
- * releaser.
- *
- * @param type Type of database
- * @param options Options of the database
- * @return Default releaser for the type of database with the fixed options
- * @public
- * @see enum DBType
- * @see enum DBOptions
- * @see #DBReleaser
- * @see #db_fix_options()
- * @see #db_custom_release()
- */
-DBReleaser (*default_release) (enum DBType type, enum DBOptions options);
+	/**
+	 * Returns the default releaser for the specified type of database with the
+	 * specified options.
+	 *
+	 * NOTE: the options are fixed by #db_fix_options() before choosing the
+	 * releaser.
+	 *
+	 * @param type Type of database
+	 * @param options Options of the database
+	 * @return Default releaser for the type of database with the fixed options
+	 * @public
+	 * @see enum DBType
+	 * @see enum DBOptions
+	 * @see #DBReleaser
+	 * @see #db_fix_options()
+	 * @see #db_custom_release()
+	 */
+	DBReleaser (*default_release)(enum DBType type, enum DBOptions options);
 
-/**
- * Returns the releaser that behaves as <code>which</code> specifies.
- * @param which Defines what the releaser releases
- * @return Releaser for the specified release options
- * @public
- * @see enum DBReleaseOption
- * @see #DBReleaser
- * @see #db_default_release()
- */
-DBReleaser (*custom_release)  (enum DBReleaseOption which);
+	/**
+	 * Returns the releaser that behaves as <code>which</code> specifies.
+	 * @param which Defines what the releaser releases
+	 * @return Releaser for the specified release options
+	 * @public
+	 * @see enum DBReleaseOption
+	 * @see #DBReleaser
+	 * @see #db_default_release()
+	 */
+	DBReleaser (*custom_release)(enum DBReleaseOption which);
 
-/**
- * Allocate a new database of the specified type.
- *
- * It uses the default comparator, hasher and releaser of the specified
- * database type and fixed options.
- *
- * NOTE: the options are fixed by #db_fix_options() before creating the
- * database.
- *
- * @param file File where the database is being allocated
- * @param line Line of the file where the database is being allocated
- * @param type Type of database
- * @param options Options of the database
- * @param maxlen Maximum length of the string to be used as key in string
- *          databases. If 0, the maximum number of maxlen is used (64K).
- * @return The interface of the database
- * @public
- * @see enum DBType
- * @see struct DBMap
- * @see #db_default_cmp()
- * @see #db_default_hash()
- * @see #db_default_release()
- * @see #db_fix_options()
- */
-struct DBMap *(*alloc) (const char *file, const char *func, int line, enum DBType type, enum DBOptions options, unsigned short maxlen);
+	/**
+	 * Allocate a new database of the specified type.
+	 *
+	 * It uses the default comparator, hasher and releaser of the specified
+	 * database type and fixed options.
+	 *
+	 * NOTE: the options are fixed by #db_fix_options() before creating the
+	 * database.
+	 *
+	 * @param file File where the database is being allocated
+	 * @param line Line of the file where the database is being allocated
+	 * @param type Type of database
+	 * @param options Options of the database
+	 * @param maxlen Maximum length of the string to be used as key in string
+	 *          databases. If 0, the maximum number of maxlen is used (64K).
+	 * @return The interface of the database
+	 * @public
+	 * @see enum DBType
+	 * @see struct DBMap
+	 * @see #db_default_cmp()
+	 * @see #db_default_hash()
+	 * @see #db_default_release()
+	 * @see #db_fix_options()
+	 */
+	struct DBMap *(*alloc)(
+	    const char *file, const char *func, int line, enum DBType type, enum DBOptions options,
+	    unsigned short maxlen
+	);
 
-/**
- * Manual cast from 'int' to the union DBKey.
- * @param key Key to be casted
- * @return The key as a DBKey union
- * @public
- */
-union DBKey (*i2key) (int key);
+	/**
+	 * Manual cast from 'int' to the union DBKey.
+	 * @param key Key to be casted
+	 * @return The key as a DBKey union
+	 * @public
+	 */
+	union DBKey (*i2key)(int key);
 
-/**
- * Manual cast from 'unsigned int' to the union DBKey.
- * @param key Key to be casted
- * @return The key as a DBKey union
- * @public
- */
-union DBKey (*ui2key) (unsigned int key);
+	/**
+	 * Manual cast from 'unsigned int' to the union DBKey.
+	 * @param key Key to be casted
+	 * @return The key as a DBKey union
+	 * @public
+	 */
+	union DBKey (*ui2key)(unsigned int key);
 
-/**
- * Manual cast from 'unsigned char *' to the union DBKey.
- * @param key Key to be casted
- * @return The key as a DBKey union
- * @public
- */
-union DBKey (*str2key) (const char *key);
+	/**
+	 * Manual cast from 'unsigned char *' to the union DBKey.
+	 * @param key Key to be casted
+	 * @return The key as a DBKey union
+	 * @public
+	 */
+	union DBKey (*str2key)(const char *key);
 
-/**
- * Manual cast from 'int64' to the union DBKey.
- * @param key Key to be casted
- * @return The key as a DBKey union
- * @public
- */
-union DBKey (*i642key) (int64 key);
+	/**
+	 * Manual cast from 'int64' to the union DBKey.
+	 * @param key Key to be casted
+	 * @return The key as a DBKey union
+	 * @public
+	 */
+	union DBKey (*i642key)(int64 key);
 
-/**
- * Manual cast from 'uint64' to the union DBKey.
- * @param key Key to be casted
- * @return The key as a DBKey union
- * @public
- */
-union DBKey (*ui642key) (uint64 key);
+	/**
+	 * Manual cast from 'uint64' to the union DBKey.
+	 * @param key Key to be casted
+	 * @return The key as a DBKey union
+	 * @public
+	 */
+	union DBKey (*ui642key)(uint64 key);
 
-/**
- * Manual cast from 'int' to the struct DBData.
- * @param data Data to be casted
- * @return The data as a DBData struct
- * @public
- */
-struct DBData (*i2data) (int data);
+	/**
+	 * Manual cast from 'int' to the struct DBData.
+	 * @param data Data to be casted
+	 * @return The data as a DBData struct
+	 * @public
+	 */
+	struct DBData (*i2data)(int data);
 
-/**
- * Manual cast from 'unsigned int' to the struct DBData.
- * @param data Data to be casted
- * @return The data as a DBData struct
- * @public
- */
-struct DBData (*ui2data) (unsigned int data);
+	/**
+	 * Manual cast from 'unsigned int' to the struct DBData.
+	 * @param data Data to be casted
+	 * @return The data as a DBData struct
+	 * @public
+	 */
+	struct DBData (*ui2data)(unsigned int data);
 
-/**
- * Manual cast from 'void *' to the struct DBData.
- * @param data Data to be casted
- * @return The data as a DBData struct
- * @public
- */
-struct DBData (*ptr2data) (void *data);
+	/**
+	 * Manual cast from 'void *' to the struct DBData.
+	 * @param data Data to be casted
+	 * @return The data as a DBData struct
+	 * @public
+	 */
+	struct DBData (*ptr2data)(void *data);
 
-/**
- * Gets int type data from struct DBData.
- * If data is not int type, returns 0.
- * @param data Data
- * @return Integer value of the data.
- * @public
- */
-int (*data2i) (struct DBData *data);
+	/**
+	 * Gets int type data from struct DBData.
+	 * If data is not int type, returns 0.
+	 * @param data Data
+	 * @return Integer value of the data.
+	 * @public
+	 */
+	int (*data2i)(struct DBData *data);
 
-/**
- * Gets unsigned int type data from struct DBData.
- * If data is not unsigned int type, returns 0.
- * @param data Data
- * @return Unsigned int value of the data.
- * @public
- */
-unsigned int (*data2ui) (struct DBData *data);
+	/**
+	 * Gets unsigned int type data from struct DBData.
+	 * If data is not unsigned int type, returns 0.
+	 * @param data Data
+	 * @return Unsigned int value of the data.
+	 * @public
+	 */
+	unsigned int (*data2ui)(struct DBData *data);
 
-/**
- * Gets void* type data from struct DBData.
- * If data is not void* type, returns NULL.
- * @param data Data
- * @return Void* value of the data.
- * @public
- */
-void* (*data2ptr) (struct DBData *data);
+	/**
+	 * Gets void* type data from struct DBData.
+	 * If data is not void* type, returns NULL.
+	 * @param data Data
+	 * @return Void* value of the data.
+	 * @public
+	 */
+	void *(*data2ptr)(struct DBData *data);
 
-/**
- * Initialize the database system.
- * @public
- * @see #db_final(void)
- */
-void (*init) (void);
+	/**
+	 * Initialize the database system.
+	 * @public
+	 * @see #db_final(void)
+	 */
+	void (*init)(void);
 
-/**
- * Finalize the database system.
- * Frees the memory used by the block reusage system.
- * @public
- * @see #db_init(void)
- */
-void (*final) (void);
+	/**
+	 * Finalize the database system.
+	 * Frees the memory used by the block reusage system.
+	 * @public
+	 * @see #db_init(void)
+	 */
+	void (*final)(void);
 };
 
 // Link DB System - From jAthena
 struct linkdb_node {
 	struct linkdb_node *next;
 	struct linkdb_node *prev;
-	void               *key;
-	void               *data;
+	void *key;
+	void *data;
 };
 
-typedef void (*LinkDBFunc)(void* key, void* data, va_list args);
+typedef void (*LinkDBFunc)(void *key, void *data, va_list args);
 
 #ifdef HERCULES_CORE
-void  linkdb_insert  (struct linkdb_node** head, void *key, void* data); // Doesn't take into account duplicate keys
-void  linkdb_replace (struct linkdb_node** head, void *key, void* data); // Takes into account duplicate keys
-void* linkdb_search  (struct linkdb_node** head, void *key);
-void* linkdb_erase   (struct linkdb_node** head, void *key);
-void  linkdb_final   (struct linkdb_node** head);
-void  linkdb_vforeach(struct linkdb_node** head, LinkDBFunc func, va_list ap);
-void  linkdb_foreach (struct linkdb_node** head, LinkDBFunc func, ...);
+void linkdb_insert(struct linkdb_node **head, void *key, void *data);  // Doesn't take into account duplicate keys
+void linkdb_replace(struct linkdb_node **head, void *key, void *data); // Takes into account duplicate keys
+void *linkdb_search(struct linkdb_node **head, void *key);
+void *linkdb_erase(struct linkdb_node **head, void *key);
+void linkdb_final(struct linkdb_node **head);
+void linkdb_vforeach(struct linkdb_node **head, LinkDBFunc func, va_list ap);
+void linkdb_foreach(struct linkdb_node **head, LinkDBFunc func, ...);
 
 void db_defaults(void);
 #endif // HERCULES_CORE
@@ -988,7 +991,7 @@ HPShared struct db_interface *DB;
 		for ((_var) = (_start); (_var) < (_end); ++(_var)) \
 			if (_cmp) \
 				break; \
-	} while(false)
+	} while (false)
 
 /**
  * Moves an entry of the array.
@@ -1009,14 +1012,14 @@ HPShared struct db_interface *DB;
 	do { \
 		if ((_from) != (_to)) { \
 			_type _backup_; \
-			memmove(&_backup_, (_arr)+(_from), sizeof(_type)); \
+			memmove(&_backup_, (_arr) + (_from), sizeof(_type)); \
 			if ((_from) < (_to)) \
-				memmove((_arr)+(_from), (_arr)+(_from)+1, ((_to)-(_from))*sizeof(_type)); \
+				memmove((_arr) + (_from), (_arr) + (_from) + 1, ((_to) - (_from)) * sizeof(_type)); \
 			else if ((_from) > (_to)) \
-				memmove((_arr)+(_to)+1, (_arr)+(_to), ((_from)-(_to))*sizeof(_type)); \
-			memmove((_arr)+(_to), &_backup_, sizeof(_type)); \
+				memmove((_arr) + (_to) + 1, (_arr) + (_to), ((_from) - (_to)) * sizeof(_type)); \
+			memmove((_arr) + (_to), &_backup_, sizeof(_type)); \
 		} \
-	} while(false)
+	} while (false)
 
 /**
  * Moves an entry of the array to the right.
@@ -1033,10 +1036,10 @@ HPShared struct db_interface *DB;
 #define ARR_MOVERIGHT(_from, _to, _arr, _type) \
 	do { \
 		_type _backup_; \
-		memmove(&_backup_, (_arr)+(_from), sizeof(_type)); \
-		memmove((_arr)+(_from), (_arr)+(_from)+1, ((_to)-(_from))*sizeof(_type)); \
-		memmove((_arr)+(_to), &_backup_, sizeof(_type)); \
-	} while(false)
+		memmove(&_backup_, (_arr) + (_from), sizeof(_type)); \
+		memmove((_arr) + (_from), (_arr) + (_from) + 1, ((_to) - (_from)) * sizeof(_type)); \
+		memmove((_arr) + (_to), &_backup_, sizeof(_type)); \
+	} while (false)
 
 /**
  * Moves an entry of the array to the left.
@@ -1053,10 +1056,10 @@ HPShared struct db_interface *DB;
 #define ARR_MOVELEFT(_from, _to, _arr, _type) \
 	do { \
 		_type _backup_; \
-		memmove(&_backup_, (_arr)+(_from), sizeof(_type)); \
-		memmove((_arr)+(_to)+1, (_arr)+(_to), ((_from)-(_to))*sizeof(_type)); \
-		memmove((_arr)+(_to), &_backup_, sizeof(_type)); \
-	} while(false)
+		memmove(&_backup_, (_arr) + (_from), sizeof(_type)); \
+		memmove((_arr) + (_to) + 1, (_arr) + (_to), ((_from) - (_to)) * sizeof(_type)); \
+		memmove((_arr) + (_to), &_backup_, sizeof(_type)); \
+	} while (false)
 
 /**
  * Vector library based on defines (dynamic array).
@@ -1096,8 +1099,7 @@ HPShared struct db_interface *DB;
  * @param _type Type of data to be contained.
  * @param _var  Variable name.
  */
-#define VECTOR_VAR(_type, _var) \
-	VECTOR_DECL(_type) _var = {0, 0, NULL}
+#define VECTOR_VAR(_type, _var) VECTOR_DECL(_type) _var = {0, 0, NULL}
 
 /**
  * Declares and initializes a named vector variable.
@@ -1105,8 +1107,7 @@ HPShared struct db_interface *DB;
  * @param _name Structure name.
  * @param _var  Variable name.
  */
-#define VECTOR_STRUCT_VAR(_name, _var) \
-	struct _name _var = {0, 0, NULL}
+#define VECTOR_STRUCT_VAR(_name, _var) struct _name _var = {0, 0, NULL}
 
 /**
  * Initializes a vector.
@@ -1115,10 +1116,10 @@ HPShared struct db_interface *DB;
  */
 #define VECTOR_INIT(_vec) \
 	do { \
-		VECTOR_DATA(_vec) = NULL; \
+		VECTOR_DATA(_vec)     = NULL; \
 		VECTOR_CAPACITY(_vec) = 0; \
-		VECTOR_LENGTH(_vec) = 0; \
-	} while(false)
+		VECTOR_LENGTH(_vec)   = 0; \
+	} while (false)
 
 /**
  * Returns the internal array of values.
@@ -1126,8 +1127,7 @@ HPShared struct db_interface *DB;
  * @param _vec Vector.
  * @return Internal array of values.
  */
-#define VECTOR_DATA(_vec) \
-	( (_vec)._data_ )
+#define VECTOR_DATA(_vec) ((_vec)._data_)
 
 /**
  * Returns the length of the vector (number of elements in use).
@@ -1135,8 +1135,7 @@ HPShared struct db_interface *DB;
  * @param _vec Vector
  * @return Length
  */
-#define VECTOR_LENGTH(_vec) \
-	( (_vec)._len_ )
+#define VECTOR_LENGTH(_vec) ((_vec)._len_)
 
 /**
  * Returns the capacity of the vector (number of elements allocated).
@@ -1144,8 +1143,7 @@ HPShared struct db_interface *DB;
  * @param _vec Vector.
  * @return Capacity.
  */
-#define VECTOR_CAPACITY(_vec) \
-	( (_vec)._max_ )
+#define VECTOR_CAPACITY(_vec) ((_vec)._max_)
 
 /**
  * Returns the value at the target index.
@@ -1156,8 +1154,7 @@ HPShared struct db_interface *DB;
  * @param _idx Index.
  * @return Value.
  */
-#define VECTOR_INDEX(_vec, _idx) \
-	( VECTOR_DATA(_vec)[_idx] )
+#define VECTOR_INDEX(_vec, _idx) (VECTOR_DATA(_vec)[_idx])
 
 /**
  * Returns the first value of the vector.
@@ -1167,8 +1164,7 @@ HPShared struct db_interface *DB;
  * @param _vec Vector.
  * @return First value.
  */
-#define VECTOR_FIRST(_vec) \
-	( VECTOR_INDEX(_vec, 0) )
+#define VECTOR_FIRST(_vec) (VECTOR_INDEX(_vec, 0))
 
 /**
  * Returns the last value of the vector.
@@ -1178,8 +1174,7 @@ HPShared struct db_interface *DB;
  * @param _vec Vector.
  * @return Last value.
  */
-#define VECTOR_LAST(_vec) \
-	( VECTOR_INDEX(_vec, VECTOR_LENGTH(_vec)-1) )
+#define VECTOR_LAST(_vec) (VECTOR_INDEX(_vec, VECTOR_LENGTH(_vec) - 1))
 
 /**
  * Resizes the vector.
@@ -1194,24 +1189,34 @@ HPShared struct db_interface *DB;
 		if ((_n) > VECTOR_CAPACITY(_vec)) { \
 			/* increase size */ \
 			if (VECTOR_CAPACITY(_vec) == 0) \
-				VECTOR_DATA(_vec) = static_cast<decltype((_vec)._data_)>(aMalloc((_n)*sizeof(VECTOR_FIRST(_vec)))); /* allocate new */ \
+				VECTOR_DATA(_vec) = static_cast<decltype((_vec)._data_)>( \
+				    aMalloc((_n) * sizeof(VECTOR_FIRST(_vec))) \
+				); /* allocate new */ \
 			else \
-				VECTOR_DATA(_vec) = static_cast<decltype((_vec)._data_)>(aRealloc(VECTOR_DATA(_vec), (_n)*sizeof(VECTOR_FIRST(_vec)))); /* reallocate */ \
-			memset(VECTOR_DATA(_vec)+VECTOR_LENGTH(_vec), 0, (VECTOR_CAPACITY(_vec)-VECTOR_LENGTH(_vec))*sizeof(VECTOR_FIRST(_vec))); /* clear new data */ \
+				VECTOR_DATA(_vec) = static_cast<decltype((_vec)._data_)>( \
+				    aRealloc(VECTOR_DATA(_vec), (_n) * sizeof(VECTOR_FIRST(_vec))) \
+				); /* reallocate */ \
+			memset( \
+			    VECTOR_DATA(_vec) + VECTOR_LENGTH(_vec), 0, \
+			    (VECTOR_CAPACITY(_vec) - VECTOR_LENGTH(_vec)) * sizeof(VECTOR_FIRST(_vec)) \
+			);                            /* clear new data */ \
 			VECTOR_CAPACITY(_vec) = (_n); /* update capacity */ \
 		} else if ((_n) == 0 && VECTOR_CAPACITY(_vec) > 0) { \
 			/* clear vector */ \
-			aFree(VECTOR_DATA(_vec)); VECTOR_DATA(_vec) = NULL; /* free data */ \
-			VECTOR_CAPACITY(_vec) = 0; /* clear capacity */ \
-			VECTOR_LENGTH(_vec) = 0; /* clear length */ \
+			aFree(VECTOR_DATA(_vec)); \
+			VECTOR_DATA(_vec)     = NULL; /* free data */ \
+			VECTOR_CAPACITY(_vec) = 0;    /* clear capacity */ \
+			VECTOR_LENGTH(_vec)   = 0;    /* clear length */ \
 		} else if ((_n) < VECTOR_CAPACITY(_vec)) { \
 			/* reduce size */ \
-			VECTOR_DATA(_vec) = static_cast<decltype((_vec)._data_)>(aRealloc(VECTOR_DATA(_vec), (_n)*sizeof(VECTOR_FIRST(_vec)))); /* reallocate */ \
+			VECTOR_DATA(_vec) = static_cast<decltype((_vec)._data_)>( \
+			    aRealloc(VECTOR_DATA(_vec), (_n) * sizeof(VECTOR_FIRST(_vec))) \
+			);                            /* reallocate */ \
 			VECTOR_CAPACITY(_vec) = (_n); /* update capacity */ \
 			if ((_n) - VECTOR_LENGTH(_vec) > 0) \
 				VECTOR_LENGTH(_vec) = (_n); /* update length */ \
 		} \
-	} while(false)
+	} while (false)
 
 /**
  * Ensures that the array has the target number of empty positions.
@@ -1229,7 +1234,7 @@ HPShared struct db_interface *DB;
 			_newcapacity_ += (_step); \
 		if (_newcapacity_ > VECTOR_CAPACITY(_vec)) \
 			VECTOR_RESIZE(_vec, _newcapacity_); \
-	} while(false)
+	} while (false)
 
 /**
  * Inserts a zeroed value in the target index.
@@ -1242,10 +1247,13 @@ HPShared struct db_interface *DB;
 #define VECTOR_INSERTZEROED(_vec, _idx) \
 	do { \
 		if ((_idx) < VECTOR_LENGTH(_vec)) /* move data */ \
-			memmove(&VECTOR_INDEX(_vec, (_idx)+1), &VECTOR_INDEX(_vec, _idx), (VECTOR_LENGTH(_vec)-(_idx))*sizeof(VECTOR_FIRST(_vec))); \
+			memmove( \
+			    &VECTOR_INDEX(_vec, (_idx) + 1), &VECTOR_INDEX(_vec, _idx), \
+			    (VECTOR_LENGTH(_vec) - (_idx)) * sizeof(VECTOR_FIRST(_vec)) \
+			); \
 		memset(&VECTOR_INDEX(_vec, _idx), 0, sizeof(VECTOR_INDEX(_vec, _idx))); /* set zeroed value */ \
-		++VECTOR_LENGTH(_vec); /* increase length */ \
-	} while(false)
+		++VECTOR_LENGTH(_vec);                                                  /* increase length */ \
+	} while (false)
 
 /**
  * Inserts a value in the target index (using the '=' operator).
@@ -1259,10 +1267,13 @@ HPShared struct db_interface *DB;
 #define VECTOR_INSERT(_vec, _idx, _val) \
 	do { \
 		if ((_idx) < VECTOR_LENGTH(_vec)) /* move data */ \
-			memmove(&VECTOR_INDEX(_vec, (_idx)+1), &VECTOR_INDEX(_vec, _idx), (VECTOR_LENGTH(_vec)-(_idx))*sizeof(VECTOR_FIRST(_vec))); \
+			memmove( \
+			    &VECTOR_INDEX(_vec, (_idx) + 1), &VECTOR_INDEX(_vec, _idx), \
+			    (VECTOR_LENGTH(_vec) - (_idx)) * sizeof(VECTOR_FIRST(_vec)) \
+			); \
 		VECTOR_INDEX(_vec, _idx) = (_val); /* set value */ \
-		++VECTOR_LENGTH(_vec); /* increase length */ \
-	} while(false)
+		++VECTOR_LENGTH(_vec);             /* increase length */ \
+	} while (false)
 
 /**
  * Inserts a value in the target index (using memcpy).
@@ -1273,8 +1284,7 @@ HPShared struct db_interface *DB;
  * @param _idx Index.
  * @param _val Value.
  */
-#define VECTOR_INSERTCOPY(_vec, _idx, _val) \
-	VECTOR_INSERTARRAY(_vec, _idx, &(_val), 1)
+#define VECTOR_INSERTCOPY(_vec, _idx, _val) VECTOR_INSERTARRAY(_vec, _idx, &(_val), 1)
 
 /**
  * Inserts the values of the array in the target index (using memcpy).
@@ -1289,10 +1299,13 @@ HPShared struct db_interface *DB;
 #define VECTOR_INSERTARRAY(_vec, _idx, _pval, _n) \
 	do { \
 		if ((_idx) < VECTOR_LENGTH(_vec)) /* move data */ \
-			memmove(&VECTOR_INDEX(_vec, (_idx)+(_n)), &VECTOR_INDEX(_vec, _idx), (VECTOR_LENGTH(_vec)-(_idx))*sizeof(VECTOR_FIRST(_vec))); \
-		memcpy(&VECTOR_INDEX(_vec, _idx), (_pval), (_n)*sizeof(VECTOR_FIRST(_vec))); /* set values */ \
-		VECTOR_LENGTH(_vec) += (_n); /* increase length */ \
-	} while(false)
+			memmove( \
+			    &VECTOR_INDEX(_vec, (_idx) + (_n)), &VECTOR_INDEX(_vec, _idx), \
+			    (VECTOR_LENGTH(_vec) - (_idx)) * sizeof(VECTOR_FIRST(_vec)) \
+			); \
+		memcpy(&VECTOR_INDEX(_vec, _idx), (_pval), (_n) * sizeof(VECTOR_FIRST(_vec))); /* set values */ \
+		VECTOR_LENGTH(_vec) += (_n);                                                   /* increase length */ \
+	} while (false)
 
 /**
  * Inserts a zeroed value in the end of the vector.
@@ -1303,9 +1316,11 @@ HPShared struct db_interface *DB;
  */
 #define VECTOR_PUSHZEROED(_vec) \
 	do { \
-		memset(&VECTOR_INDEX(_vec, VECTOR_LENGTH(_vec)), 0, sizeof(VECTOR_INDEX(_vec, VECTOR_LENGTH(_vec)))); /* set zeroed value */ \
+		memset( \
+		    &VECTOR_INDEX(_vec, VECTOR_LENGTH(_vec)), 0, sizeof(VECTOR_INDEX(_vec, VECTOR_LENGTH(_vec))) \
+		);                     /* set zeroed value */ \
 		++VECTOR_LENGTH(_vec); /* increase length */ \
-	} while(false)
+	} while (false)
 
 /**
  * Appends a value at the end of the vector (using the '=' operator).
@@ -1318,8 +1333,8 @@ HPShared struct db_interface *DB;
 #define VECTOR_PUSH(_vec, _val) \
 	do { \
 		VECTOR_INDEX(_vec, VECTOR_LENGTH(_vec)) = (_val); /* set value */ \
-		++VECTOR_LENGTH(_vec); /* increase length */ \
-	}while(false)
+		++VECTOR_LENGTH(_vec);                            /* increase length */ \
+	} while (false)
 
 /**
  * Appends a value at the end of the vector (using memcpy).
@@ -1329,8 +1344,7 @@ HPShared struct db_interface *DB;
  * @param _vec Vector.
  * @param _val Value.
  */
-#define VECTOR_PUSHCOPY(_vec, _val) \
-	VECTOR_PUSHARRAY(_vec, &(_val), 1)
+#define VECTOR_PUSHCOPY(_vec, _val) VECTOR_PUSHARRAY(_vec, &(_val), 1)
 
 /**
  * Appends the values of the array at the end of the vector (using memcpy).
@@ -1343,9 +1357,11 @@ HPShared struct db_interface *DB;
  */
 #define VECTOR_PUSHARRAY(_vec, _pval, _n) \
 	do { \
-		memcpy(&VECTOR_INDEX(_vec, VECTOR_LENGTH(_vec)), (_pval), (_n)*sizeof(VECTOR_FIRST(_vec))); /* set values */ \
+		memcpy( \
+		    &VECTOR_INDEX(_vec, VECTOR_LENGTH(_vec)), (_pval), (_n) * sizeof(VECTOR_FIRST(_vec)) \
+		);                           /* set values */ \
 		VECTOR_LENGTH(_vec) += (_n); /* increase length */ \
-	} while(false)
+	} while (false)
 
 /**
  * Removes and returns the last value of the vector.
@@ -1355,8 +1371,7 @@ HPShared struct db_interface *DB;
  * @param _vec Vector.
  * @return Removed value.
  */
-#define VECTOR_POP(_vec) \
-	( VECTOR_INDEX(_vec, --VECTOR_LENGTH(_vec)) )
+#define VECTOR_POP(_vec) (VECTOR_INDEX(_vec, --VECTOR_LENGTH(_vec)))
 
 /**
  * Removes the last N values of the vector and returns the value of the last pop.
@@ -1367,8 +1382,7 @@ HPShared struct db_interface *DB;
  * @param _n   Number of pops.
  * @return Last removed value.
  */
-#define VECTOR_POPN(_vec, _n) \
-	( VECTOR_INDEX(_vec, (VECTOR_LENGTH(_vec) -= (_n))) )
+#define VECTOR_POPN(_vec, _n) (VECTOR_INDEX(_vec, (VECTOR_LENGTH(_vec) -= (_n))))
 
 /**
  * Removes the target index from the vector.
@@ -1378,8 +1392,7 @@ HPShared struct db_interface *DB;
  * @param _vec Vector.
  * @param _idx Index.
  */
-#define VECTOR_ERASE(_vec, _idx) \
-	VECTOR_ERASEN(_vec, _idx, 1)
+#define VECTOR_ERASE(_vec, _idx) VECTOR_ERASEN(_vec, _idx, 1)
 
 /**
  * Removes N values from the target index of the vector.
@@ -1392,10 +1405,13 @@ HPShared struct db_interface *DB;
  */
 #define VECTOR_ERASEN(_vec, _idx, _n) \
 	do { \
-		if ((_idx) < VECTOR_LENGTH(_vec)-(_n) ) /* move data */ \
-			memmove(&VECTOR_INDEX(_vec, _idx), &VECTOR_INDEX(_vec, (_idx)+(_n)), (VECTOR_LENGTH(_vec)-((_idx)+(_n)))*sizeof(VECTOR_FIRST(_vec))); \
+		if ((_idx) < VECTOR_LENGTH(_vec) - (_n)) /* move data */ \
+			memmove( \
+			    &VECTOR_INDEX(_vec, _idx), &VECTOR_INDEX(_vec, (_idx) + (_n)), \
+			    (VECTOR_LENGTH(_vec) - ((_idx) + (_n))) * sizeof(VECTOR_FIRST(_vec)) \
+			); \
 		VECTOR_LENGTH(_vec) -= (_n); /* decrease length */ \
-	} while(false)
+	} while (false)
 
 /**
  * Removes all values from the vector.
@@ -1415,11 +1431,12 @@ HPShared struct db_interface *DB;
 #define VECTOR_CLEAR(_vec) \
 	do { \
 		if (VECTOR_CAPACITY(_vec) > 0) { \
-			aFree(VECTOR_DATA(_vec)); VECTOR_DATA(_vec) = NULL; /* clear allocated array */ \
-			VECTOR_CAPACITY(_vec) = 0; /* clear capacity */ \
-			VECTOR_LENGTH(_vec) = 0; /* clear length */ \
+			aFree(VECTOR_DATA(_vec)); \
+			VECTOR_DATA(_vec)     = NULL; /* clear allocated array */ \
+			VECTOR_CAPACITY(_vec) = 0;    /* clear capacity */ \
+			VECTOR_LENGTH(_vec)   = 0;    /* clear length */ \
 		} \
-	} while(false)
+	} while (false)
 
 /**
  * Binary heap library based on defines.
@@ -1436,8 +1453,7 @@ HPShared struct db_interface *DB;
  *
  * @param _type Type of data.
  */
-#define BHEAP_DECL(_type) \
-	VECTOR_DECL(_type)
+#define BHEAP_DECL(_type) VECTOR_DECL(_type)
 
 /**
  * Declares a named binary heap struct.
@@ -1445,8 +1461,7 @@ HPShared struct db_interface *DB;
  * @param _name Structure name.
  * @param _type Type of data.
  */
-#define BHEAP_STRUCT_DECL(_name, _type) \
-	VECTOR_STRUCT_DECL(_name, _type)
+#define BHEAP_STRUCT_DECL(_name, _type) VECTOR_STRUCT_DECL(_name, _type)
 
 /**
  * Declares and initializes an anonymous binary heap variable.
@@ -1454,8 +1469,7 @@ HPShared struct db_interface *DB;
  * @param _type Type of data.
  * @param _var  Variable name.
  */
-#define BHEAP_VAR(_type, _var) \
-	VECTOR_VAR(_type, _var)
+#define BHEAP_VAR(_type, _var) VECTOR_VAR(_type, _var)
 
 /**
  * Declares and initializes a named binary heap variable.
@@ -1463,16 +1477,14 @@ HPShared struct db_interface *DB;
  * @param _name Structure name.
  * @param _var  Variable name.
  */
-#define BHEAP_STRUCT_VAR(_name, _var) \
-	VECTOR_STRUCT_VAR(_name, _var)
+#define BHEAP_STRUCT_VAR(_name, _var) VECTOR_STRUCT_VAR(_name, _var)
 
 /**
  * Initializes a heap.
  *
  * @param _heap Binary heap.
  */
-#define BHEAP_INIT(_heap) \
-	VECTOR_INIT(_heap)
+#define BHEAP_INIT(_heap) VECTOR_INIT(_heap)
 
 /**
  * Returns the internal array of values.
@@ -1480,8 +1492,7 @@ HPShared struct db_interface *DB;
  * @param _heap Binary heap.
  * @return Internal array of values.
  */
-#define BHEAP_DATA(_heap) \
-	VECTOR_DATA(_heap)
+#define BHEAP_DATA(_heap) VECTOR_DATA(_heap)
 
 /**
  * Returns the length of the heap.
@@ -1489,8 +1500,7 @@ HPShared struct db_interface *DB;
  * @param _heap Binary heap.
  * @return Length.
  */
-#define BHEAP_LENGTH(_heap) \
-	VECTOR_LENGTH(_heap)
+#define BHEAP_LENGTH(_heap) VECTOR_LENGTH(_heap)
 
 /**
  * Returns the capacity of the heap.
@@ -1498,8 +1508,7 @@ HPShared struct db_interface *DB;
  * @param _heap Binary heap.
  * @return Capacity.
  */
-#define BHEAP_CAPACITY(_heap) \
-	VECTOR_CAPACITY(_heap)
+#define BHEAP_CAPACITY(_heap) VECTOR_CAPACITY(_heap)
 
 /**
  * Ensures that the heap has the target number of empty positions.
@@ -1510,8 +1519,7 @@ HPShared struct db_interface *DB;
  * @param _n    Required empty positions.
  * @param _step Increase.
  */
-#define BHEAP_ENSURE(_heap, _n, _step) \
-	VECTOR_ENSURE(_heap, _n, _step)
+#define BHEAP_ENSURE(_heap, _n, _step) VECTOR_ENSURE(_heap, _n, _step)
 
 /**
  * Returns the top value of the heap.
@@ -1521,8 +1529,7 @@ HPShared struct db_interface *DB;
  * @param _heap Binary heap.
  * @return Value at the top.
  */
-#define BHEAP_PEEK(_heap) \
-	VECTOR_INDEX(_heap, 0)
+#define BHEAP_PEEK(_heap) VECTOR_INDEX(_heap, 0)
 
 /**
  * Inserts a value in the heap (using the '=' operator).
@@ -1545,13 +1552,13 @@ HPShared struct db_interface *DB;
 		VECTOR_PUSH(_heap, _val); /* insert at end */ \
 		while (_i_ > 0) { \
 			/* restore heap property in parents */ \
-			int _parent_ = (_i_-1)/2; \
+			int _parent_ = (_i_ - 1) / 2; \
 			if (_topcmp(VECTOR_INDEX(_heap, _parent_), VECTOR_INDEX(_heap, _i_)) < 0) \
 				break; /* done */ \
 			_swp(VECTOR_INDEX(_heap, _parent_), VECTOR_INDEX(_heap, _i_)); \
 			_i_ = _parent_; \
 		} \
-	} while(false)
+	} while (false)
 
 /**
  * Variant of BHEAP_PUSH used by A* implementation, matching client bheap.
@@ -1568,7 +1575,7 @@ HPShared struct db_interface *DB;
 		int _i_ = VECTOR_LENGTH(_heap); \
 		VECTOR_PUSH(_heap, _val); /* insert at end */ \
 		BHEAP_SIFTDOWN(_heap, 0, _i_, _topcmp, _swp); \
-	} while(false)
+	} while (false)
 
 /**
  * Removes the top value of the heap (using the '=' operator).
@@ -1584,8 +1591,7 @@ HPShared struct db_interface *DB;
  * @param _topcmp Comparator.
  * @param _swp Swapper.
  */
-#define BHEAP_POP(_heap, _topcmp, _swp) \
-	BHEAP_POPINDEX(_heap, 0, _topcmp, _swp)
+#define BHEAP_POP(_heap, _topcmp, _swp) BHEAP_POPINDEX(_heap, 0, _topcmp, _swp)
 
 /**
  * Variant of BHEAP_POP used by A* implementation, matching client bheap.
@@ -1599,10 +1605,10 @@ HPShared struct db_interface *DB;
 #define BHEAP_POP2(_heap, _topcmp, _swp) \
 	do { \
 		VECTOR_INDEX(_heap, 0) = VECTOR_POP(_heap); /* put last at index */ \
-		if (VECTOR_LENGTH(_heap) == 0) /* removed last, nothing to do */ \
+		if (VECTOR_LENGTH(_heap) == 0)              /* removed last, nothing to do */ \
 			break; \
 		BHEAP_SIFTUP(_heap, 0, _topcmp, _swp); \
-	} while(false)
+	} while (false)
 
 /**
  * Removes the target value of the heap (using the '=' operator).
@@ -1621,13 +1627,13 @@ HPShared struct db_interface *DB;
  */
 #define BHEAP_POPINDEX(_heap, _idx, _topcmp, _swp) \
 	do { \
-		int _i_ = _idx; \
+		int _i_                   = _idx; \
 		VECTOR_INDEX(_heap, _idx) = VECTOR_POP(_heap); /* put last at index */ \
-		if (_i_ >= VECTOR_LENGTH(_heap)) /* removed last, nothing to do */ \
+		if (_i_ >= VECTOR_LENGTH(_heap))               /* removed last, nothing to do */ \
 			break; \
 		while (_i_ > 0) { \
 			/* restore heap property in parents */ \
-			int _parent_ = (_i_-1)/2; \
+			int _parent_ = (_i_ - 1) / 2; \
 			if (_topcmp(VECTOR_INDEX(_heap, _parent_), VECTOR_INDEX(_heap, _i_)) < 0) \
 				break; /* done */ \
 			_swp(VECTOR_INDEX(_heap, _parent_), VECTOR_INDEX(_heap, _i_)); \
@@ -1635,12 +1641,17 @@ HPShared struct db_interface *DB;
 		} \
 		while (_i_ < VECTOR_LENGTH(_heap)) { \
 			/* restore heap property in children */ \
-			int _lchild_ = _i_*2 + 1; \
-			int _rchild_ = _i_*2 + 2; \
-			if ((_lchild_ >= VECTOR_LENGTH(_heap) || _topcmp(VECTOR_INDEX(_heap, _i_), VECTOR_INDEX(_heap, _lchild_)) <= 0) \
-			 && (_rchild_ >= VECTOR_LENGTH(_heap) || _topcmp(VECTOR_INDEX(_heap, _i_), VECTOR_INDEX(_heap, _rchild_)) <= 0)) { \
+			int _lchild_ = _i_ * 2 + 1; \
+			int _rchild_ = _i_ * 2 + 2; \
+			if ((_lchild_ >= VECTOR_LENGTH(_heap) \
+			     || _topcmp(VECTOR_INDEX(_heap, _i_), VECTOR_INDEX(_heap, _lchild_)) <= 0) \
+			    && (_rchild_ >= VECTOR_LENGTH(_heap) \
+			        || _topcmp(VECTOR_INDEX(_heap, _i_), VECTOR_INDEX(_heap, _rchild_)) <= 0)) { \
 				break; /* done */ \
-			} else if (_rchild_ >= VECTOR_LENGTH(_heap) || _topcmp(VECTOR_INDEX(_heap, _lchild_), VECTOR_INDEX(_heap, _rchild_)) <= 0) { \
+			} else if ( \
+			    _rchild_ >= VECTOR_LENGTH(_heap) \
+			    || _topcmp(VECTOR_INDEX(_heap, _lchild_), VECTOR_INDEX(_heap, _rchild_)) <= 0 \
+			) { \
 				/* left child */ \
 				_swp(VECTOR_INDEX(_heap, _i_), VECTOR_INDEX(_heap, _lchild_)); \
 				_i_ = _lchild_; \
@@ -1650,7 +1661,7 @@ HPShared struct db_interface *DB;
 				_i_ = _rchild_; \
 			} \
 		} \
-	} while(false)
+	} while (false)
 
 /**
  * Follow path up towards (but not all the way to) the root, swapping nodes
@@ -1669,13 +1680,13 @@ HPShared struct db_interface *DB;
 		int _i2_ = _idx; \
 		while (_i2_ > _startidx) { \
 			/* restore heap property in parents */ \
-			int _parent_ = (_i2_-1)/2; \
+			int _parent_ = (_i2_ - 1) / 2; \
 			if (_topcmp(VECTOR_INDEX(_heap, _parent_), VECTOR_INDEX(_heap, _i2_)) <= 0) \
 				break; /* done */ \
 			_swp(VECTOR_INDEX(_heap, _parent_), VECTOR_INDEX(_heap, _i2_)); \
 			_i2_ = _parent_; \
 		} \
-	} while(false)
+	} while (false)
 
 /**
  * Repeatedly swap the smaller child with parent, after placing a new item at _idx.
@@ -1687,12 +1698,13 @@ HPShared struct db_interface *DB;
  */
 #define BHEAP_SIFTUP(_heap, _idx, _topcmp, _swp) \
 	do { \
-		int _i_ = _idx; \
-		int _lchild_ = _i_*2 + 1; \
+		int _i_      = _idx; \
+		int _lchild_ = _i_ * 2 + 1; \
 		while (_lchild_ < VECTOR_LENGTH(_heap)) { \
 			/* restore heap property in children */ \
-			int _rchild_ = _i_*2 + 2; \
-			if (_rchild_ >= VECTOR_LENGTH(_heap) || _topcmp(VECTOR_INDEX(_heap, _lchild_), VECTOR_INDEX(_heap, _rchild_)) < 0) { \
+			int _rchild_ = _i_ * 2 + 2; \
+			if (_rchild_ >= VECTOR_LENGTH(_heap) \
+			    || _topcmp(VECTOR_INDEX(_heap, _lchild_), VECTOR_INDEX(_heap, _rchild_)) < 0) { \
 				/* left child */ \
 				_swp(VECTOR_INDEX(_heap, _i_), VECTOR_INDEX(_heap, _lchild_)); \
 				_i_ = _lchild_; \
@@ -1701,10 +1713,10 @@ HPShared struct db_interface *DB;
 				_swp(VECTOR_INDEX(_heap, _i_), VECTOR_INDEX(_heap, _rchild_)); \
 				_i_ = _rchild_; \
 			} \
-			_lchild_ = _i_*2 + 1; \
+			_lchild_ = _i_ * 2 + 1; \
 		} \
 		BHEAP_SIFTDOWN(_heap, _idx, _i_, _topcmp, _swp); \
-	} while(false)
+	} while (false)
 
 /**
  * Restores a heap (after modifying the item at _idx).
@@ -1718,15 +1730,14 @@ HPShared struct db_interface *DB;
 	do { \
 		BHEAP_SIFTDOWN(_heap, 0, _idx, _topcmp, _swp); \
 		BHEAP_SIFTUP(_heap, _idx, _topcmp, _swp); \
-	} while(false)
+	} while (false)
 
 /**
  * Clears the binary heap, freeing allocated data.
  *
  * @param _heap Binary heap.
  */
-#define BHEAP_CLEAR(_heap) \
-	VECTOR_CLEAR(_heap)
+#define BHEAP_CLEAR(_heap) VECTOR_CLEAR(_heap)
 
 /**
  * Generic comparator for a min-heap (minimum value at top).
@@ -1740,8 +1751,7 @@ HPShared struct db_interface *DB;
  * @param v2 Second value.
  * @return negative if v1 is top, positive if v2 is top, 0 if equal.
  */
-#define BHEAP_MINTOPCMP(v1, v2) \
-	( (v1) == (v2) ? 0 : (v1) < (v2) ? -1 : 1 )
+#define BHEAP_MINTOPCMP(v1, v2) ((v1) == (v2) ? 0 : (v1) < (v2) ? -1 : 1)
 
 /**
  * Generic comparator for a max-heap (maximum value at top).
@@ -1755,7 +1765,6 @@ HPShared struct db_interface *DB;
  * @param v2 Second value.
  * @return negative if v1 is top, positive if v2 is top, 0 if equal.
  */
-#define BHEAP_MAXTOPCMP(v1, v2) \
-	( (v1) == (v2) ? 0 : (v1) > (v2) ? -1 : 1 )
+#define BHEAP_MAXTOPCMP(v1, v2) ((v1) == (v2) ? 0 : (v1) > (v2) ? -1 : 1)
 
 #endif /* COMMON_DB_H */

@@ -49,7 +49,7 @@ struct des_interface {
 	 *
 	 * @param[in,out] block The block to decrypt (in-place).
 	 */
-	void (*decrypt_block) (struct des_bit64 *block);
+	void (*decrypt_block)(struct des_bit64 *block);
 
 	/**
 	 * Decrypts a buffer.
@@ -57,7 +57,7 @@ struct des_interface {
 	 * @param [in,out] data The buffer to decrypt (in-place).
 	 * @param [in]     size The size of the data.
 	 */
-	void (*decrypt) (unsigned char *data, size_t size);
+	void (*decrypt)(unsigned char *data, size_t size);
 };
 
 #ifdef HERCULES_CORE

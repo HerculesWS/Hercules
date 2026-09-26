@@ -40,77 +40,98 @@
 // introduces types and global functions
 //////////////////////////////////////////////////////////////////////////
 
-
 //////////////////////////////////////////////////////////////////////////
 // setting some defines on platforms
 //////////////////////////////////////////////////////////////////////////
-#if (defined(__WIN32__) || defined(__WIN32) || defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER) || defined(__BORLANDC__)) && !defined(WIN32)
-#define WIN32
+#if ( \
+    defined(__WIN32__) \
+    || defined(__WIN32) \
+    || defined(_WIN32) \
+    || defined(_WIN64) \
+    || defined(_MSC_VER) \
+    || defined(__BORLANDC__) \
+) && !defined(WIN32)
+  #define WIN32
 #endif
 
 #if defined(__MINGW32__) && !defined(MINGW)
-#define MINGW
+  #define MINGW
 #endif
 
 #if (defined(__CYGWIN__) || defined(__CYGWIN32__)) && !defined(CYGWIN)
-#define CYGWIN
+  #define CYGWIN
 #endif
 
 // __APPLE__ is the only predefined macro on MacOS
 #if defined(__APPLE__)
-#define __DARWIN__
+  #define __DARWIN__
 #endif
 
 // Standardize the ARM platform version, if available (the only values we're interested in right now are >= ARMv6)
 #ifdef __ARM_ARCH
-#define __ARM_ARCH_VERSION__ __ARM_ARCH
+  #define __ARM_ARCH_VERSION__ __ARM_ARCH
 #else
-#if defined(__ARMV6__) || defined(__ARM_ARCH_6__) || defined(__ARM_ARCH_6J__) || defined(__ARM_ARCH_6K__) \
-	|| defined(__ARM_ARCH_6Z__) || defined(__ARM_ARCH_6ZK__) || defined(__ARM_ARCH_6T2__) // gcc ARMv6
-#define __ARM_ARCH_VERSION__ 6
-#elif defined(__ARM_ARCH_7__) || defined(__ARM_ARCH_7A__) || defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7R__) || defined(__ARM_ARCH_7S__) // gcc ARMv7
-#define __ARM_ARCH_VERSION__ 7
-#elif defined(__ARM_ARCH_8__) || defined(__ARM_ARCH_8A__)
-#define __ARM_ARCH_VERSION__ 8
-#elif defined(_M_ARM) // MSVC
-#define __ARM_ARCH_VERSION__ _M_ARM
-#elif defined(__TARGET_ARCH_ARM) // RVCT
-#define __ARM_ARCH_VERSION__ __TARGET_ARCH_ARM
-#else
-#define __ARM_ARCH_VERSION__ 0
-#endif
+  #if defined(__ARMV6__) \
+      || defined(__ARM_ARCH_6__) \
+      || defined(__ARM_ARCH_6J__) \
+      || defined(__ARM_ARCH_6K__) \
+      || defined(__ARM_ARCH_6Z__) \
+      || defined(__ARM_ARCH_6ZK__) \
+      || defined(__ARM_ARCH_6T2__) // gcc ARMv6
+    #define __ARM_ARCH_VERSION__ 6
+  #elif defined(__ARM_ARCH_7__) \
+      || defined(__ARM_ARCH_7A__) \
+      || defined(__ARM_ARCH_7M__) \
+      || defined(__ARM_ARCH_7R__) \
+      || defined(__ARM_ARCH_7S__) // gcc ARMv7
+    #define __ARM_ARCH_VERSION__ 7
+  #elif defined(__ARM_ARCH_8__) || defined(__ARM_ARCH_8A__)
+    #define __ARM_ARCH_VERSION__ 8
+  #elif defined(_M_ARM) // MSVC
+    #define __ARM_ARCH_VERSION__ _M_ARM
+  #elif defined(__TARGET_ARCH_ARM) // RVCT
+    #define __ARM_ARCH_VERSION__ __TARGET_ARCH_ARM
+  #else
+    #define __ARM_ARCH_VERSION__ 0
+  #endif
 #endif
 
 // Necessary for __NetBSD_Version__ (defined as VVRR00PP00) on NetBSD
 #ifdef __NETBSD__
-#include <sys/param.h>
+  #include <sys/param.h>
 #endif // __NETBSD__
 
 // 64bit OS
-#if defined(_M_IA64) || defined(_M_X64) || defined(_WIN64) || defined(_LP64) || defined(_ILP64) || defined(__LP64__) || defined(__ppc64__)
-#define __64BIT__
+#if defined(_M_IA64) \
+    || defined(_M_X64) \
+    || defined(_WIN64) \
+    || defined(_LP64) \
+    || defined(_ILP64) \
+    || defined(__LP64__) \
+    || defined(__ppc64__)
+  #define __64BIT__
 #endif
 
 #if defined(_ILP64)
-#error "this specific 64bit architecture is not supported"
+  #error "this specific 64bit architecture is not supported"
 #endif
 
 // debug mode
 #if defined(_DEBUG) && !defined(DEBUG)
-#define DEBUG
+  #define DEBUG
 #endif
 
 // disable attributed stuff on non-GNU
 #if !defined(__GNUC__) && !defined(MINGW)
-#  define  __attribute__(x)
+  #define __attribute__(x)
 #endif
 
 /// Feature/extension checking macros
 #ifndef __has_extension /* Available in clang and gcc >= 3 */
-#define __has_extension(x) 0
+  #define __has_extension(x) 0
 #endif
 #ifndef __has_feature /* Available in clang and gcc >= 5 */
-#define __has_feature(x) __has_extension(x)
+  #define __has_feature(x) __has_extension(x)
 #endif
 
 //////////////////////////////////////////////////////////////////////////
@@ -124,24 +145,24 @@
 
 // ILP64 isn't supported, so always 32 bits?
 #ifndef UINT_MAX
-#define UINT_MAX 0xffffffff
+  #define UINT_MAX 0xFFFFFFFF
 #endif
 
 //////////////////////////////////////////////////////////////////////////
 // Integers with guaranteed _exact_ size.
 //////////////////////////////////////////////////////////////////////////
 
-typedef int8_t   int8;
-typedef int16_t  int16;
-typedef int32_t  int32;
-typedef int64_t  int64;
+typedef int8_t int8;
+typedef int16_t int16;
+typedef int32_t int32;
+typedef int64_t int64;
 
-typedef int8_t   sint8;
-typedef int16_t  sint16;
-typedef int32_t  sint32;
-typedef int64_t  sint64;
+typedef int8_t sint8;
+typedef int16_t sint16;
+typedef int32_t sint32;
+typedef int64_t sint64;
 
-typedef uint8_t  uint8;
+typedef uint8_t uint8;
 typedef uint16_t uint16;
 typedef uint32_t uint32;
 typedef uint64_t uint64;
@@ -150,7 +171,7 @@ typedef uint64_t uint64;
 #undef UINT16_MIN
 #undef UINT32_MIN
 #undef UINT64_MIN
-#define UINT8_MIN  ((uint8) UINT8_C(0x00))
+#define UINT8_MIN  ((uint8)UINT8_C(0x00))
 #define UINT16_MIN ((uint16)UINT16_C(0x0000))
 #define UINT32_MIN ((uint32)UINT32_C(0x00000000))
 #define UINT64_MIN ((uint64)UINT64_C(0x0000000000000000))
@@ -159,7 +180,7 @@ typedef uint64_t uint64;
 #undef UINT16_MAX
 #undef UINT32_MAX
 #undef UINT64_MAX
-#define UINT8_MAX  ((uint8) UINT8_C(0xFF))
+#define UINT8_MAX  ((uint8)UINT8_C(0xFF))
 #define UINT16_MAX ((uint16)UINT16_C(0xFFFF))
 #define UINT32_MAX ((uint32)UINT32_C(0xFFFFFFFF))
 #define UINT64_MAX ((uint64)UINT64_C(0xFFFFFFFFFFFFFFFF))
@@ -168,7 +189,7 @@ typedef uint64_t uint64;
 #undef SINT16_MIN
 #undef SINT32_MIN
 #undef SINT64_MIN
-#define SINT8_MIN  ((sint8) INT8_C(0x80))
+#define SINT8_MIN  ((sint8)INT8_C(0x80))
 #define SINT16_MIN ((sint16)INT16_C(0x8000))
 #define SINT32_MIN ((sint32)INT32_C(0x80000000))
 #define SINT64_MIN ((sint32)INT64_C(0x8000000000000000))
@@ -177,7 +198,7 @@ typedef uint64_t uint64;
 #undef SINT16_MAX
 #undef SINT32_MAX
 #undef SINT64_MAX
-#define SINT8_MAX  ((sint8) INT8_C(0x7F))
+#define SINT8_MAX  ((sint8)INT8_C(0x7F))
 #define SINT16_MAX ((sint16)INT16_C(0x7FFF))
 #define SINT32_MAX ((sint32)INT32_C(0x7FFFFFFF))
 #define SINT64_MAX ((sint64)INT64_C(0x7FFFFFFFFFFFFFFF))
@@ -187,16 +208,15 @@ typedef uint64_t uint64;
 // These could be larger than you expect,
 // they are designed for speed.
 //////////////////////////////////////////////////////////////////////////
-typedef          long int   ppint;
-typedef          long int   ppint8;
-typedef          long int   ppint16;
-typedef          long int   ppint32;
+typedef long int ppint;
+typedef long int ppint8;
+typedef long int ppint16;
+typedef long int ppint32;
 
-typedef unsigned long int   ppuint;
-typedef unsigned long int   ppuint8;
-typedef unsigned long int   ppuint16;
-typedef unsigned long int   ppuint32;
-
+typedef unsigned long int ppuint;
+typedef unsigned long int ppuint8;
+typedef unsigned long int ppuint16;
+typedef unsigned long int ppuint32;
 
 //////////////////////////////////////////////////////////////////////////
 // integer with exact processor width (and best speed)
@@ -204,16 +224,15 @@ typedef unsigned long int   ppuint32;
 #include <stddef.h> // size_t
 
 #if defined(WIN32) && !defined(MINGW) // does not have a signed size_t
-//////////////////////////////
-#if defined(_WIN64) // native 64bit windows platform
+  //////////////////////////////
+  #if defined(_WIN64) // native 64bit windows platform
 typedef __int64 ssize_t;
-#else
-typedef int     ssize_t;
-#endif
+  #else
+typedef int ssize_t;
+  #endif
 //////////////////////////////
 #endif
 //////////////////////////////
-
 
 //////////////////////////////////////////////////////////////////////////
 // pointer sized integers
@@ -221,119 +240,115 @@ typedef int     ssize_t;
 typedef intptr_t intptr;
 typedef uintptr_t uintptr;
 
-
 //////////////////////////////////////////////////////////////////////////
 // Add a 'sysint' Type which has the width of the platform we're compiled for.
 //////////////////////////////////////////////////////////////////////////
 #if defined(__GNUC__)
-	#if defined(__x86_64__)
-		typedef int64 sysint;
-		typedef uint64 usysint;
-	#else
-		typedef int32 sysint;
-		typedef uint32 usysint;
-	#endif
+  #if defined(__x86_64__)
+typedef int64 sysint;
+typedef uint64 usysint;
+  #else
+typedef int32 sysint;
+typedef uint32 usysint;
+  #endif
 #elif defined(_MSC_VER)
-	#if defined(_M_X64)
-		typedef int64 sysint;
-		typedef uint64 usysint;
-	#else
-		typedef int32 sysint;
-		typedef uint32 usysint;
-	#endif
+  #if defined(_M_X64)
+typedef int64 sysint;
+typedef uint64 usysint;
+  #else
+typedef int32 sysint;
+typedef uint32 usysint;
+  #endif
 #else
-	#error Compiler / Platform is unsupported.
+  #error Compiler / Platform is unsupported.
 #endif
-
 
 //////////////////////////////////////////////////////////////////////////
 // some redefine of function redefines for some Compilers
 //////////////////////////////////////////////////////////////////////////
 #if defined(_MSC_VER) || defined(__BORLANDC__)
-#define strcasecmp  stricmp
-#define strncasecmp strnicmp
-#define strncmpi    strnicmp
-#if defined(__BORLANDC__) || _MSC_VER < 1900
-#define snprintf    _snprintf
-#endif
+  #define strcasecmp  stricmp
+  #define strncasecmp strnicmp
+  #define strncmpi    strnicmp
+  #if defined(__BORLANDC__) || _MSC_VER < 1900
+    #define snprintf _snprintf
+  #endif
 #else
-#define strcmpi     strcasecmp
-#define stricmp     strcasecmp
-#define strncmpi    strncasecmp
-#define strnicmp    strncasecmp
+  #define strcmpi  strcasecmp
+  #define stricmp  strcasecmp
+  #define strncmpi strncasecmp
+  #define strnicmp strncasecmp
 #endif
 #if defined(_MSC_VER)
-#define strtoull    _strtoui64
-#define strtoll     _strtoi64
+  #define strtoull _strtoui64
+  #define strtoll  _strtoi64
 #endif
 
 // keyword replacement
 #ifdef _MSC_VER
-// For MSVC (windows)
-#define forceinline __forceinline
-#define ra_align(n) __declspec(align(n))
+  // For MSVC (windows)
+  #define forceinline __forceinline
+  #define ra_align(n) __declspec(align(n))
 #else
-// For GCC
-#define forceinline __attribute__((always_inline)) inline
-#define ra_align(n) __attribute__(( aligned(n) ))
+  // For GCC
+  #define forceinline __attribute__((always_inline)) inline
+  #define ra_align(n) __attribute__((aligned(n)))
 #endif
 
 // gcc version (if any) - borrowed from Mana Plus
 #ifdef __GNUC__
-#define GCC_VERSION (__GNUC__ * 10000 \
-		+ __GNUC_MINOR__ * 100 \
-		+ __GNUC_PATCHLEVEL__)
+  #define GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
 #else
-#define GCC_VERSION 0
+  #define GCC_VERSION 0
 #endif
 
 // Pragma macro only enabled on gcc >= 4.6 or clang - borrowed from Mana Plus
 #if defined(__GNUC__) && (defined(__clang__) || GCC_VERSION >= 40600)
-#define PRAGMA_GCC46(str) _Pragma(#str)
+  #define PRAGMA_GCC46(str) _Pragma(#str)
 #else // ! defined(__GNUC__) && (defined(__clang__) || GCC_VERSION >= 40600)
-#define PRAGMA_GCC46(str)
+  #define PRAGMA_GCC46(str)
 #endif // ! defined(__GNUC__) && (defined(__clang__) || GCC_VERSION >= 40600)
 
 // Pragma macro only enabled on gcc >= 5 or clang - borrowed from Mana Plus
 #if defined(__GNUC__) && (GCC_VERSION >= 50000)
-#define PRAGMA_GCC5(str) _Pragma(#str)
+  #define PRAGMA_GCC5(str) _Pragma(#str)
 #else // ! defined(__GNUC__) && (GCC_VERSION >= 50000)
-#define PRAGMA_GCC5(str)
+  #define PRAGMA_GCC5(str)
 #endif // ! defined(__GNUC__) && (GCC_VERSION >= 50000)
 
 // Pragma macro only enabled on gcc >= 7
 #if defined(__GNUC__) && (GCC_VERSION >= 70000)
-#define PRAGMA_GCC7(str) _Pragma(#str)
+  #define PRAGMA_GCC7(str) _Pragma(#str)
 #else // ! defined(__GNUC__) && (GCC_VERSION >= 70000)
-#define PRAGMA_GCC7(str)
+  #define PRAGMA_GCC7(str)
 #endif // ! defined(__GNUC__) && (GCC_VERSION >= 70000)
 
 // Pragma macro only enabled on gcc >= 9
 #if defined(__GNUC__) && (GCC_VERSION >= 90000)
-#define PRAGMA_GCC9(str) _Pragma(#str)
+  #define PRAGMA_GCC9(str) _Pragma(#str)
 #else // ! defined(__GNUC__) && (GCC_VERSION >= 90000)
-#define PRAGMA_GCC9(str)
+  #define PRAGMA_GCC9(str)
 #endif // ! defined(__GNUC__) && (GCC_VERSION >= 90000)
 
 // attribute for gcc only
 #if defined(__GNUC__) && !defined(__clang__)
-#define GCCATTR(str) __attribute__ (str)
-#else  // defined(__GNUC__) && !defined(__clang__)
-#define GCCATTR(str)
+  #define GCCATTR(str) __attribute__(str)
+#else // defined(__GNUC__) && !defined(__clang__)
+  #define GCCATTR(str)
 #endif // defined(__GNUC__) && !defined(__clang__)
 
 // attribute for gcc only
 #if defined(__GNUC__) && !defined(__clang__) && (GCC_VERSION >= 100000)
-#define GCC10ATTR(str) __attribute__ (str)
-#else  // defined(__GNUC__) && !defined(__clang__)
-#define GCC10ATTR(str)
+  #define GCC10ATTR(str) __attribute__(str)
+#else // defined(__GNUC__) && !defined(__clang__)
+  #define GCC10ATTR(str)
 #endif // defined(__GNUC__) && !defined(__clang__)
 
 // attribute for gcc only
 #if defined(__GNUC__) && !defined(__clang__) && (GCC_VERSION >= 110000)
-#define GCC11ATTR(str) __attribute__ (str)
-#else  // defined(__GNUC__) && !defined(__clang__)
-#define GCC11ATTR(str)
+  #define GCC11ATTR(str) __attribute__(str)
+#else // defined(__GNUC__) && !defined(__clang__)
+  #define GCC11ATTR(str)
 #endif // defined(__GNUC__) && !defined(__clang__)
 
 // Pragma pack macro for platforms that support it (excluding Solaris and NetBSD < 6, which accept the packed attribute)
@@ -349,9 +364,9 @@ typedef uintptr_t uintptr;
 //////////////////////////////////////////////////////////////////////////
 // Additional printf specifiers
 #if defined(_MSC_VER)
-#define PRIS_PREFIX "I"
+  #define PRIS_PREFIX "I"
 #else // gcc
-#define PRIS_PREFIX "z"
+  #define PRIS_PREFIX "z"
 #endif
 #define PRIdS PRIS_PREFIX "d"
 #define PRIxS PRIS_PREFIX "x"
@@ -363,60 +378,59 @@ typedef uintptr_t uintptr;
 // path separator
 
 #if defined(WIN32)
-#define PATHSEP '\\'
-#define PATHSEP_STR "\\"
-#define PATHSEP2 '/'
-#define PATHSEP_STR2 "/"
+  #define PATHSEP      '\\'
+  #define PATHSEP_STR  "\\"
+  #define PATHSEP2     '/'
+  #define PATHSEP_STR2 "/"
 #elif defined(__APPLE__) && !defined(__MACH__)
-// __MACH__ indicates OS X ( http://sourceforge.net/p/predef/wiki/OperatingSystems/ )
-#define PATHSEP ':'
-#define PATHSEP_STR ":"
-#define PATHSEP2 ':'
-#define PATHSEP_STR2 ":"
+  // __MACH__ indicates OS X ( http://sourceforge.net/p/predef/wiki/OperatingSystems/ )
+  #define PATHSEP      ':'
+  #define PATHSEP_STR  ":"
+  #define PATHSEP2     ':'
+  #define PATHSEP_STR2 ":"
 #else
-#define PATHSEP '/'
-#define PATHSEP_STR "/"
-#define PATHSEP2 '/'
-#define PATHSEP_STR2 "/"
+  #define PATHSEP      '/'
+  #define PATHSEP_STR  "/"
+  #define PATHSEP2     '/'
+  #define PATHSEP_STR2 "/"
 #endif
 
 //////////////////////////////////////////////////////////////////////////
 // Has to be unsigned to avoid problems in some systems
 // Problems arise when these functions expect an argument in the range [0,256[ and are fed a signed char.
 #include <ctype.h>
-#define ISALNUM(c) (isalnum((unsigned char)(c)))
-#define ISALPHA(c) (isalpha((unsigned char)(c)))
-#define ISCNTRL(c) (iscntrl((unsigned char)(c)))
-#define ISDIGIT(c) (isdigit((unsigned char)(c)))
-#define ISXDIGIT(c) (isxdigit((unsigned char)(c)))
-#define ISBDIGIT(c) ((unsigned char)(c) == '0' || (unsigned char)(c) == '1')
-#define ISODIGIT(c) ((unsigned char)(c) >= '0' && (unsigned char)(c) <= '7')
+#define ISALNUM(c)      (isalnum((unsigned char)(c)))
+#define ISALPHA(c)      (isalpha((unsigned char)(c)))
+#define ISCNTRL(c)      (iscntrl((unsigned char)(c)))
+#define ISDIGIT(c)      (isdigit((unsigned char)(c)))
+#define ISXDIGIT(c)     (isxdigit((unsigned char)(c)))
+#define ISBDIGIT(c)     ((unsigned char)(c) == '0' || (unsigned char)(c) == '1')
+#define ISODIGIT(c)     ((unsigned char)(c) >= '0' && (unsigned char)(c) <= '7')
 #define ISNSEPARATOR(c) ((unsigned char)(c) == '_')
-#define ISGRAPH(c) (isgraph((unsigned char)(c)))
-#define ISLOWER(c) (islower((unsigned char)(c)))
-#define ISPRINT(c) (isprint((unsigned char)(c)))
-#define ISPUNCT(c) (ispunct((unsigned char)(c)))
-#define ISSPACE(c) (isspace((unsigned char)(c)))
-#define ISUPPER(c) (isupper((unsigned char)(c)))
-#define TOASCII(c) (toascii((unsigned char)(c)))
-#define TOLOWER(c) (tolower((unsigned char)(c)))
-#define TOUPPER(c) (toupper((unsigned char)(c)))
+#define ISGRAPH(c)      (isgraph((unsigned char)(c)))
+#define ISLOWER(c)      (islower((unsigned char)(c)))
+#define ISPRINT(c)      (isprint((unsigned char)(c)))
+#define ISPUNCT(c)      (ispunct((unsigned char)(c)))
+#define ISSPACE(c)      (isspace((unsigned char)(c)))
+#define ISUPPER(c)      (isupper((unsigned char)(c)))
+#define TOASCII(c)      (toascii((unsigned char)(c)))
+#define TOLOWER(c)      (tolower((unsigned char)(c)))
+#define TOUPPER(c)      (toupper((unsigned char)(c)))
 
 //////////////////////////////////////////////////////////////////////////
 // length of a static array
-#define ARRAYLENGTH(A) ( (int)(sizeof(A)/sizeof((A)[0])) )
+#define ARRAYLENGTH(A) ((int)(sizeof(A) / sizeof((A)[0])))
 
 //////////////////////////////////////////////////////////////////////////
 // Make sure va_copy exists
 #include <stdarg.h> // va_list, va_copy(?)
 #if !defined(va_copy)
-#if defined(__va_copy)
-#define va_copy __va_copy
-#else
-#define va_copy(dst, src) ((void) memcpy(&(dst), &(src), sizeof(va_list)))
+  #if defined(__va_copy)
+    #define va_copy __va_copy
+  #else
+    #define va_copy(dst, src) ((void)memcpy(&(dst), &(src), sizeof(va_list)))
+  #endif
 #endif
-#endif
-
 
 //////////////////////////////////////////////////////////////////////////
 // Use the preprocessor to 'stringify' stuff (convert to a string).
@@ -424,22 +438,24 @@ typedef uintptr_t uintptr;
 //   #define TESTE blabla
 //   QUOTE(TESTE) -> "TESTE"
 //   EXPAND_AND_QUOTE(TESTE) -> "blabla"
-#define QUOTE(x) #x
+#define QUOTE(x)            #x
 #define EXPAND_AND_QUOTE(x) QUOTE(x)
-
 
 /* pointer size fix which fixes several gcc warnings */
 #ifdef __64BIT__
-	#define h64BPTRSIZE(y) ((intptr)(y))
+  #define h64BPTRSIZE(y) ((intptr)(y))
 #else
-	#define h64BPTRSIZE(y) (y)
+  #define h64BPTRSIZE(y) (y)
 #endif
 
 /** Support macros for marking blocks to memset to 0 */
-#define BEGIN_ZEROED_BLOCK int8 HERC__zeroed_block_BEGIN
-#define END_ZEROED_BLOCK int8 HERC__zeroed_block_END
+#define BEGIN_ZEROED_BLOCK  int8 HERC__zeroed_block_BEGIN
+#define END_ZEROED_BLOCK    int8 HERC__zeroed_block_END
 #define ZEROED_BLOCK_POS(x) (&(x)->HERC__zeroed_block_BEGIN)
-#define ZEROED_BLOCK_SIZE(x) ((char*)&((x)->HERC__zeroed_block_END) - (char*)&((x)->HERC__zeroed_block_BEGIN) + sizeof((x)->HERC__zeroed_block_END))
+#define ZEROED_BLOCK_SIZE(x) \
+	((char *)&((x)->HERC__zeroed_block_END) \
+	 - (char *)&((x)->HERC__zeroed_block_BEGIN) \
+	 + sizeof((x)->HERC__zeroed_block_END))
 
 /** Support macros for marking structs as unavailable */
 #define UNAVAILABLE_STRUCT int8 HERC__unavailable_struct

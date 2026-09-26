@@ -28,15 +28,15 @@
 #include "common/sysinfo.h" // sysinfo->getpagesize()
 
 #ifdef WIN32
-#	include "common/winapi.h"
-#	define __thread __declspec( thread )
+  #include "common/winapi.h"
+  #define __thread __declspec(thread)
 #else
-#	include <pthread.h>
-#	include <sched.h>
-#	include <signal.h>
-#	include <stdlib.h>
-#	include <string.h>
-#	include <unistd.h>
+  #include <pthread.h>
+  #include <sched.h>
+  #include <signal.h>
+  #include <stdlib.h>
+  #include <string.h>
+  #include <unistd.h>
 #endif
 
 /** @file
@@ -57,11 +57,11 @@ struct thread_handle {
 	threadFunc proc;
 	void *param;
 
-	#ifdef WIN32
+#ifdef WIN32
 	HANDLE hThread;
-	#else
+#else
 	pthread_t hThread;
-	#endif
+#endif
 };
 
 #ifdef HAS_TLS
@@ -88,7 +88,6 @@ static void thread_init(void)
 #endif
 	l_threads[0].prio = THREADPRIO_NORMAL;
 	l_threads[0].proc = (threadFunc)0xDEADCAFE;
-
 }
 
 /// @copydoc thread_interface::final()
@@ -99,8 +98,11 @@ static void thread_final(void)
 	// Unterminated Threads Left?
 	// Shouldn't happen ... Kill 'em all!
 	for (i = 1; i < THREADS_MAX; i++) {
-		if (l_threads[i].proc != NULL){
-			ShowWarning("thread_final: unterminated Thread (tid %d entry_point %p) - forcing to terminate (kill)\n", i, l_threads[i].proc);
+		if (l_threads[i].proc != NULL) {
+			ShowWarning(
+			    "thread_final: unterminated Thread (tid %d entry_point %p) - forcing to terminate (kill)\n",
+			    i, l_threads[i].proc
+			);
 			thread->destroy(&l_threads[i]);
 		}
 	}
@@ -115,8 +117,8 @@ static void thread_terminated(struct thread_handle *handle)
 {
 	// Preserve handle->myID and handle->hThread, set everything else to its default value
 	handle->param = NULL;
-	handle->proc = NULL;
-	handle->prio = THREADPRIO_NORMAL;
+	handle->proc  = NULL;
+	handle->prio  = THREADPRIO_NORMAL;
 }
 
 #ifdef WIN32
@@ -156,11 +158,11 @@ static void *thread_main_redirector(void *p)
 
 	thread_terminated(self);
 #ifdef WIN32
-#pragma warning (push)
-#pragma warning (disable: 4311)
-#pragma warning (disable: 4302)
+  #pragma warning(push)
+  #pragma warning(disable : 4311)
+  #pragma warning(disable : 4302)
 	return (DWORD)ret;
-#pragma warning (pop)
+  #pragma warning(pop)
 #else
 	return ret;
 #endif
@@ -171,11 +173,12 @@ static void *thread_main_redirector(void *p)
 /// @copydoc thread_interface::create()
 static struct thread_handle *thread_create(threadFunc entry_point, void *param)
 {
-	return thread->create_opt(entry_point, param,  (1<<23) /*8MB*/, THREADPRIO_NORMAL);
+	return thread->create_opt(entry_point, param, (1 << 23) /*8MB*/, THREADPRIO_NORMAL);
 }
 
 /// @copydoc thread_interface::create_opt()
-static struct thread_handle *thread_create_opt(threadFunc entry_point, void *param, size_t stack_size, enum thread_priority prio)
+static struct thread_handle *
+    thread_create_opt(threadFunc entry_point, void *param, size_t stack_size, enum thread_priority prio)
 {
 #ifndef WIN32
 	pthread_attr_t attr;
@@ -191,18 +194,21 @@ static struct thread_handle *thread_create_opt(threadFunc entry_point, void *par
 
 	// Get a free Thread Slot.
 	for (i = 0; i < THREADS_MAX; i++) {
-		if(l_threads[i].proc == NULL){
+		if (l_threads[i].proc == NULL) {
 			handle = &l_threads[i];
 			break;
 		}
 	}
 
 	if (handle == NULL) {
-		ShowError("thread_create_opt: cannot create new thread (entry_point: %p) - no free thread slot found!", entry_point);
+		ShowError(
+		    "thread_create_opt: cannot create new thread (entry_point: %p) - no free thread slot found!",
+		    entry_point
+		);
 		return NULL;
 	}
 
-	handle->proc = entry_point;
+	handle->proc  = entry_point;
 	handle->param = param;
 
 #ifdef WIN32
@@ -212,14 +218,14 @@ static struct thread_handle *thread_create_opt(threadFunc entry_point, void *par
 	pthread_attr_setstacksize(&attr, stack_size);
 
 	if (pthread_create(&handle->hThread, &attr, thread_main_redirector, handle) != 0) {
-		handle->proc = NULL;
+		handle->proc  = NULL;
 		handle->param = NULL;
 		return NULL;
 	}
 	pthread_attr_destroy(&attr);
 #endif
 
-	thread->prio_set(handle,  prio);
+	thread->prio_set(handle, prio);
 
 	return handle;
 }
@@ -254,16 +260,16 @@ static struct thread_handle *thread_self(void)
 	// .. so no tls means we have to search the thread by its api-handle ..
 	int i;
 
-#ifdef WIN32
+  #ifdef WIN32
 	HANDLE hSelf;
 	hSelf = GetCurrent = GetCurrentThread();
-#else
+  #else
 	pthread_t hSelf;
 	hSelf = pthread_self();
-#endif
+  #endif
 
 	for (i = 0; i < THREADS_MAX; i++) {
-		if (l_threads[i].hThread == hSelf  &&  l_threads[i].proc != NULL)
+		if (l_threads[i].hThread == hSelf && l_threads[i].proc != NULL)
 			return &l_threads[i];
 	}
 #endif
@@ -297,7 +303,6 @@ static bool thread_wait(struct thread_handle *handle, void **out_exit_code)
 		return true;
 	return false;
 #endif
-
 }
 
 /// @copydoc thread_interface::prio_set()
@@ -326,16 +331,16 @@ static void thread_yield(void)
 /// Interface base initialization.
 void thread_defaults(void)
 {
-	thread = &thread_s;
-	thread->init = thread_init;
-	thread->final = thread_final;
-	thread->create = thread_create;
+	thread             = &thread_s;
+	thread->init       = thread_init;
+	thread->final      = thread_final;
+	thread->create     = thread_create;
 	thread->create_opt = thread_create_opt;
-	thread->destroy = thread_destroy;
-	thread->self = thread_self;
-	thread->get_tid = thread_get_tid;
-	thread->wait = thread_wait;
-	thread->prio_set = thread_prio_set;
-	thread->prio_get = thread_prio_get;
-	thread->yield = thread_yield;
+	thread->destroy    = thread_destroy;
+	thread->self       = thread_self;
+	thread->get_tid    = thread_get_tid;
+	thread->wait       = thread_wait;
+	thread->prio_set   = thread_prio_set;
+	thread->prio_get   = thread_prio_get;
+	thread->yield      = thread_yield;
 }

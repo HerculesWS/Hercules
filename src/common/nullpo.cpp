@@ -31,25 +31,28 @@
 #include <stdlib.h>
 #include <string.h>
 #if defined(HAVE_LIBBACKTRACE)
-#include <backtrace.h>
-#include <backtrace-supported.h>
-#  if defined(WIN32)
-#    include <windows.h>
-#  elif defined(__sun)
-#    include <limits.h>
-#  elif defined(__linux) || defined(__linux__)
-#    include <unistd.h>
-#    include <limits.h>
-#  elif defined(__APPLE__) && defined(__MACH__)
-#    include <mach-o/dyld.h>
-#  elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__bsdi__) || defined(__DragonFly__)
-#    include <sys/types.h>
-#    include <sys/sysctl.h>
-#  endif
+  #include <backtrace.h>
+  #include <backtrace-supported.h>
+  #if defined(WIN32)
+    #include <windows.h>
+  #elif defined(__sun)
+    #include <limits.h>
+  #elif defined(__linux) || defined(__linux__)
+    #include <unistd.h>
+    #include <limits.h>
+  #elif defined(__APPLE__) && defined(__MACH__)
+    #include <mach-o/dyld.h>
+  #elif defined(__FreeBSD__) \
+      || defined(__NetBSD__) \
+      || defined(__OpenBSD__) \
+      || defined(__bsdi__) \
+      || defined(__DragonFly__)
+    #include <sys/types.h>
+    #include <sys/sysctl.h>
+  #endif
 #elif defined(HAVE_EXECINFO)
-#include <execinfo.h>
+  #include <execinfo.h>
 #endif // HAVE_LIBBACKTRACE
-
 
 static struct nullpo_interface nullpo_s;
 struct nullpo_interface *nullpo;
@@ -63,12 +66,8 @@ static void nullpo_error_callback(void *data, const char *msg, int errnum)
 
 static int nullpo_print_callback(void *data, uintptr_t pc, const char *filename, int lineno, const char *function)
 {
-	ShowError("0x%lx %s\n",
-		(unsigned long) pc,
-		function == NULL ? "???" : function);
-	ShowError("\t%s:%d\n",
-		filename == NULL ? "???" : filename,
-		lineno);
+	ShowError("0x%lx %s\n", (unsigned long)pc, function == NULL ? "???" : function);
+	ShowError("\t%s:%d\n", filename == NULL ? "???" : filename, lineno);
 	return 0;
 }
 
@@ -76,7 +75,7 @@ static void nullpo_backtrace_print(struct backtrace_state *state)
 {
 	backtrace_full(state, 0, nullpo_print_callback, nullpo_error_callback, state);
 }
-#endif  // HAVE_LIBBACKTRACE
+#endif // HAVE_LIBBACKTRACE
 
 /**
  * Reports failed assertions or NULL pointers
@@ -102,7 +101,7 @@ static void assert_report(const char *file, int line, const char *func, const ch
 		nullpo_backtrace_print(nullpo->backtrace_state);
 #elif defined(HAVE_EXECINFO)
 	void *array[10];
-	int size = (int)backtrace(array, 10);
+	int size       = (int)backtrace(array, 10);
 	char **strings = backtrace_symbols(array, size);
 	for (int i = 0; i < size; i++)
 		ShowError("%s\n", strings[i]);
@@ -114,7 +113,8 @@ static void assert_report(const char *file, int line, const char *func, const ch
 static void nullpo_init(void)
 {
 #ifdef HAVE_LIBBACKTRACE
-	nullpo->backtrace_state = backtrace_create_state(core->executable_path, BACKTRACE_SUPPORTS_THREADS, nullpo_error_callback, NULL);
+	nullpo->backtrace_state
+	    = backtrace_create_state(core->executable_path, BACKTRACE_SUPPORTS_THREADS, nullpo_error_callback, NULL);
 #endif
 }
 
@@ -130,9 +130,9 @@ static void nullpo_final(void)
  **/
 void nullpo_defaults(void)
 {
-	nullpo = &nullpo_s;
-	nullpo->init = nullpo_init;
-	nullpo->final = nullpo_final;
+	nullpo                = &nullpo_s;
+	nullpo->init          = nullpo_init;
+	nullpo->final         = nullpo_final;
 	nullpo->assert_report = assert_report;
 
 	nullpo->backtrace_state = NULL;

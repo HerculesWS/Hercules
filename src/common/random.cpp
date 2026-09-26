@@ -30,10 +30,10 @@
 #include <stdlib.h>
 
 #if defined(WIN32)
-#	include "common/winapi.h"
+  #include "common/winapi.h"
 #elif defined(HAVE_GETPID) || defined(HAVE_GETTID)
-#	include <sys/types.h>
-#	include <unistd.h>
+  #include <sys/types.h>
+  #include <unistd.h>
 #endif
 
 /** @file
@@ -46,18 +46,18 @@ struct rnd_interface *rnd;
 /// @copydoc rnd_interface::init()
 static void rnd_init(void)
 {
-	unsigned long seed = (unsigned long)timer->gettick();
-	seed += (unsigned long)time(NULL);
+	unsigned long seed  = (unsigned long)timer->gettick();
+	seed               += (unsigned long)time(NULL);
 #if defined(WIN32)
 	seed += (unsigned long)GetCurrentProcessId();
 	seed += (unsigned long)GetCurrentThreadId();
 #else
-#if defined(HAVE_GETPID)
+  #if defined(HAVE_GETPID)
 	seed += (unsigned long)getpid();
-#endif // HAVE_GETPID
-#if defined(HAVE_GETTID)
+  #endif // HAVE_GETPID
+  #if defined(HAVE_GETTID)
 	seed += (unsigned long)gettid();
-#endif // HAVE_GETTID
+  #endif // HAVE_GETTID
 #endif
 	init_genrand(seed);
 
@@ -85,7 +85,7 @@ static int32 rnd_random(void)
 /// @copydoc rnd_interface::roll()
 static uint32 rnd_roll(uint32 dice_faces)
 {
-	return (uint32)(rnd->uniform()*dice_faces);
+	return (uint32)(rnd->uniform() * dice_faces);
 }
 
 /// @copydoc rnd_interface::value()
@@ -93,13 +93,13 @@ static int32 rnd_value(int32 min, int32 max)
 {
 	if (min >= max)
 		return min;
-	return min + (int32)(rnd->uniform()*(max-min+1));
+	return min + (int32)(rnd->uniform() * (max - min + 1));
 }
 
 /// @copydoc rnd_interface::uniform()
 static double rnd_uniform(void)
 {
-	return ((uint32)genrand_int32())*(1.0/4294967296.0);// divided by 2^32
+	return ((uint32)genrand_int32()) * (1.0 / 4294967296.0); // divided by 2^32
 }
 
 /// @copydoc rnd_interface::uniform53()
@@ -111,13 +111,13 @@ static double rnd_uniform53(void)
 /// Interface base initialization.
 void rnd_defaults(void)
 {
-	rnd = &rnd_s;
-	rnd->init = rnd_init;
-	rnd->final = rnd_final;
-	rnd->seed = rnd_seed;
-	rnd->random = rnd_random;
-	rnd->roll = rnd_roll;
-	rnd->value = rnd_value;
-	rnd->uniform = rnd_uniform;
+	rnd            = &rnd_s;
+	rnd->init      = rnd_init;
+	rnd->final     = rnd_final;
+	rnd->seed      = rnd_seed;
+	rnd->random    = rnd_random;
+	rnd->roll      = rnd_roll;
+	rnd->value     = rnd_value;
+	rnd->uniform   = rnd_uniform;
 	rnd->uniform53 = rnd_uniform53;
 }
