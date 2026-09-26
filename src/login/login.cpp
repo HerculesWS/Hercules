@@ -325,15 +325,19 @@ static void login_fromchar_parse_auth(int fd, int id, const char *const ip)
 	RFIFOSKIP(fd,23);
 
 	struct login_auth_node *node = (struct login_auth_node *)idb_get(login->auth_db, account_id);
-	if( core->runflag == LOGINSERVER_ST_RUNNING &&
-		node != NULL &&
-		node->account_id == account_id &&
-		node->login_id1  == login_id1 &&
-		node->login_id2  == login_id2 &&
-		node->sex        == sex_num2str(sex) /*&&
-		node->ip         == ip_*/ )
-	{// found
-		//ShowStatus("Char-server '%s': authentication of the account %d accepted (ip: %s).\n", login->dbs->server[id].name, account_id, ip);
+	if (
+	        core->runflag == LOGINSERVER_ST_RUNNING
+	        && node != NULL
+	        && node->account_id == account_id
+	        && node->login_id1 == login_id1
+	        && node->login_id2 == login_id2
+	        && node->sex == sex_num2str(sex)
+	        /*&& node->ip == ip_*/
+	) {
+		// found
+
+		// ShowStatus("Char-server '%s': authentication of the account %d accepted (ip: %s).\n",
+		// login->dbs->server[id].name, account_id, ip);
 
 		// send ack
 		login->fromchar_auth_ack(fd, account_id, login_id1, login_id2, sex, request_id, node);
@@ -1152,10 +1156,13 @@ static int login_mmo_auth(struct login_session_data *sd, bool isServer)
 
 	// Account creation with _M/_F
 	if (login->config->new_account_flag) {
-		if (len > 2 && sd->passwd[0] != '\0' && // valid user and password lengths
-			sd->passwdenc == PWENC_NONE && // unencoded password
-			sd->userid[len-2] == '_' && memchr("FfMm", sd->userid[len-1], 4)) // _M/_F suffix
-		{
+		if (len > 2
+		    && sd->passwd[0] != '\0'
+		    && // valid user and password lengths
+		    sd->passwdenc == PWENC_NONE
+		    && // unencoded password
+		    sd->userid[len - 2] == '_'
+		    && memchr("FfMm", sd->userid[len - 1], 4)) /* _M/_F suffix */ {
 			int result;
 
 			// remove the _M/_F suffix
@@ -1202,9 +1209,9 @@ static int login_mmo_auth(struct login_session_data *sd, bool isServer)
 		for (node = login->config->client_hash_nodes; node; node = node->next) {
 			if( acc.group_id < node->group_id )
 				continue;
-			if( *node->hash == '\0' // Allowed to login without hash
-			 || (sd->has_client_hash && memcmp(node->hash, sd->client_hash, 16) == 0 ) // Correct hash
-			) {
+			if (*node->hash == '\0' /* Allowed to login without hash */
+			    || (sd->has_client_hash
+			        && memcmp(node->hash, sd->client_hash, 16) == 0) /* Correct hash */) {
 				match = true;
 				break;
 			}
