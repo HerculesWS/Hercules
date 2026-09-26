@@ -41,7 +41,8 @@ enum login_packet_ca_id {
 	HEADER_CA_REQ_HASH             = 0x01db,
 	HEADER_CA_CHARSERVERCONNECT    = 0x2710, // Custom Hercules Packet
 	HEADER_CA_APISERVERCONNECT     = 0x2720, // Custom Hercules Packet
-	//HEADER_CA_SSO_LOGIN_REQa       = 0x825a, /* unused */
+
+	// HEADER_CA_SSO_LOGIN_REQa       = 0x825A, /* unused */
 };
 
 /* Packets Structs */

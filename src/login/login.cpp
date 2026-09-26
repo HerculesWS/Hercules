@@ -212,7 +212,8 @@ static void lchrif_server_destroy(int id)
 /// Resets all the data related to a server.
 static void lchrif_server_reset(int id)
 {
-	login->online_db->foreach(login->online_db, login->online_db_setoffline, id); //Set all chars from this char server to offline.
+	//Set all chars from this char server to offline.
+	login->online_db->foreach(login->online_db, login->online_db_setoffline, id);
 	lchrif->server_destroy(id);
 	lchrif->server_init(id);
 }
@@ -325,15 +326,19 @@ static void login_fromchar_parse_auth(int fd, int id, const char *const ip)
 	RFIFOSKIP(fd,23);
 
 	struct login_auth_node *node = (struct login_auth_node *)idb_get(login->auth_db, account_id);
-	if( core->runflag == LOGINSERVER_ST_RUNNING &&
-		node != NULL &&
-		node->account_id == account_id &&
-		node->login_id1  == login_id1 &&
-		node->login_id2  == login_id2 &&
-		node->sex        == sex_num2str(sex) /*&&
-		node->ip         == ip_*/ )
-	{// found
-		//ShowStatus("Char-server '%s': authentication of the account %d accepted (ip: %s).\n", login->dbs->server[id].name, account_id, ip);
+	if (
+	        core->runflag == LOGINSERVER_ST_RUNNING
+	        && node != NULL
+	        && node->account_id == account_id
+	        && node->login_id1 == login_id1
+	        && node->login_id2 == login_id2
+	        && node->sex == sex_num2str(sex)
+	        /*&& node->ip == ip_*/
+	) {
+		// found
+
+		// ShowStatus("Char-server '%s': authentication of the account %d accepted (ip: %s).\n",
+		// login->dbs->server[id].name, account_id, ip);
 
 		// send ack
 		login->fromchar_auth_ack(fd, account_id, login_id1, login_id2, sex, request_id, node);
@@ -742,7 +747,8 @@ static bool login_fromchar_parse_wrong_pincode(int fd)
 			return true;
 		}
 
-		loginlog->log(sockt->host2ip(acc.last_ip), acc.userid, 100, "PIN Code check failed"); // FIXME: Do we really want to log this with the same code as successful logins?
+		// FIXME: Do we really want to log this with the same code as successful logins?
+		loginlog->log(sockt->host2ip(acc.last_ip), acc.userid, 100, "PIN Code check failed");
 	}
 
 	login->remove_online_user(acc.account_id);
@@ -856,163 +862,134 @@ static int login_parse_fromchar(int fd)
 		case 0x2712: // request from char-server to authenticate an account
 			if( RFIFOREST(fd) < 23 )
 				return 0;
-		{
 			login->fromchar_parse_auth(fd, id, ip);
-		}
-		break;
+			break;
 
 		case 0x2714:
 			if( RFIFOREST(fd) < 6 )
 				return 0;
-		{
 			login->fromchar_parse_update_users(fd, id);
-		}
-		break;
+			break;
 
 		case 0x2715: // request from char server to change e-email from default "a@a.com"
 			if (RFIFOREST(fd) < 46)
 				return 0;
-		{
 			login->fromchar_parse_request_change_email(fd, id, ip);
-		}
-		break;
+			break;
 
 		case 0x2716: // request account data
 			if( RFIFOREST(fd) < 6 )
 				return 0;
-		{
 			login->fromchar_parse_account_data(fd, id, ip);
-		}
-		break;
+			break;
 
 		case 0x2719: // ping request from charserver
 			login->fromchar_parse_ping(fd);
-		break;
+			break;
 
 		case 0x2721:  // char online notification
 			if (RFIFOREST(fd) < 10)
 				return 0;
 			login->fromchar_parse_set_char_online(fd);
-		break;
+			break;
+
 		// Map server send information to change an email of an account via char-server
 		case 0x2722: // 0x2722 <account_id>.L <actual_e-mail>.40B <new_e-mail>.40B
 			if (RFIFOREST(fd) < 86)
 				return 0;
-		{
 			login->fromchar_parse_change_email(fd, id, ip);
-		}
-		break;
+			break;
 
 		case 0x2724: // Receiving an account state update request from a map-server (relayed via char-server)
 			if (RFIFOREST(fd) < 10)
 				return 0;
-		{
 			login->fromchar_parse_account_update(fd, id, ip);
-		}
-		break;
+			break;
 
 		case 0x2725: // Receiving of map-server via char-server a ban request
 			if (RFIFOREST(fd) < 18)
 				return 0;
-		{
 			login->fromchar_parse_ban(fd, id, ip);
-		}
-		break;
+			break;
 
 		case 0x2727: // Change of sex (sex is reversed)
 			if( RFIFOREST(fd) < 6 )
 				return 0;
-		{
 			login->fromchar_parse_change_sex(fd, id, ip);
-		}
-		break;
+			break;
 
 		case 0x2728: // We receive account_reg2 from a char-server, and we send them to other map-servers.
 			if( RFIFOREST(fd) < 4 || RFIFOREST(fd) < RFIFOW(fd,2) )
 				return 0;
-		{
 			login->fromchar_parse_account_reg2(fd, id, ip);
-		}
-		break;
+			break;
 
 		case 0x272a: // Receiving of map-server via char-server an unban request
 			if( RFIFOREST(fd) < 6 )
 				return 0;
-		{
 			login->fromchar_parse_unban(fd, id, ip);
-		}
-		break;
+			break;
 
 		case HEADER_CHARLOGIN_SET_ACCOUNT_ONLINE:    // Set account_id to online [Wizputer]
 			if (RFIFOREST(fd) < sizeof(struct PACKET_CHARLOGIN_SET_ACCOUNT_ONLINE))
 				return 0;
 			login->fromchar_parse_account_online(fd, id);
-		break;
+			break;
 
 		case 0x272c:   // Set account_id to offline [Wizputer]
 			if( RFIFOREST(fd) < 6 )
 				return 0;
 			login->fromchar_parse_account_offline(fd);
-		break;
+			break;
 
 		case HEADER_CHARLOGIN_ONLINE_ACCOUNTS: // Receive list of all online accounts. [Skotlex]
 			if (RFIFOREST(fd) < 4 || RFIFOREST(fd) < RFIFOW(fd,2))
 				return 0;
-			{
-				login->fromchar_parse_online_accounts(fd, id);
-			}
+			login->fromchar_parse_online_accounts(fd, id);
 			RFIFOSKIP(fd,RFIFOW(fd,2));
-		break;
+			break;
 
 		case 0x272e: //Request account_reg2 for a character.
 			if (RFIFOREST(fd) < 10)
 				return 0;
-		{
 			login->fromchar_parse_request_account_reg2(fd);
-		}
-		break;
+			break;
 
 		case 0x2736: // WAN IP update from char-server
 			if( RFIFOREST(fd) < 6 )
 				return 0;
 			login->fromchar_parse_update_wan_ip(fd, id);
-		break;
+			break;
 
 		case 0x2737: //Request to set all offline.
 			login->fromchar_parse_all_offline(fd, id);
-		break;
+			break;
 
 		case 0x2738: //Change PIN Code for a account
 			if( RFIFOREST(fd) < 11 )
 				return 0;
-			else {
-				login->fromchar_parse_change_pincode(fd);
-			}
+			login->fromchar_parse_change_pincode(fd);
 			break;
 
 		case 0x2739: // PIN Code was entered wrong too often
 			if( RFIFOREST(fd) < 6 )
 				return 0;
-			else {
-				if (login->fromchar_parse_wrong_pincode(fd))
-					return 0;
-			}
-		break;
+			if (login->fromchar_parse_wrong_pincode(fd))
+				return 0;
+			break;
 
 		case 0x2740: // Accinfo request forwarded by charserver on mapserver's account
 			if( RFIFOREST(fd) < 22 )
 				return 0;
-			else {
-				login->fromchar_parse_accinfo(fd);
-			}
-		break;
+			login->fromchar_parse_accinfo(fd);
+			break;
 
 		case HEADER_API_PROXY_REPLY:
 			if (RFIFOREST(fd) < 4 || RFIFOREST(fd) < RFIFOW(fd, 2))
 				return 0;
 			lapiif->parse_proxy_api_from_char(fd);
 			RFIFOSKIP(fd, RFIFOW(fd, 2));
-		break;
+			break;
 
 		default:
 			ShowError("login_parse_fromchar: Unknown packet 0x%x from a char-server! Disconnecting!\n", command);
@@ -1152,10 +1129,11 @@ static int login_mmo_auth(struct login_session_data *sd, bool isServer)
 
 	// Account creation with _M/_F
 	if (login->config->new_account_flag) {
-		if (len > 2 && sd->passwd[0] != '\0' && // valid user and password lengths
-			sd->passwdenc == PWENC_NONE && // unencoded password
-			sd->userid[len-2] == '_' && memchr("FfMm", sd->userid[len-1], 4)) // _M/_F suffix
-		{
+		if (len > 2
+		    && sd->passwd[0] != '\0' /* valid user and password lengths */
+		    && sd->passwdenc == PWENC_NONE /* unencoded password */
+		    && sd->userid[len - 2] == '_'
+		    && memchr("FfMm", sd->userid[len - 1], 4) /* _M/_F suffix */) {
 			int result;
 
 			// remove the _M/_F suffix
@@ -1202,9 +1180,9 @@ static int login_mmo_auth(struct login_session_data *sd, bool isServer)
 		for (node = login->config->client_hash_nodes; node; node = node->next) {
 			if( acc.group_id < node->group_id )
 				continue;
-			if( *node->hash == '\0' // Allowed to login without hash
-			 || (sd->has_client_hash && memcmp(node->hash, sd->client_hash, 16) == 0 ) // Correct hash
-			) {
+			if (*node->hash == '\0' /* Allowed to login without hash */
+			    || (sd->has_client_hash
+			        && memcmp(node->hash, sd->client_hash, 16) == 0) /* Correct hash */) {
 				match = true;
 				break;
 			}
@@ -1359,32 +1337,56 @@ static void login_auth_failed(struct login_session_data *sd, int result)
 	if (login->config->log_login) {
 		const char* error;
 		switch( result ) {
-		case   0: error = "Unregistered ID."; break; // 0 = Unregistered ID
-		case   1: error = "Incorrect Password."; break; // 1 = Incorrect Password
-		case   2: error = "Account Expired."; break; // 2 = This ID is expired
-		case   3: error = "Rejected from server."; break; // 3 = Rejected from Server
-		case   4: error = "Blocked by GM."; break; // 4 = You have been blocked by the GM Team
-		case   5: error = "Not latest game EXE."; break; // 5 = Your Game's EXE file is not the latest version
-		case   6: error = "Banned."; break; // 6 = Your are Prohibited to log in until %s
-		case   7: error = "Server Over-population."; break; // 7 = Server is jammed due to over populated
-		case   8: error = "Account limit from company"; break; // 8 = No more accounts may be connected from this company
-		case   9: error = "Ban by DBA"; break; // 9 = MSI_REFUSE_BAN_BY_DBA
-		case  10: error = "Email not confirmed"; break; // 10 = MSI_REFUSE_EMAIL_NOT_CONFIRMED
-		case  11: error = "Ban by GM"; break; // 11 = MSI_REFUSE_BAN_BY_GM
-		case  12: error = "Working in DB"; break; // 12 = MSI_REFUSE_TEMP_BAN_FOR_DBWORK
-		case  13: error = "Self Lock"; break; // 13 = MSI_REFUSE_SELF_LOCK
-		case  14: error = "Not Permitted Group"; break; // 14 = MSI_REFUSE_NOT_PERMITTED_GROUP
-		case  15: error = "Not Permitted Group"; break; // 15 = MSI_REFUSE_NOT_PERMITTED_GROUP
-		case  99: error = "Account gone."; break; // 99 = This ID has been totally erased
-		case 100: error = "Login info remains."; break; // 100 = Login information remains at %s
-		case 101: error = "Hacking investigation."; break; // 101 = Account has been locked for a hacking investigation. Please contact the GM Team for more information
-		case 102: error = "Bug investigation."; break; // 102 = This account has been temporarily prohibited from login due to a bug-related investigation
-		case 103: error = "Deleting char."; break; // 103 = This character is being deleted. Login is temporarily unavailable for the time being
-		case 104: error = "Deleting spouse char."; break; // 104 = This character is being deleted. Login is temporarily unavailable for the time being
-		default : error = "Unknown Error."; break;
+		case   0: // 0 = Unregistered ID
+			error = "Unregistered ID."; break;
+		case   1: // 1 = Incorrect Password
+			error = "Incorrect Password."; break;
+		case   2: // 2 = This ID is expired
+			error = "Account Expired."; break;
+		case   3: // 3 = Rejected from Server
+			error = "Rejected from server."; break;
+		case   4: // 4 = You have been blocked by the GM Team
+			error = "Blocked by GM."; break;
+		case   5: // 5 = Your Game's EXE file is not the latest version
+			error = "Not latest game EXE."; break;
+		case   6: // 6 = Your are Prohibited to log in until %s
+			error = "Banned."; break;
+		case   7: // 7 = Server is jammed due to over populated
+			error = "Server Over-population."; break;
+		case   8: // 8 = No more accounts may be connected from this company
+			error = "Account limit from company"; break;
+		case   9: // 9 = MSI_REFUSE_BAN_BY_DBA
+			error = "Ban by DBA"; break;
+		case  10: // 10 = MSI_REFUSE_EMAIL_NOT_CONFIRMED
+			error = "Email not confirmed"; break;
+		case  11: // 11 = MSI_REFUSE_BAN_BY_GM
+			error = "Ban by GM"; break;
+		case  12: // 12 = MSI_REFUSE_TEMP_BAN_FOR_DBWORK
+			error = "Working in DB"; break;
+		case  13: // 13 = MSI_REFUSE_SELF_LOCK
+			error = "Self Lock"; break;
+		case  14: // 14 = MSI_REFUSE_NOT_PERMITTED_GROUP
+			error = "Not Permitted Group"; break;
+		case  15: // 15 = MSI_REFUSE_NOT_PERMITTED_GROUP
+			error = "Not Permitted Group"; break;
+		case  99: // 99 = This ID has been totally erased
+			error = "Account gone."; break;
+		case 100: // 100 = Login information remains at %s
+			error = "Login info remains."; break;
+		case 101: // 101 = Account has been locked for a hacking investigation. Please contact the GM Team for more information
+			error = "Hacking investigation."; break;
+		case 102: // 102 = This account has been temporarily prohibited from login due to a bug-related investigation
+			error = "Bug investigation."; break;
+		case 103: // 103 = This character is being deleted. Login is temporarily unavailable for the time being
+			error = "Deleting char."; break;
+		case 104: // 104 = This character is being deleted. Login is temporarily unavailable for the time being
+			error = "Deleting spouse char."; break;
+		default :
+			error = "Unknown Error."; break;
 		}
 
-		loginlog->log(ip, sd->userid, result, error); // FIXME: result can be 100, conflicting with the value 100 we use for successful login...
+		// FIXME: result can be 100, conflicting with the value 100 we use for successful login...
+		loginlog->log(ip, sd->userid, result, error);
 	}
 
 	if (result == 1 && login->config->dynamic_pass_failure_ban && !sockt->trusted_ip_check(ip))
@@ -1833,7 +1835,8 @@ static void login_config_set_md5hash(struct config_setting_t *setting)
 			}
 		}
 		nnode->group_id = group_id;
-		nnode->next = login->config->client_hash_nodes; // login->config->client_hash_nodes is initialized before calling this function
+		// login->config->client_hash_nodes is initialized before calling this function
+		nnode->next = login->config->client_hash_nodes;
 		login->config->client_hash_nodes = nnode;
 	}
 
