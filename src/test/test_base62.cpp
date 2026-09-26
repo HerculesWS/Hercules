@@ -29,34 +29,39 @@
 
 #include <stdlib.h>
 
-#define TEST(name, function) do { \
-	ShowMessage("-------------------------------------------------------------------------------\n"); \
-	ShowNotice("Testing %s...\n", (name)); \
-	if (!(function)()) { \
-		ShowError("Failed.\n"); \
-		ShowMessage("===============================================================================\n"); \
-		ShowFatalError("Failure. Aborting further tests.\n"); \
-		exit(EXIT_FAILURE); \
-	} \
-	ShowInfo("Test passed.\n"); \
-} while (false)
+#define TEST(name, function) \
+	do { \
+		ShowMessage("-------------------------------------------------------------------------------\n"); \
+		ShowNotice("Testing %s...\n", (name)); \
+		if (!(function)()) { \
+			ShowError("Failed.\n"); \
+			ShowMessage( \
+			    "===============================================================================\n" \
+			); \
+			ShowFatalError("Failure. Aborting further tests.\n"); \
+			exit(EXIT_FAILURE); \
+		} \
+		ShowInfo("Test passed.\n"); \
+	} while (false)
 
-#define context(message, ...) do { \
-	ShowNotice("\n"); \
-	ShowNotice("> " message "\n", ##__VA_ARGS__); \
-} while (false)
+#define context(message, ...) \
+	do { \
+		ShowNotice("\n"); \
+		ShowNotice("> " message "\n", ##__VA_ARGS__); \
+	} while (false)
 
-#define expect(formatter, pass_expr, message, actual, expected, ...) do { \
-	ShowNotice("\t" message "... ", ##__VA_ARGS__); \
-	if (!(pass_expr)) { \
-		passed = false; \
-		ShowMessage("" CL_RED "Failed" CL_RESET "\n"); \
-		ShowNotice("\t\tExpected: " CL_GREEN formatter CL_RESET ",\n", expected); \
-		ShowNotice("\t\tReceived: " CL_RED formatter CL_RESET "\n", actual); \
-	} else { \
-		ShowMessage("" CL_GREEN "Passed" CL_RESET "\n"); \
-	} \
-} while (false)
+#define expect(formatter, pass_expr, message, actual, expected, ...) \
+	do { \
+		ShowNotice("\t" message "... ", ##__VA_ARGS__); \
+		if (!(pass_expr)) { \
+			passed = false; \
+			ShowMessage("" CL_RED "Failed" CL_RESET "\n"); \
+			ShowNotice("\t\tExpected: " CL_GREEN formatter CL_RESET ",\n", expected); \
+			ShowNotice("\t\tReceived: " CL_RED formatter CL_RESET "\n", actual); \
+		} else { \
+			ShowMessage("" CL_GREEN "Passed" CL_RESET "\n"); \
+		} \
+	} while (false)
 
 #define expect_int(message, actual, expected, ...) \
 	expect("%d", ((actual) == (expected)), message, (actual), (expected), ##__VA_ARGS__)
@@ -88,14 +93,16 @@ static bool test_base62_encode_int_padded(void)
 	{
 		context("Encoding int 'INT_MAX - 1' in a buffer with min length = 5, but enough buffer size");
 		char output[30];
-		bool res = base62->encode_int_padded(INT_MAX - 1 , output, 5, sizeof(output));
+		bool res = base62->encode_int_padded(INT_MAX - 1, output, 5, sizeof(output));
 		expect_int("To encode successfully", res, true);
 		expect_str("to return the encoded value without truncating it", output, "2lkCB0");
 		expect_int("To have a NULL-terminated buffer", output[6], '\0');
 	}
 
 	{
-		context("Encoding int 'INT_MAX - 1' in a buffer of length 6 (5 spaces + NULL terminator), which does not support the number");
+		context(
+		    "Encoding int 'INT_MAX - 1' in a buffer of length 6 (5 spaces + NULL terminator), which does not support the number"
+		);
 		char output[6];
 		// This will show an assert error to alert server owners that the used buffer is too small
 		bool res = base62->encode_int_padded(INT_MAX - 1, output, 5, sizeof(output));
@@ -117,17 +124,22 @@ int do_init(int argc, char **argv)
 	return EXIT_SUCCESS;
 }
 
-int do_final(void) {
+int do_final(void)
+{
 	ShowMessage("===============================================================================\n");
 	ShowStatus("All tests passed.\n");
 	return EXIT_SUCCESS;
 }
 
-void do_abort(void) { }
+void do_abort(void)
+{
+}
 
 void set_server_type(void)
 {
 	SERVER_TYPE = SERVER_TYPE_UNKNOWN;
 }
 
-void cmdline_args_init_local(void) { }
+void cmdline_args_init_local(void)
+{
+}
