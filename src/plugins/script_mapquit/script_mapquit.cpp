@@ -28,20 +28,25 @@
 #include "common/HPMDataCheck.h"
 
 HPM_DECLARE_PLUGIN(
-	"script_mapquit",    // Plugin name
-	SERVER_TYPE_MAP,     // Which server types this plugin works with?
-	"0.1"                // Plugin version
+    "script_mapquit", // Plugin name
+    SERVER_TYPE_MAP,  // Which server types this plugin works with?
+    "0.1"             // Plugin version
 )
 
-BUILDIN(mapquit) {
+BUILDIN(mapquit)
+{
 	if (script_hasdata(st, 2)) {
 		map->retval = script_getnum(st, 2);
 	}
 	map->do_shutdown();
 	return true;
 }
-HPExport void server_preinit(void) {
+
+HPExport void server_preinit(void)
+{
 }
-HPExport void plugin_init(void) {
+
+HPExport void plugin_init(void)
+{
 	addScriptCommand("mapquit", "?", mapquit);
 }

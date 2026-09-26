@@ -40,15 +40,15 @@
 #include <sys/stat.h>
 
 #ifdef RENEWAL
-#define OUTPUTFILENAME "doc" PATHSEP_STR "constants_re.md"
+  #define OUTPUTFILENAME "doc" PATHSEP_STR "constants_re.md"
 #else
-#define OUTPUTFILENAME "doc" PATHSEP_STR "constants_pre-re.md"
+  #define OUTPUTFILENAME "doc" PATHSEP_STR "constants_pre-re.md"
 #endif
 
 HPM_DECLARE_PLUGIN(
-	"constdb2doc",   // Plugin name
-	SERVER_TYPE_MAP, // Which server types this plugin works with?
-	"0.1"            // Plugin version
+    "constdb2doc",   // Plugin name
+    SERVER_TYPE_MAP, // Which server types this plugin works with?
+    "0.1"            // Plugin version
 )
 
 FILE *out_fp;
@@ -77,15 +77,15 @@ void constdb2doc_script_set_constant(const char *name, int value, bool is_parame
 
 void constdb2doc_constdb(void)
 {
-	void (*script_set_constant) (const char* name, int value, bool is_parameter, bool is_deprecated) = NULL;
-	void (*script_constdb_comment) (const char *comment) = NULL;
+	void (*script_set_constant)(const char *name, int value, bool is_parameter, bool is_deprecated) = NULL;
+	void (*script_constdb_comment)(const char *comment)                                             = NULL;
 
 	nullpo_retv(out_fp);
 
 	/* Link */
-	script_set_constant = script->set_constant;
-	script->set_constant = constdb2doc_script_set_constant;
-	script_constdb_comment = script->constdb_comment;
+	script_set_constant     = script->set_constant;
+	script->set_constant    = constdb2doc_script_set_constant;
+	script_constdb_comment  = script->constdb_comment;
 	script->constdb_comment = constdb2doc_constdb_comment;
 
 	/* Run */
@@ -102,7 +102,7 @@ void constdb2doc_constdb(void)
 	fprintf(out_fp, "\n");
 
 	/* Unlink */
-	script->set_constant = script_set_constant;
+	script->set_constant    = script_set_constant;
 	script->constdb_comment = script_constdb_comment;
 }
 
@@ -159,7 +159,10 @@ void constdb2doc_itemdb(void)
 
 	if (db_size(itemdb->other) > 0) {
 		struct DBIterator *iter = db_iterator(itemdb->other);
-		for (struct item_data *itd = (struct item_data *)dbi_first(iter); dbi_exists(iter); itd = (struct item_data *)dbi_next(iter)) {
+		for (
+		    struct item_data *itd = (struct item_data *)dbi_first(iter); dbi_exists(iter);
+		    itd                   = (struct item_data *)dbi_next(iter)
+		) {
 			if (itd == &itemdb->dummy)
 				continue;
 			fprintf(out_fp, "- `%s`: %d\n", itd->name, itd->nameid);
@@ -177,7 +180,10 @@ void constdb2doc_itemoptions(void)
 	fprintf(out_fp, "## Item Options (db/item_options.conf)\n\n");
 	if (db_size(itemdb->options) > 0) {
 		struct DBIterator *iter = db_iterator(itemdb->options);
-		for (struct itemdb_option *ito = (struct itemdb_option *)dbi_first(iter); dbi_exists(iter); ito = (struct itemdb_option *)dbi_next(iter)) {
+		for (
+		    struct itemdb_option *ito = (struct itemdb_option *)dbi_first(iter); dbi_exists(iter);
+		    ito                       = (struct itemdb_option *)dbi_next(iter)
+		) {
 			fprintf(out_fp, "- `%s`: %d\n", ito->name, ito->index);
 		}
 		dbi_destroy(iter);
@@ -193,9 +199,10 @@ void do_constdb2doc(void)
 		return;
 	}
 
-	fprintf(out_fp,
-		"# Constants\n\n"
-		"> This document contains all the constants available to the script engine.\n\n");
+	fprintf(
+	    out_fp,
+	    "# Constants\n\n" "> This document contains all the constants available to the script engine.\n\n"
+	);
 
 	constdb2doc_constdb();
 
@@ -212,21 +219,30 @@ void do_constdb2doc(void)
 
 	fclose(out_fp);
 }
-CPCMD(constdb2doc) {
+
+CPCMD(constdb2doc)
+{
 	do_constdb2doc();
 }
+
 CMDLINEARG(constdb2doc)
 {
 	map->minimal = torun = true;
 	return true;
 }
-HPExport void server_preinit(void) {
+
+HPExport void server_preinit(void)
+{
 	addArg("--constdb2doc", false, constdb2doc, NULL);
 }
-HPExport void plugin_init(void) {
+
+HPExport void plugin_init(void)
+{
 	addCPCommand("server:tools:constdb2doc", constdb2doc);
 }
-HPExport void server_online(void) {
+
+HPExport void server_online(void)
+{
 	if (torun)
 		do_constdb2doc();
 }

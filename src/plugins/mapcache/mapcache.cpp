@@ -1,22 +1,22 @@
 /**
-* This file is part of Hercules.
-* http://herc.ws - http://github.com/HerculesWS/Hercules
-*
-* Copyright (C) 2013-2026 Hercules Dev Team
-*
-* Hercules is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2013-2026 Hercules Dev Team
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /**
  * Mapcache Plugin
@@ -39,9 +39,9 @@
 #include <string.h>
 
 HPM_DECLARE_PLUGIN(
-	"Mapcache",      ///< Plugin name
-	SERVER_TYPE_MAP, ///< Which server types this plugin works with?
-	"1.0.0"          ///< Plugin version
+    "Mapcache",      ///< Plugin name
+    SERVER_TYPE_MAP, ///< Which server types this plugin works with?
+    "1.0.0"          ///< Plugin version
 )
 
 /**
@@ -71,34 +71,32 @@ struct old_mapcache_map_info {
 VECTOR_DECL(char *) maplist;
 bool needs_grfio;
 
-
 /**
  * code from utlis.cpp until it's interfaced
  **/
 
 #ifdef WIN32
-#	ifndef F_OK
-#		define F_OK   0x0
-#	endif  /* F_OK */
+  #ifndef F_OK
+    #define F_OK 0x0
+  #endif /* F_OK */
 #else
-#	include <unistd.h>
+  #include <unistd.h>
 #endif
 
-
 // Reads an uint32 in little-endian from the buffer
-uint32 GetULong(const unsigned char* buf)
+uint32 GetULong(const unsigned char *buf)
 {
 	return (((uint32)(buf[0])))
-		| (((uint32)(buf[1])) << 0x08)
-		| (((uint32)(buf[2])) << 0x10)
-		| (((uint32)(buf[3])) << 0x18);
+	     | (((uint32)(buf[1])) << 0x08)
+	     | (((uint32)(buf[2])) << 0x10)
+	     | (((uint32)(buf[3])) << 0x18);
 }
 
 // Reads a float (32 bits) from the buffer
-float GetFloat(const unsigned char* buf)
+float GetFloat(const unsigned char *buf)
 {
 	uint32 val = GetULong(buf);
-	return *((float*)(void*)&val);
+	return *((float *)(void *)&val);
 }
 
 bool write_mapcache(const uint8 *buf, int32 buf_len, bool is_compressed, const char *mapname, int16 xs, int16 ys)
@@ -107,7 +105,7 @@ bool write_mapcache(const uint8 *buf, int32 buf_len, bool is_compressed, const c
 	char file_path[255];
 	int mapname_len;
 	unsigned long compressed_buf_len = 0;
-	uint8 *compressed_buf = NULL;
+	uint8 *compressed_buf            = NULL;
 	FILE *new_mapcache_fp;
 
 	nullpo_retr(false, buf);
@@ -116,7 +114,10 @@ bool write_mapcache(const uint8 *buf, int32 buf_len, bool is_compressed, const c
 	mapname_len = (int)strlen(mapname);
 
 	if (mapname_len > MAP_NAME_LENGTH || mapname_len < 1) {
-		ShowError("write_mapcache: A map with invalid name length has beed passed '%s' size (%d)\n", mapname, mapname_len);
+		ShowError(
+		    "write_mapcache: A map with invalid name length has beed passed '%s' size (%d)\n", mapname,
+		    mapname_len
+		);
 		return false;
 	}
 
@@ -130,8 +131,6 @@ bool write_mapcache(const uint8 *buf, int32 buf_len, bool is_compressed, const c
 		return false;
 	}
 
-
-
 	snprintf(file_path, sizeof(file_path), "%s%s%s.%s", "maps/", DBPATH, mapname, "mcache");
 	new_mapcache_fp = fopen(file_path, "wb");
 
@@ -141,11 +140,12 @@ bool write_mapcache(const uint8 *buf, int32 buf_len, bool is_compressed, const c
 	}
 
 	header.version = 0x1;
-	header.xs = xs;
-	header.ys = ys;
+	header.xs      = xs;
+	header.ys      = ys;
 
 	if (is_compressed == false) {
-		compressed_buf_len = buf_len * 2; //Creating big enough buffer to ensure ability to hold compressed data
+		compressed_buf_len = buf_len * 2; // Creating big enough buffer to ensure ability to hold compressed
+		                                  // data
 		CREATE(compressed_buf, uint8, compressed_buf_len);
 		grfio->encode_zip(compressed_buf, &compressed_buf_len, buf, buf_len);
 
@@ -155,7 +155,6 @@ bool write_mapcache(const uint8 *buf, int32 buf_len, bool is_compressed, const c
 		header.len = buf_len;
 		md5->binary(buf, buf_len, header.md5_checksum);
 	}
-
 
 	fwrite(&header, sizeof(header), 1, new_mapcache_fp);
 	if (is_compressed == false)
@@ -172,7 +171,7 @@ bool write_mapcache(const uint8 *buf, int32 buf_len, bool is_compressed, const c
 
 bool convert_old_mapcache(void)
 {
-	const char *path = "db/" DBPATH "map_cache.dat";
+	const char *path  = "db/" DBPATH "map_cache.dat";
 	FILE *mapcache_fp = fopen(path, "rb");
 	struct old_mapcache_main_header header{};
 	uint8 *p, *cursor;
@@ -215,7 +214,8 @@ bool convert_old_mapcache(void)
 
 		ShowStatus("Creating mapcache: %s" CL_CLL "\n", info->name);
 
-		if (write_mapcache((uint8 *)info + sizeof(*info), info->len, true, info->name, info->xs, info->ys) == false) {
+		if (write_mapcache((uint8 *)info + sizeof(*info), info->len, true, info->name, info->xs, info->ys)
+		    == false) {
 			ShowError("failed To convert map '%s'\n", info->name);
 		}
 
@@ -229,7 +229,7 @@ bool convert_old_mapcache(void)
 
 bool mapcache_read_maplist(const char *filepath)
 {
-	char line[4096] = { 0 };
+	char line[4096] = {0};
 	FILE *fp;
 
 	nullpo_retr(false, filepath);
@@ -257,7 +257,7 @@ bool mapcache_read_maplist(const char *filepath)
 
 bool mapcache_cache_map(const char *mapname)
 {
-	char filepath[255] = { 0 };
+	char filepath[255] = {0};
 	uint8 *gat_cursor;
 	uint8 *cells;
 	int water_height, map_size, xy;
@@ -288,12 +288,18 @@ bool mapcache_cache_map(const char *mapname)
 		int major_version = rsw[4];
 		int minor_version = rsw[5];
 		if (major_version > 2 || (major_version == 2 && minor_version > 6)) {
-			ShowError("mapcache_cache_map: Unsupported version %d.%d for rsw file %s\n", major_version, minor_version, filepath);
+			ShowError(
+			    "mapcache_cache_map: Unsupported version %d.%d for rsw file %s\n", major_version,
+			    minor_version, filepath
+			);
 			aFree(rsw);
 			return false;
 		}
 		if (major_version < 1 || (major_version == 1 && minor_version <= 4)) {
-			ShowError("mapcache_cache_map: Unsupported version %d.%d for rsw file %s\n", major_version, minor_version, filepath);
+			ShowError(
+			    "mapcache_cache_map: Unsupported version %d.%d for rsw file %s\n", major_version,
+			    minor_version, filepath
+			);
 			aFree(rsw);
 			return false;
 		}
@@ -322,9 +328,9 @@ bool mapcache_cache_map(const char *mapname)
 
 	gat_cursor = gat;
 	for (xy = 0; xy < map_size; ++xy) {
-		float height = GetFloat(gat_cursor + 14);
-		uint32 type = GetULong(gat_cursor + 30);
-		gat_cursor += 20;
+		float height  = GetFloat(gat_cursor + 14);
+		uint32 type   = GetULong(gat_cursor + 30);
+		gat_cursor   += 20;
 
 		if (type == 0 && water_height != NO_WATER && height > water_height)
 			type = 3;
@@ -350,7 +356,9 @@ bool mapcache_rebuild(void)
 	}
 
 	for (i = 0; i < VECTOR_LENGTH(maplist); ++i) {
-		snprintf(file_path, sizeof(file_path), "%s%s%s.%s", "maps/", DBPATH, VECTOR_INDEX(maplist, i), "mcache");
+		snprintf(
+		    file_path, sizeof(file_path), "%s%s%s.%s", "maps/", DBPATH, VECTOR_INDEX(maplist, i), "mcache"
+		);
 		if (access(file_path, F_OK) == 0 && remove(file_path) != 0) {
 			ShowWarning("mapcache_rebuild: Could not remove file '%s' \n", file_path);
 		}
@@ -383,7 +391,9 @@ bool fix_md5_truncation_sub(FILE *fp, const char *map_name)
 	}
 
 	if (mheader.len <= 0) {
-		ShowError("fix_md5_truncation: A file with negative or zero compressed length passed '%d'.\n", mheader.len);
+		ShowError(
+		    "fix_md5_truncation: A file with negative or zero compressed length passed '%d'.\n", mheader.len
+		);
 		return false;
 	}
 
@@ -429,7 +439,10 @@ bool fix_md5_truncation(void)
 		fp = fopen(file_path, "r+b");
 
 		if (fp == NULL) {
-			ShowWarning("fix_md5_truncation: Could not open the mapcache file for map '%s' at path '%s'.\n", map_name, file_path);
+			ShowWarning(
+			    "fix_md5_truncation: Could not open the mapcache file for map '%s' at path '%s'.\n",
+			    map_name, file_path
+			);
 			retval = false;
 			continue;
 		}
@@ -442,7 +455,10 @@ bool fix_md5_truncation(void)
 		}
 
 		if (version != 1) {
-			ShowError("fix_md5_truncation: Mapcache for map '%s' has version %d. The update is only applied to version 1.\n", map_name, version);
+			ShowError(
+			    "fix_md5_truncation: Mapcache for map '%s' has version %d. The update is only applied to version 1.\n",
+			    map_name, version
+			);
 			fclose(fp);
 			continue;
 		}
@@ -487,14 +503,22 @@ CMDLINEARG(fixmd5)
 
 HPExport void server_preinit(void)
 {
-	addArg("--convert-old-mapcache", false, convertmapcache,
-			"Converts an old db/" DBPATH "map_cache.dat file to the new format.");
-	addArg("--rebuild-mapcache", false, rebuild,
-			"Rebuilds the entire mapcache folder (maps/" DBPATH "), using db/map_index.txt as index.");
-	addArg("--map", true, cachemap,
-			"Rebuilds an individual map's cache into maps/" DBPATH " (usage: --map <map_name_without_extension>).");
-	addArg("--fix-md5", false, fixmd5,
-			"Updates the checksum for the files in maps/" DBPATH ", using db/map_index.txt as index (see PR #1981).");
+	addArg(
+	    "--convert-old-mapcache", false, convertmapcache,
+	    "Converts an old db/" DBPATH "map_cache.dat file to the new format."
+	);
+	addArg(
+	    "--rebuild-mapcache", false, rebuild,
+	    "Rebuilds the entire mapcache folder (maps/" DBPATH "), using db/map_index.txt as index."
+	);
+	addArg(
+	    "--map", true, cachemap,
+	    "Rebuilds an individual map's cache into maps/" DBPATH " (usage: --map <map_name_without_extension>)."
+	);
+	addArg(
+	    "--fix-md5", false, fixmd5,
+	    "Updates the checksum for the files in maps/" DBPATH ", using db/map_index.txt as index (see PR #1981)."
+	);
 
 	needs_grfio = false;
 	VECTOR_INIT(maplist);

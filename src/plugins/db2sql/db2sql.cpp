@@ -39,39 +39,41 @@
 #include <stdlib.h>
 
 HPM_DECLARE_PLUGIN(
-	"DB2SQL",        // Plugin name
-	SERVER_TYPE_MAP, // Which server types this plugin works with?
-	"0.5"            // Plugin version
+    "DB2SQL",        // Plugin name
+    SERVER_TYPE_MAP, // Which server types this plugin works with?
+    "0.5"            // Plugin version
 )
 
 #ifdef RENEWAL
-#define DBSUFFIX "_re"
+  #define DBSUFFIX "_re"
 #else // not RENEWAL
-#define DBSUFFIX ""
+  #define DBSUFFIX ""
 #endif
 
 /// Conversion state tracking.
 struct {
 	FILE *fp; ///< Currently open file pointer
+
 	struct {
 		char *p;    ///< Buffer pointer
 		size_t len; ///< Buffer length
-	} buf[6]; ///< Output buffer
+	} buf[6];           ///< Output buffer
+
 	const char *db_name; ///< Database table name
 } tosql;
 
 /// Whether the item_db converter will automatically run.
-bool itemdb2sql_torun = false;
+bool itemdb2sql_torun         = false;
 /// Whether the mob_db converter will automatically run.
-bool mobdb2sql_torun = false;
+bool mobdb2sql_torun          = false;
 /// mysql handle for escape strings
 static struct Sql *sql_handle = NULL;
 
 /// Backup of the original item_db parser function pointer.
-int (*itemdb_readdb_libconfig_sub) (struct config_setting_t *it, int n, const char *source, struct DBMap *itemconst_db);
+int (*itemdb_readdb_libconfig_sub)(struct config_setting_t *it, int n, const char *source, struct DBMap *itemconst_db);
 /// Backup of the original mob_db parser function pointer.
-int (*mob_read_db_sub) (struct config_setting_t *it, int n, const char *source);
-bool (*mob_skill_db_libconfig_sub_skill) (struct config_setting_t *it, int n, int mob_id);
+int (*mob_read_db_sub)(struct config_setting_t *it, int n, const char *source);
+bool (*mob_skill_db_libconfig_sub_skill)(struct config_setting_t *it, int n, int mob_id);
 
 //
 void do_mobskilldb2sql(void);
@@ -86,10 +88,10 @@ void hstr(const char *str)
 	nullpo_retv(str);
 	if (strlen(str) > tosql.buf[5].len) {
 		tosql.buf[5].len = tosql.buf[5].len + strlen(str) + 1000;
-		RECREATE(tosql.buf[5].p,char,tosql.buf[5].len);
+		RECREATE(tosql.buf[5].p, char, tosql.buf[5].len);
 	}
-	safestrncpy(tosql.buf[5].p,str,strlen(str));
-	normalize_name(tosql.buf[5].p,"\t\n ");
+	safestrncpy(tosql.buf[5].p, str, strlen(str));
+	normalize_name(tosql.buf[5].p, "\t\n ");
 }
 
 /**
@@ -97,9 +99,9 @@ void hstr(const char *str)
  */
 void db2sql_fileheader(void)
 {
-	time_t t = time(NULL);
+	time_t t      = time(NULL);
 	struct tm *lt = localtime(&t);
-	int year = lt->tm_year+1900;
+	int year      = lt->tm_year + 1900;
 
 	fprintf(tosql.fp,
 			"-- This file is part of Hercules.\n"
@@ -134,10 +136,10 @@ void db2sql_fileheader(void)
  */
 uint64 itemdb2sql_readdb_job_sub(struct config_setting_t *t)
 {
-	uint64 jobmask = 0;
-	int idx = 0;
+	uint64 jobmask              = 0;
+	int idx                     = 0;
 	struct config_setting_t *it = NULL;
-	bool enable_all = false;
+	bool enable_all             = false;
 
 	if (libconfig->setting_lookup_bool_real(t, "All", &enable_all) && enable_all) {
 		jobmask |= UINT64_MAX;
@@ -152,67 +154,67 @@ uint64 itemdb2sql_readdb_job_sub(struct config_setting_t *t)
 		if ((job_id = pc->check_job_name(job_name)) != -1) {
 			uint64 newmask = 0;
 			switch (job_id) {
-				// Base Classes
-				case JOB_NOVICE:
-				case JOB_SUPER_NOVICE:
-					newmask = 1ULL << JOB_NOVICE;
-					break;
-				case JOB_SWORDMAN:
-				case JOB_MAGE:
-				case JOB_ARCHER:
-				case JOB_ACOLYTE:
-				case JOB_MERCHANT:
-				case JOB_THIEF:
-				// 2-1 Classes
-				case JOB_KNIGHT:
-				case JOB_PRIEST:
-				case JOB_WIZARD:
-				case JOB_BLACKSMITH:
-				case JOB_HUNTER:
-				case JOB_ASSASSIN:
-				// 2-2 Classes
-				case JOB_CRUSADER:
-				case JOB_MONK:
-				case JOB_SAGE:
-				case JOB_ALCHEMIST:
-				case JOB_BARD:
-				case JOB_DANCER:
-				case JOB_ROGUE:
-				// Extended Classes
-				case JOB_GUNSLINGER:
-				case JOB_NINJA:
-					newmask = 1ULL << job_id;
-					break;
-				// Extended Classes (special handling)
-				case JOB_TAEKWON:
-					newmask = 1ULL << 21;
-					break;
-				case JOB_STAR_GLADIATOR:
-					newmask = 1ULL << 22;
-					break;
-				case JOB_SOUL_LINKER:
-					newmask = 1ULL << 23;
-					break;
-				// Other Classes
-				case JOB_GANGSI: //Bongun/Munak
-					newmask = 1ULL << 26;
-					break;
-				case JOB_DEATH_KNIGHT:
-					newmask = 1ULL << 27;
-					break;
-				case JOB_DARK_COLLECTOR:
-					newmask = 1ULL << 28;
-					break;
-				case JOB_KAGEROU:
-				case JOB_OBORO:
-					newmask = 1ULL << 29;
-					break;
-				case JOB_REBELLION:
-					newmask = 1ULL << 30;
-					break;
-				case JOB_SUMMONER:
-					newmask = 1ULL << 31;
-					break;
+			// Base Classes
+			case JOB_NOVICE:
+			case JOB_SUPER_NOVICE:
+				newmask = 1ull << JOB_NOVICE;
+				break;
+			case JOB_SWORDMAN:
+			case JOB_MAGE:
+			case JOB_ARCHER:
+			case JOB_ACOLYTE:
+			case JOB_MERCHANT:
+			case JOB_THIEF:
+			// 2-1 Classes
+			case JOB_KNIGHT:
+			case JOB_PRIEST:
+			case JOB_WIZARD:
+			case JOB_BLACKSMITH:
+			case JOB_HUNTER:
+			case JOB_ASSASSIN:
+			// 2-2 Classes
+			case JOB_CRUSADER:
+			case JOB_MONK:
+			case JOB_SAGE:
+			case JOB_ALCHEMIST:
+			case JOB_BARD:
+			case JOB_DANCER:
+			case JOB_ROGUE:
+			// Extended Classes
+			case JOB_GUNSLINGER:
+			case JOB_NINJA:
+				newmask = 1ull << job_id;
+				break;
+			// Extended Classes (special handling)
+			case JOB_TAEKWON:
+				newmask = 1ull << 21;
+				break;
+			case JOB_STAR_GLADIATOR:
+				newmask = 1ull << 22;
+				break;
+			case JOB_SOUL_LINKER:
+				newmask = 1ull << 23;
+				break;
+			// Other Classes
+			case JOB_GANGSI: // Bongun/Munak
+				newmask = 1ull << 26;
+				break;
+			case JOB_DEATH_KNIGHT:
+				newmask = 1ull << 27;
+				break;
+			case JOB_DARK_COLLECTOR:
+				newmask = 1ull << 28;
+				break;
+			case JOB_KAGEROU:
+			case JOB_OBORO:
+				newmask = 1ull << 29;
+				break;
+			case JOB_REBELLION:
+				newmask = 1ull << 30;
+				break;
+			case JOB_SUMMONER:
+				newmask = 1ull << 31;
+				break;
 			}
 
 			if (libconfig->setting_get_bool(it)) {
@@ -236,7 +238,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source, st
 	struct item_data *it = NULL;
 
 	if ((it = itemdb->exists(itemdb_readdb_libconfig_sub(entry, n, source, itemconst_db)))) {
-		char e_name[ITEM_NAME_LENGTH*2+1];
+		char e_name[ITEM_NAME_LENGTH * 2 + 1];
 		const char *bonus = NULL;
 		char *str;
 		int i32;
@@ -294,7 +296,8 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source, st
 		if ((t = libconfig->setting_get_member(entry, "Job")) != NULL) {
 			if (config_setting_is_group(t)) {
 				ui64 = itemdb2sql_readdb_job_sub(t);
-			} else if (map->setting_lookup_const(entry, "Job", &i32)) { // This is an unsigned value, do not check for >= 0
+			} else if (map->setting_lookup_const(entry, "Job", &i32)) { // This is an unsigned value, do not
+				                                                    // check for >= 0
 				ui64 = (uint64)i32;
 			} else {
 				ui64 = UINT64_MAX;
@@ -325,58 +328,62 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source, st
 		StrBuf->Printf(&buf, "'%d',", it->elv);
 
 		// equip_level_max
-		if ((t = libconfig->setting_get_member(entry, "EquipLv")) && config_setting_is_aggregate(t) && libconfig->setting_length(t) >= 2)
+		if ((t = libconfig->setting_get_member(entry, "EquipLv"))
+		    && config_setting_is_aggregate(t)
+		    && libconfig->setting_length(t) >= 2)
 			StrBuf->Printf(&buf, "'%d',", it->elvmax);
 		else
 			StrBuf->AppendStr(&buf, "NULL,");
 
 		// refineable
-		StrBuf->Printf(&buf, "'%d',", it->flag.no_refine?0:1);
+		StrBuf->Printf(&buf, "'%d',", it->flag.no_refine ? 0 : 1);
 
 		// gradeable
-		StrBuf->Printf(&buf, "'%d',", it->flag.no_grade?1:0);
+		StrBuf->Printf(&buf, "'%d',", it->flag.no_grade ? 1 : 0);
 
 		// disable_options
-		StrBuf->Printf(&buf, "'%d',", it->flag.no_options?1:0);
+		StrBuf->Printf(&buf, "'%d',", it->flag.no_options ? 1 : 0);
 
 		// view_sprite
 		StrBuf->Printf(&buf, "'%d',", it->view_sprite);
 
 		// bindonequip
-		StrBuf->Printf(&buf, "'%d',", it->flag.bindonequip?1:0);
+		StrBuf->Printf(&buf, "'%d',", it->flag.bindonequip ? 1 : 0);
 
 		// forceserial
-		StrBuf->Printf(&buf, "'%d',", it->flag.force_serial?1:0);
+		StrBuf->Printf(&buf, "'%d',", it->flag.force_serial ? 1 : 0);
 
 		// buyingstore
-		StrBuf->Printf(&buf, "'%d',", it->flag.buyingstore?1:0);
+		StrBuf->Printf(&buf, "'%d',", it->flag.buyingstore ? 1 : 0);
 
 		// delay
 		StrBuf->Printf(&buf, "'%d',", it->delay);
 
 		// keepafteruse
-		StrBuf->Printf(&buf, "'%d',", it->flag.keepafteruse?1:0);
+		StrBuf->Printf(&buf, "'%d',", it->flag.keepafteruse ? 1 : 0);
 
 		// dropannounce
-		StrBuf->Printf(&buf, "'%d',", it->flag.drop_announce?1:0);
+		StrBuf->Printf(&buf, "'%d',", it->flag.drop_announce ? 1 : 0);
 
 		// showdropeffect
-		StrBuf->Printf(&buf, "'%d',", it->flag.showdropeffect?1:0);
+		StrBuf->Printf(&buf, "'%d',", it->flag.showdropeffect ? 1 : 0);
 
 		// dropeffectmode
 		StrBuf->Printf(&buf, "'%d',", it->dropeffectmode);
 
 		// ignorediscount
-		StrBuf->Printf(&buf, "'%d',", it->flag.ignore_discount?1:0);
+		StrBuf->Printf(&buf, "'%d',", it->flag.ignore_discount ? 1 : 0);
 
 		// ignoreovercharge
-		StrBuf->Printf(&buf, "'%d',", it->flag.ignore_overcharge?1:0);
+		StrBuf->Printf(&buf, "'%d',", it->flag.ignore_overcharge ? 1 : 0);
 
 		// trade_flag
 		StrBuf->Printf(&buf, "'%d',", it->flag.trade_restriction);
 
 		// trade_group
-		if (it->flag.trade_restriction != ITR_NONE && it->gm_lv_trade_override > 0 && it->gm_lv_trade_override < 100) {
+		if (it->flag.trade_restriction != ITR_NONE
+		    && it->gm_lv_trade_override > 0
+		    && it->gm_lv_trade_override < 100) {
 			StrBuf->Printf(&buf, "'%d',", it->gm_lv_trade_override);
 		} else {
 			StrBuf->AppendStr(&buf, "NULL,");
@@ -397,11 +404,11 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source, st
 
 		// stack_flag
 		if (it->stack.amount) {
-			uint32 value = 0; // FIXME: Use an enum
-			value |= it->stack.inventory ? 1 : 0;
-			value |= it->stack.cart ? 2 : 0;
-			value |= it->stack.storage ? 4 : 0;
-			value |= it->stack.guildstorage ? 8 : 0;
+			uint32 value  = 0; // FIXME: Use an enum
+			value        |= it->stack.inventory ? 1 : 0;
+			value        |= it->stack.cart ? 2 : 0;
+			value        |= it->stack.storage ? 4 : 0;
+			value        |= it->stack.guildstorage ? 8 : 0;
 			StrBuf->Printf(&buf, "'%u',", value);
 		} else {
 			StrBuf->AppendStr(&buf, "NULL,");
@@ -420,7 +427,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source, st
 			str = tosql.buf[5].p;
 			if (strlen(str) > tosql.buf[0].len) {
 				tosql.buf[0].len = tosql.buf[0].len + strlen(str) + 1000;
-				RECREATE(tosql.buf[0].p,char,tosql.buf[0].len);
+				RECREATE(tosql.buf[0].p, char, tosql.buf[0].len);
 			}
 			SQL->EscapeString(sql_handle, tosql.buf[0].p, str);
 			StrBuf->Printf(&buf, "'%s',", tosql.buf[0].p);
@@ -434,7 +441,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source, st
 			str = tosql.buf[5].p;
 			if (strlen(str) > tosql.buf[1].len) {
 				tosql.buf[1].len = tosql.buf[1].len + strlen(str) + 1000;
-				RECREATE(tosql.buf[1].p,char,tosql.buf[1].len);
+				RECREATE(tosql.buf[1].p, char, tosql.buf[1].len);
 			}
 			SQL->EscapeString(sql_handle, tosql.buf[1].p, str);
 			StrBuf->Printf(&buf, "'%s',", tosql.buf[1].p);
@@ -448,7 +455,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source, st
 			str = tosql.buf[5].p;
 			if (strlen(str) > tosql.buf[2].len) {
 				tosql.buf[2].len = tosql.buf[2].len + strlen(str) + 1000;
-				RECREATE(tosql.buf[2].p,char,tosql.buf[2].len);
+				RECREATE(tosql.buf[2].p, char, tosql.buf[2].len);
 			}
 			SQL->EscapeString(sql_handle, tosql.buf[2].p, str);
 			StrBuf->Printf(&buf, "'%s',", tosql.buf[2].p);
@@ -462,7 +469,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source, st
 			str = tosql.buf[5].p;
 			if (strlen(str) > tosql.buf[3].len) {
 				tosql.buf[3].len = tosql.buf[3].len + strlen(str) + 1000;
-				RECREATE(tosql.buf[3].p,char,tosql.buf[3].len);
+				RECREATE(tosql.buf[3].p, char, tosql.buf[3].len);
 			}
 			SQL->EscapeString(sql_handle, tosql.buf[3].p, str);
 			StrBuf->Printf(&buf, "'%s',", tosql.buf[3].p);
@@ -476,7 +483,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source, st
 			str = tosql.buf[5].p;
 			if (strlen(str) > tosql.buf[4].len) {
 				tosql.buf[4].len = tosql.buf[4].len + strlen(str) + 1000;
-				RECREATE(tosql.buf[4].p,char,tosql.buf[4].len);
+				RECREATE(tosql.buf[4].p, char, tosql.buf[4].len);
 			}
 			SQL->EscapeString(sql_handle, tosql.buf[4].p, str);
 			StrBuf->Printf(&buf, "'%s'", tosql.buf[4].p);
@@ -489,7 +496,7 @@ int itemdb2sql_sub(struct config_setting_t *entry, int n, const char *source, st
 		StrBuf->Destroy(&buf);
 	}
 
-	return it?it->nameid:0;
+	return it ? it->nameid : 0;
 }
 
 /**
@@ -565,17 +572,18 @@ void itemdb2sql_tableheader(void)
 void do_itemdb2sql(void)
 {
 	int i;
+
 	struct convert_db_files {
 		const char *name;
 		const char *source;
 		const char *destination;
 	} files[] = {
-		{"item_db", DBPATH "item_db.conf", "sql-files/item_db" DBSUFFIX ".sql"},
-		{"item_db2", "item_db2.conf", "sql-files/item_db2.sql"},
+	    { "item_db", DBPATH "item_db.conf", "sql-files/item_db" DBSUFFIX ".sql"},
+	    {"item_db2",       "item_db2.conf",            "sql-files/item_db2.sql"},
 	};
 
 	/* link */
-	itemdb_readdb_libconfig_sub = itemdb->readdb_libconfig_sub;
+	itemdb_readdb_libconfig_sub  = itemdb->readdb_libconfig_sub;
 	itemdb->readdb_libconfig_sub = itemdb2sql_sub;
 
 	memset(&tosql.buf, 0, sizeof(tosql.buf));
@@ -619,7 +627,7 @@ int mobdb2sql_sub(struct config_setting_t *mobt, int n, const char *source)
 	nullpo_ret(mobt);
 
 	if ((md = mob->db(mob_read_db_sub(mobt, n, source))) != mob->dummy) {
-		char e_name[NAME_LENGTH*2+1];
+		char e_name[NAME_LENGTH * 2 + 1];
 		StringBuf buf;
 		int card_idx = 9, i;
 
@@ -731,7 +739,9 @@ int mobdb2sql_sub(struct config_setting_t *mobt, int n, const char *source)
 		// Scan for cards
 		for (i = 0; i < MAX_MOB_DROP; i++) {
 			struct item_data *it = NULL;
-			if (md->dropitem[i].nameid != 0 && (it = itemdb->exists(md->dropitem[i].nameid)) != NULL && it->type == IT_CARD)
+			if (md->dropitem[i].nameid != 0
+			    && (it = itemdb->exists(md->dropitem[i].nameid)) != NULL
+			    && it->type == IT_CARD)
 				card_idx = i;
 		}
 
@@ -834,17 +844,18 @@ void mobdb2sql_tableheader(void)
 void do_mobdb2sql(void)
 {
 	int i;
+
 	struct convert_db_files {
 		const char *name;
 		const char *source;
 		const char *destination;
 	} files[] = {
-		{"mob_db", DBPATH "mob_db.conf", "sql-files/mob_db" DBSUFFIX ".sql"},
-		{"mob_db2", "mob_db2.conf", "sql-files/mob_db2.sql"},
+	    { "mob_db", DBPATH "mob_db.conf", "sql-files/mob_db" DBSUFFIX ".sql"},
+	    {"mob_db2",       "mob_db2.conf",            "sql-files/mob_db2.sql"},
 	};
 
 	/* link */
-	mob_read_db_sub = mob->read_db_sub;
+	mob_read_db_sub  = mob->read_db_sub;
 	mob->read_db_sub = mobdb2sql_sub;
 
 	if (map->minimal) {
@@ -882,9 +893,9 @@ void do_mobdb2sql(void)
 /**
  * Converts Mob Skill State constant to string
  */
-const char* mob_skill_state_tostring(enum MobSkillState mss)
+const char *mob_skill_state_tostring(enum MobSkillState mss)
 {
-	switch(mss) {
+	switch (mss) {
 	case MSS_ANY:
 		return "any";
 	case MSS_IDLE:
@@ -913,9 +924,9 @@ const char* mob_skill_state_tostring(enum MobSkillState mss)
 /**
  * Converts Mob Skill Target constant to string
  */
-const char* mob_skill_target_tostring(int target)
+const char *mob_skill_target_tostring(int target)
 {
-	switch(target) {
+	switch (target) {
 	case MST_TARGET:
 		return "target";
 	case MST_RANDOM:
@@ -932,7 +943,7 @@ const char* mob_skill_target_tostring(int target)
 		return "around2";
 	case MST_AROUND3:
 		return "around3";
-	//case MST_AROUND: // same value as MST_AROUND4
+	// case MST_AROUND: // same value as MST_AROUND4
 	case MST_AROUND4:
 		return "around4";
 	case MST_AROUND5:
@@ -950,9 +961,9 @@ const char* mob_skill_target_tostring(int target)
 /**
  * Converts Mob Skill Condition constant to string
  */
-const char* mob_skill_condition_tostring(int condition)
+const char *mob_skill_condition_tostring(int condition)
 {
-	switch(condition) {
+	switch (condition) {
 	case MSC_ALWAYS:
 		return "always";
 	case MSC_MYHPLTMAXRATE:
@@ -1015,7 +1026,7 @@ bool mobskilldb2sql_sub(struct config_setting_t *it, int n, int mob_id)
 	struct mob_db *md = mob->db(mob_id);
 	char valname[15];
 	const char *name = config_setting_name(it);
-	char e_name[NAME_LENGTH*2+1];
+	char e_name[NAME_LENGTH * 2 + 1];
 
 	nullpo_retr(false, it);
 	Assert_retr(false, mob_id <= 0 || md != mob->dummy);
@@ -1030,7 +1041,10 @@ bool mobskilldb2sql_sub(struct config_setting_t *it, int n, int mob_id)
 	StrBuf->Printf(&buf, "'%s@%s',", e_name, name);
 
 	if (map->setting_lookup_const(it, "SkillState", &i32) && (i32 < MSS_ANY || i32 > MSS_ANYTARGET)) {
-		ShowWarning("mob_skill_db_libconfig_sub_skill: Invalid skill state %d for skill '%s' in monster %d, defaulting to MSS_ANY.\n", i32, name, mob_id);
+		ShowWarning(
+		    "mob_skill_db_libconfig_sub_skill: Invalid skill state %d for skill '%s' in monster %d, defaulting to MSS_ANY.\n",
+		    i32, name, mob_id
+		);
 		i32 = MSS_ANY;
 	}
 	// State
@@ -1038,7 +1052,9 @@ bool mobskilldb2sql_sub(struct config_setting_t *it, int n, int mob_id)
 
 	// SkillID
 	if (!(i32 = skill->name2id(name))) {
-		ShowWarning("mob_skill_db_libconfig_sub_skill: Non existant skill id %d in monster %d, skipping.\n", i32, mob_id);
+		ShowWarning(
+		    "mob_skill_db_libconfig_sub_skill: Non existant skill id %d in monster %d, skipping.\n", i32, mob_id
+		);
 		return false;
 	}
 	StrBuf->Printf(&buf, "%d,", i32);
@@ -1118,9 +1134,7 @@ bool mobskilldb2sql_sub(struct config_setting_t *it, int n, int mob_id)
 	StrBuf->Destroy(&buf);
 
 	return true;
-
 }
-
 
 /**
  * Prints a SQL table header for the current mob_skill_db table.
@@ -1165,17 +1179,18 @@ void mobskilldb2sql_tableheader(void)
 void do_mobskilldb2sql(void)
 {
 	int i;
+
 	struct convert_db_files {
 		const char *name;
 		const char *source;
 		const char *destination;
 	} files[] = {
-		{"mob_skill_db", DBPATH "mob_skill_db.conf", "sql-files/mob_skill_db" DBSUFFIX ".sql"},
-		{"mob_skill_db2", "mob_skill_db2.conf", "sql-files/mob_skill_db2.sql"},
+	    { "mob_skill_db", DBPATH "mob_skill_db.conf", "sql-files/mob_skill_db" DBSUFFIX ".sql"},
+	    {"mob_skill_db2",       "mob_skill_db2.conf",            "sql-files/mob_skill_db2.sql"},
 	};
 
 	/* link */
-	mob_skill_db_libconfig_sub_skill = mob->skill_db_libconfig_sub_skill;
+	mob_skill_db_libconfig_sub_skill  = mob->skill_db_libconfig_sub_skill;
 	mob->skill_db_libconfig_sub_skill = mobskilldb2sql_sub;
 
 	memset(&tosql.buf, 0, sizeof(tosql.buf));
@@ -1232,9 +1247,9 @@ CPCMD(mobdb2sql)
  */
 CMDLINEARG(db2sql)
 {
-	map->minimal = true;
+	map->minimal     = true;
 	itemdb2sql_torun = true;
-	mobdb2sql_torun = true;
+	mobdb2sql_torun  = true;
 	return true;
 }
 
@@ -1243,7 +1258,7 @@ CMDLINEARG(db2sql)
  */
 CMDLINEARG(itemdb2sql)
 {
-	map->minimal = true;
+	map->minimal     = true;
 	itemdb2sql_torun = true;
 	return true;
 }
@@ -1253,7 +1268,7 @@ CMDLINEARG(itemdb2sql)
  */
 CMDLINEARG(mobdb2sql)
 {
-	map->minimal = true;
+	map->minimal    = true;
 	mobdb2sql_torun = true;
 	return true;
 }
@@ -1281,7 +1296,7 @@ HPExport void server_online(void)
 		do_mobdb2sql();
 }
 
-HPExport void plugin_final (void)
+HPExport void plugin_final(void)
 {
 	SQL->Free(sql_handle);
 	sql_handle = NULL;

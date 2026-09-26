@@ -41,9 +41,9 @@
 #include <time.h>
 
 HPM_DECLARE_PLUGIN(
-	"generate-translations", // Plugin name
-	SERVER_TYPE_MAP, // Which server types this plugin works with?
-	"0.1"            // Plugin version
+    "generate-translations", // Plugin name
+    SERVER_TYPE_MAP,         // Which server types this plugin works with?
+    "0.1"                    // Plugin version
 )
 
 struct DBMap *translatable_strings; // string map parsed (used when exporting strings only)
@@ -66,9 +66,9 @@ bool createdirectory(const char *dirname)
 		if (ERROR_ALREADY_EXISTS != GetLastError())
 			return false;
 	}
-#else /* Not WIN32 */
+#else  /* Not WIN32 */
 	struct stat st{};
-	if (stat(dirname, &st) == -1 ) {
+	if (stat(dirname, &st) == -1) {
 		if (mkdir(dirname, 0755) != 0)
 			return false;
 	}
@@ -94,8 +94,8 @@ CMDLINEARG(generatetranslations)
 
 void script_add_translatable_string_posthook(const struct script_string_buf *string, const char *start_point)
 {
-	bool duplicate = true;
-	bool is_translatable_string = false;
+	bool duplicate                 = true;
+	bool is_translatable_string    = false;
 	bool is_translatable_fmtstring = false;
 
 	if (!generating_translations || lang_export_fp == NULL)
@@ -105,7 +105,8 @@ void script_add_translatable_string_posthook(const struct script_string_buf *str
 	if (VECTOR_LENGTH(*string) > 1) {
 		// The length of *string will always be at least 1 because of the '\0'
 		if (translatable_strings == NULL) {
-			translatable_strings = strdb_alloc((enum DBOptions)(DB_OPT_DUP_KEY | DB_OPT_ALLOW_NULL_DATA), 0);
+			translatable_strings
+			    = strdb_alloc((enum DBOptions)(DB_OPT_DUP_KEY | DB_OPT_ALLOW_NULL_DATA), 0);
 		}
 
 		if (!strdb_exists(translatable_strings, VECTOR_DATA(*string))) {
@@ -116,26 +117,26 @@ void script_add_translatable_string_posthook(const struct script_string_buf *str
 
 	if (!duplicate) {
 		if (script->syntax.last_func == script->buildin_mes_offset
-		 || script->syntax.last_func == script->buildin_mes2_offset
-		 || script->syntax.last_func == script->buildin_zmes1_offset
-		 || script->syntax.last_func == script->buildin_zmes2_offset
-		 || script->syntax.last_func == script->buildin_select_offset
-		 || script->syntax.lang_macro_active
-		 ) {
+		    || script->syntax.last_func == script->buildin_mes2_offset
+		    || script->syntax.last_func == script->buildin_zmes1_offset
+		    || script->syntax.last_func == script->buildin_zmes2_offset
+		    || script->syntax.last_func == script->buildin_select_offset
+		    || script->syntax.lang_macro_active) {
 			is_translatable_string = true;
-		} else if (script->syntax.last_func == script->buildin_mesf_offset
-				|| script->syntax.last_func == script->buildin_mes2f_offset
-				|| script->syntax.last_func == script->buildin_zmes1f_offset
-				|| script->syntax.last_func == script->buildin_zmes2f_offset
-				|| script->syntax.lang_macro_fmtstring_active
-				) {
+		} else if (
+		    script->syntax.last_func == script->buildin_mesf_offset
+		    || script->syntax.last_func == script->buildin_mes2f_offset
+		    || script->syntax.last_func == script->buildin_zmes1f_offset
+		    || script->syntax.last_func == script->buildin_zmes2f_offset
+		    || script->syntax.lang_macro_fmtstring_active
+		) {
 			is_translatable_fmtstring = true;
 		}
 	}
 
 	if (is_translatable_string || is_translatable_fmtstring) {
 		const char *line_start = start_point;
-		const char *line_end = start_point;
+		const char *line_end   = start_point;
 		int line_length;
 		bool has_percent_sign = false;
 
@@ -155,14 +156,17 @@ void script_add_translatable_string_posthook(const struct script_string_buf *str
 			VECTOR_PUSHARRAY(lang_export_line_buf, line_start, line_length);
 			VECTOR_PUSH(lang_export_line_buf, '\0');
 
-			normalize_name(VECTOR_DATA(lang_export_line_buf), "\r\n\t "); // [!] Note: VECTOR_LENGTH() will lie.
+			normalize_name(
+			    VECTOR_DATA(lang_export_line_buf), "\r\n\t "
+			); // [!] Note: VECTOR_LENGTH() will lie.
 		}
 
-		VECTOR_ENSURE(lang_export_escaped_buf, 4*VECTOR_LENGTH(*string)+1, 1);
-		VECTOR_LENGTH(lang_export_escaped_buf) = (int)sv->escape_c(VECTOR_DATA(lang_export_escaped_buf),
-				VECTOR_DATA(*string),
-				VECTOR_LENGTH(*string)-1, /* exclude null terminator */
-				"\"");
+		VECTOR_ENSURE(lang_export_escaped_buf, 4 * VECTOR_LENGTH(*string) + 1, 1);
+		VECTOR_LENGTH(lang_export_escaped_buf) = (int)sv->escape_c(
+		    VECTOR_DATA(lang_export_escaped_buf), VECTOR_DATA(*string),
+		    VECTOR_LENGTH(*string) - 1, /* exclude null terminator */
+		    "\""
+		);
 		VECTOR_PUSH(lang_export_escaped_buf, '\0');
 
 		fprintf(lang_export_fp, "\n#: %s\n"
@@ -212,8 +216,8 @@ bool translations_enter_file(const char *filepath)
 	if (!generating_translations)
 		return false;
 
-	p = filepath;
-	len = (int)strlen(filepath) + (int)strlen(DIRECTORYNAME) + (int)strlen(PATHSEP_STR);
+	p                    = filepath;
+	len                  = (int)strlen(filepath) + (int)strlen(DIRECTORYNAME) + (int)strlen(PATHSEP_STR);
 	lang_export_filepath = (char *)aCalloc(len + 4 + 1, sizeof(char)); // + ".pot"
 	strncat(lang_export_filepath, DIRECTORYNAME PATHSEP_STR, len);
 	lang_export_stringcount_current = 0;
@@ -228,14 +232,17 @@ bool translations_enter_file(const char *filepath)
 		if (*p == '.') {
 			lang_export_filepath[i] = '_';
 #ifdef WIN32
-		} else if (*p == PATHSEP || *p == PATHSEP2) {  // quick hack for avoid windows issues
-#else  // WIN32
+		} else if (*p == PATHSEP || *p == PATHSEP2) { // quick hack for avoid windows issues
+#else                                                         // WIN32
 		} else if (*p == PATHSEP) {
-#endif  // WIN32
+#endif                                                        // WIN32
 			if (!createdirectory(lang_export_filepath)) {
-				ShowError("generatetranslations: Unable to create output directory '%s'.\n", lang_export_filepath);
+				ShowError(
+				    "generatetranslations: Unable to create output directory '%s'.\n",
+				    lang_export_filepath
+				);
 				aFree(lang_export_filepath);
-			lang_export_filepath = NULL;
+				lang_export_filepath = NULL;
 				return false;
 			}
 			lang_export_filepath[i] = PATHSEP;
@@ -255,9 +262,9 @@ bool translations_enter_file(const char *filepath)
 	}
 
 	{
-		time_t t = time(NULL);
-		struct tm *lt = localtime(&t);
-		int year = lt->tm_year+1900;
+		time_t t             = time(NULL);
+		struct tm *lt        = localtime(&t);
+		int year             = lt->tm_year + 1900;
 		char timestring[128] = "";
 		strftime(timestring, sizeof(timestring), "%Y-%m-%d %H:%M:%S%z", lt);
 		fprintf(lang_export_fp,
@@ -308,7 +315,9 @@ bool translations_leave_file(const char *filepath)
 			remove(lang_export_filepath);
 		} else {
 			ShowMessage("\r");
-			ShowInfo("%s => %s (%d strings)\n", filepath, lang_export_filepath, lang_export_stringcount_current);
+			ShowInfo(
+			    "%s => %s (%d strings)\n", filepath, lang_export_filepath, lang_export_stringcount_current
+			);
 		}
 		aFree(lang_export_filepath);
 		lang_export_filepath = NULL;
@@ -373,8 +382,10 @@ int npc_parsesrcfile_posthook(int retVal, const char *filepath, bool runOnInit)
 
 HPExport void server_preinit(void)
 {
-	addArg("--generate-translations", false, generatetranslations,
-			"Creates 'generated_translations/**/*.pot' file with all translateable strings from scripts, server terminates afterwards.");
+	addArg(
+	    "--generate-translations", false, generatetranslations,
+	    "Creates 'generated_translations/**/*.pot' file with all translateable strings from scripts, server terminates afterwards."
+	);
 	VECTOR_INIT(lang_export_line_buf);
 	VECTOR_INIT(lang_export_escaped_buf);
 	addHookPost(script, add_translatable_string, script_add_translatable_string_posthook);
@@ -384,7 +395,7 @@ HPExport void server_preinit(void)
 	addHookPost(atcommand, msg_read, msg_config_read_posthook);
 	addHookPre(npc, parsesrcfile, npc_parsesrcfile_prehook);
 	addHookPost(npc, parsesrcfile, npc_parsesrcfile_posthook);
-	lang_export_stringcount_total = 0;
+	lang_export_stringcount_total   = 0;
 	lang_export_stringcount_current = 0;
 }
 
@@ -395,7 +406,10 @@ HPExport void plugin_init(void)
 HPExport void server_online(void)
 {
 	if (generating_translations) {
-		ShowInfo("Translations template exported to '%s' with %d strings.\n", DIRECTORYNAME, lang_export_stringcount_total);
+		ShowInfo(
+		    "Translations template exported to '%s' with %d strings.\n", DIRECTORYNAME,
+		    lang_export_stringcount_total
+		);
 	}
 	core->runflag = CORE_ST_STOP;
 }

@@ -56,9 +56,11 @@ enum apimessages {
 };
 
 HPM_DECLARE_PLUGIN(
-	"Http sample",    // Plugin name
-	(enum server_types)(SERVER_TYPE_CHAR | SERVER_TYPE_LOGIN | SERVER_TYPE_MAP | SERVER_TYPE_API), // Which server types this plugin works with?
-	"0.1"        // Plugin version
+    "Http sample", // Plugin name
+    (enum server_types)(
+        SERVER_TYPE_CHAR | SERVER_TYPE_LOGIN | SERVER_TYPE_MAP | SERVER_TYPE_API
+    ),    // Which server types this plugin works with?
+    "0.1" // Plugin version
 )
 
 struct PACKET_API_sample_login_request_data {
@@ -110,7 +112,7 @@ HTTP_URL(my_sample_test_simple)
 	char buf[1000];
 	// get client user agent
 	const char *user_agent = (const char *)strdb_get(sd->headers_db, "User-Agent");
-	const char *format = "<html>Hercules test from sample plugin.<br/>Your user agent is: %s<br/></html>\n";
+	const char *format     = "<html>Hercules test from sample plugin.<br/>Your user agent is: %s<br/></html>\n";
 	if (user_agent != NULL) {
 		// copy user agent from http request to buffer
 		snprintf(buf, sizeof(buf), format, user_agent);
@@ -284,7 +286,7 @@ HTTP_URL(my_sample_test_user)
 	struct sample_player_id *player_id = NULL;
 	CREATE(player_id, struct sample_player_id, 1);
 	player_id->account_id = account_id;
-	sd->custom = player_id;
+	sd->custom            = player_id;
 	// prepare and send packet to map server
 	CREATE_HTTP_DATA(data, sample_user_request);
 	data.account_id = account_id;
@@ -331,13 +333,13 @@ void sample_login_api_packet(int fd)
 	int server_num = 0;
 	for (int i = 0; i < ARRAYLENGTH(login->dbs->server); ++i) {
 		if (sockt->session_is_active(login->dbs->server[i].fd))
-			server_num ++;
+			server_num++;
 	}
 	data->char_servers_count = server_num;
-	server_num = 0;
+	server_num               = 0;
 	for (int i = 0; i < ARRAYLENGTH(login->dbs->api_server); ++i) {
 		if (sockt->session_is_active(login->dbs->api_server[i].fd))
-			server_num ++;
+			server_num++;
 	}
 	data->api_servers_count = server_num;
 
@@ -387,10 +389,10 @@ void sample_user_api_packet(int fd)
 	// find user by aid and store his dead/sit flag into sending packet
 	struct map_session_data *sd = map->id2sd(sdata->account_id);
 	if (sd == NULL) {
-		data->error = true;
+		data->error    = true;
 		data->dead_sit = 0;
 	} else {
-		data->error = false;
+		data->error    = false;
 		data->dead_sit = sd->state.dead_sit;
 	}
 	// send created packet
@@ -398,16 +400,26 @@ void sample_user_api_packet(int fd)
 }
 
 /* run when server starts */
-HPExport void plugin_init (void)
+HPExport void plugin_init(void)
 {
 	ShowInfo("Server type is ");
 
 	switch (SERVER_TYPE) {
-		case SERVER_TYPE_LOGIN: printf("Login Server\n"); break;
-		case SERVER_TYPE_CHAR: printf("Char Server\n"); break;
-		case SERVER_TYPE_MAP: printf ("Map Server\n"); break;
-		case SERVER_TYPE_API: printf ("Api Server\n"); break;
-		case SERVER_TYPE_UNKNOWN: printf ("Unknown Server\n"); break;
+	case SERVER_TYPE_LOGIN:
+		printf("Login Server\n");
+		break;
+	case SERVER_TYPE_CHAR:
+		printf("Char Server\n");
+		break;
+	case SERVER_TYPE_MAP:
+		printf("Map Server\n");
+		break;
+	case SERVER_TYPE_API:
+		printf("Api Server\n");
+		break;
+	case SERVER_TYPE_UNKNOWN:
+		printf("Unknown Server\n");
+		break;
 	}
 
 	ShowInfo("I'm being run from the '%s' filename\n", SERVER_NAME);
@@ -426,13 +438,14 @@ HPExport void plugin_init (void)
 		addProxyPacket(API_MSG_SAMPLE_USER, sample_user_request, sample_user_api_packet, hpProxy_ApiMap);
 	}
 }
+
 /* triggered when server starts loading, before any server-specific data is set */
 HPExport void server_preinit(void)
 {
 }
 
 /* run when server is ready (online) */
-HPExport void server_online (void)
+HPExport void server_online(void)
 {
 	// Register url for GET request
 	if (SERVER_TYPE == SERVER_TYPE_API) {
@@ -445,7 +458,9 @@ HPExport void server_online (void)
 		// REQ_WORLD_NAME - automatically parse header WorldName for select world aka char server
 		// REQ_EXTRA_HEADERS - allow any unparsed post header
 		// REQ_TRUSTED - allow use url only from trusted ip
-		addHttpHandler(HTTP_POST, "/httpsample/user", my_sample_test_user, REQ_WORLD_NAME | REQ_EXTRA_HEADERS | REQ_TRUSTED);
+		addHttpHandler(
+		    HTTP_POST, "/httpsample/user", my_sample_test_user, REQ_WORLD_NAME | REQ_EXTRA_HEADERS | REQ_TRUSTED
+		);
 
 		addHttpDataHandler(my_sample_test_login, API_MSG_SAMPLE_LOGIN);
 		addHttpDataHandler(my_sample_test_char, API_MSG_SAMPLE_CHAR);
@@ -455,6 +470,7 @@ HPExport void server_online (void)
 }
 
 /* run when server is shutting down */
-HPExport void plugin_final (void) {
-	ShowInfo ("%s says ~Bye world\n", pinfo.name);
+HPExport void plugin_final(void)
+{
+	ShowInfo("%s says ~Bye world\n", pinfo.name);
 }
