@@ -25,7 +25,7 @@
 
 #include "common/cbasetypes.h"
 #include "common/api.h"
-//#include "common/chunked.h"
+// #include "common/chunked.h"
 #include "common/memmgr.h"
 #include "common/nullpo.h"
 #include "common/showmsg.h"
@@ -45,54 +45,58 @@
 #include <stdarg.h>
 #include <time.h>
 
-#define SEND_ASYNC_USERHOKEY_V2_TAB(name) do { \
+#define SEND_ASYNC_USERHOKEY_V2_TAB(name) \
+	do { \
 		JsonP *name = jsonparser->get(userHotkeyV2, #name); \
 		if (!jsonparser->is_null_or_missing(name)) { \
-			ShowInfo("send tab " # name "\n"); \
+			ShowInfo("send tab " #name "\n"); \
 			CREATE_HTTP_DATA(data, userconfig_save_userhotkey_v2); \
-			data.hotkeys.tab = UserHotKey_v2_ ## name; \
+			data.hotkeys.tab = UserHotKey_v2_##name; \
 			handlers->sendHotkeyV2Tab(name, &data.hotkeys); \
 			SEND_CHAR_ASYNC_DATA(userconfig_save_userhotkey_v2, &data); \
 		} \
 	} while (false)
 
-#define GET_JSON_HEADER(name, json) do { \
-		if (!aclif->get_valid_header_data_json(sd, CONST_POST_ ## name, POST_ ## name, (json))) { \
-			ShowError("Valid post header %s not found. Can be memory leaks.", POST_ ## name); \
+#define GET_JSON_HEADER(name, json) \
+	do { \
+		if (!aclif->get_valid_header_data_json(sd, CONST_POST_##name, POST_##name, (json))) { \
+			ShowError("Valid post header %s not found. Can be memory leaks.", POST_##name); \
 			Assert_report(0); \
 			aclif->terminate_connection(fd); \
 			return false; \
 		} \
 	} while (false)
 
-#define GET_STR_HEADER(name, var, varSize) do { \
-		if (!aclif->get_valid_header_data_str(sd, CONST_POST_ ## name, POST_ ## name, (var), (varSize))) { \
-			ShowError("Valid post header %s not found. Can be memory leaks.", POST_ ## name); \
+#define GET_STR_HEADER(name, var, varSize) \
+	do { \
+		if (!aclif->get_valid_header_data_str(sd, CONST_POST_##name, POST_##name, (var), (varSize))) { \
+			ShowError("Valid post header %s not found. Can be memory leaks.", POST_##name); \
 			Assert_report(0); \
 			aclif->terminate_connection(fd); \
 			return false; \
 		} \
 	} while (false)
-#define GET_STR_HEADER_EMPTY(name, var, varSize) aclif->get_valid_header_data_str(sd, CONST_POST_ ## name, POST_ ## name, (var), (varSize))
+#define GET_STR_HEADER_EMPTY(name, var, varSize) \
+	aclif->get_valid_header_data_str(sd, CONST_POST_##name, POST_##name, (var), (varSize))
 
-#define RET_INT_HEADER(name, def) aclif->ret_valid_header_data_int(sd, CONST_POST_ ## name, POST_ ## name, (def))
-#define GET_INT_HEADER(name, var) aclif->get_valid_header_data_int(sd, CONST_POST_ ## name, POST_ ## name, (var))
+#define RET_INT_HEADER(name, def) aclif->ret_valid_header_data_int(sd, CONST_POST_##name, POST_##name, (def))
+#define GET_INT_HEADER(name, var) aclif->get_valid_header_data_int(sd, CONST_POST_##name, POST_##name, (var))
 
 static struct handlers_interface handlers_s;
 struct handlers_interface *handlers;
 
-//#define DEBUG_LOG
-//#define REQUEST_LOG
+// #define DEBUG_LOG
+// #define REQUEST_LOG
 
 const char *handlers_hotkeyTabIdToName(int tab_id)
 {
 	Assert_retr(NULL, tab_id >= 0 && tab_id < UserHotKey_v2_max);
 
 	static const char *name[4] = {
-		"SkillBar_1Tab",
-		"SkillBar_2Tab",
-		"InterfaceTab",
-		"EmotionTab",
+	    "SkillBar_1Tab",
+	    "SkillBar_2Tab",
+	    "InterfaceTab",
+	    "EmotionTab",
 	};
 	return name[tab_id];
 }
@@ -141,9 +145,9 @@ HTTP_DATA(userconfig_load_emotes)
 	}
 
 	// create initial json node and add emotionHotkey
-	JsonW *json = jsonwriter->create("{\"Type\":1}");
-	sd->json = json;
-	JsonW *dataNode = jsonwriter->add_new_object(json, "data");
+	JsonW *json          = jsonwriter->create("{\"Type\":1}");
+	sd->json             = json;
+	JsonW *dataNode      = jsonwriter->add_new_object(json, "data");
 	JsonW *emotionHotkey = jsonwriter->add_new_array(dataNode, "EmotionHotkey");
 
 	// WhisperBlockList not implimented yet
@@ -152,10 +156,11 @@ HTTP_DATA(userconfig_load_emotes)
 	// add empty UserHotkey_V2 for future usage
 	jsonwriter->add_new_object(dataNode, "UserHotkey_V2");
 
-	jsonwriter->add_new_strings_to_array(emotionHotkey,
-		p->emotes.emote[0], p->emotes.emote[1], p->emotes.emote[2], p->emotes.emote[3], p->emotes.emote[4],
-		p->emotes.emote[5], p->emotes.emote[6], p->emotes.emote[7], p->emotes.emote[8], p->emotes.emote[9],
-		NULL);
+	jsonwriter->add_new_strings_to_array(
+	    emotionHotkey, p->emotes.emote[0], p->emotes.emote[1], p->emotes.emote[2], p->emotes.emote[3],
+	    p->emotes.emote[4], p->emotes.emote[5], p->emotes.emote[6], p->emotes.emote[7], p->emotes.emote[8],
+	    p->emotes.emote[9], NULL
+	);
 }
 
 HTTP_DATA(userconfig_load_hotkeys)
@@ -177,12 +182,12 @@ HTTP_DATA(userconfig_load_hotkeys)
 		return;
 	}
 
-	JsonW *dataNode = jsonwriter->get(json, "data");
+	JsonW *dataNode         = jsonwriter->get(json, "data");
 	JsonW *userHotkeyV2Node = jsonwriter->get(dataNode, "UserHotkey_V2");
-	const char *tab_name = handlers->hotkeyTabIdToName(p->hotkeys.tab);
+	const char *tab_name    = handlers->hotkeyTabIdToName(p->hotkeys.tab);
 	if (p->hotkeys.count != 0) {
 		JsonW *tabNode = jsonwriter->add_new_array(userHotkeyV2Node, tab_name);
-		for (int i = 0; i < p->hotkeys.count; i ++) {
+		for (int i = 0; i < p->hotkeys.count; i++) {
 			JsonW *hotkey = jsonwriter->add_new_object_to_array(tabNode);
 			jsonwriter->add_new_string(hotkey, "desc", p->hotkeys.keys[i].desc);
 			jsonwriter->add_new_number(hotkey, "index", p->hotkeys.keys[i].index);
@@ -204,7 +209,7 @@ HTTP_URL(userconfig_load)
 #endif
 	SEND_CHAR_ASYNC_DATA_EMPTY(userconfig_load_emotes, NULL);
 	SEND_CHAR_ASYNC_DATA_EMPTY(userconfig_load_hotkeys, NULL);
-//	SEND_CHAR_ASYNC_DATA_EMPTY(userconfig_load, NULL);
+	//	SEND_CHAR_ASYNC_DATA_EMPTY(userconfig_load, NULL);
 
 	return true;
 }
@@ -219,10 +224,10 @@ void handlers_sendHotkeyV2Tab(JsonP *json, struct userconfig_userhotkeys_v2 *hot
 		if (desc == NULL)
 			continue;
 		hotkeys->keys[i].index = jsonparser->get_child_int_value(value, "index");
-		hotkeys->keys[i].key1 = jsonparser->get_child_int_value(value, "key1");
-		hotkeys->keys[i].key2 = jsonparser->get_child_int_value(value, "key2");
+		hotkeys->keys[i].key1  = jsonparser->get_child_int_value(value, "key1");
+		hotkeys->keys[i].key2  = jsonparser->get_child_int_value(value, "key2");
 		safestrncpy(hotkeys->keys[i].desc, desc, HOTKEY_DESCRIPTION_SIZE);
-		i ++;
+		i++;
 	}
 	hotkeys->count = i;
 }
@@ -257,7 +262,6 @@ HTTP_URL(userconfig_save)
 		jsonparser->delete_(json);
 		return false;
 	}
-
 
 	JsonP *userHotkeyV2 = jsonparser->get(dataNode, "UserHotkey_V2");
 	if (userHotkeyV2 != NULL) {
@@ -335,9 +339,9 @@ HTTP_URL(emblem_upload)
 #endif
 	char *imgType = NULL;
 	GET_STR_HEADER(IMG_TYPE, &imgType, NULL);
-	char *img = NULL;
+	char *img       = NULL;
 	uint32 img_size = 0;
-	bool is_gif = false;
+	bool is_gif     = false;
 	GET_STR_HEADER(IMG, &img, &img_size);
 
 	bool has_error = false;
@@ -365,7 +369,7 @@ HTTP_URL(emblem_upload)
 
 	CREATE_HTTP_DATA(data, emblem_upload_guild_id);
 	data.guild_id = RET_INT_HEADER(GUILD_ID, 0);
-	data.is_gif = is_gif;
+	data.is_gif   = is_gif;
 	SEND_CHAR_ASYNC_DATA(emblem_upload_guild_id, &data);
 	SEND_CHAR_ASYNC_DATA_SPLIT(emblem_upload, img, img_size);
 
@@ -378,8 +382,7 @@ HTTP_DATA(emblem_download)
 	ShowError("emblem_download data called\n");
 #endif
 
-	if (data_size < CHUNKED_FLAG_SIZE)
-	{
+	if (data_size < CHUNKED_FLAG_SIZE) {
 		// response size smaller than flag field size
 		// Can be missing icon
 		aclif->terminate_connection(fd);
@@ -414,7 +417,7 @@ HTTP_URL(emblem_download)
 	CREATE_HTTP_DATA(data, emblem_download);
 
 	data.guild_id = RET_INT_HEADER(GUILD_ID, 0);
-	data.version = RET_INT_HEADER(VERSION, 0);
+	data.version  = RET_INT_HEADER(VERSION, 0);
 
 	SEND_CHAR_ASYNC_DATA(emblem_download, &data);
 
@@ -424,7 +427,7 @@ HTTP_URL(emblem_download)
 HTTP_DATA(party_list)
 {
 	GET_HTTP_DATA(p, party_list);
-	int index = 0;
+	int index   = 0;
 	JsonW *json = jsonwriter->create_empty();
 	jsonwriter->add_new_number(json, "totalPage", p->totalPage);
 	JsonW *dataNode = jsonwriter->add_new_array(json, "data");
@@ -446,7 +449,7 @@ HTTP_DATA(party_list)
 		jsonwriter->add_new_number(objNode, "MaxLV", entry->max_level);
 		jsonwriter->add_new_number(objNode, "Type", entry->type);
 		jsonwriter->add_new_string(objNode, "Memo", entry->message);
-		index ++;
+		index++;
 	}
 
 #ifdef DEBUG_LOG
@@ -479,7 +482,7 @@ HTTP_DATA(party_get)
 
 	JsonW *json = jsonwriter->create("{\"Type\":1}");
 	if (p->data.char_id != 0) {
-		JsonW *dataNode = jsonwriter->add_new_object(json, "data");
+		JsonW *dataNode                             = jsonwriter->add_new_object(json, "data");
 		const struct adventuter_agency_entry *entry = &p->data;
 		jsonwriter->add_new_number(dataNode, "AID", entry->account_id);
 		jsonwriter->add_new_number(dataNode, "GID", entry->char_id);
@@ -552,13 +555,13 @@ HTTP_URL(party_add)
 		safestrncpy(data.entry.message, text, NAME_LENGTH);
 	else
 		memset(data.entry.message, 0, NAME_LENGTH);
-	data.entry.type = RET_INT_HEADER(TYPE, 0);
+	data.entry.type      = RET_INT_HEADER(TYPE, 0);
 	data.entry.min_level = RET_INT_HEADER(MINLV, 0);
 	data.entry.max_level = RET_INT_HEADER(MAXLV, 0);
-	data.entry.healer = RET_INT_HEADER(HEALER, 0);
-	data.entry.assist = RET_INT_HEADER(ASSIST, 0);
-	data.entry.tanker = RET_INT_HEADER(TANKER, 0);
-	data.entry.dealer = RET_INT_HEADER(DEALER, 0);
+	data.entry.healer    = RET_INT_HEADER(HEALER, 0);
+	data.entry.assist    = RET_INT_HEADER(ASSIST, 0);
+	data.entry.tanker    = RET_INT_HEADER(TANKER, 0);
+	data.entry.dealer    = RET_INT_HEADER(DEALER, 0);
 
 	SEND_CHAR_ASYNC_DATA(party_add, &data);
 
@@ -636,7 +639,7 @@ HTTP_URL(test_url)
 
 	char buf[1000];
 	const char *user_agent = (const char *)strdb_get(sd->headers_db, "User-Agent");
-	const char *format = "<html>Hercules test.<br/>Your user agent is: %s<br/></html>\n";
+	const char *format     = "<html>Hercules test.<br/>Your user agent is: %s<br/></html>\n";
 	snprintf(buf, sizeof(buf), format, user_agent);
 
 	httpsender->send_html(fd, buf);
@@ -657,18 +660,25 @@ static void do_final_handlers(void)
 
 void handlers_defaults(void)
 {
-	handlers = &handlers_s;
-	handlers->init = do_init_handlers;
-	handlers->final = do_final_handlers;
-	handlers->sendHotkeyV2Tab = handlers_sendHotkeyV2Tab;
+	handlers                    = &handlers_s;
+	handlers->init              = do_init_handlers;
+	handlers->final             = do_final_handlers;
+	handlers->sendHotkeyV2Tab   = handlers_sendHotkeyV2Tab;
 	handlers->hotkeyTabIdToName = handlers_hotkeyTabIdToName;
 
-#define handler(method, url, func, flags) do { handlers->parse_ ## func = handlers_parse_ ## func; } while (false)
-#define handler2(method, url, func, flags) do { \
-		handlers->parse_ ## func = handlers_parse_ ## func; \
-		handlers->func = handlers_ ## func; \
+#define handler(method, url, func, flags) \
+	do { \
+		handlers->parse_##func = handlers_parse_##func; \
 	} while (false)
-#define packet_handler(func) do { handlers->func = handlers_ ## func; } while (false)
+#define handler2(method, url, func, flags) \
+	do { \
+		handlers->parse_##func = handlers_parse_##func; \
+		handlers->func         = handlers_##func; \
+	} while (false)
+#define packet_handler(func) \
+	do { \
+		handlers->func = handlers_##func; \
+	} while (false)
 #include "api/urlhandlers.h"
 #undef handler
 #undef handler2

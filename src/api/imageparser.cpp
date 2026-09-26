@@ -57,55 +57,63 @@ static bool imageparser_validate_bmp_emblem(const char *emblem, uint64 emblem_le
 	const uint8 *buf = (const uint8 *)emblem;
 
 	enum e_bitmapconst {
-		RGBTRIPLE_SIZE = 3,         // sizeof(RGBTRIPLE)
-		RGBQUAD_SIZE = 4,           // sizeof(RGBQUAD)
+		RGBTRIPLE_SIZE        = 3,  // sizeof(RGBTRIPLE)
+		RGBQUAD_SIZE          = 4,  // sizeof(RGBQUAD)
 		BITMAPFILEHEADER_SIZE = 14, // sizeof(BITMAPFILEHEADER)
 		BITMAPINFOHEADER_SIZE = 40, // sizeof(BITMAPINFOHEADER)
 	};
 
-PRAGMA_PACK_PUSH(1)
-	struct s_bitmaptripple {
-		//uint8 b;
-		//uint8 g;
-		//uint8 r;
-		uint32 rgb:24;
-	} __attribute__((packed));
-PRAGMA_PACK_POP()
+	PRAGMA_PACK_PUSH(1)
 
-	if ((int)emblem_len > extraconf->emblems->max_bmp_guild_emblem_size // Safe to conver it to int, we check if it's not negative
-	 || extraconf->emblems->max_bmp_guild_emblem_size < BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE
-	 || RBUFW(buf, 0) != 0x4d42 // BITMAPFILEHEADER.bfType (signature)
-	 || RBUFL(buf, 2) != emblem_len // BITMAPFILEHEADER.bfSize (file size)
-	 || RBUFL(buf, 14) != BITMAPINFOHEADER_SIZE // BITMAPINFOHEADER.biSize (other headers are not supported)
-	 || RBUFSL(buf, 18) != extraconf->emblems->guild_emblem_width // BITMAPINFOHEADER.biWidth
-	 || RBUFSL(buf, 22) != extraconf->emblems->guild_emblem_height // BITMAPINFOHEADER.biHeight (top-down bitmaps (-24) are not supported)
-	 || RBUFL(buf, 30) != 0 // BITMAPINFOHEADER.biCompression == BI_RGB (compression not supported)
-	 ) {
+	struct s_bitmaptripple {
+		// uint8 b;
+		// uint8 g;
+		// uint8 r;
+		uint32 rgb : 24;
+	} __attribute__((packed));
+
+	PRAGMA_PACK_POP()
+
+	if (
+	    (int)emblem_len > extraconf->emblems
+	                          ->max_bmp_guild_emblem_size // Safe to conver it to int, we check if it's not negative
+	    || extraconf->emblems->max_bmp_guild_emblem_size < BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE
+	    || RBUFW(buf, 0) != 0x4D42                 // BITMAPFILEHEADER.bfType (signature)
+	    || RBUFL(buf, 2) != emblem_len             // BITMAPFILEHEADER.bfSize (file size)
+	    || RBUFL(buf, 14) != BITMAPINFOHEADER_SIZE // BITMAPINFOHEADER.biSize (other headers are not supported)
+	    || RBUFSL(buf, 18) != extraconf->emblems->guild_emblem_width // BITMAPINFOHEADER.biWidth
+	    || RBUFSL(buf, 22)
+	           != extraconf->emblems
+	                  ->guild_emblem_height // BITMAPINFOHEADER.biHeight (top-down bitmaps (-24) are not supported)
+	    || RBUFL(buf, 30) != 0              // BITMAPINFOHEADER.biCompression == BI_RGB (compression not supported)
+	) {
 		// Invalid data
 		return false;
 	}
 
 	const int offbits = RBUFL(buf, 10); // BITMAPFILEHEADER.bfOffBits (offset to bitmap bits)
-	int header = 0;
-	int bitmap = 0;
-	int palettesize = 0;
+	int header        = 0;
+	int bitmap        = 0;
+	int palettesize   = 0;
 
 	switch (RBUFW(buf, 28)) { // BITMAPINFOHEADER.biBitCount
-		case 8:
-			palettesize = RBUFL(buf, 46); // BITMAPINFOHEADER.biClrUsed (number of colors in the palette)
-			if (palettesize == 0)
-				palettesize = 256; // Defaults to 2^n if set to zero
-			else if (palettesize > 256)
-				return false;
-			header = BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE + RGBQUAD_SIZE * palettesize; // headers + palette
-			bitmap = extraconf->emblems->guild_emblem_width * extraconf->emblems->guild_emblem_height;
-			break;
-		case 24:
-			header = BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE;
-			bitmap = extraconf->emblems->guild_emblem_width * extraconf->emblems->guild_emblem_height * RGBTRIPLE_SIZE;
-			break;
-		default:
+	case 8:
+		palettesize = RBUFL(buf, 46); // BITMAPINFOHEADER.biClrUsed (number of colors in the palette)
+		if (palettesize == 0)
+			palettesize = 256; // Defaults to 2^n if set to zero
+		else if (palettesize > 256)
 			return false;
+		header
+		    = BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE + RGBQUAD_SIZE * palettesize; // headers + palette
+		bitmap = extraconf->emblems->guild_emblem_width * extraconf->emblems->guild_emblem_height;
+		break;
+	case 24:
+		header = BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE;
+		bitmap
+		    = extraconf->emblems->guild_emblem_width * extraconf->emblems->guild_emblem_height * RGBTRIPLE_SIZE;
+		break;
+	default:
+		return false;
 	}
 
 	// NOTE: This check gives a little freedom for bitmap-producing implementations,
@@ -113,7 +121,9 @@ PRAGMA_PACK_POP()
 	// If you want it paranoidly strict, change the first condition from < to !=.
 	// This also allows files with trailing garbage at the end of the file.
 	// If you want to avoid that, change the last condition to !=.
-	if (offbits < header || extraconf->emblems->max_bmp_guild_emblem_size < bitmap || offbits > extraconf->emblems->max_bmp_guild_emblem_size - bitmap) {
+	if (offbits < header
+	    || extraconf->emblems->max_bmp_guild_emblem_size < bitmap
+	    || offbits > extraconf->emblems->max_bmp_guild_emblem_size - bitmap) {
 		return false;
 	}
 
@@ -130,7 +140,7 @@ static int imageparser_read_gif_func(GifFileType *gif, GifByteType *buf, int len
 		return 0;
 	struct gif_user_data *userData = (struct gif_user_data *)gif->UserData;
 	nullpo_ret(userData);
-	const uint64 read_pos = userData->read_pos;
+	const uint64 read_pos   = userData->read_pos;
 	const uint64 emblem_len = userData->emblem_len;
 	if (read_pos >= emblem_len)
 		return 0;
@@ -154,9 +164,9 @@ static bool imageparser_validate_gif_emblem(const char *emblem, uint64 emblem_le
 	}
 
 	// basic check for gif format
-	if (emblem_len < 10 ||
-	    strncmp(emblem, "GIF", 3) != 0 ||
-	    (memcmp(emblem + 3, "87a", 3) != 0 && memcmp(emblem + 3, "89a", 3) != 0)) {
+	if (emblem_len < 10
+	    || strncmp(emblem, "GIF", 3) != 0
+	    || (memcmp(emblem + 3, "87a", 3) != 0 && memcmp(emblem + 3, "89a", 3) != 0)) {
 #ifdef DEBUG_ERRORS
 		ShowError("Error: Unknown gif image header\n");
 #endif
@@ -165,9 +175,9 @@ static bool imageparser_validate_gif_emblem(const char *emblem, uint64 emblem_le
 
 	int error = D_GIF_SUCCEEDED;
 	struct gif_user_data userData;
-	userData.emblem = emblem;
+	userData.emblem     = emblem;
 	userData.emblem_len = emblem_len;
-	userData.read_pos = 0;
+	userData.read_pos   = 0;
 
 	GifFileType *image = DGifOpen(&userData, imageparser->read_gif_func, &error);
 	if (image == NULL) {
@@ -196,9 +206,9 @@ static bool imageparser_validate_gif_emblem(const char *emblem, uint64 emblem_le
 		return false;
 	}
 #endif // 0
-	// check image resolution and images count
-	if (image->SWidth != extraconf->emblems->guild_emblem_width ||
-	    image->SHeight != extraconf->emblems->guild_emblem_height) {
+       // check image resolution and images count
+	if (image->SWidth != extraconf->emblems->guild_emblem_width
+	    || image->SHeight != extraconf->emblems->guild_emblem_height) {
 #ifdef DEBUG_ERRORS
 		ShowError("Error: Gif canvas resolution error: %d, %d\n", image->SWidth, image->SHeight);
 #endif
@@ -233,11 +243,11 @@ static bool imageparser_validate_gif_emblem(const char *emblem, uint64 emblem_le
 
 void imageparser_defaults(void)
 {
-	imageparser = &imageparser_s;
-	imageparser->init = do_init_imageparser;
+	imageparser        = &imageparser_s;
+	imageparser->init  = do_init_imageparser;
 	imageparser->final = do_final_imageparser;
 
 	imageparser->validate_bmp_emblem = imageparser_validate_bmp_emblem;
 	imageparser->validate_gif_emblem = imageparser_validate_gif_emblem;
-	imageparser->read_gif_func = imageparser_read_gif_func;
+	imageparser->read_gif_func       = imageparser_read_gif_func;
 }

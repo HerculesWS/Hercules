@@ -49,14 +49,14 @@ static JsonP *jsonparser_parse(const char *text)
 	return cJSON_Parse(text);
 }
 
-char* jsonparser_get_formatted_string(const JsonP *parent)
+char *jsonparser_get_formatted_string(const JsonP *parent)
 {
 	nullpo_retr(NULL, parent);
 
 	return cJSON_Print(parent);
 }
 
-char* jsonparser_get_string(const JsonP *parent)
+char *jsonparser_get_string(const JsonP *parent)
 {
 	nullpo_retr(NULL, parent);
 
@@ -163,25 +163,25 @@ void jsonparser_delete(JsonP *ptr)
 
 void jsonparser_defaults(void)
 {
-	jsonparser = &jsonparser_s;
+	jsonparser        = &jsonparser_s;
 	/* core */
-	jsonparser->init = do_init_jsonparser;
+	jsonparser->init  = do_init_jsonparser;
 	jsonparser->final = do_final_jsonparser;
 
-	jsonparser->parse = jsonparser_parse;
-	jsonparser->get_string = jsonparser_get_string;
-	jsonparser->get_formatted_string = jsonparser_get_formatted_string;
-	jsonparser->get = jsonparser_get;
-	jsonparser->get_array_size = jsonparser_get_array_size;
-	jsonparser->get_string_value = jsonparser_get_string_value;
-	jsonparser->get_number_value = jsonparser_get_number_value;
-	jsonparser->get_int_value = jsonparser_get_int_value;
+	jsonparser->parse                  = jsonparser_parse;
+	jsonparser->get_string             = jsonparser_get_string;
+	jsonparser->get_formatted_string   = jsonparser_get_formatted_string;
+	jsonparser->get                    = jsonparser_get;
+	jsonparser->get_array_size         = jsonparser_get_array_size;
+	jsonparser->get_string_value       = jsonparser_get_string_value;
+	jsonparser->get_number_value       = jsonparser_get_number_value;
+	jsonparser->get_int_value          = jsonparser_get_int_value;
 	jsonparser->get_child_string_value = jsonparser_get_child_string_value;
 	jsonparser->get_child_number_value = jsonparser_get_child_number_value;
-	jsonparser->get_child_int_value = jsonparser_get_child_int_value;
-	jsonparser->is_null = jsonparser_is_null;
-	jsonparser->is_null_or_missing = jsonparser_is_null_or_missing;
-	jsonparser->print = jsonparser_print;
-	jsonparser->free = jsonparser_free;
-	jsonparser->delete_ = jsonparser_delete;
+	jsonparser->get_child_int_value    = jsonparser_get_child_int_value;
+	jsonparser->is_null                = jsonparser_is_null;
+	jsonparser->is_null_or_missing     = jsonparser_is_null_or_missing;
+	jsonparser->print                  = jsonparser_print;
+	jsonparser->free                   = jsonparser_free;
+	jsonparser->delete_                = jsonparser_delete;
 }

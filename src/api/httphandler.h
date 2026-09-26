@@ -21,7 +21,7 @@
 #ifndef API_HTTPHANDLER_H
 #define API_HTTPHANDLER_H
 
-#include "http_include.h"  // enum http_method
+#include "http_include.h" // enum http_method
 
 #include "api/httpparsehandler.h"
 

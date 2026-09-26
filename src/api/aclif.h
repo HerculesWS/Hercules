@@ -31,52 +31,52 @@
 #include <stdarg.h>
 
 #ifndef MAX_URL_SIZE
-#define MAX_URL_SIZE 30
+  #define MAX_URL_SIZE 30
 #endif
 #ifndef MAX_BODY_SIZE
-#define MAX_BODY_SIZE 100000
+  #define MAX_BODY_SIZE 100000
 #endif
 #ifndef MAX_REQUEST_SIZE
-#define MAX_REQUEST_SIZE 150000
+  #define MAX_REQUEST_SIZE 150000
 #endif
 
 #ifndef MAX_HEADER_COUNT
-#define MAX_HEADER_COUNT 20
+  #define MAX_HEADER_COUNT 20
 #endif
 #ifndef MAX_HEADER_NAME_SIZE
-#define MAX_HEADER_NAME_SIZE 30
+  #define MAX_HEADER_NAME_SIZE 30
 #endif
 #ifndef MAX_HEADER_VALUE_SIZE
-#define MAX_HEADER_VALUE_SIZE 200
+  #define MAX_HEADER_VALUE_SIZE 200
 #endif
 #ifndef MAX_POST_HEADER_COUNT
-#define MAX_POST_HEADER_COUNT 7
+  #define MAX_POST_HEADER_COUNT 7
 #endif
 #ifndef MAX_POST_HEADER_NAME_SIZE
-#define MAX_POST_HEADER_NAME_SIZE 20
+  #define MAX_POST_HEADER_NAME_SIZE 20
 #endif
 #ifndef MAX_POST_HEADER_VALUE_SIZE
-#define MAX_POST_HEADER_VALUE_SIZE 100
+  #define MAX_POST_HEADER_VALUE_SIZE 100
 #endif
 #ifndef MAX_POST_HEADER_DATA_SIZE
-#define MAX_POST_HEADER_DATA_SIZE 100000
+  #define MAX_POST_HEADER_DATA_SIZE 100000
 #endif
 #ifndef MIN_BOUNDARY_SIZE
-#define MIN_BOUNDARY_SIZE 30
+  #define MIN_BOUNDARY_SIZE 30
 #endif
 #ifndef MAX_BOUNDARY_SIZE
-#define MAX_BOUNDARY_SIZE 50
+  #define MAX_BOUNDARY_SIZE 50
 #endif
 #ifndef MAX_TEMP_HEADER_SIZE
-#define MAX_TEMP_HEADER_SIZE 5000
+  #define MAX_TEMP_HEADER_SIZE 5000
 #endif
 
 #ifndef HTTP_MAX_PROTOCOL
-#define HTTP_MAX_PROTOCOL (HTTP_SOURCE + 1)
+  #define HTTP_MAX_PROTOCOL (HTTP_SOURCE + 1)
 #endif
 
 #ifndef AUTH_TOKEN_SIZE
-#define AUTH_TOKEN_SIZE 16
+  #define AUTH_TOKEN_SIZE 16
 #endif
 
 union DBKey;
@@ -110,10 +110,25 @@ enum req_flags {
 	REQ_EXTRA_HEADERS  = 0x0800000,
 	REQ_TRUSTED        = 0x1000000,
 
-	REQ_API = REQ_ACCOUNT_ID | REQ_WORLD_NAME,
-	REQ_API_AUTH = REQ_ACCOUNT_ID | REQ_WORLD_NAME | REQ_AUTH_TOKEN,
-	REQ_EMBLEM_UPLOAD = REQ_ACCOUNT_ID | REQ_WORLD_NAME | REQ_AUTH_TOKEN | REQ_API_AUTH | REQ_GUILD_ID | REQ_IMG_TYPE | REQ_IMG | REQ_CHAR_LOGGED_IN,
-	REQ_PARTY_ADD = REQ_MINLV | REQ_MAXLV | REQ_HEALER | REQ_ASSIST | REQ_TANKER | REQ_DEALER | REQ_MEMO | REQ_TYPE | REQ_CHAR_NAME
+	REQ_API           = REQ_ACCOUNT_ID | REQ_WORLD_NAME,
+	REQ_API_AUTH      = REQ_ACCOUNT_ID | REQ_WORLD_NAME | REQ_AUTH_TOKEN,
+	REQ_EMBLEM_UPLOAD = REQ_ACCOUNT_ID
+	                  | REQ_WORLD_NAME
+	                  | REQ_AUTH_TOKEN
+	                  | REQ_API_AUTH
+	                  | REQ_GUILD_ID
+	                  | REQ_IMG_TYPE
+	                  | REQ_IMG
+	                  | REQ_CHAR_LOGGED_IN,
+	REQ_PARTY_ADD     = REQ_MINLV
+	                  | REQ_MAXLV
+	                  | REQ_HEALER
+	                  | REQ_ASSIST
+	                  | REQ_TANKER
+	                  | REQ_DEALER
+	                  | REQ_MEMO
+	                  | REQ_TYPE
+	                  | REQ_CHAR_NAME
 };
 
 struct online_api_login_data {
@@ -147,83 +162,92 @@ struct aclif_interface {
 	struct DBMap *char_servers_id_db;
 
 	/* core */
-	int (*init) (bool minimal);
-	void (*final) (void);
-	bool (*setip) (const char* ip);
-	bool (*setbindip) (const char* ip);
-	void (*setport) (uint16 port);
-	uint32 (*refresh_ip) (void);
-	int (*parse) (int fd);
-	int (*parse_request) (int fd, struct api_session_data *sd);
-	void (*terminate_connection) (int fd);
-	int (*connected) (int fd);
-	bool (*socket_secure_check) (int fd);
-	int (*session_delete) (int fd);
-	void (*init_handlers) (void);
-	void (*register_handlers) (void);
-	void (*add_handler) (http_method method, const char *url, HttpParseHandler func, Handler_func func2, int msg_id, int flags);
-	void (*add_packet_handler) (Handler_func func2, int msg_id);
-	void (*set_url) (int fd, http_method method, const char *url, size_t size);
-	void (*set_body) (int fd, const char *body, size_t size);
-	void (*set_header_name) (int fd, const char *name, size_t size);
-	void (*set_header_value) (int fd, const char *value, size_t size);
-	void (*set_post_header_name) (int fd, const char *name, size_t size);
-	void (*set_post_header_value) (int fd, const char *value, size_t size);
-	void (*set_post_header_data) (int fd, const char *data, size_t size);
-	bool (*check_header) (int fd, struct api_session_data *sd, const char *name, const char *value, size_t value_size);
-	void (*multi_part_start) (int fd, struct api_session_data *sd);
-	void (*multi_part_complete) (int fd, struct api_session_data *sd);
-	void (*multi_body_complete) (int fd, struct api_session_data *sd);
-	int (*post_headers_destroy_sub) (union DBKey key, struct DBData *data, va_list ap);
-	void (*reportError) (int fd, struct api_session_data *sd);
-	void (*check_headers) (int fd, struct api_session_data *sd);
-	bool (*decode_post_headers) (int fd, struct api_session_data *sd);
-	int (*print_header) (union DBKey key, struct DBData *data, va_list ap);
-	bool (*is_post_header_present) (struct api_session_data *sd, const char *name);
-	bool (*is_post_header_present_or_empty) (struct api_session_data *sd, const char *name);
-	bool (*get_post_header_data_int) (struct api_session_data *sd, const char *name, int *account_id);
-	bool (*get_post_header_data_str) (struct api_session_data *sd, const char *name, char **data, uint32_t *data_size);
-	bool (*get_post_header_data_json) (struct api_session_data *sd, const char *name, JsonP **json);
-	bool (*get_post_header_content_type) (struct api_session_data *sd, const char *name, char **content_type);
-	int (*get_post_headers_count) (struct api_session_data *sd);
-	int (*ret_post_header_data_int) (struct api_session_data *sd, const char *name, int def);
+	int (*init)(bool minimal);
+	void (*final)(void);
+	bool (*setip)(const char *ip);
+	bool (*setbindip)(const char *ip);
+	void (*setport)(uint16 port);
+	uint32 (*refresh_ip)(void);
+	int (*parse)(int fd);
+	int (*parse_request)(int fd, struct api_session_data *sd);
+	void (*terminate_connection)(int fd);
+	int (*connected)(int fd);
+	bool (*socket_secure_check)(int fd);
+	int (*session_delete)(int fd);
+	void (*init_handlers)(void);
+	void (*register_handlers)(void);
+	void (*add_handler)(
+	    http_method method, const char *url, HttpParseHandler func, Handler_func func2, int msg_id, int flags
+	);
+	void (*add_packet_handler)(Handler_func func2, int msg_id);
+	void (*set_url)(int fd, http_method method, const char *url, size_t size);
+	void (*set_body)(int fd, const char *body, size_t size);
+	void (*set_header_name)(int fd, const char *name, size_t size);
+	void (*set_header_value)(int fd, const char *value, size_t size);
+	void (*set_post_header_name)(int fd, const char *name, size_t size);
+	void (*set_post_header_value)(int fd, const char *value, size_t size);
+	void (*set_post_header_data)(int fd, const char *data, size_t size);
+	bool (*check_header)(
+	    int fd, struct api_session_data *sd, const char *name, const char *value, size_t value_size
+	);
+	void (*multi_part_start)(int fd, struct api_session_data *sd);
+	void (*multi_part_complete)(int fd, struct api_session_data *sd);
+	void (*multi_body_complete)(int fd, struct api_session_data *sd);
+	int (*post_headers_destroy_sub)(union DBKey key, struct DBData *data, va_list ap);
+	void (*reportError)(int fd, struct api_session_data *sd);
+	void (*check_headers)(int fd, struct api_session_data *sd);
+	bool (*decode_post_headers)(int fd, struct api_session_data *sd);
+	int (*print_header)(union DBKey key, struct DBData *data, va_list ap);
+	bool (*is_post_header_present)(struct api_session_data *sd, const char *name);
+	bool (*is_post_header_present_or_empty)(struct api_session_data *sd, const char *name);
+	bool (*get_post_header_data_int)(struct api_session_data *sd, const char *name, int *account_id);
+	bool (*get_post_header_data_str)(
+	    struct api_session_data *sd, const char *name, char **data, uint32_t *data_size
+	);
+	bool (*get_post_header_data_json)(struct api_session_data *sd, const char *name, JsonP **json);
+	bool (*get_post_header_content_type)(struct api_session_data *sd, const char *name, char **content_type);
+	int (*get_post_headers_count)(struct api_session_data *sd);
+	int (*ret_post_header_data_int)(struct api_session_data *sd, const char *name, int def);
 
-	bool (*get_valid_header_data_int) (struct api_session_data *sd, int header_id, const char *name, int *account_id);
-	bool (*get_valid_header_data_str) (struct api_session_data *sd, int header_id, const char *name, char **data, uint32_t *data_size);
-	bool (*get_valid_header_data_json) (struct api_session_data *sd, int header_id, const char *name, JsonP **json);
-	bool (*get_valid_header_content_type) (struct api_session_data *sd, int header_id, const char *name, char **content_type);
-	int (*ret_valid_header_data_int) (struct api_session_data *sd, int header_id, const char *name, int def);
+	bool (*get_valid_header_data_int)(
+	    struct api_session_data *sd, int header_id, const char *name, int *account_id
+	);
+	bool (*get_valid_header_data_str)(
+	    struct api_session_data *sd, int header_id, const char *name, char **data, uint32_t *data_size
+	);
+	bool (*get_valid_header_data_json)(struct api_session_data *sd, int header_id, const char *name, JsonP **json);
+	bool (*get_valid_header_content_type)(
+	    struct api_session_data *sd, int header_id, const char *name, char **content_type
+	);
+	int (*ret_valid_header_data_int)(struct api_session_data *sd, int header_id, const char *name, int def);
 
-	void (*delete_online_player) (int account_id);
-	void (*real_delete_online_player) (int account_id);
-	void (*add_online_player) (int account_id, const unsigned char *auth_token);
-	void (*add_online_char) (int account_id, int char_id);
-	struct DBData (*create_online_login_data) (union DBKey key, va_list args);
-	void (*add_char_server) (int char_server_id, const char *name);
-	void (*remove_char_server) (int char_server_id, const char *name);
-	int (*purge_disconnected_users) (int tid, int64 tick, int id, intptr_t data);
-	int (*purge_disconnected_user) (union DBKey key, struct DBData *data, va_list ap);
-	int (*get_char_server_id) (struct api_session_data *sd);
-	void (*add_remove_timer) (struct online_api_login_data *data);
-	void (*remove_remove_timer) (struct online_api_login_data *data);
-	const char *(*get_first_world_name) (void);
+	void (*delete_online_player)(int account_id);
+	void (*real_delete_online_player)(int account_id);
+	void (*add_online_player)(int account_id, const unsigned char *auth_token);
+	void (*add_online_char)(int account_id, int char_id);
+	struct DBData (*create_online_login_data)(union DBKey key, va_list args);
+	void (*add_char_server)(int char_server_id, const char *name);
+	void (*remove_char_server)(int char_server_id, const char *name);
+	int (*purge_disconnected_users)(int tid, int64 tick, int id, intptr_t data);
+	int (*purge_disconnected_user)(union DBKey key, struct DBData *data, va_list ap);
+	int (*get_char_server_id)(struct api_session_data *sd);
+	void (*add_remove_timer)(struct online_api_login_data *data);
+	void (*remove_remove_timer)(struct online_api_login_data *data);
+	const char *(*get_first_world_name)(void);
 
-	void (*show_request) (int fd, struct api_session_data *sd, bool show_http_headers);
+	void (*show_request)(int fd, struct api_session_data *sd, bool show_http_headers);
 };
 
 #ifdef HERCULES_CORE
 void aclif_defaults(void);
 #else
-#define addHttpHandler(method, url, func, flags) \
-	( \
-		(void)((bool (*)(int fd, struct api_session_data *sd))0 == (handlers_parse_ ## func)), \
-		aclif->add_handler(method, url, handlers_parse_ ## func, NULL, 0, flags) \
-	)
-#define addHttpDataHandler(func, msg) \
-	( \
-		(void)((void (*)(int fd, struct api_session_data *sd, const void *data, size_t data_size))0 == (handlers_ ## func)), \
-		aclif->add_packet_handler(handlers_ ## func, msg) \
-	)
+  #define addHttpHandler(method, url, func, flags) \
+	  ((void)((bool (*)(int fd, struct api_session_data *sd))0 == (handlers_parse_##func)), \
+	   aclif->add_handler(method, url, handlers_parse_##func, NULL, 0, flags))
+  #define addHttpDataHandler(func, msg) \
+	  ((void)((void (*)(int fd, struct api_session_data *sd, const void *data, size_t data_size))0 \
+		  == (handlers_##func)), \
+	   aclif->add_packet_handler(handlers_##func, msg))
 
 #endif // HERCULES_CORE
 

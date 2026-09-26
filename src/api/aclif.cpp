@@ -57,44 +57,47 @@
 static struct aclif_interface aclif_s;
 struct aclif_interface *aclif;
 
-//#define DEBUG_ONLINEDB_LOG
-//#define DEBUG_LOG
+// #define DEBUG_ONLINEDB_LOG
+// #define DEBUG_LOG
 
 #ifdef DEBUG_LOG
-#define LOG_HANDLED_HEADER(name) ShowInfo("Handled header: " name "\n")
-#define HANDLE_HEADER(name) do { \
-		handled_count++; \
-		sd->valid_post_headers[CONST_POST_ ## name] = 1; \
-		ShowInfo("Handled header: %s\n", POST_ ## name); \
-	} while (false)
-#else  // DEBUG_LOG
-#define LOG_HANDLED_HEADER(name) ((void)0)
-#define HANDLE_HEADER(name) do { \
-		handled_count ++; \
-		sd->valid_post_headers[CONST_POST_ ## name] = 1; \
-	} while (false)
-#endif  // DEBUG_LOG
+  #define LOG_HANDLED_HEADER(name) ShowInfo("Handled header: " name "\n")
+  #define HANDLE_HEADER(name) \
+	  do { \
+		  handled_count++; \
+		  sd->valid_post_headers[CONST_POST_##name] = 1; \
+		  ShowInfo("Handled header: %s\n", POST_##name); \
+	  } while (false)
+#else // DEBUG_LOG
+  #define LOG_HANDLED_HEADER(name) ((void)0)
+  #define HANDLE_HEADER(name) \
+	  do { \
+		  handled_count++; \
+		  sd->valid_post_headers[CONST_POST_##name] = 1; \
+	  } while (false)
+#endif // DEBUG_LOG
 
-#define CHECK_POST_HEADER_PRESENT(name) do { \
-		if ((sd->handler->flags & REQ_ ## name) != 0) { \
-			if (!aclif->is_post_header_present(sd, POST_ ## name)) { \
-				ShowError("Http request without %s %d\n", POST_ ## name, fd); \
+#define CHECK_POST_HEADER_PRESENT(name) \
+	do { \
+		if ((sd->handler->flags & REQ_##name) != 0) { \
+			if (!aclif->is_post_header_present(sd, POST_##name)) { \
+				ShowError("Http request without %s %d\n", POST_##name, fd); \
 				return false; \
 			} \
 			HANDLE_HEADER(name); \
 		} \
 	} while (false)
 
-#define CHECK_POST_HEADER_PRESENT_OR_EMPTY(name) do { \
-		if ((sd->handler->flags & REQ_ ## name) != 0) { \
-			if (!aclif->is_post_header_present_or_empty(sd, POST_ ## name)) { \
-				ShowError("Http request without %s %d\n", POST_ ## name, fd); \
+#define CHECK_POST_HEADER_PRESENT_OR_EMPTY(name) \
+	do { \
+		if ((sd->handler->flags & REQ_##name) != 0) { \
+			if (!aclif->is_post_header_present_or_empty(sd, POST_##name)) { \
+				ShowError("Http request without %s %d\n", POST_##name, fd); \
 				return false; \
 			} \
 			HANDLE_HEADER(name); \
 		} \
 	} while (false)
-
 
 static bool aclif_setip(const char *ip)
 {
@@ -107,7 +110,10 @@ static bool aclif_setip(const char *ip)
 	}
 
 	safestrncpy(aclif->api_ip_str, ip, sizeof(aclif->api_ip_str));
-	ShowInfo("Api server IP address : '" CL_WHITE "%s" CL_RESET "' -> '" CL_WHITE "%s" CL_RESET "'.\n", ip, sockt->ip2str(aclif->api_ip, ip_str));
+	ShowInfo(
+	    "Api server IP address : '" CL_WHITE "%s" CL_RESET "' -> '" CL_WHITE "%s" CL_RESET "'.\n", ip,
+	    sockt->ip2str(aclif->api_ip, ip_str)
+	);
 	return true;
 }
 
@@ -117,7 +123,10 @@ static bool aclif_setbindip(const char *ip)
 	aclif->bind_ip = sockt->host2ip(ip);
 	if (aclif->bind_ip) {
 		char ip_str[16];
-		ShowInfo("Api Server Bind IP Address : '" CL_WHITE "%s" CL_RESET "' -> '" CL_WHITE "%s" CL_RESET "'.\n", ip, sockt->ip2str(aclif->bind_ip, ip_str));
+		ShowInfo(
+		    "Api Server Bind IP Address : '" CL_WHITE "%s" CL_RESET "' -> '" CL_WHITE "%s" CL_RESET "'.\n", ip,
+		    sockt->ip2str(aclif->bind_ip, ip_str)
+		);
 		return true;
 	}
 	ShowWarning("Failed to Resolve Api Server Address! (%s)\n", ip);
@@ -149,8 +158,7 @@ static int aclif_parse(int fd)
 		}
 		return 0;
 	}
-	if (!httpparser->parse(fd))
-	{
+	if (!httpparser->parse(fd)) {
 		httpparser->show_error(fd, sd);
 		sockt->eof(fd);
 		aclif->terminate_connection(fd);
@@ -216,17 +224,20 @@ static int aclif_connected(int fd)
 
 	if (!aclif->socket_secure_check(fd)) {
 		char ip_str[16];
-		ShowError("Too many connections from %d ip %s\n", fd, sockt->ip2str(sockt->session[fd]->client_addr, ip_str));
+		ShowError(
+		    "Too many connections from %d ip %s\n", fd, sockt->ip2str(sockt->session[fd]->client_addr, ip_str)
+		);
 		aclif->terminate_connection(fd);
 		return 1;
 	}
 	nullpo_ret(sockt->session[fd]);
 	struct api_session_data *sd = NULL;
 	CREATE(sd, struct api_session_data, 1);
-	sd->fd = fd;
+	sd->fd         = fd;
 	sd->headers_db = strdb_alloc((enum DBOptions)(DB_OPT_BASE | DB_OPT_RELEASE_BOTH), MAX_HEADER_NAME_SIZE);
-	sd->post_headers_db = strdb_alloc((enum DBOptions)(DB_OPT_BASE | DB_OPT_RELEASE_DATA), MAX_POST_HEADER_NAME_SIZE);
-	sd->id = aclif->id_counter++;
+	sd->post_headers_db
+	    = strdb_alloc((enum DBOptions)(DB_OPT_BASE | DB_OPT_RELEASE_DATA), MAX_POST_HEADER_NAME_SIZE);
+	sd->id                           = aclif->id_counter++;
 	sockt->session[fd]->session_data = sd;
 	httpparser->init_parser(fd, sd);
 	return 0;
@@ -241,14 +252,14 @@ static bool aclif_socket_secure_check(int fd)
 		return true;
 	}
 
-	int count = 0;
-	const int max_count = api->ip_connections_limit;
+	int count                = 0;
+	const int max_count      = api->ip_connections_limit;
 	const uint32 client_addr = sockt->session[fd]->client_addr;
-	for (int fd2 = 0; fd2 < sockt->fd_max; fd2 ++) {
+	for (int fd2 = 0; fd2 < sockt->fd_max; fd2++) {
 		if (!sockt->session_is_valid(fd2))
 			continue;
 		if (client_addr == sockt->session[fd2]->client_addr) {
-			count ++;
+			count++;
 			if (count > max_count)
 				return false;
 		}
@@ -261,7 +272,7 @@ static int aclif_post_headers_destroy_sub(union DBKey key, struct DBData *data, 
 	struct MimePart *part = (struct MimePart *)DB->data2ptr(data);
 	if (part && part->data) {
 		aFree(part->data);
-		part->data = NULL;
+		part->data      = NULL;
 		part->data_size = 0;
 	}
 	return 0;
@@ -297,8 +308,7 @@ static int aclif_session_delete(int fd)
 	sd->custom = NULL;
 	aFree(sd->request_temp);
 	sd->request_temp = NULL;
-	if (sd->json != NULL)
-	{
+	if (sd->json != NULL) {
 		jsonwriter->delete_(sd->json);
 		sd->json = NULL;
 	}
@@ -309,23 +319,26 @@ static int aclif_session_delete(int fd)
 
 static void aclif_init_handlers(void)
 {
-	for (int i = 0; i < HTTP_MAX_PROTOCOL; i ++) {
+	for (int i = 0; i < HTTP_MAX_PROTOCOL; i++) {
 		aclif->handlers_db[i] = strdb_alloc((enum DBOptions)(DB_OPT_BASE | DB_OPT_RELEASE_DATA), MAX_URL_SIZE);
 	}
 }
 
 static void aclif_register_handlers(void)
 {
-#define handler(method, url, func, flags) aclif->add_handler(method, url, handlers->parse_ ## func, NULL, 0, flags)
-#define handler2(method, url, func, flags) aclif->add_handler(method, url, handlers->parse_ ## func, handlers->func, API_MSG_ ## func, flags)
-#define packet_handler(func) aclif->add_packet_handler(handlers->func, API_MSG_ ## func)
+#define handler(method, url, func, flags) aclif->add_handler(method, url, handlers->parse_##func, NULL, 0, flags)
+#define handler2(method, url, func, flags) \
+	aclif->add_handler(method, url, handlers->parse_##func, handlers->func, API_MSG_##func, flags)
+#define packet_handler(func) aclif->add_packet_handler(handlers->func, API_MSG_##func)
 #include "api/urlhandlers.h"
 #undef handler
 #undef handler2
 #undef packet_handler
 }
 
-static void aclif_add_handler(http_method method, const char *url, HttpParseHandler func, Handler_func func2, int msg_id, int flags)
+static void aclif_add_handler(
+    http_method method, const char *url, HttpParseHandler func, Handler_func func2, int msg_id, int flags
+)
 {
 	nullpo_retv(url);
 	nullpo_retv(func);
@@ -335,9 +348,9 @@ static void aclif_add_handler(http_method method, const char *url, HttpParseHand
 	ShowWarning("Add url: %s\n", url);
 #endif
 	struct HttpHandler *handler = (struct HttpHandler *)aCalloc(1, sizeof(struct HttpHandler));
-	handler->method = method;
-	handler->func = func;
-	handler->flags = flags;
+	handler->method             = method;
+	handler->func               = func;
+	handler->flags              = flags;
 
 	strdb_put(aclif->handlers_db[method], url, handler);
 
@@ -385,7 +398,7 @@ static void aclif_set_url(int fd, http_method method, const char *url, size_t si
 	}
 
 	sd->flag.url = 1;
-	sd->handler = handler;
+	sd->handler  = handler;
 
 #ifdef DEBUG_LOG
 	ShowWarning("url: %s\n", sd->url);
@@ -408,7 +421,7 @@ static void aclif_set_body(int fd, const char *body, size_t size)
 	sd->body = (char *)aMalloc(size + 1);
 	memcpy(sd->body, body, size);
 	sd->body[size] = 0;
-	sd->body_size = size;
+	sd->body_size  = size;
 
 	if (!httpparser->multi_parse(fd)) {
 		ShowWarning("Post headers parsing error %d\n", fd);
@@ -439,14 +452,15 @@ static void aclif_set_header_name(int fd, const char *name, size_t size)
 	sd->temp_header = aStrndup(name, size);
 }
 
-static bool aclif_check_header(int fd, struct api_session_data *sd, const char *name, const char *value, size_t value_size)
+static bool
+    aclif_check_header(int fd, struct api_session_data *sd, const char *name, const char *value, size_t value_size)
 {
 	if (value_size > MAX_HEADER_VALUE_SIZE) {
 		ShowWarning("Header value size too big %d: %lu\n", fd, value_size);
 		return false;
 	}
 	if (strcmp(name, "Content-Type") == 0 && httpparser->get_method(sd) == HTTP_POST) {
-		const char *post_name = "multipart/form-data; boundary=";
+		const char *post_name     = "multipart/form-data; boundary=";
 		const size_t post_name_sz = strlen(post_name);
 		if (strncmp(value, post_name, post_name_sz) != 0) {
 			ShowWarning("Wrong content type for post request %d\n", fd);
@@ -468,7 +482,7 @@ static void aclif_set_header_value(int fd, const char *value, size_t size)
 	}
 	strdb_put(sd->headers_db, sd->temp_header, aStrndup(value, size));
 	sd->temp_header = NULL;
-	sd->headers_count ++;
+	sd->headers_count++;
 }
 
 static void aclif_set_post_header_name(int fd, const char *name, size_t size)
@@ -512,22 +526,22 @@ static void aclif_set_post_header_value(int fd, const char *value, size_t size)
 
 	if (sd->mime_flag == MIME_FLAG_CONTENT_DISPOSITION) {
 		// form-data; name="myname"
-		char *buf0 = aStrndup(value, size);
-		char *buf = buf0;
+		char *buf0         = aStrndup(value, size);
+		char *buf          = buf0;
 		const char *format = "form-data; name=\"";
-		const size_t sz = strlen(format);
+		const size_t sz    = strlen(format);
 		if (strncmp(buf, format, sz) != 0) {
 			ShowError("Unknown multi header value %d\n", fd);
 			aFree(buf0);
 			sockt->eof(fd);
 			return;
 		}
-		buf += sz;
-		char *ptr = strchr(buf, '"');
+		buf       += sz;
+		char *ptr  = strchr(buf, '"');
 		if (ptr == NULL || ptr <= buf + 1) {
 			ShowError("Corrupted multi header value %d\n", fd);
 #ifdef DEBUG_LOG
-			ShowError("buf '%s' %p, '%s' %p\n", buf, (void*)buf, ptr, (void*)ptr);
+			ShowError("buf '%s' %p, '%s' %p\n", buf, (void *)buf, ptr, (void *)ptr);
 #endif
 			aFree(buf0);
 			sockt->eof(fd);
@@ -566,14 +580,14 @@ static void aclif_set_post_header_data(int fd, const char *value, size_t size)
 		sd->temp_mime_header->data = (char *)aMalloc(size + 1);
 		memcpy(sd->temp_mime_header->data, value, size);
 		sd->temp_mime_header->data_size = (uint32)size;
-		sd->flag.multi_part_begin = 0;
+		sd->flag.multi_part_begin       = 0;
 	} else if (sd->temp_mime_header->data == NULL) {
 		ShowWarning("Post header data parsing error %d: %lu\n", fd, size);
 		sockt->eof(fd);
 		return;
 	} else {
 		// append header data
-		const uint32 newSize = sd->temp_mime_header->data_size + (uint32)size;
+		const uint32 newSize       = sd->temp_mime_header->data_size + (uint32)size;
 		sd->temp_mime_header->data = (char *)aRealloc(sd->temp_mime_header->data, newSize + 1);
 		memcpy(sd->temp_mime_header->data + sd->temp_mime_header->data_size, value, size);
 		sd->temp_mime_header->data_size = newSize;
@@ -581,7 +595,7 @@ static void aclif_set_post_header_data(int fd, const char *value, size_t size)
 	sd->temp_mime_header->data[sd->temp_mime_header->data_size] = '\x0';
 #ifdef DEBUG_LOG
 	printf(" hex: ");
-	for (int f = 0; f < sd->temp_mime_header->data_size; f ++) {
+	for (int f = 0; f < sd->temp_mime_header->data_size; f++) {
 		printf("%02x ", (uint32)(unsigned char)sd->temp_mime_header->data[f]);
 	}
 	printf("\n");
@@ -592,12 +606,12 @@ static void aclif_multi_part_start(int fd, struct api_session_data *sd)
 {
 	nullpo_retv(sd);
 
-	sd->flag.multi_part_begin = 1;
+	sd->flag.multi_part_begin    = 1;
 	sd->flag.multi_part_complete = 0;
 	if (sd->temp_mime_header)
 		aFree(sd->temp_mime_header);
 	sd->temp_mime_header = (struct MimePart *)aCalloc(1, sizeof(*sd->temp_mime_header));
-	sd->mime_flag = MIME_FLAG_NONE;
+	sd->mime_flag        = MIME_FLAG_NONE;
 }
 
 static void aclif_multi_part_complete(int fd, struct api_session_data *sd)
@@ -609,9 +623,9 @@ static void aclif_multi_part_complete(int fd, struct api_session_data *sd)
 
 	sd->temp_mime_header = NULL;
 
-	sd->flag.multi_part_begin = 0;
+	sd->flag.multi_part_begin    = 0;
 	sd->flag.multi_part_complete = 1;
-	sd->mime_flag = MIME_FLAG_NONE;
+	sd->mime_flag                = MIME_FLAG_NONE;
 }
 
 static void aclif_multi_body_complete(int fd, struct api_session_data *sd)
@@ -620,13 +634,15 @@ static void aclif_multi_body_complete(int fd, struct api_session_data *sd)
 
 	struct DBIterator *iter = db_iterator(sd->post_headers_db);
 #ifdef DEBUG_LOG
-	for (struct MimePart *data = (struct MimePart *)dbi_first(iter); dbi_exists(iter); data = (struct MimePart *)dbi_next(iter)) {
+	for (
+	    struct MimePart *data = (struct MimePart *)dbi_first(iter); dbi_exists(iter);
+	    data                  = (struct MimePart *)dbi_next(iter)
+	) {
 		ShowError("found mime headers: %s, %s, '%s'\n", data->name, data->content_type, data->data);
 	}
 #endif
 
 	dbi_destroy(iter);
-
 }
 
 static void aclif_check_headers(int fd, struct api_session_data *sd)
@@ -647,7 +663,7 @@ static void aclif_check_headers(int fd, struct api_session_data *sd)
 	const char *content_type = (char *)strdb_get(sd->headers_db, "Content-Type");
 	if (content_type == NULL)
 		return;
-	const char *post_name = "multipart/form-data; boundary=";
+	const char *post_name     = "multipart/form-data; boundary=";
 	const size_t post_name_sz = strlen(post_name);
 	if (strncmp(content_type, post_name, post_name_sz) != 0) {
 		return;
@@ -669,7 +685,6 @@ static void aclif_check_headers(int fd, struct api_session_data *sd)
 #endif
 
 	httpparser->init_multi_parser(fd, sd, content_type + post_name_sz);
-
 }
 
 static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
@@ -801,8 +816,7 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 			ShowError("Http request without Img or empty content_type %d\n", fd);
 			return false;
 		}
-		if (strcmp(content_type, "application/octet-stream") != 0 &&
-		    strcmp(content_type, "image/gif") != 0) {
+		if (strcmp(content_type, "application/octet-stream") != 0 && strcmp(content_type, "image/gif") != 0) {
 			ShowError("Http request with Img with wrong content_type %d\n", fd);
 			aclif->show_request(fd, sd, false);
 			return false;
@@ -839,13 +853,19 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 	const int count = aclif->get_post_headers_count(sd);
 	if ((sd->handler->flags & REQ_EXTRA_HEADERS) != 0) {
 		if (handled_count > count) {
-			ShowError("Handled wrong number of post headers. Handled %d, requested %d :%d\n", handled_count, count, fd);
+			ShowError(
+			    "Handled wrong number of post headers. Handled %d, requested %d :%d\n", handled_count,
+			    count, fd
+			);
 			aclif->show_request(fd, sd, false);
 			return false;
 		}
 	} else {
 		if (handled_count != count) {
-			ShowError("Handled wrong number of post headers. Handled %d, requested %d :%d\n", handled_count, count, fd);
+			ShowError(
+			    "Handled wrong number of post headers. Handled %d, requested %d :%d\n", handled_count,
+			    count, fd
+			);
 			aclif->show_request(fd, sd, false);
 			return false;
 		}
@@ -859,8 +879,8 @@ static void aclif_reportError(int fd, struct api_session_data *sd)
 
 static int aclif_print_header(union DBKey key, struct DBData *data, va_list ap)
 {
-    ShowInfo(" http header: %s = %s\n", key.str, (char*)DB->data2ptr(data));
-    return 0;
+	ShowInfo(" http header: %s = %s\n", key.str, (char *)DB->data2ptr(data));
+	return 0;
 }
 
 static void aclif_show_request(int fd, struct api_session_data *sd, bool show_http_headers)
@@ -873,14 +893,17 @@ static void aclif_show_request(int fd, struct api_session_data *sd, bool show_ht
 		sd->headers_db->foreach(sd->headers_db, aclif->print_header);
 
 	struct DBIterator *iter = db_iterator(sd->post_headers_db);
-	for (struct MimePart *data = (struct MimePart *)dbi_first(iter); dbi_exists(iter); data = (struct MimePart *)dbi_next(iter)) {
+	for (
+	    struct MimePart *data = (struct MimePart *)dbi_first(iter); dbi_exists(iter);
+	    data                  = (struct MimePart *)dbi_next(iter)
+	) {
 		if (*data->content_type == '\x0')
 			ShowInfo(" mime header: %s, '%s'\n", data->name, data->data);
 		else
 			ShowInfo(" mime header: %s, %s, '%s'\n", data->name, data->content_type, data->data);
 #ifdef DEBUG_LOG
 		printf(" Hex: ");
-		for (int f = 0; f < data->data_size; f ++) {
+		for (int f = 0; f < data->data_size; f++) {
 			printf("%02x ", (uint32)(unsigned char)data->data[f]);
 		}
 		printf("\n");
@@ -914,7 +937,8 @@ static void aclif_add_online_player(int account_id, const unsigned char *auth_to
 	ShowInfo("connect account: %d\n", account_id);
 //	ShowInfo("token: %.*s\n", 16, auth_token);
 #endif
-	struct online_api_login_data *user = (struct online_api_login_data *)idb_ensure(aclif->online_db, account_id, aclif->create_online_login_data);
+	struct online_api_login_data *user
+	    = (struct online_api_login_data *)idb_ensure(aclif->online_db, account_id, aclif->create_online_login_data);
 	if (user->remove_tick != 0)
 		aclif->remove_remove_timer(user);
 	memcpy(user->auth_token, auth_token, AUTH_TOKEN_SIZE);
@@ -961,7 +985,7 @@ static int aclif_purge_disconnected_users(int tid, int64 tick, int id, intptr_t 
 
 static int aclif_purge_disconnected_user(union DBKey key, struct DBData *data, va_list ap)
 {
-	const int64 tick = va_arg(ap, int64);
+	const int64 tick                   = va_arg(ap, int64);
 	struct online_api_login_data *user = (struct online_api_login_data *)DB->data2ptr(data);
 	if (user == NULL || user->remove_tick == 0)
 		return 0;
@@ -1033,7 +1057,9 @@ static int aclif_ret_post_header_data_int(struct api_session_data *sd, const cha
 	}
 }
 
-static bool aclif_get_valid_header_data_str(struct api_session_data *sd, int header_id, const char *name, char **data, uint32 *data_size)
+static bool aclif_get_valid_header_data_str(
+    struct api_session_data *sd, int header_id, const char *name, char **data, uint32 *data_size
+)
 {
 	nullpo_retr(false, sd);
 	Assert_retr(false, header_id >= 0 && header_id < CONST_POST_MAX);
@@ -1041,7 +1067,8 @@ static bool aclif_get_valid_header_data_str(struct api_session_data *sd, int hea
 	return aclif->get_post_header_data_str(sd, name, data, data_size);
 }
 
-static bool aclif_get_post_header_data_str(struct api_session_data *sd, const char *name, char **data, uint32 *data_size)
+static bool
+    aclif_get_post_header_data_str(struct api_session_data *sd, const char *name, char **data, uint32 *data_size)
 {
 	nullpo_retr(false, data);
 	*data = NULL;
@@ -1079,7 +1106,9 @@ static bool aclif_get_post_header_data_json(struct api_session_data *sd, const c
 	return *json != NULL;
 }
 
-static bool aclif_get_valid_header_content_type(struct api_session_data *sd, int header_id, const char *name, char **content_type)
+static bool aclif_get_valid_header_content_type(
+    struct api_session_data *sd, int header_id, const char *name, char **content_type
+)
 {
 	nullpo_retr(false, sd);
 	Assert_retr(false, header_id >= 0 && header_id < CONST_POST_MAX);
@@ -1109,9 +1138,9 @@ static int aclif_get_post_headers_count(struct api_session_data *sd)
 static void aclif_add_char_server(int char_server_id, const char *name)
 {
 	struct char_server_data *data = (struct char_server_data *)aCalloc(1, sizeof(struct char_server_data));
-	data->id = char_server_id;
-	char *name2 = aStrdup(name);
-	data->world_name = name2;
+	data->id                      = char_server_id;
+	char *name2                   = aStrdup(name);
+	data->world_name              = name2;
 	strdb_put(aclif->char_servers_db, name2, data);
 	idb_put(aclif->char_servers_id_db, char_server_id, name2);
 }
@@ -1144,7 +1173,7 @@ static void aclif_remove_remove_timer(struct online_api_login_data *user)
 
 static const char *aclif_get_first_world_name(void)
 {
-	struct DBIterator *iter = db_iterator(aclif->char_servers_db);
+	struct DBIterator *iter       = db_iterator(aclif->char_servers_db);
 	struct char_server_data *data = (struct char_server_data *)dbi_first(iter);
 	if (dbi_exists(iter)) {
 		dbi_destroy(iter);
@@ -1172,14 +1201,17 @@ static int do_init_aclif(bool minimal)
 	aclif->register_handlers();
 
 	timer->add_func_list(aclif->purge_disconnected_users, "aclif->purge_disconnected_users");
-	timer->add_interval(timer->gettick() + aclif->remove_disconnected_delay, aclif->purge_disconnected_users, 0, 0, aclif->remove_disconnected_delay);
+	timer->add_interval(
+	    timer->gettick() + aclif->remove_disconnected_delay, aclif->purge_disconnected_users, 0, 0,
+	    aclif->remove_disconnected_delay
+	);
 
 	return 0;
 }
 
 static void do_final_aclif(void)
 {
-	for (int i = 0; i < HTTP_MAX_PROTOCOL; i ++) {
+	for (int i = 0; i < HTTP_MAX_PROTOCOL; i++) {
 		db_destroy(aclif->handlers_db[i]);
 		aclif->handlers_db[i] = NULL;
 	}
@@ -1190,80 +1222,81 @@ static void do_final_aclif(void)
 
 void aclif_defaults(void)
 {
-	aclif = &aclif_s;
+	aclif           = &aclif_s;
 	/* vars */
-	aclif->bind_ip = INADDR_ANY;
+	aclif->bind_ip  = INADDR_ANY;
 	aclif->api_port = 3000;
 
 	aclif->remove_disconnected_delay = 5000;
-	aclif->id_counter = 0;
+	aclif->id_counter                = 0;
 
-	for (int i = 0; i < HTTP_MAX_PROTOCOL; i ++) {
+	for (int i = 0; i < HTTP_MAX_PROTOCOL; i++) {
 		aclif->handlers_db[i] = NULL;
 	}
 	aclif->online_db = idb_alloc(DB_OPT_RELEASE_DATA);
-	aclif->char_servers_db = strdb_alloc((enum DBOptions)(DB_OPT_BASE | DB_OPT_RELEASE_BOTH), MAX_CHARSERVER_NAME_SIZE);
+	aclif->char_servers_db
+	    = strdb_alloc((enum DBOptions)(DB_OPT_BASE | DB_OPT_RELEASE_BOTH), MAX_CHARSERVER_NAME_SIZE);
 	aclif->char_servers_id_db = idb_alloc(DB_OPT_BASE);
 
 	/* core */
-	aclif->init = do_init_aclif;
-	aclif->final = do_final_aclif;
-	aclif->setip = aclif_setip;
-	aclif->setbindip = aclif_setbindip;
-	aclif->setport = aclif_setport;
-	aclif->parse = aclif_parse;
-	aclif->parse_request = aclif_parse_request;
-	aclif->terminate_connection = aclif_terminate_connection;
-	aclif->connected = aclif_connected;
-	aclif->socket_secure_check = aclif_socket_secure_check;
-	aclif->session_delete = aclif_session_delete;
-	aclif->init_handlers = aclif_init_handlers;
-	aclif->register_handlers = aclif_register_handlers;
-	aclif->add_handler = aclif_add_handler;
-	aclif->add_packet_handler = aclif_add_packet_handler;
-	aclif->set_url = aclif_set_url;
-	aclif->set_body = aclif_set_body;
-	aclif->set_header_name = aclif_set_header_name;
-	aclif->set_header_value = aclif_set_header_value;
-	aclif->set_post_header_name = aclif_set_post_header_name;
-	aclif->set_post_header_value = aclif_set_post_header_value;
-	aclif->set_post_header_data = aclif_set_post_header_data;
-	aclif->check_header = aclif_check_header;
-	aclif->multi_part_start = aclif_multi_part_start;
-	aclif->multi_part_complete = aclif_multi_part_complete;
-	aclif->multi_body_complete = aclif_multi_body_complete;
-	aclif->post_headers_destroy_sub = aclif_post_headers_destroy_sub;
-	aclif->check_headers = aclif_check_headers;
-	aclif->decode_post_headers = aclif_decode_post_headers;
-	aclif->show_request = aclif_show_request;
-	aclif->print_header = aclif_print_header;
-	aclif->is_post_header_present = aclif_is_post_header_present;
+	aclif->init                            = do_init_aclif;
+	aclif->final                           = do_final_aclif;
+	aclif->setip                           = aclif_setip;
+	aclif->setbindip                       = aclif_setbindip;
+	aclif->setport                         = aclif_setport;
+	aclif->parse                           = aclif_parse;
+	aclif->parse_request                   = aclif_parse_request;
+	aclif->terminate_connection            = aclif_terminate_connection;
+	aclif->connected                       = aclif_connected;
+	aclif->socket_secure_check             = aclif_socket_secure_check;
+	aclif->session_delete                  = aclif_session_delete;
+	aclif->init_handlers                   = aclif_init_handlers;
+	aclif->register_handlers               = aclif_register_handlers;
+	aclif->add_handler                     = aclif_add_handler;
+	aclif->add_packet_handler              = aclif_add_packet_handler;
+	aclif->set_url                         = aclif_set_url;
+	aclif->set_body                        = aclif_set_body;
+	aclif->set_header_name                 = aclif_set_header_name;
+	aclif->set_header_value                = aclif_set_header_value;
+	aclif->set_post_header_name            = aclif_set_post_header_name;
+	aclif->set_post_header_value           = aclif_set_post_header_value;
+	aclif->set_post_header_data            = aclif_set_post_header_data;
+	aclif->check_header                    = aclif_check_header;
+	aclif->multi_part_start                = aclif_multi_part_start;
+	aclif->multi_part_complete             = aclif_multi_part_complete;
+	aclif->multi_body_complete             = aclif_multi_body_complete;
+	aclif->post_headers_destroy_sub        = aclif_post_headers_destroy_sub;
+	aclif->check_headers                   = aclif_check_headers;
+	aclif->decode_post_headers             = aclif_decode_post_headers;
+	aclif->show_request                    = aclif_show_request;
+	aclif->print_header                    = aclif_print_header;
+	aclif->is_post_header_present          = aclif_is_post_header_present;
 	aclif->is_post_header_present_or_empty = aclif_is_post_header_present_or_empty;
-	aclif->get_post_header_data_int = aclif_get_post_header_data_int;
-	aclif->get_post_header_data_str = aclif_get_post_header_data_str;
-	aclif->get_post_header_data_json = aclif_get_post_header_data_json;
-	aclif->get_post_header_content_type = aclif_get_post_header_content_type;
-	aclif->get_post_headers_count = aclif_get_post_headers_count;
-	aclif->ret_post_header_data_int = aclif_ret_post_header_data_int;
-	aclif->get_valid_header_data_int = aclif_get_valid_header_data_int;
-	aclif->get_valid_header_data_str = aclif_get_valid_header_data_str;
-	aclif->get_valid_header_data_json = aclif_get_valid_header_data_json;
-	aclif->get_valid_header_content_type = aclif_get_valid_header_content_type;
-	aclif->ret_valid_header_data_int = aclif_ret_valid_header_data_int;
+	aclif->get_post_header_data_int        = aclif_get_post_header_data_int;
+	aclif->get_post_header_data_str        = aclif_get_post_header_data_str;
+	aclif->get_post_header_data_json       = aclif_get_post_header_data_json;
+	aclif->get_post_header_content_type    = aclif_get_post_header_content_type;
+	aclif->get_post_headers_count          = aclif_get_post_headers_count;
+	aclif->ret_post_header_data_int        = aclif_ret_post_header_data_int;
+	aclif->get_valid_header_data_int       = aclif_get_valid_header_data_int;
+	aclif->get_valid_header_data_str       = aclif_get_valid_header_data_str;
+	aclif->get_valid_header_data_json      = aclif_get_valid_header_data_json;
+	aclif->get_valid_header_content_type   = aclif_get_valid_header_content_type;
+	aclif->ret_valid_header_data_int       = aclif_ret_valid_header_data_int;
 
-	aclif->delete_online_player = aclif_delete_online_player;
+	aclif->delete_online_player      = aclif_delete_online_player;
 	aclif->real_delete_online_player = aclif_real_delete_online_player;
-	aclif->add_online_player = aclif_add_online_player;
-	aclif->create_online_login_data = aclif_create_online_login_data;
-	aclif->add_char_server = aclif_add_char_server;
-	aclif->remove_char_server = aclif_remove_char_server;
-	aclif->purge_disconnected_users = aclif_purge_disconnected_users;
-	aclif->purge_disconnected_user = aclif_purge_disconnected_user;
-	aclif->get_char_server_id = aclif_get_char_server_id;
-	aclif->add_online_char = aclif_add_online_char;
-	aclif->add_remove_timer = aclif_add_remove_timer;
-	aclif->remove_remove_timer = aclif_remove_remove_timer;
-	aclif->get_first_world_name = aclif_get_first_world_name;
+	aclif->add_online_player         = aclif_add_online_player;
+	aclif->create_online_login_data  = aclif_create_online_login_data;
+	aclif->add_char_server           = aclif_add_char_server;
+	aclif->remove_char_server        = aclif_remove_char_server;
+	aclif->purge_disconnected_users  = aclif_purge_disconnected_users;
+	aclif->purge_disconnected_user   = aclif_purge_disconnected_user;
+	aclif->get_char_server_id        = aclif_get_char_server_id;
+	aclif->add_online_char           = aclif_add_online_char;
+	aclif->add_remove_timer          = aclif_add_remove_timer;
+	aclif->remove_remove_timer       = aclif_remove_remove_timer;
+	aclif->get_first_world_name      = aclif_get_first_world_name;
 
 	aclif->reportError = aclif_reportError;
 }

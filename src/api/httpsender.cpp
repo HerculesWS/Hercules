@@ -48,12 +48,14 @@
 #include <stdarg.h>
 #include <time.h>
 
-#define WFIFOADDSTR(fd, str) do { \
+#define WFIFOADDSTR(fd, str) \
+	do { \
 		memcpy(WFIFOP(char *, fd, 0), str, strlen(str)); \
 		WFIFOSET(fd, strlen(str)); \
 	} while (false)
 
-#define WFIFOADDBUF(fd, buf, buf_size) do { \
+#define WFIFOADDBUF(fd, buf, buf_size) \
+	do { \
 		memcpy(WFIFOP(char *, fd, 0), buf, buf_size); \
 		WFIFOSET(fd, buf_size); \
 	} while (false)
@@ -62,7 +64,7 @@ static struct httpsender_interface httpsender_s;
 struct httpsender_interface *httpsender;
 static char tmp_buffer[MAX_RESPONSE_SIZE];
 
-//#define DEBUG_LOG
+// #define DEBUG_LOG
 
 static int do_init_httpsender(bool minimal)
 {
@@ -81,9 +83,11 @@ static void do_final_httpsender(void)
 static const char *httpsender_http_status_name(enum http_status status)
 {
 	switch (status) {
-	#define XX(num, name, string) case HTTP_STATUS_##name: return #string;
-	HTTP_STATUS_MAP(XX)
-	#undef XX
+#define XX(num, name, string) \
+	case HTTP_STATUS_##name: \
+		return #string;
+		HTTP_STATUS_MAP(XX)
+#undef XX
 	default:
 		ShowWarning("%s: Invalid http status (%u) received.\n", __func__, (unsigned int)status);
 		return "Unknown";
@@ -101,7 +105,7 @@ static void httpsender_send_continue(int fd)
 {
 #ifdef DEBUG_LOG
 	ShowInfo("httpsender_send_continue\n");
-#endif  // DEBUG_LOG
+#endif // DEBUG_LOG
 
 	safestrncpy(tmp_buffer, "HTTP/1.1 100 Continue\n\n", sizeof(tmp_buffer));
 	WFIFOHEAD(fd, strlen(tmp_buffer));
@@ -113,7 +117,7 @@ static bool httpsender_send_html(int fd, const char *data)
 {
 #ifdef DEBUG_LOG
 	ShowInfo("httpsender_send_html\n");
-#endif  // DEBUG_LOG
+#endif // DEBUG_LOG
 
 	nullpo_retr(false, data);
 
@@ -136,9 +140,9 @@ static bool httpsender_send_json(int fd, const JsonW *json)
 {
 #ifdef DEBUG_LOG
 	ShowInfo("httpsender_send_json\n");
-#endif  // DEBUG_LOG
+#endif // DEBUG_LOG
 
-	char *data = jsonwriter->get_string(json);
+	char *data      = jsonwriter->get_string(json);
 	const size_t sz = strlen(data);
 	size_t buf_sz = snprintf(tmp_buffer, sizeof(tmp_buffer),
 		"HTTP/1.1 200 OK\n"
@@ -157,10 +161,10 @@ static bool httpsender_send_json(int fd, const JsonW *json)
 
 /**
  * Sends "json" content to fd.
- * 
+ *
  * This is similar to httpsender->send_plain but uses the JSON Content-Type.
  * It doesn't perform any validation over "json" to ensure it is correct.
- * 
+ *
  * @param fd connection
  * @param json json text to be sent
  * @param status response HTTP status
@@ -170,7 +174,7 @@ static bool httpsender_send_json_text(int fd, const char *json, enum http_status
 {
 #ifdef DEBUG_LOG
 	ShowInfo("httpsender_send_json_text\n");
-#endif  // DEBUG_LOG
+#endif // DEBUG_LOG
 
 	nullpo_retr(false, json);
 
@@ -195,7 +199,7 @@ static bool httpsender_send_plain(int fd, const char *data)
 {
 #ifdef DEBUG_LOG
 	ShowInfo("httpsender_send_plain\n");
-#endif  // DEBUG_LOG
+#endif // DEBUG_LOG
 
 	nullpo_retr(false, data);
 
@@ -218,7 +222,7 @@ static bool httpsender_send_binary(int fd, const char *data, const size_t data_l
 {
 #ifdef DEBUG_LOG
 	ShowInfo("httpsender_send_binary\n");
-#endif  // DEBUG_LOG
+#endif // DEBUG_LOG
 
 	nullpo_retr(false, data);
 
@@ -242,19 +246,19 @@ void httpsender_defaults(void)
 {
 	httpsender = &httpsender_s;
 
-	httpsender->tmp_buffer = tmp_buffer;
+	httpsender->tmp_buffer  = tmp_buffer;
 	httpsender->server_name = "herc.ws/1.0";
 
-	httpsender->init = do_init_httpsender;
+	httpsender->init  = do_init_httpsender;
 	httpsender->final = do_final_httpsender;
 
 	httpsender->http_status_name = httpsender_http_status_name;
 
 	httpsender->send_continue = httpsender_send_continue;
 
-	httpsender->send_plain = httpsender_send_plain;
-	httpsender->send_html = httpsender_send_html;
-	httpsender->send_json = httpsender_send_json;
+	httpsender->send_plain     = httpsender_send_plain;
+	httpsender->send_html      = httpsender_send_html;
+	httpsender->send_json      = httpsender_send_json;
 	httpsender->send_json_text = httpsender_send_json_text;
-	httpsender->send_binary = httpsender_send_binary;
+	httpsender->send_binary    = httpsender_send_binary;
 }

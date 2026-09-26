@@ -52,12 +52,12 @@
 
 static struct httpparser_interface httpparser_s;
 struct httpparser_interface *httpparser;
-//#define DEBUG_LOG
+// #define DEBUG_LOG
 
 // parser handlers
 
 #define GET_FD_SD \
-	int fd = (int)(intptr_t)parser->data; \
+	int fd                      = (int)(intptr_t)parser->data; \
 	struct api_session_data *sd = (struct api_session_data *)sockt->session[fd]->session_data; \
 	nullpo_ret(sd);
 
@@ -94,7 +94,8 @@ static int handler_on_headers_complete(HTTP_PARSER *parser)
 	ShowInfo("***HEADERS COMPLETE (HTTP Version: %d.%d)***\n", parser->http_major, parser->http_minor);
 #endif
 
-	// Per RFC-9110, only HTTP 1.1 and newer should handle Expect: https://httpwg.org/specs/rfc9110.html#field.expect
+	// Per RFC-9110, only HTTP 1.1 and newer should handle Expect:
+	// https://httpwg.org/specs/rfc9110.html#field.expect
 	if (parser->http_major >= 1 && parser->http_minor >= 1) {
 		const char *expect = (const char *)strdb_get(sd->headers_db, "Expect");
 		if (expect != NULL && strcmp(expect, "100-continue") == 0)
@@ -113,7 +114,7 @@ static int handler_on_message_complete(HTTP_PARSER *parser)
 		return 0;
 
 	sd->flag.message_complete = 1;
-	sd->flag.message_begin = 0;
+	sd->flag.message_begin    = 0;
 
 #ifdef DEBUG_LOG
 	ShowInfo("***MESSAGE COMPLETE***\n");
@@ -377,7 +378,7 @@ static bool httpparser_parse_real(int fd, struct api_session_data *sd, const cha
 		sd->request_size += data_size;
 		return true;
 	}
-#endif  // USE_HTTP_PARSER
+#endif // USE_HTTP_PARSER
 
 	return false;
 }
@@ -386,15 +387,15 @@ static void httpparser_add_to_temp_request(int fd, struct api_session_data *sd, 
 {
 	nullpo_retv(sd);
 	if (sd->request_temp == NULL) {
-		sd->request_temp = (char *)aCalloc(1, data_size);
-		sd->request_temp_size = data_size;
+		sd->request_temp            = (char *)aCalloc(1, data_size);
+		sd->request_temp_size       = data_size;
 		sd->request_temp_alloc_size = data_size;
 		memcpy(sd->request_temp, data, data_size);
 	} else {
-		const size_t old_size = sd->request_temp_size;
+		const size_t old_size  = sd->request_temp_size;
 		sd->request_temp_size += data_size;
 		if (sd->request_temp_alloc_size < sd->request_temp_size) {
-			sd->request_temp = (char *)aRealloc(sd->request_temp, sd->request_temp_size);
+			sd->request_temp            = (char *)aRealloc(sd->request_temp, sd->request_temp_size);
 			sd->request_temp_alloc_size = sd->request_temp_size;
 		}
 		memcpy(sd->request_temp + old_size, data, data_size);
@@ -405,10 +406,10 @@ static int httpparser_search_request_line_end(struct api_session_data *sd)
 {
 	nullpo_retr(-1, sd);
 
-	int idx = -1;
-	const char *data = sd->request_temp;
+	int idx             = -1;
+	const char *data    = sd->request_temp;
 	const int data_size = (int)sd->request_temp_size;
-	for (int i = 0; i < data_size - 1; i ++) {
+	for (int i = 0; i < data_size - 1; i++) {
 		if (data[i] == '\r' && data[i + 1] == '\n') {
 			idx = i;
 			i++;
@@ -422,7 +423,7 @@ static bool httpparser_parse(int fd)
 	nullpo_ret(sockt->session[fd]);
 
 	struct api_session_data *sd = (struct api_session_data *)sockt->session[fd]->session_data;
-	size_t data_size = RFIFOREST(fd);
+	size_t data_size            = RFIFOREST(fd);
 	if (data_size == 0)
 		return true;
 
@@ -459,10 +460,17 @@ static bool httpparser_parse(int fd)
 static void httpparser_show_error(int fd, struct api_session_data *sd)
 {
 #ifdef USE_HTTP_PARSER
-	ShowError("http parser error %d: %d, %s, %s\n", fd, sd->parser.http_errno, http_errno_name((enum http_errno)sd->parser.http_errno), http_errno_description((enum http_errno)sd->parser.http_errno));
+	ShowError(
+	    "http parser error %d: %d, %s, %s\n", fd, sd->parser.http_errno,
+	    http_errno_name((enum http_errno)sd->parser.http_errno),
+	    http_errno_description((enum http_errno)sd->parser.http_errno)
+	);
 #else  // USE_HTTP_PARSER
-	ShowError("http parser error %d: %d, %s, %s\n", fd, sd->parser.error, http_errno_name((llhttp_errno)sd->parser.error), sd->parser.reason);
-#endif  // USE_HTTP_PARSER
+	ShowError(
+	    "http parser error %d: %d, %s, %s\n", fd, sd->parser.error, http_errno_name((llhttp_errno)sd->parser.error),
+	    sd->parser.reason
+	);
+#endif // USE_HTTP_PARSER
 }
 
 static bool httpparser_multi_parse(int fd)
@@ -473,7 +481,8 @@ static bool httpparser_multi_parse(int fd)
 
 	if (sd->multi_parser == NULL)
 		return true;
-	size_t parsed_size = multipartparser_execute(sd->multi_parser, httpparser->multi_settings, sd->body, sd->body_size);
+	size_t parsed_size
+	    = multipartparser_execute(sd->multi_parser, httpparser->multi_settings, sd->body, sd->body_size);
 	if (parsed_size != sd->body_size) {
 		return false;
 	}
@@ -487,8 +496,8 @@ static void httpparser_init_parser(int fd, struct api_session_data *sd)
 	http_parser_init(&sd->parser, HTTP_REQUEST);
 #else  // USE_HTTP_PARSER
 	llhttp_init(&sd->parser, HTTP_REQUEST, httpparser->settings);
-#endif  // USE_HTTP_PARSER
-	sd->parser.data = (void*)(intptr_t)fd;
+#endif // USE_HTTP_PARSER
+	sd->parser.data = (void *)(intptr_t)fd;
 }
 
 static void httpparser_init_multi_parser(int fd, struct api_session_data *sd, const char *boundary)
@@ -497,7 +506,7 @@ static void httpparser_init_multi_parser(int fd, struct api_session_data *sd, co
 	nullpo_retv(boundary);
 	sd->multi_parser = (multipartparser *)aMalloc(sizeof(multipartparser));
 	multipartparser_init(sd->multi_parser, boundary);
-	sd->multi_parser->data = (void*)(intptr_t)fd;
+	sd->multi_parser->data = (void *)(intptr_t)fd;
 }
 
 static void httpparser_delete_parser(int fd)
@@ -509,31 +518,32 @@ static void httpparser_init_settings(void)
 	httpparser->settings = (struct http_parser_settings *)aCalloc(1, sizeof(struct http_parser_settings));
 #ifndef USE_HTTP_PARSER
 	llhttp_settings_init(httpparser->settings);
-#endif  // USE_HTTP_PARSER
-	httpparser->settings->on_message_begin = httpparser->on_message_begin;
-	httpparser->settings->on_url = httpparser->on_url;
-	httpparser->settings->on_header_field = httpparser->on_header_field;
-	httpparser->settings->on_header_value = httpparser->on_header_value;
+#endif // USE_HTTP_PARSER
+	httpparser->settings->on_message_begin    = httpparser->on_message_begin;
+	httpparser->settings->on_url              = httpparser->on_url;
+	httpparser->settings->on_header_field     = httpparser->on_header_field;
+	httpparser->settings->on_header_value     = httpparser->on_header_value;
 	httpparser->settings->on_headers_complete = httpparser->on_headers_complete;
-	httpparser->settings->on_body = httpparser->on_body;
+	httpparser->settings->on_body             = httpparser->on_body;
 	httpparser->settings->on_message_complete = httpparser->on_message_complete;
-	httpparser->settings->on_status = httpparser->on_status;
-	httpparser->settings->on_chunk_header = httpparser->on_chunk_header;
-	httpparser->settings->on_chunk_complete = httpparser->on_chunk_complete;
+	httpparser->settings->on_status           = httpparser->on_status;
+	httpparser->settings->on_chunk_header     = httpparser->on_chunk_header;
+	httpparser->settings->on_chunk_complete   = httpparser->on_chunk_complete;
 }
 
 static void httpparser_init_multi_settings(void)
 {
-	httpparser->multi_settings = (struct multipartparser_callbacks *)aCalloc(1, sizeof(struct multipartparser_callbacks));
+	httpparser->multi_settings
+	    = (struct multipartparser_callbacks *)aCalloc(1, sizeof(struct multipartparser_callbacks));
 	multipartparser_callbacks_init(httpparser->multi_settings);
-	httpparser->multi_settings->on_body_begin = httpparser->on_multi_body_begin;
-	httpparser->multi_settings->on_part_begin = httpparser->on_multi_part_begin;
-	httpparser->multi_settings->on_header_field = httpparser->on_multi_header_field;
-	httpparser->multi_settings->on_header_value = httpparser->on_multi_header_value;
+	httpparser->multi_settings->on_body_begin       = httpparser->on_multi_body_begin;
+	httpparser->multi_settings->on_part_begin       = httpparser->on_multi_part_begin;
+	httpparser->multi_settings->on_header_field     = httpparser->on_multi_header_field;
+	httpparser->multi_settings->on_header_value     = httpparser->on_multi_header_value;
 	httpparser->multi_settings->on_headers_complete = httpparser->on_multi_headers_complete;
-	httpparser->multi_settings->on_data = httpparser->on_multi_data;
-	httpparser->multi_settings->on_part_end = httpparser->on_multi_part_end;
-	httpparser->multi_settings->on_body_end = httpparser->on_multi_body_end;
+	httpparser->multi_settings->on_data             = httpparser->on_multi_data;
+	httpparser->multi_settings->on_part_end         = httpparser->on_multi_part_end;
+	httpparser->multi_settings->on_body_end         = httpparser->on_multi_body_end;
 }
 
 static int do_init_httpparser(bool minimal)
@@ -554,43 +564,43 @@ static void do_final_httpparser(void)
 
 void httpparser_defaults(void)
 {
-	httpparser = &httpparser_s;
+	httpparser                          = &httpparser_s;
 	/* vars */
-	httpparser->settings = NULL;
+	httpparser->settings                = NULL;
 	/* core */
-	httpparser->init = do_init_httpparser;
-	httpparser->final = do_final_httpparser;
-	httpparser->parse = httpparser_parse;
-	httpparser->parse_real = httpparser_parse_real;
-	httpparser->add_to_temp_request = httpparser_add_to_temp_request;
+	httpparser->init                    = do_init_httpparser;
+	httpparser->final                   = do_final_httpparser;
+	httpparser->parse                   = httpparser_parse;
+	httpparser->parse_real              = httpparser_parse_real;
+	httpparser->add_to_temp_request     = httpparser_add_to_temp_request;
 	httpparser->search_request_line_end = httpparser_search_request_line_end;
-	httpparser->show_error = httpparser_show_error;
-	httpparser->multi_parse = httpparser_multi_parse;
-	httpparser->init_parser = httpparser_init_parser;
-	httpparser->init_multi_parser = httpparser_init_multi_parser;
-	httpparser->delete_parser = httpparser_delete_parser;
-	httpparser->init_settings = httpparser_init_settings;
-	httpparser->init_multi_settings = httpparser_init_multi_settings;
-	httpparser->get_method_str = httpparser_get_method_str;
-	httpparser->get_method = httpparser_get_method;
+	httpparser->show_error              = httpparser_show_error;
+	httpparser->multi_parse             = httpparser_multi_parse;
+	httpparser->init_parser             = httpparser_init_parser;
+	httpparser->init_multi_parser       = httpparser_init_multi_parser;
+	httpparser->delete_parser           = httpparser_delete_parser;
+	httpparser->init_settings           = httpparser_init_settings;
+	httpparser->init_multi_settings     = httpparser_init_multi_settings;
+	httpparser->get_method_str          = httpparser_get_method_str;
+	httpparser->get_method              = httpparser_get_method;
 
-	httpparser->on_message_begin = handler_on_message_begin;
-	httpparser->on_url = handler_on_url;
-	httpparser->on_header_field = handler_on_header_field;
-	httpparser->on_header_value = handler_on_header_value;
+	httpparser->on_message_begin    = handler_on_message_begin;
+	httpparser->on_url              = handler_on_url;
+	httpparser->on_header_field     = handler_on_header_field;
+	httpparser->on_header_value     = handler_on_header_value;
 	httpparser->on_headers_complete = handler_on_headers_complete;
-	httpparser->on_body = handler_on_body;
+	httpparser->on_body             = handler_on_body;
 	httpparser->on_message_complete = handler_on_message_complete;
-	httpparser->on_status = handler_on_status;
-	httpparser->on_chunk_header = handler_on_chunk_header;
-	httpparser->on_chunk_complete = handler_on_chunk_complete;
+	httpparser->on_status           = handler_on_status;
+	httpparser->on_chunk_header     = handler_on_chunk_header;
+	httpparser->on_chunk_complete   = handler_on_chunk_complete;
 
-	httpparser->on_multi_body_begin = handler_on_multi_body_begin;
-	httpparser->on_multi_part_begin = handler_on_multi_part_begin;
-	httpparser->on_multi_header_field = handler_on_multi_header_field;
-	httpparser->on_multi_header_value = handler_on_multi_header_value;
+	httpparser->on_multi_body_begin       = handler_on_multi_body_begin;
+	httpparser->on_multi_part_begin       = handler_on_multi_part_begin;
+	httpparser->on_multi_header_field     = handler_on_multi_header_field;
+	httpparser->on_multi_header_value     = handler_on_multi_header_value;
 	httpparser->on_multi_headers_complete = handler_on_multi_headers_complete;
-	httpparser->on_multi_data = handler_on_multi_data;
-	httpparser->on_multi_part_end = handler_on_multi_part_end;
-	httpparser->on_multi_body_end = handler_on_multi_body_end;
+	httpparser->on_multi_data             = handler_on_multi_data;
+	httpparser->on_multi_part_end         = handler_on_multi_part_end;
+	httpparser->on_multi_body_end         = handler_on_multi_body_end;
 }

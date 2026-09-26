@@ -49,20 +49,21 @@
 static struct aloginif_interface aloginif_s;
 struct aloginif_interface *aloginif;
 
-//#define DEBUG_LOG
+// #define DEBUG_LOG
 
-#define INIT_PACKET_PROXY_FIELDS(p, sd, param) do { \
+#define INIT_PACKET_PROXY_FIELDS(p, sd, param) \
+	do { \
 		(p)->msg_id = msg_id; \
 		if ((param & (proxy_flag_char | proxy_flag_map)) != 0) { \
 			(p)->char_server_id = aclif->get_char_server_id(sd); \
 		} else { \
 			(p)->char_server_id = -1; \
 		} \
-		(p)->client_fd = (sd)->fd; \
-		(p)->account_id = (sd)->account_id; \
-		(p)->char_id = (sd)->char_id; \
+		(p)->client_fd        = (sd)->fd; \
+		(p)->account_id       = (sd)->account_id; \
+		(p)->char_id          = (sd)->char_id; \
 		(p)->client_random_id = (sd)->id; \
-		(p)->flags = (param); \
+		(p)->flags            = (param); \
 	} while (false)
 
 // sets login-server's user id
@@ -83,9 +84,11 @@ static void aloginif_setpasswd(char *pwd)
 static void aloginif_checkdefaultlogin(void)
 {
 #ifndef BUILDBOT
-	if (strcmp(aloginif->userid, "s1")==0 && strcmp(aloginif->passwd, "p1")==0) {
+	if (strcmp(aloginif->userid, "s1") == 0 && strcmp(aloginif->passwd, "p1") == 0) {
 		ShowWarning("Using the default user/password s1/p1 is NOT RECOMMENDED.\n");
-		ShowNotice("Please edit your 'login' table to create a proper inter-server user/password (gender 'S')\n");
+		ShowNotice(
+		    "Please edit your 'login' table to create a proper inter-server user/password (gender 'S')\n"
+		);
 		ShowNotice("and then edit your user/password in conf/api-server.conf (or conf/import/api_conf.txt)\n");
 	}
 #endif
@@ -104,7 +107,10 @@ static bool aloginif_setip(const char *ip)
 
 	safestrncpy(aloginif->ip_str, ip, sizeof(aloginif->ip_str));
 
-	ShowInfo("Login Server IP Address : '" CL_WHITE "%s" CL_RESET "' -> '" CL_WHITE "%s" CL_RESET "'.\n", ip, sockt->ip2str(aloginif->ip, ip_str));
+	ShowInfo(
+	    "Login Server IP Address : '" CL_WHITE "%s" CL_RESET "' -> '" CL_WHITE "%s" CL_RESET "'.\n", ip,
+	    sockt->ip2str(aloginif->ip, ip_str)
+	);
 
 	return true;
 }
@@ -144,7 +150,8 @@ static int aloginif_parse(int fd)
 		aloginif->on_disconnect();
 		return 0;
 	} else if (sockt->session[fd]->flag.ping) { /* we've reached stall time */
-		if (DIFF_TICK(sockt->last_tick, sockt->session[fd]->rdata_tick) > (sockt->stall_time * 2)) { /* we can't wait any longer */
+		if (DIFF_TICK(sockt->last_tick, sockt->session[fd]->rdata_tick)
+		    > (sockt->stall_time * 2)) { /* we can't wait any longer */
 			sockt->eof(fd);
 			return 0;
 		} else if (sockt->session[fd]->flag.ping != 2) { /* we haven't sent ping out yet */
@@ -166,8 +173,13 @@ static int aloginif_parse(int fd)
 		}
 #endif // 0
 
-		if (cmd < ALOGINIF_PACKET_LEN_TABLE_START || cmd >= ALOGINIF_PACKET_LEN_TABLE_START + ARRAYLENGTH(aloginif->packet_len_table) || aloginif->packet_len_table[cmd - ALOGINIF_PACKET_LEN_TABLE_START] == 0) {
-			ShowWarning("aloginif_parse: session #%d, failed (unrecognized command 0x%.4x).\n", fd, (unsigned int)cmd);
+		if (cmd < ALOGINIF_PACKET_LEN_TABLE_START
+		    || cmd >= ALOGINIF_PACKET_LEN_TABLE_START + ARRAYLENGTH(aloginif->packet_len_table)
+		    || aloginif->packet_len_table[cmd - ALOGINIF_PACKET_LEN_TABLE_START] == 0) {
+			ShowWarning(
+			    "aloginif_parse: session #%d, failed (unrecognized command 0x%.4x).\n", fd,
+			    (unsigned int)cmd
+			);
 			sockt->eof(fd);
 			return 0;
 		}
@@ -184,8 +196,10 @@ static int aloginif_parse(int fd)
 			return 0;
 
 #ifdef DEBUG_LOG
-		ShowDebug("Received packet 0x%4x (%d bytes) from login-server (connection %d)\n", (uint32)cmd, packet_len, fd);
-#endif  // DEBUG_LOG
+		ShowDebug(
+		    "Received packet 0x%4x (%d bytes) from login-server (connection %d)\n", (uint32)cmd, packet_len, fd
+		);
+#endif // DEBUG_LOG
 
 		if (VECTOR_LENGTH(HPM->packets[hpParse_LoginApi]) > 0) {
 			int result = HPM->parse_packets(fd, cmd, hpParse_LoginApi);
@@ -196,19 +210,40 @@ static int aloginif_parse(int fd)
 		}
 
 		switch (cmd) {
-			case 0x2811: aloginif->parse_connection_state(fd); break;
-			case 0x2812: aloginif->parse_pong(fd); break;
-			case 0x2813: aloginif->parse_disconnect_user(fd); break;
-			case 0x2814: aloginif->parse_connect_user(fd); break;
-			case 0x2815: aloginif->parse_char_servers_list(fd); break;
-			case 0x2816: aloginif->parse_remove_char_server(fd); break;
-			case 0x2817: aloginif->parse_add_char_server(fd); break;
-			case 0x2819: aloginif->parse_set_char_online(fd); break;
-			case HEADER_API_PROXY_REPLY: aloginif->parse_proxy_from_char_server(fd); break;
-			default:
-				ShowError("aloginif_parse : unknown packet (session #%d): 0x%x. Disconnecting.\n", fd, (unsigned int)cmd);
-				sockt->eof(fd);
-				return 0;
+		case 0x2811:
+			aloginif->parse_connection_state(fd);
+			break;
+		case 0x2812:
+			aloginif->parse_pong(fd);
+			break;
+		case 0x2813:
+			aloginif->parse_disconnect_user(fd);
+			break;
+		case 0x2814:
+			aloginif->parse_connect_user(fd);
+			break;
+		case 0x2815:
+			aloginif->parse_char_servers_list(fd);
+			break;
+		case 0x2816:
+			aloginif->parse_remove_char_server(fd);
+			break;
+		case 0x2817:
+			aloginif->parse_add_char_server(fd);
+			break;
+		case 0x2819:
+			aloginif->parse_set_char_online(fd);
+			break;
+		case HEADER_API_PROXY_REPLY:
+			aloginif->parse_proxy_from_char_server(fd);
+			break;
+		default:
+			ShowError(
+			    "aloginif_parse : unknown packet (session #%d): 0x%x. Disconnecting.\n", fd,
+			    (unsigned int)cmd
+			);
+			sockt->eof(fd);
+			return 0;
 		}
 		// There's the slight chance we lost the connection during parse, in which case this would segfault if
 		// not checked [Skotlex]
@@ -252,8 +287,12 @@ static int aloginif_parse_connection_state(int fd)
 	case 1: // Invalid username/password
 		ShowError("Can not connect to login-server.\n");
 		ShowError("The server communication passwords (default s1/p1) are probably invalid.\n");
-		ShowError("Also, please make sure your login db has the correct communication username/passwords and the gender of the account is S.\n");
-		ShowError("The communication passwords are set in /conf/map/map-server.conf and /conf/char/char-server.conf\n");
+		ShowError(
+		    "Also, please make sure your login db has the correct communication username/passwords and the gender of the account is S.\n"
+		);
+		ShowError(
+		    "The communication passwords are set in /conf/map/map-server.conf and /conf/char/char-server.conf\n"
+		);
 		sockt->eof(fd);
 		return 1;
 	case 2: // IP not allowed
@@ -276,12 +315,12 @@ static int aloginif_parse_char_servers_list(int fd)
 
 	const int part_size = 2 + MAX_CHARSERVER_NAME_SIZE;
 
-	int offset = 4;
+	int offset      = 4;
 	const int count = (RFIFOW(fd, 2) - offset) / part_size;
 #ifdef DEBUG_LOG
 	ShowInfo("Got %d char servers.\n", count);
 #endif
-	for (int f = 0; f < count; f ++) {
+	for (int f = 0; f < count; f++) {
 		aclif->add_char_server(RFIFOW(fd, offset), RFIFOP(char *, fd, offset + 2));
 		offset += part_size;
 	}
@@ -291,7 +330,7 @@ static int aloginif_parse_char_servers_list(int fd)
 static int aloginif_parse_remove_char_server(int fd)
 {
 	const int char_server_id = RFIFOW(fd, 2);
-	const char *name = (const char *)idb_get(aclif->char_servers_id_db, char_server_id);
+	const char *name         = (const char *)idb_get(aclif->char_servers_id_db, char_server_id);
 	nullpo_retr(1, name);
 
 	ShowInfo("Char-server '%s' has disconnected.\n", name);
@@ -301,11 +340,11 @@ static int aloginif_parse_remove_char_server(int fd)
 
 static int aloginif_parse_add_char_server(int fd)
 {
-	const int char_server_id = RFIFOW(fd, 2);
+	const int char_server_id      = RFIFOW(fd, 2);
 	struct char_server_data *data = (struct char_server_data *)aCalloc(1, sizeof(struct char_server_data));
-	data->id = char_server_id;
-	char *name = aStrdup(RFIFOP(char *, fd, 4));
-	data->world_name = name;
+	data->id                      = char_server_id;
+	char *name                    = aStrdup(RFIFOP(char *, fd, 4));
+	data->world_name              = name;
 	strdb_put(aclif->char_servers_db, name, data);
 	idb_put(aclif->char_servers_id_db, data->id, name);
 	ShowInfo("Connection of the char-server '%s' accepted.\n", name);
@@ -331,7 +370,9 @@ static void aloginif_keepalive(int fd)
 	WFIFOSET(fd, 2);
 }
 
-static void aloginif_send_to_server(int fd, struct api_session_data *sd, int msg_id, void *data, size_t data_len, int proxy_flag)
+static void aloginif_send_to_server(
+    int fd, struct api_session_data *sd, int msg_id, void *data, size_t data_len, int proxy_flag
+)
 {
 	nullpo_retv(sd);
 	Assert_retv(aloginif->fd != -1);
@@ -339,16 +380,18 @@ static void aloginif_send_to_server(int fd, struct api_session_data *sd, int msg
 	const int len = (int)sizeof(struct PACKET_API_PROXY) + (int)data_len;
 	WFIFOHEAD(aloginif->fd, len);
 	struct PACKET_API_PROXY *p = WP2PTR(struct PACKET_API_PROXY *, aloginif->fd);
-	p->packet_id = HEADER_API_PROXY_REQUEST;
-	p->packet_len = len;
+	p->packet_id               = HEADER_API_PROXY_REQUEST;
+	p->packet_len              = len;
 	INIT_PACKET_PROXY_FIELDS(p, sd, proxy_flag);
 	if (data && data_len > 0)
-		memcpy(((struct PACKET_API_PROXY0*)p)->data, data, data_len);
+		memcpy(((struct PACKET_API_PROXY0 *)p)->data, data, data_len);
 
 	WFIFOSET(aloginif->fd, len);
 }
 
-static void aloginif_send_split_to_server(int fd, struct api_session_data *sd, int msg_id, char *data, size_t data_len, int proxy_flag)
+static void aloginif_send_split_to_server(
+    int fd, struct api_session_data *sd, int msg_id, char *data, size_t data_len, int proxy_flag
+)
 {
 	nullpo_retv(sd);
 	Assert_retv(aloginif->fd != -1);
@@ -422,58 +465,58 @@ static void do_init_aloginif(bool minimal)
 }
 
 /*=====================================
-* Default Functions : aloginif.h
-* Generated by HerculesInterfaceMaker
-* created by Susu
-*-------------------------------------*/
+ * Default Functions : aloginif.h
+ * Generated by HerculesInterfaceMaker
+ * created by Susu
+ *-------------------------------------*/
 void aloginif_defaults(void)
 {
 	aloginif = &aloginif_s;
 
 	const int packet_len_table[ALOGINIF_PACKET_LEN_TABLE_SIZE] = {
-		 0,  3,  2,  6, 22, -1,  4, 24, // 0x2810 - 0x2817
-		-1, 10,  0,  0,  0,  0,  0,  0, // 0x2818 - 0x2825
+	    0,  3,  2, 6, 22, -1, 4, 24, // 0x2810 - 0x2817
+	    -1, 10, 0, 0, 0,  0,  0, 0,  // 0x2818 - 0x2825
 	};
 
 	/* vars */
 	aloginif->connected = 0;
 
 	memcpy(aloginif->packet_len_table, &packet_len_table, sizeof(aloginif->packet_len_table));
-	aloginif->fd = -1;
+	aloginif->fd      = -1;
 	aloginif->srvinfo = 0;
 	memset(aloginif->ip_str, 0, sizeof(aloginif->ip_str));
-	aloginif->ip = 0;
+	aloginif->ip   = 0;
 	aloginif->port = 6900;
 	memset(aloginif->userid, 0, sizeof(aloginif->userid));
 	memset(aloginif->passwd, 0, sizeof(aloginif->passwd));
 	aloginif->state = 0;
 
 	/* */
-	aloginif->init = do_init_aloginif;
+	aloginif->init  = do_init_aloginif;
 	aloginif->final = do_final_aloginif;
 
 	/* funcs */
-	aloginif->setuserid = aloginif_setuserid;
-	aloginif->setpasswd = aloginif_setpasswd;
-	aloginif->checkdefaultlogin = aloginif_checkdefaultlogin;
-	aloginif->setip = aloginif_setip;
-	aloginif->setport = aloginif_setport;
-	aloginif->connect_to_server = aloginif_connect_to_server;
-	aloginif->on_disconnect = aloginif_on_disconnect;
-	aloginif->keepalive = aloginif_keepalive;
-	aloginif->on_ready = aloginif_on_ready;
-	aloginif->send_to_server = aloginif_send_to_server;
+	aloginif->setuserid            = aloginif_setuserid;
+	aloginif->setpasswd            = aloginif_setpasswd;
+	aloginif->checkdefaultlogin    = aloginif_checkdefaultlogin;
+	aloginif->setip                = aloginif_setip;
+	aloginif->setport              = aloginif_setport;
+	aloginif->connect_to_server    = aloginif_connect_to_server;
+	aloginif->on_disconnect        = aloginif_on_disconnect;
+	aloginif->keepalive            = aloginif_keepalive;
+	aloginif->on_ready             = aloginif_on_ready;
+	aloginif->send_to_server       = aloginif_send_to_server;
 	aloginif->send_split_to_server = aloginif_send_split_to_server;
 
-	aloginif->parse = aloginif_parse;
-	aloginif->parse_connection_state = aloginif_parse_connection_state;
-	aloginif->parse_pong = aloginif_parse_pong;
-	aloginif->parse_disconnect_user = aloginif_parse_disconnect_user;
-	aloginif->parse_connect_user = aloginif_parse_connect_user;
-	aloginif->parse_char_servers_list = aloginif_parse_char_servers_list;
-	aloginif->parse_add_char_server = aloginif_parse_add_char_server;
-	aloginif->parse_remove_char_server = aloginif_parse_remove_char_server;
+	aloginif->parse                        = aloginif_parse;
+	aloginif->parse_connection_state       = aloginif_parse_connection_state;
+	aloginif->parse_pong                   = aloginif_parse_pong;
+	aloginif->parse_disconnect_user        = aloginif_parse_disconnect_user;
+	aloginif->parse_connect_user           = aloginif_parse_connect_user;
+	aloginif->parse_char_servers_list      = aloginif_parse_char_servers_list;
+	aloginif->parse_add_char_server        = aloginif_parse_add_char_server;
+	aloginif->parse_remove_char_server     = aloginif_parse_remove_char_server;
 	aloginif->parse_proxy_from_char_server = aloginif_parse_proxy_from_char_server;
-	aloginif->parse_from_char = aloginif_parse_from_char;
-	aloginif->parse_set_char_online = aloginif_parse_set_char_online;
+	aloginif->parse_from_char              = aloginif_parse_from_char;
+	aloginif->parse_set_char_online        = aloginif_parse_set_char_online;
 }

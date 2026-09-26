@@ -57,13 +57,12 @@
 #include <string.h>
 #include <sys/stat.h>
 #ifndef _WIN32
-#include <unistd.h>
+  #include <unistd.h>
 #endif
 
 static struct api_interface api_s;
 
 struct api_interface *api;
-
 
 int do_final(void)
 {
@@ -90,7 +89,7 @@ int do_final(void)
 void do_abort(void)
 {
 	static int run = 0;
-	//Save all characters and then flush the inter-connection.
+	// Save all characters and then flush the inter-connection.
 	if (run) {
 		ShowFatalError("Server has crashed while trying to save characters. Character data can't be saved!\n");
 		return;
@@ -107,8 +106,7 @@ void set_server_type(void)
 /// Called when a terminate signal is received.
 static void do_shutdown(void)
 {
-	if (core->runflag != APISERVER_ST_SHUTDOWN)
-	{
+	if (core->runflag != APISERVER_ST_SHUTDOWN) {
 		core->runflag = APISERVER_ST_SHUTDOWN;
 		ShowStatus("Shutting down...\n");
 		sockt->flush_fifos();
@@ -184,13 +182,14 @@ static int api_check_connect_login_server(int tid, int64 tick, int id, intptr_t 
 
 	ShowInfo("Attempt to connect to login-server...\n");
 
-	if ((aloginif->fd = sockt->make_connection(aloginif->ip, aloginif->port, NULL)) == -1) { //Try again later. [Skotlex]
+	if ((aloginif->fd = sockt->make_connection(aloginif->ip, aloginif->port, NULL))
+	    == -1) { // Try again later. [Skotlex]
 		aloginif->fd = 0;
 		return 0;
 	}
 
-	sockt->session[aloginif->fd]->func_parse = aloginif->parse;
-	sockt->session[aloginif->fd]->flag.server = 1;
+	sockt->session[aloginif->fd]->func_parse    = aloginif->parse;
+	sockt->session[aloginif->fd]->flag.server   = 1;
 	sockt->session[aloginif->fd]->flag.validate = 0;
 	sockt->realloc_fifo(aloginif->fd, FIFOSIZE_SERVERLINK, FIFOSIZE_SERVERLINK);
 
@@ -227,7 +226,9 @@ static bool api_config_read_console(const char *filename, struct config_t *confi
 		if (showmsg->silent) // only bother if its actually enabled
 			ShowInfo("Console Silent Setting: %d\n", showmsg->silent);
 	}
-	libconfig->setting_lookup_mutable_string(setting, "timestamp_format", showmsg->timestamp_format, sizeof(showmsg->timestamp_format));
+	libconfig->setting_lookup_mutable_string(
+	    setting, "timestamp_format", showmsg->timestamp_format, sizeof(showmsg->timestamp_format)
+	);
 	libconfig->setting_lookup_int(setting, "console_msg_log", &showmsg->console_log);
 
 	return true;
@@ -262,7 +263,9 @@ static bool api_config_read_connection(const char *filename, struct config_t *co
 	libconfig->setting_lookup_mutable_string(setting, "db_username", api->server_id, sizeof(api->server_id));
 	libconfig->setting_lookup_mutable_string(setting, "db_password", api->server_pw, sizeof(api->server_pw));
 	libconfig->setting_lookup_mutable_string(setting, "db_database", api->server_db, sizeof(api->server_db));
-	libconfig->setting_lookup_mutable_string(setting, "default_codepage", api->default_codepage, sizeof(api->default_codepage));
+	libconfig->setting_lookup_mutable_string(
+	    setting, "default_codepage", api->default_codepage, sizeof(api->default_codepage)
+	);
 
 	return true;
 }
@@ -279,7 +282,7 @@ static bool api_config_read_connection(const char *filename, struct config_t *co
 static bool api_config_read_inter(const char *filename, struct config_t *config, bool imported)
 {
 	struct config_setting_t *setting = NULL;
-	const char *str = NULL;
+	const char *str                  = NULL;
 	char temp[24];
 	uint16 port;
 
@@ -340,8 +343,8 @@ static bool api_config_read(const char *filename, bool imported)
 {
 	struct config_t config;
 	struct config_setting_t *setting = NULL;
-	const char *import = NULL;
-	bool retval = true;
+	const char *import               = NULL;
+	bool retval                      = true;
 
 	nullpo_retr(false, filename);
 
@@ -427,7 +430,7 @@ int do_init(int argc, char *argv[])
 	aclif->init(minimal);
 	httpparser->init(minimal);
 
-	if( minimal ) {
+	if (minimal) {
 		HPM->event(HPET_READY);
 		exit(EXIT_SUCCESS);
 	}
@@ -436,11 +439,14 @@ int do_init(int argc, char *argv[])
 
 	Sql_HerculesUpdateCheck(api->mysql_handle);
 
-	ShowStatus("Server is '" CL_GREEN "ready" CL_RESET "' and listening on port '" CL_WHITE "%d" CL_RESET "'.\n\n", api->port);
+	ShowStatus(
+	    "Server is '" CL_GREEN "ready" CL_RESET "' and listening on port '" CL_WHITE "%d" CL_RESET "'.\n\n",
+	    api->port
+	);
 
-	if( core->runflag != CORE_ST_STOP ) {
+	if (core->runflag != CORE_ST_STOP) {
 		core->shutdown_callback = api->do_shutdown;
-		core->runflag = APISERVER_ST_RUNNING;
+		core->runflag           = APISERVER_ST_RUNNING;
 	}
 
 	HPM->event(HPET_READY);
@@ -459,25 +465,25 @@ void api_defaults(void)
 
 	/* */
 	api->minimal = false;
-	api->retval = EXIT_SUCCESS;
+	api->retval  = EXIT_SUCCESS;
 
 	api->server_port = 3306;
-	sprintf(api->server_ip,"127.0.0.1");
-	sprintf(api->server_id,"ragnarok");
-	sprintf(api->server_pw,"ragnarok");
-	sprintf(api->server_db,"ragnarok");
-	api->mysql_handle = NULL;
+	sprintf(api->server_ip, "127.0.0.1");
+	sprintf(api->server_id, "ragnarok");
+	sprintf(api->server_pw, "ragnarok");
+	sprintf(api->server_db, "ragnarok");
+	api->mysql_handle         = NULL;
 	api->ip_connections_limit = 5;
 
-	api->port = 7121;
-	api->ip_set = 0;
+	api->port         = 7121;
+	api->ip_set       = 0;
 	api->login_ip_set = 0;
-	api->char_ip_set = 0;
+	api->char_ip_set  = 0;
 
-	api->do_shutdown = do_shutdown;
-	api->config_read = api_config_read;
-	api->config_read_console = api_config_read_console;
-	api->config_read_connection = api_config_read_connection;
-	api->config_read_inter = api_config_read_inter;
+	api->do_shutdown                = do_shutdown;
+	api->config_read                = api_config_read;
+	api->config_read_console        = api_config_read_console;
+	api->config_read_connection     = api_config_read_connection;
+	api->config_read_inter          = api_config_read_inter;
 	api->check_connect_login_server = api_check_connect_login_server;
 }
