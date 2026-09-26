@@ -29,16 +29,16 @@
 /// Packet IDs
 enum login_packet_ca_id {
 	HEADER_CA_LOGIN                = 0x0064,
-	HEADER_CA_LOGIN2               = 0x01dd,
-	HEADER_CA_LOGIN3               = 0x01fa,
+	HEADER_CA_LOGIN2               = 0x01DD,
+	HEADER_CA_LOGIN3               = 0x01FA,
 	HEADER_CA_CONNECT_INFO_CHANGED = 0x0200,
 	HEADER_CA_EXE_HASHCHECK        = 0x0204,
 	HEADER_CA_LOGIN_PCBANG         = 0x0277,
-	HEADER_CA_LOGIN4               = 0x027c,
-	HEADER_CA_LOGIN_HAN            = 0x02b0,
+	HEADER_CA_LOGIN4               = 0x027C,
+	HEADER_CA_LOGIN_HAN            = 0x02B0,
 	HEADER_CA_SSO_LOGIN_REQ        = 0x0825,
-	HEADER_CA_LOGIN_OTP            = 0x0acf,
-	HEADER_CA_REQ_HASH             = 0x01db,
+	HEADER_CA_LOGIN_OTP            = 0x0ACF,
+	HEADER_CA_REQ_HASH             = 0x01DB,
 	HEADER_CA_CHARSERVERCONNECT    = 0x2710, // Custom Hercules Packet
 	HEADER_CA_APISERVERCONNECT     = 0x2720, // Custom Hercules Packet
 
@@ -80,7 +80,7 @@ struct PACKET_CA_LOGIN3 {
 	char id[24];            ///< Username
 	uint8 password_md5[16]; ///< Password hash
 	uint8 clienttype;       ///< Client Type
-	uint8 clientinfo;       ///< Index of the connection in the clientinfo file (+10 if the command-line contains "pc")
+	uint8 clientinfo; ///< Index of the connection in the clientinfo file (+10 if the command-line contains "pc")
 } __attribute__((packed));
 
 /**
@@ -146,36 +146,38 @@ struct PACKET_CA_SSO_LOGIN_REQ {
  * Variable-length packet.
  */
 struct PACKET_CA_ACK_MOBILE_OTP {
-	int16 packet_id;      ///< Packet ID (#HEADER_CA_ACK_MOBILE_OTP)
-	int16 packet_len;     ///< Length (variable length)
-	uint32 aid;           ///< Account ID
-	char code[6];         ///< Code
+	int16 packet_id;  ///< Packet ID (#HEADER_CA_ACK_MOBILE_OTP)
+	int16 packet_len; ///< Length (variable length)
+	uint32 aid;       ///< Account ID
+	char code[6];     ///< Code
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CA_ACK_MOBILE_OTP, 0x09a3);
+
+DEFINE_PACKET_HEADER(CA_ACK_MOBILE_OTP, 0x09A3);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20181114 || PACKETVER_RE_NUM >= 20181114 || defined(PACKETVER_ZERO)
 struct PACKET_CA_OTP_CODE {
-	int16 packet_id;      ///< Packet ID (#HEADER_CA_OTP_CODE)
-	char code[9];         ///< Code
+	int16 packet_id; ///< Packet ID (#HEADER_CA_OTP_CODE)
+	char code[9];    ///< Code
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CA_OTP_CODE, 0x0ad0);
+
+DEFINE_PACKET_HEADER(CA_OTP_CODE, 0x0AD0);
 #endif
 
 /**
  * Packet structure for CA_LOGIN_OTP.
  */
 struct PACKET_CA_LOGIN_OTP {
-	int16 packet_id;      ///< Packet ID (#HEADER_CA_LOGIN_OTP)
+	int16 packet_id; ///< Packet ID (#HEADER_CA_LOGIN_OTP)
 #if PACKETVER >= 20171113
-	uint32 devFlags;      ///< flags including dev flag
+	uint32 devFlags; ///< flags including dev flag
 #endif
-	char login[25];       ///< Username
-	char password[32];    ///< Password encrypted by rijndael
-	char flagsStr[5];     ///< Unknown flags. Normally string: G000
+	char login[25];    ///< Username
+	char password[32]; ///< Password encrypted by rijndael
+	char flagsStr[5];  ///< Unknown flags. Normally string: G000
 } __attribute__((packed));
 
-#if 0 // Unused
+#if 0  // Unused
 struct PACKET_CA_SSO_LOGIN_REQa {
 	int16 packet_id;
 	int16 packet_len;
@@ -195,7 +197,7 @@ struct PACKET_CA_SSO_LOGIN_REQa {
  */
 struct PACKET_CA_CONNECT_INFO_CHANGED {
 	int16 packet_id; ///< Packet ID (#HEADER_CA_CONNECT_INFO_CHANGED)
-	char id[24];    ///< account.userid
+	char id[24];     ///< account.userid
 } __attribute__((packed));
 
 /**
@@ -225,12 +227,12 @@ struct PACKET_CA_CHARSERVERCONNECT {
 	char userid[24];   ///< Username
 	char password[24]; ///< Password
 	int32 unknown;
-	int32 ip;          ///< Charserver IP
-	int16 port;        ///< Charserver port
-	char name[MAX_CHARSERVER_NAME_SIZE];  ///< Charserver name
+	int32 ip;                            ///< Charserver IP
+	int16 port;                          ///< Charserver port
+	char name[MAX_CHARSERVER_NAME_SIZE]; ///< Charserver name
 	int16 unknown2;
-	int16 type;        ///< Charserver type
-	int16 new_;         ///< Whether charserver is to be marked as new
+	int16 type; ///< Charserver type
+	int16 new_; ///< Whether charserver is to be marked as new
 } __attribute__((packed));
 
 /**

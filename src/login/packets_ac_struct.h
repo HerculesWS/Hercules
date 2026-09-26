@@ -28,13 +28,13 @@
 
 /// Packet IDs
 enum login_ac_packet_id {
-	HEADER_AC_ACCEPT_LOGIN         = 0x0069,
-	HEADER_AC_ACCEPT_LOGIN2        = 0x0ac4,
-	HEADER_AC_REFUSE_LOGIN         = 0x006a,
-	HEADER_SC_NOTIFY_BAN           = 0x0081,
-	HEADER_AC_ACK_HASH             = 0x01dc,
-	HEADER_AC_REFUSE_LOGIN_R2      = 0x083e,
-	HEADER_AC_REFUSE_LOGIN_R3      = 0x0b02,
+	HEADER_AC_ACCEPT_LOGIN    = 0x0069,
+	HEADER_AC_ACCEPT_LOGIN2   = 0x0AC4,
+	HEADER_AC_REFUSE_LOGIN    = 0x006A,
+	HEADER_SC_NOTIFY_BAN      = 0x0081,
+	HEADER_AC_ACK_HASH        = 0x01DC,
+	HEADER_AC_REFUSE_LOGIN_R2 = 0x083E,
+	HEADER_AC_REFUSE_LOGIN_R3 = 0x0B02,
 };
 
 /* Packets Structs */
@@ -88,16 +88,16 @@ struct PACKET_AC_ACCEPT_LOGIN {
 	uint8 twitter_flag;
 #endif
 	struct {
-		uint32 ip;        ///< Server IP address
-		int16 port;       ///< Server port
-		char name[MAX_CHARSERVER_NAME_SIZE];  ///< Server name
-		uint16 usercount; ///< Online users
-		uint16 state;     ///< Server state
-		uint16 property;  ///< Server property
+		uint32 ip;                           ///< Server IP address
+		int16 port;                          ///< Server port
+		char name[MAX_CHARSERVER_NAME_SIZE]; ///< Server name
+		uint16 usercount;                    ///< Online users
+		uint16 state;                        ///< Server state
+		uint16 property;                     ///< Server property
 #if PACKETVER >= 20170315
 		char unknown2[128];
 #endif
-	} server_list[];          ///< List of charservers
+	} server_list[]; ///< List of charservers
 } __attribute__((packed));
 
 /**
@@ -113,10 +113,11 @@ struct PACKET_AC_ACK_HASH {
 
 #if PACKETVER_MAIN_NUM >= 20181114 || PACKETVER_RE_NUM >= 20181114 || defined(PACKETVER_ZERO)
 struct PACKET_AC_REQ_MOBILE_OTP {
-	int16 packet_id;      ///< Packet ID (#HEADER_CA_SSO_LOGIN_REQ)
-	uint32 aid;           ///< Account ID
+	int16 packet_id; ///< Packet ID (#HEADER_CA_SSO_LOGIN_REQ)
+	uint32 aid;      ///< Account ID
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(AC_REQ_MOBILE_OTP, 0x09a2);
+
+DEFINE_PACKET_HEADER(AC_REQ_MOBILE_OTP, 0x09A2);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20171213 || PACKETVER_RE_NUM >= 20171213 || PACKETVER_ZERO_NUM >= 20171808
@@ -128,7 +129,8 @@ struct PACKET_AC_LOGIN_OTP {
 	char loginFlag2[20];
 	char token[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(AC_LOGIN_OTP, 0x0ae3);
+
+DEFINE_PACKET_HEADER(AC_LOGIN_OTP, 0x0AE3);
 #elif PACKETVER_ZERO_NUM >= 20171123
 // AC_LOGIN_OTP2
 struct PACKET_AC_LOGIN_OTP {
@@ -138,7 +140,8 @@ struct PACKET_AC_LOGIN_OTP {
 	char loginFlag2[6];
 	char token[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(AC_LOGIN_OTP, 0x0ae3);
+
+DEFINE_PACKET_HEADER(AC_LOGIN_OTP, 0x0AE3);
 #elif PACKETVER_MAIN_NUM >= 20170621 || PACKETVER_RE_NUM >= 20170621 || defined(PACKETVER_ZERO)
 // AC_LOGIN_OTP1
 struct PACKET_AC_LOGIN_OTP {
@@ -147,7 +150,8 @@ struct PACKET_AC_LOGIN_OTP {
 	int32 loginFlag;
 	char token[];
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(AC_LOGIN_OTP, 0x0ad1);
+
+DEFINE_PACKET_HEADER(AC_LOGIN_OTP, 0x0AD1);
 #endif
 
 PRAGMA_PACK_POP()
