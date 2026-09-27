@@ -70,12 +70,12 @@
 
 static std::forward_list<ERI *> ers_instance_list;
 
-void ERI::add_to_global_list(void) noexcept
+void ERI::add_to_global_list() noexcept
 {
 	ers_instance_list.push_front(this);
 }
 
-void ERI::remove_from_global_list(void) noexcept
+void ERI::remove_from_global_list() noexcept
 {
 	ers_instance_list.remove(this);
 }
