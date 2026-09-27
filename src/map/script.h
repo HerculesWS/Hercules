@@ -911,8 +911,8 @@ struct script_interface {
 	struct DBMap *st_db;
 	unsigned int active_scripts;
 	unsigned int next_id;
-	ERS<script_state> *st_ers;
-	ERS<script_stack> *stack_ers;
+	ERS<script_state, 10> *st_ers;
+	ERS<script_stack, 10> *stack_ers;
 	/* */
 	VECTOR_DECL(struct script_queue) hq;
 	VECTOR_DECL(struct script_queue_iterator) hqi;
