@@ -62,8 +62,6 @@
 
 #include "ers.h"
 
-#include "common/memmgr.h" // CREATE, RECREATE, aMalloc, aFree
-
 #include <stdlib.h>
 
 #ifndef DISABLE_ERS
