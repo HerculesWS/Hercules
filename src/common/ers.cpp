@@ -66,25 +66,15 @@
 
 #ifndef DISABLE_ERS
 
-static std::forward_list<ERI *> ers_instance_list;
+std::forward_list<ERI *> ERI::m_ers_instance_list;
 
-void ERI::add_to_global_list() noexcept
-{
-	ers_instance_list.push_front(this);
-}
-
-void ERI::remove_from_global_list() noexcept
-{
-	ers_instance_list.remove(this);
-}
-
-void ers_report(void)
+void ERI::print_full_report() noexcept
 {
 	size_t blocks_u = 0, blocks_a = 0, memory_b = 0, memory_t = 0;
 #ifdef DEBUG
 	unsigned int instance_c = 0, instance_c_d = 0;
 
-	for (const auto *instance : ers_instance_list) {
+	for (const auto *instance : ERI::m_ers_instance_list) {
 		instance_c++;
 		if (instance->print_report() == false)
 			continue;
@@ -92,7 +82,7 @@ void ers_report(void)
 	}
 #endif
 
-	for (const auto instance : ers_instance_list) {
+	for (const auto instance : ERI::m_ers_instance_list) {
 		const auto [blocks_used, blocks_total, memory_used, memory_total] = instance->print_report_cache();
 
 		blocks_u += blocks_used;
@@ -110,13 +100,13 @@ void ers_report(void)
 /**
  * Call on shutdown to clear remaining entries
  **/
-void ers_final(void)
+void ERI::final() noexcept
 {
-	for (auto *instance : ers_instance_list) {
+	for (auto *instance : ERI::m_ers_instance_list) {
 		delete instance;
 	}
 
-	ers_instance_list.clear();
+	ERI::m_ers_instance_list.clear();
 }
 
 #endif

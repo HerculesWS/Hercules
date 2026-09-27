@@ -147,7 +147,7 @@ static CPCMD_C(exit, server)
  **/
 static CPCMD_C(ers_report, server)
 {
-	ers_report();
+	ERI::print_full_report();
 }
 
 /**
