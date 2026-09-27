@@ -296,16 +296,6 @@ class ERS final : public ERI
 	}
 
 	/**
-	 * Return the size of the entries allocated from this manager.
-	 * @param self Interface of the entry manager
-	 * @return Size of the entries of this manager in bytes
-	 */
-	[[nodiscard]] size_t entry_size() const noexcept
-	{
-		return sizeof(T);
-	}
-
-	/**
 	 * Reports debug information for instance cache
 	 * @return used blocks, total blocks, memory used, total memory
 	 */
