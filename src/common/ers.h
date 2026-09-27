@@ -139,7 +139,7 @@ class ERI
  * Public interface of the entry manager.
  */
 template<typename T>
-class ERS : public ERI
+class ERS final : public ERI
 {
   public:
 	/**
