@@ -59,7 +59,6 @@
 #define COMMON_ERS_H
 
 #include "common/showmsg.h"
-#include "common/memmgr.h"
 
 #include <forward_list>
 #include <string>
