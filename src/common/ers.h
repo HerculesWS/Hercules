@@ -60,7 +60,6 @@
 
 #include "common/nullpo.h"
 #include "common/showmsg.h"
-#include "common/memmgr.h"
 
 #include <array>
 #include <forward_list>
