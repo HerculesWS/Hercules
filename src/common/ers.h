@@ -62,6 +62,7 @@
 #include "common/showmsg.h"
 
 #include <array>
+#include <deque>
 #include <forward_list>
 #include <memory>
 #include <string>
@@ -287,7 +288,6 @@ class ERS final : public ERI
 			memset(entry, 0, sizeof(T));
 
 		m_cache.reuse_list.push_front(entry);
-		m_cache.reuse_size++;
 	}
 
 	/**
@@ -361,7 +361,7 @@ class ERS final : public ERI
 		if (m_cache.chunks.empty())
 			return 0;
 
-		return (m_cache.chunks.size() * chunk_size) - unused_blocks() - m_cache.reuse_size;
+		return (m_cache.chunks.size() * chunk_size) - unused_blocks() - m_cache.reuse_list.size();
 	}
 
 	/**
@@ -375,7 +375,6 @@ class ERS final : public ERI
 		if (m_cache.reuse_list.empty() == false) {
 			auto *ret = m_cache.reuse_list.front();
 			m_cache.reuse_list.pop_front();
-			m_cache.reuse_size--;
 
 			new (ret) T(std::forward<Args>(args)...);
 			return ret;
@@ -403,8 +402,7 @@ class ERS final : public ERI
 #endif
 
 	struct {
-		std::forward_list<T *> reuse_list; //< Reuse linked list
-		size_t reuse_size{0};
+		std::deque<T *> reuse_list; //< Reuse linked list
 		std::vector<std::unique_ptr<ers_chunk<T, chunk_size>>> chunks; //< Memory blocks array
 	} m_cache;
 };
