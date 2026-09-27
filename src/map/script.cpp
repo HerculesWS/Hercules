@@ -6146,12 +6146,9 @@ static void do_init_script(bool minimal)
 	script->userfunc_db = strdb_alloc(DB_OPT_DUP_KEY,0);
 	script->autobonus_db = strdb_alloc(DB_OPT_DUP_KEY,0);
 
-	script->st_ers = ers_new(script_state, "script.cpp::st_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
-	script->stack_ers = ers_new(script_stack, "script.cpp::script_stack", (enum ERSOptions)(ERS_OPT_NONE | ERS_OPT_FLEX_CHUNK));
+	script->st_ers = ers_new2(script_state, "script.cpp::st_ers", ERS_OPT_CLEAN, 10);
+	script->stack_ers = ers_new2(script_stack, "script.cpp::script_stack", ERS_OPT_NONE, 10);
 	script->array_ers = ers_new(script_array, "script.cpp::array_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_CLEAR));
-
-	ers_chunk_size(script->st_ers, 10);
-	ers_chunk_size(script->stack_ers, 10);
 
 	VECTOR_INIT(script->hq);
 	VECTOR_INIT(script->hqi);

@@ -7041,11 +7041,9 @@ int do_init(int argc, char *argv[])
 	map->iwall_db  = strdb_alloc((enum DBOptions)(DB_OPT_DUP_KEY | DB_OPT_RELEASE_DATA), 2*NAME_LENGTH+2+1); // [Zephyrus] Invisible Walls
 	map->zone_db   = strdb_alloc((enum DBOptions)(DB_OPT_DUP_KEY | DB_OPT_RELEASE_DATA), MAP_ZONE_NAME_LENGTH);
 
-	map->iterator_ers = ers_new(s_mapiterator, "map.cpp::map_iterator_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
-	ers_chunk_size(map->iterator_ers, 25);
+	map->iterator_ers = ers_new2(s_mapiterator, "map.cpp::map_iterator_ers", ERS_OPT_CLEAN, 25);
 
-	map->flooritem_ers = ers_new(flooritem_data, "map.cpp::map_flooritem_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
-	ers_chunk_size(map->flooritem_ers, 100);
+	map->flooritem_ers = ers_new2(flooritem_data, "map.cpp::map_flooritem_ers", ERS_OPT_CLEAN, 100);
 
 	if (!minimal) {
 		map->sql_init();

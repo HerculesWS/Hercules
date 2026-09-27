@@ -358,8 +358,8 @@ static struct db_stats {
 #endif /* !defined(DB_ENABLE_STATS) */
 
 /* [Ind/Hercules] */
-static ERS<DBIterator_impl> *db_iterator_ers;
-static ERS<DBMap_impl> *db_alloc_ers;
+static ERS<DBIterator_impl, 10> *db_iterator_ers;
+static ERS<DBMap_impl, 50> *db_alloc_ers;
 
 /*****************************************************************************\
  *  (2) Section of private functions used by the database system.            *
@@ -2810,10 +2810,8 @@ static void *db_data2ptr(struct DBData *data)
  */
 static void db_init(void)
 {
-	db_iterator_ers = ers_new(DBIterator_impl,"db.cpp::db_iterator_ers", (enum ERSOptions)(ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK)); // FIXME: change this to a flag type
-	db_alloc_ers = ers_new(DBMap_impl,"db.cpp::db_alloc_ers",(enum ERSOptions)(ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK)); // FIXME: change this to a flag type
-	ers_chunk_size(db_alloc_ers, 50);
-	ers_chunk_size(db_iterator_ers, 10);
+	db_iterator_ers = ers_new2(DBIterator_impl,"db.cpp::db_iterator_ers", ERS_OPT_CLEAN, 10); // FIXME: change this to a flag type
+	db_alloc_ers = ers_new2(DBMap_impl,"db.cpp::db_alloc_ers", ERS_OPT_CLEAN, 50); // FIXME: change this to a flag type
 	DB_COUNTSTAT(db_init);
 }
 

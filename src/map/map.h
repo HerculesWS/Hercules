@@ -1339,9 +1339,9 @@ END_ZEROED_BLOCK;
 	struct map_session_data *cpsd;
 	struct map_data *list;
 	/* [Ind/Hercules] */
-	ERS<s_mapiterator> *iterator_ers;
+	ERS<s_mapiterator, 25> *iterator_ers;
 	/* */
-	ERS<flooritem_data> *flooritem_ers;
+	ERS<flooritem_data, 100> *flooritem_ers;
 	/* */
 	int bonus_id;
 	/* */

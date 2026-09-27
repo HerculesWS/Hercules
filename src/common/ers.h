@@ -58,9 +58,12 @@
 #ifndef COMMON_ERS_H
 #define COMMON_ERS_H
 
+#include "common/nullpo.h"
 #include "common/showmsg.h"
 
+#include <array>
 #include <forward_list>
+#include <memory>
 #include <string>
 #include <tuple>
 #include <vector>
@@ -82,7 +85,7 @@
  */
 //#define DISABLE_ERS
 
-constexpr unsigned int ers_chunk_size = 2048;
+constexpr size_t ers_chunk_size = 2048;
 
 enum ERSOptions {
 	ERS_OPT_NONE        = 0x00,
@@ -90,10 +93,7 @@ enum ERSOptions {
 	ERS_OPT_WAIT        = 0x02,/* wait for entries to come in order to list! */
 	// ERS_OPT_FREE_NAME   = 0x04,/* name is dynamic memory, and should be freed */ // UNUSED
 	ERS_OPT_CLEAN       = 0x08,/* clears used memory upon ers_free so that its all new to be reused on the next alloc */
-	ERS_OPT_FLEX_CHUNK  = 0x10,/* signs that it should look for its own cache given it'll have a dynamic chunk size, so that it doesn't affect the other ERS it'd otherwise be sharing */
-
-	/* Compound, is used to determine whether it should be looking for a cache of matching options */
-	ERS_CACHE_OPTIONS   = ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK,
+	// ERS_OPT_FLEX_CHUNK  = 0x10,/* signs that it should look for its own cache given it'll have a dynamic chunk size, so that it doesn't affect the other ERS it'd otherwise be sharing */ // UNUSED
 };
 
 /**
@@ -144,9 +144,79 @@ class ERI
 };
 
 /**
+ * Manages an ERS chunk
+ */
+template<typename T, size_t chunk_size>
+class ers_chunk
+{
+	static_assert(chunk_size > 0, "chunk size has to be greater than 0");
+
+  public:
+	ers_chunk() = default;
+	ers_chunk(ers_chunk &&other)                 = default;
+	ers_chunk &operator=(ers_chunk &&other)      = default;
+	ers_chunk(const ers_chunk &other)            = delete;
+	ers_chunk &operator=(const ers_chunk &other) = delete;
+
+	/**
+	 * Allocates a new object in chunk
+	 * @return a pointer of the type T or nullptr if chunk is full
+	 */
+	template<typename... Args>
+	[[nodiscard]] T *alloc(Args &&...args) noexcept
+	{
+		if (used_memory() >= m_chunk.size())
+			return nullptr;
+
+		T *ptr = reinterpret_cast<T *>(&m_chunk[used_memory()]);
+		new (ptr) T(std::forward<Args>(args)...);
+
+		++m_used_objects;
+
+		return ptr;
+	}
+
+	/**
+	 * @return Gives current maximum capacity
+	 */
+	[[nodiscard]] size_t capacity() const noexcept
+	{
+		return m_chunk.size();
+	}
+
+	/**
+	 * @return Gives currently used objects
+	 */
+	[[nodiscard]] size_t used_objects() const noexcept
+	{
+		return m_used_objects;
+	}
+
+	/**
+	 * @return Used memory
+	 */
+	[[nodiscard]] size_t used_memory() const noexcept
+	{
+		return used_objects() * sizeof(T);
+	}
+
+	/**
+	 * @return Unused blocks
+	 */
+	[[nodiscard]] size_t unused_blocks() const noexcept
+	{
+		return (capacity() - used_memory()) / sizeof(T);
+	}
+
+  private:
+	std::array<std::byte, sizeof(T) * chunk_size> m_chunk{}; // The memory chunk used
+	size_t m_used_objects{0}; // Used objects in chunk
+};
+
+/**
  * Public interface of the entry manager.
  */
-template<typename T>
+template<typename T, size_t chunk_size = ers_chunk_size>
 class ERS final : public ERI
 {
   public:
@@ -178,30 +248,17 @@ class ERS final : public ERI
 	/**
 	 * Allocate an entry from this entry manager.
 	 * If there are reusable entries available, it reuses one instead.
+	 * terminates the process if OOM happens
+	 * @param args arguments passed to ctor
 	 * @return An entry
 	 */
 	template<typename... Args>
 	[[nodiscard]] T *alloc(Args &&...args) noexcept
 	{
-		T *ret;
+		T *ret = alloc_sub(std::forward<Args>(args)...);
 
-		if (m_cache.reuse_list.empty() == false) {
-			ret = m_cache.reuse_list.front();
-			m_cache.reuse_list.pop_front();
-			m_cache.reuse_size--;
-
-			new (ret) T(std::forward<Args>(args)...);
-		} else if (m_cache.blocks.empty() == false && m_cache.blocks.back().size() < m_cache.blocks.back().capacity()) {
-			m_cache.blocks.back().emplace_back(std::forward<Args>(args)...);
-			ret = &m_cache.blocks.back().back();
-		} else {
-			m_cache.blocks.emplace_back();
-
-			auto &chunk = m_cache.blocks.back();
-			chunk.reserve(m_cache.chunk_size);
-			chunk.emplace_back(std::forward<Args>(args)...);
-			ret = &chunk.back();
-		}
+		if (Assert_chk(ret != nullptr))
+			std::terminate();
 
 #ifdef DEBUG
 		if (m_peak < used_objects())
@@ -231,24 +288,6 @@ class ERS final : public ERI
 
 		m_cache.reuse_list.push_front(entry);
 		m_cache.reuse_size++;
-	}
-
-	/**
-	 * Adjusts chunk size of the ers cache requires ERS_OPT_FLEX_CHUNK option
-	 * otherwise it throws a warning
-	 * @param new_size the new chunk size
-	 */
-	void chunk_size(unsigned int new_size) noexcept
-	{
-		if ((m_options & ERS_OPT_FLEX_CHUNK) == 0) {
-			ShowWarning(
-			        "ers_cache_size: '%s' has adjusted its chunk size to '%u', however ERS_OPT_FLEX_CHUNK "
-			        "is missing!\n",
-			        m_name.c_str(),
-			        new_size);
-		}
-
-		m_cache.chunk_size = new_size;
 	}
 
 	/**
@@ -307,10 +346,10 @@ class ERS final : public ERI
 	 */
 	[[nodiscard]] size_t unused_blocks() const noexcept
 	{
-		if (m_cache.blocks.empty())
+		if (m_cache.chunks.empty())
 			return 0;
 
-		return m_cache.blocks.back().capacity() - m_cache.blocks.back().size();
+		return m_cache.chunks.back()->unused_blocks();
 	}
 
 	/**
@@ -319,10 +358,37 @@ class ERS final : public ERI
 	 */
 	[[nodiscard]] size_t used_objects() const noexcept
 	{
-		if (m_cache.blocks.empty())
+		if (m_cache.chunks.empty())
 			return 0;
 
-		return (m_cache.blocks.size() * m_cache.chunk_size) - unused_blocks() - m_cache.reuse_size;
+		return (m_cache.chunks.size() * chunk_size) - unused_blocks() - m_cache.reuse_size;
+	}
+
+	/**
+	 * Tries to allocate an object from already allocated memory then create a new chunk
+	 * @param args arguments passed to ctor
+	 * @return a pointer if successful otherwise nullptr
+	 */
+	template<typename... Args>
+	[[nodiscard]] T *alloc_sub(Args &&...args) noexcept
+	{
+		if (m_cache.reuse_list.empty() == false) {
+			auto *ret = m_cache.reuse_list.front();
+			m_cache.reuse_list.pop_front();
+			m_cache.reuse_size--;
+
+			new (ret) T(std::forward<Args>(args)...);
+			return ret;
+		}
+
+		if (m_cache.chunks.empty() == false) {
+			auto chunk_ptr = m_cache.chunks.back()->alloc(std::forward<Args>(args)...);
+			if (chunk_ptr != nullptr)
+				return chunk_ptr;
+		}
+
+		m_cache.chunks.push_back(std::make_unique<ers_chunk<T, chunk_size>>());
+		return m_cache.chunks.back()->alloc(std::forward<Args>(args)...); // Should never fail unless OOM
 	}
 
 	std::string m_name; //< Name, used for debugging purposes
@@ -337,12 +403,9 @@ class ERS final : public ERI
 #endif
 
 	struct {
-		std::forward_list<T *> reuse_list;  //< Reuse linked list
+		std::forward_list<T *> reuse_list; //< Reuse linked list
 		size_t reuse_size{0};
-		std::vector<std::vector<T>> blocks; //< Memory blocks array
-		unsigned int chunk_size{
-		        ers_chunk_size}; //< Default = ERS_BLOCK_ENTRIES, can be adjusted for performance for individual
-		                         // cache sizes.
+		std::vector<std::unique_ptr<ers_chunk<T, chunk_size>>> chunks; //< Memory blocks array
 	} m_cache;
 };
 
@@ -352,7 +415,6 @@ class ERS final : public ERI
 #	define ers_free(obj,entry) ((void)(obj), aFree(entry))
 #	define ers_entry_size(obj) ((void)(obj), (size_t)0)
 #	define ers_destroy(obj) ((void)(obj), (void)0)
-#	define ers_chunk_size(obj,size) ((void)(obj), (void)(size), (size_t)0)
 // Disable the public functions
 #	define ers_new(type,name,options) nullptr
 #	define ers_report() (void)0
@@ -360,12 +422,12 @@ class ERS final : public ERI
 #else /* not DISABLE_ERS */
 // These defines should be used to allow the code to keep working whenever
 // the system is disabled
-#	define ers_new(type,name,options) (new ERS<type>((name), (options)))
+#	define ers_new(type,name,options) (new ERS<type, ers_chunk_size>((name), (options)))
+#	define ers_new2(type,name,options,chunk_size) (new ERS<type, (chunk_size)>((name), (options)))
 #	define ers_alloc(obj, ...) ((obj)->alloc(##__VA_ARGS__))
 #	define ers_free(obj,entry) ((obj)->free((entry)))
 #	define ers_entry_size(obj) ((obj)->entry_size())
 #	define ers_destroy(obj)    (delete (obj))
-#	define ers_chunk_size(obj,size) ((obj)->chunk_size((size)))
 
 #endif /* DISABLE_ERS / not DISABLE_ERS */
 

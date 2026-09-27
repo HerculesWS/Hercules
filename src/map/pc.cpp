@@ -12939,13 +12939,9 @@ static void do_init_pc(bool minimal)
 
 	pcg->init();
 
-	pc->sc_display_ers = ers_new(sc_display_entry, "pc.cpp:sc_display_ers", ERS_OPT_FLEX_CHUNK);
-	pc->num_reg_ers = ers_new(script_reg_num, "pc.cpp::num_reg_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
-	pc->str_reg_ers = ers_new(script_reg_str, "pc.cpp::str_reg_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
-
-	ers_chunk_size(pc->sc_display_ers, 150);
-	ers_chunk_size(pc->num_reg_ers, 300);
-	ers_chunk_size(pc->str_reg_ers, 50);
+	pc->sc_display_ers = ers_new2(sc_display_entry, "pc.cpp:sc_display_ers", ERS_OPT_NONE, 150);
+	pc->num_reg_ers = ers_new2(script_reg_num, "pc.cpp::num_reg_ers", ERS_OPT_CLEAN, 300);
+	pc->str_reg_ers = ers_new2(script_reg_str, "pc.cpp::str_reg_ers", ERS_OPT_CLEAN, 50);
 }
 
 /*=====================================

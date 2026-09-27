@@ -25547,15 +25547,10 @@ static int do_init_skill(bool minimal)
 	skill->cd_db = idb_alloc(DB_OPT_BASE);
 	skill->usave_db = idb_alloc(DB_OPT_RELEASE_DATA);
 	skill->bowling_db = idb_alloc(DB_OPT_BASE);
-	skill->unit_ers = ers_new(skill_unit_group, "skill.cpp::skill_unit_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
-	skill->timer_ers  = ers_new(skill_timerskill, "skill.cpp::skill_timer_ers", (enum ERSOptions)(ERS_OPT_NONE | ERS_OPT_FLEX_CHUNK));
-	skill->cd_ers = ers_new(skill_cd, "skill.cpp::skill_cd_ers", (enum ERSOptions)(ERS_OPT_CLEAR | ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
-	skill->cd_entry_ers = ers_new(skill_cd_entry, "skill.cpp::skill_cd_entry_ers", (enum ERSOptions)(ERS_OPT_CLEAR | ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
-
-	ers_chunk_size(skill->cd_ers, 25);
-	ers_chunk_size(skill->cd_entry_ers, 100);
-	ers_chunk_size(skill->unit_ers, 150);
-	ers_chunk_size(skill->timer_ers, 150);
+	skill->unit_ers = ers_new2(skill_unit_group, "skill.cpp::skill_unit_ers", ERS_OPT_CLEAN, 150);
+	skill->timer_ers  = ers_new2(skill_timerskill, "skill.cpp::skill_timer_ers", ERS_OPT_NONE, 150);
+	skill->cd_ers = ers_new2(skill_cd, "skill.cpp::skill_cd_ers", (enum ERSOptions)(ERS_OPT_CLEAR | ERS_OPT_CLEAN), 25);
+	skill->cd_entry_ers = ers_new2(skill_cd_entry, "skill.cpp::skill_cd_entry_ers", (enum ERSOptions)(ERS_OPT_CLEAR | ERS_OPT_CLEAN), 100);
 
 	timer->add_func_list(skill->unit_timer,"skill_unit_timer");
 	timer->add_func_list(skill->castend_id,"skill_castend_id");
