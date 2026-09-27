@@ -109,25 +109,25 @@ class ERI
 	 * @return used blocks, total blocks, memory used, total memory
 	 */
 	[[nodiscard]] virtual std::tuple<size_t, size_t, size_t, size_t>
-	        print_report_cache(void) const noexcept = 0;
+	        print_report_cache() const noexcept = 0;
 
 #ifdef DEBUG
 	/**
 	 * Reports debug information for current instance.
 	 * @return true if reports is displayed, false otherwise.
 	 */
-	[[nodiscard]] virtual bool print_report(void) const noexcept = 0;
+	[[nodiscard]] virtual bool print_report() const noexcept = 0;
 #endif
 
   protected:
 	/**
 	 * Adds ERS instance to the global list of instances
 	 */
-	void add_to_global_list(void) noexcept;
+	void add_to_global_list() noexcept;
 	/**
 	 * Removes ERS instance from global list of instances
 	 */
-	void remove_from_global_list(void) noexcept;
+	void remove_from_global_list() noexcept;
 };
 
 /**
@@ -230,7 +230,7 @@ class ERS final : public ERI
 	 * @param self Interface of the entry manager
 	 * @return Size of the entries of this manager in bytes
 	 */
-	[[nodiscard]] size_t entry_size(void) const noexcept
+	[[nodiscard]] size_t entry_size() const noexcept
 	{
 		return sizeof(T);
 	}
@@ -258,7 +258,7 @@ class ERS final : public ERI
 	 * @return used blocks, total blocks, memory used, total memory
 	 */
 	[[nodiscard]] std::tuple<size_t, size_t, size_t, size_t>
-	        print_report_cache(void) const noexcept override
+	        print_report_cache() const noexcept override
 	{
 		ShowMessage(CL_BOLD "[ERS Cache of size '" CL_NORMAL CL_WHITE "%" PRIuS CL_NORMAL CL_BOLD
 		                    "' report]\n" CL_NORMAL,
@@ -285,7 +285,7 @@ class ERS final : public ERI
 	 * Reports debug information for current instance.
 	 * @return true if reports is displayed, false otherwise.
 	 */
-	[[nodiscard]] bool print_report(void) const noexcept override
+	[[nodiscard]] bool print_report() const noexcept override
 	{
 		if ((m_options & ERS_OPT_WAIT) != 0 && used_objects() == 0)
 			return false;
@@ -307,7 +307,7 @@ class ERS final : public ERI
 	 * Returns never used blocks
 	 * @return allocated blocks that aren't used
 	 */
-	[[nodiscard]] size_t unused_blocks(void) const noexcept
+	[[nodiscard]] size_t unused_blocks() const noexcept
 	{
 		if (m_cache.blocks.empty())
 			return 0;
@@ -319,7 +319,7 @@ class ERS final : public ERI
 	 * Returns currently allocated objects
 	 * @return count of objects that are actually allocated for us
 	 */
-	[[nodiscard]] size_t used_objects(void) const noexcept
+	[[nodiscard]] size_t used_objects() const noexcept
 	{
 		if (m_cache.blocks.empty())
 			return 0;
