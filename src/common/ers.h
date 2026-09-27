@@ -102,7 +102,14 @@ enum ERSOptions {
 class ERI
 {
   public:
-	virtual ~ERI() = default;
+	explicit ERI() {
+		m_ers_instance_list.push_front(this);
+	}
+
+	virtual ~ERI() {
+		m_ers_instance_list.remove(this);
+	}
+
 	/**
 	 * Reports debug information for instance cache
 	 * @return used blocks, total blocks, memory used, total memory
@@ -118,15 +125,22 @@ class ERI
 	[[nodiscard]] virtual bool print_report() const noexcept = 0;
 #endif
 
-  protected:
 	/**
-	 * Adds ERS instance to the global list of instances
+	 * Print a report about the current state of the Entry Reusage System.
+	 * Shows information about the global system and each entry manager.
+	 * The number of entries are checked and a warning is shown if extra reusable
+	 * entries are found.
+	 * The extra entries are included in the count of reusable entries.
 	 */
-	void add_to_global_list() noexcept;
+	static void print_full_report() noexcept;
+
 	/**
-	 * Removes ERS instance from global list of instances
+	 * Destructs all allocated instances that remained in memory
 	 */
-	void remove_from_global_list() noexcept;
+	static void final() noexcept;
+
+  private:
+	static std::forward_list<ERI *> m_ers_instance_list; //< A list holding all allocations of ERI interface
 };
 
 /**
@@ -142,10 +156,7 @@ class ERS final : public ERI
 	 * @param options a bitmask options of this instance manager
 	 */
 	ERS(const std::string &name, enum ERSOptions options) noexcept
-	        : m_name(name), m_options(options) // FIXME: change this to a flag type
-	{
-		add_to_global_list();
-	};
+	        : ERI(), m_name(name), m_options(options) {}; // FIXME: change this to a flag type
 
 	/**
 	 * Destroy this instance of the manager.
@@ -162,8 +173,6 @@ class ERS final : public ERI
 				            used_objects());
 			}
 		}
-
-		remove_from_global_list();
 	}
 
 	/**
@@ -367,22 +376,6 @@ class ERS final : public ERI
 #	define ers_entry_size(obj) ((obj)->entry_size())
 #	define ers_destroy(obj)    (delete (obj))
 #	define ers_chunk_size(obj,size) ((obj)->chunk_size((size)))
-
-#ifdef HERCULES_CORE
-/**
- * Print a report about the current state of the Entry Reusage System.
- * Shows information about the global system and each entry manager.
- * The number of entries are checked and a warning is shown if extra reusable
- * entries are found.
- * The extra entries are included in the count of reusable entries.
- */
-void ers_report(void);
-
-/**
- * Clears the remainder of the managers
- **/
-void ers_final(void);
-#endif // HERCULES_CORE
 
 #endif /* DISABLE_ERS / not DISABLE_ERS */
 

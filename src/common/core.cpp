@@ -620,7 +620,7 @@ int main(int argc, char **argv)
 	sockt->final();
 	DB->final();
 	thread->final();
-	ers_final();
+	ERI::final();
 	rnd->final();
 	cmdline->final();
 	//sysinfo->final(); Called by iMalloc->final()
