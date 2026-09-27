@@ -234,16 +234,6 @@ class ERS final : public ERI
 	}
 
 	/**
-	 * Return the size of the entries allocated from this manager.
-	 * @param self Interface of the entry manager
-	 * @return Size of the entries of this manager in bytes
-	 */
-	[[nodiscard]] size_t entry_size() const noexcept
-	{
-		return sizeof(T);
-	}
-
-	/**
 	 * Adjusts chunk size of the ers cache requires ERS_OPT_FLEX_CHUNK option
 	 * otherwise it throws a warning
 	 * @param new_size the new chunk size
