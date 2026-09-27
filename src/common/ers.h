@@ -287,7 +287,7 @@ class ERS final : public ERI
 		if ((m_options & ERS_OPT_CLEAN) != 0)
 			memset(entry, 0, sizeof(T));
 
-		m_cache.reuse_list.push_front(entry);
+		m_reuse_list.push_front(entry);
 	}
 
 	/**
@@ -346,10 +346,10 @@ class ERS final : public ERI
 	 */
 	[[nodiscard]] size_t unused_blocks() const noexcept
 	{
-		if (m_cache.chunks.empty())
+		if (m_chunks.empty())
 			return 0;
 
-		return m_cache.chunks.back()->unused_blocks();
+		return m_chunks.back()->unused_blocks();
 	}
 
 	/**
@@ -358,10 +358,10 @@ class ERS final : public ERI
 	 */
 	[[nodiscard]] size_t used_objects() const noexcept
 	{
-		if (m_cache.chunks.empty())
+		if (m_chunks.empty())
 			return 0;
 
-		return (m_cache.chunks.size() * chunk_size) - unused_blocks() - m_cache.reuse_list.size();
+		return (m_chunks.size() * chunk_size) - unused_blocks() - m_reuse_list.size();
 	}
 
 	/**
@@ -372,22 +372,22 @@ class ERS final : public ERI
 	template<typename... Args>
 	[[nodiscard]] T *alloc_sub(Args &&...args) noexcept
 	{
-		if (m_cache.reuse_list.empty() == false) {
-			auto *ret = m_cache.reuse_list.front();
-			m_cache.reuse_list.pop_front();
+		if (m_reuse_list.empty() == false) {
+			auto *ret = m_reuse_list.front();
+			m_reuse_list.pop_front();
 
 			new (ret) T(std::forward<Args>(args)...);
 			return ret;
 		}
 
-		if (m_cache.chunks.empty() == false) {
-			auto chunk_ptr = m_cache.chunks.back()->alloc(std::forward<Args>(args)...);
+		if (m_chunks.empty() == false) {
+			auto chunk_ptr = m_chunks.back()->alloc(std::forward<Args>(args)...);
 			if (chunk_ptr != nullptr)
 				return chunk_ptr;
 		}
 
-		m_cache.chunks.push_back(std::make_unique<ers_chunk<T, chunk_size>>());
-		return m_cache.chunks.back()->alloc(std::forward<Args>(args)...); // Should never fail unless OOM
+		m_chunks.push_back(std::make_unique<ers_chunk<T, chunk_size>>());
+		return m_chunks.back()->alloc(std::forward<Args>(args)...); // Should never fail unless OOM
 	}
 
 	std::string m_name; //< Name, used for debugging purposes
@@ -401,10 +401,9 @@ class ERS final : public ERI
 	size_t m_peak{0};
 #endif
 
-	struct {
-		std::deque<T *> reuse_list; //< Reuse linked list
-		std::vector<std::unique_ptr<ers_chunk<T, chunk_size>>> chunks; //< Memory blocks array
-	} m_cache;
+
+	std::deque<T *> m_reuse_list; //< Reuse linked list
+	std::vector<std::unique_ptr<ers_chunk<T, chunk_size>>> m_chunks; //< Memory blocks array
 };
 
 #ifdef DISABLE_ERS
