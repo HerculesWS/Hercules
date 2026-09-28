@@ -65,6 +65,7 @@
 #include <deque>
 #include <forward_list>
 #include <memory>
+#include <unordered_set>
 #include <string>
 #include <tuple>
 #include <vector>
@@ -227,7 +228,7 @@ class ERS final : public ERI
 	 * @param options a bitmask options of this instance manager
 	 */
 	ERS(const std::string &name, enum ERSOptions options) noexcept
-	        : ERI(), m_name(name), m_options(options) {}; // FIXME: change this to a flag type
+	        : ERI(), m_name(name), m_options(options){}; // FIXME: change this to a flag type
 
 	/**
 	 * Destroy this instance of the manager.
@@ -242,6 +243,10 @@ class ERS final : public ERI
 				ShowWarning("Memory leak detected at ERS '%s', %" PRIuS " objects not freed.\n",
 				            m_name.c_str(),
 				            used_objects());
+			} else { // Call dtor on objects we're supposed to clean
+				for (auto *object : m_used_list) {
+					object->~T();
+				}
 			}
 		}
 	}
@@ -266,6 +271,7 @@ class ERS final : public ERI
 			m_peak = used_objects();
 #endif
 
+		add_to_used_list(ret);
 		return ret;
 	}
 
@@ -288,6 +294,7 @@ class ERS final : public ERI
 			memset(entry, 0, sizeof(T));
 
 		m_reuse_list.push_front(entry);
+		remove_from_used_list(entry);
 	}
 
 	/**
@@ -390,6 +397,28 @@ class ERS final : public ERI
 		return m_chunks.back()->alloc(std::forward<Args>(args)...); // Should never fail unless OOM
 	}
 
+	/**
+	 * Adds an object to the used list, only adds to it if ERS_OPT_CLEAR is set
+	 */
+	void add_to_used_list(T *p) noexcept
+	{
+		if ((m_options & ERS_OPT_CLEAR) != 0) {
+			if ((m_used_list.size() % chunk_size) == 0)
+				m_used_list.reserve(m_used_list.size() + chunk_size);
+
+			m_used_list.emplace(p);
+		}
+	}
+
+	/**
+	 * Removes an object from used list
+	 */
+	void remove_from_used_list(T *p) noexcept
+	{
+		if ((m_options & ERS_OPT_CLEAR) != 0)
+			std::erase(m_reuse_list, p);
+	}
+
 	std::string m_name; //< Name, used for debugging purposes
 
 	ERSOptions m_options {
@@ -403,6 +432,7 @@ class ERS final : public ERI
 
 
 	std::deque<T *> m_reuse_list; //< Reuse linked list
+	std::unordered_set<T *> m_used_list; //< List of used objects only used if ERS_OPT_CLEAR is set
 	std::vector<std::unique_ptr<ers_chunk<T, chunk_size>>> m_chunks; //< Memory blocks array
 };
 
