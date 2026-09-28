@@ -64,8 +64,6 @@
 
 #include <stdlib.h>
 
-#ifndef DISABLE_ERS
-
 std::forward_list<ERI *> ERI::g_ers_instance_list;
 
 void ERI::print_full_report() noexcept
@@ -108,5 +106,3 @@ void ERI::final() noexcept
 
 	ERI::g_ers_instance_list.clear();
 }
-
-#endif
