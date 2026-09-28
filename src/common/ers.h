@@ -58,6 +58,7 @@
 #ifndef COMMON_ERS_H
 #define COMMON_ERS_H
 
+#include "common/memmgr.h"
 #include "common/nullpo.h"
 #include "common/showmsg.h"
 
@@ -238,6 +239,14 @@ class ERS final : public ERI
 	 */
 	~ERS() noexcept override
 	{
+#ifdef DISABLE_ERS
+		if ((m_options & ERS_OPT_CLEAR) != 0) {
+			for (auto *object : m_used_list) {
+				object->~T();
+				aFree(object);
+			}
+		}
+#else
 		if (used_objects() > 0) {
 			if ((m_options & ERS_OPT_CLEAR) == 0) {
 				ShowWarning("Memory leak detected at ERS '%s', %" PRIuS " objects not freed.\n",
@@ -249,6 +258,7 @@ class ERS final : public ERI
 				}
 			}
 		}
+#endif
 	}
 
 	/**
@@ -261,6 +271,11 @@ class ERS final : public ERI
 	template<typename... Args>
 	[[nodiscard]] T *alloc(Args &&...args) noexcept
 	{
+#ifdef DISABLE_ERS
+		T *ret = reinterpret_cast<T *>(aCalloc(1, sizeof(T)));
+		add_to_used_list(ret);
+		return new (ret) T(std::forward<Args>(args)...);
+#else
 		T *ret = alloc_sub(std::forward<Args>(args)...);
 
 		if (Assert_chk(ret != nullptr))
@@ -269,6 +284,7 @@ class ERS final : public ERI
 #ifdef DEBUG
 		if (m_peak < used_objects())
 			m_peak = used_objects();
+#endif
 #endif
 
 		add_to_used_list(ret);
@@ -283,6 +299,11 @@ class ERS final : public ERI
 	 */
 	void free(T *entry) noexcept
 	{
+#ifdef DISABLE_ERS
+		entry->~T();
+		remove_from_used_list(entry);
+		aFree(entry);
+#else
 		if (entry == nullptr) {
 			ShowError("ERS::free: NULL entry, nothing to free.\n");
 			return;
@@ -295,6 +316,7 @@ class ERS final : public ERI
 
 		m_reuse_list.push_front(entry);
 		remove_from_used_list(entry);
+#endif
 	}
 
 	/**
@@ -436,26 +458,12 @@ class ERS final : public ERI
 	std::vector<std::unique_ptr<ers_chunk<T, chunk_size>>> m_chunks; //< Memory blocks array
 };
 
-#ifdef DISABLE_ERS
-// Use memory manager to allocate/free and disable other interface functions
-#	define ers_alloc(obj,type) ((void)(obj), (type *)aMalloc(sizeof(type)))
-#	define ers_free(obj,entry) ((void)(obj), aFree(entry))
-#	define ers_entry_size(obj) ((void)(obj), (size_t)0)
-#	define ers_destroy(obj) ((void)(obj), (void)0)
-// Disable the public functions
-#	define ers_new(type,name,options) nullptr
-#	define ers_report() (void)0
-#	define ers_final() (void)0
-#else /* not DISABLE_ERS */
 // These defines should be used to allow the code to keep working whenever
 // the system is disabled
 #	define ers_new(type,name,options) (new ERS<type, ers_chunk_size>((name), (options)))
 #	define ers_new2(type,name,options,chunk_size) (new ERS<type, (chunk_size)>((name), (options)))
 #	define ers_alloc(obj, ...) ((obj)->alloc(##__VA_ARGS__))
 #	define ers_free(obj,entry) ((obj)->free((entry)))
-#	define ers_entry_size(obj) ((obj)->entry_size())
 #	define ers_destroy(obj)    (delete (obj))
-
-#endif /* DISABLE_ERS / not DISABLE_ERS */
 
 #endif /* COMMON_ERS_H */
