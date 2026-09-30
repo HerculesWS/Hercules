@@ -3452,9 +3452,8 @@ struct PACKET_CZ_SEARCH_STORE_INFO {
 	uint8 itemsCount;
 	uint8 cardsCount;
 	struct PACKET_CZ_SEARCH_STORE_INFO_item items[];  // items[itemCount]
-/*
-	struct PACKET_CZ_SEARCH_STORE_INFO_item cards[cardCount];
-*/
+
+	// struct PACKET_CZ_SEARCH_STORE_INFO_item cards[cardCount];
 } __attribute__((packed));
 
 #if PACKETVER_MAIN_NUM >= 20200916 || PACKETVER_RE_NUM >= 20200723 || PACKETVER_ZERO_NUM >= 20221024

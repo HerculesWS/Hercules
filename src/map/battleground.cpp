@@ -170,13 +170,16 @@ static int bg_team_leave(struct map_session_data *sd, enum bg_team_leave_type fl
 		switch (flag) {
 			default:
 			case BGTL_QUIT:
-				sprintf(output, msg_txt(MSGTBL_BG_PLAYER_QUIT), sd->status.name); // Server : %s has quit the game...
+				// Server : %s has quit the game...
+				sprintf(output, msg_txt(MSGTBL_BG_PLAYER_QUIT), sd->status.name);
 				break;
 			case BGTL_LEFT:
-				sprintf(output, msg_txt(MSGTBL_BG_PLAYER_LEFT), sd->status.name); // Server : %s is leaving the battlefield...
+				// Server : %s is leaving the battlefield...
+				sprintf(output, msg_txt(MSGTBL_BG_PLAYER_LEFT), sd->status.name);
 				break;
 			case BGTL_AFK:
-				sprintf(output, msg_txt(MSGTBL_BG_PLAYER_AFK_KICK), sd->status.name); // Server : %s has been afk-kicked from the battlefield...
+				// Server : %s has been afk-kicked from the battlefield...
+				sprintf(output, msg_txt(MSGTBL_BG_PLAYER_AFK_KICK), sd->status.name);
 				break;
 		}
 		clif->bg_message(bgd, 0, "Server", output);
@@ -862,7 +865,8 @@ static enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, str
 	if ( sd->status.base_level > arena->max_level || sd->status.base_level < arena->min_level )
 		return BGQA_FAIL_LEVEL_INCORRECT;
 
-	if ((sd->job & JOBL_2) == 0) /* TODO: maybe make this a per-arena setting, so users may make custom arenas like baby-only,whatever. */
+	/* TODO: maybe make this a per-arena setting, so users may make custom arenas like baby-only,whatever. */
+	if ((sd->job & JOBL_2) == 0)
 		return BGQA_FAIL_CLASS_INVALID;
 
 	int tick;
@@ -870,20 +874,26 @@ static enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, str
 
 	if ( ( tick = pc_readglobalreg(sd, script->add_variable(bg->gdelay_var)) ) && tsec < tick ) {
 		char response[100];
-		if( (tick-tsec) > 60 )
-			sprintf(response, msg_sd(sd, MSGTBL_BG_QUEUE_PUNISHMENT_MINUTES), (tick - tsec) / 60); // You are a deserter! Wait %u minute(s) before you can apply again
-		else
-			sprintf(response, msg_sd(sd, MSGTBL_BG_QUEUE_PUNISHMENT_SECONDS), (tick - tsec)); // You are a deserter! Wait %u seconds before you can apply again
+		if( (tick-tsec) > 60 ) {
+			// You are a deserter! Wait %u minute(s) before you can apply again
+			sprintf(response, msg_sd(sd, MSGTBL_BG_QUEUE_PUNISHMENT_MINUTES), (tick - tsec) / 60);
+		} else {
+			// You are a deserter! Wait %u seconds before you can apply again
+			sprintf(response, msg_sd(sd, MSGTBL_BG_QUEUE_PUNISHMENT_SECONDS), (tick - tsec));
+		}
 		clif->messagecolor_self(sd->fd, COLOR_RED, response);
 		return BGQA_FAIL_DESERTER;
 	}
 
 	if ( ( tick = pc_readglobalreg(sd, script->add_variable(arena->delay_var)) ) && tsec < tick ) {
 		char response[100];
-		if( (tick-tsec) > 60 )
-			sprintf(response, msg_sd(sd, MSGTBL_BG_QUEUE_COOLDOWN_MINUTES), (tick - tsec) / 60); // You can't reapply to this arena so fast. Apply to the different arena or wait %u minute(s)
-		else
-			sprintf(response, msg_sd(sd, MSGTBL_BG_QUEUE_COOLDOWN_SECONDS), (tick - tsec)); // You can't reapply to this arena so fast. Apply to the different arena or wait %u seconds
+		if( (tick-tsec) > 60 ) {
+			// You can't reapply to this arena so fast. Apply to the different arena or wait %u minute(s)
+			sprintf(response, msg_sd(sd, MSGTBL_BG_QUEUE_COOLDOWN_MINUTES), (tick - tsec) / 60);
+		} else {
+			// You can't reapply to this arena so fast. Apply to the different arena or wait %u seconds
+			sprintf(response, msg_sd(sd, MSGTBL_BG_QUEUE_COOLDOWN_SECONDS), (tick - tsec));
+		}
 		clif->messagecolor_self(sd->fd, COLOR_RED, response);
 		return BGQA_FAIL_COOLDOWN;
 	}
@@ -904,10 +914,13 @@ static enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, str
 				}
 				if ( count < arena->min_team_players ) {
 					char response[121];
-					if( count != sd->guild->connect_member && sd->guild->connect_member >= arena->min_team_players )
-						sprintf(response, msg_sd(sd, MSGTBL_BG_QUEUE_AVAILABLE_GUILD_TOO_SMALL), arena->min_team_players); // Can't apply: not enough members in your team/guild that have not entered the queue in individual mode, minimum is %d
-					else
-						sprintf(response, msg_sd(sd, MSGTBL_BG_QUEUE_GUILD_TOO_SMALL), arena->min_team_players); // Can't apply: not enough members in your team/guild, minimum is %d
+					if( count != sd->guild->connect_member && sd->guild->connect_member >= arena->min_team_players ) {
+						// Can't apply: not enough members in your team/guild that have not entered the queue in individual mode, minimum is %d
+						sprintf(response, msg_sd(sd, MSGTBL_BG_QUEUE_AVAILABLE_GUILD_TOO_SMALL), arena->min_team_players);
+					} else {
+						// Can't apply: not enough members in your team/guild, minimum is %d
+						sprintf(response, msg_sd(sd, MSGTBL_BG_QUEUE_GUILD_TOO_SMALL), arena->min_team_players);
+					}
 					clif->messagecolor_self(sd->fd, COLOR_RED, response);
 					return BGQA_FAIL_TEAM_COUNT;
 				}
@@ -936,10 +949,13 @@ static enum BATTLEGROUNDS_QUEUE_ACK bg_canqueue(struct map_session_data *sd, str
 
 					if( count < arena->min_team_players ) {
 						char response[121];
-						if( count != p->party.count && p->party.count >= arena->min_team_players )
-							sprintf(response, msg_sd(sd, MSGTBL_BG_QUEUE_AVAILABLE_PARTY_TOO_SMALL), arena->min_team_players); // Can't apply: not enough members in your team/party that have not entered the queue in individual mode, minimum is %d
-						else
-							sprintf(response, msg_sd(sd, MSGTBL_BG_QUEUE_PARTY_TOO_SMALL), arena->min_team_players); // Can't apply: not enough members in your team/party, minimum is %d
+						if( count != p->party.count && p->party.count >= arena->min_team_players ) {
+							// Can't apply: not enough members in your team/party that have not entered the queue in individual mode, minimum is %d
+							sprintf(response, msg_sd(sd, MSGTBL_BG_QUEUE_AVAILABLE_PARTY_TOO_SMALL), arena->min_team_players);
+						} else {
+							// Can't apply: not enough members in your team/party, minimum is %d
+							sprintf(response, msg_sd(sd, MSGTBL_BG_QUEUE_PARTY_TOO_SMALL), arena->min_team_players);
+						}
 						clif->messagecolor_self(sd->fd, COLOR_RED, response);
 						return BGQA_FAIL_TEAM_COUNT;
 					}

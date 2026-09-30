@@ -425,7 +425,8 @@ struct Battle_Config {
 
 	int character_size; // if riders have size=2, and baby class riders size=1 [Lupus]
 
-	int retaliate_to_master; //Whether when a mob is attacked by another mob, it will retaliate versus the mob or the mob's master. [Skotlex]
+	/// Whether when a mob is attacked by another mob, it will retaliate versus the mob or the mob's master. [Skotlex]
+	int retaliate_to_master;
 
 	int duel_allow_pvp; // [LuzZza]
 	int duel_allow_gvg; // [LuzZza]
@@ -434,7 +435,8 @@ struct Battle_Config {
 	int duel_time_interval; // [LuzZza]
 	int duel_only_on_same_map; // [Toms]
 
-	int skip_teleport_lv1_menu; // possibility to disable (skip) Teleport Lv1 menu, that have only two lines `Random` and `Cancel` [LuzZza]
+	/// possibility to disable (skip) Teleport Lv1 menu, that have only two lines `Random` and `Cancel` [LuzZza]
+	int skip_teleport_lv1_menu;
 	int mob_max_skilllvl;
 	int allow_skill_without_day; // [Komurka]
 	int allow_es_magic_pc; // [Skotlex]
@@ -508,7 +510,8 @@ struct Battle_Config {
 	int vendchat_near_hiddennpc;
 	int atcommand_mobinfo_type;
 
-	int mob_size_influence; // Enable modifications on earned experience, drop rates and monster status depending on monster size. [mkbu95]
+	/// Enable modifications on earned experience, drop rates and monster status depending on monster size. [mkbu95]
+	int mob_size_influence;
 	int bowling_bash_area;
 	int mob_chase_refresh; //How often a monster should refresh its chase [Playtester]
 	int mob_icewall_walk_block; //How a normal monster should be trapped in icewall [Playtester]

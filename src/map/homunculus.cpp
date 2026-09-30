@@ -317,8 +317,8 @@ static void homunculus_skillup(struct homun_data *hd, uint16 skill_id)
 	Assert_retv(i >= 0 && i < MAX_HOMUNSKILL && i < MAX_SKILL_TREE);
 	if (hd->homunculus.skillpts > 0 &&
 		hd->homunculus.hskill[i].id &&
-		hd->homunculus.hskill[i].flag == SKILL_FLAG_PERMANENT && //Don't allow raising while you have granted skills. [Skotlex]
-		hd->homunculus.hskill[i].lv < homun->skill_tree_get_max(skill_id, hd->homunculus.class_)
+		hd->homunculus.hskill[i].flag == SKILL_FLAG_PERMANENT /* Don't allow raising while you have granted skills. [Skotlex] */
+		&& hd->homunculus.hskill[i].lv < homun->skill_tree_get_max(skill_id, hd->homunculus.class_)
 		)
 	{
 		bool stop = false;
@@ -413,8 +413,9 @@ static bool homunculus_levelup(struct homun_data *hd)
 
 	if ( battle_config.homunculus_show_growth ) {
 		char output[256] ;
+		// Growth: hp:%d sp:%d str(%.2f) agi(%.2f) vit(%.2f) int(%.2f) dex(%.2f) luk(%.2f)
 		sprintf(output,
-			msg_sd(hd->master, MSGTBL_GROWTH_STATS), // Growth: hp:%d sp:%d str(%.2f) agi(%.2f) vit(%.2f) int(%.2f) dex(%.2f) luk(%.2f)
+			msg_sd(hd->master, MSGTBL_GROWTH_STATS),
 			growth_max_hp, growth_max_sp,
 			growth_str/10.0, growth_agi/10.0, growth_vit/10.0,
 			growth_int/10.0, growth_dex/10.0, growth_luk/10.0);
@@ -745,7 +746,8 @@ static int homunculus_hunger_timer(int tid, int64 tick, int id, intptr_t data)
 	}
 
 	clif->send_homdata(sd,SP_HUNGRY,hd->homunculus.hunger);
-	hd->hungry_timer = timer->add(tick+hd->homunculusDB->hungryDelay,homun->hunger_timer,sd->bl.id,0); //simple Fix albator
+	//simple Fix albator
+	hd->hungry_timer = timer->add(tick+hd->homunculusDB->hungryDelay,homun->hunger_timer,sd->bl.id,0);
 	return 0;
 }
 
@@ -790,7 +792,8 @@ static bool homunculus_change_name_ack(struct map_session_data *sd, const char *
 	if (!homun_alive(hd)) return false;
 
 	newname = aStrndup(name, NAME_LENGTH-1);
-	normalize_name(newname, " ");//bugreport:3032 // FIXME[Haru]: This should be normalized by the inter-server (so that it's const here)
+	//bugreport:3032 // FIXME[Haru]: This should be normalized by the inter-server (so that it's const here)
+	normalize_name(newname, " ");
 
 	if (flag == 0 || strlen(newname) == 0) {
 		clif->message(sd->fd, msg_sd(sd, MSGTBL_BAD_HOMPET_NAME)); // You cannot use this name

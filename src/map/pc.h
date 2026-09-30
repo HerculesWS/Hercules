@@ -154,8 +154,9 @@ struct s_addeffect {
 	int16 rate;       ///< Base success rate
 	int16 arrow_rate; ///< Success rate modifier for ranged attacks (adds to the base rate)
 	uint8 flag;       ///< Trigger flag (@see enum auto_trigger_flag)
-	uint16 duration;  ///< Optional, non-reducible duration in ms. If 0, the default, reducible effect's duration is used.
-	// TODO[Haru]: Duration is only used in addeff (set through bonus4 bAddEff). The other addeffect types could also use it.
+	/// Optional, non-reducible duration in ms. If 0, the default, reducible effect's duration is used.
+	/// TODO[Haru]: Duration is only used in addeff (set through bonus4 bAddEff). The other addeffect types could also use it.
+	uint16 duration;
 };
 struct s_addeffectonskill {
 	enum sc_type id;
@@ -193,13 +194,17 @@ struct pc_combos {
 
 /** Auto-cast related data. **/
 struct autocast_data {
-	enum autocast_type type; // The auto-cast type.
-	int skill_id; // The auto-cast skill ID.
-	int skill_lv; // The auto-cast skill level.
-	bool itemskill_conditions_checked; // Used by itemskill() script command, to prevent second check of conditions after target was selected.
-	bool itemskill_check_conditions; // Used by itemskill() script command, to check skill conditions and consume them.
-	bool itemskill_instant_cast; // Used by itemskill() script command, to cast skill instantaneously.
-	bool itemskill_cast_on_self; // Used by itemskill() script command, to forcefully cast skill on invoking character.
+	enum autocast_type type; ///< The auto-cast type.
+	int skill_id; ///< The auto-cast skill ID.
+	int skill_lv; ///< The auto-cast skill level.
+	/// Used by itemskill() script command, to prevent second check of conditions after target was selected.
+	bool itemskill_conditions_checked;
+	/// Used by itemskill() script command, to check skill conditions and consume them.
+	bool itemskill_check_conditions;
+	/// Used by itemskill() script command, to cast skill instantaneously.
+	bool itemskill_instant_cast;
+	/// Used by itemskill() script command, to forcefully cast skill on invoking character.
+	bool itemskill_cast_on_self;
 };
 struct map_session_data {
 	struct block_list bl;
@@ -212,6 +217,7 @@ struct map_session_data {
 	struct regen_data_sub sitting_regen;
 	struct autocast_data auto_cast_current; // Currently processed auto-cast skill.
 	VECTOR_DECL(struct autocast_data) auto_cast; // Auto-cast vector.
+
 	//NOTE: When deciding to add a flag to state or special_state, take into consideration that state is preserved in
 	//status_calc_pc, while special_state is recalculated in each call. [Skotlex]
 	struct {
@@ -290,7 +296,8 @@ struct map_session_data {
 		unsigned int bonus_coma : 1;
 	} special_state;
 	int login_id1, login_id2;
-	uint16 job; //This is the internal job ID used by the map server to simplify comparisons/queries/etc. [Skotlex]
+	/// This is the internal job ID used by the map server to simplify comparisons/queries/etc. [Skotlex]
+	uint16 job;
 
 	/// Groups & permissions
 	int group_id;
@@ -298,7 +305,8 @@ struct map_session_data {
 	unsigned int extra_temp_permissions; /* permissions from @addperm */
 
 	struct mmo_charstatus status;
-	struct item_data *inventory_data[MAX_INVENTORY]; // direct pointers to itemdb entries (faster than doing item_id lookups)
+	/// direct pointers to itemdb entries (faster than doing item_id lookups)
+	struct item_data *inventory_data[MAX_INVENTORY];
 	struct {
 		int current;                           ///< Marker for the current storage ID in use.
 		enum storage_access_modes access;      ///< Access level for the user.
@@ -312,8 +320,10 @@ struct map_session_data {
 	unsigned short mapindex;
 	unsigned char head_dir; //0: Look forward. 1: Look right, 2: Look left.
 	unsigned int client_tick;
-	int npc_id,areanpc_id,npc_shopid,touching_id; //for script follow scriptoid;   ,npcid
-	int npc_item_flag; //Marks the npc_id with which you can change equipments during interactions with said npc (see script command enable_itemuse)
+	// for script follow scriptoid;   ,npcid
+	int npc_id,areanpc_id,npc_shopid,touching_id;
+	/// Marks the npc_id with which you can change equipments during interactions with said npc (see script command enable_itemuse)
+	int npc_item_flag;
 	int npc_menu; // internal variable, used in npc menu handling
 	int npc_amount;
 	int npc_amount_min;
@@ -360,7 +370,8 @@ struct map_session_data {
 	int disguise; // [Valaris]
 	struct weapon_data right_weapon, left_weapon;
 
-BEGIN_ZEROED_BLOCK; // this block will be globally zeroed at the beginning of status_calc_pc()
+	/// this block will be globally zeroed at the beginning of status_calc_pc()
+BEGIN_ZEROED_BLOCK;
 	int param_bonus[6],param_equip[6]; //Stores card/equipment bonuses.
 	int subele[ELE_MAX];
 	int subrace[RC_MAX];
@@ -392,7 +403,8 @@ BEGIN_ZEROED_BLOCK; // this block will be globally zeroed at the beginning of st
 	struct s_autospell autospell[15], autospell2[15], autospell3[15];
 	struct s_addeffect addeff[MAX_PC_BONUS], addeff2[MAX_PC_BONUS];
 	struct s_addeffectonskill addeff3[MAX_PC_BONUS];
-	struct { //skillatk raises bonus dmg% of skills, skillheal increases heal%, skillblown increases bonus blewcount for some skills.
+	/// skillatk raises bonus dmg% of skills, skillheal increases heal%, skillblown increases bonus blewcount for some skills.
+	struct {
 		unsigned int id;
 		int val;
 	} skillatk[MAX_PC_BONUS], skillusesprate[MAX_PC_BONUS], skillusesp[MAX_PC_BONUS], skillheal[5], skillheal2[5], skillblown[MAX_PC_BONUS], skillcast[MAX_PC_BONUS], skillcooldown[MAX_PC_BONUS], skillfixcast[MAX_PC_BONUS], skillvarcast[MAX_PC_BONUS], skillfixcastrate[MAX_PC_BONUS], subskill[MAX_PC_BONUS];
@@ -531,8 +543,10 @@ END_ZEROED_BLOCK;
 	int eventtimer[MAX_EVENTTIMER];
 	unsigned int eventcount; // [celest]
 
-	int change_level_2nd; // job level when changing from 1st to 2nd class [jobchange_level in global_reg_value]
-	int change_level_3rd; // job level when changing from 2nd to 3rd class [jobchange_level_3rd in global_reg_value]
+	/// job level when changing from 1st to 2nd class [jobchange_level in global_reg_value]
+	int change_level_2nd;
+	/// job level when changing from 2nd to 3rd class [jobchange_level_3rd in global_reg_value]
+	int change_level_3rd;
 
 	char fakename[NAME_LENGTH]; // fake names [Valaris]
 	int fakename_options; // Fake name display options.
@@ -627,8 +641,10 @@ END_ZEROED_BLOCK;
 
 	/* Possible Thanks to Yommy~! */
 	struct {
-		unsigned int ready : 1;/* did he accept the 'match is about to start, enter' dialog? */
-		unsigned int client_has_bg_data : 1; /* flags whether the client has the "in queue" window (aka the client knows it is in a queue) */
+		/// did he accept the 'match is about to start, enter' dialog?
+		unsigned int ready : 1;
+		/// flags whether the client has the "in queue" window (aka the client knows it is in a queue)
+		unsigned int client_has_bg_data : 1;
 		struct bg_arena *arena;
 		enum bg_queue_types type;
 	} bg_queue;
@@ -636,8 +652,10 @@ END_ZEROED_BLOCK;
 	VECTOR_DECL(int) script_queues;
 
 	/* Made Possible Thanks to Yommy~! */
-	unsigned int cryptKey;                                                 ///< Packet obfuscation key to be used for the next received packet
-	unsigned short (*parse_cmd_func)(int fd, struct map_session_data *sd); ///< parse_cmd_func used by this player
+	/// Packet obfuscation key to be used for the next received packet
+	unsigned int cryptKey;
+	/// parse_cmd_func used by this player
+	unsigned short (*parse_cmd_func)(int fd, struct map_session_data *sd);
 
 	unsigned char delayed_damage;//ref. counter bugreport:7307 [Ind/Hercules]
 	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
@@ -695,12 +713,13 @@ END_ZEROED_BLOCK;
 	struct macro_detect macro_detect;
 
 	struct {
-		bool loaded; //< Has goldpc initialization finished?
-		struct goldpc_mode *mode; //< the mode this player is currently spending time for
-		int points; //< How many points the player currently have
-		int play_time; //< How many seconds has passed since the player started this unit (not updated in real time)
-		int tid; //< Timer to get points
-		int64 start_tick; //< tick when the timer started
+		bool loaded; ///< Has goldpc initialization finished?
+		struct goldpc_mode *mode; ///< the mode this player is currently spending time for
+		int points; ///< How many points the player currently have
+		/// How many seconds has passed since the player started this unit (not updated in real time)
+		int play_time;
+		int tid; ///< Timer to get points
+		int64 start_tick; ///< tick when the timer started
 	} goldpc;
 
 	VECTOR_DECL(int) agency_requests;
@@ -894,10 +913,14 @@ enum e_pc_autotrade_update_action {
  * Flag values for pc->skill
  */
 enum pc_skill_flag {
-	SKILL_GRANT_PERMANENT     = 0, // Grant permanent skill to be bound to skill tree
-	SKILL_GRANT_TEMPORARY     = 1, // Grant an item skill (temporary)
-	SKILL_GRANT_TEMPSTACK     = 2, // Like 1, except the level granted can stack with previously learned level.
-	SKILL_GRANT_UNCONDITIONAL = 3, // Grant skill unconditionally and forever (persistent to job changes and skill resets)
+	/// Grant permanent skill to be bound to skill tree
+	SKILL_GRANT_PERMANENT     = 0,
+	/// Grant an item skill (temporary)
+	SKILL_GRANT_TEMPORARY     = 1,
+	/// Like SKILL_GRANT_TEMPORARY, except the level granted can stack with previously learned level.
+	SKILL_GRANT_TEMPSTACK     = 2,
+	/// Grant skill unconditionally and forever (persistent to job changes and skill resets)
+	SKILL_GRANT_UNCONDITIONAL = 3,
 };
 
 /**
@@ -950,7 +973,8 @@ struct pc_interface {
 	int night_timer_tid;
 	/* */
 
-BEGIN_ZEROED_BLOCK; /* Everything within this block will be memset to 0 when status_defaults() is executed */
+	/* Everything within this block will be memset to 0 when status_defaults() is executed */
+BEGIN_ZEROED_BLOCK;
 	unsigned int statp[MAX_LEVEL+1];
 	unsigned int level_penalty[3][RC_MAX][MAX_LEVEL*2+1];
 	/* */

@@ -836,7 +836,8 @@ static int pet_menu(struct map_session_data *sd, int menunum)
 
 	if (egg_id != NULL) {
 		if ((egg_id->flag.trade_restriction & ITR_NODROP) != 0 && pc->inventoryblank(sd) == 0) {
-			clif->message(sd->fd, msg_sd(sd, MSGTBL_CANT_RETURN_PET_INVENTORY_FULL)); // You can't return your pet because your inventory is full.
+			// You can't return your pet because your inventory is full.
+			clif->message(sd->fd, msg_sd(sd, MSGTBL_CANT_RETURN_PET_INVENTORY_FULL));
 			return 1;
 		}
 	}
@@ -894,7 +895,8 @@ static int pet_change_name_ack(struct map_session_data *sd, const char *name, in
 	if (pd == NULL) return 0;
 
 	newname = aStrndup(name, NAME_LENGTH-1);
-	normalize_name(newname, " ");//bugreport:3032 // FIXME[Haru]: This should be normalized by the inter-server (so that it's const here)
+	//bugreport:3032 // FIXME[Haru]: This should be normalized by the inter-server (so that it's const here)
+	normalize_name(newname, " ");
 
 	if (flag == 0 || strlen(newname) == 0) {
 		clif->message(sd->fd, msg_sd(sd, MSGTBL_BAD_HOMPET_NAME)); // You cannot use this name for your pet.
@@ -1149,7 +1151,8 @@ static int pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, int
 	}
 
 	if (target == NULL && pd->loot != NULL && pd->msd != NULL && pc_has_permission(pd->msd, PC_PERM_TRADE)
-	    && pd->loot->count < pd->loot->max && DIFF_TICK(tick, pd->ud.canact_tick) > 0) { // Use half the pet's range of sight.
+	    && pd->loot->count < pd->loot->max && DIFF_TICK(tick, pd->ud.canact_tick) > 0) {
+		// Use half the pet's range of sight.
 		map->foreachinrange(pet->ai_sub_hard_lootsearch, &pd->bl, pd->db->range2 / 2, BL_ITEM, pd, &target);
 	}
 
@@ -1171,19 +1174,27 @@ static int pet_ai_sub_hard(struct pet_data *pd, struct map_session_data *sd, int
 	if (pd->ud.target == target->id && (pd->ud.attacktimer != INVALID_TIMER || pd->ud.walktimer != INVALID_TIMER))
 		return 0; // Target already locked.
 
-	if (target->type != BL_ITEM) { // Target is enemy. Chase or attack it.
-		if (!battle->check_range(&pd->bl, target, pd->status.rhw.range)) { // Chase enemy.
-			if (unit->walk_tobl(&pd->bl, target, pd->status.rhw.range, 2) != 0) // Enemy is unreachable.
+	if (target->type != BL_ITEM) {
+		// Target is enemy. Chase or attack it.
+		if (!battle->check_range(&pd->bl, target, pd->status.rhw.range)) {
+			// Chase enemy.
+			if (unit->walk_tobl(&pd->bl, target, pd->status.rhw.range, 2) != 0) {
+				// Enemy is unreachable.
 				pet->unlocktarget(pd);
+			}
 
 			return 0;
 		}
 
 		unit->attack(&pd->bl, pd->target_id, 1); // Start/continue attacking.
-	} else { // Target is item. Attempt looting.
-		if (!check_distance_bl(&pd->bl, target, 1)) { // Item is out of range.
-			if (unit->walk_tobl(&pd->bl, target, 1, 1) != 0) // Item is unreachable.
+	} else {
+		// Target is item. Attempt looting.
+		if (!check_distance_bl(&pd->bl, target, 1)) {
+			// Item is out of range.
+			if (unit->walk_tobl(&pd->bl, target, 1, 1) != 0) {
+				// Item is unreachable.
 				pet->unlocktarget(pd);
+			}
 
 			return 0;
 		}
@@ -1245,8 +1256,9 @@ static int pet_ai_sub_hard_lootsearch(struct block_list *bl, va_list ap)
 	if(sd_charid && sd_charid != pd->msd->status.char_id)
 		return 0;
 
-	if(unit->can_reach_bl(&pd->bl,bl, pd->db->range2, 1, NULL, NULL) &&
-		((*target) == NULL || //New target closer than previous one.
+	if(unit->can_reach_bl(&pd->bl,bl, pd->db->range2, 1, NULL, NULL)
+		/* New target closer than previous one */
+		&& ((*target) == NULL ||
 		!check_distance_bl(&pd->bl, *target, distance_bl(&pd->bl, bl))))
 	{
 		(*target) = bl;
@@ -1435,9 +1447,10 @@ static int pet_skill_support_timer(int tid, int64 tick, int id, intptr_t data)
 
 	if(pc_isdead(sd) ||
 		(rate = get_percentage(st->sp, st->max_sp)) > pd->s_skill->sp ||
-		(rate = get_percentage(st->hp, st->max_hp)) > pd->s_skill->hp ||
-		(rate = (pd->ud.skilltimer != INVALID_TIMER)) //Another skill is in effect
-	) {  //Wait (how long? 1 sec for every 10% of remaining)
+		(rate = get_percentage(st->hp, st->max_hp)) > pd->s_skill->hp
+		|| (rate = (pd->ud.skilltimer != INVALID_TIMER)) /* Another skill is in effect */
+	) {
+		//Wait (how long? 1 sec for every 10% of remaining)
 		pd->s_skill->timer=timer->add(tick+(rate>10?rate:10)*100,pet->skill_support_timer,sd->bl.id,0);
 		return 0;
 	}

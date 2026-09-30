@@ -209,15 +209,18 @@ struct npc_path_data {
 struct npc_interface {
 	/* */
 	struct npc_data *motd;
-	struct DBMap *ev_db; // const char* event_name -> struct event_data*
-	struct DBMap *ev_label_db; // const char* label_name (without leading "::") -> struct linkdb_node**   (key: struct npc_data*; data: struct event_data*)
-	struct DBMap *name_db; // const char* npc_name -> struct npc_data*
+	/// const char* event_name -> struct event_data*
+	struct DBMap *ev_db;
+	/// const char* label_name (without leading "::") -> struct linkdb_node**   (key: struct npc_data*; data: struct event_data*)
+	struct DBMap *ev_label_db;
+	/// const char* npc_name -> struct npc_data*
+	struct DBMap *name_db;
 	struct DBMap *path_db;
-	struct eri *timer_event_ers; //For the npc timer data. [Skotlex]
+	struct eri *timer_event_ers; ///< For the npc timer data. [Skotlex]
 	struct npc_data *fake_nd;
 	struct npc_src_list *src_files;
 	struct unit_data base_ud;
-	/* npc trader global data, for ease of transition between the script, cleared on every usage */
+	/// npc trader global data, for ease of transition between the script, cleared on every usage
 	bool trader_ok;
 	int trader_funds[2];
 	int npc_id;

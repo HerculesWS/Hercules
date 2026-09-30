@@ -94,7 +94,8 @@ static void trade_traderequest(struct map_session_data *sd, struct map_session_d
 
 	if (!pc_can_give_items(sd) || !pc_can_give_items(target_sd)) //check if both GMs are allowed to trade
 	{
-		clif->message(sd->fd, msg_sd(sd, MSGTBL_CANT_GIVE_ITEMS)); // Your GM level doesn't authorize you to perform this action.
+		// Your GM level doesn't authorize you to perform this action.
+		clif->message(sd->fd, msg_sd(sd, MSGTBL_CANT_GIVE_ITEMS));
 		clif->tradestart(sd, 2); // GM is not allowed to trade
 		return;
 	}
@@ -225,27 +226,34 @@ static int impossible_trade_check(struct map_session_data *sd)
 		index = sd->deal.item[i].index;
 		if (index < 0 || index >= sd->status.inventorySize)
 			return 1;
+		// if more than the player have -> hack
 		if (inventory[index].amount < sd->deal.item[i].amount) {
-			// if more than the player have -> hack
-			snprintf(message_to_gm, sizeof(message_to_gm), msg_txt(MSGTBL_TRADE_SPOOF_TOO_MANY_ITEMS), sd->status.name, sd->status.account_id); // Hack on trade: character '%s' (account: %d) try to trade more items that he has.
+			// Hack on trade: character '%s' (account: %d) try to trade more items that he has.
+			snprintf(message_to_gm, sizeof(message_to_gm), msg_txt(MSGTBL_TRADE_SPOOF_TOO_MANY_ITEMS), sd->status.name, sd->status.account_id);
 			pc->wis_message_to_gm(map->wisp_server_name, PC_PERM_RECEIVE_HACK_INFO, message_to_gm);
-			snprintf(message_to_gm, sizeof(message_to_gm), msg_txt(MSGTBL_TRADE_SPOOF_TOO_MANY_ITEMS2), inventory[index].amount, inventory[index].nameid, sd->deal.item[i].amount); // This player has %d of a kind of item (id: %d), and try to trade %d of them.
+			// This player has %d of a kind of item (id: %d), and try to trade %d of them.
+			snprintf(message_to_gm, sizeof(message_to_gm), msg_txt(MSGTBL_TRADE_SPOOF_TOO_MANY_ITEMS2), inventory[index].amount, inventory[index].nameid, sd->deal.item[i].amount);
 			pc->wis_message_to_gm(map->wisp_server_name, PC_PERM_RECEIVE_HACK_INFO, message_to_gm);
 			// if we block people
 			if (battle_config.ban_hack_trade < 0) {
 				chrif->char_ask_name(-1, sd->status.name, CHAR_ASK_NAME_BLOCK, 0, 0, 0, 0, 0, 0);
 				sockt->eof(sd->fd); // forced to disconnect because of the hack
-				// message about the ban
-				safestrncpy(message_to_gm, msg_txt(MSGTBL_TRADE_SPOOF_PERMANENT_BAN), sizeof(message_to_gm)); //  This player has been definitively blocked.
+
+				//  This player has been definitively blocked.
+				safestrncpy(message_to_gm, msg_txt(MSGTBL_TRADE_SPOOF_PERMANENT_BAN), sizeof(message_to_gm));
 			// if we ban people
 			} else if (battle_config.ban_hack_trade > 0) {
-				chrif->char_ask_name(-1, sd->status.name, CHAR_ASK_NAME_BAN, 0, 0, 0, 0, battle_config.ban_hack_trade, 0); // type: 2 - ban (year, month, day, hour, minute, second)
+				// type: 2 - ban (year, month, day, hour, minute, second)
+				chrif->char_ask_name(-1, sd->status.name, CHAR_ASK_NAME_BAN, 0, 0, 0, 0, battle_config.ban_hack_trade, 0);
 				sockt->eof(sd->fd); // forced to disconnect because of the hack
+
+				//  This player has been banned for %d minute(s).
+				sprintf(message_to_gm, msg_txt(MSGTBL_TRADE_SPOOF_BAN_ALERT), battle_config.ban_hack_trade);
+			} else {
 				// message about the ban
-				sprintf(message_to_gm, msg_txt(MSGTBL_TRADE_SPOOF_BAN_ALERT), battle_config.ban_hack_trade); //  This player has been banned for %d minute(s).
-			} else
-				// message about the ban
-				safestrncpy(message_to_gm, msg_txt(MSGTBL_TRADE_SPOOF_NOT_BANNED), sizeof(message_to_gm)); //  This player hasn't been banned (Ban option is disabled).
+				// This player hasn't been banned (Ban option is disabled).
+				safestrncpy(message_to_gm, msg_txt(MSGTBL_TRADE_SPOOF_NOT_BANNED), sizeof(message_to_gm));
+			}
 
 			pc->wis_message_to_gm(map->wisp_server_name, PC_PERM_RECEIVE_HACK_INFO, message_to_gm);
 			return 1;
@@ -382,8 +390,8 @@ static void trade_tradeadditem(struct map_session_data *sd, short index, short a
 	item = &sd->status.inventory[index];
 	src_lv = pc_get_group_level(sd);
 	dst_lv = pc_get_group_level(target_sd);
-	if( !itemdb_cantrade(item, src_lv, dst_lv) && //Can't trade
-		(pc->get_partner(sd) != target_sd || !itemdb_canpartnertrade(item, src_lv, dst_lv)) ) //Can't partner-trade
+	if( !itemdb_cantrade(item, src_lv, dst_lv) &&
+		(pc->get_partner(sd) != target_sd || !itemdb_canpartnertrade(item, src_lv, dst_lv)) )
 	{
 		clif->message (sd->fd, msg_sd(sd, MSGTBL_CANT_TRADE_ITEM)); // This item cannot be traded.
 		clif->tradeitemok(sd, index+2, TIO_INDROCKS);
@@ -401,7 +409,8 @@ static void trade_tradeadditem(struct map_session_data *sd, short index, short a
 			!( item->bound == IBT_GUILD && sd->status.guild_id == target_sd->status.guild_id ) &&
 			!( item->bound == IBT_PARTY && sd->status.party_id == target_sd->status.party_id )
 					&& !pc_can_give_bound_items(sd) ) {
-		clif->message(sd->fd, msg_sd(sd, MSGTBL_BOUND_CANT_TRADE)); // This bound item cannot be traded to that character.
+		// This bound item cannot be traded to that character.
+		clif->message(sd->fd, msg_sd(sd, MSGTBL_BOUND_CANT_TRADE));
 		clif->tradeitemok(sd, index+2, TIO_INDROCKS);
 		return;
 	}

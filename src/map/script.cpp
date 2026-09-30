@@ -592,8 +592,10 @@ static int script_add_str(const char *p)
 			 || strcasecmp(p, "PecoPeco_Egg") == 0 || strcasecmp(p, "Soccer_Ball") == 0
 			 || strcasecmp(p, "Horn") == 0 || strcasecmp(p, "Treasure_Box_") == 0
 			 || strcasecmp(p, "Lord_of_Death") == 0
-			  ) // Known duplicates, don't bother warning the user
+			  ) {
+				// Known duplicates, don't bother warning the user
 				existingentry = NULL;
+			}
 		}
 	}
 	if( existingentry ) {
@@ -804,6 +806,7 @@ static const char *script_skip_space(const char *p)
 						p += 2;
 					if (found)
 						continue; // Condition met: continue skipping whitespace
+
 					// else fall through and keep skipping until the end of the comment
 				} else {
 					script->disp_warning_message("script:script->skip_space: Invalid conditional comment: missing condition.", cond);
@@ -1156,8 +1159,8 @@ static const char *parse_variable(const char *p)
 	const char *var = p;
 
 	nullpo_retr(NULL, p);
-	if( ( p[0] == '+' && p[1] == '+' && (type = C_ADD_PRE, true) ) // pre ++
-	 || ( p[0] == '-' && p[1] == '-' && (type = C_SUB_PRE, true) ) // pre --
+	if( ( p[0] == '+' && p[1] == '+' && (type = C_ADD_PRE, true) ) /* pre ++ */
+	 || ( p[0] == '-' && p[1] == '-' && (type = C_SUB_PRE, true) ) /* pre -- */
 	) {
 		var = p = script->skip_space(&p[2]);
 	}
@@ -1674,9 +1677,11 @@ static const char *script_parse_subexpr(const char *p, int limit)
 		}
 	}
 
-	if( (p[0]=='+' && p[1]=='+') /* C_ADD_PRE */ || (p[0]=='-'&&p[1]=='-') /* C_SUB_PRE */ ) { // Pre ++ -- operators
+	if( (p[0]=='+' && p[1]=='+') /* C_ADD_PRE */ || (p[0]=='-'&&p[1]=='-') /* C_SUB_PRE */ ) {
+		// Pre ++ -- operators
 		p=script->parse_variable(p);
-	} else if( (op=C_NEG,*p=='-') || (op=C_LNOT,*p=='!') || (op=C_NOT,*p=='~') ) { // Unary - ! ~ operators
+	} else if( (op=C_NEG,*p=='-') || (op=C_LNOT,*p=='!') || (op=C_NOT,*p=='~') ) {
+		// Unary - ! ~ operators
 		p=script->parse_subexpr(p+1,11);
 		script->addc(op);
 	} else {
@@ -2591,12 +2596,14 @@ static void script_set_constant(const char *name, int value, bool is_parameter, 
 		script->str_data[n].type = is_parameter ? C_PARAM : C_INT;
 		script->str_data[n].val  = value;
 		script->str_data[n].deprecated = is_deprecated ? 1 : 0;
-	} else if (script->str_data[n].type == C_PARAM || script->str_data[n].type == C_INT) {  // existing parameter or constant
+	} else if (script->str_data[n].type == C_PARAM || script->str_data[n].type == C_INT) {
+		// existing parameter or constant
 		if (script->str_data[n].val != value)
 			ShowError("script_set_constant: Attempted to overwrite existing %s '%s' (old value=%d, new value=%d).\n", (script->str_data[n].type == C_PARAM) ? "parameter" : "constant", name, script->str_data[n].val, value);
 		else
 			ShowError("script_set_constant: Attempted to overwrite same existing %s '%s' (value=%d).\n", (script->str_data[n].type == C_PARAM) ? "parameter" : "constant", name, value);
-	} else {// existing name
+	} else {
+		// existing name
 		ShowError("script_set_constant: Invalid name for %s '%s' (already defined as %s).\n", is_parameter ? "parameter" : "constant", name, script->op2name(script->str_data[n].type));
 	}
 }
@@ -2615,7 +2622,8 @@ static void script_set_constant2(const char *name, int value, bool is_parameter,
 		return;
 	}
 
-	if( script->str_data[n].type == C_INT && value && value != script->str_data[n].val ) { // existing constant
+	if( script->str_data[n].type == C_INT && value && value != script->str_data[n].val ) {
+		// existing constant
 		if (script->str_data[n].val != value)
 			ShowWarning("script_set_constant2: Attempted to overwrite existing constant '%s' (old value=%d, new value=%d).\n", name, script->str_data[n].val, value);
 		else
@@ -3411,9 +3419,10 @@ static const void *get_val2(struct script_state *st, int64 uid, struct reg_db *r
 		return (const void *)h64BPTRSIZE(data->u.str);
 }
 /**
- * Because, currently, array members with key 0 are indifferenciable from normal variables, we should ensure its actually in
+ * Because, currently, array members with key 0 are indifferenciable from normal variables, we should ensure its
+ * actually in.
  * Will be gone as soon as undefined var feature is implemented
- **/
+ */
 static void script_array_ensure_zero(struct script_state *st, struct map_session_data *sd, int64 uid, struct reg_db *ref)
 {
 	const char *name = script->get_str(script_getvarid(uid));
@@ -4030,7 +4039,8 @@ static int conv_num(struct script_state *st, struct script_data *data)
 		// the result does not overflow or underflow, it is capped instead
 		// ex: 999999999999 is capped to INT_MAX (2147483647)
 		errno = 0;
-		num = strtol(data->u.str, NULL, 10);// change radix to 0 to support octal numbers "o377" and hex numbers "0xFF"
+		// change radix to 0 to support octal numbers "o377" and hex numbers "0xFF"
+		num = strtol(data->u.str, NULL, 10);
 		if( errno == ERANGE
 #if LONG_MAX > INT_MAX
 			|| num < INT_MIN || num > INT_MAX
@@ -4674,11 +4684,13 @@ static void op_2(struct script_state *st, int op)
 	{
 	case C_ADD:
 		if( data_isint(left) && data_isstring(right) )
-		{// convert int-string to string-string
+		{
+			// convert int-string to string-string
 			script->conv_str(st, left);
 		}
 		else if( data_isstring(left) && data_isint(right) )
-		{// convert string-int to string-string
+		{
+			// convert string-int to string-string
 			script->conv_str(st, right);
 		}
 		break;
@@ -4987,7 +4999,8 @@ static int run_script_timer(int tid, int64 tick, int id, intptr_t data)
 	if( st ) {
 		struct map_session_data *sd = map->id2sd(st->rid);
 
-		if ((sd != NULL && sd->status.char_id != id) || (st->rid != 0 && sd == NULL)) { // Character mismatch. Cancel execution.
+		if ((sd != NULL && sd->status.char_id != id) || (st->rid != 0 && sd == NULL)) {
+			// Character mismatch. Cancel execution.
 			st->rid = 0;
 			st->state = END;
 		}
@@ -5102,10 +5115,12 @@ static void run_script_main(struct script_state *st)
 		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
 		switch(c) {
 			case C_EOL:
-				if( stack->defsp > stack->sp )
+				if( stack->defsp > stack->sp ) {
 					ShowError("script:run_script_main: unexpected stack position (defsp=%d sp=%d). please report this!!!\n", stack->defsp, stack->sp);
-				else
-					script->pop_stack(st, stack->defsp, stack->sp);// pop unused stack data. (unused return value)
+				} else {
+					// pop unused stack data. (unused return value)
+					script->pop_stack(st, stack->defsp, stack->sp);
+				}
 				break;
 			case C_INT:
 				script->push_val(stack,C_INT,script->get_num(&st->script->script_buf, &st->pos), NULL);
@@ -5554,7 +5569,8 @@ static void do_final_script(void)
 			fprintf(fp,"\n--------------------\n  items : buckets\n--------------------\n");
 			for( i=min; i <= max; ++i ) {
 				fprintf(fp,"  %5d : %7d\n",i,count2[i]);
-				mean += 1.0f*i*count2[i]/SCRIPT_HASH_SIZE; // Note: this will always result in <nr labels>/<nr buckets>
+				// Note: this will always result in <nr labels>/<nr buckets>
+				mean += 1.0f*i*count2[i]/SCRIPT_HASH_SIZE;
 			}
 			for( i=min; i <= max; ++i ) {
 				n += count2[i];
@@ -5688,7 +5704,8 @@ static void script_load_translations(void)
 	script->languages = NULL;
 	script->max_lang_id = 0;
 
-	script->add_language("English");/* 0 is default, which is whatever is in the npc files hardcoded (in our case, English) */
+	/* 0 is default, which is whatever is in the npc files hardcoded (in our case, English) */
+	script->add_language("English");
 
 	if (!libconfig->load_file(&translations_conf, config_filename))
 		return;
@@ -6880,18 +6897,21 @@ static BUILDIN(menu)
 		StrBuf->Destroy(&buf);
 
 		if( sd->npc_menu >= MAX_MENU_OPTIONS )
-		{// client supports only up to 254 entries; 0 is not used and 255 is reserved for cancel; excess entries are displayed but cause 'uint8' overflow
+		{
+			// client supports only up to 254 entries; 0 is not used and 255 is reserved for cancel; excess entries are displayed but cause 'uint8' overflow
 			ShowWarning("buildin_menu: Too many options specified (current=%d, max=%d).\n", sd->npc_menu, MAX_MENU_OPTIONS - 1);
 			script->reportsrc(st);
 		}
 	}
 	else if( sd->npc_menu == MAX_MENU_OPTIONS )
-	{// Cancel was pressed
+	{
+		// Cancel was pressed
 		sd->state.menu_or_input = 0;
 		st->state = END;
 	}
 	else
-	{// goto target label
+	{
+		// goto target label
 		int menu = 0;
 
 		sd->state.menu_or_input = 0;
@@ -6911,13 +6931,15 @@ static BUILDIN(menu)
 				break;// entry found
 		}
 		if( sd->npc_menu > 0 )
-		{// Invalid selection
+		{
+			// Invalid selection
 			ShowDebug("script:menu: selection is out of range (%d pairs are missing?) - please report this\n", sd->npc_menu);
 			st->state = END;
 			return false;
 		}
 		if( !data_islabel(script_getdata(st, i + 1)) )
-		{// TODO remove this temporary crash-prevention code (fallback for multiple scripts requesting user input)
+		{
+			// TODO remove this temporary crash-prevention code (fallback for multiple scripts requesting user input)
 			ShowError("script:menu: unexpected data in label argument\n");
 			script->reportdata(script_getdata(st, i + 1));
 			st->state = END;
@@ -7010,7 +7032,8 @@ static BUILDIN(select)
 			if( sd->npc_menu <= 0 )
 				break;// entry found
 		}
-		pc->setreg(sd, script->add_variable("@menu"), menu); // TODO: throw a deprecation warning for scripts using @menu
+		// TODO: throw a deprecation warning for scripts using @menu
+		pc->setreg(sd, script->add_variable("@menu"), menu);
 		script_pushint(st, menu);
 		st->state = RUN;
 	}
@@ -8225,7 +8248,8 @@ static BUILDIN(getarraysize)
 }
 static int script_array_index_cmp(const void *a, const void *b)
 {
-	return (*(const unsigned int *)a - *(const unsigned int *)b); // FIXME: Is the unsigned difference really intended here?
+	// FIXME: Is the unsigned difference really intended here?
+	return (*(const unsigned int *)a - *(const unsigned int *)b);
 }
 
 static BUILDIN(getarrayindex)
@@ -8492,7 +8516,8 @@ static BUILDIN(countitem)
 	}
 
 	if( id == NULL ) {
-		ShowError("buildin_countitem: Invalid item '%s'.\n", script_getstr(st,2));  // returns string, regardless of what it was
+		// returns string, regardless of what it was
+		ShowError("buildin_countitem: Invalid item '%s'.\n", script_getstr(st,2));
 		script_pushint(st,0);
 		return false;
 	}
@@ -8531,7 +8556,8 @@ static BUILDIN(countitem2)
 	}
 
 	if( id == NULL ) {
-		ShowError("buildin_countitem2: Invalid item '%s'.\n", script_getstr(st,2));  // returns string, regardless of what it was
+		// returns string, regardless of what it was
+		ShowError("buildin_countitem2: Invalid item '%s'.\n", script_getstr(st,2));
 		script_pushint(st,0);
 		return false;
 	}
@@ -8596,7 +8622,8 @@ static BUILDIN(countnameditem)
 	}
 
 	if (id == NULL) {
-		ShowError("buildin_countnameditem: Invalid item '%s'.\n", script_getstr(st, 2));  // returns string, regardless of what it was
+		// returns string, regardless of what it was
+		ShowError("buildin_countnameditem: Invalid item '%s'.\n", script_getstr(st, 2));
 		script_pushint(st, 0);
 		return false;
 	}
@@ -8656,7 +8683,8 @@ static BUILDIN(checkweight)
 			return false;
 		}
 		if( id == NULL ) {
-			ShowError("buildin_checkweight: Invalid item '%s'.\n", script_getstr(st,i));  // returns string, regardless of what it was
+			// returns string, regardless of what it was
+			ShowError("buildin_checkweight: Invalid item '%s'.\n", script_getstr(st,i));
 			script_pushint(st,0);
 			return false;
 		}
@@ -9099,7 +9127,8 @@ static BUILDIN(getnameditem)
 	item_tmp.nameid = nameid;
 	item_tmp.amount = 1;
 	item_tmp.identify = 1;
-	item_tmp.card[0] = CARD0_CREATE; //we don't use 255! because for example SIGNED WEAPON shouldn't get TOP10 BS Fame bonus [Lupus]
+	//we don't use 255! because for example SIGNED WEAPON shouldn't get TOP10 BS Fame bonus [Lupus]
+	item_tmp.card[0] = CARD0_CREATE;
 	item_tmp.card[2] = GetWord(tsd->status.char_id, 0);
 	item_tmp.card[3] = GetWord(tsd->status.char_id, 1);
 	if(pc->additem(sd,&item_tmp,1,LOG_TYPE_SCRIPT)) {
@@ -9267,7 +9296,8 @@ static BUILDIN(makeitem)
 		} else {
 			int16 search_x = 0;
 			int16 search_y = 0;
-			map->search_free_cell(&sd->bl, sd->bl.m, &search_x, &search_y, 3, 3, SFC_DEFAULT); // Locate spot next to player.
+			// Locate spot next to player.
+			map->search_free_cell(&sd->bl, sd->bl.m, &search_x, &search_y, 3, 3, SFC_DEFAULT);
 			x = search_x;
 			y = search_y;
 		}
@@ -9348,7 +9378,8 @@ static BUILDIN(makeitem2)
 			int16 search_x = 0;
 			int16 search_y = 0;
 			int range = (script_hasdata(st, 14) ? std::clamp(script_getnum(st, 14), 1, std::max(1, battle_config.area_size)) : 3);
-			map->search_free_cell(&sd->bl, sd->bl.m, &search_x, &search_y, range, range, SFC_DEFAULT); // Locate spot next to player.
+			// Locate spot next to player.
+			map->search_free_cell(&sd->bl, sd->bl.m, &search_x, &search_y, range, range, SFC_DEFAULT);
 			x = search_x;
 			y = search_y;
 		}
@@ -9405,7 +9436,8 @@ static void buildin_delitem_delete(struct map_session_data *sd, int idx, int *am
 	if( delete_items )
 	{
 		if( sd->inventory_data[idx]->type == IT_PETEGG && inv->card[0] == CARD0_PET )
-		{// delete associated pet
+		{
+			// delete associated pet
 			intif->delete_petdata(MakeDWord(inv->card[1], inv->card[2]));
 		}
 		pc->delitem(sd, idx, delamount, 0, DELITEM_NORMAL, LOG_TYPE_SCRIPT);
@@ -10844,16 +10876,20 @@ static BUILDIN(successrefitem)
 		if(sd->status.inventory[i].refine == 10 &&
 		   sd->status.inventory[i].card[0] == CARD0_FORGE &&
 		   sd->status.char_id == (int)MakeDWord(sd->status.inventory[i].card[2],sd->status.inventory[i].card[3])
-		  ) { // Fame point system [DracoRPG]
+		  ) {
+			// Fame point system [DracoRPG]
 			switch (sd->inventory_data[i]->wlv) {
 			case 1:
-				pc->addfame(sd, RANKTYPE_BLACKSMITH, 1); // Success to refine to +10 a lv1 weapon you forged = +1 fame point
+				// Success to refine to +10 a lv1 weapon you forged = +1 fame point
+				pc->addfame(sd, RANKTYPE_BLACKSMITH, 1);
 				break;
 			case 2:
-				pc->addfame(sd, RANKTYPE_BLACKSMITH, 25); // Success to refine to +10 a lv2 weapon you forged = +25 fame point
+				// Success to refine to +10 a lv2 weapon you forged = +25 fame point
+				pc->addfame(sd, RANKTYPE_BLACKSMITH, 25);
 				break;
 			case 3:
-				pc->addfame(sd, RANKTYPE_BLACKSMITH, 1000); // Success to refine to +10 a lv3 weapon you forged = +1000 fame point
+				// Success to refine to +10 a lv3 weapon you forged = +1000 fame point
+				pc->addfame(sd, RANKTYPE_BLACKSMITH, 1000);
 				break;
 			}
 		}
@@ -11430,7 +11466,8 @@ static BUILDIN(end)
 	if( st->stack->defsp >= 1 && st->stack->stack_data[st->stack->defsp-1].type == C_RETINFO ) {
 		int i;
 		for(i = 0; i < st->stack->sp; i++) {
-			if( st->stack->stack_data[i].type == C_RETINFO ) {/* grab the first, aka the original */
+			if( st->stack->stack_data[i].type == C_RETINFO ) {
+				/* grab the first, aka the original */
 				struct script_retinfo *ri = st->stack->stack_data[i].u.ri;
 				st->script = ri->script;
 				break;
@@ -11763,7 +11800,7 @@ static BUILDIN(setmount)
 				           flag == SETMOUNT_TYPE_DRAGON_GRAY ? OPTION_DRAGON3 :
 				           flag == SETMOUNT_TYPE_DRAGON_BLUE ? OPTION_DRAGON4 :
 				           flag == SETMOUNT_TYPE_DRAGON_RED ? OPTION_DRAGON5 :
-				           OPTION_DRAGON1); // default value
+				           OPTION_DRAGON1 /* default value */);
 				pc->setridingdragon(sd, option);
 			}
 		} else if ((sd->job & MAPID_THIRDMASK) == MAPID_RANGER) {
@@ -11863,7 +11900,8 @@ static BUILDIN(gettimetick)
 	case GETTIMETICK_SYSTEM_MS:
 		// System Ticks
 		// Conjunction with INT_MAX is done to prevent overflow. (Script variables are signed integers.)
-		script_pushint(st, timer->gettick() & INT_MAX); // TODO: change this to int64 when we'll support 64 bit script values
+		// TODO: change this to int64 when we'll support 64 bit script values
+		script_pushint(st, timer->gettick() & INT_MAX);
 		break;
 	case GETTIMETICK_HOUROFDAY_S: {
 		// Second Ticks: 0-86399, 00:00:00-23:59:59
@@ -12300,7 +12338,8 @@ static BUILDIN(monster)
 			return false;
 		}
 
-		if (map->list[m].flag.src4instance && st->instance_id >= 0) { // Try to redirect to the instance map, not the src map
+		if (map->list[m].flag.src4instance && st->instance_id >= 0) {
+			// Try to redirect to the instance map, not the src map
 			if ((m = instance->mapid2imapid(m, st->instance_id)) < 0) {
 				ShowError("buildin_monster: Trying to spawn monster (%d) on instance map (%s) without instance attached.\n", class_, mapn);
 				return false;
@@ -12447,7 +12486,8 @@ static BUILDIN(areamonster)
 			ShowWarning("buildin_areamonster: Attempted to spawn monster class %d on non-existing map '%s'\n",class_, mapn);
 			return false;
 		}
-		if (map->list[m].flag.src4instance && st->instance_id >= 0) { // Try to redirect to the instance map, not the src map
+		if (map->list[m].flag.src4instance && st->instance_id >= 0) {
+			// Try to redirect to the instance map, not the src map
 			if ((m = instance->mapid2imapid(m, st->instance_id)) < 0) {
 				ShowError("buildin_areamonster: Trying to spawn monster (%d) on instance map (%s) without instance attached.\n", class_, mapn);
 				return false;
@@ -12543,8 +12583,9 @@ static BUILDIN(killmonster)
 	return true;
 }
 
+/// Strips the event from the mob if it's killed the old method.
 static int buildin_killmonsterall_sub_strip(struct block_list *bl, va_list ap)
-{ //Strips the event from the mob if it's killed the old method.
+{
 	struct mob_data *md;
 
 	md = BL_CAST(BL_MOB, bl);
@@ -13313,10 +13354,10 @@ static BUILDIN(announce)
 	const char *mes       = script_getstr(st,2);
 	int         flag      = script_getnum(st,3);
 	const char *fontColor = script_hasdata(st,4) ? script_getstr(st,4) : NULL;
-	int         fontType  = script_hasdata(st,5) ? script_getnum(st,5) : 0x190; // default fontType (FW_NORMAL)
-	int         fontSize  = script_hasdata(st,6) ? script_getnum(st,6) : 12;    // default fontSize
-	int         fontAlign = script_hasdata(st,7) ? script_getnum(st,7) : 0;     // default fontAlign
-	int         fontY     = script_hasdata(st,8) ? script_getnum(st,8) : 0;     // default fontY
+	int         fontType  = script_hasdata(st,5) ? script_getnum(st,5) : 0x190 /* default fontType (FW_NORMAL) */;
+	int         fontSize  = script_hasdata(st,6) ? script_getnum(st,6) : 12 /* default fontSize */;
+	int         fontAlign = script_hasdata(st,7) ? script_getnum(st,7) : 0 /* default fontAlign */;
+	int         fontY     = script_hasdata(st,8) ? script_getnum(st,8) : 0 /* default fontY */;
 	size_t len = strlen(mes);
 	send_target target = ALL_CLIENT;
 	struct block_list *bl = NULL;
@@ -13410,10 +13451,10 @@ static BUILDIN(mapannounce)
 	const char *mes       = script_getstr(st,3);
 	int         flag      = script_getnum(st,4);
 	const char *fontColor = script_hasdata(st,5) ? script_getstr(st,5) : NULL;
-	int         fontType  = script_hasdata(st,6) ? script_getnum(st,6) : 0x190; // default fontType (FW_NORMAL)
-	int         fontSize  = script_hasdata(st,7) ? script_getnum(st,7) : 12;    // default fontSize
-	int         fontAlign = script_hasdata(st,8) ? script_getnum(st,8) : 0;     // default fontAlign
-	int         fontY     = script_hasdata(st,9) ? script_getnum(st,9) : 0;     // default fontY
+	int         fontType  = script_hasdata(st,6) ? script_getnum(st,6) : 0x190 /* default fontType (FW_NORMAL) */;
+	int         fontSize  = script_hasdata(st,7) ? script_getnum(st,7) : 12 /* default fontSize */;
+	int         fontAlign = script_hasdata(st,8) ? script_getnum(st,8) : 0 /* default fontAlign */;
+	int         fontY     = script_hasdata(st,9) ? script_getnum(st,9) : 0 /* default fontY */;
 	int16 m;
 	size_t len = strlen(mes);
 	Assert_retr(false, len < INT_MAX);
@@ -13437,10 +13478,10 @@ static BUILDIN(areaannounce)
 	const char *mes       = script_getstr(st,7);
 	int         flag      = script_getnum(st,8);
 	const char *fontColor = script_hasdata(st,9) ? script_getstr(st,9) : NULL;
-	int         fontType  = script_hasdata(st,10) ? script_getnum(st,10) : 0x190; // default fontType (FW_NORMAL)
-	int         fontSize  = script_hasdata(st,11) ? script_getnum(st,11) : 12;    // default fontSize
-	int         fontAlign = script_hasdata(st,12) ? script_getnum(st,12) : 0;     // default fontAlign
-	int         fontY     = script_hasdata(st,13) ? script_getnum(st,13) : 0;     // default fontY
+	int         fontType  = script_hasdata(st,10) ? script_getnum(st,10) : 0x190 /* default fontType (FW_NORMAL) */;
+	int         fontSize  = script_hasdata(st,11) ? script_getnum(st,11) : 12 /* default fontSize */;
+	int         fontAlign = script_hasdata(st,12) ? script_getnum(st,12) : 0 /* default fontAlign */;
+	int         fontY     = script_hasdata(st,13) ? script_getnum(st,13) : 0 /* default fontY */;
 	int16 m;
 	size_t len = strlen(mes);
 	Assert_retr(false, len < INT_MAX);
@@ -13807,11 +13848,13 @@ static BUILDIN(sc_start)
 		bl = map->id2bl(st->rid);
 
 	if(tick == 0 && val1 > 0 && type > SC_NONE && type < SC_MAX && status->sc2skill(type) != 0)
-	{// When there isn't a duration specified, try to get it from the skill_db
+	{
+		// When there isn't a duration specified, try to get it from the skill_db
 		tick = skill->get_time(status->sc2skill(type), val1);
 	}
 
-	if(script->potion_flag == 1 && script->potion_target) { //skill.cpp set the flags before running the script, this is a potion-pitched effect.
+	if(script->potion_flag == 1 && script->potion_target) {
+		//skill.cpp set the flags before running the script, this is a potion-pitched effect.
 		bl = map->id2bl(script->potion_target);
 		tick /= 2;// Thrown potions only last half.
 		val4 = 1;// Mark that this was a thrown sc_effect
@@ -13951,7 +13994,8 @@ static BUILDIN(getstatus)
 
 				if (td != NULL) {
 					// return the amount of time remaining
-					script_pushint(st, (int)(td->tick - timer->gettick())); // TODO: change this to int64 when we'll support 64 bit script values
+					// TODO: change this to int64 when we'll support 64 bit script values
+					script_pushint(st, (int)(td->tick - timer->gettick()));
 				}
 			}
 			break;
@@ -14232,8 +14276,8 @@ static BUILDIN(changebase)
 	vclass = script_getnum(st,2);
 	if(vclass == JOB_WEDDING)
 	{
-		if (!battle_config.wedding_modifydisplay || //Do not show the wedding sprites
-			sd->job & JOBL_BABY //Baby classes screw up when showing wedding sprites. [Skotlex] They don't seem to anymore.
+		if (!battle_config.wedding_modifydisplay /* Do not show the wedding sprites */
+			|| sd->job & JOBL_BABY /* Baby classes screw up when showing wedding sprites. [Skotlex] They don't seem to anymore. */
 			)
 			return true;
 	}
@@ -15268,9 +15312,9 @@ static int buildin_maprespawnguildid_sub_pc(struct map_session_data *sd, va_list
 	if(!sd || sd->bl.m != m)
 		return 0;
 	if(
-	    (sd->status.guild_id == g_id && flag&1) //Warp out owners
-	 || (sd->status.guild_id != g_id && flag&2) //Warp out outsiders
-	 || (sd->status.guild_id == 0)              // Warp out players not in guild [Valaris]
+	    (sd->status.guild_id == g_id && flag&1) /* Warp out owners */
+	 || (sd->status.guild_id != g_id && flag&2) /* Warp out outsiders */
+	 || (sd->status.guild_id == 0)              /* Warp out players not in guild [Valaris] */
 	  )
 		pc->setpos(sd,sd->status.save_point.map,sd->status.save_point.x,sd->status.save_point.y,CLR_TELEPORT);
 	return 1;
@@ -19317,7 +19361,8 @@ static BUILDIN(explode)
 	char *temp = (char *)aMalloc(len + 1);
 
 	for (i = 0; str[i] != '\0'; i++) {
-		if (str[i] == delimiter && (int64)start + k < (int64)(SCRIPT_MAX_ARRAYSIZE-1)) { // FIXME[Haru]: SCRIPT_MAX_ARRAYSIZE should really be unsigned (and INT32_MAX)
+		// FIXME[Haru]: SCRIPT_MAX_ARRAYSIZE should really be unsigned (and INT32_MAX)
+		if (str[i] == delimiter && (int64)start + k < (int64)(SCRIPT_MAX_ARRAYSIZE-1)) {
 			//break at delimiter but ignore after reaching last array index
 			temp[j] = '\0';
 			script->set_reg(st, sd, reference_uid(id, start + k), name, temp, reference_getref(data));
@@ -20224,9 +20269,15 @@ static BUILDIN(callshop)
 
 		switch( flag )
 		{
-			case 1: npc->buysellsel(sd,nd->bl.id,0); break; //Buy window
-			case 2: npc->buysellsel(sd,nd->bl.id,1); break; //Sell window
-			default: clif->npcbuysell(sd,nd->bl.id); break; //Show menu
+			case 1:
+				//Buy window
+				npc->buysellsel(sd,nd->bl.id,0); break;
+			case 2:
+				//Sell window
+				npc->buysellsel(sd,nd->bl.id,1); break;
+			default:
+				//Show menu
+				clif->npcbuysell(sd,nd->bl.id); break;
 		}
 	}
 	else
@@ -20612,10 +20663,12 @@ static BUILDIN(checkidle)
 	else
 		sd = script->rid2sd(st);
 
-	if (sd != NULL)
-		script_pushint(st, DIFF_TICK32(sockt->last_tick, sd->idletime)); // TODO: change this to int64 when we'll support 64 bit script values
-	else
+	if (sd != NULL) {
+		// TODO: change this to int64 when we'll support 64 bit script values
+		script_pushint(st, DIFF_TICK32(sockt->last_tick, sd->idletime));
+	} else {
 		script_pushint(st, 0);
+	}
 
 	return true;
 }
@@ -21123,7 +21176,8 @@ static BUILDIN(setunitdata)
 		setunitdata_check_bounds(4, 0, SHRT_MAX);
 		break;
 	case UDT_HUNGER:
-		setunitdata_check_bounds(4, PET_HUNGER_STARVING, PET_HUNGER_STUFFED); // Pets and Homunculi have the same hunger value bounds.
+		// Pets and Homunculi have the same hunger value bounds.
+		setunitdata_check_bounds(4, PET_HUNGER_STARVING, PET_HUNGER_STUFFED);
 		break;
 	case UDT_RACE:
 	case UDT_ELETYPE:
@@ -23174,7 +23228,8 @@ static BUILDIN(getvariableofnpc)
 
 	data = script_getdata(st,2);
 	if( !data_isreference(data) )
-	{// Not a reference (aka varaible name)
+	{
+		// Not a reference (aka variable name)
 		ShowError("script:getvariableofnpc: not a variable\n");
 		script->reportdata(data);
 		script_pushnil(st);
@@ -23184,7 +23239,8 @@ static BUILDIN(getvariableofnpc)
 
 	name = reference_getname(data);
 	if( *name != '.' || name[1] == '@' )
-	{// not a npc variable
+	{
+		// not a npc variable
 		ShowError("script:getvariableofnpc: invalid scope (not npc variable)\n");
 		script->reportdata(data);
 		script_pushnil(st);
@@ -23194,7 +23250,8 @@ static BUILDIN(getvariableofnpc)
 
 	nd = npc->name2id(script_getstr(st,3));
 	if( nd == NULL || nd->subtype != SCRIPT || nd->u.scr.script == NULL )
-	{// NPC not found or has no script
+	{
+		// NPC not found or has no script
 		ShowError("script:getvariableofnpc: can't find npc %s\n", script_getstr(st,3));
 		script_pushnil(st);
 		st->state = END;
@@ -24478,10 +24535,10 @@ static BUILDIN(instance_announce)
 	const char *mes         = script_getstr(st,3);
 	int         flag        = script_getnum(st,4);
 	const char *fontColor   = script_hasdata(st,5) ? script_getstr(st,5) : NULL;
-	int         fontType    = script_hasdata(st,6) ? script_getnum(st,6) : 0x190; // default fontType (FW_NORMAL)
-	int         fontSize    = script_hasdata(st,7) ? script_getnum(st,7) : 12;    // default fontSize
-	int         fontAlign   = script_hasdata(st,8) ? script_getnum(st,8) : 0;     // default fontAlign
-	int         fontY       = script_hasdata(st,9) ? script_getnum(st,9) : 0;     // default fontY
+	int         fontType    = script_hasdata(st,6) ? script_getnum(st,6) : 0x190 /* default fontType (FW_NORMAL) */;
+	int         fontSize    = script_hasdata(st,7) ? script_getnum(st,7) : 12 /* default fontSize */;
+	int         fontAlign   = script_hasdata(st,8) ? script_getnum(st,8) : 0 /* default fontAlign */;
+	int         fontY       = script_hasdata(st,9) ? script_getnum(st,9) : 0 /* default fontY */;
 	int i;
 	size_t len = strlen(mes);
 	Assert_retr(false, len < INT_MAX);
@@ -25688,12 +25745,14 @@ static BUILDIN(montransform)
 			return false;
 
 		if (battle_config.mon_trans_disable_in_gvg && map_flag_gvg2(sd->bl.m)) {
-			clif->message(sd->fd, msg_sd(sd, MSGTBL_TRANSFORM_NOT_ALLOWED_GW)); // Transforming into monster is not allowed in Guild Wars.
+			// Transforming into monster is not allowed in Guild Wars.
+			clif->message(sd->fd, msg_sd(sd, MSGTBL_TRANSFORM_NOT_ALLOWED_GW));
 			return true;
 		}
 
 		if (sd->disguise != -1) {
-			clif->message(sd->fd, msg_sd(sd, MSGTBL_NOT_TRANSFORM_WHILE_DISGUISED)); // Cannot transform into monster while in disguise.
+			// Cannot transform into monster while in disguise.
+			clif->message(sd->fd, msg_sd(sd, MSGTBL_NOT_TRANSFORM_WHILE_DISGUISED));
 			return true;
 		}
 
@@ -27238,10 +27297,13 @@ static BUILDIN(getcalendartime)
 	}
 
 	if (day_of_month > -1) {
-		if (day_of_month < day) { // Next Month
+		if (day_of_month < day) {
+			// Next Month
 			info.tm_mon++;
-		} else if (day_of_month == day) { // Today
-			if (hour < cur_hour || (hour == cur_hour && minute <= cur_min)) { // But past time, next month
+		} else if (day_of_month == day) {
+			// Today
+			if (hour < cur_hour || (hour == cur_hour && minute <= cur_min)) {
+				// But past time, next month
 				info.tm_mon++;
 			}
 		}
@@ -30338,8 +30400,10 @@ static void script_hardcoded_constants(void)
 	script->set_constant("UDT_MAXSP", UDT_MAXSP, false, false);
 	script->set_constant("UDT_MASTERAID", UDT_MASTERAID, false, false);
 	script->set_constant("UDT_MASTERCID", UDT_MASTERCID, false, false);
-	script->set_constant("UDT_MAPIDXY", UDT_MAPIDXY, false, true);  // for setunitdata use *unitwarp, for getunitdata use *getmapxy
-	script->set_constant("UDT_WALKTOXY", UDT_WALKTOXY, false, true);  // use *unitwalk
+	// for setunitdata use *unitwarp, for getunitdata use *getmapxy
+	script->set_constant("UDT_MAPIDXY", UDT_MAPIDXY, false, true);
+	// use *unitwalk
+	script->set_constant("UDT_WALKTOXY", UDT_WALKTOXY, false, true);
 	script->set_constant("UDT_SPEED", UDT_SPEED, false, false);
 	script->set_constant("UDT_MODE", UDT_MODE, false, false);
 	script->set_constant("UDT_AI", UDT_AI, false, false);
@@ -30775,7 +30839,7 @@ static unsigned short script_mapindexname2id(struct script_state *st, const char
 void script_defaults(void)
 {
 	// aegis->athena slot position conversion table
-	unsigned int equip[SCRIPT_EQUIP_TABLE_SIZE] = {EQP_HEAD_TOP,EQP_ARMOR,EQP_HAND_L,EQP_HAND_R,EQP_GARMENT,EQP_SHOES,EQP_ACC_L,EQP_ACC_R,EQP_HEAD_MID,EQP_HEAD_LOW,EQP_COSTUME_HEAD_LOW,EQP_COSTUME_HEAD_MID,EQP_COSTUME_HEAD_TOP,EQP_COSTUME_GARMENT,EQP_SHADOW_ARMOR, EQP_SHADOW_WEAPON, EQP_SHADOW_SHIELD, EQP_SHADOW_SHOES, EQP_SHADOW_ACC_R, EQP_SHADOW_ACC_L};
+	unsigned int equip[SCRIPT_EQUIP_TABLE_SIZE] = {EQP_HEAD_TOP,EQP_ARMOR,EQP_HAND_L,EQP_HAND_R,EQP_GARMENT,EQP_SHOES,EQP_ACC_L,EQP_ACC_R,EQP_HEAD_MID,EQP_HEAD_LOW,EQP_COSTUME_HEAD_LOW,EQP_COSTUME_HEAD_MID,EQP_COSTUME_HEAD_TOP,EQP_COSTUME_GARMENT,EQP_SHADOW_ARMOR, EQP_SHADOW_WEAPON, EQP_SHADOW_SHIELD, EQP_SHADOW_SHOES, EQP_SHADOW_ACC_R, EQP_SHADOW_ACC_L,};
 
 	script = &script_s;
 
@@ -30831,8 +30895,12 @@ void script_defaults(void)
 	script->autobonus_db = NULL;
 	script->userfunc_db = NULL;
 
-	script->potion_flag = script->potion_hp = script->potion_per_hp =
-	script->potion_sp = script->potion_per_sp = script->potion_target = 0;
+	script->potion_flag = 0;
+	script->potion_hp = 0;
+	script->potion_per_hp = 0;
+	script->potion_sp = 0;
+	script->potion_per_sp = 0;
+	script->potion_target = 0;
 
 	script->generic_ui_array = NULL;
 	script->generic_ui_array_size = 0;
@@ -31019,9 +31087,12 @@ void script_defaults(void)
 	script->config.loadmap_event_name = "OnPCLoadMapEvent";
 	script->config.baselvup_event_name = "OnPCBaseLvUpEvent";
 	script->config.joblvup_event_name = "OnPCJobLvUpEvent";
-	script->config.ontouch_name = "OnTouch_";  //ontouch_name (runs on first visible char to enter area, picks another char if the first char leaves)
-	script->config.ontouch2_name = "OnTouch";  //ontouch2_name (run whenever a char walks into the OnTouch area)
-	script->config.onuntouch_name = "OnUnTouch";  //onuntouch_name (run whenever a char walks from the OnTouch area)
+	//ontouch_name (runs on first visible char to enter area, picks another char if the first char leaves)
+	script->config.ontouch_name = "OnTouch_";
+	//ontouch2_name (run whenever a char walks into the OnTouch area)
+	script->config.ontouch2_name = "OnTouch";
+	//onuntouch_name (run whenever a char walks from the OnTouch area)
+	script->config.onuntouch_name = "OnUnTouch";
 	script->config.functions_private_by_default = true;
 	script->config.functions_as_events = false;
 
