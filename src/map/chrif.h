@@ -23,7 +23,7 @@
 
 #include "common/hercules.h"
 #include "common/db.h"
-#include "common/ers.h"
+#include "common/ers_fwd.h"
 #include "common/mmo.h"
 
 struct map_session_data;

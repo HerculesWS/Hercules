@@ -24,7 +24,7 @@
 #include "map/map.h" // EVENT_NAME_LENGTH
 #include "common/hercules.h"
 #include "common/db.h"
-#include "common/ers.h"
+#include "common/ers_fwd.h"
 #include "common/mmo.h"
 
 struct fifo_chunk_buf;

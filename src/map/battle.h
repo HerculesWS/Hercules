@@ -23,7 +23,7 @@
 
 #include "map/map.h" //ELE_MAX
 #include "common/hercules.h"
-#include "common/ers.h"
+#include "common/ers_fwd.h"
 
 /**
  * Declarations
