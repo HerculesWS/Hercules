@@ -7236,7 +7236,7 @@ static void status_display_add(struct map_session_data *sd, enum sc_type type, i
 		return;
 	}
 
-	entry = ers_alloc(pc->sc_display_ers);
+	entry = pc->sc_display_ers->alloc();
 
 	entry->type = type;
 	entry->val1 = dval1;
@@ -10060,7 +10060,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			timer->delete_(sce->timer, status->change_timer);
 	} else {// new sc
 		++(sc->count);
-		sce = sc->data[type] = ers_alloc(status->data_ers);
+		sce = sc->data[type] = status->data_ers->alloc();
 	}
 
 	sce->val1 = val1;

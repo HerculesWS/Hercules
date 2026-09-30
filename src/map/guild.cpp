@@ -1423,7 +1423,7 @@ static struct DBData create_expcache(union DBKey key, va_list args)
 	struct guild_expcache *c;
 	struct map_session_data *sd = va_arg(args, struct map_session_data*);
 
-	c = ers_alloc(guild->expcache_ers);
+	c = guild->expcache_ers->alloc();
 	nullpo_retr(DB->ptr2data(c), sd);
 	c->guild_id = sd->status.guild_id;
 	c->account_id = sd->status.account_id;

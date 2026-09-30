@@ -686,7 +686,7 @@ static int npc_timerevent_start(struct npc_data *nd, int rid)
 		int next;
 		struct timer_event_data *ted;
 		// Arrange for the next event
-		ted = ers_alloc(npc->timer_event_ers);
+		ted = npc->timer_event_ers->alloc();
 		ted->next = j; // Set event index
 		ted->time = nd->u.scr.timer_event[j].timer;
 		next = nd->u.scr.timer_event[j].timer - nd->u.scr.timer;

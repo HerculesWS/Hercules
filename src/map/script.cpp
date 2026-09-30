@@ -3646,7 +3646,7 @@ static void script_array_update(struct reg_db *src, int64 num, bool empty)
 			/* we do nothing if its empty, no point in modifying array data for a new empty member */
 		}
 	} else if ( !empty ) {/* we only move to create if not empty */
-		sa = ers_alloc(script->array_ers);
+		sa = script->array_ers->alloc();
 		sa->id = id;
 		sa->members = NULL;
 		sa->size = 0;
@@ -4271,8 +4271,8 @@ static struct script_state *script_alloc_state(struct script_code *rootscript, i
 {
 	struct script_state* st;
 
-	st = ers_alloc(script->st_ers);
-	st->stack = ers_alloc(script->stack_ers);
+	st = script->st_ers->alloc();
+	st->stack = script->stack_ers->alloc();
 	st->pending_refs = NULL;
 	st->pending_ref_count = 0;
 	st->stack->sp = 0;

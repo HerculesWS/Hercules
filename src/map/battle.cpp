@@ -332,7 +332,7 @@ static int battle_delay_damage(int64 tick, int amotion, struct block_list *src, 
 		map->freeblock_unlock();
 		return 0;
 	}
-	dat = ers_alloc(battle->delay_damage_ers);
+	dat = battle->delay_damage_ers->alloc();
 	dat->src_id = src->id;
 	dat->target_id = target->id;
 	dat->skill_id = skill_id;

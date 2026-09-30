@@ -959,7 +959,7 @@ static void clif_clearunit_delayed(struct block_list *bl, enum clr_type type, in
 {
 	nullpo_retv(bl);
 	Assert_retv(bl->type == BL_MOB);
-	struct mob_data *md = ers_alloc(clif->delay_clearunit_ers);
+	struct mob_data *md = clif->delay_clearunit_ers->alloc();
 	memcpy (md, bl, sizeof (struct mob_data));
 	timer->add(tick, clif->clearunit_delayed_sub, (int)type, (intptr_t)md);
 }
@@ -22037,7 +22037,7 @@ static int clif_delay_damage(int64 tick, struct block_list *src, struct block_li
 
 	type = clif_calc_delay(type,div,damage,ddelay);
 
-	dd = ers_alloc(clif->delayed_damage_ers);
+	dd = clif->delayed_damage_ers->alloc();
 
 	dd->p.PacketType = damageType;
 	dd->p.GID = src->id;

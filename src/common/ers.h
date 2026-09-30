@@ -479,7 +479,6 @@ class ERS final : public ERI
 	std::vector<std::unique_ptr<ers_chunk<T, chunk_size>>> m_chunks; //< Memory blocks array
 };
 
-#	define ers_alloc(obj, ...) ((obj)->alloc(##__VA_ARGS__))
 #	define ers_free(obj,entry) ((obj)->free((entry)))
 
 #endif /* COMMON_ERS_H */

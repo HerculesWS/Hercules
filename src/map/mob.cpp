@@ -2151,7 +2151,7 @@ static void mob_setdropitem_options(struct item *item, struct optdrop_group *opt
  *------------------------------------------*/
 static struct item_drop *mob_setdropitem(int nameid, struct optdrop_group *options, int qty, struct item_data *data)
 {
-	struct item_drop *drop = ers_alloc(item_drop_ers);
+	struct item_drop *drop = item_drop_ers->alloc();
 	drop->item_data.nameid = nameid;
 	drop->item_data.amount = qty;
 	drop->item_data.identify = data ? itemdb->isidentified2(data) : itemdb->isidentified(nameid);
@@ -2173,7 +2173,7 @@ static struct item_drop *mob_setlootitem(struct item *item)
 	struct item_drop *drop ;
 
 	nullpo_retr(NULL, item);
-	drop = ers_alloc(item_drop_ers);
+	drop = item_drop_ers->alloc();
 	memcpy(&drop->item_data, item, sizeof(struct item));
 	drop->showdropeffect = false;
 	drop->next = NULL;
@@ -2715,7 +2715,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 		(md->special_state.ai == AI_SPHERE && battle_config.alchemist_summon_reward == 1) //Marine Sphere Drops items.
 		) )
 	{ // Item Drop
-		struct item_drop_list *dlist = ers_alloc(item_drop_list_ers);
+		struct item_drop_list *dlist = item_drop_list_ers->alloc();
 		struct item_drop *ditem;
 		struct item_data* it = NULL;
 		int drop_rate;
@@ -2881,7 +2881,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 			ers_free(item_drop_list_ers, dlist);
 	} else if (md->lootitem && md->lootitem_count) {
 		//Loot MUST drop!
-		struct item_drop_list *dlist = ers_alloc(item_drop_list_ers);
+		struct item_drop_list *dlist = item_drop_list_ers->alloc();
 		dlist->m = md->bl.m;
 		dlist->x = md->bl.x;
 		dlist->y = md->bl.y;

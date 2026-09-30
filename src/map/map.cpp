@@ -1858,7 +1858,7 @@ static int map_addflooritem(const struct block_list *bl, struct item *item_data,
 		return 0;
 	r=rnd();
 
-	fitem = ers_alloc(map->flooritem_ers);
+	fitem = map->flooritem_ers->alloc();
 
 	fitem->bl.type = BL_ITEM;
 	fitem->bl.prev = fitem->bl.next = NULL;
@@ -2652,7 +2652,7 @@ static struct s_mapiterator *mapit_alloc(enum e_mapitflags flags, enum bl_type t
 {
 	struct s_mapiterator* iter;
 
-	iter = ers_alloc(map->iterator_ers);
+	iter = map->iterator_ers->alloc();
 	iter->flags = flags;
 	iter->types = types;
 	if( types == BL_PC )       iter->dbi = db_iterator(map->pc_db);

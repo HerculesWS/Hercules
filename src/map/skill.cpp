@@ -4670,7 +4670,7 @@ static int skill_addtimerskill(struct block_list *src, int64 tick, int target, i
 	ARR_FIND( 0, MAX_SKILLTIMERSKILL, i, ud->skilltimerskill[i] == 0 );
 	if( i == MAX_SKILLTIMERSKILL ) return 1;
 
-	ud->skilltimerskill[i] = ers_alloc(skill->timer_ers);
+	ud->skilltimerskill[i] = skill->timer_ers->alloc();
 	ud->skilltimerskill[i]->timer = timer->add(tick, skill->timerskill, src->id, i);
 	ud->skilltimerskill[i]->src_id = src->id;
 	ud->skilltimerskill[i]->target_id = target;
@@ -19339,7 +19339,7 @@ static struct skill_unit_group *skill_initunitgroup(struct block_list *src, int 
 		i = MAX_SKILLUNITGROUP-1;
 	}
 
-	group              = ers_alloc(skill->unit_ers);
+	group              = skill->unit_ers->alloc();
 	group->src_id      = src->id;
 	group->party_id    = status->get_party_id(src);
 	group->guild_id    = status->get_guild_id(src);
@@ -21217,7 +21217,7 @@ static int skill_blockpc_start_(struct map_session_data *sd, uint16 skill_id, in
 		clif->skill_cooldown(sd, skill_id, tick);
 
 	if ((cd = (struct skill_cd *)idb_get(skill->cd_db, sd->status.char_id)) == NULL) {// create a new skill cooldown object for map storage
-		cd = ers_alloc(skill->cd_ers);
+		cd = skill->cd_ers->alloc();
 
 		idb_put( skill->cd_db, sd->status.char_id, cd );
 	} else {
@@ -21262,7 +21262,7 @@ static int skill_blockpc_start_(struct map_session_data *sd, uint16 skill_id, in
 		return -1;
 	}
 
-	cd->entry[cd->cursor] = ers_alloc(skill->cd_entry_ers);
+	cd->entry[cd->cursor] = skill->cd_entry_ers->alloc();
 
 	cd->entry[cd->cursor]->duration = tick;
 	cd->entry[cd->cursor]->total = tick;

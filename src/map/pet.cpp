@@ -1283,7 +1283,7 @@ static int pet_lootitem_drop(struct pet_data *pd, struct map_session_data *sd)
 	struct item_drop *ditem;
 	if(!pd || !pd->loot || !pd->loot->count)
 		return 0;
-	dlist = ers_alloc(pet->item_drop_list_ers);
+	dlist = pet->item_drop_list_ers->alloc();
 	dlist->m = pd->bl.m;
 	dlist->x = pd->bl.x;
 	dlist->y = pd->bl.y;
@@ -1297,13 +1297,13 @@ static int pet_lootitem_drop(struct pet_data *pd, struct map_session_data *sd)
 		if (sd) {
 			if ((flag = pc->additem(sd,it,it->amount,LOG_TYPE_PICKDROP_PLAYER))) {
 				clif->additem(sd,0,0,flag);
-				ditem = ers_alloc(pet->item_drop_ers);
+				ditem = pet->item_drop_ers->alloc();
 				memcpy(&ditem->item_data, it, sizeof(struct item));
 				ditem->next = dlist->item;
 				dlist->item = ditem;
 			}
 		} else {
-			ditem = ers_alloc(pet->item_drop_ers);
+			ditem = pet->item_drop_ers->alloc();
 			memcpy(&ditem->item_data, it, sizeof(struct item));
 			ditem->next = dlist->item;
 			dlist->item = ditem;

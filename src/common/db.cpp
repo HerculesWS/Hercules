@@ -1532,7 +1532,7 @@ static struct DBIterator *db_obj_iterator(struct DBMap *self)
 	struct DBIterator_impl *it;
 
 	DB_COUNTSTAT(db_iterator);
-	it = ers_alloc(db_iterator_ers);
+	it = db_iterator_ers->alloc();
 	/* Interface of the iterator **/
 	it->vtable.first   = dbit_obj_first;
 	it->vtable.last    = dbit_obj_last;
@@ -1813,7 +1813,7 @@ static struct DBData *db_obj_vensure(struct DBMap *self, union DBKey key, DBCrea
 				return NULL;
 		}
 		DB_COUNTSTAT(db_node_alloc);
-		node = ers_alloc(db->nodes);
+		node = db->nodes->alloc();
 		node->left = NULL;
 		node->right = NULL;
 		node->deleted = 0;
@@ -1953,7 +1953,7 @@ static int db_obj_put(struct DBMap *self, union DBKey key, struct DBData data, s
 	// allocate a new node if necessary
 	if (node == NULL) {
 		DB_COUNTSTAT(db_node_alloc);
-		node = ers_alloc(db->nodes);
+		node = db->nodes->alloc();
 		node->left = NULL;
 		node->right = NULL;
 		node->deleted = 0;
@@ -2584,7 +2584,7 @@ static struct DBMap *db_alloc(const char *file, const char *func, int line, enum
 		case DB_UINT64: DB_COUNTSTAT(db_uint64_alloc); break;
 	}
 #endif /* DB_ENABLE_STATS */
-	db = ers_alloc(db_alloc_ers);
+	db = db_alloc_ers->alloc();
 
 	options = DB->fix_options(type, options);
 	/* Interface of the database */

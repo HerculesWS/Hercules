@@ -104,7 +104,7 @@ static bool mapreg_set_num_db(int64 uid, const char *name, unsigned int index, i
 	if (index != 0)
 		script->array_update(&mapreg->regs, uid, false);
 
-	var = ers_alloc(mapreg->ers);
+	var = mapreg->ers->alloc();
 	var->u.i = value;
 	var->uid = uid;
 	var->save = false;
@@ -249,7 +249,7 @@ static bool mapreg_set_str_db(int64 uid, const char *name, unsigned int index, c
 	if (index != 0)
 		script->array_update(&mapreg->regs, uid, false);
 
-	var = ers_alloc(mapreg->ers);
+	var = mapreg->ers->alloc();
 	var->u.str = aStrdup(value);
 	var->uid = uid;
 	var->save = false;
