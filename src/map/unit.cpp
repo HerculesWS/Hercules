@@ -49,6 +49,7 @@
 #include "map/storage.h"
 #include "map/trade.h"
 #include "map/vending.h"
+#include "common/ers.h"
 #include "common/HPM.h"
 #include "common/db.h"
 #include "common/memmgr.h"

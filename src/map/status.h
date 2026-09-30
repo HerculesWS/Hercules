@@ -22,7 +22,7 @@
 #define MAP_STATUS_H
 
 #include "common/hercules.h"
-#include "common/ers.h"
+#include "common/ers_fwd.h"
 #include "common/mmo.h" // NEW_CARTS
 
 struct block_list;

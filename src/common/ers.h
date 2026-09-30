@@ -62,6 +62,8 @@
 #include "common/nullpo.h"
 #include "common/showmsg.h"
 
+#include "common/ers_fwd.h"
+
 #include <array>
 #include <deque>
 #include <forward_list>
@@ -87,8 +89,6 @@
  * To allow a smooth transition,
  */
 //#define DISABLE_ERS
-
-constexpr size_t ers_chunk_size = 2048;
 
 enum ERSOptions {
 	ERS_OPT_NONE        = 0x00,
@@ -227,7 +227,7 @@ class ers_chunk
 /**
  * Public interface of the entry manager.
  */
-template<typename T, size_t chunk_size = ers_chunk_size>
+template<typename T, size_t chunk_size>
 class ERS final : public ERI
 {
   public:

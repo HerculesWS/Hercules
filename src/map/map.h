@@ -25,7 +25,7 @@
 #include "common/hercules.h"
 #include "common/core.h" // CORE_ST_LAST
 #include "common/db.h"
-#include "common/ers.h"
+#include "common/ers_fwd.h"
 #include "common/mapindex.h"
 #include "common/mmo.h"
 #include "map/unitdefines.h"  // enum unit_dir

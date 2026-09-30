@@ -23,7 +23,7 @@
 
 #include "map/script.h"
 #include "common/db.h"
-#include "common/ers.h"
+#include "common/ers_fwd.h"
 #include "common/hercules.h"
 
 /** Forward Declarations **/

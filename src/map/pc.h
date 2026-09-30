@@ -38,7 +38,7 @@
 #include "map/unit.h" // struct unit_data, struct view_data
 #include "map/vending.h" // struct s_vending
 #include "common/db.h"
-#include "common/ers.h" // struct eri
+#include "common/ers_fwd.h"
 #include "common/hercules.h"
 #include "common/mmo.h" // JOB_*, MAX_FAME_LIST, struct fame_list, struct mmo_charstatus, NEW_CARTS, struct s_achievement
 
