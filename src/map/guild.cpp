@@ -397,7 +397,7 @@ static int guild_payexp_timer_sub(union DBKey key, struct DBData *data, va_list 
 	if ((g = guild->search(c->guild_id)) == NULL
 	 || (i = guild->getindex(g, c->account_id, c->char_id)) == INDEX_NOT_FOUND
 	) {
-		ers_free(guild->expcache_ers, c);
+		guild->expcache_ers->free(c);
 		return 0;
 	}
 
@@ -410,7 +410,7 @@ static int guild_payexp_timer_sub(union DBKey key, struct DBData *data, va_list 
 		GMI_EXP,&g->member[i].exp,sizeof(g->member[i].exp));
 	c->exp=0;
 
-	ers_free(guild->expcache_ers, c);
+	guild->expcache_ers->free(c);
 	return 0;
 }
 
@@ -2431,7 +2431,7 @@ static int eventlist_db_final(union DBKey key, struct DBData *data, va_list ap)
  */
 static int guild_expcache_db_final(union DBKey key, struct DBData *data, va_list ap)
 {
-	ers_free(guild->expcache_ers, reinterpret_cast<guild_expcache *>(DB->data2ptr(data)));
+	guild->expcache_ers->free(reinterpret_cast<guild_expcache *>(DB->data2ptr(data)));
 	return 0;
 }
 

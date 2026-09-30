@@ -866,7 +866,7 @@ static void db_free_unlock(struct DBMap_impl *db)
 		db_rebalance_erase(db->free_list[i].node, db->free_list[i].root);
 		db_dup_key_free(db, db->free_list[i].node->key);
 		DB_COUNTSTAT(db_node_free);
-		ers_free(db->nodes, db->free_list[i].node);
+		db->nodes->free(db->free_list[i].node);
 	}
 	db->free_count = 0;
 }
@@ -1514,7 +1514,7 @@ static void dbit_obj_destroy(struct DBIterator *self)
 	// unlock the database
 	db_free_unlock(it->db);
 	// free iterator
-	ers_free(db_iterator_ers,it);
+	db_iterator_ers->free(it);
 }
 
 /**
@@ -2190,7 +2190,7 @@ static int db_obj_vclear(struct DBMap *self, DBApply func, va_list args)
 				else
 					parent->right = NULL;
 			}
-			ers_free(db->nodes, node);
+			db->nodes->free(node);
 			node = parent;
 		}
 		db->ht[i] = NULL;
@@ -2281,7 +2281,7 @@ static int db_obj_vdestroy(struct DBMap *self, DBApply func, va_list args)
 	db->free_max = 0;
 	ERI::destroy(db->nodes);
 	db_free_unlock(db);
-	ers_free(db_alloc_ers, db);
+	db_alloc_ers->free(db);
 	return sum;
 }
 

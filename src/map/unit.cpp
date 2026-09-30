@@ -2997,7 +2997,7 @@ static int unit_free(struct block_list *bl, enum clr_type clrtype)
 			if( sd->sc_display_count ) {
 				int i;
 				for(i = 0; i < sd->sc_display_count; i++) {
-					ers_free(pc->sc_display_ers, sd->sc_display[i]);
+					pc->sc_display_ers->free(sd->sc_display[i]);
 				}
 				sd->sc_display_count = 0;
 			}

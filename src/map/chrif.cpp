@@ -116,7 +116,7 @@ static bool chrif_auth_delete(int account_id, int char_id, enum sd_state state)
 			aFree(node->sd);
 		}
 
-		ers_free(chrif->auth_db_ers, node);
+		chrif->auth_db_ers->free(node);
 		idb_remove(chrif->auth_db,account_id);
 
 		return true;
@@ -1563,7 +1563,7 @@ static int auth_db_final(union DBKey key, struct DBData *data, va_list ap)
 
 		aFree(node->sd);
 	}
-	ers_free(chrif->auth_db_ers, node);
+	chrif->auth_db_ers->free(node);
 
 	return 0;
 }

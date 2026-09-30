@@ -947,11 +947,11 @@ static int clif_clearunit_delayed_sub(int tid, int64 tick, int id, intptr_t data
 	Assert_ret(bl->m >= 0 && bl->m < map->count);
 	if (map->list[bl->m].block == NULL) {
 		// avoid error report for missing/removed map
-		ers_free(clif->delay_clearunit_ers, BL_UCAST(BL_MOB, bl));
+		clif->delay_clearunit_ers->free(BL_UCAST(BL_MOB, bl));
 		return 0;
 	}
 	clif->clearunit_area(bl, (enum clr_type) id);
-	ers_free(clif->delay_clearunit_ers, BL_UCAST(BL_MOB, bl));
+	clif->delay_clearunit_ers->free(BL_UCAST(BL_MOB, bl));
 	return 0;
 }
 
@@ -21991,7 +21991,7 @@ static int clif_delay_damage_sub(int tid, int64 tick, int id, intptr_t data)
 
 	clif->send(&dd->p,sizeof(struct packet_damage),&dd->bl,AREA_WOS);
 
-	ers_free(clif->delayed_damage_ers,dd);
+	clif->delayed_damage_ers->free(dd);
 
 	return 0;
 }
@@ -22064,7 +22064,7 @@ static int clif_delay_damage(int64 tick, struct block_list *src, struct block_li
 	else {
 		clif->send(&dd->p,sizeof(struct packet_damage),&dd->bl,AREA_WOS);
 
-		ers_free(clif->delayed_damage_ers,dd);
+		clif->delayed_damage_ers->free(dd);
 	}
 
 	return clif->calc_walkdelay(dst,ddelay,type,damage,div);

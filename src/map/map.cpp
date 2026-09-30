@@ -153,7 +153,7 @@ static int map_freeblock(struct block_list *bl)
 
 	if (map->block_free_lock == 0) {
 		if( bl->type == BL_ITEM )
-			ers_free(map->flooritem_ers, BL_UCAST(BL_ITEM, bl));
+			map->flooritem_ers->free(BL_UCAST(BL_ITEM, bl));
 		else
 			aFree(bl);
 		bl = NULL;
@@ -194,7 +194,7 @@ static int map_freeblock_unlock(void)
 			map->block_free_sanitize[i] = NULL;
 #endif
 			if( map->block_free[i]->type == BL_ITEM )
-				ers_free(map->flooritem_ers, BL_UCAST(BL_ITEM, map->block_free[i]));
+				map->flooritem_ers->free(BL_UCAST(BL_ITEM, map->block_free[i]));
 			else
 				aFree(map->block_free[i]);
 			map->block_free[i] = NULL;
@@ -1868,7 +1868,7 @@ static int map_addflooritem(const struct block_list *bl, struct item *item_data,
 	fitem->bl.id = map->get_new_object_id();
 	fitem->showdropeffect = showdropeffect;
 	if(fitem->bl.id==0){
-		ers_free(map->flooritem_ers, fitem);
+		map->flooritem_ers->free(fitem);
 		return 0;
 	}
 
@@ -2669,7 +2669,7 @@ static void mapit_free(struct s_mapiterator *iter)
 	nullpo_retv(iter);
 
 	dbi_destroy(iter->dbi);
-	ers_free(map->iterator_ers, iter);
+	map->iterator_ers->free(iter);
 }
 
 /// Returns the first block_list that matches the description.

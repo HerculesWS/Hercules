@@ -606,7 +606,7 @@ static int npc_timerevent(int tid, int64 tick, int id, intptr_t data)
 
 	if (ted->rid && (sd = map->id2sd(ted->rid)) == NULL) {
 		ShowError("npc_timerevent: Attached player not found.\n");
-		ers_free(npc->timer_event_ers, ted);
+		npc->timer_event_ers->free(ted);
 		return 0;
 	}
 
@@ -641,7 +641,7 @@ static int npc_timerevent(int tid, int64 tick, int id, intptr_t data)
 		else
 			nd->u.scr.timerid = INVALID_TIMER;
 
-		ers_free(npc->timer_event_ers, ted);
+		npc->timer_event_ers->free(ted);
 	}
 
 	// Run the script
@@ -731,7 +731,7 @@ static int npc_timerevent_stop(struct npc_data *nd)
 	if (*tid != INVALID_TIMER) {
 		const struct TimerData *td = timer->get(*tid);
 		if (td && td->data)
-			ers_free(npc->timer_event_ers, reinterpret_cast<timer_event_data *>(td->data));
+			npc->timer_event_ers->free(reinterpret_cast<timer_event_data *>(td->data));
 		timer->delete_(*tid,npc->timerevent);
 		*tid = INVALID_TIMER;
 	}
@@ -801,7 +801,7 @@ static void npc_timerevent_quit(struct map_session_data *sd)
 			nd->u.scr.timertick = old_tick;
 		}
 	}
-	ers_free(npc->timer_event_ers, ted);
+	npc->timer_event_ers->free(ted);
 }
 
 /*==========================================
@@ -3161,7 +3161,7 @@ static int npc_unload(struct npc_data *nd, bool single, bool unload_mobs)
 					continue;
 
 				if (td != NULL && td->data != 0)
-					ers_free(npc->timer_event_ers, reinterpret_cast<timer_event_data *>(td->data));
+					npc->timer_event_ers->free(reinterpret_cast<timer_event_data *>(td->data));
 
 				timer->delete_(sd->npc_timer_id, npc->timerevent);
 				sd->npc_timer_id = INVALID_TIMER;
@@ -3174,7 +3174,7 @@ static int npc_unload(struct npc_data *nd, bool single, bool unload_mobs)
 			const struct TimerData *td = timer->get(nd->u.scr.timerid);
 
 			if (td != NULL && td->data != 0)
-				ers_free(npc->timer_event_ers, reinterpret_cast<timer_event_data *>(td->data));
+				npc->timer_event_ers->free(reinterpret_cast<timer_event_data *>(td->data));
 
 			timer->delete_(nd->u.scr.timerid, npc->timerevent);
 		}

@@ -4635,7 +4635,7 @@ static int skill_timerskill_(int tid, int64 tick, int id, intptr_t data)
 		}
 	} while (0);
 	//Free skl now that it is no longer needed.
-	ers_free(skill->timer_ers, skl);
+	skill->timer_ers->free(skl);
 	return 0;
 }
 
@@ -4713,7 +4713,7 @@ static int skill_cleartimerskill(struct block_list *src)
 						continue;
 			}
 			timer->delete_(ud->skilltimerskill[i]->timer, skill->timerskill);
-			ers_free(skill->timer_ers, ud->skilltimerskill[i]);
+			skill->timer_ers->free(ud->skilltimerskill[i]);
 			ud->skilltimerskill[i]=NULL;
 		}
 	}
@@ -19494,7 +19494,7 @@ static int skill_delunitgroup(struct skill_unit_group *group)
 	if( i < MAX_SKILLUNITGROUP ) {
 		ud->skillunit[i] = ud->skillunit[j];
 		ud->skillunit[j] = NULL;
-		ers_free(skill->unit_ers, group);
+		skill->unit_ers->free(group);
 	} else
 		ShowError("skill_delunitgroup: Group not found! (src_id: %d skill_id: %d)\n", group->src_id, group->skill_id);
 
@@ -21167,7 +21167,7 @@ static int skill_blockpc_end(int tid, int64 tick, int id, intptr_t data)
 		} else {
 			int cursor = 0;
 
-			ers_free(skill->cd_entry_ers, cd->entry[i]);
+			skill->cd_entry_ers->free(cd->entry[i]);
 
 			cd->entry[i] = NULL;
 
@@ -21181,7 +21181,7 @@ static int skill_blockpc_end(int tid, int64 tick, int id, intptr_t data)
 
 			if( (cd->cursor = cursor) == 0 ) {
 				idb_remove(skill->cd_db,sd->status.char_id);
-				ers_free(skill->cd_ers, cd);
+				skill->cd_ers->free(cd);
 			}
 		}
 	}
@@ -21240,7 +21240,7 @@ static int skill_blockpc_start_(struct map_session_data *sd, uint16 skill_id, in
 			else {
 				int cursor;
 				/* somehow, the timer vanished. (bugreport:8367) */
-				ers_free(skill->cd_entry_ers, cd->entry[i]);
+				skill->cd_entry_ers->free(cd->entry[i]);
 
 				cd->entry[i] = NULL;
 

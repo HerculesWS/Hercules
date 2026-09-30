@@ -1270,9 +1270,9 @@ static int pet_delay_item_drop(int tid, int64 tick, int id, intptr_t data)
 			list->first_charid, list->second_charid, list->third_charid, 0, false);
 		ditem_prev = ditem;
 		ditem = ditem->next;
-		ers_free(pet->item_drop_ers, ditem_prev);
+		pet->item_drop_ers->free(ditem_prev);
 	}
-	ers_free(pet->item_drop_list_ers, list);
+	pet->item_drop_list_ers->free(list);
 	return 0;
 }
 
@@ -1318,7 +1318,7 @@ static int pet_lootitem_drop(struct pet_data *pd, struct map_session_data *sd)
 	if (dlist->item)
 		timer->add(timer->gettick()+540,pet->delay_item_drop,0,(intptr_t)dlist);
 	else
-		ers_free(pet->item_drop_list_ers, dlist);
+		pet->item_drop_list_ers->free(dlist);
 	return 1;
 }
 

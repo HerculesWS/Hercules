@@ -9593,7 +9593,7 @@ static void pc_setregstr(struct map_session_data *sd, int64 reg, const char *str
 			struct script_reg_str *p_old = (struct script_reg_str *)DB->data2ptr(&prev);
 			if (p_old->value)
 				aFree(p_old->value);
-			ers_free(pc->str_reg_ers, p_old);
+			pc->str_reg_ers->free(p_old);
 		} else {
 			if( index )
 				script->array_update(&sd->regs, reg, false);
@@ -9603,7 +9603,7 @@ static void pc_setregstr(struct map_session_data *sd, int64 reg, const char *str
 			struct script_reg_str *p_old = (struct script_reg_str *)DB->data2ptr(&prev);
 			if (p_old->value)
 				aFree(p_old->value);
-			ers_free(pc->str_reg_ers, p_old);
+			pc->str_reg_ers->free(p_old);
 			if( index )
 				script->array_update(&sd->regs, reg, true);
 		}
@@ -9731,7 +9731,7 @@ static int pc_setregistry(struct map_session_data *sd, int64 reg, int val)
 		if( sd->regs.vars->put(sd->regs.vars, DB->i642key(reg), DB->ptr2data(p), &prev) ) {
 			// TODO: Is this intentionally overwriting p? (see the check below to decide whether to mark as dirty)
 			p = (struct script_reg_num *)DB->data2ptr(&prev);
-			ers_free(pc->num_reg_ers, p);
+			pc->num_reg_ers->free(p);
 		}
 	}
 
@@ -9791,7 +9791,7 @@ static int pc_setregistry_str(struct map_session_data *sd, int64 reg, const char
 			p = (struct script_reg_str *)DB->data2ptr(&prev);
 			if( p->value )
 				aFree(p->value);
-			ers_free(pc->str_reg_ers, p);
+			pc->str_reg_ers->free(p);
 		}
 	}
 

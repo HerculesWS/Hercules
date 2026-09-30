@@ -3504,7 +3504,7 @@ static int script_free_array_db(union DBKey key, struct DBData *data, va_list ap
 {
 	struct script_array *sa = (struct script_array *)DB->data2ptr(data);
 	aFree(sa->members);
-	ers_free(script->array_ers, sa);
+	script->array_ers->free(sa);
 	return 0;
 }
 /**
@@ -3516,7 +3516,7 @@ static void script_array_delete(struct reg_db *src, struct script_array *sa)
 	nullpo_retv(sa);
 	aFree(sa->members);
 	idb_remove(src->arrays, sa->id);
-	ers_free(script->array_ers, sa);
+	script->array_ers->free(sa);
 }
 /**
  * Removes a member from a script_array list
@@ -4337,7 +4337,7 @@ static void script_free_state(struct script_state *st)
 				st->stack->scope.arrays->destroy(st->stack->scope.arrays,script->array_free_db);
 			script->pop_stack(st, 0, st->stack->sp);
 			aFree(st->stack->stack_data);
-			ers_free(script->stack_ers, st->stack);
+			script->stack_ers->free(st->stack);
 			st->stack = NULL;
 		}
 		if( st->script && st->script->instances != USHRT_MAX && --st->script->instances == 0 ) {
@@ -4358,7 +4358,7 @@ static void script_free_state(struct script_state *st)
 			st->pending_refs = NULL;
 		}
 		idb_remove(script->st_db, st->id);
-		ers_free(script->st_ers, st);
+		script->st_ers->free(st);
 		if( --script->active_scripts == 0 ) {
 			script->next_id = 0;
 		}
@@ -5425,9 +5425,9 @@ static int script_reg_destroy(union DBKey key, struct DBData *data, va_list ap)
 		if( p->value )
 			aFree(p->value);
 
-		ers_free(pc->str_reg_ers,p);
+		pc->str_reg_ers->free(p);
 	} else {
-		ers_free(pc->num_reg_ers,(struct script_reg_num*)src);
+		pc->num_reg_ers->free((struct script_reg_num*)src);
 	}
 	return 0;
 }
@@ -5446,9 +5446,9 @@ static void script_reg_destroy_single(struct map_session_data *sd, int64 reg, st
 		if( p->value )
 			aFree(p->value);
 
-		ers_free(pc->str_reg_ers,p);
+		pc->str_reg_ers->free(p);
 	} else {
-		ers_free(pc->num_reg_ers,(struct script_reg_num*)data);
+		pc->num_reg_ers->free((struct script_reg_num*)data);
 	}
 }
 static unsigned int *script_array_cpy_list(struct script_array *sa)

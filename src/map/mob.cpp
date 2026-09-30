@@ -2197,9 +2197,9 @@ static int mob_delay_item_drop(int tid, int64 tick, int id, intptr_t data)
 		    ditem->showdropeffect);
 		ditem_prev = ditem;
 		ditem = ditem->next;
-		ers_free(item_drop_ers, ditem_prev);
+		item_drop_ers->free(ditem_prev);
 	}
-	ers_free(item_drop_list_ers, list);
+	item_drop_list_ers->free(list);
 	return 0;
 }
 
@@ -2237,7 +2237,7 @@ static void mob_item_drop(struct mob_data *md, struct item_drop_list *dlist, str
 		if (party->share_loot(party->search(sd->status.party_id),
 			sd, &ditem->item_data, sd->status.char_id) == 0
 		) {
-			ers_free(item_drop_ers, ditem);
+			item_drop_ers->free(ditem);
 			return;
 		}
 	}
@@ -2878,7 +2878,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 		if (dlist->item) //There are drop items.
 			timer->add(tick + (!battle_config.delay_battle_damage?500:0), mob->delay_item_drop, 0, (intptr_t)dlist);
 		else //No drops
-			ers_free(item_drop_list_ers, dlist);
+			item_drop_list_ers->free(dlist);
 	} else if (md->lootitem && md->lootitem_count) {
 		//Loot MUST drop!
 		struct item_drop_list *dlist = item_drop_list_ers->alloc();

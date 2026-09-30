@@ -7260,7 +7260,7 @@ static void status_display_remove(struct map_session_data *sd, enum sc_type type
 	if( i != sd->sc_display_count ) {
 		int cursor;
 
-		ers_free(pc->sc_display_ers, sd->sc_display[i]);
+		pc->sc_display_ers->free(sd->sc_display[i]);
 		sd->sc_display[i] = NULL;
 
 		/* the all-mighty compact-o-matic */
@@ -11253,7 +11253,7 @@ static int status_change_clear(struct block_list *bl, int type)
 			(sc->count)--;
 			if (sc->data[i]->timer != INVALID_TIMER)
 				timer->delete_(sc->data[i]->timer, status->change_timer);
-			ers_free(status->data_ers, sc->data[i]);
+			status->data_ers->free(sc->data[i]);
 			sc->data[i] = NULL;
 		}
 	}
@@ -12294,7 +12294,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 			npc->untouch_areanpc(sd, bl->m, bl->x, bl->y);
 	}
 
-	ers_free(status->data_ers, sce);
+	status->data_ers->free(sce);
 	map->freeblock_unlock();
 
 	return 1;
