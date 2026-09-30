@@ -133,7 +133,7 @@ static bool chrif_sd_to_auth(struct map_session_data *sd, enum sd_state state)
 	if ( chrif->search(sd->status.account_id) )
 		return false; //Already exists?
 
-	node = ers_alloc(chrif->auth_db_ers);
+	node = chrif->auth_db_ers->alloc();
 
 	memset(node, 0, sizeof(struct auth_node));
 

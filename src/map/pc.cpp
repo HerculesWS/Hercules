@@ -9639,7 +9639,7 @@ static void pc_setregstr(struct map_session_data *sd, int64 reg, const char *str
 	nullpo_retv(sd);
 	nullpo_retv(str);
 	if( str[0] ) {
-		struct script_reg_str *p_new = ers_alloc(pc->str_reg_ers);
+		struct script_reg_str *p_new = pc->str_reg_ers->alloc();
 
 		p_new->value = aStrdup(str);
 		p_new->flag.type = 1;
@@ -9777,7 +9777,7 @@ static int pc_setregistry(struct map_session_data *sd, int64 reg, int val)
 		if( index )
 			script->array_update(&sd->regs, reg, false);
 
-		p = ers_alloc(pc->num_reg_ers);
+		p = pc->num_reg_ers->alloc();
 
 		p->value = val;
 		if( !pc->reg_load )
@@ -9834,7 +9834,7 @@ static int pc_setregistry_str(struct map_session_data *sd, int64 reg, const char
 		if( index )
 			script->array_update(&sd->regs, reg, false);
 
-		p = ers_alloc(pc->str_reg_ers);
+		p = pc->str_reg_ers->alloc();
 
 		p->value = aStrdup(val);
 		if( !pc->reg_load )
