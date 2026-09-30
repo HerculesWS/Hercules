@@ -188,9 +188,9 @@ static int unit_walk_toxy_sub(struct block_list *bl)
 		return 1;
 
 #ifdef OFFICIAL_WALKPATH
-	if (bl->type != BL_NPC // If type is an NPC, disregard.
-	    && !path->search_long(NULL, bl, bl->m, bl->x, bl->y, ud->to_x, ud->to_y, CELL_CHKNOPASS) // Check if there is an obstacle between
-	    && wpd.path_len > 14) { // Official number of walkable cells is 14 if and only if there is an obstacle between. [malufett]
+	if (bl->type != BL_NPC /* If type is an NPC, disregard */
+	    && !path->search_long(NULL, bl, bl->m, bl->x, bl->y, ud->to_x, ud->to_y, CELL_CHKNOPASS) /* Check if there is an obstacle between */
+	    && wpd.path_len > 14 /* Official number of walkable cells is 14 if and only if there is an obstacle between. [malufett] */) {
 			return 1;
 	}
 #endif
@@ -636,7 +636,8 @@ static int unit_walk_toxy(struct block_list *bl, short x, short y, int flag)
 
 	sc = status->get_sc(bl);
 	if (sc != NULL) {
-		if (sc->data[SC_CONFUSION] != NULL || sc->data[SC__CHAOS] != NULL) { // Randomize the target position
+		if (sc->data[SC_CONFUSION] != NULL || sc->data[SC__CHAOS] != NULL) {
+			// Randomize the target position
 			// Aegis behavior, yes if it doesn't find a random walkable cell it will not move at all.
 			ud->to_x = bl->x;
 			ud->to_y = bl->y;
@@ -957,8 +958,9 @@ static int unit_move_pos(struct block_list *bl, short dst_x, short dst_y, int ea
 		// Check if pet needs to be teleported. [Skotlex]
 		if (sd->status.pet_id > 0 && sd->pd != NULL && sd->pd->pet.intimate > PET_INTIMACY_NONE) {
 			struct block_list* pbl = &sd->pd->bl;
-			if ((!checkpath && !path->search(NULL, pbl, pbl->m, pbl->x, pbl->y, dst_x, dst_y, 0, CELL_CHKNOPASS)) // No path to master
-			    || !check_distance_bl(bl, pbl, AREA_SIZE)) { // Too far, teleport.
+			if ((!checkpath && !path->search(NULL, pbl, pbl->m, pbl->x, pbl->y, dst_x, dst_y, 0, CELL_CHKNOPASS)) /* No path to master */
+			    || !check_distance_bl(bl, pbl, AREA_SIZE)) {
+				// Too far, teleport.
 				unit->move_pos(pbl, bl->x, bl->y, 0, false);
 				clif->slide(pbl, pbl->x, pbl->y);
 			}
@@ -1166,8 +1168,8 @@ static int unit_stop_walking(struct block_list *bl, int flag)
 	ud->walktimer = INVALID_TIMER;
 	ud->state.change_walk_target = 0;
 	tick = timer->gettick();
-	if( (flag&STOPWALKING_FLAG_ONESTEP && !ud->walkpath.path_pos) //Force moving at least one cell.
-	||  (flag&STOPWALKING_FLAG_NEXTCELL && td && DIFF_TICK(td->tick, tick) <= td->data/2) //Enough time has passed to cover half-cell
+	if( (flag&STOPWALKING_FLAG_ONESTEP && !ud->walkpath.path_pos) /* Force moving at least one cell. */
+	||  (flag&STOPWALKING_FLAG_NEXTCELL && td && DIFF_TICK(td->tick, tick) <= td->data/2) /* Enough time has passed to cover half-cell */
 	) {
 		ud->walkpath.path_len = ud->walkpath.path_pos+1;
 		unit->walk_toxy_timer(INVALID_TIMER, tick, bl->id, ud->walkpath.path_pos);
@@ -1264,8 +1266,8 @@ static int unit_can_move(struct block_list *bl)
 		    ||  sc->data[SC_TRICKDEAD]
 		    ||  sc->data[SC_BLADESTOP]
 		    ||  sc->data[SC_BLADESTOP_WAIT]
-		    || (sc->data[SC_GOSPEL] && sc->data[SC_GOSPEL]->val4 == BCT_SELF) // cannot move while gospel is in effect
-		    || (sc->data[SC_BASILICA] && sc->data[SC_BASILICA]->val4 == bl->id) // Basilica caster cannot move
+		    || (sc->data[SC_GOSPEL] && sc->data[SC_GOSPEL]->val4 == BCT_SELF) /* cannot move while gospel is in effect */
+		    || (sc->data[SC_BASILICA] && sc->data[SC_BASILICA]->val4 == bl->id) /* Basilica caster cannot move */
 		    ||  sc->data[SC_STOP]
 			|| sc->data[SC_FALLENEMPIRE]
 		    ||  sc->data[SC_RG_CCONFINE_M]
@@ -1291,7 +1293,7 @@ static int unit_can_move(struct block_list *bl)
 			|| sc->data[SC_NETHERWORLD]
 			|| sc->data[SC_SUHIDE]
 		    || (sc->data[SC_SPIDERWEB] && sc->data[SC_SPIDERWEB]->val1)
-		    || (sc->data[SC_CLOAKING] && sc->data[SC_CLOAKING]->val1 < 3 && !(sc->data[SC_CLOAKING]->val4&1)) //Need wall at level 1-2
+		    || (sc->data[SC_CLOAKING] && sc->data[SC_CLOAKING]->val1 < 3 && !(sc->data[SC_CLOAKING]->val4&1)) /* Need wall at level 1-2 */
 		    || (
 		         sc->data[SC_DANCING] && sc->data[SC_DANCING]->val4
 		         && (
@@ -1805,8 +1807,11 @@ static int unit_skilluse_id2(struct block_list *src, int target_id, uint16 skill
 		}
 	}
 
-	if (!ud->state.running) //need TK_RUN or WUGDASH handler to be done before that, see bugreport:6026
-		unit->stop_walking(src, STOPWALKING_FLAG_FIXPOS);// even though this is not how official works but this will do the trick. bugreport:6829
+	//need TK_RUN or WUGDASH handler to be done before that, see bugreport:6026
+	if (!ud->state.running) {
+		// even though this is not how official works but this will do the trick. bugreport:6829
+		unit->stop_walking(src, STOPWALKING_FLAG_FIXPOS);
+	}
 
 	if (sd != NULL && sd->auto_cast_current.itemskill_instant_cast && sd->auto_cast_current.type == AUTOCAST_ITEM)
 		casttime = 0;
@@ -1921,7 +1926,8 @@ static int unit_skilluse_pos2(struct block_list *src, short skill_x, short skill
 	ud = unit->bl2ud(src);
 	if(ud == NULL) return 0;
 
-	if(ud->skilltimer != INVALID_TIMER) //Normally not needed since clif.cpp checks for it, but at/char/script commands don't! [Skotlex]
+	//Normally not needed since clif.cpp checks for it, but at/char/script commands don't! [Skotlex]
+	if(ud->skilltimer != INVALID_TIMER)
 		return 0;
 
 	sc = status->get_sc(src);
@@ -2286,9 +2292,9 @@ static bool unit_can_reach_bl(struct block_list *bl, struct block_list *tbl, int
 		return false;
 
 #ifdef OFFICIAL_WALKPATH
-	if( !path->search_long(NULL, bl, bl->m, bl->x, bl->y, tbl->x-dx, tbl->y-dy, CELL_CHKNOPASS) // Check if there is an obstacle between
-	  && wpd.path_len > 14 // Official number of walkable cells is 14 if and only if there is an obstacle between. [malufett]
-	  && (bl->type != BL_NPC) ) // If type is a NPC, please disregard.
+	if( !path->search_long(NULL, bl, bl->m, bl->x, bl->y, tbl->x-dx, tbl->y-dy, CELL_CHKNOPASS) /* Check if there is an obstacle between */
+	  && wpd.path_len > 14 /* Official number of walkable cells is 14 if and only if there is an obstacle between. [malufett] */
+	  && (bl->type != BL_NPC) /* If type is a NPC, please disregard. */)
 		return false;
 #endif
 
@@ -2398,8 +2404,10 @@ static int unit_attack_timer_sub(struct block_list *src, int tid, int64 tick)
 		return 0; // can't attack while casting
 
 	if (!battle_config.sdelay_attack_enable && DIFF_TICK(ud->canact_tick, tick) > 0 && !(sd && (pc->checkskill(sd, SA_FREECAST) > 0 || (skill->get_inf2(ud->skill_id) & (INF2_FREE_CAST_REDUCED | INF2_FREE_CAST_NORMAL)) != 0)))
-	{ // attacking when under cast delay has restrictions:
-		if( tid == INVALID_TIMER ) { //requested attack.
+	{
+		// attacking when under cast delay has restrictions:
+		if( tid == INVALID_TIMER ) {
+			//requested attack.
 			if(sd) clif->skill_fail(sd, 1, USESKILL_FAIL_SKILLINTERVAL, 0, 0);
 			return 0;
 		}
@@ -2538,7 +2546,7 @@ static int unit_skillcastcancel(struct block_list *bl, int type)
 			return 0;
 
 		if (sd && (sd->special_state.no_castcancel2
-		 || (sd->special_state.no_castcancel && !map_flag_gvg(bl->m) && !map->list[bl->m].flag.battleground))) //fixed flags being read the wrong way around [blackhole89]
+		 || (sd->special_state.no_castcancel && !map_flag_gvg(bl->m) && !map->list[bl->m].flag.battleground)))
 			return 0;
 	}
 

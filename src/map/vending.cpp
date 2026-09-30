@@ -79,8 +79,10 @@ static void vending_vendinglistreq(struct map_session_data *sd, unsigned int id)
 	if( !vsd->state.vending )
 		return; // not vending
 
-	if (!pc_can_give_items(sd) || !pc_can_give_items(vsd)) { //check if both GMs are allowed to trade
-		clif->message(sd->fd, msg_sd(sd, MSGTBL_CANT_GIVE_ITEMS)); // Your GM level doesn't authorize you to perform this action.
+	//check if both GMs are allowed to trade
+	if (!pc_can_give_items(sd) || !pc_can_give_items(vsd)) {
+		// Your GM level doesn't authorize you to perform this action.
+		clif->message(sd->fd, msg_sd(sd, MSGTBL_CANT_GIVE_ITEMS));
 		return;
 	}
 
@@ -254,7 +256,8 @@ static void vending_openvending(struct map_session_data *sd, const char *message
 
 	if (pc_isdead(sd) || sd->state.prevend == 0 || pc_istrading_except_npc(sd)
 	    || (sd->npc_id != 0 && sd->state.using_megaphone == 0)) {
-		return; // Can't open vendings lying dead. || Didn't use via the skill. (wpe/hack) || Can't have 2 shops at once.
+		// Can't open vendings lying dead. || Didn't use via the skill. (wpe/hack) || Can't have 2 shops at once.
+		return;
 	}
 
 	vending_skill_lvl = pc->checkskill(sd, MC_VENDING);
@@ -280,15 +283,16 @@ static void vending_openvending(struct map_session_data *sd, const char *message
 
 		index -= 2; // offset adjustment (client says that the first cart position is 2)
 
-		if( index < 0 || index >= MAX_CART // invalid position
-		 || pc->cartitem_amount(sd, index, amount) < 0 // invalid item or insufficient quantity
-		//NOTE: official server does not do any of the following checks!
-		 || !sd->status.cart[index].identify // unidentified item
-		 || (sd->status.cart[index].attribute & ATTR_BROKEN) != 0 // broken item
-		 || sd->status.cart[index].expire_time // It should not be in the cart but just in case
-		 || (sd->status.cart[index].bound && !pc_can_give_bound_items(sd)) // can't trade bound items w/o permission
-		 || !itemdb_cantrade(&sd->status.cart[index], pc_get_group_level(sd), pc_get_group_level(sd)) ) // untradeable item
+		if( index < 0 || index >= MAX_CART /* invalid position */
+		 || pc->cartitem_amount(sd, index, amount) < 0 /* invalid item or insufficient quantity */
+		/* NOTE: official server does not do any of the following checks! */
+		 || !sd->status.cart[index].identify /* unidentified item */
+		 || (sd->status.cart[index].attribute & ATTR_BROKEN) != 0 /* broken item */
+		 || sd->status.cart[index].expire_time /* It should not be in the cart but just in case */
+		 || (sd->status.cart[index].bound && !pc_can_give_bound_items(sd)) /* can't trade bound items w/o permission */
+		 || !itemdb_cantrade(&sd->status.cart[index], pc_get_group_level(sd), pc_get_group_level(sd)) /* untradeable item */) {
 			continue;
+		 }
 
 		sd->vending[i].index = index;
 		sd->vending[i].amount = amount;
@@ -297,11 +301,14 @@ static void vending_openvending(struct map_session_data *sd, const char *message
 		i++; // item successfully added
 	}
 
-	if( i != j )
-		clif->message (sd->fd, msg_sd(sd, MSGTBL_ITEMS_REMOVED_FROM_SHOP)); //"Some of your items cannot be vended and were removed from the shop."
+	if( i != j ) {
+		//"Some of your items cannot be vended and were removed from the shop."
+		clif->message (sd->fd, msg_sd(sd, MSGTBL_ITEMS_REMOVED_FROM_SHOP));
+	}
 
 	if( i == 0 ) { // no valid item found
-		clif->skill_fail(sd, MC_VENDING, USESKILL_FAIL_LEVEL, 0, 0); // custom reply packet
+		// custom reply packet
+		clif->skill_fail(sd, MC_VENDING, USESKILL_FAIL_LEVEL, 0, 0);
 		return;
 	}
 	sd->state.prevend = sd->state.workinprogress = 0;
@@ -384,7 +391,8 @@ static bool vending_searchall(struct map_session_data *sd, const struct s_search
 		}
 
 		if (!searchstore->result(s->search_sd, sd->vender_id, sd->status.account_id, sd->message, it->nameid, sd->vending[i].amount, sd->vending[i].value, it->card, it->refine, it->grade, it->option))
-		{// result set full
+		{
+			// result set full
 			return false;
 		}
 	}

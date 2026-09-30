@@ -98,7 +98,8 @@ static int guild_checkskill(struct guild *g, int id)
  * guild_skill_tree.txt reading - from jA [Komurka]
  *------------------------------------------*/
 static bool guild_read_guildskill_tree_db(char *split[], int columns, int current)
-{// <skill id>,<max lv>,<req id1>,<req lv1>,<req id2>,<req lv2>,<req id3>,<req lv3>,<req id4>,<req lv4>,<req id5>,<req lv5>
+{
+	// <skill id>,<max lv>,<req id1>,<req lv1>,<req id2>,<req lv2>,<req id3>,<req lv3>,<req id4>,<req lv4>,<req id5>,<req lv5>
 	int k, id, skill_id;
 
 	skill_id = atoi(split[0]);
@@ -114,7 +115,8 @@ static bool guild_read_guildskill_tree_db(char *split[], int columns, int curren
 	guild->skill_tree[id].max = atoi(split[1]);
 
 	if( guild->skill_tree[id].id == GD_GLORYGUILD && battle_config.require_glory_guild && guild->skill_tree[id].max == 0 )
-	{// enable guild's glory when required for emblems
+	{
+		// enable guild's glory when required for emblems
 		guild->skill_tree[id].max = 1;
 	}
 
@@ -263,13 +265,15 @@ static bool guild_read_castledb_libconfig_sub_warp(struct config_setting_t *wd, 
 		if (i64 > MAX_ZENY) {
 			ShowWarning("guild_read_castledb_libconfig_sub_warp: ZenyCost is too big in \"%s\", for castle (%d), capping to MAX_ZENY.\n", source, gc->castle_id);
 		}
-		gc->client_warp.zeny = std::clamp((int)i64, 0, MAX_ZENY); // FIXME: This doesn't do what it claims above (it should operate on the larger range and then cast the result)
+		// FIXME: This doesn't do what it claims above (it should operate on the larger range and then cast the result)
+		gc->client_warp.zeny = std::clamp((int)i64, 0, MAX_ZENY);
 	}
 	if (libconfig->setting_lookup_int64(wd, "ZenyCostSiegeTime", &i64)) {
 		if (i64 > MAX_ZENY) {
 			ShowWarning("guild_read_castledb_libconfig_sub_warp: ZenyCostSiegeTime is too big in \"%s\", for castle (%d), capping to MAX_ZENY.\n", source, gc->castle_id);
 		}
-		gc->client_warp.zeny_siege = std::clamp((int)i64, 0, MAX_ZENY); // FIXME: This doesn't do what it claims above (it should operate on the larger range and then cast the result)
+		// FIXME: This doesn't do what it claims above (it should operate on the larger range and then cast the result)
+		gc->client_warp.zeny_siege = std::clamp((int)i64, 0, MAX_ZENY);
 	}
 	return true;
 }
@@ -472,7 +476,8 @@ static int guild_create(struct map_session_data *sd, const char *name)
 	nullpo_ret(name);
 
 	if (sd->clan != NULL) {
-		clif->messagecolor_self(sd->fd, COLOR_RED, msg_sd(sd, MSGTBL_CANT_CREATE_GUILD_WHILE_IN_CLAN)); // "You cannot create a guild because you are in a clan."
+		// "You cannot create a guild because you are in a clan."
+		clif->messagecolor_self(sd->fd, COLOR_RED, msg_sd(sd, MSGTBL_CANT_CREATE_GUILD_WHILE_IN_CLAN));
 		return 0;
 	}
 
@@ -644,7 +649,8 @@ static int guild_recv_info(const struct guild *sg, struct fifo_chunk_buf *emblem
 					}
 
 					for (i = 0; i < MAX_GUILDALLIANCE; i++) {
-						if (tg[i] && sd->status.guild_id == tg[i]->guild_id) { // Shortcut to skip the alliance checks again
+						// Shortcut to skip the alliance checks again
+						if (tg[i] && sd->status.guild_id == tg[i]->guild_id) {
 							// Alliance member
 							if( !(chan->banned && idb_exists(chan->banned, sd->status.account_id)))
 								channel->join_sub(chan, sd, false);
@@ -771,7 +777,8 @@ static int guild_invite(struct map_session_data *sd, struct map_session_data *ts
 		return 0; //Invite permission.
 
 	if(!battle_config.invite_request_check) {
-		if (tsd->party_invite > 0 || tsd->trade_partner || tsd->adopt_invite) { //checking if there no other invitation pending
+		//checking if there no other invitation pending
+		if (tsd->party_invite > 0 || tsd->trade_partner || tsd->adopt_invite) {
 			clif->guild_inviteack(sd,0);
 			return 0;
 		}
@@ -985,7 +992,7 @@ static int guild_leave(struct map_session_data *sd, int guild_id, int account_id
 	if( sd->status.account_id != account_id
 	 || sd->status.char_id != char_id
 	 || sd->status.guild_id != guild_id
-	 // Can't leave inside castles
+	 /* Can't leave inside castles */
 	 || ((map->agit_flag || map->agit2_flag)
 			&& map->list[sd->bl.m].flag.gvg_castle
 			&& !battle_config.guild_castle_expulsion)
@@ -1381,7 +1388,8 @@ static int guild_emblem_changed(int len, int guild_id, int emblem_id, const char
 			clif->guild_emblem_id_area(&sd->bl);
 		}
 	}
-	{// update guardians (mobs)
+	{
+		// update guardians (mobs)
 		struct DBIterator *iter = db_iterator(guild->castle_db);
 		for (struct guild_castle *gc = (struct guild_castle *)dbi_first(iter); dbi_exists(iter); gc = (struct guild_castle *)dbi_next(iter)) {
 			if( gc->guild_id != guild_id )
@@ -1405,7 +1413,8 @@ static int guild_emblem_changed(int len, int guild_id, int emblem_id, const char
 		}
 		dbi_destroy(iter);
 	}
-	{// update npcs (flags or other npcs that used flagemblem to attach to this guild)
+	{
+		// update npcs (flags or other npcs that used flagemblem to attach to this guild)
 		for( i = 0; i < guild->flags_count; i++ ) {
 			if( guild->flags[i] && guild->flags[i]->u.scr.guild_id == guild_id ) {
 				clif->guild_emblem_id_area(&guild->flags[i]->bl);
@@ -1494,9 +1503,10 @@ static int guild_skillup(struct map_session_data *sd, uint16 skill_id)
 
 	nullpo_ret(sd);
 
-	if( idx < 0 || idx >= MAX_GUILDSKILL || // not a guild skill
-			sd->status.guild_id == 0 || (g=sd->guild) == NULL || // no guild
-			strcmp(sd->status.name, g->master) ) // not the guild master
+	if( idx < 0 || idx >= MAX_GUILDSKILL /* not a guild skill */
+			|| sd->status.guild_id == 0 || (g=sd->guild) == NULL /* no guild */
+			|| strcmp(sd->status.name, g->master) /* not the guild master */
+	)
 		return 0;
 
 	if( g->skill_point > 0 &&
@@ -1562,7 +1572,8 @@ static void guild_guildaura_refresh(struct map_session_data *sd, uint16 skill_id
 	}
 	group = skill->unitsetting(&sd->bl,skill_id,skill_lv,sd->bl.x,sd->bl.y,0);
 	if( group ) {
-		sc_start4(NULL, &sd->bl, (enum sc_type)type, 100, (battle_config.guild_aura & 16) ? 0 : skill_lv, 0, 0, group->group_id, 600000, skill_id);// duration doesn't matter these status never end with val4
+		// duration doesn't matter these status never end with val4
+		sc_start4(NULL, &sd->bl, (enum sc_type)type, 100, (battle_config.guild_aura & 16) ? 0 : skill_lv, 0, 0, group->group_id, 600000, skill_id);
 	}
 	return;
 }
@@ -1625,7 +1636,9 @@ static int guild_reqalliance(struct map_session_data *sd, struct map_session_dat
 
 	if(map->agit_flag || map->agit2_flag) {
 		// Disable alliance creation during woe [Valaris]
-		clif->message(sd->fd,msg_sd(sd, MSGTBL_NOT_MAKE_ALLIANCE_DURING_GW)); //"Alliances cannot be made during Guild Wars!"
+
+		//"Alliances cannot be made during Guild Wars!"
+		clif->message(sd->fd,msg_sd(sd, MSGTBL_NOT_MAKE_ALLIANCE_DURING_GW));
 		return 0;
 	}
 
@@ -1742,7 +1755,9 @@ static int guild_delalliance(struct map_session_data *sd, int guild_id, int flag
 
 	if(map->agit_flag || map->agit2_flag) {
 		// Disable alliance breaking during woe [Valaris]
-		clif->message(sd->fd,msg_sd(sd, MSGTBL_NOT_BREAK_ALLIANCE_DURING_GW)); //"Alliances cannot be broken during Guild Wars!"
+
+		//"Alliances cannot be broken during Guild Wars!"
+		clif->message(sd->fd,msg_sd(sd, MSGTBL_NOT_BREAK_ALLIANCE_DURING_GW));
 		return 0;
 	}
 
@@ -2032,13 +2047,15 @@ static int guild_gm_changed(int guild_id, int account_id, int char_id)
 	strcpy(g->master, g->member[0].name);
 
 	if (g->member[pos].sd && g->member[pos].sd->fd) {
-		clif->message(g->member[pos].sd->fd, msg_sd(g->member[pos].sd, MSGTBL_NOT_GUILD_MASTER)); //"You no longer are the Guild Master."
+		//"You no longer are the Guild Master."
+		clif->message(g->member[pos].sd->fd, msg_sd(g->member[pos].sd, MSGTBL_NOT_GUILD_MASTER));
 		g->member[pos].sd->state.gmaster_flag = 0;
 		clif->blname_ack(0, &g->member[pos].sd->bl);
 	}
 
 	if (g->member[0].sd && g->member[0].sd->fd) {
-		clif->message(g->member[0].sd->fd, msg_sd(g->member[0].sd, MSGTBL_BECOME_GUILD_MASTER)); //"You have become the Guild Master!"
+		//"You have become the Guild Master!"
+		clif->message(g->member[0].sd->fd, msg_sd(g->member[0].sd, MSGTBL_BECOME_GUILD_MASTER));
 		g->member[0].sd->state.gmaster_flag = 1;
 		//Block his skills for 5 minutes to prevent abuse.
 		guild->block_skill(g->member[0].sd, 300000);
@@ -2478,7 +2495,8 @@ static void do_init_guild(bool minimal)
 	guild->expcache_ers = ers_new(sizeof(struct guild_expcache),"guild.cpp::expcache_ers",ERS_OPT_NONE);
 
 	guild->read_castledb_libconfig();
-	sv->readdb(map->db_path, "guild_skill_tree.txt", ',', 2+MAX_GUILD_SKILL_REQUIRE*2, 2+MAX_GUILD_SKILL_REQUIRE*2, -1, guild->read_guildskill_tree_db); //guild skill tree [Komurka]
+	//guild skill tree [Komurka]
+	sv->readdb(map->db_path, "guild_skill_tree.txt", ',', 2+MAX_GUILD_SKILL_REQUIRE*2, 2+MAX_GUILD_SKILL_REQUIRE*2, -1, guild->read_guildskill_tree_db);
 
 	timer->add_func_list(guild->payexp_timer,"guild_payexp_timer");
 	timer->add_func_list(guild->send_xy_timer, "guild_send_xy_timer");

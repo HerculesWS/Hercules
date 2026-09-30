@@ -101,11 +101,13 @@ static bool chat_createpcchat(struct map_session_data *sd, const char *title, co
 	nullpo_ret(title);
 	nullpo_ret(pass);
 
+	//Prevent people abusing the chat system by creating multiple chats, as pointed out by End of Exam. [Skotlex]
 	if (sd->chat_id != 0)
-		return false; //Prevent people abusing the chat system by creating multiple chats, as pointed out by End of Exam. [Skotlex]
+		return false;
 
 	if (sd->state.vending || sd->state.prevend || sd->state.buyingstore)
-	{// not chat, when you already have a store open
+	{
+		// not chat, when you already have a store open
 		return false;
 	}
 

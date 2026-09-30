@@ -349,7 +349,8 @@ static void quest_update_objective(struct map_session_data *sd, const struct mob
 			item.nameid = dropitem->nameid;
 			item.identify = itemdb->isidentified2(data);
 			item.amount = 1;
-			if((temp = pc->additem(sd, &item, 1, LOG_TYPE_QUEST)) != 0) { // TODO: We might want a new log type here?
+			// TODO: We might want a new log type here?
+			if((temp = pc->additem(sd, &item, 1, LOG_TYPE_QUEST)) != 0) {
 				// Failed to obtain the item
 				clif->additem(sd, 0, 0, temp);
 			}

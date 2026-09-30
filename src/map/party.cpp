@@ -386,7 +386,8 @@ static int party_invite(struct map_session_data *sd, struct map_session_data *ts
 	ARR_FIND(0, MAX_PARTY, i, p->data[i].sd == sd);
 
 	if( i == MAX_PARTY || !p->party.member[i].leader ) {
-		clif->message(sd->fd, msg_sd(sd, MSGTBL_MUST_BE_PARTY_LEADER)); // You need to be a party leader to use this command.
+		// You need to be a party leader to use this command.
+		clif->message(sd->fd, msg_sd(sd, MSGTBL_MUST_BE_PARTY_LEADER));
 		return 0;
 	}
 
@@ -400,7 +401,8 @@ static int party_invite(struct map_session_data *sd, struct map_session_data *ts
 
 	// confirm whether the account has the ability to invite before checking the player
 	if( !pc_has_permission(sd, PC_PERM_PARTY) || (tsd && !pc_has_permission(tsd, PC_PERM_PARTY)) ) {
-		clif->message(sd->fd, msg_sd(sd, MSGTBL_GM_LEVEL_UNAUTHORIZED)); // "Your GM level doesn't authorize you to preform this action on the specified player."
+		// "Your GM level doesn't authorize you to preform this action on the specified player."
+		clif->message(sd->fd, msg_sd(sd, MSGTBL_GM_LEVEL_UNAUTHORIZED));
 		return 0;
 	}
 
@@ -764,19 +766,22 @@ static bool party_changeleader(struct map_session_data *sd, struct map_session_d
 		return false;
 
 	if (!tsd || tsd->status.party_id != sd->status.party_id) {
-		clif->message(sd->fd, msg_sd(sd, MSGTBL_REQUIRE_ONLINE_PARTY_MEMBER)); // Target character must be online and in your current party.
+		// Target character must be online and in your current party.
+		clif->message(sd->fd, msg_sd(sd, MSGTBL_REQUIRE_ONLINE_PARTY_MEMBER));
 		return false;
 	}
 
 	if (battle_config.party_change_leader_same_map && sd->bl.m != tsd->bl.m) {
 #if PACKETVER >= 20120307
-		clif->msgtable(sd, MSG_PARTY_MASTER_CHANGE_SAME_MAP); // It is only possible to change the party leader while on the same map.
+		// It is only possible to change the party leader while on the same map.
+		clif->msgtable(sd, MSG_PARTY_MASTER_CHANGE_SAME_MAP);
 #endif
 		return false;
 	}
 
 	if( map->list[sd->bl.m].flag.partylock ) {
-		clif->message(sd->fd, msg_sd(sd, MSGTBL_CANT_CHANGE_PARTY_LEADER_IN_MAP)); // You cannot change party leaders in this map.
+		// You cannot change party leaders in this map.
+		clif->message(sd->fd, msg_sd(sd, MSGTBL_CANT_CHANGE_PARTY_LEADER_IN_MAP));
 		return false;
 	}
 
@@ -788,7 +793,8 @@ static bool party_changeleader(struct map_session_data *sd, struct map_session_d
 		return false; //Shouldn't happen
 
 	if (!p->party.member[mi].leader) {
-		clif->message(sd->fd, msg_sd(sd, MSGTBL_MUST_BE_PARTY_LEADER)); // You need to be a party leader to use this command.
+		// You need to be a party leader to use this command.
+		clif->message(sd->fd, msg_sd(sd, MSGTBL_MUST_BE_PARTY_LEADER));
 		return false;
 	}
 
@@ -968,7 +974,7 @@ static int party_skill_check(struct map_session_data *sd, int party_id, uint16 s
 			case TK_COUNTER: //Increase Triple Attack rate of Monks.
 				if ((p_sd->job & MAPID_UPPERMASK) == MAPID_MONK && pc->checkskill(p_sd, MO_TRIPLEATTACK)) {
 					sc_start4(&p_sd->bl,&p_sd->bl,SC_SKILLRATE_UP,100,MO_TRIPLEATTACK,
-						50+50*skill_lv, //+100/150/200% rate
+						50+50*skill_lv /* +100/150/200% rate */,
 						0, 0, skill->get_time(SG_FRIEND, 1), skill_id);
 				}
 				break;
@@ -977,7 +983,7 @@ static int party_skill_check(struct map_session_data *sd, int party_id, uint16 s
 					&& sd->sc.data[SC_COUNTERKICK_READY]
 					&& pc->checkskill(p_sd,SG_FRIEND)) {
 					sc_start4(&p_sd->bl,&p_sd->bl,SC_SKILLRATE_UP,100,TK_COUNTER,
-						50+50*pc->checkskill(p_sd,SG_FRIEND), //+100/150/200% rate
+						50+50*pc->checkskill(p_sd,SG_FRIEND) /* +100/150/200% rate */,
 						0, 0, skill->get_time(SG_FRIEND, 1), skill_id);
 				}
 				break;

@@ -397,6 +397,7 @@ enum RaceMask {
 	RCMASK_PLAYER    = 1<<RC_PLAYER,
 	RCMASK_BOSS      = 1<<RC_BOSS,
 	RCMASK_NONBOSS   = 1<<RC_NONBOSS,
+
 	RCMASK_NONDEMIPLAYER = RCMASK_FORMLESS | RCMASK_UNDEAD | RCMASK_BRUTE | RCMASK_PLANT | RCMASK_INSECT | RCMASK_FISH | RCMASK_DEMON | RCMASK_ANGEL | RCMASK_DRAGON,
 	RCMASK_NONDEMIHUMAN = RCMASK_NONDEMIPLAYER | RCMASK_PLAYER,
 	RCMASK_NONPLAYER    = RCMASK_NONDEMIPLAYER | RCMASK_DEMIHUMAN,
@@ -840,21 +841,19 @@ typedef enum {
 
 struct mapcell {
 	// terrain flags
-	unsigned char
-		walkable : 1,
-		shootable : 1,
-		water : 1;
+	unsigned char walkable : 1;
+	unsigned char shootable : 1;
+	unsigned char water : 1;
 
 	// dynamic flags
-	unsigned char
-		npc : 1,
-		basilica : 1,
-		landprotector : 1,
-		novending : 1,
-		nochat : 1,
-		icewall : 1,
-		noicewall : 1,
-		noskill : 1;
+	unsigned char npc : 1;
+	unsigned char basilica : 1;
+	unsigned char landprotector : 1;
+	unsigned char novending : 1;
+	unsigned char nochat : 1;
+	unsigned char icewall : 1;
+	unsigned char noicewall : 1;
+	unsigned char noskill : 1;
 
 #ifdef CELL_NOSTACK
 	int cell_bl; //Holds amount of bls in this cell.
@@ -923,7 +922,8 @@ struct map_zone_data {
 	int disabled_skills_count;
 	int *disabled_items;
 	int disabled_items_count;
-	int *cant_disable_items; /** when a zone wants to ensure such a item is never disabled (i.e. gvg zone enables a item that is restricted everywhere else) **/
+	/// when a zone wants to ensure such a item is never disabled (i.e. gvg zone enables a item that is restricted everywhere else)
+	int *cant_disable_items;
 	int cant_disable_items_count;
 	char **mapflags;
 	int mapflags_count;
@@ -953,13 +953,13 @@ struct map_data {
 	struct mapcell* cell; // Holds the information of each map cell (NULL if the map is not on this map-server).
 
 	/* 2D Orthogonal Range Search: Grid Implementation
-	   "Algorithms in Java, Parts 1-4" 3.18, Robert Sedgewick
-	   Map is divided into squares, called blocks (side length = BLOCK_SIZE).
-	   For each block there is a linked list of objects in that block (block_list).
-	   Array provides capability to access immediately the set of objects close
-	   to a given object.
-	   The linked lists provide the flexibility to store the objects without
-	   knowing ahead how many objects fall into each block.
+	 * "Algorithms in Java, Parts 1-4" 3.18, Robert Sedgewick
+	 * Map is divided into squares, called blocks (side length = BLOCK_SIZE).
+	 * For each block there is a linked list of objects in that block (block_list).
+	 * Array provides capability to access immediately the set of objects close
+	 * to a given object.
+	 * The linked lists provide the flexibility to store the objects without
+	 * knowing ahead how many objects fall into each block.
 	*/
 	struct block_list **block; // Grid array of block_lists containing only non-BL_MOB objects
 	struct block_list **block_mob; // Grid array of block_lists containing only BL_MOB objects
