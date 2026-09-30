@@ -295,7 +295,7 @@ static int battle_delay_damage_sub(int tid, int64 tick, int id, intptr_t data)
 			status_calc_pc(sd, SCO_FORCE);
 		}
 	}
-	ers_free(battle->delay_damage_ers, dat);
+	battle->delay_damage_ers->free(dat);
 	return 0;
 }
 
