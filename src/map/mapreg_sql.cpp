@@ -677,7 +677,7 @@ static void mapreg_final(void)
 {
 	mapreg->save();
 	mapreg->regs.vars->destroy(mapreg->regs.vars, mapreg->destroyreg);
-	ers_destroy(mapreg->ers);
+	ERI::destroy(mapreg->ers);
 
 	if (mapreg->regs.arrays != NULL)
 		mapreg->regs.arrays->destroy(mapreg->regs.arrays, script->array_free_db);
@@ -690,7 +690,7 @@ static void mapreg_final(void)
 static void mapreg_init(void)
 {
 	mapreg->regs.vars = i64db_alloc(DB_OPT_BASE);
-	mapreg->ers = ers_new(mapreg_save, "mapreg_sql.cpp::mapreg_ers", ERS_OPT_CLEAN);
+	mapreg->ers = ERS<mapreg_save>::create("mapreg_sql.cpp::mapreg_ers", ERS_OPT_CLEAN);
 	mapreg->load();
 	timer->add_func_list(mapreg->save_timer, "mapreg_save_timer");
 	timer->add_interval(timer->gettick() + MAPREG_AUTOSAVE_INTERVAL, mapreg->save_timer, 0, 0, MAPREG_AUTOSAVE_INTERVAL);
