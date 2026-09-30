@@ -101,7 +101,7 @@ void ERI::print_full_report() noexcept
 void ERI::final() noexcept
 {
 	for (auto *instance : ERI::g_ers_instance_list) {
-		ers_destroy(instance);
+		ERI::destroy(instance);
 	}
 
 	ERI::g_ers_instance_list.clear();
