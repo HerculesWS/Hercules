@@ -26,7 +26,7 @@
 #include "map/unit.h" // struct unit_data
 #include "common/hercules.h"
 #include "common/db.h"
-#include "common/ers.h"
+#include "common/ers_fwd.h"
 
 #include <pcre.h>
 

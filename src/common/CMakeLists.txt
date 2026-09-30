@@ -54,6 +54,7 @@ set(COMMON_HDRS
   db.h
   des.h
   ers.h
+  ers_fwd.h
   extraconf.h
   grfio.h
   hercules.h

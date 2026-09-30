@@ -62,6 +62,7 @@
 #include "common/cbasetypes.h"
 #include "common/conf.h"
 #include "common/core.h"
+#include "common/ers.h"
 #include "common/memmgr.h"
 #include "common/mmo.h" // MAX_CARTS
 #include "common/msgtable.h"

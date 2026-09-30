@@ -26,7 +26,7 @@
 #include "map/status.h" // enum sc_type
 #include "map/unit.h" // struct unit_data
 #include "common/hercules.h"
-#include "common/ers.h"
+#include "common/ers_fwd.h"
 #include "common/mmo.h" // NAME_LENGTH, struct s_pet
 
 #define MAX_PET_DB       300

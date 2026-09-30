@@ -64,6 +64,7 @@
 #include "common/cbasetypes.h"
 #include "common/conf.h"
 #include "common/db.h"
+#include "common/ers.h"
 #include "common/memmgr.h"
 #include "common/md5calc.h"
 #include "common/mmo.h" // NEW_CARTS
