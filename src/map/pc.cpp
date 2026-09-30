@@ -12891,9 +12891,9 @@ static void do_final_pc(void)
 
 	pc->clear_exp_groups();
 
-	ers_destroy(pc->sc_display_ers);
-	ers_destroy(pc->num_reg_ers);
-	ers_destroy(pc->str_reg_ers);
+	ERI::destroy(pc->sc_display_ers);
+	ERI::destroy(pc->num_reg_ers);
+	ERI::destroy(pc->str_reg_ers);
 
 	return;
 }
@@ -12939,9 +12939,9 @@ static void do_init_pc(bool minimal)
 
 	pcg->init();
 
-	pc->sc_display_ers = ers_new2(sc_display_entry, "pc.cpp:sc_display_ers", ERS_OPT_NONE, 150);
-	pc->num_reg_ers = ers_new2(script_reg_num, "pc.cpp::num_reg_ers", ERS_OPT_CLEAN, 300);
-	pc->str_reg_ers = ers_new2(script_reg_str, "pc.cpp::str_reg_ers", ERS_OPT_CLEAN, 50);
+	pc->sc_display_ers = ERS<sc_display_entry, 150>::create("pc.cpp:sc_display_ers", ERS_OPT_NONE);
+	pc->num_reg_ers = ERS<script_reg_num, 300>::create("pc.cpp::num_reg_ers", ERS_OPT_CLEAN);
+	pc->str_reg_ers = ERS<script_reg_str, 50>::create("pc.cpp::str_reg_ers", ERS_OPT_CLEAN);
 }
 
 /*=====================================

@@ -15021,14 +15021,14 @@ static int do_init_status(bool minimal)
 	status->initDummyData();
 	status->readdb();
 	status->natural_heal_prev_tick = timer->gettick();
-	status->data_ers = ers_new(status_change_entry,"status.cpp::data_ers",ERS_OPT_NONE);
+	status->data_ers = ERS<status_change_entry>::create("status.cpp::data_ers", ERS_OPT_NONE);
 	timer->add_interval(status->natural_heal_prev_tick + NATURAL_HEAL_INTERVAL, status->natural_heal_timer, 0, 0, NATURAL_HEAL_INTERVAL);
 	return 0;
 }
 
 static void do_final_status(void)
 {
-	ers_destroy(status->data_ers);
+	ERI::destroy(status->data_ers);
 
 	status->unit_params_destroy_entry(&status->dummy_unit_params);
 	status->unit_params_clear_db();

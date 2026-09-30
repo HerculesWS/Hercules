@@ -6569,8 +6569,8 @@ int do_final(void)
 	db_destroy(map->regen_db);
 
 	map->sql_close();
-	ers_destroy(map->iterator_ers);
-	ers_destroy(map->flooritem_ers);
+	ERI::destroy(map->iterator_ers);
+	ERI::destroy(map->flooritem_ers);
 
 	for (i = 0; i < map->count; ++i) {
 		if (map->list[i].cell_buf.data != NULL)
@@ -7041,9 +7041,9 @@ int do_init(int argc, char *argv[])
 	map->iwall_db  = strdb_alloc((enum DBOptions)(DB_OPT_DUP_KEY | DB_OPT_RELEASE_DATA), 2*NAME_LENGTH+2+1); // [Zephyrus] Invisible Walls
 	map->zone_db   = strdb_alloc((enum DBOptions)(DB_OPT_DUP_KEY | DB_OPT_RELEASE_DATA), MAP_ZONE_NAME_LENGTH);
 
-	map->iterator_ers = ers_new2(s_mapiterator, "map.cpp::map_iterator_ers", ERS_OPT_CLEAN, 25);
+	map->iterator_ers = ERS<s_mapiterator, 25>::create("map.cpp::map_iterator_ers", ERS_OPT_CLEAN);
 
-	map->flooritem_ers = ers_new2(flooritem_data, "map.cpp::map_flooritem_ers", ERS_OPT_CLEAN, 100);
+	map->flooritem_ers = ERS<flooritem_data, 100>::create("map.cpp::map_flooritem_ers", ERS_OPT_CLEAN);
 
 	if (!minimal) {
 		map->sql_init();

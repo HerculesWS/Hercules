@@ -2475,7 +2475,7 @@ static void do_init_guild(bool minimal)
 	guild->castle_db    = idb_alloc(DB_OPT_BASE);
 	guild->expcache_db  = idb_alloc(DB_OPT_BASE);
 	guild->infoevent_db = idb_alloc(DB_OPT_BASE);
-	guild->expcache_ers = ers_new(guild_expcache,"guild.cpp::expcache_ers",ERS_OPT_NONE);
+	guild->expcache_ers = ERS<guild_expcache>::create("guild.cpp::expcache_ers", ERS_OPT_NONE);
 
 	guild->read_castledb_libconfig();
 	sv->readdb(map->db_path, "guild_skill_tree.txt", ',', 2+MAX_GUILD_SKILL_REQUIRE*2, 2+MAX_GUILD_SKILL_REQUIRE*2, -1, guild->read_guildskill_tree_db); //guild skill tree [Komurka]
@@ -2505,7 +2505,7 @@ static void do_final_guild(void)
 	guild->castle_db->destroy(guild->castle_db,guild->castle_db_final);
 	guild->expcache_db->destroy(guild->expcache_db,guild->expcache_db_final);
 	guild->infoevent_db->destroy(guild->infoevent_db,guild->eventlist_db_final);
-	ers_destroy(guild->expcache_ers);
+	ERI::destroy(guild->expcache_ers);
 
 	if( guild->flags )
 		aFree(guild->flags);

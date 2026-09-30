@@ -8493,7 +8493,7 @@ static void do_init_battle(bool minimal)
 	if (minimal)
 		return;
 
-	battle->delay_damage_ers = ers_new(delay_damage,"battle.cpp::delay_damage_ers",ERS_OPT_CLEAR);
+	battle->delay_damage_ers = ERS<delay_damage>::create("battle.cpp::delay_damage_ers", ERS_OPT_CLEAR);
 	timer->add_func_list(battle->delay_damage_sub, "battle_delay_damage_sub");
 }
 
@@ -8501,7 +8501,7 @@ static void do_final_battle(void)
 {
 	if (map->minimal)
 		return;
-	ers_destroy(battle->delay_damage_ers);
+	ERI::destroy(battle->delay_damage_ers);
 }
 
 /* initialize the interface */

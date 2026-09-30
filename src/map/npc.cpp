@@ -5894,7 +5894,7 @@ static int do_final_npc(void)
 	npc->ev_label_db->destroy(npc->ev_label_db, npc->ev_label_db_clear_sub);
 	db_destroy(npc->name_db);
 	npc->path_db->destroy(npc->path_db, npc->path_db_clear_sub);
-	ers_destroy(npc->timer_event_ers);
+	ERI::destroy(npc->timer_event_ers);
 	npc->clearsrcfile();
 
 	return 0;
@@ -6007,7 +6007,7 @@ static int do_init_npc(bool minimal)
 	clan->set_constants();
 
 	if (!minimal) {
-		npc->timer_event_ers = ers_new(timer_event_data,"clif.cpp::timer_event_ers",ERS_OPT_NONE);
+		npc->timer_event_ers = ERS<timer_event_data>::create("clif.cpp::timer_event_ers", ERS_OPT_NONE);
 
 		npc->process_files(START_NPC_NUM);
 	}

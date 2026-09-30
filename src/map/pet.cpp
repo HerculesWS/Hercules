@@ -1894,8 +1894,8 @@ static int do_init_pet(bool minimal)
 
 	pet->read_db();
 
-	pet->item_drop_ers = ers_new(item_drop,"pet.cpp::item_drop_ers",ERS_OPT_NONE);
-	pet->item_drop_list_ers = ers_new(item_drop_list,"pet.cpp::item_drop_list_ers",ERS_OPT_NONE);
+	pet->item_drop_ers = ERS<item_drop>::create("pet.cpp::item_drop_ers", ERS_OPT_NONE);
+	pet->item_drop_list_ers = ERS<item_drop_list>::create("pet.cpp::item_drop_list_ers", ERS_OPT_NONE);
 
 	timer->add_func_list(pet->hungry,"pet_hungry");
 	timer->add_func_list(pet->ai_hard,"pet_ai_hard");
@@ -1931,8 +1931,8 @@ static int do_final_pet(void)
 		}
 		VECTOR_CLEAR(pet->db[i].evolve_data);
 	}
-	ers_destroy(pet->item_drop_ers);
-	ers_destroy(pet->item_drop_list_ers);
+	ERI::destroy(pet->item_drop_ers);
+	ERI::destroy(pet->item_drop_list_ers);
 
 	return 0;
 }

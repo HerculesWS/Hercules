@@ -6084,8 +6084,8 @@ static int do_init_mob(bool minimal)
 	memset(mob->db_data,0,sizeof(mob->db_data)); //Clear the array
 	mob->db_data[0] = (struct mob_db *)aCalloc(1, sizeof (struct mob_db)); //This mob is used for random spawns
 	mob->makedummymobdb(0); //The first time this is invoked, it creates the dummy mob
-	item_drop_ers = ers_new(item_drop,"mob.cpp::item_drop_ers",ERS_OPT_CLEAN);
-	item_drop_list_ers = ers_new(struct item_drop_list,"mob.cpp::item_drop_list_ers",ERS_OPT_NONE);
+	item_drop_ers = ERS<item_drop>::create("mob.cpp::item_drop_ers", ERS_OPT_CLEAN);
+	item_drop_list_ers = ERS<item_drop_list>::create("mob.cpp::item_drop_list_ers", ERS_OPT_NONE);
 
 	mob->load(minimal);
 
@@ -6175,8 +6175,8 @@ static int do_final_mob(void)
 	}
 	mob->item_drop_ratio_other_db->clear(mob->item_drop_ratio_other_db, mob->final_ratio_sub);
 	db_destroy(mob->item_drop_ratio_other_db);
-	ers_destroy(item_drop_ers);
-	ers_destroy(item_drop_list_ers);
+	ERI::destroy(item_drop_ers);
+	ERI::destroy(item_drop_list_ers);
 	return 0;
 }
 

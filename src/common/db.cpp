@@ -2279,7 +2279,7 @@ static int db_obj_vdestroy(struct DBMap *self, DBApply func, va_list args)
 	aFree(db->free_list);
 	db->free_list = NULL;
 	db->free_max = 0;
-	ers_destroy(db->nodes);
+	ERI::destroy(db->nodes);
 	db_free_unlock(db);
 	ers_free(db_alloc_ers, db);
 	return sum;
@@ -2616,7 +2616,7 @@ static struct DBMap *db_alloc(const char *file, const char *func, int line, enum
 	db->free_lock = 0;
 	/* Other */
 	snprintf(ers_name, 50, "db_alloc:nodes:%s:%s:%d",func,file,line);
-	db->nodes = ers_new(DBNode,ers_name,(enum ERSOptions)(ERS_OPT_WAIT|ERS_OPT_CLEAN)); // FIXME: change this to a flag type
+	db->nodes = ERS<DBNode>::create(ers_name,(enum ERSOptions)(ERS_OPT_WAIT|ERS_OPT_CLEAN)); // FIXME: change this to a flag type
 	db->cmp = DB->default_cmp(type);
 	db->hash = DB->default_hash(type);
 	db->release = DB->default_release(type, options);
@@ -2810,8 +2810,8 @@ static void *db_data2ptr(struct DBData *data)
  */
 static void db_init(void)
 {
-	db_iterator_ers = ers_new2(DBIterator_impl,"db.cpp::db_iterator_ers", ERS_OPT_CLEAN, 10); // FIXME: change this to a flag type
-	db_alloc_ers = ers_new2(DBMap_impl,"db.cpp::db_alloc_ers", ERS_OPT_CLEAN, 50); // FIXME: change this to a flag type
+	db_iterator_ers = ERS<DBIterator_impl, 10>::create("db.cpp::db_iterator_ers", ERS_OPT_CLEAN); // FIXME: change this to a flag type
+	db_alloc_ers = ERS<DBMap_impl, 50>::create("db.cpp::db_alloc_ers", ERS_OPT_CLEAN); // FIXME: change this to a flag type
 	DB_COUNTSTAT(db_init);
 }
 
@@ -2914,8 +2914,8 @@ static void db_final(void)
 			stats.db_data2ui,         stats.db_data2ptr,
 			stats.db_init,            stats.db_final);
 #endif /* DB_ENABLE_STATS */
-	ers_destroy(db_iterator_ers);
-	ers_destroy(db_alloc_ers);
+	ERI::destroy(db_iterator_ers);
+	ERI::destroy(db_alloc_ers);
 }
 
 // Link DB System - jAthena

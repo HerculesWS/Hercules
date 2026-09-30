@@ -5632,15 +5632,15 @@ static void do_final_script(void)
 	script->local_casecheck.clear();
 #endif // ENABLE_CASE_CHECK
 
-	ers_destroy(script->st_ers);
-	ers_destroy(script->stack_ers);
+	ERI::destroy(script->st_ers);
+	ERI::destroy(script->stack_ers);
 
 	db_destroy(script->st_db);
 
 	if( script->labels != NULL )
 		aFree(script->labels);
 
-	ers_destroy(script->array_ers);
+	ERI::destroy(script->array_ers);
 
 	if( script->generic_ui_array )
 		aFree(script->generic_ui_array);
@@ -6146,9 +6146,9 @@ static void do_init_script(bool minimal)
 	script->userfunc_db = strdb_alloc(DB_OPT_DUP_KEY,0);
 	script->autobonus_db = strdb_alloc(DB_OPT_DUP_KEY,0);
 
-	script->st_ers = ers_new2(script_state, "script.cpp::st_ers", ERS_OPT_CLEAN, 10);
-	script->stack_ers = ers_new2(script_stack, "script.cpp::script_stack", ERS_OPT_NONE, 10);
-	script->array_ers = ers_new(script_array, "script.cpp::array_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_CLEAR));
+	script->st_ers = ERS<script_state, 10>::create("script.cpp::st_ers", ERS_OPT_CLEAN);
+	script->stack_ers = ERS<script_stack, 10>::create("script.cpp::script_stack", ERS_OPT_NONE);
+	script->array_ers = ERS<script_array>::create("script.cpp::array_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_CLEAR));
 
 	VECTOR_INIT(script->hq);
 	VECTOR_INIT(script->hqi);

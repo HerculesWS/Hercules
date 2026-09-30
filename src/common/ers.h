@@ -142,6 +142,14 @@ class ERI
 	 */
 	static void final() noexcept;
 
+	/**
+	 * Frees a raw pointer of ERS instance
+	 */
+	static void destroy(ERI *ptr) noexcept
+	{
+		delete ptr;
+	}
+
   private:
 	static std::forward_list<ERI *> m_ers_instance_list; //< A list holding all allocations of ERI interface
 };
@@ -228,7 +236,7 @@ class ERS final : public ERI
 	 * @param name the name of this ERS manager instance
 	 * @param options a bitmask options of this instance manager
 	 */
-	ERS(const std::string &name, enum ERSOptions options) noexcept
+	ERS(const std::string &name, ERSOptions options) noexcept
 	        : ERI(), m_name(name), m_options(options){}; // FIXME: change this to a flag type
 
 	/**
@@ -260,6 +268,19 @@ class ERS final : public ERI
 		}
 #endif
 	}
+
+	/**
+	 * Allocates a new ERS instance and returns a raw pointer to it
+	 * To be used temporarily until everything stored in smart pointers
+	 */
+	template<typename... Args>
+	[[nodiscard]] static ERS<T, chunk_size> *create(Args &&...args) noexcept
+	{
+		return new ERS<T, chunk_size>(std::forward<Args>(args)...);
+	}
+
+	/**
+	 */
 
 	/**
 	 * Allocate an entry from this entry manager.
@@ -458,12 +479,7 @@ class ERS final : public ERI
 	std::vector<std::unique_ptr<ers_chunk<T, chunk_size>>> m_chunks; //< Memory blocks array
 };
 
-// These defines should be used to allow the code to keep working whenever
-// the system is disabled
-#	define ers_new(type,name,options) (new ERS<type, ers_chunk_size>((name), (options)))
-#	define ers_new2(type,name,options,chunk_size) (new ERS<type, (chunk_size)>((name), (options)))
 #	define ers_alloc(obj, ...) ((obj)->alloc(##__VA_ARGS__))
 #	define ers_free(obj,entry) ((obj)->free((entry)))
-#	define ers_destroy(obj)    (delete (obj))
 
 #endif /* COMMON_ERS_H */

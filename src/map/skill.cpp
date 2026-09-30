@@ -25547,10 +25547,10 @@ static int do_init_skill(bool minimal)
 	skill->cd_db = idb_alloc(DB_OPT_BASE);
 	skill->usave_db = idb_alloc(DB_OPT_RELEASE_DATA);
 	skill->bowling_db = idb_alloc(DB_OPT_BASE);
-	skill->unit_ers = ers_new2(skill_unit_group, "skill.cpp::skill_unit_ers", ERS_OPT_CLEAN, 150);
-	skill->timer_ers  = ers_new2(skill_timerskill, "skill.cpp::skill_timer_ers", ERS_OPT_NONE, 150);
-	skill->cd_ers = ers_new2(skill_cd, "skill.cpp::skill_cd_ers", (enum ERSOptions)(ERS_OPT_CLEAR | ERS_OPT_CLEAN), 25);
-	skill->cd_entry_ers = ers_new2(skill_cd_entry, "skill.cpp::skill_cd_entry_ers", (enum ERSOptions)(ERS_OPT_CLEAR | ERS_OPT_CLEAN), 100);
+	skill->unit_ers = ERS<skill_unit_group, 150>::create("skill.cpp::skill_unit_ers", ERS_OPT_CLEAN);
+	skill->timer_ers  = ERS<skill_timerskill, 150>::create("skill.cpp::skill_timer_ers", ERS_OPT_NONE);
+	skill->cd_ers = ERS<skill_cd, 25>::create("skill.cpp::skill_cd_ers", (enum ERSOptions)(ERS_OPT_CLEAR | ERS_OPT_CLEAN));
+	skill->cd_entry_ers = ERS<skill_cd_entry, 100>::create("skill.cpp::skill_cd_entry_ers", (enum ERSOptions)(ERS_OPT_CLEAR | ERS_OPT_CLEAN));
 
 	timer->add_func_list(skill->unit_timer,"skill_unit_timer");
 	timer->add_func_list(skill->castend_id,"skill_castend_id");
@@ -25571,10 +25571,10 @@ static int do_final_skill(void)
 	db_destroy(skill->cd_db);
 	db_destroy(skill->usave_db);
 	db_destroy(skill->bowling_db);
-	ers_destroy(skill->unit_ers);
-	ers_destroy(skill->timer_ers);
-	ers_destroy(skill->cd_ers);
-	ers_destroy(skill->cd_entry_ers);
+	ERI::destroy(skill->unit_ers);
+	ERI::destroy(skill->timer_ers);
+	ERI::destroy(skill->cd_ers);
+	ERI::destroy(skill->cd_entry_ers);
 	return 0;
 }
 

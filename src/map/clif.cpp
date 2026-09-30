@@ -26539,8 +26539,8 @@ static int do_init_clif(bool minimal)
 	timer->add_func_list(clif->clearunit_delayed_sub, "clif_clearunit_delayed_sub");
 	timer->add_func_list(clif->delayquit, "clif_delayquit");
 
-	clif->delay_clearunit_ers = ers_new(mob_data, "clif.cpp::delay_clearunit_ers", ERS_OPT_CLEAR);
-	clif->delayed_damage_ers = ers_new(cdelayed_damage,"clif.cpp::delayed_damage_ers",ERS_OPT_CLEAR);
+	clif->delay_clearunit_ers = ERS<mob_data>::create("clif.cpp::delay_clearunit_ers", ERS_OPT_CLEAR);
+	clif->delayed_damage_ers = ERS<cdelayed_damage>::create("clif.cpp::delayed_damage_ers", ERS_OPT_CLEAR);
 
 #if PACKETVER_MAIN_NUM >= 20190403 || PACKETVER_RE_NUM >= 20190320
 	timer->add_func_list(clif->pingTimer, "clif_pingTimer");
@@ -26555,8 +26555,8 @@ static void do_final_clif(void)
 {
 	unsigned char i;
 
-	ers_destroy(clif->delay_clearunit_ers);
-	ers_destroy(clif->delayed_damage_ers);
+	ERI::destroy(clif->delay_clearunit_ers);
+	ERI::destroy(clif->delayed_damage_ers);
 
 	for(i = 0; i < CASHSHOP_TAB_MAX; i++) {
 		int k;

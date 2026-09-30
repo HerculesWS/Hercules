@@ -1580,7 +1580,7 @@ static void do_final_chrif(void)
 
 	chrif->auth_db->destroy(chrif->auth_db, chrif->auth_db_final);
 
-	ers_destroy(chrif->auth_db_ers);
+	ERI::destroy(chrif->auth_db_ers);
 }
 
 /*==========================================
@@ -1592,7 +1592,7 @@ static void do_init_chrif(bool minimal)
 		return;
 
 	chrif->auth_db = idb_alloc(DB_OPT_BASE);
-	chrif->auth_db_ers = ers_new(auth_node,"chrif.cpp::auth_db_ers",ERS_OPT_NONE);
+	chrif->auth_db_ers = ERS<auth_node>::create("chrif.cpp::auth_db_ers", ERS_OPT_NONE);
 
 	timer->add_func_list(chrif->check_connect_char_server, "check_connect_char_server");
 	timer->add_func_list(chrif->auth_db_cleanup, "auth_db_cleanup");
