@@ -155,7 +155,7 @@ static bool mapreg_delete_num_db(int64 uid, const char *name, unsigned int index
 	struct mapreg_save *var = (struct mapreg_save *)i64db_get(mapreg->regs.vars, uid);
 
 	if (var != NULL)
-		ers_free(mapreg->ers, var);
+		mapreg->ers->free(var);
 
 	if (index != 0)
 		script->array_update(&mapreg->regs, uid, true);
@@ -303,7 +303,7 @@ static bool mapreg_delete_str_db(int64 uid, const char *name, unsigned int index
 		if (var->u.str != NULL)
 			aFree(var->u.str);
 
-		ers_free(mapreg->ers, var);
+		mapreg->ers->free(var);
 	}
 
 	if (index != 0)
@@ -610,7 +610,7 @@ static int mapreg_destroy_reg(union DBKey key, struct DBData *data, va_list ap)
 	if (var->is_string && var->u.str != NULL)
 		aFree(var->u.str);
 
-	ers_free(mapreg->ers, var);
+	mapreg->ers->free(var);
 	return 0;
 }
 
