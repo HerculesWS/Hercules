@@ -157,10 +157,10 @@ class ERI
 /**
  * Manages an ERS chunk
  */
-template<typename T, size_t chunk_size>
+template<typename T, size_t max_blocks_count>
 class ers_chunk
 {
-	static_assert(chunk_size > 0, "chunk size has to be greater than 0");
+	static_assert(max_blocks_count > 0, "max_blocks_count has to be greater than 0");
 
   public:
 	ers_chunk() = default;
@@ -176,31 +176,31 @@ class ers_chunk
 	template<typename... Args>
 	[[nodiscard]] T *alloc(Args &&...args) noexcept
 	{
-		if (used_memory() >= m_chunk.size())
+		if (used_memory() >= m_buffer.size())
 			return nullptr;
 
-		T *ptr = reinterpret_cast<T *>(&m_chunk[used_memory()]);
+		T *ptr = reinterpret_cast<T *>(&m_buffer[used_memory()]);
 		new (ptr) T(std::forward<Args>(args)...);
 
-		++m_used_objects;
+		++m_used_blocks;
 
 		return ptr;
 	}
 
 	/**
-	 * @return Gives current maximum capacity
+	 * @return Gives current maximum memory capacity in bytes
 	 */
-	[[nodiscard]] size_t capacity() const noexcept
+	[[nodiscard]] size_t memory_capacity() const noexcept
 	{
-		return m_chunk.size();
+		return m_buffer.size();
 	}
 
 	/**
-	 * @return Gives currently used objects
+	 * @return Gives currently used blocks
 	 */
-	[[nodiscard]] size_t used_objects() const noexcept
+	[[nodiscard]] size_t used_blocks() const noexcept
 	{
-		return m_used_objects;
+		return m_used_blocks;
 	}
 
 	/**
@@ -208,7 +208,7 @@ class ers_chunk
 	 */
 	[[nodiscard]] size_t used_memory() const noexcept
 	{
-		return used_objects() * sizeof(T);
+		return used_blocks() * sizeof(T);
 	}
 
 	/**
@@ -216,18 +216,18 @@ class ers_chunk
 	 */
 	[[nodiscard]] size_t unused_blocks() const noexcept
 	{
-		return (capacity() - used_memory()) / sizeof(T);
+		return (memory_capacity() - used_memory()) / sizeof(T);
 	}
 
   private:
-	std::array<std::byte, sizeof(T) * chunk_size> m_chunk{}; // The memory chunk used
-	size_t m_used_objects{0}; // Used objects in chunk
+	std::array<std::byte, sizeof(T) * max_blocks_count> m_buffer{}; // The memory chunk used
+	size_t m_used_blocks{0}; // Used objects in chunk
 };
 
 /**
  * Public interface of the entry manager.
  */
-template<typename T, size_t chunk_size>
+template<typename T, size_t blocks_per_chunk>
 class ERS final : public ERI
 {
   public:
@@ -255,13 +255,13 @@ class ERS final : public ERI
 			}
 		}
 #else
-		if (used_objects() > 0) {
+		if (used_blocks() > 0) {
 			if ((m_options & ERS_OPT_CLEAR) == 0) {
 				ShowWarning("Memory leak detected at ERS '%s', %" PRIuS " objects not freed.\n",
 				            m_name.c_str(),
-				            used_objects());
+				            used_blocks());
 			} else { // Call dtor on objects we're supposed to clean
-				for (auto *object : m_used_list) {
+				for (auto *object : m_used_blocks) {
 					object->~T();
 				}
 			}
@@ -274,9 +274,9 @@ class ERS final : public ERI
 	 * To be used temporarily until everything stored in smart pointers
 	 */
 	template<typename... Args>
-	[[nodiscard]] static ERS<T, chunk_size> *create(Args &&...args) noexcept
+	[[nodiscard]] static ERS<T, blocks_per_chunk> *create(Args &&...args) noexcept
 	{
-		return new ERS<T, chunk_size>(std::forward<Args>(args)...);
+		return new ERS<T, blocks_per_chunk>(std::forward<Args>(args)...);
 	}
 
 	/**
@@ -303,12 +303,12 @@ class ERS final : public ERI
 			std::terminate();
 
 #ifdef DEBUG
-		if (m_peak < used_objects())
-			m_peak = used_objects();
+		if (m_peak < used_blocks())
+			m_peak = used_blocks();
 #endif
 #endif
 
-		add_to_used_list(ret);
+		register_used_block(ret);
 		return ret;
 	}
 
@@ -322,7 +322,7 @@ class ERS final : public ERI
 	{
 #ifdef DISABLE_ERS
 		entry->~T();
-		remove_from_used_list(entry);
+		deregister_used_block(entry);
 		aFree(entry);
 #else
 		if (entry == nullptr) {
@@ -335,8 +335,8 @@ class ERS final : public ERI
 		if ((m_options & ERS_OPT_CLEAN) != 0)
 			memset(entry, 0, sizeof(T));
 
-		m_reuse_list.push_front(entry);
-		remove_from_used_list(entry);
+		m_reusable_blocks.push_front(entry);
+		deregister_used_block(entry);
 #endif
 	}
 
@@ -350,21 +350,21 @@ class ERS final : public ERI
 		ShowMessage(CL_BOLD "[ERS Cache of size '" CL_NORMAL CL_WHITE "%" PRIuS CL_NORMAL CL_BOLD
 		                    "' report]\n" CL_NORMAL,
 		            sizeof(T));
-		ShowMessage("\tblocks in use      : %" PRIuS "/%" PRIuS "\n", used_objects(), used_objects() + unused_blocks());
+		ShowMessage("\tblocks in use      : %" PRIuS "/%" PRIuS "\n", used_blocks(), used_blocks() + unused_blocks());
 		ShowMessage("\tblocks unused      : %" PRIuS "\n", unused_blocks());
 		ShowMessage("\tmemory in use      : %.2f MB\n",
-		            used_objects() == 0 ? 0.
-		                                   : (double)((used_objects() * sizeof(T)) / 1024) / 1024);
+		            used_blocks() == 0 ? 0.
+		                                   : (double)((used_blocks() * sizeof(T)) / 1024) / 1024);
 		ShowMessage("\tmemory allocated   : %.2f MB\n",
-		            (unused_blocks() + used_objects()) == 0
+		            (unused_blocks() + used_blocks()) == 0
 		                    ? 0.
-		                    : (double)(((used_objects() + unused_blocks()) * sizeof(T)) / 1024)
+		                    : (double)(((used_blocks() + unused_blocks()) * sizeof(T)) / 1024)
 		                              / 1024);
 
-		return {used_objects(),
-		        used_objects() + unused_blocks(),
-		        used_objects() * sizeof(T),
-		        (used_objects() + unused_blocks()) * sizeof(T)};
+		return {used_blocks(),
+		        used_blocks() + unused_blocks(),
+		        used_blocks() * sizeof(T),
+		        (used_blocks() + unused_blocks()) * sizeof(T)};
 	}
 
 #ifdef DEBUG
@@ -374,16 +374,16 @@ class ERS final : public ERI
 	 */
 	[[nodiscard]] bool print_report() const noexcept override
 	{
-		if ((m_options & ERS_OPT_WAIT) != 0 && used_objects() == 0)
+		if ((m_options & ERS_OPT_WAIT) != 0 && used_blocks() == 0)
 			return false;
 
 		ShowMessage(CL_BOLD "[ERS Instance " CL_NORMAL CL_WHITE "%s" CL_NORMAL CL_BOLD " report]\n" CL_NORMAL,
 		            m_name.c_str());
 		ShowMessage("\tblock size        : %" PRIuS "\n", sizeof(T));
-		ShowMessage("\tblocks being used : %" PRIuS "\n", used_objects());
+		ShowMessage("\tblocks being used : %" PRIuS "\n", used_blocks());
 		ShowMessage("\tpeak blocks       : %" PRIuS "\n", m_peak);
 		ShowMessage("\tmemory in use     : %.2f MB\n",
-		            used_objects() == 0 ? 0. : (double)((used_objects() * sizeof(T)) / 1024) / 1024);
+		            used_blocks() == 0 ? 0. : (double)((used_blocks() * sizeof(T)) / 1024) / 1024);
 
 		return true;
 	}
@@ -406,12 +406,12 @@ class ERS final : public ERI
 	 * Returns currently allocated objects
 	 * @return count of objects that are actually allocated for us
 	 */
-	[[nodiscard]] size_t used_objects() const noexcept
+	[[nodiscard]] size_t used_blocks() const noexcept
 	{
 		if (m_chunks.empty())
 			return 0;
 
-		return (m_chunks.size() * chunk_size) - unused_blocks() - m_reuse_list.size();
+		return (m_chunks.size() * blocks_per_chunk) - unused_blocks() - m_reusable_blocks.size();
 	}
 
 	/**
@@ -422,9 +422,9 @@ class ERS final : public ERI
 	template<typename... Args>
 	[[nodiscard]] T *alloc_sub(Args &&...args) noexcept
 	{
-		if (m_reuse_list.empty() == false) {
-			auto *ret = m_reuse_list.front();
-			m_reuse_list.pop_front();
+		if (m_reusable_blocks.empty() == false) {
+			auto *ret = m_reusable_blocks.front();
+			m_reusable_blocks.pop_front();
 
 			new (ret) T(std::forward<Args>(args)...);
 			return ret;
@@ -436,30 +436,30 @@ class ERS final : public ERI
 				return chunk_ptr;
 		}
 
-		m_chunks.push_back(std::make_unique<ers_chunk<T, chunk_size>>());
+		m_chunks.push_back(std::make_unique<ers_chunk<T, blocks_per_chunk>>());
 		return m_chunks.back()->alloc(std::forward<Args>(args)...); // Should never fail unless OOM
 	}
 
 	/**
 	 * Adds an object to the used list, only adds to it if ERS_OPT_CLEAR is set
 	 */
-	void add_to_used_list(T *p) noexcept
+	void register_used_block(T *p) noexcept
 	{
 		if ((m_options & ERS_OPT_CLEAR) != 0) {
-			if ((m_used_list.size() % chunk_size) == 0)
-				m_used_list.reserve(m_used_list.size() + chunk_size);
+			if ((m_used_blocks.size() % blocks_per_chunk) == 0)
+				m_used_blocks.reserve(m_used_blocks.size() + blocks_per_chunk);
 
-			m_used_list.emplace(p);
+			m_used_blocks.emplace(p);
 		}
 	}
 
 	/**
 	 * Removes an object from used list
 	 */
-	void remove_from_used_list(T *p) noexcept
+	void deregister_used_block(T *p) noexcept
 	{
 		if ((m_options & ERS_OPT_CLEAR) != 0)
-			std::erase(m_reuse_list, p);
+			std::erase(m_reusable_blocks, p);
 	}
 
 	std::string m_name; //< Name, used for debugging purposes
@@ -474,9 +474,9 @@ class ERS final : public ERI
 #endif
 
 
-	std::deque<T *> m_reuse_list; //< Reuse linked list
-	std::unordered_set<T *> m_used_list; //< List of used objects only used if ERS_OPT_CLEAR is set
-	std::vector<std::unique_ptr<ers_chunk<T, chunk_size>>> m_chunks; //< Memory blocks array
+	std::deque<T *> m_reusable_blocks; //< Reuse linked list
+	std::unordered_set<T *> m_used_blocks; //< List of used objects only used if ERS_OPT_CLEAR is set
+	std::vector<std::unique_ptr<ers_chunk<T, blocks_per_chunk>>> m_chunks; //< Memory blocks array
 };
 
 #endif /* COMMON_ERS_H */
