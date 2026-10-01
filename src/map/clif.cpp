@@ -485,7 +485,7 @@ static bool clif_send(const void *buf, int len, struct block_list *bl, enum send
 		case AREA_DEAD:
 			if (sd && bl->prev == NULL) //Otherwise source misses the packet.[Skotlex]
 				clif->send (buf, len, bl, SELF);
-			/* Fall through */
+			[[fallthrough]];
 		case AREA_WOC:
 		case AREA_WOS:
 			if (type == AREA_DEAD)
@@ -533,7 +533,7 @@ static bool clif_send(const void *buf, int len, struct block_list *bl, enum send
 			y0 = bl->y - AREA_SIZE;
 			x1 = bl->x + AREA_SIZE;
 			y1 = bl->y + AREA_SIZE;
-			/* Fall through */
+			[[fallthrough]];
 		case PARTY:
 		case PARTY_WOS:
 		case PARTY_SAMEMAP:
@@ -610,7 +610,7 @@ static bool clif_send(const void *buf, int len, struct block_list *bl, enum send
 			y0 = bl->y - AREA_SIZE;
 			x1 = bl->x + AREA_SIZE;
 			y1 = bl->y + AREA_SIZE;
-			/* Fall through */
+			[[fallthrough]];
 		case GUILD_SAMEMAP:
 		case GUILD_SAMEMAP_WOS:
 		case GUILD:
@@ -663,7 +663,7 @@ static bool clif_send(const void *buf, int len, struct block_list *bl, enum send
 			y0 = bl->y - AREA_SIZE;
 			x1 = bl->x + AREA_SIZE;
 			y1 = bl->y + AREA_SIZE;
-			/* Fall through */
+			[[fallthrough]];
 		case BG_SAMEMAP:
 		case BG_SAMEMAP_WOS:
 		case BG:

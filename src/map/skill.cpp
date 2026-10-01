@@ -1436,7 +1436,7 @@ static int skillnotok_hom(uint16 skill_id, struct homun_data *hd)
 	    case MH_GOLDENE_FERSE: //can be used with angriff
 			if(hd->sc.data[SC_ANGRIFFS_MODUS])
 				return 1;
-			/* Fall through */
+			[[fallthrough]];
 	    case MH_ANGRIFFS_MODUS:
 			if(hd->sc.data[SC_GOLDENE_FERSE])
 				return 1;
@@ -1713,7 +1713,7 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 		case AS_VENOMKNIFE:
 			if (sd) //Poison chance must be that of Envenom. [Skotlex]
 				skill_lv = pc->checkskill(sd, TF_POISON);
-			/* Fall through */
+			[[fallthrough]];
 		case TF_POISON:
 		case AS_SPLASHER:
 			if (!sc_start2(src, bl, SC_POISON, (4 * skill_lv + 10), skill_lv, src->id, skill->get_time2(skill_id, skill_lv), skill_id)
@@ -3533,7 +3533,7 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 			if(src->type==BL_PC)
 				dmg.blewcount = 10;
 			dmg.amotion = 0; //Disable delay or attack will do no damage since source is dead by the time it takes effect. [Skotlex]
-			// fall through
+			[[fallthrough]];
 		case KN_AUTOCOUNTER:
 		case NPC_CRITICALSLASH:
 		case TF_DOUBLE:
@@ -3565,7 +3565,6 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 			break;
 		case LG_OVERBRAND_BRANDISH:
 		case LG_OVERBRAND:
-			/* Fall through */
 			dmg.amotion = status_get_amotion(src) * 2;
 			[[fallthrough]];
 		case LG_OVERBRAND_PLUSATK:
@@ -4609,7 +4608,6 @@ static int skill_timerskill_(int tid, int64 tick, int id, intptr_t data)
 						map->foreachinarea(skill->cell_overlap,src->m,skl->x-i,skl->y-i,skl->x+i,skl->y+i,BL_SKILL,skl->skill_id,&dummy,src);
 					}
 					[[fallthrough]];
-				// fall through ...
 				case WL_EARTHSTRAIN:
 					skill->unitsetting(src,skl->skill_id,skl->skill_lv,skl->x,skl->y,(skl->type<<16)|skl->flag);
 					break;
@@ -4962,7 +4960,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 		case NC_PILEBUNKER:
 		case NC_COLDSLOWER:
 			if (sd) pc->overheat(sd,1);
-			/* Fall through */
+			[[fallthrough]];
 		case RK_WINDCUTTER:
 			skill->attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag|SD_ANIMATION);
 			break;
@@ -5024,7 +5022,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 
 		case NC_FLAMELAUNCHER:
 			if (sd) pc->overheat(sd,1);
-			/* Fall through */
+			[[fallthrough]];
 		case SN_SHARPSHOOTING:
 		case MA_SHARPSHOOTING:
 		case NJ_KAMAITACHI:
@@ -5293,7 +5291,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 					case GC_COUNTERSLASH:
 					case GC_ROLLINGCUTTER:
 						flag |= SD_ANIMATION;
-						/* Fall through */
+						[[fallthrough]];
 					case LG_MOONSLASHER:
 					case MH_XENO_SLASHER:
 						clif->skill_damage(src,bl,tick, status_get_amotion(src), 0, -30000, 1, skill_id, skill_lv, BDT_SKILL);
@@ -5613,7 +5611,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 
 		case SL_SMA:
 			status_change_end(src, SC_SMA_READY, INVALID_TIMER);
-			/* Fall through */
+			[[fallthrough]];
 		case SL_STIN:
 		case SL_STUN:
 		case SP_SPA:
@@ -5627,7 +5625,7 @@ static int skill_castend_damage_id(struct block_list *src, struct block_list *bl
 
 		case NPC_DARKBREATH:
 			clif->emotion(src,E_AG);
-			/* Fall through */
+			[[fallthrough]];
 		case SN_FALCONASSAULT:
 		case PA_PRESSURE:
 		case CR_ACIDDEMONSTRATION:
@@ -6468,7 +6466,7 @@ static int skill_castend_id(int tid, int64 tick, int id, intptr_t data)
 			//These should become skill_castend_pos
 			case WE_CALLPARTNER:
 				if(sd) clif->callpartner(sd);
-				/* Fall through */
+				[[fallthrough]];
 			case WE_CALLPARENT:
 			case WE_CALLBABY:
 			case AM_RESURRECTHOMUN:
@@ -7970,7 +7968,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case SR_WINDMILL:
 		case GN_CART_TORNADO:
 			clif->skill_nodamage(src,bl,skill_id,skill_lv,1);
-			/* Fall through */
+			[[fallthrough]];
 		case SR_EARTHSHAKER:
 		case NC_INFRAREDSCAN:
 		case NPC_VAMPIRE_GIFT:
@@ -9313,7 +9311,6 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 								// if it is already trapping something don't spring it,
 								// remove trap should be used instead
 								break;
-							// otherwise fall through to below
 							[[fallthrough]];
 						case UNT_BLASTMINE:
 						case UNT_SKIDTRAP:
@@ -11091,7 +11088,7 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 			break;
 		case WM_SIRCLEOFNATURE:
 			flag |= BCT_SELF|BCT_PARTY|BCT_GUILD;
-			/* Fall through */
+			[[fallthrough]];
 		case WM_VOICEOFSIREN:
 			if( skill_id != WM_SIRCLEOFNATURE )
 				flag &= ~BCT_SELF;
@@ -12958,7 +12955,7 @@ static int skill_castend_pos2(struct block_list *src, int x, int y, uint16 skill
 
 		case RK_WINDCUTTER:
 			clif->skill_damage(src, src, tick, status_get_amotion(src), 0, -30000, 1, skill_id, skill_lv, BDT_SKILL);
-			/* Fall through */
+			[[fallthrough]];
 		case NC_COLDSLOWER:
 		case RK_DRAGONBREATH:
 		case RK_DRAGONBREATH_WATER:
@@ -14069,7 +14066,6 @@ static int skill_unit_onplace(struct skill_unit *src, struct block_list *bl, int
 			// If Aegis, apple of idun doesn't update its effect
 			if (!battle_config.song_timer_reset && sc && sce)
 				return 0;
-			// Let it fall through
 			[[fallthrough]];
 		case UNT_WHISTLE:
 		case UNT_ASSASSINCROSS:
@@ -15167,7 +15163,7 @@ static int skill_unit_onleft(uint16 skill_id, struct block_list *bl, int64 tick)
 				//your own. Let's pray that scenario is pretty unlikely and none will complain too much about it.
 				status_change_end(bl, SC_DANCING, INVALID_TIMER);
 			}
-			/* Fall through */
+			[[fallthrough]];
 		case MH_STEINWAND:
 		case MG_SAFETYWALL:
 		case AL_PNEUMA:
@@ -17269,7 +17265,7 @@ static struct skill_condition skill_get_requirement(struct map_session_data *sd,
 		case SJ_SUNSTANCE:
 			if (sc && sc->data[skill->get_sc_type(skill_id)])
 				return req;
-			/* Fall through */
+			[[fallthrough]];
 		default:
 			if (skill->get_requirement_off_unknown(sc, &skill_id))
 				return req;
@@ -18938,7 +18934,7 @@ static int skill_trap_splash(struct block_list *bl, va_list ap)
 				if (su->group->unit_id == UNT_USED_TRAPS)
 					break;
 			}
-			/* Fall through */
+			[[fallthrough]];
 		case UNT_CLUSTERBOMB:
 			if( ss != bl )
 				skill->attack(BF_MISC,ss,src,bl,sg->skill_id,sg->skill_lv,tick,sg->val1|SD_LEVEL);
@@ -18974,7 +18970,7 @@ static int skill_trap_splash(struct block_list *bl, va_list ap)
 				}
 				break;
 			}
-			/* Fall through */
+			[[fallthrough]];
 		default:
 			skill->attack(skill->get_type(sg->skill_id, sg->skill_lv), ss, src, bl, sg->skill_id, sg->skill_lv, tick, enemy_count);
 			break;
@@ -20684,7 +20680,7 @@ static int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int n
 		switch (skill_id) {
 			case ASC_CDP: //25% Damage yourself, and display same effect as failed potion.
 				status_percent_damage(NULL, &sd->bl, -25, 0, true);
-				/* Fall through */
+				[[fallthrough]];
 			case AM_PHARMACY:
 			case AM_TWILIGHT1:
 			case AM_TWILIGHT2:

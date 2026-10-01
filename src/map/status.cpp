@@ -3967,7 +3967,7 @@ static void status_calc_misc(struct block_list *bl, struct status_data *st, int 
 				st->def2 = st->vit + level / 10 + st->vit / 5;
 				st->mdef2 = level / 10 + st->int_ / 5;
 	#endif
-			/* Fall through */
+				[[fallthrough]];
 			case BL_HOM:
 			case BL_NUL:
 			case BL_SKILL:
@@ -7053,7 +7053,7 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 		break;
 	case SC_OBLIVIONCURSE: // 100% - (100 - 0.8 x INT)
 		sc_def = st->int_*80;
-		/* Fall through */
+		[[fallthrough]];
 	case SC_TOXIN:
 	case SC_PARALYSE:
 	case SC_VENOMBLEED:
@@ -8218,7 +8218,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 					}
 					status_zap(bl, diff, 0);
 				}
-				// fall through
+				[[fallthrough]];
 			case SC_POISON:
 				val3 = total_tick/1000; //Damage iterations
 				if(val3 < 1) val3 = 1;
@@ -12085,7 +12085,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 		case SC_CLOAKINGEXCEED:
 		case SC_NEWMOON:
 			sc->option &= ~OPTION_CLOAK;
-			/* Fall through */
+			[[fallthrough]];
 		case SC_CAMOUFLAGE:
 			opt_flag|= 2;
 			break;
@@ -13333,7 +13333,7 @@ static int status_change_timer_sub(struct block_list *bl, va_list ap)
 			if( tsc && tsc->data[SC__SHADOWFORM] && (sce && sce->val4 >0 && sce->val4%2000 == 0) && // for every 2 seconds do the checking
 				rnd()%100 < 100-tsc->data[SC__SHADOWFORM]->val1*10 ) // [100 - (Skill Level x 10)] %
 				status_change_end(bl, SC__SHADOWFORM, INVALID_TIMER);
-			/* Fall through */
+			[[fallthrough]];
 		case SC_CONCENTRATION:
 			status_change_end(bl, SC_HIDING, INVALID_TIMER);
 			status_change_end(bl, SC_CLOAKING, INVALID_TIMER);

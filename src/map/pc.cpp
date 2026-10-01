@@ -5165,7 +5165,7 @@ static int pc_isUseitem(struct map_session_data *sd, int n)
 #endif
 				return 0;
 			}
-			/* Fall through */
+			[[fallthrough]];
 		case ITEMID_WING_OF_BUTTERFLY:
 		case ITEMID_N_BUTTERFLY_WING:
 		case ITEMID_DUN_TELE_SCROLL1:

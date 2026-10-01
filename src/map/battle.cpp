@@ -868,7 +868,7 @@ static int64 battle_calc_masteryfix(struct block_list *src, struct block_list *t
 		case RA_WUGDASH://(Caster Current Weight x 10 / 8)
 			if( sd->weight )
 				damage += sd->weight / 8;
-			/* Fall through */
+			[[fallthrough]];
 		case RA_WUGSTRIKE:
 		case RA_WUGBITE:
 			damage += 30*pc->checkskill(sd, RA_TOOTHOFWUG);
@@ -1792,7 +1792,7 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 				case NJ_KAMAITACHI:
 					if (sd && sd->charm_type == CHARM_TYPE_WIND && sd->charm_count > 0)
 						skillratio += 10 * sd->charm_count;
-					/* Fall through */
+					[[fallthrough]];
 				case NPC_ENERGYDRAIN:
 					skillratio += 100 * skill_lv;
 					break;
@@ -2893,7 +2893,7 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					break;
 				case GN_SPORE_EXPLOSION:
 					skillratio = 100 * skill_lv + (200 + st->int_) * status->get_lv(src) / 100;
-					/* Fall through */
+					[[fallthrough]];
 				case GN_CRAZYWEED_ATK:
 					skillratio += 400 + 100 * skill_lv;
 					break;
@@ -4183,7 +4183,7 @@ static struct Damage battle_calc_magic_attack(struct block_list *src, struct blo
 							ad.flag = BF_WEAPON|BF_SHORT;
 							ad.type = BDT_NORMAL;
 						}
-					/* Fall through */
+						[[fallthrough]];
 					default:
 						MATK_RATE(battle->calc_skillratio(BF_MAGIC, src, target, skill_id, skill_lv, skillratio, mflag));
 				}
@@ -5014,7 +5014,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 			case NJ_SYURIKEN:
 			case KO_BAKURETSU:
 				flag.distinct = 1;
-				/* Fall through */
+				[[fallthrough]];
 			case NJ_KUNAI:
 			case HW_MAGICCRASHER:
 				flag.tdef = 1;
