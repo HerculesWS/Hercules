@@ -697,7 +697,7 @@ static int elemental_ai_sub_timer_activesearch(struct block_list *bl, va_list ap
 		case BL_PC:
 			if( !map_flag_vs(ed->bl.m) )
 				return 0;
-			/* Fall through */
+			[[fallthrough]];
 		case BL_NUL:
 		case BL_ITEM:
 		case BL_NPC:
