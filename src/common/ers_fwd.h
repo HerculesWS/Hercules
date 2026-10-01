@@ -24,9 +24,9 @@
 
 #include <cstddef>
 
-constexpr size_t ers_chunk_size = 2048;
+constexpr size_t ers_chunk_blocks_count = 2048; // Default blocks count
 
-template<typename T, size_t chunk_size = ers_chunk_size>
+template<typename T, size_t blocks_per_chunk = ers_chunk_blocks_count>
 class ERS;
 
 #endif
