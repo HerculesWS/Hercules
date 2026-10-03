@@ -129,6 +129,7 @@ struct npc_data {
 			/* */
 			struct npc_shop_data *shop;
 			bool trader;
+			bool script_is_own; ///< Whether this NPC owns a private (cloned) copy of `script` and must free it on unload.
 		} scr;
 		struct { /* TODO duck this as soon as the new shop formatting is deemed stable */
 			struct npc_item_list* shop_item;
