@@ -33,15 +33,20 @@ HPM_DECLARE_PLUGIN(
 	"0.1"                // Plugin version
 )
 
-BUILDIN(mapquit) {
+BUILDIN(mapquit)
+{
 	if (script_hasdata(st, 2)) {
 		map->retval = script_getnum(st, 2);
 	}
 	map->do_shutdown();
 	return true;
 }
-HPExport void server_preinit(void) {
+
+HPExport void server_preinit(void)
+{
 }
-HPExport void plugin_init(void) {
+
+HPExport void plugin_init(void)
+{
 	addScriptCommand("mapquit", "?", mapquit);
 }
