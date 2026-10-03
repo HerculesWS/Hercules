@@ -1117,7 +1117,7 @@ static enum login_auth_result login_mmo_auth(struct login_session_data *sd, bool
 	size_t len;
 
 	char ip[16];
-	nullpo_ret(sd);
+	nullpo_retr(LOGIN_AUTH_REJECTED_FROM_SERVER, sd);
 	sockt->ip2str(sockt->session[sd->fd]->client_addr, ip);
 
 	// DNS Blacklist check

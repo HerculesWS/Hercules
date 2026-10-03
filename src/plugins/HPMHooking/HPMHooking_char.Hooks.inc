@@ -1675,7 +1675,7 @@ void HP_chr_authfail_fd(int fd, enum notify_ban_errorcode type) {
 		void (*preHookFunc) (int *fd, enum notify_ban_errorcode *type);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_authfail_fd_pre; hIndex++) {
-			preHookFunc = (void (*) (int *fd, int *type))HPMHooks.list.HP_chr_authfail_fd_pre[hIndex].func;
+			preHookFunc = (void (*) (int *fd, enum notify_ban_errorcode *type))HPMHooks.list.HP_chr_authfail_fd_pre[hIndex].func;
 			preHookFunc(&fd, &type);
 		}
 		if (*HPMforce_return) {
@@ -1689,7 +1689,7 @@ void HP_chr_authfail_fd(int fd, enum notify_ban_errorcode type) {
 	if (HPMHooks.count.HP_chr_authfail_fd_post > 0) {
 		void (*postHookFunc) (int fd, enum notify_ban_errorcode type);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_chr_authfail_fd_post; hIndex++) {
-			postHookFunc = (void (*) (int fd, int type))HPMHooks.list.HP_chr_authfail_fd_post[hIndex].func;
+			postHookFunc = (void (*) (int fd, enum notify_ban_errorcode type))HPMHooks.list.HP_chr_authfail_fd_post[hIndex].func;
 			postHookFunc(fd, type);
 		}
 	}
