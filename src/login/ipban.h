@@ -28,13 +28,13 @@
 struct config_t; // common/conf.h
 
 struct s_ipban_dbs {
-	char   db_hostname[32];
+	char db_hostname[32];
 	uint16 db_port;
-	char   db_username[32];
-	char   db_password[100];
-	char   db_database[32];
-	char   codepage[32];
-	char   table[32];
+	char db_username[32];
+	char db_password[100];
+	char db_database[32];
+	char codepage[32];
+	char table[32];
 };
 
 /**
@@ -45,15 +45,15 @@ struct ipban_interface {
 	struct Sql *sql_handle;
 	int cleanup_timer_id;
 	bool inited;
-	void (*init) (void);
-	void (*final) (void);
-	int (*cleanup) (int tid, int64 tick, int id, intptr_t data);
-	bool (*config_read_inter) (const char *filename, bool imported);
-	bool (*config_read_connection) (const char *filename, struct config_t *config, bool imported);
-	bool (*config_read_dynamic) (const char *filename, struct config_t *config, bool imported);
-	bool (*config_read) (const char *filename, struct config_t *config, bool imported);
-	bool (*check) (uint32 ip);
-	void (*log) (uint32 ip);
+	void (*init)(void);
+	void (*final)(void);
+	int (*cleanup)(int tid, int64 tick, int id, intptr_t data);
+	bool (*config_read_inter)(const char *filename, bool imported);
+	bool (*config_read_connection)(const char *filename, struct config_t *config, bool imported);
+	bool (*config_read_dynamic)(const char *filename, struct config_t *config, bool imported);
+	bool (*config_read)(const char *filename, struct config_t *config, bool imported);
+	bool (*check)(uint32 ip);
+	void (*log)(uint32 ip);
 };
 
 #ifdef HERCULES_CORE
