@@ -39,8 +39,8 @@
 #define MAX_SPIRITBALL 15
 
 /**
-* Spirit Charm Limitation
-**/
+ * Spirit Charm Limitation
+ **/
 #define MAX_SPIRITCHARM 10
 
 /**
@@ -62,7 +62,7 @@
  * when enabled, reflect damage doesn't bypass devotion (and thus damage is passed to crusader)
  * uncomment to enable
  **/
-//#define DEVOTION_REFLECT_DAMAGE
+// #define DEVOTION_REFLECT_DAMAGE
 
 /**
  * When enabled, RENEWAL servers loads db/pre-re/autospell_db.conf instead of db/re/autospell_db.conf.
@@ -75,7 +75,7 @@
  *
  * You may want to enable this if you have a client that can't support the list with more than 7 skills.
  */
-//#define CLASSIC_AUTOSPELL_LIST
+// #define CLASSIC_AUTOSPELL_LIST
 
 /**
  * No settings past this point
