@@ -183,6 +183,8 @@ struct login_interface {
 	int (*mmo_auth) (struct login_session_data* sd, bool isServer);
 	int (*mmo_auth_new) (const char* userid, const char* pass, const char sex, const char* last_ip);
 	int (*waiting_disconnect_timer) (int tid, int64 tick, int id, intptr_t data);
+	int (*shutdown_timeout_timer) (int tid, int64 tick, int id, intptr_t data);
+	void (*check_shutdown) (void);
 	struct DBData (*create_online_user) (union DBKey key, va_list args);
 	struct online_login_data* (*add_online_user) (int char_server, int account_id);
 	void (*remove_online_user) (int account_id);

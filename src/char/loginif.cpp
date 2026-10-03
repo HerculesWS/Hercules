@@ -49,9 +49,9 @@ static void loginif_reset(void)
 }
 
 
-/// Checks the conditions for the server to stop.
-/// Releases the cookie when all characters are saved.
-/// If all the conditions are met, it stops the core loop.
+/// Finishes the shutdown started by chr->do_shutdown().
+/// Called only once chr->check_shutdown() has confirmed there are no more
+/// characters left for the map-server to disconnect/save.
 static void loginif_check_shutdown(void)
 {
 	if( core->runflag != CHARSERVER_ST_SHUTDOWN )

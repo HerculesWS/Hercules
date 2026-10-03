@@ -74,6 +74,13 @@ static AccountDB *accounts = NULL;
 //-----------------------------------------------------
 #define AUTH_TIMEOUT 30000
 
+//-----------------------------------------------------
+// Shutdown
+//-----------------------------------------------------
+// Maximum time to wait for char-servers to acknowledge in-flight auth
+// requests before forcing the shutdown to proceed anyway.
+#define SHUTDOWN_TIMEOUT 30000
+
 /**
  * @see DBCreateData
  */
@@ -120,6 +127,7 @@ static int login_waiting_disconnect_timer(int tid, int64 tick, int id, intptr_t 
 		p->waiting_disconnect = INVALID_TIMER;
 		login->remove_online_user(id);
 		idb_remove(login->auth_db, id);
+		login->check_shutdown();
 	}
 	return 0;
 }
@@ -345,7 +353,12 @@ static void login_fromchar_parse_auth(int fd, int id, const char *const ip)
 		nullpo_retv(ip);
 		ShowStatus("Char-server '%s': authentication of the account %d REFUSED (ip: %s).\n", login->dbs->server[id].name, account_id, ip);
 		login->fromchar_auth_ack(fd, account_id, login_id1, login_id2, sex, request_id, NULL);
+		// server is shutting down: this request will never be retried, so stop waiting on it
+		if (core->runflag != LOGINSERVER_ST_RUNNING && node != NULL)
+			idb_remove(login->auth_db, account_id);
 	}
+
+	login->check_shutdown();
 }
 
 static void login_fromchar_parse_update_users(int fd, int id)
@@ -2170,6 +2183,32 @@ void set_server_type(void)
 }
 
 
+static int login_shutdown_timeout_timer(int tid, int64 tick, int id, intptr_t data)
+{
+	if (core->runflag != LOGINSERVER_ST_SHUTDOWN)
+		return 0;
+	ShowWarning("Shutdown: timed out waiting for %u pending auth request(s) to be acknowledged, forcing shutdown.\n",
+		db_size(login->auth_db));
+	core->runflag = CORE_ST_STOP;
+	return 0;
+}
+
+/// Checks the conditions for the server to stop.
+/// Finishes the shutdown once no auth requests are still awaiting a char-server ack.
+static void login_check_shutdown(void)
+{
+	if (core->runflag != LOGINSERVER_ST_SHUTDOWN)
+		return;
+	if (db_size(login->auth_db) > 0)
+		return;
+	for (int id = 0; id < ARRAYLENGTH(login->dbs->server); ++id)
+		lchrif->server_reset(id);
+	for (int id = 0; id < ARRAYLENGTH(login->dbs->api_server); ++id)
+		lapiif->server_reset(id);
+	sockt->flush_fifos();
+	core->runflag = CORE_ST_STOP;
+}
+
 /// Called when a terminate signal is received.
 static void do_shutdown_login(void)
 {
@@ -2177,13 +2216,8 @@ static void do_shutdown_login(void)
 	{
 		core->runflag = LOGINSERVER_ST_SHUTDOWN;
 		ShowStatus("Shutting down...\n");
-		// TODO proper shutdown procedure; kick all characters, wait for acks, ...  [FlavioJS]
-		for (int id = 0; id < ARRAYLENGTH(login->dbs->server); ++id)
-			lchrif->server_reset(id);
-		for (int id = 0; id < ARRAYLENGTH(login->dbs->api_server); ++id)
-			lapiif->server_reset(id);
-		sockt->flush_fifos();
-		core->runflag = CORE_ST_STOP;
+		timer->add(timer->gettick() + SHUTDOWN_TIMEOUT, login->shutdown_timeout_timer, 0, 0);
+		login->check_shutdown();
 	}
 }
 
@@ -2317,6 +2351,7 @@ int do_init(int argc, char **argv)
 
 	// Interserver auth init
 	login->auth_db = idb_alloc(DB_OPT_RELEASE_DATA);
+	timer->add_func_list(login->shutdown_timeout_timer, "login->shutdown_timeout_timer");
 
 	// set default parser as lclif->parse function
 	sockt->set_defaultparse(lclif->parse);
@@ -2377,6 +2412,8 @@ void login_defaults(void)
 	login->mmo_auth = login_mmo_auth;
 	login->mmo_auth_new = login_mmo_auth_new;
 	login->waiting_disconnect_timer = login_waiting_disconnect_timer;
+	login->shutdown_timeout_timer = login_shutdown_timeout_timer;
+	login->check_shutdown = login_check_shutdown;
 	login->create_online_user = login_create_online_user;
 	login->add_online_user = login_add_online_user;
 	login->remove_online_user = login_remove_online_user;
