@@ -19,5 +19,5 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define CONFIG(type, name, def, min, max) type name;
+#define CONFIG(type, name, def, min, max)    type name;
 #define CONFIGSTR(type, name, def, min, max) char *name;

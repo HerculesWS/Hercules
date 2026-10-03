@@ -35,13 +35,9 @@ struct base62_interface *base62;
  * Base 62 conversion table
  */
 static char base62tbl[62] = {
-	'0','1','2','3','4','5','6','7','8',
-	'9','a','b','c','d','e','f','g','h',
-	'i','j','k','l','m','n','o','p','q',
-	'r','s','t','u','v','w','x','y','z',
-	'A','B','C','D','E','F','G','H','I',
-	'J','K','L','M','N','O','P','Q','R',
-	'S','T','U','V','W','X','Y','Z',
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
+    'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F',
+    'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
 };
 
 /**
@@ -66,14 +62,14 @@ static bool base62_encode_int_padded(int value, char *buf, int min_len, int buf_
 
 	Assert_retr(false, min_len < buf_len);
 	Assert_retr(false, buf_len >= 2);
-	
-	char temp_buf[BASE62_INT_BUFFER_LEN] = { 0 };
-	int max_idx = std::clamp(buf_len - 2, 0, BASE62_INT_BUFFER_LEN - 2);
+
+	char temp_buf[BASE62_INT_BUFFER_LEN] = {0};
+	int max_idx                          = std::clamp(buf_len - 2, 0, BASE62_INT_BUFFER_LEN - 2);
 
 	int idx = 0;
 	do {
-		temp_buf[idx] = base62tbl[value % 62];
-		value /= 62;
+		temp_buf[idx]  = base62tbl[value % 62];
+		value         /= 62;
 		idx++;
 	} while (idx <= max_idx && value > 0);
 
@@ -107,6 +103,6 @@ static bool base62_encode_int_padded(int value, char *buf, int min_len, int buf_
  **/
 void base62_defaults(void)
 {
-	base62 = &base62_s;
+	base62                    = &base62_s;
 	base62->encode_int_padded = base62_encode_int_padded;
 }
