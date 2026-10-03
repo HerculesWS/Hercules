@@ -7446,10 +7446,10 @@ typedef int (*HPMHOOK_pre_pc_bonus_autospell) (struct s_autospell **spell, int *
 typedef int (*HPMHOOK_post_pc_bonus_autospell) (int retVal___, struct s_autospell *spell, int max, short id, short lv, short rate, short flag, int card_id);
 typedef int (*HPMHOOK_pre_pc_bonus_autospell_onskill) (struct s_autospell **spell, int *max, short *src_skill, short *id, short *lv, short *rate, int *card_id);
 typedef int (*HPMHOOK_post_pc_bonus_autospell_onskill) (int retVal___, struct s_autospell *spell, int max, short src_skill, short id, short lv, short rate, int card_id);
-typedef int (*HPMHOOK_pre_pc_bonus_addeff) (struct s_addeffect **effect, int *max, enum sc_type *id, int16 *rate, int16 *arrow_rate, uint8 *flag, uint16 *duration);
-typedef int (*HPMHOOK_post_pc_bonus_addeff) (int retVal___, struct s_addeffect *effect, int max, enum sc_type id, int16 rate, int16 arrow_rate, uint8 flag, uint16 duration);
-typedef int (*HPMHOOK_pre_pc_bonus_addeff_onskill) (struct s_addeffectonskill **effect, int *max, enum sc_type *id, short *rate, short *skill_id, unsigned char *target);
-typedef int (*HPMHOOK_post_pc_bonus_addeff_onskill) (int retVal___, struct s_addeffectonskill *effect, int max, enum sc_type id, short rate, short skill_id, unsigned char target);
+typedef int (*HPMHOOK_pre_pc_bonus_addeff) (struct s_addeffect **effect, int *max, enum sc_type *id, int16 *rate, int16 *arrow_rate, uint8 *flag, uint16 *duration, uint16 *wait_duration);
+typedef int (*HPMHOOK_post_pc_bonus_addeff) (int retVal___, struct s_addeffect *effect, int max, enum sc_type id, int16 rate, int16 arrow_rate, uint8 flag, uint16 duration, uint16 wait_duration);
+typedef int (*HPMHOOK_pre_pc_bonus_addeff_onskill) (struct s_addeffectonskill **effect, int *max, enum sc_type *id, short *rate, short *skill_id, unsigned char *target, uint16 *wait_duration);
+typedef int (*HPMHOOK_post_pc_bonus_addeff_onskill) (int retVal___, struct s_addeffectonskill *effect, int max, enum sc_type id, short rate, short skill_id, unsigned char target, uint16 wait_duration);
 typedef int (*HPMHOOK_pre_pc_bonus_item_drop) (struct s_add_drop **drop, const short *max, int *id, bool *is_group, int *race, int *rate);
 typedef int (*HPMHOOK_post_pc_bonus_item_drop) (int retVal___, struct s_add_drop *drop, const short max, int id, bool is_group, int race, int rate);
 typedef void (*HPMHOOK_pre_pc_calcexp) (struct map_session_data **sd, uint64 **base_exp, uint64 **job_exp, struct block_list **src, enum gainexp_flags *flags);

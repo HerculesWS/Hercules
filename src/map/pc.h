@@ -150,17 +150,18 @@ struct s_autospell {
 };
 /// AddEff bonus data
 struct s_addeffect {
-	enum sc_type id;  ///< Effect ID
-	int16 rate;       ///< Base success rate
-	int16 arrow_rate; ///< Success rate modifier for ranged attacks (adds to the base rate)
-	uint8 flag;       ///< Trigger flag (@see enum auto_trigger_flag)
-	uint16 duration;  ///< Optional, non-reducible duration in ms. If 0, the default, reducible effect's duration is used.
-	// TODO[Haru]: Duration is only used in addeff (set through bonus4 bAddEff). The other addeffect types could also use it.
+	enum sc_type id;      ///< Effect ID
+	int16 rate;           ///< Base success rate
+	int16 arrow_rate;     ///< Success rate modifier for ranged attacks (adds to the base rate)
+	uint8 flag;           ///< Trigger flag (@see enum auto_trigger_flag)
+	uint16 duration;      ///< Optional, non-reducible duration in ms. If 0, the default, reducible effect's duration is used.
+	uint16 wait_duration; ///< Optional wait/transition duration in ms, for opt1 states that use one (e.g. OPT1_STONEWAIT for SC_STONE). Ignored by effects that don't use it. If 0, a built-in default is used.
 };
 struct s_addeffectonskill {
 	enum sc_type id;
 	int rate, skill;
 	unsigned char target;
+	uint16 wait_duration; ///< @see s_addeffect::wait_duration
 };
 struct s_add_drop {
 	bool is_group;
@@ -1229,8 +1230,8 @@ END_ZEROED_BLOCK; /* End */
 	void (*check_skilltree) (struct map_session_data *sd, int skill_id);
 	int (*bonus_autospell) (struct s_autospell *spell, int max, short id, short lv, short rate, short flag, int card_id);
 	int (*bonus_autospell_onskill) (struct s_autospell *spell, int max, short src_skill, short id, short lv, short rate, int card_id);
-	int (*bonus_addeff) (struct s_addeffect* effect, int max, enum sc_type id, int16 rate, int16 arrow_rate, uint8 flag, uint16 duration);
-	int (*bonus_addeff_onskill) (struct s_addeffectonskill* effect, int max, enum sc_type id, short rate, short skill_id, unsigned char target);
+	int (*bonus_addeff) (struct s_addeffect* effect, int max, enum sc_type id, int16 rate, int16 arrow_rate, uint8 flag, uint16 duration, uint16 wait_duration);
+	int (*bonus_addeff_onskill) (struct s_addeffectonskill* effect, int max, enum sc_type id, short rate, short skill_id, unsigned char target, uint16 wait_duration);
 	int (*bonus_item_drop) (struct s_add_drop *drop, const short max, int id, bool is_group, int race, int rate);
 	void (*calcexp) (struct map_session_data *sd, uint64 *base_exp, uint64 *job_exp, struct block_list *src, enum gainexp_flags flags);
 	int (*respawn_timer) (int tid, int64 tick, int id, intptr_t data);
