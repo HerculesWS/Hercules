@@ -1200,7 +1200,7 @@ enum {
 #endif
 };
 
-#define JOB_ENUM_VALUE(name, id, msgtbl) JOB_ ## name = id,
+#define JOB_ENUM_VALUE(name, id, msgtbl, scriptname) JOB_ ## name = id,
 //These mark the ID of the jobs, as expected by the client. [Skotlex]
 enum e_class {
 #include "common/class_hidden.h"
