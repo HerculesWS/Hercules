@@ -109,7 +109,7 @@ static struct channel_data *channel_create(enum channel_types type, const char *
 	chan->color = color;
 
 	chan->options = HCS_OPT_BASE;
-	chan->banned = NULL;
+	chan->banned  = NULL;
 
 	chan->msg_delay = 0;
 
@@ -130,7 +130,10 @@ static void channel_delete(struct channel_data *chan)
 
 	if (db_size(chan->users) && !channel->config->closing) {
 		struct DBIterator *iter = db_iterator(chan->users);
-		for (struct map_session_data *sd = (struct map_session_data *)dbi_first(iter); dbi_exists(iter); sd = (struct map_session_data *)dbi_next(iter)) {
+		for (
+		  struct map_session_data *sd = (struct map_session_data *)dbi_first(iter); dbi_exists(iter);
+		  sd                          = (struct map_session_data *)dbi_next(iter)
+		) {
 			channel->leave_sub(chan, sd);
 		}
 		dbi_destroy(iter);
@@ -176,7 +179,8 @@ static void channel_set_password(struct channel_data *chan, const char *password
  * @retval HCS_STATUS_NOPERM if the source character doesn't have enough permissions.
  * @retval HCS_STATUS_FAIL in case of generic failure.
  */
-static enum channel_operation_status channel_ban(struct channel_data *chan, const struct map_session_data *ssd, struct map_session_data *tsd)
+static enum channel_operation_status channel_ban(struct channel_data *chan, const struct map_session_data *ssd,
+                                                 struct map_session_data *tsd)
 {
 	struct channel_ban_entry *entry = NULL;
 
@@ -215,7 +219,8 @@ static enum channel_operation_status channel_ban(struct channel_data *chan, cons
  * @retval HCS_STATUS_NOPERM if the source character doesn't have enough permissions.
  * @retval HCS_STATUS_FAIL in case of generic failure.
  */
-static enum channel_operation_status channel_unban(struct channel_data *chan, const struct map_session_data *ssd, struct map_session_data *tsd)
+static enum channel_operation_status channel_unban(struct channel_data *chan, const struct map_session_data *ssd,
+                                                   struct map_session_data *tsd)
 {
 	nullpo_retr(HCS_STATUS_FAIL, chan);
 
@@ -273,21 +278,25 @@ static void channel_send(struct channel_data *chan, struct map_session_data *sd,
 	nullpo_retv(chan);
 	nullpo_retv(msg);
 
-	if (sd && chan->msg_delay != 0
-	 && DIFF_TICK(sd->hchsysch_tick + chan->msg_delay*1000, timer->gettick()) > 0
-	 && !pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN)) {
+	if (
+	  sd
+	  && chan->msg_delay != 0
+	  && DIFF_TICK(sd->hchsysch_tick + chan->msg_delay * 1000, timer->gettick()) > 0
+	  && !pc_has_permission(sd, PC_PERM_HCHSYS_ADMIN)
+	) {
 		char output[CHAT_SIZE_MAX];
 		// "You cannot send a message to this channel for another %d seconds."
-		sprintf(output, msg_sd(sd, MSGTBL_CHANNEL_COOLDOWN), DIFF_TICK(sd->hchsysch_tick + chan->msg_delay * 1000, timer->gettick()) / 1000);
+		sprintf(output, msg_sd(sd, MSGTBL_CHANNEL_COOLDOWN),
+		        DIFF_TICK(sd->hchsysch_tick + chan->msg_delay * 1000, timer->gettick()) / 1000);
 		clif->messagecolor_self(sd->fd, COLOR_RED, output);
 		return;
 	} else if (sd) {
 		int i;
 
 		snprintf(message, 150, "[ #%s ] %s : %s", chan->name, sd->status.name, msg);
-		clif->channel_msg(chan,sd,message);
+		clif->channel_msg(chan, sd, message);
 		if (chan->type == HCS_TYPE_IRC)
-			ircbot->relay(sd->status.name,msg);
+			ircbot->relay(sd->status.name, msg);
 		if (chan->msg_delay != 0)
 			sd->hchsysch_tick = timer->gettick();
 
@@ -323,17 +332,16 @@ static void channel_join_sub(struct channel_data *chan, struct map_session_data 
 	VECTOR_ENSURE(sd->channels, 1, 1);
 	VECTOR_PUSH(sd->channels, chan);
 
-	if (!stealth && (chan->options&HCS_OPT_ANNOUNCE_JOIN)) {
+	if (!stealth && (chan->options & HCS_OPT_ANNOUNCE_JOIN)) {
 		char message[60];
 		sprintf(message, msg_txt(MSGTBL_PLAYER_JOINED), chan->name, sd->status.name); // #%s '%s' joined
-		clif->channel_msg(chan,sd,message);
+		clif->channel_msg(chan, sd, message);
 	}
 
 	/* someone is cheating, we kindly disconnect the bastard */
 	if (VECTOR_LENGTH(sd->channels) > 200) {
 		sockt->eof(sd->fd);
 	}
-
 }
 
 /**
@@ -352,7 +360,8 @@ static void channel_join_sub(struct channel_data *chan, struct map_session_data 
  * @retval HCS_STATUS_BANNED  if the character is in the channel's ban list
  * @retval HCS_STATUS_FAIL    in case of generic error
  */
-static enum channel_operation_status channel_join(struct channel_data *chan, struct map_session_data *sd, const char *password, bool silent)
+static enum channel_operation_status channel_join(struct channel_data *chan, struct map_session_data *sd,
+                                                  const char *password, bool silent)
 {
 	bool stealth = false;
 
@@ -376,7 +385,7 @@ static enum channel_operation_status channel_join(struct channel_data *chan, str
 		return HCS_STATUS_BANNED;
 	}
 
-	if (!silent && !(chan->options&HCS_OPT_ANNOUNCE_JOIN)) {
+	if (!silent && !(chan->options & HCS_OPT_ANNOUNCE_JOIN)) {
 		char output[CHAT_SIZE_MAX];
 		if (chan->type == HCS_TYPE_MAP) {
 			// You're now in the '#%s' channel for '%s'
@@ -392,7 +401,11 @@ static enum channel_operation_status channel_join(struct channel_data *chan, str
 		int i;
 		for (i = 0; i < MAX_GUILDALLIANCE; i++) {
 			struct guild *sg = NULL;
-			if (g->alliance[i].opposition == 0 && g->alliance[i].guild_id && (sg = guild->search(g->alliance[i].guild_id)) != NULL) {
+			if (
+			  g->alliance[i].opposition == 0
+			  && g->alliance[i].guild_id
+			  && (sg = guild->search(g->alliance[i].guild_id)) != NULL
+			) {
 				if (!(sg->channel->banned && idb_exists(sg->channel->banned, sd->status.account_id))) {
 					channel->join_sub(sg->channel, sd, stealth);
 				}
@@ -434,7 +447,7 @@ static void channel_leave(struct channel_data *chan, struct map_session_data *sd
 	nullpo_retv(chan);
 	nullpo_retv(sd);
 
-	if (!idb_remove(chan->users,sd->status.char_id))
+	if (!idb_remove(chan->users, sd->status.char_id))
 		return;
 
 	if (chan == sd->gcbind)
@@ -445,7 +458,7 @@ static void channel_leave(struct channel_data *chan, struct map_session_data *sd
 	} else if (!channel->config->closing && (chan->options & HCS_OPT_ANNOUNCE_JOIN)) {
 		char message[60];
 		sprintf(message, msg_txt(MSGTBL_PLAYER_LEFT), chan->name, sd->status.name); // #%s '%s' left
-		clif->channel_msg(chan,sd,message);
+		clif->channel_msg(chan, sd, message);
 	}
 
 	channel->leave_sub(chan, sd);
@@ -480,10 +493,15 @@ static void channel_map_join(struct map_session_data *sd)
 	if (sd->state.autotrade || sd->state.standalone)
 		return;
 	if (!map->list[sd->bl.m].channel) {
-		if (map->list[sd->bl.m].flag.chsysnolocalaj || (map->list[sd->bl.m].instance_id >= 0 && instance->list[map->list[sd->bl.m].instance_id].owner_type != IOT_NONE))
+		if (
+		  map->list[sd->bl.m].flag.chsysnolocalaj
+		  || (map->list[sd->bl.m].instance_id >= 0
+		      && instance->list[map->list[sd->bl.m].instance_id].owner_type != IOT_NONE)
+		)
 			return;
 
-		map->list[sd->bl.m].channel = channel->create(HCS_TYPE_MAP, channel->config->local_name, channel->config->local_color);
+		map->list[sd->bl.m].channel
+		  = channel->create(HCS_TYPE_MAP, channel->config->local_name, channel->config->local_color);
 		map->list[sd->bl.m].channel->m = sd->bl.m;
 	}
 
@@ -526,7 +544,7 @@ static void channel_guild_join_alliance(const struct guild *g_source, const stru
 			if (sd == NULL)
 				continue;
 			if (!(g_ally->channel->banned && idb_exists(g_ally->channel->banned, sd->status.account_id)))
-				channel->join_sub(chan,sd, false);
+				channel->join_sub(chan, sd, false);
 		}
 	}
 }
@@ -554,7 +572,7 @@ static void channel_guild_leave_alliance(const struct guild *g_source, const str
 			if (sd == NULL)
 				continue;
 
-			channel->leave(chan,sd);
+			channel->leave(chan, sd);
 		}
 	}
 }
@@ -582,7 +600,7 @@ static void read_channels_config(void)
 {
 	struct config_t channels_conf;
 	struct config_setting_t *chsys = NULL;
-	const char *config_filename = "conf/channels.conf"; // FIXME hardcoded name
+	const char *config_filename    = "conf/channels.conf"; // FIXME hardcoded name
 
 	if (!libconfig->load_file(&channels_conf, config_filename))
 		return;
@@ -593,29 +611,21 @@ static void read_channels_config(void)
 		struct config_setting_t *settings = libconfig->setting_get_elem(chsys, 0);
 		struct config_setting_t *channels;
 		struct config_setting_t *colors;
-		int i,k;
-		const char *local_name, *ally_name,
-					*local_color, *ally_color,
-					*irc_name, *irc_color;
-		int ally_enabled = 0, local_enabled = 0,
-			local_autojoin = 0, ally_autojoin = 0,
-			allow_user_channel_creation = 0,
-			irc_enabled = 0,
-			irc_autojoin = 0,
-			irc_flood_protection_rate = 0,
-			irc_flood_protection_burst = 0,
-			irc_flood_protection_enabled = 0,
-			channel_opt_msg_delay = 10;
+		int i, k;
+		const char *local_name, *ally_name, *local_color, *ally_color, *irc_name, *irc_color;
+		int ally_enabled = 0, local_enabled = 0, local_autojoin = 0, ally_autojoin = 0, allow_user_channel_creation = 0,
+		    irc_enabled = 0, irc_autojoin = 0, irc_flood_protection_rate = 0, irc_flood_protection_burst = 0,
+		    irc_flood_protection_enabled = 0, channel_opt_msg_delay = 10;
 
-		if( !libconfig->setting_lookup_string(settings, "map_local_channel_name", &local_name) )
+		if (!libconfig->setting_lookup_string(settings, "map_local_channel_name", &local_name))
 			local_name = "map";
 		safestrncpy(channel->config->local_name, local_name, HCS_NAME_LENGTH);
 
-		if( !libconfig->setting_lookup_string(settings, "ally_channel_name", &ally_name) )
+		if (!libconfig->setting_lookup_string(settings, "ally_channel_name", &ally_name))
 			ally_name = "ally";
 		safestrncpy(channel->config->ally_name, ally_name, HCS_NAME_LENGTH);
 
-		if( !libconfig->setting_lookup_string(settings, "irc_channel_name", &irc_name) )
+		if (!libconfig->setting_lookup_string(settings, "irc_channel_name", &irc_name))
 			irc_name = "irc";
 		safestrncpy(channel->config->irc_name, irc_name, HCS_NAME_LENGTH);
 
@@ -630,24 +640,27 @@ static void read_channels_config(void)
 		if (irc_enabled)
 			channel->config->irc = true;
 
-		channel->config->irc_server[0] = channel->config->irc_channel[0] = channel->config->irc_nick[0] = channel->config->irc_nick_pw[0] = '\0';
+		channel->config->irc_server[0] = channel->config->irc_channel[0] = channel->config->irc_nick[0]
+		  = channel->config->irc_nick_pw[0]                              = '\0';
 
 		if (channel->config->irc) {
-			const char *irc_server, *irc_channel,
-				 *irc_nick, *irc_nick_pw;
+			const char *irc_server, *irc_channel, *irc_nick, *irc_nick_pw;
 			int irc_use_ghost = 0;
 			if (!libconfig->setting_lookup_string(settings, "irc_channel_network", &irc_server)) {
 				channel->config->irc = false;
-				ShowWarning("channels.conf : irc channel enabled but irc_channel_network wasn't found, disabling irc channel...\n");
+				ShowWarning(
+				  "channels.conf : irc channel enabled but irc_channel_network wasn't found, disabling irc channel...\n");
 			} else {
 				char *server = aStrdup(irc_server);
-				char *port = strchr(server, ':');
+				char *port   = strchr(server, ':');
 				if (port == NULL) {
 					channel->config->irc = false;
-					ShowWarning("channels.conf: network port wasn't found in 'irc_channel_network', disabling irc channel...\n");
-				} else if ((size_t)(port-server) > sizeof channel->config->irc_server - 1) {
+					ShowWarning(
+					  "channels.conf: network port wasn't found in 'irc_channel_network', disabling irc channel...\n");
+				} else if ((size_t)(port - server) > sizeof channel->config->irc_server - 1) {
 					channel->config->irc = false;
-					ShowWarning("channels.conf: server name is too long in 'irc_channel_network', disabling irc channel...\n");
+					ShowWarning(
+					  "channels.conf: server name is too long in 'irc_channel_network', disabling irc channel...\n");
 				} else {
 					*port = '\0';
 					port++;
@@ -660,17 +673,19 @@ static void read_channels_config(void)
 				safestrncpy(channel->config->irc_channel, irc_channel, 50);
 			} else {
 				channel->config->irc = false;
-				ShowWarning("channels.conf : irc channel enabled but irc_channel_channel wasn't found, disabling irc channel...\n");
+				ShowWarning(
+				  "channels.conf : irc channel enabled but irc_channel_channel wasn't found, disabling irc channel...\n");
 			}
 			if (libconfig->setting_lookup_string(settings, "irc_channel_nick", &irc_nick)) {
-				if (strcmpi(irc_nick,"Hercules_chSysBot") == 0) {
-					sprintf(channel->config->irc_nick, "Hercules_chSysBot%d",rnd()%777);
+				if (strcmpi(irc_nick, "Hercules_chSysBot") == 0) {
+					sprintf(channel->config->irc_nick, "Hercules_chSysBot%d", rnd() % 777);
 				} else {
 					safestrncpy(channel->config->irc_nick, irc_nick, 40);
 				}
 			} else {
 				channel->config->irc = false;
-				ShowWarning("channels.conf : irc channel enabled but irc_channel_nick wasn't found, disabling irc channel...\n");
+				ShowWarning(
+				  "channels.conf : irc channel enabled but irc_channel_nick wasn't found, disabling irc channel...\n");
 			}
 			if (libconfig->setting_lookup_string(settings, "irc_channel_nick_pw", &irc_nick_pw)) {
 				safestrncpy(channel->config->irc_nick_pw, irc_nick_pw, 30);
@@ -711,21 +726,22 @@ static void read_channels_config(void)
 
 		libconfig->setting_lookup_bool(settings, "allow_user_channel_creation", &allow_user_channel_creation);
 
-		if( allow_user_channel_creation )
+		if (allow_user_channel_creation)
 			channel->config->allow_user_channel_creation = true;
 
-		if( (colors = libconfig->setting_get_member(settings, "colors")) != NULL ) {
+		if ((colors = libconfig->setting_get_member(settings, "colors")) != NULL) {
 			int color_count = libconfig->setting_length(colors);
 			CREATE(channel->config->colors, unsigned int, color_count);
 			CREATE(channel->config->colors_name, char *, color_count);
-			for(i = 0; i < color_count; i++) {
+			for (i = 0; i < color_count; i++) {
 				struct config_setting_t *color = libconfig->setting_get_elem(colors, i);
 
 				CREATE(channel->config->colors_name[i], char, HCS_NAME_LENGTH);
 
 				safestrncpy(channel->config->colors_name[i], config_setting_name(color), HCS_NAME_LENGTH);
 
-				channel->config->colors[i] = (unsigned int)strtoul(libconfig->setting_get_string_elem(colors,i),NULL,0);
+				channel->config->colors[i]
+				  = (unsigned int)strtoul(libconfig->setting_get_string_elem(colors, i), NULL, 0);
 			}
 			channel->config->colors_count = color_count;
 		}
@@ -740,7 +756,8 @@ static void read_channels_config(void)
 		if (k < channel->config->colors_count) {
 			channel->config->local_color = k;
 		} else {
-			ShowError("channels.conf: unknown color '%s' for 'map_local_channel_color', disabling '#%s'...\n",local_color,local_name);
+			ShowError("channels.conf: unknown color '%s' for 'map_local_channel_color', disabling '#%s'...\n",
+			          local_color, local_name);
 			channel->config->local = false;
 		}
 
@@ -751,10 +768,11 @@ static void read_channels_config(void)
 				break;
 		}
 
-		if( k < channel->config->colors_count ) {
+		if (k < channel->config->colors_count) {
 			channel->config->ally_color = k;
 		} else {
-			ShowError("channels.conf: unknown color '%s' for 'ally_channel_color', disabling '#%s'...\n",ally_color,ally_name);
+			ShowError("channels.conf: unknown color '%s' for 'ally_channel_color', disabling '#%s'...\n", ally_color,
+			          ally_name);
 			channel->config->ally = false;
 		}
 
@@ -768,7 +786,8 @@ static void read_channels_config(void)
 		if (k < channel->config->colors_count) {
 			channel->config->irc_color = k;
 		} else {
-			ShowError("channels.conf: unknown color '%s' for 'irc_channel_color', disabling '#%s'...\n",irc_color,irc_name);
+			ShowError("channels.conf: unknown color '%s' for 'irc_channel_color', disabling '#%s'...\n", irc_color,
+			          irc_name);
 			channel->config->irc = false;
 		}
 
@@ -776,26 +795,27 @@ static void read_channels_config(void)
 			ircbot->channel = channel->create(HCS_TYPE_IRC, channel->config->irc_name, channel->config->irc_color);
 		}
 
-		if( (channels = libconfig->setting_get_member(settings, "default_channels")) != NULL ) {
+		if ((channels = libconfig->setting_get_member(settings, "default_channels")) != NULL) {
 			int channel_count = libconfig->setting_length(channels);
 
-			for(i = 0; i < channel_count; i++) {
+			for (i = 0; i < channel_count; i++) {
 				struct config_setting_t *chan = libconfig->setting_get_elem(channels, i);
-				const char *name = config_setting_name(chan);
-				const char *color = libconfig->setting_get_string_elem(channels,i);
+				const char *name              = config_setting_name(chan);
+				const char *color             = libconfig->setting_get_string_elem(channels, i);
 
-				ARR_FIND(0, channel->config->colors_count, k, strcmpi(channel->config->colors_name[k],color) == 0);
+				ARR_FIND(0, channel->config->colors_count, k, strcmpi(channel->config->colors_name[k], color) == 0);
 				if (k == channel->config->colors_count) {
-					ShowError("channels.conf: unknown color '%s' for channel '%s', skipping channel...\n",color,name);
+					ShowError("channels.conf: unknown color '%s' for channel '%s', skipping channel...\n", color, name);
 					continue;
 				}
-				if (strcmpi(name, channel->config->local_name) == 0
-				 || strcmpi(name, channel->config->ally_name) == 0
-				 || strcmpi(name, channel->config->irc_name) == 0
-				 || strdb_exists(channel->db, name)) {
-					ShowError("channels.conf: duplicate channel '%s', skipping channel...\n",name);
+				if (
+				  strcmpi(name, channel->config->local_name) == 0
+				  || strcmpi(name, channel->config->ally_name) == 0
+				  || strcmpi(name, channel->config->irc_name) == 0
+				  || strdb_exists(channel->db, name)
+				) {
+					ShowError("channels.conf: duplicate channel '%s', skipping channel...\n", name);
 					continue;
-
 				}
 				channel->create(HCS_TYPE_PUBLIC, name, k);
 			}
@@ -803,15 +823,18 @@ static void read_channels_config(void)
 
 		libconfig->setting_lookup_int(settings, "channel_opt_msg_delay", &channel_opt_msg_delay);
 		if (channel_opt_msg_delay < 0) {
-			ShowWarning("channels.conf: channel_opt_msg_delay value '%d' must be from 0-255. Defaulting to 0...\n", channel_opt_msg_delay);
+			ShowWarning("channels.conf: channel_opt_msg_delay value '%d' must be from 0-255. Defaulting to 0...\n",
+			            channel_opt_msg_delay);
 			channel_opt_msg_delay = 0;
 		} else if (channel_opt_msg_delay > 255) {
-			ShowWarning("channels.conf: channel_opt_msg_delay value '%d' must be from 0-255. Defaulting to 255...\n", channel_opt_msg_delay);
+			ShowWarning("channels.conf: channel_opt_msg_delay value '%d' must be from 0-255. Defaulting to 255...\n",
+			            channel_opt_msg_delay);
 			channel_opt_msg_delay = 255;
 		}
 		channel->config->channel_opt_msg_delay = channel_opt_msg_delay;
 
-		ShowStatus("Done reading '" CL_WHITE "%u" CL_RESET "' channels in '" CL_WHITE "%s" CL_RESET "'.\n", db_size(channel->db), config_filename);
+		ShowStatus("Done reading '" CL_WHITE "%u" CL_RESET "' channels in '" CL_WHITE "%s" CL_RESET "'.\n",
+		           db_size(channel->db), config_filename);
 	}
 	libconfig->destroy(&channels_conf);
 }
@@ -824,8 +847,9 @@ static int do_init_channel(bool minimal)
 	if (minimal)
 		return 0;
 
-	channel->db = stridb_alloc((enum DBOptions)(DB_OPT_DUP_KEY | DB_OPT_RELEASE_DATA), HCS_NAME_LENGTH);
-	channel->config->ally = channel->config->local = channel->config->irc = channel->config->ally_autojoin = channel->config->local_autojoin = channel->config->irc_autojoin = false;
+	channel->db           = stridb_alloc((enum DBOptions)(DB_OPT_DUP_KEY | DB_OPT_RELEASE_DATA), HCS_NAME_LENGTH);
+	channel->config->ally = channel->config->local = channel->config->irc = channel->config->ally_autojoin
+	  = channel->config->local_autojoin = channel->config->irc_autojoin = false;
 	channel->config_read();
 
 	return 0;
@@ -834,7 +858,10 @@ static int do_init_channel(bool minimal)
 static void do_final_channel(void)
 {
 	struct DBIterator *iter = db_iterator(channel->db);
-	for (struct channel_data *chan = (struct channel_data *)dbi_first(iter); dbi_exists(iter); chan = (struct channel_data *)dbi_next(iter)) {
+	for (
+	  struct channel_data *chan = (struct channel_data *)dbi_first(iter); dbi_exists(iter);
+	  chan                      = (struct channel_data *)dbi_next(iter)
+	) {
 		channel->delete_(chan);
 	}
 
@@ -856,33 +883,33 @@ void channel_defaults(void)
 {
 	channel = &channel_s;
 
-	channel->db = NULL;
+	channel->db     = NULL;
 	channel->config = &channel_config;
 
-	channel->init = do_init_channel;
+	channel->init  = do_init_channel;
 	channel->final = do_final_channel;
 
-	channel->search = channel_search;
-	channel->create = channel_create;
+	channel->search  = channel_search;
+	channel->create  = channel_create;
 	channel->delete_ = channel_delete;
 
 	channel->set_password = channel_set_password;
-	channel->ban = channel_ban;
-	channel->unban = channel_unban;
-	channel->set_options = channel_set_options;
+	channel->ban          = channel_ban;
+	channel->unban        = channel_unban;
+	channel->set_options  = channel_set_options;
 
-	channel->send = channel_send;
-	channel->join_sub = channel_join_sub;
-	channel->join = channel_join;
-	channel->leave = channel_leave;
+	channel->send      = channel_send;
+	channel->join_sub  = channel_join_sub;
+	channel->join      = channel_join;
+	channel->leave     = channel_leave;
 	channel->leave_sub = channel_leave_sub;
-	channel->quit = channel_quit;
+	channel->quit      = channel_quit;
 
-	channel->map_join = channel_map_join;
-	channel->guild_join_alliance = channel_guild_join_alliance;
+	channel->map_join             = channel_map_join;
+	channel->guild_join_alliance  = channel_guild_join_alliance;
 	channel->guild_leave_alliance = channel_guild_leave_alliance;
-	channel->quit_guild = channel_quit_guild;
-	channel->irc_join = channel_irc_join;
+	channel->quit_guild           = channel_quit_guild;
+	channel->irc_join             = channel_irc_join;
 
 	channel->config_read = read_channels_config;
 }

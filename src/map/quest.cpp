@@ -85,14 +85,14 @@ static int quest_pc_login(struct map_session_data *sd)
 #endif
 
 	nullpo_retr(1, sd);
-	if(sd->avail_quests == 0)
+	if (sd->avail_quests == 0)
 		return 1;
 
 	clif->quest_send_list(sd);
 
 #if PACKETVER < 20141022
 	clif->quest_send_mission(sd);
-	for( i = 0; i < sd->avail_quests; i++ ) {
+	for (i = 0; i < sd->avail_quests; i++) {
 		// TODO[Haru]: is this necessary? Does quest_send_mission not take care of this?
 		clif->quest_update_objective(sd, &sd->quest_log[i]);
 	}
@@ -136,7 +136,7 @@ static int quest_add(struct map_session_data *sd, int quest_id, unsigned int tim
 
 	if (sd->avail_quests != sd->num_quests) {
 		// The character has some completed quests, make room before them so that they will stay at the end of the array
-		memmove(&sd->quest_log[n+1], &sd->quest_log[n], sizeof(struct quest)*(sd->num_quests-sd->avail_quests));
+		memmove(&sd->quest_log[n + 1], &sd->quest_log[n], sizeof(struct quest) * (sd->num_quests - sd->avail_quests));
 	}
 
 	memset(&sd->quest_log[n], 0, sizeof(struct quest));
@@ -148,7 +148,7 @@ static int quest_add(struct map_session_data *sd, int quest_id, unsigned int tim
 		sd->quest_log[n].time = (unsigned int)(time(NULL) + qi->time);
 	sd->quest_log[n].state = Q_ACTIVE;
 
-	sd->save_quest = true;
+	sd->save_quest          = true;
 	sd->last_added_quest_id = qi->id;
 
 	clif->quest_add(sd, &sd->quest_log[n]);
@@ -179,30 +179,30 @@ static int quest_change(struct map_session_data *sd, int qid1, int qid2)
 	struct quest_db *qi = quest->db(qid2);
 
 	nullpo_retr(-1, sd);
-	if( qi == &quest->dummy ) {
+	if (qi == &quest->dummy) {
 		ShowError("quest_change: quest %d not found in DB.\n", qid2);
 		return -1;
 	}
 
-	if( quest->check(sd, qid2, HAVEQUEST) >= 0 ) {
+	if (quest->check(sd, qid2, HAVEQUEST) >= 0) {
 		ShowError("quest_change: Character %d already has quest %d.\n", sd->status.char_id, qid2);
 		return -1;
 	}
 
-	if( quest->check(sd, qid1, HAVEQUEST) < 0 ) {
+	if (quest->check(sd, qid1, HAVEQUEST) < 0) {
 		ShowError("quest_change: Character %d doesn't have quest %d.\n", sd->status.char_id, qid1);
 		return -1;
 	}
 
 	ARR_FIND(0, sd->avail_quests, i, sd->quest_log[i].quest_id == qid1);
-	if( i == sd->avail_quests ) {
+	if (i == sd->avail_quests) {
 		ShowError("quest_change: Character %d has completed quest %d.\n", sd->status.char_id, qid1);
 		return -1;
 	}
 
 	memset(&sd->quest_log[i], 0, sizeof(struct quest));
 	sd->quest_log[i].quest_id = qi->id;
-	if( qi->time )
+	if (qi->time)
 		sd->quest_log[i].time = (unsigned int)(time(NULL) + qi->time);
 	sd->quest_log[i].state = Q_ACTIVE;
 
@@ -217,8 +217,8 @@ static int quest_change(struct map_session_data *sd, int qid1, int qid2)
 #endif
 	quest->questinfo_refresh(sd);
 
-	if( map->save_settings&64 )
-		chrif->save(sd,0);
+	if (map->save_settings & 64)
+		chrif->save(sd, 0);
 	return 0;
 }
 
@@ -234,22 +234,22 @@ static int quest_delete(struct map_session_data *sd, int quest_id)
 	int i;
 
 	nullpo_retr(-1, sd);
-	//Search for quest
+	// Search for quest
 	ARR_FIND(0, sd->num_quests, i, sd->quest_log[i].quest_id == quest_id);
 
-	if(i == sd->num_quests) {
+	if (i == sd->num_quests) {
 		ShowError("quest_delete: Character %d doesn't have quest %d.\n", sd->status.char_id, quest_id);
 		return -1;
 	}
 
-	if( sd->quest_log[i].state != Q_COMPLETE )
+	if (sd->quest_log[i].state != Q_COMPLETE)
 		sd->avail_quests--;
 
-	if( i < --sd->num_quests ) {
+	if (i < --sd->num_quests) {
 		// Compact the array
-		memmove(&sd->quest_log[i], &sd->quest_log[i+1], sizeof(struct quest)*(sd->num_quests-i));
+		memmove(&sd->quest_log[i], &sd->quest_log[i + 1], sizeof(struct quest) * (sd->num_quests - i));
 	}
-	if( sd->num_quests == 0 ) {
+	if (sd->num_quests == 0) {
 		aFree(sd->quest_log);
 		sd->quest_log = NULL;
 	} else {
@@ -260,8 +260,8 @@ static int quest_delete(struct map_session_data *sd, int quest_id)
 	clif->quest_delete(sd, quest_id);
 	quest->questinfo_refresh(sd);
 
-	if( map->save_settings&64 )
-		chrif->save(sd,0);
+	if (map->save_settings & 64)
+		chrif->save(sd, 0);
 
 	return 0;
 }
@@ -277,24 +277,23 @@ static int quest_delete(struct map_session_data *sd, int quest_id)
 static int quest_update_objective_sub(struct block_list *bl, va_list ap)
 {
 	struct map_session_data *sd = NULL;
-	int party_id = va_arg(ap, int);
-	const struct mob_data *md = va_arg(ap, const struct mob_data *);
+	int party_id                = va_arg(ap, int);
+	const struct mob_data *md   = va_arg(ap, const struct mob_data *);
 
 	nullpo_ret(bl);
 	nullpo_ret(md);
 	Assert_ret(bl->type == BL_PC);
 	sd = BL_UCAST(BL_PC, bl);
 
-	if( !sd->avail_quests )
+	if (!sd->avail_quests)
 		return 0;
-	if( sd->status.party_id != party_id )
+	if (sd->status.party_id != party_id)
 		return 0;
 
 	quest->update_objective(sd, md);
 
 	return 1;
 }
-
 
 /**
  * Updates the quest objectives for a character after killing a monster, including the handling of quest-granted drops.
@@ -304,7 +303,7 @@ static int quest_update_objective_sub(struct block_list *bl, va_list ap)
  */
 static void quest_update_objective(struct map_session_data *sd, const struct mob_data *md)
 {
-	int i,j;
+	int i, j;
 
 	nullpo_retv(sd);
 	nullpo_retv(md);
@@ -318,17 +317,19 @@ static void quest_update_objective(struct map_session_data *sd, const struct mob
 		qi = quest->db(sd->quest_log[i].quest_id);
 
 		for (j = 0; j < qi->objectives_count; j++) {
-			if ((qi->objectives[j].mob == 0 || qi->objectives[j].mob == md->class_) &&
-				sd->quest_log[i].count[j] < qi->objectives[j].count &&
-				(qi->objectives[j].level.min == 0 || qi->objectives[j].level.min <= md->level) &&
-				(qi->objectives[j].level.max == 0 || qi->objectives[j].level.max >= md->level) &&
-				(qi->objectives[j].mapid < 0 || qi->objectives[j].mapid == md->bl.m) &&
-				(qi->objectives[j].mobtype.size_enabled == false  || qi->objectives[j].mobtype.size == md->status.size) &&
-				(qi->objectives[j].mobtype.race_enabled == false || qi->objectives[j].mobtype.race == md->status.race) &&
-				(qi->objectives[j].mobtype.ele_enabled == false || qi->objectives[j].mobtype.ele == md->status.def_ele)) {
-					sd->quest_log[i].count[j]++;
-					sd->save_quest = true;
-					clif->quest_update_objective(sd, &sd->quest_log[i]);
+			if (
+			  (qi->objectives[j].mob == 0 || qi->objectives[j].mob == md->class_)
+			  && sd->quest_log[i].count[j] < qi->objectives[j].count
+			  && (qi->objectives[j].level.min == 0 || qi->objectives[j].level.min <= md->level)
+			  && (qi->objectives[j].level.max == 0 || qi->objectives[j].level.max >= md->level)
+			  && (qi->objectives[j].mapid < 0 || qi->objectives[j].mapid == md->bl.m)
+			  && (qi->objectives[j].mobtype.size_enabled == false || qi->objectives[j].mobtype.size == md->status.size)
+			  && (qi->objectives[j].mobtype.race_enabled == false || qi->objectives[j].mobtype.race == md->status.race)
+			  && (qi->objectives[j].mobtype.ele_enabled == false || qi->objectives[j].mobtype.ele == md->status.def_ele)
+			) {
+				sd->quest_log[i].count[j]++;
+				sd->save_quest = true;
+				clif->quest_update_objective(sd, &sd->quest_log[i]);
 			}
 		}
 
@@ -341,16 +342,16 @@ static void quest_update_objective(struct map_session_data *sd, const struct mob
 			if (dropitem->mob_id != 0 && dropitem->mob_id != md->class_)
 				continue;
 			// TODO: Should this be affected by server rates?
-			if (rnd()%10000 >= dropitem->rate)
+			if (rnd() % 10000 >= dropitem->rate)
 				continue;
 			if (!(data = itemdb->exists(dropitem->nameid)))
 				continue;
-			memset(&item,0,sizeof(item));
-			item.nameid = dropitem->nameid;
+			memset(&item, 0, sizeof(item));
+			item.nameid   = dropitem->nameid;
 			item.identify = itemdb->isidentified2(data);
-			item.amount = 1;
+			item.amount   = 1;
 			// TODO: We might want a new log type here?
-			if((temp = pc->additem(sd, &item, 1, LOG_TYPE_QUEST)) != 0) {
+			if ((temp = pc->additem(sd, &item, 1, LOG_TYPE_QUEST)) != 0) {
 				// Failed to obtain the item
 				clif->additem(sd, 0, 0, temp);
 			}
@@ -374,33 +375,33 @@ static int quest_update_status(struct map_session_data *sd, int quest_id, enum q
 
 	nullpo_retr(-1, sd);
 	ARR_FIND(0, sd->avail_quests, i, sd->quest_log[i].quest_id == quest_id);
-	if( i == sd->avail_quests ) {
+	if (i == sd->avail_quests) {
 		ShowError("quest_update_status: Character %d doesn't have quest %d.\n", sd->status.char_id, quest_id);
 		return -1;
 	}
 
 	sd->quest_log[i].state = qs;
-	sd->save_quest = true;
+	sd->save_quest         = true;
 
-	if( qs < Q_COMPLETE ) {
+	if (qs < Q_COMPLETE) {
 		clif->quest_update_status(sd, quest_id, qs == Q_ACTIVE ? true : false);
 		return 0;
 	}
 
 	// The quest is complete, so it needs to be moved to the completed quests block at the end of the array.
 
-	if( i < (--sd->avail_quests) ) {
+	if (i < (--sd->avail_quests)) {
 		struct quest tmp_quest;
-		memcpy(&tmp_quest, &sd->quest_log[i],sizeof(struct quest));
-		memcpy(&sd->quest_log[i], &sd->quest_log[sd->avail_quests],sizeof(struct quest));
-		memcpy(&sd->quest_log[sd->avail_quests], &tmp_quest,sizeof(struct quest));
+		memcpy(&tmp_quest, &sd->quest_log[i], sizeof(struct quest));
+		memcpy(&sd->quest_log[i], &sd->quest_log[sd->avail_quests], sizeof(struct quest));
+		memcpy(&sd->quest_log[sd->avail_quests], &tmp_quest, sizeof(struct quest));
 	}
 
 	clif->quest_delete(sd, quest_id);
 	quest->questinfo_refresh(sd);
 
-	if( map->save_settings&64 )
-		chrif->save(sd,0);
+	if (map->save_settings & 64)
+		chrif->save(sd, 0);
 
 	return 0;
 }
@@ -430,24 +431,24 @@ static int quest_check(struct map_session_data *sd, int quest_id, enum quest_che
 		return -1;
 
 	switch (type) {
-		case HAVEQUEST:
-			return sd->quest_log[i].state;
-		case PLAYTIME:
-			return (sd->quest_log[i].time < (unsigned int)time(NULL) ? 2 : sd->quest_log[i].state == Q_COMPLETE ? 1 : 0);
-		case HUNTING:
-			if( sd->quest_log[i].state == Q_INACTIVE || sd->quest_log[i].state == Q_ACTIVE ) {
-				int j;
-				struct quest_db *qi = quest->db(sd->quest_log[i].quest_id);
-				ARR_FIND(0, qi->objectives_count, j, sd->quest_log[i].count[j] < qi->objectives[j].count);
-				if (j == qi->objectives_count)
-					return 2;
-				if (sd->quest_log[i].time < (unsigned int)time(NULL))
-					return 1;
-			}
-			return 0;
-		default:
-			ShowError("quest_check_quest: Unknown parameter %u", (unsigned int)type);
-			break;
+	case HAVEQUEST:
+		return sd->quest_log[i].state;
+	case PLAYTIME:
+		return (sd->quest_log[i].time < (unsigned int)time(NULL) ? 2 : sd->quest_log[i].state == Q_COMPLETE ? 1 : 0);
+	case HUNTING:
+		if (sd->quest_log[i].state == Q_INACTIVE || sd->quest_log[i].state == Q_ACTIVE) {
+			int j;
+			struct quest_db *qi = quest->db(sd->quest_log[i].quest_id);
+			ARR_FIND(0, qi->objectives_count, j, sd->quest_log[i].count[j] < qi->objectives[j].count);
+			if (j == qi->objectives_count)
+				return 2;
+			if (sd->quest_log[i].time < (unsigned int)time(NULL))
+				return 1;
+		}
+		return 0;
+	default:
+		ShowError("quest_check_quest: Unknown parameter %u", (unsigned int)type);
+		break;
 	}
 
 	return -1;
@@ -465,7 +466,8 @@ static int quest_check(struct map_session_data *sd, int quest_id, enum quest_che
  * @param source    Source file (for error messages)
  * @return CONFIG_FALSE if something goes wrong, CONFIG_TRUE otherwise. value will be set to the value value.
  */
-static int quest_setting_lookup_const(struct config_setting_t *tt, const char *name, int *value, int quest_id, int idx, const char *kind, const char *source)
+static int quest_setting_lookup_const(struct config_setting_t *tt, const char *name, int *value, int quest_id, int idx,
+                                      const char *kind, const char *source)
 {
 	nullpo_retr(CONFIG_FALSE, tt);
 
@@ -475,7 +477,8 @@ static int quest_setting_lookup_const(struct config_setting_t *tt, const char *n
 	const char *str = NULL;
 	if (libconfig->setting_lookup_string(tt, name, &str) == CONFIG_TRUE) {
 		if (str[0] == '\0' || !script->get_constant(str, value)) {
-			ShowError("%s: Invalid %s constant \"%s\" at index (%d) in \"%s\" for quest id (%d), skipping.\n", __func__, kind, str, idx, source, quest_id);
+			ShowError("%s: Invalid %s constant \"%s\" at index (%d) in \"%s\" for quest id (%d), skipping.\n", __func__,
+			          kind, str, idx, source, quest_id);
 			return CONFIG_FALSE;
 		}
 
@@ -483,7 +486,8 @@ static int quest_setting_lookup_const(struct config_setting_t *tt, const char *n
 	}
 
 	if (libconfig->setting_lookup(tt, name) != NULL) {
-		ShowError("%s: Invalid '%s' for %s at index (%d) of quest (%d) in \"%s\". Skipping.\n", __func__, name, kind, idx, quest_id, source);
+		ShowError("%s: Invalid '%s' for %s at index (%d) of quest (%d) in \"%s\". Skipping.\n", __func__, name, kind,
+		          idx, quest_id, source);
 		return CONFIG_FALSE;
 	}
 
@@ -501,10 +505,10 @@ static int quest_setting_lookup_const(struct config_setting_t *tt, const char *n
  */
 static struct quest_db *quest_read_db_sub(struct config_setting_t *cs, int n, const char *source)
 {
-	struct quest_db *entry = NULL;
+	struct quest_db *entry     = NULL;
 	struct config_setting_t *t = NULL;
-	int i32 = 0, quest_id;
-	const char *str = NULL;
+	int i32                    = 0, quest_id;
+	const char *str            = NULL;
 	nullpo_retr(NULL, cs);
 	/*
 	 * Id: Quest ID                    [int]
@@ -531,7 +535,8 @@ static struct quest_db *quest_read_db_sub(struct config_setting_t *cs, int n, co
 		return NULL;
 	}
 	if (quest_id < 0 || quest_id >= MAX_QUEST_DB) {
-		ShowWarning("quest_read_db: Invalid quest ID '%d' in \"%s\", entry #%d (min: 0, max: %d), skipping.\n", quest_id, source, n, MAX_QUEST_DB);
+		ShowWarning("quest_read_db: Invalid quest ID '%d' in \"%s\", entry #%d (min: 0, max: %d), skipping.\n",
+		            quest_id, source, n, MAX_QUEST_DB);
 		return NULL;
 	}
 
@@ -542,12 +547,12 @@ static struct quest_db *quest_read_db_sub(struct config_setting_t *cs, int n, co
 
 	CREATE(entry, struct quest_db, 1);
 	entry->id = quest_id;
-	//safestrncpy(entry->name, str, sizeof(entry->name));
+	// safestrncpy(entry->name, str, sizeof(entry->name));
 
 	if (libconfig->setting_lookup_int(cs, "TimeLimit", &i32)) // This is an unsigned value, do not check for >= 0
 		entry->time = (unsigned int)i32;
 
-	if ((t=libconfig->setting_get_member(cs, "Targets")) && config_setting_is_list(t)) {
+	if ((t = libconfig->setting_get_member(cs, "Targets")) && config_setting_is_list(t)) {
 		int i, len = libconfig->setting_length(t);
 		for (i = 0; i < len && entry->objectives_count < MAX_QUEST_OBJECTIVES; i++) {
 			// Note: We ensure that objectives_count < MAX_QUEST_OBJECTIVES because
@@ -558,24 +563,31 @@ static struct quest_db *quest_read_db_sub(struct config_setting_t *cs, int n, co
 				break;
 			if (!config_setting_is_group(tt))
 				continue;
-			if (quest->setting_lookup_const(tt, "MobId", &mob_id, entry->id, i, "'Target' monster", source) != CONFIG_TRUE)
+			if (
+			  quest->setting_lookup_const(tt, "MobId", &mob_id, entry->id, i, "'Target' monster", source) != CONFIG_TRUE
+			)
 				continue;
 			if (mob_id < 0) {
-				ShowWarning("quest_read_db_sub: Invalid monster (%d, index: %d) in \"%s\", for quest (%d).\n", mob_id, i, source, entry->id);
+				ShowWarning("quest_read_db_sub: Invalid monster (%d, index: %d) in \"%s\", for quest (%d).\n", mob_id,
+				            i, source, entry->id);
 				continue;
 			}
 			if (!libconfig->setting_lookup_int(tt, "Count", &count) || count <= 0) {
-				ShowWarning("quest_read_db_sub: Invalid 'Count' for 'Target' (%d, index: %d) in \"%s\", for quest (%d).\n", mob_id, i, source, entry->id);
+				ShowWarning(
+				  "quest_read_db_sub: Invalid 'Count' for 'Target' (%d, index: %d) in \"%s\", for quest (%d).\n",
+				  mob_id, i, source, entry->id);
 				continue;
 			}
 			RECREATE(entry->objectives, struct quest_objective, ++entry->objectives_count);
-			entry->objectives[entry->objectives_count-1].mob = mob_id;
-			entry->objectives[entry->objectives_count-1].count = count;
+			entry->objectives[entry->objectives_count - 1].mob   = mob_id;
+			entry->objectives[entry->objectives_count - 1].count = count;
 
 			const struct config_setting_t *lvt = libconfig->setting_get_member(tt, "Level");
 			if (lvt != NULL) {
 				if (mob_id != 0) {
-					ShowWarning("quest_read_db_sub: Level can't be used when a MobId is defined in \"%s\", for quest (%d), ignoring.\n", source, entry->id);
+					ShowWarning(
+					  "quest_read_db_sub: Level can't be used when a MobId is defined in \"%s\", for quest (%d), ignoring.\n",
+					  source, entry->id);
 					continue;
 				}
 
@@ -583,25 +595,31 @@ static struct quest_db *quest_read_db_sub(struct config_setting_t *cs, int n, co
 					int min = libconfig->setting_get_int_elem(lvt, 0);
 					int max = libconfig->setting_get_int_elem(lvt, 1);
 					if (min < 0 || max < 0) {
-						ShowWarning("quest_read_db_sub: level can't be a negative value in \"%s\", for quest (%d), ignoring.\n", source, entry->id);
+						ShowWarning(
+						  "quest_read_db_sub: level can't be a negative value in \"%s\", for quest (%d), ignoring.\n",
+						  source, entry->id);
 						continue;
 					}
 					if (min > max && max != 0) {
-						ShowWarning("quest_read_db_sub: minimal level (%d) is bigger than the maximal level (%d) in \"%s\", for quest (%d), ignoring.\n", min, max, source, entry->id);
+						ShowWarning(
+						  "quest_read_db_sub: minimal level (%d) is bigger than the maximal level (%d) in \"%s\", for quest (%d), ignoring.\n",
+						  min, max, source, entry->id);
 						continue;
 					}
 					entry->objectives[entry->objectives_count - 1].level.min = min;
 					entry->objectives[entry->objectives_count - 1].level.max = max;
 				} else {
-					ShowWarning("quest_read_db_sub: Invalid format for Level in \"%s\", for quest (%d).\n", source, entry->id);
+					ShowWarning("quest_read_db_sub: Invalid format for Level in \"%s\", for quest (%d).\n", source,
+					            entry->id);
 				}
 			}
 			const char *map_name = NULL;
-			int16 mapid = -1;
+			int16 mapid          = -1;
 
 			if (libconfig->setting_lookup_string(tt, "MapName", &map_name) != CONFIG_FALSE) {
 				if ((mapid = map->mapname2mapid(map_name)) < 0) {
-					ShowWarning("quest_read_db_sub: Invalid MapName \"%s\" in \"%s\", for quest (%d), ignoring.\n", map_name, source, entry->id);
+					ShowWarning("quest_read_db_sub: Invalid MapName \"%s\" in \"%s\", for quest (%d), ignoring.\n",
+					            map_name, source, entry->id);
 					continue;
 				}
 			}
@@ -610,28 +628,29 @@ static struct quest_db *quest_read_db_sub(struct config_setting_t *cs, int n, co
 			const struct config_setting_t *mobt = libconfig->setting_get_member(tt, "MobType");
 			if (mobt != NULL) {
 				if (mob_id != 0) {
-					ShowWarning("quest_read_db_sub: MobType can't be used when a MobId is defined in \"%s\", for quest (%d), ignoring.\n", source, entry->id);
+					ShowWarning(
+					  "quest_read_db_sub: MobType can't be used when a MobId is defined in \"%s\", for quest (%d), ignoring.\n",
+					  source, entry->id);
 					continue;
 				}
 
 				if (map->setting_lookup_const(mobt, "Size", &i32)) {
-					entry->objectives[entry->objectives_count - 1].mobtype.size = (uint8)i32;
+					entry->objectives[entry->objectives_count - 1].mobtype.size         = (uint8)i32;
 					entry->objectives[entry->objectives_count - 1].mobtype.size_enabled = true;
 				}
 				if (map->setting_lookup_const(mobt, "Race", &i32)) {
-					entry->objectives[entry->objectives_count - 1].mobtype.race = (uint8)i32;
+					entry->objectives[entry->objectives_count - 1].mobtype.race         = (uint8)i32;
 					entry->objectives[entry->objectives_count - 1].mobtype.race_enabled = true;
 				}
 				if (map->setting_lookup_const(mobt, "Element", &i32)) {
-					entry->objectives[entry->objectives_count - 1].mobtype.ele = (uint8)i32;
+					entry->objectives[entry->objectives_count - 1].mobtype.ele         = (uint8)i32;
 					entry->objectives[entry->objectives_count - 1].mobtype.ele_enabled = true;
 				}
 			}
-
 		}
 	}
 
-	if ((t=libconfig->setting_get_member(cs, "Drops")) && config_setting_is_list(t)) {
+	if ((t = libconfig->setting_get_member(cs, "Drops")) && config_setting_is_list(t)) {
 		int i, len = libconfig->setting_length(t);
 		for (i = 0; i < len; i++) {
 			struct config_setting_t *tt = libconfig->setting_get_elem(t, i);
@@ -640,26 +659,32 @@ static struct quest_db *quest_read_db_sub(struct config_setting_t *cs, int n, co
 				break;
 			if (!config_setting_is_group(tt))
 				continue;
-			if (quest->setting_lookup_const(tt, "MobId", &mob_id, entry->id, i, "'Drops' monster", source) != CONFIG_TRUE)
+			if (
+			  quest->setting_lookup_const(tt, "MobId", &mob_id, entry->id, i, "'Drops' monster", source) != CONFIG_TRUE
+			)
 				continue;
 			if (mob_id < 0) {
-				ShowError("%s: Invalid MobId (%d, index: %d) for 'Drop' monster in \"%s\", for quest id (%d), ignoring.\n", __func__, mob_id, i, source, entry->id);
+				ShowError(
+				  "%s: Invalid MobId (%d, index: %d) for 'Drop' monster in \"%s\", for quest id (%d), ignoring.\n",
+				  __func__, mob_id, i, source, entry->id);
 				continue;
 			}
 			if (quest->setting_lookup_const(tt, "ItemId", &nameid, entry->id, i, "'Drops' item", source) != CONFIG_TRUE)
 				continue;
 			if (!itemdb->exists(nameid)) {
-				ShowError("%s: Invalid ItemId (%d, index: %d) for 'Drops' in \"%s\", for quest (%d), ignoring.\n", __func__, nameid, i, source, entry->id);
+				ShowError("%s: Invalid ItemId (%d, index: %d) for 'Drops' in \"%s\", for quest (%d), ignoring.\n",
+				          __func__, nameid, i, source, entry->id);
 				continue;
 			}
 			if (!libconfig->setting_lookup_int(tt, "Rate", &rate) || rate <= 0) {
-				ShowError("%s: Invalid 'Drops' Rate for item (%d, index: %d) in \"%s\", for quest (%d), ignoring.\n", __func__, nameid, i, source, entry->id);
+				ShowError("%s: Invalid 'Drops' Rate for item (%d, index: %d) in \"%s\", for quest (%d), ignoring.\n",
+				          __func__, nameid, i, source, entry->id);
 				continue;
 			}
 			RECREATE(entry->dropitem, struct quest_dropitem, ++entry->dropitem_count);
-			entry->dropitem[entry->dropitem_count-1].mob_id = mob_id;
-			entry->dropitem[entry->dropitem_count-1].nameid = nameid;
-			entry->dropitem[entry->dropitem_count-1].rate = rate;
+			entry->dropitem[entry->dropitem_count - 1].mob_id = mob_id;
+			entry->dropitem[entry->dropitem_count - 1].nameid = nameid;
+			entry->dropitem[entry->dropitem_count - 1].rate   = rate;
 		}
 	}
 	return entry;
@@ -688,7 +713,7 @@ static int quest_read_db(void)
 	}
 
 	while ((q = libconfig->setting_get_elem(qdb, i++))) {
-		struct quest_db *entry = quest->read_db_sub(q, i-1, filepath);
+		struct quest_db *entry = quest->read_db_sub(q, i - 1, filepath);
 		if (!entry)
 			continue;
 
@@ -726,7 +751,7 @@ static int quest_reload_check_sub(struct map_session_data *sd, va_list ap)
 	j = 0;
 	for (i = 0; i < sd->num_quests; i++) {
 		struct quest_db *qi = quest->db(sd->quest_log[i].quest_id);
-		if (qi == &quest->dummy) { // Remove no longer existing entries
+		if (qi == &quest->dummy) {                    // Remove no longer existing entries
 			if (sd->quest_log[i].state != Q_COMPLETE) // And inform the client if necessary
 				clif->quest_delete(sd, sd->quest_log[i].quest_id);
 			continue;
@@ -764,8 +789,8 @@ static void quest_clear_db(void)
 }
 
 /*
-* Limit the questinfo icon id to avoid client problems
-*/
+ * Limit the questinfo icon id to avoid client problems
+ */
 static int quest_questinfo_validate_icon(int icon)
 {
 #if PACKETVER >= 20170315
@@ -798,7 +823,8 @@ static void quest_questinfo_refresh(struct map_session_data *sd)
 		struct npc_data *nd = VECTOR_INDEX(map->list[sd->bl.m].qi_list, i);
 
 		int j;
-		ARR_FIND(0, VECTOR_LENGTH(nd->qi_data), j, quest->questinfo_validate(sd, &VECTOR_INDEX(nd->qi_data, j)) == true);
+		ARR_FIND(0, VECTOR_LENGTH(nd->qi_data), j,
+		         quest->questinfo_validate(sd, &VECTOR_INDEX(nd->qi_data, j)) == true);
 		if (j != VECTOR_LENGTH(nd->qi_data)) {
 			struct questinfo *qi = &VECTOR_INDEX(nd->qi_data, j);
 			clif->quest_show_event(sd, &nd->bl, qi->icon, qi->color);
@@ -934,7 +960,7 @@ static bool quest_questinfo_validate_items(struct map_session_data *sd, struct q
 
 	for (int i = 0; i < VECTOR_LENGTH(qi->items); i++) {
 		struct questinfo_itemreq *item = &VECTOR_INDEX(qi->items, i);
-		int count = 0;
+		int count                      = 0;
 		for (int j = 0; j < sd->status.inventorySize; j++) {
 			if (sd->status.inventory[j].nameid == item->nameid)
 				count += sd->status.inventory[j].amount;
@@ -1010,7 +1036,7 @@ static bool quest_questinfo_validate_quests(struct map_session_data *sd, struct 
 
 	for (i = 0; i < VECTOR_LENGTH(qi->quest_requirement); i++) {
 		struct questinfo_qreq *quest_requirement = &VECTOR_INDEX(qi->quest_requirement, i);
-		int quest_progress = quest->check(sd, quest_requirement->id, HAVEQUEST);
+		int quest_progress                       = quest->check(sd, quest_requirement->id, HAVEQUEST);
 		if (quest_progress == -1)
 			quest_progress = 0;
 		else if (quest_progress == 0 || quest_progress == 1)
@@ -1159,43 +1185,43 @@ static void do_reload_quest(void)
  */
 void quest_defaults(void)
 {
-	quest = &quest_s;
+	quest          = &quest_s;
 	quest->db_data = db_data;
 
 	memset(&quest->db, 0, sizeof(quest->db));
 	memset(&quest->dummy, 0, sizeof(quest->dummy));
 	/* */
-	quest->init = do_init_quest;
-	quest->final = do_final_quest;
-	quest->reload = do_reload_quest;
+	quest->init                 = do_init_quest;
+	quest->final                = do_final_quest;
+	quest->reload               = do_reload_quest;
 	/* */
-	quest->db = quest_db_;
-	quest->pc_login = quest_pc_login;
-	quest->add = quest_add;
-	quest->change = quest_change;
-	quest->delete_ = quest_delete;
+	quest->db                   = quest_db_;
+	quest->pc_login             = quest_pc_login;
+	quest->add                  = quest_add;
+	quest->change               = quest_change;
+	quest->delete_              = quest_delete;
 	quest->update_objective_sub = quest_update_objective_sub;
-	quest->update_objective = quest_update_objective;
-	quest->update_status = quest_update_status;
-	quest->check = quest_check;
-	quest->clear = quest_clear_db;
-	quest->read_db = quest_read_db;
-	quest->read_db_sub = quest_read_db_sub;
+	quest->update_objective     = quest_update_objective;
+	quest->update_status        = quest_update_status;
+	quest->check                = quest_check;
+	quest->clear                = quest_clear_db;
+	quest->read_db              = quest_read_db;
+	quest->read_db_sub          = quest_read_db_sub;
 	quest->setting_lookup_const = quest_setting_lookup_const;
 
-	quest->questinfo_validate_icon = quest_questinfo_validate_icon;
-	quest->questinfo_refresh = quest_questinfo_refresh;
-	quest->questinfo_validate = quest_questinfo_validate;
-	quest->questinfo_validate_job = quest_questinfo_validate_job;
-	quest->questinfo_validate_sex = quest_questinfo_validate_sex;
-	quest->questinfo_validate_baselevel = quest_questinfo_validate_baselevel;
-	quest->questinfo_validate_joblevel = quest_questinfo_validate_joblevel;
-	quest->questinfo_validate_items = quest_questinfo_validate_items;
+	quest->questinfo_validate_icon             = quest_questinfo_validate_icon;
+	quest->questinfo_refresh                   = quest_questinfo_refresh;
+	quest->questinfo_validate                  = quest_questinfo_validate;
+	quest->questinfo_validate_job              = quest_questinfo_validate_job;
+	quest->questinfo_validate_sex              = quest_questinfo_validate_sex;
+	quest->questinfo_validate_baselevel        = quest_questinfo_validate_baselevel;
+	quest->questinfo_validate_joblevel         = quest_questinfo_validate_joblevel;
+	quest->questinfo_validate_items            = quest_questinfo_validate_items;
 	quest->questinfo_validate_homunculus_level = quest_questinfo_validate_homunculus_level;
-	quest->questinfo_validate_homunculus_type = quest_questinfo_validate_homunculus_type;
-	quest->questinfo_validate_quests = quest_questinfo_validate_quests;
-	quest->questinfo_validate_mercenary_class = quest_questinfo_validate_mercenary_class;
-	quest->mobsize2client = quest_mobsize2client;
-	quest->mobele2client = quest_mobele2client;
-	quest->mobrace2client = quest_mobrace2client;
+	quest->questinfo_validate_homunculus_type  = quest_questinfo_validate_homunculus_type;
+	quest->questinfo_validate_quests           = quest_questinfo_validate_quests;
+	quest->questinfo_validate_mercenary_class  = quest_questinfo_validate_mercenary_class;
+	quest->mobsize2client                      = quest_mobsize2client;
+	quest->mobele2client                       = quest_mobele2client;
+	quest->mobrace2client                      = quest_mobrace2client;
 }

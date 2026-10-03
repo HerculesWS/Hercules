@@ -36,25 +36,25 @@ struct mob_data;
  * Defines
  **/
 #ifdef SQL_INNODB
-// database is using an InnoDB engine so do not use DELAYED
-	#define LOG_QUERY "INSERT"
+	// database is using an InnoDB engine so do not use DELAYED
+  #define LOG_QUERY "INSERT"
 #else
-// database is using a MyISAM engine so use DELAYED
-	#define LOG_QUERY "INSERT DELAYED"
+	// database is using a MyISAM engine so use DELAYED
+  #define LOG_QUERY "INSERT DELAYED"
 #endif
 
 /**
  * Enumerations
  **/
 typedef enum e_log_chat_type {
-	LOG_CHAT_GLOBAL      = 0x01,
-	LOG_CHAT_WHISPER     = 0x02,
-	LOG_CHAT_PARTY       = 0x04,
-	LOG_CHAT_GUILD       = 0x08,
-	LOG_CHAT_MAINCHAT    = 0x10,
-	LOG_CHAT_CLAN        = 0x20,
+	LOG_CHAT_GLOBAL   = 0x01,
+	LOG_CHAT_WHISPER  = 0x02,
+	LOG_CHAT_PARTY    = 0x04,
+	LOG_CHAT_GUILD    = 0x08,
+	LOG_CHAT_MAINCHAT = 0x10,
+	LOG_CHAT_CLAN     = 0x20,
 	// all
-	LOG_CHAT_ALL         = 0xFF,
+	LOG_CHAT_ALL      = 0xFF,
 } e_log_chat_type;
 
 typedef enum e_log_pick_type {
@@ -93,7 +93,7 @@ typedef enum e_log_pick_type {
 	LOG_TYPE_STYLIST          = 0x80000000,
 
 	// all
-	LOG_TYPE_ALL              = 0xFFFFFFFF,
+	LOG_TYPE_ALL = 0xFFFFFFFF,
 } e_log_pick_type;
 
 /// filters for item logging
@@ -101,17 +101,17 @@ typedef enum e_log_filter {
 	LOG_FILTER_NONE     = 0x000,
 	LOG_FILTER_ALL      = 0x001,
 	// bits
-	LOG_FILTER_HEALING  = 0x002,  ///< Healing items (0)
-	LOG_FILTER_ETC_AMMO = 0x004,  ///< Etc Items(3) + Arrows (10)
-	LOG_FILTER_USABLE   = 0x008,  ///< Usable Items(2) + Scrolls, Lures(11) + Usable Cash Items(18)
-	LOG_FILTER_WEAPON   = 0x010,  ///< Weapons(4)
-	LOG_FILTER_ARMOR    = 0x020,  ///< Shields, Armors, Headgears, Accessories, Garments and Shoes(5)
-	LOG_FILTER_CARD     = 0x040,  ///< Cards(6)
-	LOG_FILTER_PETITEM  = 0x080,  ///< Pet Accessories(8) + Eggs(7)
-	LOG_FILTER_PRICE    = 0x100,  ///< Log expensive items ( >= price_log )
-	LOG_FILTER_AMOUNT   = 0x200,  ///< Log large amount of items ( >= amount_log )
-	LOG_FILTER_REFINE   = 0x400,  ///< Log refined items ( refine >= refine_log ) [not implemented]
-	LOG_FILTER_CHANCE   = 0x800,  ///< Log rare items and Emperium ( drop chance <= rare_log )
+	LOG_FILTER_HEALING  = 0x002, ///< Healing items (0)
+	LOG_FILTER_ETC_AMMO = 0x004, ///< Etc Items(3) + Arrows (10)
+	LOG_FILTER_USABLE   = 0x008, ///< Usable Items(2) + Scrolls, Lures(11) + Usable Cash Items(18)
+	LOG_FILTER_WEAPON   = 0x010, ///< Weapons(4)
+	LOG_FILTER_ARMOR    = 0x020, ///< Shields, Armors, Headgears, Accessories, Garments and Shoes(5)
+	LOG_FILTER_CARD     = 0x040, ///< Cards(6)
+	LOG_FILTER_PETITEM  = 0x080, ///< Pet Accessories(8) + Eggs(7)
+	LOG_FILTER_PRICE    = 0x100, ///< Log expensive items ( >= price_log )
+	LOG_FILTER_AMOUNT   = 0x200, ///< Log large amount of items ( >= amount_log )
+	LOG_FILTER_REFINE   = 0x400, ///< Log refined items ( refine >= refine_log ) [not implemented]
+	LOG_FILTER_CHANCE   = 0x800, ///< Log rare items and Emperium ( drop chance <= rare_log )
 } e_log_filter;
 
 struct log_interface {
@@ -120,11 +120,12 @@ struct log_interface {
 		int filter;
 		bool sql_logs;
 		bool log_chat_woe_disable;
-		int rare_items_log,refine_items_log,price_items_log,amount_items_log;
+		int rare_items_log, refine_items_log, price_items_log, amount_items_log;
 		int zeny, chat;
 		bool branch, mvpdrop, commands, npc;
 		char log_branch[64], log_pick[64], log_zeny[64], log_mvpdrop[64], log_gm[64], log_npc[64], log_chat[64];
 	} config;
+
 	/* */
 	char db_ip[32];
 	int db_port;
@@ -133,31 +134,34 @@ struct log_interface {
 	char db_name[32];
 	struct Sql *mysql_handle;
 	/* */
-	void (*pick_pc) (struct map_session_data* sd, e_log_pick_type type, int amount, struct item* itm, struct item_data *data);
-	void (*pick_mob) (struct mob_data* md, e_log_pick_type type, int amount, struct item* itm, struct item_data *data);
-	void (*zeny) (struct map_session_data* sd, e_log_pick_type type, struct map_session_data* src_sd, int amount);
-	void (*npc) (struct map_session_data* sd, const char *message);
-	void (*chat) (e_log_chat_type type, int type_id, int src_charid, int src_accid, const char *mapname, int x, int y, const char* dst_charname, const char* message);
-	void (*atcommand) (struct map_session_data* sd, const char* message);
-	void (*branch) (struct map_session_data* sd);
-	void (*mvpdrop) (struct map_session_data* sd, int monster_id, int* log_mvp);
+	void (*pick_pc)(struct map_session_data *sd, e_log_pick_type type, int amount, struct item *itm,
+	                struct item_data *data);
+	void (*pick_mob)(struct mob_data *md, e_log_pick_type type, int amount, struct item *itm, struct item_data *data);
+	void (*zeny)(struct map_session_data *sd, e_log_pick_type type, struct map_session_data *src_sd, int amount);
+	void (*npc)(struct map_session_data *sd, const char *message);
+	void (*chat)(e_log_chat_type type, int type_id, int src_charid, int src_accid, const char *mapname, int x, int y,
+	             const char *dst_charname, const char *message);
+	void (*atcommand)(struct map_session_data *sd, const char *message);
+	void (*branch)(struct map_session_data *sd);
+	void (*mvpdrop)(struct map_session_data *sd, int monster_id, int *log_mvp);
 
-	void (*pick_sub) (int id, int16 m, e_log_pick_type type, int amount, struct item* itm, struct item_data *data);
-	void (*zeny_sub) (struct map_session_data* sd, e_log_pick_type type, struct map_session_data* src_sd, int amount);
-	void (*npc_sub) (struct map_session_data* sd, const char *message);
-	void (*chat_sub) (e_log_chat_type type, int type_id, int src_charid, int src_accid, const char *mapname, int x, int y, const char* dst_charname, const char* message);
-	void (*atcommand_sub) (struct map_session_data* sd, const char* message);
-	void (*branch_sub) (struct map_session_data* sd);
-	void (*mvpdrop_sub) (struct map_session_data* sd, int monster_id, int* log_mvp);
+	void (*pick_sub)(int id, int16 m, e_log_pick_type type, int amount, struct item *itm, struct item_data *data);
+	void (*zeny_sub)(struct map_session_data *sd, e_log_pick_type type, struct map_session_data *src_sd, int amount);
+	void (*npc_sub)(struct map_session_data *sd, const char *message);
+	void (*chat_sub)(e_log_chat_type type, int type_id, int src_charid, int src_accid, const char *mapname, int x,
+	                 int y, const char *dst_charname, const char *message);
+	void (*atcommand_sub)(struct map_session_data *sd, const char *message);
+	void (*branch_sub)(struct map_session_data *sd);
+	void (*mvpdrop_sub)(struct map_session_data *sd, int monster_id, int *log_mvp);
 
-	bool (*config_read) (const char *filename, bool imported);
-	void (*config_done) (void);
-	void (*sql_init) (void);
-	void (*sql_final) (void);
+	bool (*config_read)(const char *filename, bool imported);
+	void (*config_done)(void);
+	void (*sql_init)(void);
+	void (*sql_final)(void);
 
-	char (*picktype2char) (e_log_pick_type type);
-	char (*chattype2char) (e_log_chat_type type);
-	bool (*should_log_item) (int nameid, int amount, int refine_level, struct item_data *id);
+	char (*picktype2char)(e_log_pick_type type);
+	char (*chattype2char)(e_log_chat_type type);
+	bool (*should_log_item)(int nameid, int amount, int refine_level, struct item_data *id);
 };
 
 #ifdef HERCULES_CORE

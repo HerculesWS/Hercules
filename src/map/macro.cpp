@@ -48,9 +48,12 @@ static void macro_captcha_register(struct map_session_data *sd, const int image_
 {
 	nullpo_retv(sd);
 
-	if (captcha_answer == NULL || strlen(captcha_answer) < 4
-		|| (image_size < 0 || image_size > CAPTCHA_BMP_SIZE)
-		|| VECTOR_LENGTH(macro->captcha_registery) >= CAPTCHA_REGISTERY_MAX_SIZE) {
+	if (
+	  captcha_answer == NULL
+	  || strlen(captcha_answer) < 4
+	  || (image_size < 0 || image_size > CAPTCHA_BMP_SIZE)
+	  || VECTOR_LENGTH(macro->captcha_registery) >= CAPTCHA_REGISTERY_MAX_SIZE
+	) {
 		clif->captcha_upload_request(sd, "", 1); // Notify client of failure.
 		return;
 	}
@@ -60,7 +63,7 @@ static void macro_captcha_register(struct map_session_data *sd, const int image_
 
 	struct captcha_data cd{};
 	cd.upload_size = 0;
-	cd.image_size = image_size;
+	cd.image_size  = image_size;
 	safestrncpy(cd.captcha_answer, captcha_answer, sizeof(cd.captcha_answer));
 	memset(cd.image_data, 0, CAPTCHA_BMP_SIZE);
 
@@ -74,7 +77,8 @@ static void macro_captcha_register(struct map_session_data *sd, const int image_
 	clif->captcha_upload_request(sd, captcha_key, 0);
 }
 
-static void macro_captcha_register_upload(struct map_session_data *sd, const char *captcha_key, const int upload_size, const char *upload_data)
+static void macro_captcha_register_upload(struct map_session_data *sd, const char *captcha_key, const int upload_size,
+                                          const char *upload_data)
 {
 	nullpo_retv(sd);
 	nullpo_retv(captcha_key);
@@ -112,8 +116,7 @@ static void macro_captcha_preview(struct map_session_data *sd, const int captcha
 	clif->captcha_preview_request_init(sd, cd->captcha_key, cd->image_size, 0);
 
 	// Send the image data in chunks.
-	const int chunks = (cd->image_size / MAX_CAPTCHA_CHUNK_SIZE) +
-						(cd->image_size % MAX_CAPTCHA_CHUNK_SIZE != 0);
+	const int chunks = (cd->image_size / MAX_CAPTCHA_CHUNK_SIZE) + (cd->image_size % MAX_CAPTCHA_CHUNK_SIZE != 0);
 	for (int i = 0, offset = 0; i < chunks; i++) {
 		const int chunk_size = std::min(cd->image_size - offset, MAX_CAPTCHA_CHUNK_SIZE);
 		clif->captcha_preview_request_download(sd, cd->captcha_key, chunk_size, &cd->image_data[offset]);
@@ -132,8 +135,7 @@ static void macro_detector_request(struct map_session_data *sd)
 	clif->macro_detector_request_init(sd, cd->captcha_key, cd->image_size);
 
 	// Send the image data in chunks.
-	const int chunks = (cd->image_size / MAX_CAPTCHA_CHUNK_SIZE) +
-						(cd->image_size % MAX_CAPTCHA_CHUNK_SIZE != 0);
+	const int chunks = (cd->image_size / MAX_CAPTCHA_CHUNK_SIZE) + (cd->image_size % MAX_CAPTCHA_CHUNK_SIZE != 0);
 	for (int i = 0, offset = 0; i < chunks; i++) {
 		const int chunk_size = std::min(cd->image_size - offset, MAX_CAPTCHA_CHUNK_SIZE);
 		clif->macro_detector_request_download(sd, cd->captcha_key, chunk_size, &cd->image_data[offset]);
@@ -161,8 +163,8 @@ static int macro_detector_timeout(int tid, int64 tick, int id, intptr_t data)
 		clif->macro_detector_request_show(sd);
 
 		// Start a new timer
-		sd->macro_detect.timer = timer->add(timer->gettick() + battle->bc->macro_detect_timeout,
-			macro->detector_timeout, sd->bl.id, 0);
+		sd->macro_detect.timer
+		  = timer->add(timer->gettick() + battle->bc->macro_detect_timeout, macro->detector_timeout, sd->bl.id, 0);
 	}
 	return 0;
 }
@@ -235,9 +237,8 @@ static void macro_reporter_area_select(struct map_session_data *sd, const int16 
 	struct macroaidlist aid_list;
 	VECTOR_INIT(aid_list);
 
-	map->foreachinarea(macro->reporter_area_select_sub, sd->bl.m,
-					x - radius, y - radius, x + radius, y + radius,
-					BL_PC, &aid_list);
+	map->foreachinarea(macro->reporter_area_select_sub, sd->bl.m, x - radius, y - radius, x + radius, y + radius, BL_PC,
+	                   &aid_list);
 
 	clif->macro_reporter_select(sd, &aid_list);
 	VECTOR_CLEAR(aid_list);
@@ -262,13 +263,13 @@ static void macro_reporter_process(struct map_session_data *ssd, struct map_sess
 	Assert_retv(VECTOR_LENGTH(macro->captcha_registery) != 0);
 
 	// pick a random image from the database.
-	const int captcha_idx = rnd() % VECTOR_LENGTH(macro->captcha_registery);
+	const int captcha_idx         = rnd() % VECTOR_LENGTH(macro->captcha_registery);
 	const struct captcha_data *cd = &VECTOR_INDEX(macro->captcha_registery, captcha_idx);
 
 	// set macro detection data
-	tsd->macro_detect.cd = cd;
+	tsd->macro_detect.cd           = cd;
 	tsd->macro_detect.reporter_aid = ssd->status.account_id;
-	tsd->macro_detect.retry = battle->bc->macro_detect_retry;
+	tsd->macro_detect.retry        = battle->bc->macro_detect_retry;
 
 	// Block all actions for the target player
 	SET_MACRO_BLOCK_ACTIONS(tsd, 1);
@@ -277,8 +278,8 @@ static void macro_reporter_process(struct map_session_data *ssd, struct map_sess
 	macro->detector_request(tsd);
 
 	// start the timeout timer.
-	tsd->macro_detect.timer = timer->add(timer->gettick() + battle->bc->macro_detect_timeout,
-										macro->detector_timeout, tsd->bl.id, 0);
+	tsd->macro_detect.timer
+	  = timer->add(timer->gettick() + battle->bc->macro_detect_timeout, macro->detector_timeout, tsd->bl.id, 0);
 }
 
 static bool macro_read_captcha_db_libconfig(void)
@@ -292,9 +293,9 @@ static bool macro_read_captcha_db_libconfig(void)
 		return false;
 	}
 
-	int i = 0;
-	int count = 0;
-	struct config_setting_t *it = NULL;
+	int i                        = 0;
+	int count                    = 0;
+	struct config_setting_t *it  = NULL;
 	struct config_setting_t *cdb = libconfig->lookup(&captcha_db_conf, "captcha_db");
 
 	while ((it = libconfig->setting_get_elem(cdb, i++)) != NULL) {
@@ -336,13 +337,15 @@ static bool macro_read_captcha_db_libconfig_sub(const struct config_setting_t *i
 
 	const size_t alen = strlen(answer);
 	if (alen < 4 || alen > 15) {
-		ShowError("%s: Answer \"%s\" must be between 4~15 chars in len for entry %d in %s\n", __func__, answer, n, source);
+		ShowError("%s: Answer \"%s\" must be between 4~15 chars in len for entry %d in %s\n", __func__, answer, n,
+		          source);
 		return false;
 	}
 
 	for (size_t i = 0; i < alen; ++i) {
 		if (strchr(macro_allowed_answer_chars, answer[i]) == NULL) {
-			ShowError("%s: Answer \"%s\" have an invalid character \"%c\" for entry %d in %s\n", __func__, answer, answer[i], n, source);
+			ShowError("%s: Answer \"%s\" have an invalid character \"%c\" for entry %d in %s\n", __func__, answer,
+			          answer[i], n, source);
 			return false;
 		}
 	}
@@ -433,20 +436,20 @@ void macro_defaults(void)
 	macro = &macro_s;
 
 	/* core */
-	macro->init = do_init_macro;
+	macro->init  = do_init_macro;
 	macro->final = do_final_macro;
 
-	macro->captcha_register = macro_captcha_register;
-	macro->captcha_register_upload = macro_captcha_register_upload;
-	macro->captcha_preview = macro_captcha_preview;
-	macro->detector_request = macro_detector_request;
-	macro->detector_process_answer = macro_detector_process_answer;
-	macro->detector_timeout = macro_detector_timeout;
-	macro->detector_disconnect = macro_detector_disconnect;
-	macro->reporter_area_select = macro_reporter_area_select;
-	macro->reporter_area_select_sub = macro_reporter_area_select_sub;
-	macro->reporter_process = macro_reporter_process;
-	macro->read_captcha_db_libconfig = macro_read_captcha_db_libconfig;
-	macro->read_captcha_db_libconfig_sub = macro_read_captcha_db_libconfig_sub;
+	macro->captcha_register                      = macro_captcha_register;
+	macro->captcha_register_upload               = macro_captcha_register_upload;
+	macro->captcha_preview                       = macro_captcha_preview;
+	macro->detector_request                      = macro_detector_request;
+	macro->detector_process_answer               = macro_detector_process_answer;
+	macro->detector_timeout                      = macro_detector_timeout;
+	macro->detector_disconnect                   = macro_detector_disconnect;
+	macro->reporter_area_select                  = macro_reporter_area_select;
+	macro->reporter_area_select_sub              = macro_reporter_area_select_sub;
+	macro->reporter_process                      = macro_reporter_process;
+	macro->read_captcha_db_libconfig             = macro_read_captcha_db_libconfig;
+	macro->read_captcha_db_libconfig_sub         = macro_read_captcha_db_libconfig_sub;
 	macro->read_captcha_db_libconfig_sub_loadbmp = macro_read_captcha_db_libconfig_sub_loadbmp;
 }
