@@ -1317,6 +1317,42 @@ enum hz_char_ask_name_answer {
 };
 
 /**
+ * Error codes for SC_NOTIFY_BAN (packet 0x81), sent by chr->authfail_fd() and clif->authfail_fd().
+ */
+enum notify_ban_errorcode {
+	BAN_UNFAIR                            = 0, // "disconnected from server" -> MsgStringTable[3]
+	BAN_SERVER_CLOSED                     = 1, // MsgStringTable[4]
+	BAN_ALREADY_LOGGED_IN                 = 2, // MsgStringTable[5]
+	BAN_TIMEOUT                           = 3, // MsgStringTable[241]
+	BAN_SERVER_FULL                       = 4, // MsgStringTable[264]
+	BAN_UNDERAGED                         = 5, // MsgStringTable[305]
+	BAN_LAST_CONNECTION_RECOGNIZED        = 8, // MsgStringTable[441]
+	BAN_TOO_MANY_CONNECTIONS              = 9, // MsgStringTable[529]
+	BAN_OUT_OF_PAID_TIME                  = 10, // MsgStringTable[530]
+	BAN_PAY_SUSPEND                       = 11,
+	BAN_PAY_CHANGE                        = 12,
+	BAN_PAY_WRONGIP                       = 13,
+	BAN_PAY_PNGAMEROOM                    = 14,
+	BAN_DISCONNECTED_BY_GM                = 15, // if (servicetype == taiwan) MsgStringTable[579]
+	BAN_JAPAN_REFUSE1                     = 16,
+	BAN_JAPAN_REFUSE2                     = 17,
+	BAN_INFORMATION_REMAINED_ANOTHER_ACCOUNT = 18,
+	BAN_PC_IP_UNFAIR                      = 100,
+	BAN_PC_IP_COUNT_ALL                   = 101,
+	BAN_PC_IP_COUNT                       = 102,
+	BAN_GRAVITY_MEM_AGREE                 = 103,
+	BAN_GAME_MEM_AGREE                    = 104,
+	BAN_HAN_VALID                         = 105,
+	BAN_PC_IP_LIMIT_ACCESS                = 106,
+	BAN_OVER_CHARACTER_LIST               = 107,
+	BAN_IP_BLOCK                          = 108,
+	BAN_INVALID_PWD_CNT                   = 109,
+	BAN_NOT_ALLOWED_JOBCLASS              = 110,
+	BAN_RESTRICTED_HOURS                  = 113, // access is restricted between the hours of midnight to 6:00am.
+	BAN_GAME_CONNECTION_BAN_PERIOD        = 115,
+};
+
+/**
  * Quest Info Types
  */
 enum questinfo_type {

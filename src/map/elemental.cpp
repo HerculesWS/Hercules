@@ -803,7 +803,7 @@ static int elemental_ai_sub_timer(struct elemental_data *ed, struct map_session_
 		if( DIFF_TICK(tick, ed->ud.canmove_tick) < 0 )
 			return 0; //Can't move yet.
 		if (map->search_free_cell(&ed->bl, sd->bl.m, &x, &y, MIN_ELEDISTANCE, MIN_ELEDISTANCE, SFC_XY_CENTER) == 0
-		 && unit->walk_toxy(&ed->bl, x, y, 0) == 0)
+		 && unit->walk_toxy(&ed->bl, x, y, UNIT_WALK_TOXY_NONE) == 0)
 			return 0;
 	}
 

@@ -51,6 +51,37 @@ enum password_enc {
 
 #define PASSWORDENC PWENC_BOTH
 
+/**
+ * Result codes for login_mmo_auth() / login->mmo_auth() and the other login-auth helpers
+ * that share the same result space (login->mmo_auth_new(), login->check_client_version()).
+ * @see login_auth_failed
+ */
+enum login_auth_result {
+	LOGIN_AUTH_OK                        = -1, ///< Account OK, or account created successfully
+	LOGIN_AUTH_UNREGISTERED_ID           = 0,
+	LOGIN_AUTH_INCORRECT_PASSWORD        = 1,
+	LOGIN_AUTH_ACCOUNT_EXPIRED           = 2,
+	LOGIN_AUTH_REJECTED_FROM_SERVER      = 3,
+	LOGIN_AUTH_BLOCKED_BY_GM             = 4,
+	LOGIN_AUTH_NOT_LATEST_GAME_EXE       = 5,
+	LOGIN_AUTH_BANNED                    = 6,
+	LOGIN_AUTH_SERVER_OVERPOPULATED      = 7,
+	LOGIN_AUTH_COMPANY_ACCOUNT_LIMIT     = 8,
+	LOGIN_AUTH_BAN_BY_DBA                = 9,
+	LOGIN_AUTH_EMAIL_NOT_CONFIRMED       = 10,
+	LOGIN_AUTH_BAN_BY_GM                 = 11,
+	LOGIN_AUTH_WORKING_IN_DB             = 12,
+	LOGIN_AUTH_SELF_LOCK                 = 13,
+	LOGIN_AUTH_NOT_PERMITTED_GROUP       = 14,
+	LOGIN_AUTH_NOT_PERMITTED_GROUP2      = 15,
+	LOGIN_AUTH_ACCOUNT_GONE              = 99,
+	LOGIN_AUTH_LOGIN_INFO_REMAINS        = 100,
+	LOGIN_AUTH_HACKING_INVESTIGATION     = 101,
+	LOGIN_AUTH_BUG_INVESTIGATION         = 102,
+	LOGIN_AUTH_DELETING_CHAR             = 103,
+	LOGIN_AUTH_DELETING_SPOUSE_CHAR      = 104,
+};
+
 #define PASSWD_LEN (32+1) // 23+1 for plaintext, 32+1 for md5-ed passwords
 
 struct login_session_data {
@@ -180,8 +211,8 @@ struct login_interface {
 	struct AccountDB* accounts;
 	struct s_login_dbs *dbs;
 
-	int (*mmo_auth) (struct login_session_data* sd, bool isServer);
-	int (*mmo_auth_new) (const char* userid, const char* pass, const char sex, const char* last_ip);
+	enum login_auth_result (*mmo_auth) (struct login_session_data* sd, bool isServer);
+	enum login_auth_result (*mmo_auth_new) (const char* userid, const char* pass, const char sex, const char* last_ip);
 	int (*waiting_disconnect_timer) (int tid, int64 tick, int id, intptr_t data);
 	struct DBData (*create_online_user) (union DBKey key, va_list args);
 	struct online_login_data* (*add_online_user) (int char_server, int account_id);
@@ -224,7 +255,7 @@ struct login_interface {
 	int (*parse_fromchar) (int fd);
 	void (*kick) (struct login_session_data* sd);
 	void (*auth_ok) (struct login_session_data* sd);
-	void (*auth_failed) (struct login_session_data* sd, int result);
+	void (*auth_failed) (struct login_session_data* sd, enum login_auth_result result);
 	bool (*client_login) (int fd, struct login_session_data *sd);
 	bool (*client_login_otp) (int fd, struct login_session_data *sd);
 	void (*client_login_mobile_otp_request) (int fd, struct login_session_data *sd);
@@ -247,7 +278,7 @@ struct login_interface {
 	void (*clear_client_hash_nodes) (void);
 	void (*config_set_md5hash) (struct config_setting_t *setting);
 	uint16 (*convert_users_to_colors) (uint16 users);
-	int (*check_client_version) (struct login_session_data *sd);
+	enum login_auth_result (*check_client_version) (struct login_session_data *sd);
 	void (*generate_token) (unsigned char *token);
 	char *LOGIN_CONF_NAME;
 	char *NET_CONF_NAME; ///< Network configuration filename

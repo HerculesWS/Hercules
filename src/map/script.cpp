@@ -18080,7 +18080,7 @@ static BUILDIN(npcwalkto)
 		} else {
 			status_calc_npc(nd, SCO_NONE);
 		}
-		unit->walk_toxy(&nd->bl, x, y, 0);
+		unit->walk_toxy(&nd->bl, x, y, UNIT_WALK_TOXY_NONE);
 	}
 
 	return true;
@@ -21230,7 +21230,7 @@ static BUILDIN(setunitdata)
 			unit->warp(bl, (short)val, (short)val2, (short)val3, CLR_TELEPORT);
 			break;
 		case UDT_WALKTOXY:
-			if (unit->walk_toxy(bl, (short)val, (short)val2, 2) != 0)
+			if (unit->walk_toxy(bl, (short)val, (short)val2, UNIT_WALK_TOXY_FORCE) != 0)
 				unit->move_pos(bl, (short)val, (short)val2, 0, false);
 			break;
 		case UDT_SPEED:
@@ -21414,7 +21414,7 @@ static BUILDIN(setunitdata)
 			unit->warp(bl, (short)val, (short)val2, (short)val3, CLR_TELEPORT);
 			break;
 		case UDT_WALKTOXY:
-			if (unit->walk_toxy(bl, (short)val, (short)val2, 2) != 0)
+			if (unit->walk_toxy(bl, (short)val, (short)val2, UNIT_WALK_TOXY_FORCE) != 0)
 				unit->move_pos(bl, (short)val, (short)val2, 0, false);
 			break;
 		case UDT_SPEED:
@@ -21557,7 +21557,7 @@ static BUILDIN(setunitdata)
 			unit->warp(bl, (short)val, (short)val2, (short)val3, CLR_TELEPORT);
 			break;
 		case UDT_WALKTOXY:
-			if (unit->walk_toxy(bl, (short)val, (short)val2, 2) != 0)
+			if (unit->walk_toxy(bl, (short)val, (short)val2, UNIT_WALK_TOXY_FORCE) != 0)
 				unit->move_pos(bl, (short)val, (short)val2, 0, false);
 			break;
 		case UDT_SPEED:
@@ -21691,7 +21691,7 @@ static BUILDIN(setunitdata)
 			unit->warp(bl, (short)val, (short)val2, (short)val3, CLR_TELEPORT);
 			break;
 		case UDT_WALKTOXY:
-			if (unit->walk_toxy(bl, (short)val, (short)val2, 2) != 0)
+			if (unit->walk_toxy(bl, (short)val, (short)val2, UNIT_WALK_TOXY_FORCE) != 0)
 				unit->move_pos(bl, (short)val, (short)val2, 0, false);
 			break;
 		case UDT_SPEED:
@@ -21828,7 +21828,7 @@ static BUILDIN(setunitdata)
 			unit->warp(bl, (short)val, (short)val2, (short)val3, CLR_TELEPORT);
 			break;
 		case UDT_WALKTOXY:
-			if (unit->walk_toxy(bl, (short)val, (short)val2, 2) != 0)
+			if (unit->walk_toxy(bl, (short)val, (short)val2, UNIT_WALK_TOXY_FORCE) != 0)
 				unit->move_pos(bl, (short)val, (short)val2, 0, false);
 			break;
 		case UDT_SPEED:
@@ -21966,7 +21966,7 @@ static BUILDIN(setunitdata)
 			unit->warp(bl, (short)val, (short)val2, (short)val3, CLR_TELEPORT);
 			break;
 		case UDT_WALKTOXY:
-			if (unit->walk_toxy(bl, (short)val, (short)val2, 2) != 0)
+			if (unit->walk_toxy(bl, (short)val, (short)val2, UNIT_WALK_TOXY_FORCE) != 0)
 				unit->move_pos(bl, (short)val, (short)val2, 0, false);
 			break;
 		case UDT_CLASS:
@@ -22725,7 +22725,7 @@ static BUILDIN(unitwalk)
 	if (script_hasdata(st, 4)) {
 		int x = script_getnum(st, 3);
 		int y = script_getnum(st, 4);
-		if (unit->walk_toxy(bl, x, y, 0) == 0) // We'll use harder calculations.
+		if (unit->walk_toxy(bl, x, y, UNIT_WALK_TOXY_NONE) == 0) // We'll use harder calculations.
 			script_pushint(st, 1);
 		else
 			script_pushint(st, 0);

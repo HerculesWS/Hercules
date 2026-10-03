@@ -393,8 +393,8 @@ static void buyingstore_trade(struct map_session_data* sd, int account_id, unsig
 	}
 
 	if( map->save_settings&128 ) {
-		chrif->save(sd, 0);
-		chrif->save(pl_sd, 0);
+		chrif->save(sd, CSAVE_NORMAL);
+		chrif->save(pl_sd, CSAVE_NORMAL);
 	}
 
 	// check whether or not there is still something to buy

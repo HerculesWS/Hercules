@@ -520,7 +520,7 @@ static void storage_storageclose(struct map_session_data *sd)
 	clif->storageclose(sd);
 
 	if (map->save_settings & 4)
-		chrif->save(sd, 0); //Invokes the storage saving as well.
+		chrif->save(sd, CSAVE_NORMAL); //Invokes the storage saving as well.
 
 	/* Erase deleted account storage items from memory
 	 * and resize the vector. */
@@ -546,7 +546,7 @@ static void storage_storage_quit(struct map_session_data *sd, int flag)
 	nullpo_retv(sd);
 
 	if (map->save_settings&4)
-		chrif->save(sd, flag); //Invokes the storage saving as well.
+		chrif->save(sd, (enum chrif_save_flag)flag); //Invokes the storage saving as well.
 
 	sd->state.storage_flag = STORAGE_FLAG_CLOSED;
 }
@@ -944,7 +944,7 @@ static int storage_guild_storageclose(struct map_session_data *sd)
 	clif->storageclose(sd);
 	if (stor->in_use) {
 		if (map->save_settings&4)
-			chrif->save(sd, 0); //This one also saves the storage. [Skotlex]
+			chrif->save(sd, CSAVE_NORMAL); //This one also saves the storage. [Skotlex]
 		else
 			gstorage->save(sd->status.account_id, sd->status.guild_id,0);
 		stor->in_use = false;
@@ -967,13 +967,13 @@ static int storage_guild_storage_quit(struct map_session_data *sd, int flag)
 		stor->in_use = false;
 		clif->storageclose(sd);
 		if (map->save_settings&4)
-			chrif->save(sd,0);
+			chrif->save(sd, CSAVE_NORMAL);
 		return 0;
 	}
 
 	if(stor->in_use) {
 		if (map->save_settings&4)
-			chrif->save(sd,0);
+			chrif->save(sd, CSAVE_NORMAL);
 		else
 			gstorage->save(sd->status.account_id,sd->status.guild_id,1);
 	}
