@@ -35,7 +35,7 @@ struct PACKET_CHARLOGIN_SET_ACCOUNT_ONLINE {
 	int account_id;
 	uint8 standalone; // 0 - real player (false) / 1 - standalone/server generated (true)
 } __attribute__((packed));
-DEFINE_PACKET_ID(CHARLOGIN_SET_ACCOUNT_ONLINE, 0x272b)
+DEFINE_PACKET_ID(CHARLOGIN_SET_ACCOUNT_ONLINE, 0x272B)
 
 struct PACKET_CHARLOGIN_ONLINE_ACCOUNTS {
 	int16 packetType;
@@ -43,7 +43,7 @@ struct PACKET_CHARLOGIN_ONLINE_ACCOUNTS {
 	uint32 list_length;
 	int accounts[];
 } __attribute__((packed));
-DEFINE_PACKET_ID(CHARLOGIN_ONLINE_ACCOUNTS, 0x272d)
+DEFINE_PACKET_ID(CHARLOGIN_ONLINE_ACCOUNTS, 0x272D)
 
 PRAGMA_PACK_POP()
 

@@ -39,27 +39,27 @@ struct sysinfo_private;
 struct sysinfo_interface {
 	struct sysinfo_private *p;
 
-	long (*getpagesize) (void);
-	const char *(*platform) (void);
-	const char *(*osversion) (void);
-	const char *(*cpu) (void);
-	int (*cpucores) (void);
-	const char *(*arch) (void);
-	bool (*is64bit) (void);
-	const char *(*compiler) (void);
-	const char *(*cflags) (void);
-	const char *(*time) (void);
-	const char *(*vcstype) (void);
-	int (*vcstypeid) (void);
-	const char *(*vcsrevision_src) (void);
-	const char *(*vcsrevision_scripts) (void);
-	int (*build_revision) (void);
-	uint32 (*fflags) (void);
-	void (*vcsrevision_reload) (void);
-	bool (*is_superuser) (void);
-	const char *(*zlib) (void);
-	void (*init) (void);
-	void (*final) (void);
+	long (*getpagesize)(void);
+	const char *(*platform)(void);
+	const char *(*osversion)(void);
+	const char *(*cpu)(void);
+	int (*cpucores)(void);
+	const char *(*arch)(void);
+	bool (*is64bit)(void);
+	const char *(*compiler)(void);
+	const char *(*cflags)(void);
+	const char *(*time)(void);
+	const char *(*vcstype)(void);
+	int (*vcstypeid)(void);
+	const char *(*vcsrevision_src)(void);
+	const char *(*vcsrevision_scripts)(void);
+	int (*build_revision)(void);
+	uint32 (*fflags)(void);
+	void (*vcsrevision_reload)(void);
+	bool (*is_superuser)(void);
+	const char *(*zlib)(void);
+	void (*init)(void);
+	void (*final)(void);
 };
 
 #ifdef HERCULES_CORE

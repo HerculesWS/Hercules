@@ -21,15 +21,17 @@
 #define COMMON_PACKETSSTATIC_LEN_H
 
 #ifdef packetLen
-#error packetLen already defined
+  #error packetLen already defined
 #endif
 
 #include "common/packetsmacro.h"
 
 #define packetLen(id, len) PACKET_LEN_##id = (len),
+
 enum packet_lengths {
 #include "common/packets_len.h"
 };
+
 #undef packetLen
 
 #endif /* COMMON_PACKETSSTATIC_LEN_H */
