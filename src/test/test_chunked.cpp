@@ -38,9 +38,9 @@
 #undef WFIFOSET
 
 #define WFIFOHEAD(fd, size) fake_WFIFOHEAD(fd, size)
-#define WFIFOP(T, fd, pos) ((T)fake_WFIFOP(fd, pos))
-#define WFIFO2PTR(T, fd) ((T)fake_WFIFOP(fd, 0))
-#define WFIFOSET(fd, size) fake_WFIFOSET(fd, size)
+#define WFIFOP(T, fd, pos)  ((T)fake_WFIFOP(fd, pos))
+#define WFIFO2PTR(T, fd)    ((T)fake_WFIFOP(fd, 0))
+#define WFIFOSET(fd, size)  fake_WFIFOSET(fd, size)
 
 #undef RFIFOHEAD
 #undef RFIFOP
@@ -48,16 +48,17 @@
 #undef RFIFOSET
 
 #define RFIFOHEAD(fd, size) fake_RFIFOHEAD(fd, size)
-#define RFIFOP(T, fd, pos) ((const T)fake_RFIFOP(fd, pos))
-#define RFIFO2PTR(T, fd) ((const T)fake_RFIFOP(fd, 0))
-#define RFIFOSET(fd, size) fake_RFIFOSET(fd, size)
+#define RFIFOP(T, fd, pos)  ((const T)fake_RFIFOP(fd, pos))
+#define RFIFO2PTR(T, fd)    ((const T)fake_RFIFOP(fd, 0))
+#define RFIFOSET(fd, size)  fake_RFIFOSET(fd, size)
 
 #undef WFIFO_CHUNK_SIZE
 #define WFIFO_CHUNK_SIZE fake_GET_WCHUNK_SIZE()
 
 #define SHOW_TEST_ERROR(...) ShowError("  failed: " #__VA_ARGS__ "\n")
 
-#define TEST(...) do { \
+#define TEST(...) \
+	do { \
 		if (!(__VA_ARGS__)) { \
 			ShowError("  failed: " #__VA_ARGS__ "\n"); \
 			exit(1); \
@@ -66,7 +67,8 @@
 		} \
 	} while (false)
 
-#define TEST_INT(a, b) do { \
+#define TEST_INT(a, b) \
+	do { \
 		if ((a) != (b)) { \
 			ShowError("  failed: " #a " == " #b "  ->  %d == %d\n", a, b); \
 			exit(1); \
@@ -75,7 +77,8 @@
 		} \
 	} while (false)
 
-#define TEST_UINT(a, b) do { \
+#define TEST_UINT(a, b) \
+	do { \
 		if ((a) != (b)) { \
 			ShowError("  failed: " #a " == " #b "  ->  %u == %u\n", a, b); \
 			exit(1); \
@@ -84,7 +87,8 @@
 		} \
 	} while (false)
 
-#define TEST_BUF(a, b, size) do { \
+#define TEST_BUF(a, b, size) \
+	do { \
 		if (memcmp(a, b, size) != 0) { \
 			ShowError("  failed: " #a " == " #b "  ->\n"); \
 			ShowBuf("   a   ", a, size); \
@@ -97,12 +101,12 @@
 		} \
 	} while (false)
 
-//#define DEBUGLOG
+// #define DEBUGLOG
 
 struct PACKET_TEST_CHUNKED {
 	int16 packet_id;
 	int16 packet_len;
-	int16 msg_id;  // some persistent data field
+	int16 msg_id; // some persistent data field
 	uint8 flag;
 	char data[];
 } __attribute__((packed));
@@ -113,19 +117,19 @@ struct PACKET_TEST_CHUNKED {
 
 static bool show_success = true;
 
-static int fake_wfd = 0;
-static int fake_wsize = 0;
-static uint8 *fake_wbuf = NULL;
-static void (*pWFIFOSET) (int fd, int size) = NULL;
-static int fake_wchunk_size = 5;
+static int fake_wfd                        = 0;
+static int fake_wsize                      = 0;
+static uint8 *fake_wbuf                    = NULL;
+static void (*pWFIFOSET)(int fd, int size) = NULL;
+static int fake_wchunk_size                = 5;
 
 static int fake_rfd = 0;
 static struct fifo_chunk_buf fake_rbuf;
-static char *fake_rflags = NULL;
-static int fake_rflags_ptr = 0;
-static void (*pRecv) (char *buf, int size) = NULL;
-static int recv_cnt = 0;
-static bool recv_complete = false;
+static char *fake_rflags                  = NULL;
+static int fake_rflags_ptr                = 0;
+static void (*pRecv)(char *buf, int size) = NULL;
+static int recv_cnt                       = 0;
+static bool recv_complete                 = false;
 
 static int fake_GET_WCHUNK_SIZE(void)
 {
@@ -141,9 +145,9 @@ static void fake_WFIFOHEAD(int fd, int size)
 	Assert_retv(fake_wsize == 0);
 	Assert_retv(fake_wbuf == NULL);
 
-	fake_wfd = fd;
+	fake_wfd   = fd;
 	fake_wsize = size;
-	fake_wbuf = (uint8 *)aCalloc(1, size);
+	fake_wbuf  = (uint8 *)aCalloc(1, size);
 }
 
 static void fake_WFIFOSET(int fd, int size)
@@ -158,7 +162,7 @@ static void fake_WFIFOSET(int fd, int size)
 	if (pWFIFOSET != NULL)
 		pWFIFOSET(fd, size);
 
-	fake_wfd = 0;
+	fake_wfd   = 0;
 	fake_wsize = 0;
 	aFree(fake_wbuf);
 	fake_wbuf = NULL;
@@ -172,7 +176,7 @@ static void *fake_WFIFOP(int fd, int pos)
 	Assert_ret(fake_wfd == fd);
 	Assert_ret(fake_wbuf != NULL);
 	Assert_ret(fake_wsize != 0);
-	return (void*)(fake_wbuf + pos);
+	return (void *)(fake_wbuf + pos);
 }
 
 static void recv_clear(void)
@@ -180,15 +184,15 @@ static void recv_clear(void)
 	fake_rfd = 0;
 	fifo_chunk_buf_clear(fake_rbuf);
 	aFree(fake_rflags);
-	fake_rflags = NULL;
+	fake_rflags     = NULL;
 	fake_rflags_ptr = 0;
-	recv_cnt = 0;
-	recv_complete = false;
+	recv_cnt        = 0;
+	recv_complete   = false;
 }
 
 static void write_clear(void)
 {
-	fake_wfd = 0;
+	fake_wfd   = 0;
 	fake_wsize = 0;
 	aFree(fake_wbuf);
 	fake_wbuf = NULL;
@@ -197,12 +201,12 @@ static void write_clear(void)
 void ShowBuf(const char *msg, void *buf, const size_t size)
 {
 	printf("%s: ", msg);
-	for (size_t f = 0; f < size; f ++) {
-		printf("%02x", ((uint8*)buf)[f]);
+	for (size_t f = 0; f < size; f++) {
+		printf("%02x", ((uint8 *)buf)[f]);
 	}
 	printf("  ");
-	for (size_t f = 0; f < size; f ++) {
-		uint8 chr = ((uint8*)buf)[f];
+	for (size_t f = 0; f < size; f++) {
+		uint8 chr = ((uint8 *)buf)[f];
 		if (chr >= 0x20 && chr < 0x80)
 			printf("%c", chr);
 		else
@@ -214,15 +218,15 @@ void ShowBuf(const char *msg, void *buf, const size_t size)
 void ShowBufDiff(const char *msg, void *buf1, void *buf2, const size_t size)
 {
 	printf("%s: ", msg);
-	for (size_t f = 0; f < size; f ++) {
-		if (((uint8*)buf1)[f] == ((uint8*)buf2)[f])
+	for (size_t f = 0; f < size; f++) {
+		if (((uint8 *)buf1)[f] == ((uint8 *)buf2)[f])
 			printf("  ");
 		else
 			printf("XX");
 	}
 	printf("  ");
-	for (size_t f = 0; f < size; f ++) {
-		if (((uint8*)buf1)[f] == ((uint8*)buf2)[f])
+	for (size_t f = 0; f < size; f++) {
+		if (((uint8 *)buf1)[f] == ((uint8 *)buf2)[f])
 			printf(" ");
 		else
 			printf("X");
@@ -238,19 +242,19 @@ static void testMacro(void)
 	WFIFOHEAD(fd, 100);
 
 	WFIFOL(fd, 0) = 2;
-	TEST_UINT(WFIFOL(fd, 0), 2U);
-	TEST_UINT(WFIFOB(fd, 0), 2U);
-	TEST_UINT(WFIFOW(fd, 0), 2U);
-	TEST_UINT(WFIFOB(fd, 1), 0U);
-	TEST_UINT(WFIFOW(fd, 1), 0U);
+	TEST_UINT(WFIFOL(fd, 0), 2u);
+	TEST_UINT(WFIFOB(fd, 0), 2u);
+	TEST_UINT(WFIFOW(fd, 0), 2u);
+	TEST_UINT(WFIFOB(fd, 1), 0u);
+	TEST_UINT(WFIFOW(fd, 1), 0u);
 
 	WFIFOB(fd, 2) = 1;
-	TEST_UINT(WFIFOL(fd, 0), 0x10002U);
-	TEST_UINT(WFIFOB(fd, 0), 2U);
-	TEST_UINT(WFIFOW(fd, 0), 2U);
-	TEST_UINT(WFIFOB(fd, 1), 0U);
-	TEST_UINT(WFIFOW(fd, 1), 0x100U);
-	TEST_UINT(WFIFOW(fd, 2), 1U);
+	TEST_UINT(WFIFOL(fd, 0), 0x10002u);
+	TEST_UINT(WFIFOB(fd, 0), 2u);
+	TEST_UINT(WFIFOW(fd, 0), 2u);
+	TEST_UINT(WFIFOB(fd, 1), 0u);
+	TEST_UINT(WFIFOW(fd, 1), 0x100u);
+	TEST_UINT(WFIFOW(fd, 2), 1u);
 
 	WFIFOSET(fd, 100);
 }
@@ -277,7 +281,7 @@ static void testChunked1Recv(char *buf, int size)
 	nullpo_retv(buf);
 	Assert_retv(size > 0);
 
-	struct PACKET_TEST_CHUNKED *p = (struct PACKET_TEST_CHUNKED*)buf;
+	struct PACKET_TEST_CHUNKED *p = (struct PACKET_TEST_CHUNKED *)buf;
 
 	recv_cnt++;
 	const size_t src_size = GET_RBUF_PACKET_CHUNKED_SIZE(buf, PACKET_TEST_CHUNKED);
@@ -313,13 +317,13 @@ static void testChunkedBuf2(char *data, int sz)
 	if (show_success)
 		ShowStatus("Test chunked: size: %d, '%.*s'\n", fake_wchunk_size, sz, data);
 
-	int fd = 2;
+	int fd       = 2;
 	int data_len = sz;
-	int msg_id = 10;
-	int cnt = (data_len + 1) / WFIFO_CHUNK_SIZE;
+	int msg_id   = 10;
+	int cnt      = (data_len + 1) / WFIFO_CHUNK_SIZE;
 
 	if ((data_len + 1) % WFIFO_CHUNK_SIZE != 0)
-		cnt ++;
+		cnt++;
 	if (cnt == 0)
 		cnt = 1;
 
@@ -354,7 +358,7 @@ static void testChunkedBuf2(char *data, int sz)
 			ShowBuf("flags", fake_rflags, recv_cnt);
 			exit(1);
 		}
-		for (int f = 1; f < recv_cnt - 1; f ++) {
+		for (int f = 1; f < recv_cnt - 1; f++) {
 			TEST_INT((int)fake_rflags[f], 1);
 		}
 		if (fake_rflags[recv_cnt - 1] != 2) {
@@ -372,8 +376,8 @@ static void testChunkedBuf2(char *data, int sz)
 static void testChunkedBuf(char *data, int sz)
 {
 	if (sz == 0)
-		sz = (int) strnlen(data, MAX_TEST_BUFFER);
-	for (int f = 1; f < 30; f ++) {
+		sz = (int)strnlen(data, MAX_TEST_BUFFER);
+	for (int f = 1; f < 30; f++) {
 		fake_wchunk_size = f;
 		testChunkedBuf2(data, sz);
 	}
@@ -383,7 +387,7 @@ static void testChunked1(void)
 {
 	ShowStatus("Test chunked\n");
 	pWFIFOSET = testChunked1Send;
-	pRecv = testChunked1Recv;
+	pRecv     = testChunked1Recv;
 	{
 		char test_string[] = "test line";
 		testChunkedBuf(test_string, 0);
@@ -405,7 +409,7 @@ static void testChunked1(void)
 	for (int f = 1; f < MAX_TEST_BUFFER; f += 100) {
 		// reallocate buffer always for detect overflow
 		char *buf = (char *)aCalloc(1, f);
-		for (int i = 0; i < f; i ++) {
+		for (int i = 0; i < f; i++) {
 			buf[i] = '0' + (i % 10);
 		}
 		testChunkedBuf(buf, f);
@@ -441,9 +445,11 @@ int do_final(void)
 	return EXIT_SUCCESS;
 }
 
-int parse_console(const char* command)
+int parse_console(const char *command)
 {
 	return 0;
 }
 
-void cmdline_args_init_local(void) { }
+void cmdline_args_init_local(void)
+{
+}
