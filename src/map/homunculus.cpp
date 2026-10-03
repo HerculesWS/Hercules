@@ -302,7 +302,7 @@ static int homunculus_skill_tree_get_max(int id, int b_class)
 	for(i=0;(skill_id=homun->dbs->skill_tree[b_class][i].id)>0;i++)
 		if (id == skill_id)
 			return homun->dbs->skill_tree[b_class][i].max;
-	return skill->get_max(id);
+	return skill->get_max(NULL, id);
 }
 
 static void homunculus_skillup(struct homun_data *hd, uint16 skill_id)
