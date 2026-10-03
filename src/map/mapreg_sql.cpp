@@ -39,7 +39,7 @@
 #include <string.h>
 
 static struct mapreg_interface mapreg_s; //!< Private interface structure.
-struct mapreg_interface *mapreg; //!< Public interface structure.
+struct mapreg_interface *mapreg;         //!< Public interface structure.
 
 /**
  * Looks up the value of a global integer variable using its unique ID.
@@ -93,7 +93,7 @@ static bool mapreg_set_num_db(int64 uid, const char *name, unsigned int index, i
 		var->u.i = value;
 
 		if (script->is_permanent_variable(name)) {
-			var->save = true;
+			var->save     = true;
 			mapreg->dirty = true;
 		}
 
@@ -104,10 +104,10 @@ static bool mapreg_set_num_db(int64 uid, const char *name, unsigned int index, i
 	if (index != 0)
 		script->array_update(&mapreg->regs, uid, false);
 
-	var = ers_alloc(mapreg->ers, struct mapreg_save);
-	var->u.i = value;
-	var->uid = uid;
-	var->save = false;
+	var            = ers_alloc(mapreg->ers, struct mapreg_save);
+	var->u.i       = value;
+	var->uid       = uid;
+	var->save      = false;
 	var->is_string = false;
 	i64db_put(mapreg->regs.vars, uid, var);
 
@@ -121,11 +121,13 @@ static bool mapreg_set_num_db(int64 uid, const char *name, unsigned int index, i
 
 		const char *query = "INSERT INTO `%s` (`key`, `index`, `value`) VALUES (?, ?, ?)";
 
-		if (SQL_ERROR == SQL->StmtPrepare(stmt, query, mapreg->num_db)
-		    || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_STRING, name, strlen(name))
-		    || SQL_ERROR == SQL->StmtBindParam(stmt, 1, SQLDT_UINT32, &index, sizeof(index))
-		    || SQL_ERROR == SQL->StmtBindParam(stmt, 2, SQLDT_INT32, &value, sizeof(value))
-		    || SQL_ERROR == SQL->StmtExecute(stmt)) {
+		if (
+		  SQL_ERROR == SQL->StmtPrepare(stmt, query, mapreg->num_db)
+		  || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_STRING, name, strlen(name))
+		  || SQL_ERROR == SQL->StmtBindParam(stmt, 1, SQLDT_UINT32, &index, sizeof(index))
+		  || SQL_ERROR == SQL->StmtBindParam(stmt, 2, SQLDT_INT32, &value, sizeof(value))
+		  || SQL_ERROR == SQL->StmtExecute(stmt)
+		) {
 			SqlStmt_ShowDebug(stmt);
 			SQL->StmtFree(stmt);
 			return false;
@@ -172,10 +174,12 @@ static bool mapreg_delete_num_db(int64 uid, const char *name, unsigned int index
 
 		const char *query = "DELETE FROM `%s` WHERE `key`=? AND `index`=?";
 
-		if (SQL_ERROR == SQL->StmtPrepare(stmt, query, mapreg->num_db)
-		    || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_STRING, name, strlen(name))
-		    || SQL_ERROR == SQL->StmtBindParam(stmt, 1, SQLDT_UINT32, &index, sizeof(index))
-		    || SQL_ERROR == SQL->StmtExecute(stmt)) {
+		if (
+		  SQL_ERROR == SQL->StmtPrepare(stmt, query, mapreg->num_db)
+		  || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_STRING, name, strlen(name))
+		  || SQL_ERROR == SQL->StmtBindParam(stmt, 1, SQLDT_UINT32, &index, sizeof(index))
+		  || SQL_ERROR == SQL->StmtExecute(stmt)
+		) {
 			SqlStmt_ShowDebug(stmt);
 			SQL->StmtFree(stmt);
 			return false;
@@ -198,7 +202,7 @@ static bool mapreg_delete_num_db(int64 uid, const char *name, unsigned int index
 static bool mapreg_set_num(int64 uid, int val)
 {
 	unsigned int index = script_getvaridx(uid);
-	const char *name = script->get_str(script_getvarid(uid));
+	const char *name   = script->get_str(script_getvarid(uid));
 
 	if (val != 0)
 		return mapreg->set_num_db(uid, name, index, val);
@@ -238,7 +242,7 @@ static bool mapreg_set_str_db(int64 uid, const char *name, unsigned int index, c
 		var->u.str = aStrdup(value);
 
 		if (script->is_permanent_variable(name)) {
-			var->save = true;
+			var->save     = true;
 			mapreg->dirty = true;
 		}
 
@@ -249,10 +253,10 @@ static bool mapreg_set_str_db(int64 uid, const char *name, unsigned int index, c
 	if (index != 0)
 		script->array_update(&mapreg->regs, uid, false);
 
-	var = ers_alloc(mapreg->ers, struct mapreg_save);
-	var->u.str = aStrdup(value);
-	var->uid = uid;
-	var->save = false;
+	var            = ers_alloc(mapreg->ers, struct mapreg_save);
+	var->u.str     = aStrdup(value);
+	var->uid       = uid;
+	var->save      = false;
 	var->is_string = true;
 	i64db_put(mapreg->regs.vars, uid, var);
 
@@ -266,11 +270,13 @@ static bool mapreg_set_str_db(int64 uid, const char *name, unsigned int index, c
 
 		const char *query = "INSERT INTO `%s` (`key`, `index`, `value`) VALUES (?, ?, ?)";
 
-		if (SQL_ERROR == SQL->StmtPrepare(stmt, query, mapreg->str_db)
-		    || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_STRING, name, strlen(name))
-		    || SQL_ERROR == SQL->StmtBindParam(stmt, 1, SQLDT_UINT32, &index, sizeof(index))
-		    || SQL_ERROR == SQL->StmtBindParam(stmt, 2, SQLDT_STRING, value, strlen(value))
-		    || SQL_ERROR == SQL->StmtExecute(stmt)) {
+		if (
+		  SQL_ERROR == SQL->StmtPrepare(stmt, query, mapreg->str_db)
+		  || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_STRING, name, strlen(name))
+		  || SQL_ERROR == SQL->StmtBindParam(stmt, 1, SQLDT_UINT32, &index, sizeof(index))
+		  || SQL_ERROR == SQL->StmtBindParam(stmt, 2, SQLDT_STRING, value, strlen(value))
+		  || SQL_ERROR == SQL->StmtExecute(stmt)
+		) {
 			SqlStmt_ShowDebug(stmt);
 			SQL->StmtFree(stmt);
 			return false;
@@ -321,10 +327,12 @@ static bool mapreg_delete_str_db(int64 uid, const char *name, unsigned int index
 
 		const char *query = "DELETE FROM `%s` WHERE `key`=? AND `index`=?";
 
-		if (SQL_ERROR == SQL->StmtPrepare(stmt, query, mapreg->str_db)
-		    || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_STRING, name, strlen(name))
-		    || SQL_ERROR == SQL->StmtBindParam(stmt, 1, SQLDT_UINT32, &index, sizeof(index))
-		    || SQL_ERROR == SQL->StmtExecute(stmt)) {
+		if (
+		  SQL_ERROR == SQL->StmtPrepare(stmt, query, mapreg->str_db)
+		  || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_STRING, name, strlen(name))
+		  || SQL_ERROR == SQL->StmtBindParam(stmt, 1, SQLDT_UINT32, &index, sizeof(index))
+		  || SQL_ERROR == SQL->StmtExecute(stmt)
+		) {
 			SqlStmt_ShowDebug(stmt);
 			SQL->StmtFree(stmt);
 			return false;
@@ -347,7 +355,7 @@ static bool mapreg_delete_str_db(int64 uid, const char *name, unsigned int index
 static bool mapreg_set_str(int64 uid, const char *str)
 {
 	unsigned int index = script_getvaridx(uid);
-	const char *name = script->get_str(script_getvarid(uid));
+	const char *name   = script->get_str(script_getvarid(uid));
 
 	if (str != NULL && *str != '\0')
 		return mapreg->set_str_db(uid, name, index, str);
@@ -373,11 +381,13 @@ static void mapreg_load_num_db(void)
 	unsigned int index;
 	int value;
 
-	if (SQL_ERROR == SQL->StmtPrepare(stmt, query, mapreg->num_db)
-	    || SQL_ERROR == SQL->StmtExecute(stmt)
-	    || SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_STRING, &name, sizeof(name), NULL, NULL)
-	    || SQL_ERROR == SQL->StmtBindColumn(stmt, 1, SQLDT_UINT32, &index, sizeof(index), NULL, NULL)
-	    || SQL_ERROR == SQL->StmtBindColumn(stmt, 2, SQLDT_INT32, &value, sizeof(value), NULL, NULL)) {
+	if (
+	  SQL_ERROR == SQL->StmtPrepare(stmt, query, mapreg->num_db)
+	  || SQL_ERROR == SQL->StmtExecute(stmt)
+	  || SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_STRING, &name, sizeof(name), NULL, NULL)
+	  || SQL_ERROR == SQL->StmtBindColumn(stmt, 1, SQLDT_UINT32, &index, sizeof(index), NULL, NULL)
+	  || SQL_ERROR == SQL->StmtBindColumn(stmt, 2, SQLDT_INT32, &value, sizeof(value), NULL, NULL)
+	) {
 		SqlStmt_ShowDebug(stmt);
 		SQL->StmtFree(stmt);
 		return;
@@ -392,7 +402,7 @@ static void mapreg_load_num_db(void)
 
 	while (SQL_SUCCESS == SQL->StmtNextRow(stmt)) {
 		int var_key = script->add_variable(name);
-		int64 uid = reference_uid(var_key, index);
+		int64 uid   = reference_uid(var_key, index);
 
 		if (i64db_exists(mapreg->regs.vars, uid)) {
 			ShowWarning("mapreg_load_num_db: Duplicate! '%s' => '%d' Skipping...\n", name, value);
@@ -424,11 +434,13 @@ static void mapreg_load_str_db(void)
 	unsigned int index;
 	char value[SCRIPT_STRING_VAR_LENGTH + 1];
 
-	if (SQL_ERROR == SQL->StmtPrepare(stmt, query, mapreg->str_db)
-	    || SQL_ERROR == SQL->StmtExecute(stmt)
-	    || SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_STRING, &name, sizeof(name), NULL, NULL)
-	    || SQL_ERROR == SQL->StmtBindColumn(stmt, 1, SQLDT_UINT32, &index, sizeof(index), NULL, NULL)
-	    || SQL_ERROR == SQL->StmtBindColumn(stmt, 2, SQLDT_STRING, &value, sizeof(value), NULL, NULL)) {
+	if (
+	  SQL_ERROR == SQL->StmtPrepare(stmt, query, mapreg->str_db)
+	  || SQL_ERROR == SQL->StmtExecute(stmt)
+	  || SQL_ERROR == SQL->StmtBindColumn(stmt, 0, SQLDT_STRING, &name, sizeof(name), NULL, NULL)
+	  || SQL_ERROR == SQL->StmtBindColumn(stmt, 1, SQLDT_UINT32, &index, sizeof(index), NULL, NULL)
+	  || SQL_ERROR == SQL->StmtBindColumn(stmt, 2, SQLDT_STRING, &value, sizeof(value), NULL, NULL)
+	) {
 		SqlStmt_ShowDebug(stmt);
 		SQL->StmtFree(stmt);
 		return;
@@ -443,7 +455,7 @@ static void mapreg_load_str_db(void)
 
 	while (SQL_SUCCESS == SQL->StmtNextRow(stmt)) {
 		int var_key = script->add_variable(name);
-		int64 uid = reference_uid(var_key, index);
+		int64 uid   = reference_uid(var_key, index);
 
 		if (i64db_exists(mapreg->regs.vars, uid)) {
 			ShowWarning("mapreg_load_str_db: Duplicate! '%s' => '%s' Skipping...\n", name, value);
@@ -491,11 +503,13 @@ static void mapreg_save_num_db(const char *name, unsigned int index, int value)
 
 	const char *query = "UPDATE `%s` SET `value`=? WHERE `key`=? AND `index`=? LIMIT 1";
 
-	if (SQL_ERROR == SQL->StmtPrepare(stmt, query, mapreg->num_db)
-	    || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT32, &value, sizeof(value))
-	    || SQL_ERROR == SQL->StmtBindParam(stmt, 1, SQLDT_STRING, name, strlen(name))
-	    || SQL_ERROR == SQL->StmtBindParam(stmt, 2, SQLDT_UINT32, &index, sizeof(index))
-	    || SQL_ERROR == SQL->StmtExecute(stmt)) {
+	if (
+	  SQL_ERROR == SQL->StmtPrepare(stmt, query, mapreg->num_db)
+	  || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_INT32, &value, sizeof(value))
+	  || SQL_ERROR == SQL->StmtBindParam(stmt, 1, SQLDT_STRING, name, strlen(name))
+	  || SQL_ERROR == SQL->StmtBindParam(stmt, 2, SQLDT_UINT32, &index, sizeof(index))
+	  || SQL_ERROR == SQL->StmtExecute(stmt)
+	) {
 		SqlStmt_ShowDebug(stmt);
 	}
 
@@ -528,11 +542,13 @@ static void mapreg_save_str_db(const char *name, unsigned int index, const char 
 
 	const char *query = "UPDATE `%s` SET `value`=? WHERE `key`=? AND `index`=? LIMIT 1";
 
-	if (SQL_ERROR == SQL->StmtPrepare(stmt, query, mapreg->str_db)
-	    || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_STRING, value, strlen(value))
-	    || SQL_ERROR == SQL->StmtBindParam(stmt, 1, SQLDT_STRING, name, strlen(name))
-	    || SQL_ERROR == SQL->StmtBindParam(stmt, 2, SQLDT_UINT32, &index, sizeof(index))
-	    || SQL_ERROR == SQL->StmtExecute(stmt)) {
+	if (
+	  SQL_ERROR == SQL->StmtPrepare(stmt, query, mapreg->str_db)
+	  || SQL_ERROR == SQL->StmtBindParam(stmt, 0, SQLDT_STRING, value, strlen(value))
+	  || SQL_ERROR == SQL->StmtBindParam(stmt, 1, SQLDT_STRING, name, strlen(name))
+	  || SQL_ERROR == SQL->StmtBindParam(stmt, 2, SQLDT_UINT32, &index, sizeof(index))
+	  || SQL_ERROR == SQL->StmtExecute(stmt)
+	) {
 		SqlStmt_ShowDebug(stmt);
 	}
 
@@ -547,9 +563,12 @@ static void mapreg_save_(void)
 {
 	if (mapreg->dirty) {
 		struct DBIterator *iter = db_iterator(mapreg->regs.vars);
-		for (struct mapreg_save *var = (struct mapreg_save *)dbi_first(iter); dbi_exists(iter); var = (struct mapreg_save *)dbi_next(iter)) {
+		for (
+		  struct mapreg_save *var = (struct mapreg_save *)dbi_first(iter); dbi_exists(iter);
+		  var                     = (struct mapreg_save *)dbi_next(iter)
+		) {
 			if (var->save) {
-				int index = script_getvaridx(var->uid);
+				int index        = script_getvaridx(var->uid);
 				const char *name = script->get_str(script_getvarid(var->uid));
 
 				if (!var->is_string)
@@ -646,23 +665,23 @@ static bool mapreg_config_read_registry(const char *filename, const struct confi
 {
 	nullpo_retr(false, filename);
 	nullpo_retr(false, config);
-	
+
 	bool ret_val = true;
-	size_t sz = sizeof(mapreg->num_db);
-	int result = libconfig->setting_lookup_mutable_string(config, "map_reg_num_db", mapreg->num_db, sz);
+	size_t sz    = sizeof(mapreg->num_db);
+	int result   = libconfig->setting_lookup_mutable_string(config, "map_reg_num_db", mapreg->num_db, sz);
 
 	if (result != CONFIG_TRUE && !imported) {
-		ShowError("%s: inter_configuration/database_names/registry/map_reg_num_db was not found in %s!\n",
-			  __func__, filename);
+		ShowError("%s: inter_configuration/database_names/registry/map_reg_num_db was not found in %s!\n", __func__,
+		          filename);
 		ret_val = false;
 	}
 
-	sz = sizeof(mapreg->str_db);
+	sz     = sizeof(mapreg->str_db);
 	result = libconfig->setting_lookup_mutable_string(config, "map_reg_str_db", mapreg->str_db, sz);
 
 	if (result != CONFIG_TRUE && !imported) {
-		ShowError("%s: inter_configuration/database_names/registry/map_reg_str_db was not found in %s!\n",
-			  __func__, filename);
+		ShowError("%s: inter_configuration/database_names/registry/map_reg_str_db was not found in %s!\n", __func__,
+		          filename);
 		ret_val = false;
 	}
 
@@ -690,10 +709,11 @@ static void mapreg_final(void)
 static void mapreg_init(void)
 {
 	mapreg->regs.vars = i64db_alloc(DB_OPT_BASE);
-	mapreg->ers = ers_new(sizeof(struct mapreg_save), "mapreg_sql.cpp::mapreg_ers", ERS_OPT_CLEAN);
+	mapreg->ers       = ers_new(sizeof(struct mapreg_save), "mapreg_sql.cpp::mapreg_ers", ERS_OPT_CLEAN);
 	mapreg->load();
 	timer->add_func_list(mapreg->save_timer, "mapreg_save_timer");
-	timer->add_interval(timer->gettick() + MAPREG_AUTOSAVE_INTERVAL, mapreg->save_timer, 0, 0, MAPREG_AUTOSAVE_INTERVAL);
+	timer->add_interval(timer->gettick() + MAPREG_AUTOSAVE_INTERVAL, mapreg->save_timer, 0, 0,
+	                    MAPREG_AUTOSAVE_INTERVAL);
 }
 
 /**
@@ -706,33 +726,33 @@ void mapreg_defaults(void)
 	mapreg = &mapreg_s;
 
 	/** Interface variables. **/
-	mapreg->ers = NULL;
-	mapreg->regs.vars = NULL;
+	mapreg->ers         = NULL;
+	mapreg->regs.vars   = NULL;
 	mapreg->regs.arrays = NULL;
-	mapreg->dirty = false;
+	mapreg->dirty       = false;
 	mapreg->skip_insert = false;
 	safestrncpy(mapreg->num_db, "map_reg_num_db", sizeof(mapreg->num_db));
 	safestrncpy(mapreg->str_db, "map_reg_str_db", sizeof(mapreg->str_db));
 
 	/** Interface functions. **/
-	mapreg->readreg = mapreg_get_num_reg;
-	mapreg->readregstr = mapreg_get_str_reg;
-	mapreg->set_num_db = mapreg_set_num_db;
-	mapreg->delete_num_db = mapreg_delete_num_db;
-	mapreg->setreg = mapreg_set_num;
-	mapreg->set_str_db = mapreg_set_str_db;
-	mapreg->delete_str_db = mapreg_delete_str_db;
-	mapreg->setregstr = mapreg_set_str;
-	mapreg->load_num_db = mapreg_load_num_db;
-	mapreg->load_str_db = mapreg_load_str_db;
-	mapreg->load = mapreg_load;
-	mapreg->save_num_db = mapreg_save_num_db;
-	mapreg->save_str_db = mapreg_save_str_db;
-	mapreg->save = mapreg_save_;
-	mapreg->save_timer = mapreg_save_timer;
-	mapreg->destroyreg = mapreg_destroy_reg;
-	mapreg->reload = mapreg_reload;
+	mapreg->readreg              = mapreg_get_num_reg;
+	mapreg->readregstr           = mapreg_get_str_reg;
+	mapreg->set_num_db           = mapreg_set_num_db;
+	mapreg->delete_num_db        = mapreg_delete_num_db;
+	mapreg->setreg               = mapreg_set_num;
+	mapreg->set_str_db           = mapreg_set_str_db;
+	mapreg->delete_str_db        = mapreg_delete_str_db;
+	mapreg->setregstr            = mapreg_set_str;
+	mapreg->load_num_db          = mapreg_load_num_db;
+	mapreg->load_str_db          = mapreg_load_str_db;
+	mapreg->load                 = mapreg_load;
+	mapreg->save_num_db          = mapreg_save_num_db;
+	mapreg->save_str_db          = mapreg_save_str_db;
+	mapreg->save                 = mapreg_save_;
+	mapreg->save_timer           = mapreg_save_timer;
+	mapreg->destroyreg           = mapreg_destroy_reg;
+	mapreg->reload               = mapreg_reload;
 	mapreg->config_read_registry = mapreg_config_read_registry;
-	mapreg->final = mapreg_final;
-	mapreg->init = mapreg_init;
+	mapreg->final                = mapreg_final;
+	mapreg->init                 = mapreg_init;
 }

@@ -63,18 +63,18 @@ enum e_pc_permission {
 
 // Cached config settings for quick lookup
 struct GroupSettings {
-	unsigned int id; // groups.[].id
-	int level; // groups.[].level
-	char *name; // copy of groups.[].name
+	unsigned int id;            // groups.[].id
+	int level;                  // groups.[].level
+	char *name;                 // copy of groups.[].name
 	unsigned int e_permissions; // packed groups.[].permissions
-	bool log_commands; // groups.[].log_commands
-	int index; // internal index of the group (contiguous range starting at 0) [Ind]
+	bool log_commands;          // groups.[].log_commands
+	int index;                  // internal index of the group (contiguous range starting at 0) [Ind]
 	/// Following are used/available only during config reading
-	struct config_setting_t *commands; // groups.[].commands
+	struct config_setting_t *commands;    // groups.[].commands
 	struct config_setting_t *permissions; // groups.[].permissions
-	struct config_setting_t *inherit; // groups.[].inherit
-	bool inheritance_done; // have all inheritance rules been evaluated?
-	struct config_setting_t *root; // groups.[]
+	struct config_setting_t *inherit;     // groups.[].inherit
+	bool inheritance_done;                // have all inheritance rules been evaluated?
+	struct config_setting_t *root;        // groups.[]
 };
 
 typedef struct GroupSettings GroupSettings;
@@ -86,14 +86,14 @@ struct pc_groups_permission_table {
 
 /* used by plugins to list permissions */
 struct pc_groups_new_permission {
-	unsigned int pID;/* plugin identity (for the future unload during runtime support) */
-	char *name;/* aStrdup' of the permission name */
-	unsigned int *mask;/* pointer to the plugin val that will store the value of the mask */
+	unsigned int pID;   /* plugin identity (for the future unload during runtime support) */
+	char *name;         /* aStrdup' of the permission name */
+	unsigned int *mask; /* pointer to the plugin val that will store the value of the mask */
 };
 
 struct pc_groups_interface {
 	/* */
-	struct DBMap *db; // id -> GroupSettings
+	struct DBMap *db;      // id -> GroupSettings
 	struct DBMap *name_db; // name -> GroupSettings
 	/* */
 	struct pc_groups_permission_table *permissions;
@@ -102,18 +102,18 @@ struct pc_groups_interface {
 	struct pc_groups_new_permission *HPMpermissions;
 	unsigned char HPMpermissions_count;
 	/* */
-	void (*init) (void);
-	void (*final) (void);
-	void (*reload) (void);
+	void (*init)(void);
+	void (*final)(void);
+	void (*reload)(void);
 	/* */
-	GroupSettings* (*get_dummy_group) (void);
-	bool (*exists) (int group_id);
-	GroupSettings* (*id2group) (int group_id);
-	bool (*has_permission) (GroupSettings *group, unsigned int permission);
-	bool (*should_log_commands) (GroupSettings *group);
-	const char* (*get_name) (GroupSettings *group);
-	int (*get_level) (GroupSettings *group);
-	int (*get_idx) (GroupSettings *group);
+	GroupSettings *(*get_dummy_group)(void);
+	bool (*exists)(int group_id);
+	GroupSettings *(*id2group)(int group_id);
+	bool (*has_permission)(GroupSettings *group, unsigned int permission);
+	bool (*should_log_commands)(GroupSettings *group);
+	const char *(*get_name)(GroupSettings *group);
+	int (*get_level)(GroupSettings *group);
+	int (*get_idx)(GroupSettings *group);
 };
 
 #ifdef HERCULES_CORE

@@ -97,11 +97,12 @@ static void do_final_mapiif(void)
 {
 }
 
-void mapiif_defaults(void) {
+void mapiif_defaults(void)
+{
 	mapiif = &mapiif_s;
 
-	mapiif->init = do_init_mapiif;
-	mapiif->final = do_final_mapiif;
-	mapiif->parse_fromchar_api_proxy = mapiif_parse_fromchar_api_proxy;
+	mapiif->init                         = do_init_mapiif;
+	mapiif->final                        = do_final_mapiif;
+	mapiif->parse_fromchar_api_proxy     = mapiif_parse_fromchar_api_proxy;
 	mapiif->parse_adventurer_agency_info = mapiif_parse_adventurer_agency_info;
 }
