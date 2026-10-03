@@ -197,7 +197,7 @@ JsonW *jsonwriter_add_new_strings_to_array(JsonW *parent, ...)
 	va_start(va, parent);
 	const char *str;
 	JsonW *obj = NULL;
-	while ((str = va_arg(va, const char*)) != NULL) {
+	while ((str = va_arg(va, const char *)) != NULL) {
 		obj = jsonwriter->new_string(str);
 		if (!cJSON_IsString(obj)) {
 			Assert_report(0);
@@ -214,14 +214,14 @@ JsonW *jsonwriter_add_new_strings_to_array(JsonW *parent, ...)
 	return obj;
 }
 
-char* jsonwriter_get_formatted_string(const JsonW *parent)
+char *jsonwriter_get_formatted_string(const JsonW *parent)
 {
 	nullpo_retr(NULL, parent);
 
 	return cJSON_Print(parent);
 }
 
-char* jsonwriter_get_string(const JsonW *parent)
+char *jsonwriter_get_string(const JsonW *parent)
 {
 	nullpo_retr(NULL, parent);
 
@@ -235,7 +235,6 @@ JsonW *jsonwriter_get(const JsonW *parent, const char *name)
 
 	return cJSON_GetObjectItemCaseSensitive(parent, name);
 }
-
 
 void jsonwriter_print(const JsonW *parent)
 {
@@ -257,31 +256,31 @@ void jsonwriter_delete(JsonW *ptr)
 
 void jsonwriter_defaults(void)
 {
-	jsonwriter = &jsonwriter_s;
+	jsonwriter                           = &jsonwriter_s;
 	/* core */
-	jsonwriter->init = do_init_jsonwriter;
-	jsonwriter->final = do_final_jsonwriter;
-	jsonwriter->create = jsonwriter_create;
-	jsonwriter->create_empty = jsonwriter_create_empty;
-	jsonwriter->new_array = jsonwriter_new_array;
-	jsonwriter->new_object = jsonwriter_new_object;
-	jsonwriter->new_string = jsonwriter_new_string;
-	jsonwriter->new_number = jsonwriter_new_number;
-	jsonwriter->new_null = jsonwriter_new_null;
-	jsonwriter->add_node = jsonwriter_add_node;
-	jsonwriter->add_node_to_array = jsonwriter_add_node_to_array;
-	jsonwriter->add_new_array = jsonwriter_add_new_array;
-	jsonwriter->add_new_object = jsonwriter_add_new_object;
-	jsonwriter->add_new_null = jsonwriter_add_new_null;
-	jsonwriter->add_new_number = jsonwriter_add_new_number;
-	jsonwriter->add_new_string = jsonwriter_add_new_string;
-	jsonwriter->add_new_string_to_array = jsonwriter_add_new_string_to_array;
+	jsonwriter->init                     = do_init_jsonwriter;
+	jsonwriter->final                    = do_final_jsonwriter;
+	jsonwriter->create                   = jsonwriter_create;
+	jsonwriter->create_empty             = jsonwriter_create_empty;
+	jsonwriter->new_array                = jsonwriter_new_array;
+	jsonwriter->new_object               = jsonwriter_new_object;
+	jsonwriter->new_string               = jsonwriter_new_string;
+	jsonwriter->new_number               = jsonwriter_new_number;
+	jsonwriter->new_null                 = jsonwriter_new_null;
+	jsonwriter->add_node                 = jsonwriter_add_node;
+	jsonwriter->add_node_to_array        = jsonwriter_add_node_to_array;
+	jsonwriter->add_new_array            = jsonwriter_add_new_array;
+	jsonwriter->add_new_object           = jsonwriter_add_new_object;
+	jsonwriter->add_new_null             = jsonwriter_add_new_null;
+	jsonwriter->add_new_number           = jsonwriter_add_new_number;
+	jsonwriter->add_new_string           = jsonwriter_add_new_string;
+	jsonwriter->add_new_string_to_array  = jsonwriter_add_new_string_to_array;
 	jsonwriter->add_new_strings_to_array = jsonwriter_add_new_strings_to_array;
-	jsonwriter->add_new_object_to_array = jsonwriter_add_new_object_to_array;
-	jsonwriter->get_string = jsonwriter_get_string;
-	jsonwriter->get_formatted_string = jsonwriter_get_formatted_string;
-	jsonwriter->get = jsonwriter_get;
-	jsonwriter->print = jsonwriter_print;
-	jsonwriter->free = jsonwriter_free;
-	jsonwriter->delete_ = jsonwriter_delete;
+	jsonwriter->add_new_object_to_array  = jsonwriter_add_new_object_to_array;
+	jsonwriter->get_string               = jsonwriter_get_string;
+	jsonwriter->get_formatted_string     = jsonwriter_get_formatted_string;
+	jsonwriter->get                      = jsonwriter_get;
+	jsonwriter->print                    = jsonwriter_print;
+	jsonwriter->free                     = jsonwriter_free;
+	jsonwriter->delete_                  = jsonwriter_delete;
 }
