@@ -19,14 +19,52 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use strict;
-use warnings;
+no warnings;  # Suppress all warnings
 use XML::Simple;
+use FindBin;
+use Cwd qw(abs_path);
+
+# Suppress locale warnings
+BEGIN {
+    $ENV{LC_ALL} = 'C';
+    $ENV{LANG} = 'C';
+
+    # Override warn function to suppress locale warnings
+    $SIG{__WARN__} = sub {
+        my $warning = shift;
+        return if $warning =~ /Setting locale failed|Please check that your locale settings|are supported and installed on your system|Falling back to the standard locale/;
+        warn $warning;
+    };
+}
 
 # XML Parser hint (some are faster than others)
-#local $ENV{XML_SIMPLE_PREFERRED_PARSER} = '';                 # 0m7.138s
-local $ENV{XML_SIMPLE_PREFERRED_PARSER} = 'XML::Parser';      # 0m2.674s
-#local $ENV{XML_SIMPLE_PREFERRED_PARSER} = 'XML::SAX::Expat';  # 0m7.026s
-#local $ENV{XML_SIMPLE_PREFERRED_PARSER} = 'XML::LibXML::SAX'; # 0m4.152s
+# Performance comparison (lower is better):
+#local $ENV{XML_SIMPLE_PREFERRED_PARSER} = '';                 # 0m7.138s (slowest)
+local $ENV{XML_SIMPLE_PREFERRED_PARSER} = 'XML::Parser';      # 0m2.674s (DEFAULT: fastest but less stable)
+#local $ENV{XML_SIMPLE_PREFERRED_PARSER} = 'XML::SAX::Expat';  # 0m7.026s (slow)
+#local $ENV{XML_SIMPLE_PREFERRED_PARSER} = 'XML::LibXML::SAX'; # 0m4.152s (RECOMMENDED: balanced speed + stability)
+
+my $script_dir = abs_path($FindBin::Bin);
+my $root_dir = abs_path("$script_dir/../..");
+
+sub write_file_if_changed($$) {
+	my ($fname, $content) = @_;
+	my $existing_content = '';
+
+	if (-f $fname) {
+		open(my $fh, '<', $fname) or die "Cannot open $fname for reading: $!";
+		$existing_content = do { local $/; <$fh> };
+		close($fh);
+	}
+
+	if ($existing_content ne $content) {
+		open(my $fh, '>', $fname) or die "Cannot open $fname for writing: $!";
+		print $fh $content;
+		close($fh);
+		return 1; # File was written
+	}
+	return 0; # File unchanged
+}
 
 sub trim($) {
 	my $s = $_[0];
@@ -296,7 +334,7 @@ sub parse($$) {
 
 my %key2original;
 my %key2pointer;
-my @files = grep { -f } glob 'doxyoutput/xml/*interface*.xml';
+my @files = grep { -f } glob "$script_dir/doxyoutput/xml/*interface*.xml";
 my %ifs;
 my %keys = (
 	login => [ ],
@@ -531,25 +569,22 @@ foreach my $servertype (keys %keys) {
 	my $fname;
 
 	if ($servertype eq 'all') {
-		$fname = "../../src/common/HPMSymbols.inc.h";
-		open(FH, ">", $fname)
-			or die "cannot open > $fname: $!";
-
-		print FH <<"EOF";
+		$fname = "$root_dir/src/common/HPMSymbols.inc.h";
+		my $symbols_content = <<"EOF";
 $fileheader
 #if !defined(HERCULES_CORE)
 EOF
 
 		foreach my $key (@$keysref) {
 			next if $fileguards{$key}->{private};
-			print FH <<"EOF";
+			$symbols_content .= <<"EOF";
 #ifdef $fileguards{$key}->{guard} /* $key */
 struct $key2original{$key} *$key;
 #endif // $fileguards{$key}->{guard}
 EOF
 		}
 
-		print FH <<"EOF";
+		$symbols_content .= <<"EOF";
 #endif // ! HERCULES_CORE
 
 HPExport const char *HPM_shared_symbols(int server_type)
@@ -558,7 +593,7 @@ EOF
 
 		foreach my $key (@$keysref) {
 			next if $fileguards{$key}->{private};
-			print FH <<"EOF";
+			$symbols_content .= <<"EOF";
 #ifdef $fileguards{$key}->{guard} /* $key */
 	if ((server_type&($fileguards{$key}->{type})) != 0 && !HPM_SYMBOL("$exportsymbols{$key}", $key))
 		return "$exportsymbols{$key}";
@@ -566,22 +601,19 @@ EOF
 EOF
 		}
 
-		print FH <<"EOF";
+		$symbols_content .= <<"EOF";
 	return NULL;
 }
 EOF
-		close FH;
+		write_file_if_changed($fname, $symbols_content);
 
-		$fname = "../../src/plugins/HPMHooking/HPMHooking.Defs.inc";
-		open(FH, ">", $fname)
-			or die "cannot open > $fname: $!";
-
-		print FH <<"EOF";
+		$fname = "$root_dir/src/plugins/HPMHooking/HPMHooking.Defs.inc";
+		my $defs_content = <<"EOF";
 $fileheader
 EOF
 
 		foreach my $key (@$keysref) {
-			print FH <<"EOF";
+			$defs_content .= <<"EOF";
 #ifdef $fileguards{$key}->{guard} /* $key */
 EOF
 
@@ -590,34 +622,31 @@ EOF
 				$predef =~ s/preHookFunc/HPMHOOK_pre_${key}_$if->{name}/;
 				$postdef =~ s/postHookFunc/HPMHOOK_post_${key}_$if->{name}/;
 
-				print FH <<"EOF";
+				$defs_content .= <<"EOF";
 typedef $predef
 typedef $postdef
 EOF
 			}
-			print FH <<"EOF";
+			$defs_content .= <<"EOF";
 #endif // $fileguards{$key}->{guard}
 EOF
 		}
-		close FH;
+		write_file_if_changed($fname, $defs_content);
 
 		next;
 	}
 
-	$fname = "../../src/plugins/HPMHooking/HPMHooking_${servertype}.HookingPoints.inc";
-	open(FH, ">", $fname)
-		or die "cannot open > $fname: $!";
-
-	print FH <<"EOF";
+	$fname = "$root_dir/src/plugins/HPMHooking/HPMHooking_${servertype}.HookingPoints.inc";
+	my $points_content = <<"EOF";
 $fileheader
 struct HookingPointData HookingPoints[] = {
 EOF
 
 	foreach my $key (@$keysref) {
-		print FH "/* $key2original{$key} */\n";
+		$points_content .= "/* $key2original{$key} */\n";
 		foreach my $if (@{ $ifs{$key} }) {
 
-			print FH <<"EOF";
+			$points_content .= <<"EOF";
 	{ HP_POP($key2pointer{$key}\->$if->{name}, $if->{hname}) },
 EOF
 
@@ -625,89 +654,58 @@ EOF
 			$maxlen = length($key."->".$if->{name}) if (length($key."->".$if->{name}) > $maxlen);
 		}
 	}
-	print FH <<"EOF";
+	$points_content .= <<"EOF";
 };
 
 int HookingPointsLenMax = $maxlen;
 EOF
-	close FH;
+	write_file_if_changed($fname, $points_content);
 
-	$fname = "../../src/plugins/HPMHooking/HPMHooking_${servertype}.sources.inc";
-	open(FH, ">", $fname)
-		or die "cannot open > $fname: $!";
-
-	print FH <<"EOF";
+	$fname = "$root_dir/src/plugins/HPMHooking/HPMHooking_${servertype}.sources.inc";
+	my $sources_content = <<"EOF";
 $fileheader
 EOF
 	foreach my $key (@$keysref) {
 
-		print FH <<"EOF";
+		$sources_content .= <<"EOF";
 HPMHooks.source.$key = *$key2pointer{$key};
 EOF
 	}
-	close FH;
+	write_file_if_changed($fname, $sources_content);
 
-	$fname = "../../src/plugins/HPMHooking/HPMHooking_${servertype}.HPMHooksCore.inc";
-	open(FH, ">", $fname)
-		or die "cannot open > $fname: $!";
-
-	print FH <<"EOF";
-$fileheader
-struct {
-EOF
+	$fname = "$root_dir/src/plugins/HPMHooking/HPMHooking_${servertype}.HPMHooksCore.inc";
+	my $core_content = "$fileheader\nstruct {\n";
 
 	foreach my $key (@$keysref) {
 		foreach my $if (@{ $ifs{$key} }) {
-
-			print FH <<"EOF";
-	struct HPMHookPoint *$if->{hname}_pre;
-	struct HPMHookPoint *$if->{hname}_post;
-EOF
+			$core_content .= "\tstruct HPMHookPoint *$if->{hname}_pre;\n";
+			$core_content .= "\tstruct HPMHookPoint *$if->{hname}_post;\n";
 		}
 	}
-	print FH <<"EOF";
-} list;
-
-struct {
-EOF
+	$core_content .= "} list;\n\nstruct {\n";
 
 	foreach my $key (@$keysref) {
 		foreach my $if (@{ $ifs{$key} }) {
-
-			print FH <<"EOF";
-	int $if->{hname}_pre;
-	int $if->{hname}_post;
-EOF
+			$core_content .= "\tint $if->{hname}_pre;\n";
+			$core_content .= "\tint $if->{hname}_post;\n";
 		}
 	}
-	print FH <<"EOF";
-} count;
-
-struct {
-EOF
+	$core_content .= "} count;\n\nstruct {\n";
 
 	foreach my $key (@$keysref) {
-
-		print FH <<"EOF";
-	struct $key2original{$key} $key;
-EOF
+		$core_content .= "\tstruct $key2original{$key} $key;\n";
 	}
 
-	print FH <<"EOF";
-} source;
-EOF
-	close FH;
+	$core_content .= "} source;\n";
+	write_file_if_changed($fname, $core_content);
 
-	$fname = "../../src/plugins/HPMHooking/HPMHooking_${servertype}.Hooks.inc";
-	open(FH, ">", $fname)
-		or die "cannot open > $fname: $!";
-
-	print FH <<"EOF";
+	$fname = "$root_dir/src/plugins/HPMHooking/HPMHooking_${servertype}.Hooks.inc";
+	my $hooks_content = <<"EOF";
 $fileheader
 EOF
 	foreach my $key (@$keysref) {
 
-		print FH <<"EOF";
+		$hooks_content .= <<"EOF";
 /* $key2original{$key} */
 EOF
 
@@ -730,7 +728,7 @@ EOF
 			$posthook_type =~ s/postHookFunc//;
 			$posthook_type =~ s/;//;
 
-			print FH <<"EOF";
+			$hooks_content .= <<"EOF";
 $if->{handlerdef} {$if->{notes}
 	int hIndex = 0;${initialization}
 	if (HPMHooks.count.$if->{hname}_pre > 0) {
@@ -761,5 +759,5 @@ EOF
 		}
 	}
 
-	close FH;
+	write_file_if_changed($fname, $hooks_content);
 }
