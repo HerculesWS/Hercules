@@ -552,6 +552,7 @@ struct Battle_Config {
 	// Refine Def/Atk
 	int costume_refine_def, shadow_refine_def;
 	int shadow_refine_atk;
+	int official_def_display;
 
 	// BodyStyle
 	int min_body_style, max_body_style;
