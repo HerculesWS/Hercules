@@ -9228,6 +9228,8 @@ typedef int (*HPMHOOK_pre_status_calc_batk) (struct block_list **bl, struct stat
 typedef int (*HPMHOOK_post_status_calc_batk) (int retVal___, struct block_list *bl, struct status_change *sc, int batk, bool viewable);
 typedef int (*HPMHOOK_pre_status_calc_buff_extra_batk) (struct block_list **bl, struct status_change **sc);
 typedef int (*HPMHOOK_post_status_calc_buff_extra_batk) (int retVal___, struct block_list *bl, struct status_change *sc);
+typedef int (*HPMHOOK_pre_status_calc_buff_extra_matk) (struct block_list **bl, struct status_change **sc);
+typedef int (*HPMHOOK_post_status_calc_buff_extra_matk) (int retVal___, struct block_list *bl, struct status_change *sc);
 typedef int (*HPMHOOK_pre_status_base_matk) (struct block_list **bl, const struct status_data **st, int *level);
 typedef int (*HPMHOOK_post_status_base_matk) (int retVal___, struct block_list *bl, const struct status_data *st, int level);
 typedef int (*HPMHOOK_pre_status_get_weapon_atk) (struct block_list **src, struct weapon_atk **watk, int *flag);

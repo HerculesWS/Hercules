@@ -1718,7 +1718,7 @@ static void clif_hominfo(struct map_session_data *sd, struct homun_data *hd, int
 #else
 	p.atk2 = std::clamp(hstatus->rhw.atk2 + hstatus->batk, 0u, (unsigned int)INT16_MAX);
 #endif
-	p.matk = std::clamp(hstatus->matk_max, 0u, (uint32)INT16_MAX);
+	p.matk = std::clamp(hstatus->matk_max, 0, (int)INT16_MAX);
 	p.hit = hstatus->hit;
 	if (battle_config.hom_setting&0x10)
 		p.crit = hstatus->luk / 3 + 1; //crit is a +1 decimal value! Just display purpose.[Vicious]
@@ -19333,7 +19333,7 @@ static void clif_mercenary_updatestatus(struct map_session_data *sd, enum status
 		}
 			break;
 		case SP_MATK1:
-			WFIFOL(fd,4) = std::clamp(mstatus->matk_max, 0u, (uint32)INT16_MAX);
+			WFIFOL(fd,4) = std::clamp(mstatus->matk_max, 0, (int)INT16_MAX);
 			break;
 		case SP_HIT:
 			WFIFOL(fd,4) = mstatus->hit;
@@ -19409,7 +19409,7 @@ static void clif_mercenary_info(struct map_session_data *sd)
 	atk = status->base_matk(&md->bl, mstatus, status->get_lv(&md->bl));
 	WFIFOW(fd,8) = std::clamp(atk, 0, (int)INT16_MAX);
 #else
-	WFIFOW(fd,8) = std::clamp(mstatus->matk_max, 0u, (uint32)INT16_MAX);
+	WFIFOW(fd,8) = std::clamp(mstatus->matk_max, 0, (int)INT16_MAX);
 #endif
 	WFIFOW(fd,10) = mstatus->hit;
 	WFIFOW(fd,12) = mstatus->cri/10;

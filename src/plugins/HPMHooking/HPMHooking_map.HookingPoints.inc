@@ -3651,6 +3651,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(status->calc_mdef2, HP_status_calc_mdef2) },
 	{ HP_POP(status->calc_batk, HP_status_calc_batk) },
 	{ HP_POP(status->calc_buff_extra_batk, HP_status_calc_buff_extra_batk) },
+	{ HP_POP(status->calc_buff_extra_matk, HP_status_calc_buff_extra_matk) },
 	{ HP_POP(status->base_matk, HP_status_base_matk) },
 	{ HP_POP(status->get_weapon_atk, HP_status_get_weapon_atk) },
 	{ HP_POP(status->get_total_mdef, HP_status_get_total_mdef) },
