@@ -31,15 +31,14 @@ struct s_geoip {
 	bool active;
 };
 
-
 /**
  * geoip interface
  **/
 struct geoip_interface {
 	struct s_geoip *data;
-	const char* (*getcountry) (uint32 ipnum);
-	void (*final) (bool shutdown);
-	void (*init) (void);
+	const char *(*getcountry)(uint32 ipnum);
+	void (*final)(bool shutdown);
+	void (*init)(void);
 };
 
 #ifdef HERCULES_CORE
