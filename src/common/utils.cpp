@@ -47,7 +47,7 @@ static struct HCache_interface HCache_s;
 HERCAPI_COMMON_EXPORT struct HCache_interface *HCache;
 
 /// Dumps given buffer into file pointed to by a handle.
-void WriteDump(FILE *fp, const void *buffer, size_t length)
+HERCAPI_COMMON_EXPORT void WriteDump(FILE *fp, const void *buffer, size_t length)
 {
 	size_t i;
 	char hex[48 + 1], ascii[16 + 1];
@@ -76,7 +76,7 @@ void WriteDump(FILE *fp, const void *buffer, size_t length)
 }
 
 /// Dumps given buffer on the console.
-void ShowDump(const void *buffer, size_t length)
+HERCAPI_COMMON_EXPORT void ShowDump(const void *buffer, size_t length)
 {
 	size_t i;
 	char hex[48 + 1], ascii[16 + 1];
@@ -122,7 +122,8 @@ static char *checkpath(char *path, const char *srcpath)
 	return path;
 }
 
-void findfile(const char *p, const char *pat, void(func)(const char *, void *context), void *context)
+HERCAPI_COMMON_EXPORT void findfile(const char *p, const char *pat, void(func)(const char *, void *context),
+                                    void *context)
 {
 	WIN32_FIND_DATAA FindFileData;
 	HANDLE hFind;
@@ -166,7 +167,7 @@ void findfile(const char *p, const char *pat, void(func)(const char *, void *con
  * @return true if the passed path points to a file, otherwise false.
  *
  **/
-bool is_file(const char *path)
+HERCAPI_COMMON_EXPORT bool is_file(const char *path)
 {
 	nullpo_retr(false, path);
 
@@ -197,7 +198,8 @@ static char *checkpath(char *path, const char *srcpath)
 	return path;
 }
 
-void findfile(const char *p, const char *pat, void(func)(const char *, void *context), void *context)
+HERCAPI_COMMON_EXPORT void findfile(const char *p, const char *pat, void(func)(const char *, void *context),
+                                    void *context)
 {
 	DIR *dir;             ///< pointer to the scanned directory.
 	struct dirent *entry; ///< pointer to one directory entry.
@@ -255,7 +257,7 @@ void findfile(const char *p, const char *pat, void(func)(const char *, void *con
  * @return true if the passed path points to a file, otherwise false.
  *
  **/
-bool is_file(const char *path)
+HERCAPI_COMMON_EXPORT bool is_file(const char *path)
 {
 	nullpo_retr(false, path);
 
@@ -270,12 +272,12 @@ bool is_file(const char *path)
 
 #endif
 
-bool exists(const char *filename)
+HERCAPI_COMMON_EXPORT bool exists(const char *filename)
 {
 	return !access(filename, F_OK);
 }
 
-uint8 GetByte(uint32 val, int idx)
+HERCAPI_COMMON_EXPORT uint8 GetByte(uint32 val, int idx)
 {
 	switch (idx) {
 	case 0:
@@ -294,7 +296,7 @@ uint8 GetByte(uint32 val, int idx)
 	}
 }
 
-uint16 GetWord(uint32 val, int idx)
+HERCAPI_COMMON_EXPORT uint16 GetWord(uint32 val, int idx)
 {
 	switch (idx) {
 	case 0:
@@ -309,12 +311,12 @@ uint16 GetWord(uint32 val, int idx)
 	}
 }
 
-uint16 MakeWord(uint8 byte0, uint8 byte1)
+HERCAPI_COMMON_EXPORT uint16 MakeWord(uint8 byte0, uint8 byte1)
 {
 	return byte0 | (byte1 << 0x08);
 }
 
-uint32 MakeDWord(uint16 word0, uint16 word1)
+HERCAPI_COMMON_EXPORT uint32 MakeDWord(uint16 word0, uint16 word1)
 {
 	return ((uint32)(word0)) | ((uint32)(word1 << 0x10));
 }
@@ -324,7 +326,7 @@ uint32 MakeDWord(uint16 word0, uint16 word1)
  *************************************/
 
 // Converts an int16 from current machine order to little-endian
-int16 MakeShortLE(int16 val)
+HERCAPI_COMMON_EXPORT int16 MakeShortLE(int16 val)
 {
 	unsigned char buf[2];
 	buf[0] = (unsigned char)((val & 0x00FF));
@@ -333,7 +335,7 @@ int16 MakeShortLE(int16 val)
 }
 
 // Converts an int32 from current machine order to little-endian
-int32 MakeLongLE(int32 val)
+HERCAPI_COMMON_EXPORT int32 MakeLongLE(int32 val)
 {
 	unsigned char buf[4];
 	buf[0] = (unsigned char)((val & 0x000000FF));
@@ -344,13 +346,13 @@ int32 MakeLongLE(int32 val)
 }
 
 // Reads an uint16 in little-endian from the buffer
-uint16 GetUShort(const unsigned char *buf)
+HERCAPI_COMMON_EXPORT uint16 GetUShort(const unsigned char *buf)
 {
 	return (((uint16)(buf[0]))) | (((uint16)(buf[1])) << 0x08);
 }
 
 // Reads an uint32 in little-endian from the buffer
-uint32 GetULong(const unsigned char *buf)
+HERCAPI_COMMON_EXPORT uint32 GetULong(const unsigned char *buf)
 {
 	return (((uint32)(buf[0])))
 	     | (((uint32)(buf[1])) << 0x08)
@@ -359,20 +361,20 @@ uint32 GetULong(const unsigned char *buf)
 }
 
 // Reads an int32 in little-endian from the buffer
-int32 GetLong(const unsigned char *buf)
+HERCAPI_COMMON_EXPORT int32 GetLong(const unsigned char *buf)
 {
 	return (int32)GetULong(buf);
 }
 
 // Reads a float (32 bits) from the buffer
-float GetFloat(const unsigned char *buf)
+HERCAPI_COMMON_EXPORT float GetFloat(const unsigned char *buf)
 {
 	uint32 val = GetULong(buf);
 	return *((float *)(void *)&val);
 }
 
 /// calculates the value of A / B, in percent (rounded down)
-unsigned int get_percentage(const unsigned int A, const unsigned int B)
+HERCAPI_COMMON_EXPORT unsigned int get_percentage(const unsigned int A, const unsigned int B)
 {
 	double result;
 
@@ -392,7 +394,7 @@ unsigned int get_percentage(const unsigned int A, const unsigned int B)
 }
 
 /// calculates the value of A / B, in percent (rounded down)
-uint64 get_percentage64(const uint64 A, const uint64 B)
+HERCAPI_COMMON_EXPORT uint64 get_percentage64(const uint64 A, const uint64 B)
 {
 	double result;
 
@@ -420,7 +422,7 @@ uint64 get_percentage64(const uint64 A, const uint64 B)
  * @param stdrate The rate modifier's divider (rate == stdrate => 100%).
  * @return The modified value.
  */
-int64 apply_percentrate64(int64 value, int rate, int stdrate)
+HERCAPI_COMMON_EXPORT int64 apply_percentrate64(int64 value, int rate, int stdrate)
 {
 	Assert_ret(stdrate > 0);
 	Assert_ret(rate >= 0);
@@ -443,7 +445,7 @@ int64 apply_percentrate64(int64 value, int rate, int stdrate)
  * @param maxrate The rate modifier's divider (maxrate = 100%).
  * @return The modified value.
  */
-int apply_percentrate(int value, int rate, int maxrate)
+HERCAPI_COMMON_EXPORT int apply_percentrate(int value, int rate, int maxrate)
 {
 	Assert_ret(maxrate > 0);
 	Assert_ret(rate >= 0);
@@ -457,7 +459,7 @@ int apply_percentrate(int value, int rate, int maxrate)
 //-----------------------------------------------------
 // custom timestamp formatting (from eApp)
 //-----------------------------------------------------
-const char *timestamp2string(char *str, size_t size, time_t timestamp, const char *format)
+HERCAPI_COMMON_EXPORT const char *timestamp2string(char *str, size_t size, time_t timestamp, const char *format)
 {
 	size_t len;
 	nullpo_retr(NULL, str);
