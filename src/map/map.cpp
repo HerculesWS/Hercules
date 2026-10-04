@@ -7189,6 +7189,11 @@ void hserver_map::cmdline_args_init_local() noexcept
 
 int hserver_map::do_init(int argc, char *argv[]) noexcept
 {
+	{
+		printf("Mapserver's foo:\n");
+		Foo foo{1};
+		printf("Foo says: %d\n", foo.foo(1));
+	}
 	bool minimal = false;
 	int i;
 
@@ -7733,4 +7738,20 @@ void mapit_defaults(void)
 	mapit->next   = mapit_next;
 	mapit->prev   = mapit_prev;
 	mapit->exists = mapit_exists;
+}
+
+
+Foo::Foo(int n) : m_n(n)
+{
+	printf("Constructing Foo with n = %d\n", m_n);
+}
+
+Foo::~Foo()
+{
+	printf("Destructing Foo with n = %d\n", m_n);
+}
+
+int Foo::foo(int n)
+{
+	return m_n + n;
 }

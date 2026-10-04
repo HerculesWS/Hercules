@@ -1281,6 +1281,11 @@ HPM_EXPORT void plugin_init(void)
 	addCPCommand("server:tools:db2sql", db2sql);
 	addCPCommand("server:tools:itemdb2sql", itemdb2sql);
 	addCPCommand("server:tools:mobdb2sql", mobdb2sql);
+	{
+		printf("Plugin's foo:\n");
+		Foo foo{1};
+		printf("Foo says: %d\n", foo.foo(1));
+	}
 }
 
 HPM_EXPORT void server_online(void)

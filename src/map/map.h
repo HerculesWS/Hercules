@@ -1602,4 +1602,15 @@ class HERCAPI_MAP_EXPORT hserver_map final : public hserver_i
 HERCAPI_MAP_EXTERN struct mapit_interface *mapit;
 HERCAPI_MAP_EXTERN struct map_interface *map;
 
+class HERCAPI_MAP_EXPORT Foo
+{
+  public:
+	explicit Foo(int n);
+	~Foo();
+	int foo(int n);
+
+  private:
+	int m_n;
+};
+
 #endif /* MAP_MAP_H */
