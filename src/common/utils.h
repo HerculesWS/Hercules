@@ -39,7 +39,6 @@
   #endif
 #endif
 
-#ifdef HERCULES_CORE
 // generate a hex dump of the first 'length' bytes of 'buffer'
 HERCAPI_COMMON_EXPORT void WriteDump(FILE *fp, const void *buffer, size_t length);
 HERCAPI_COMMON_EXPORT void ShowDump(const void *buffer, size_t length);
@@ -69,13 +68,14 @@ HERCAPI_COMMON_EXPORT uint32 MakeDWord(uint16 word0, uint16 word1);
 //////////////////////////////////////////////////////////////////////////
 // Big-endian compatibility functions
 //////////////////////////////////////////////////////////////////////////
-extern int16 MakeShortLE(int16 val);
-extern int32 MakeLongLE(int32 val);
-extern uint16 GetUShort(const unsigned char *buf);
-extern uint32 GetULong(const unsigned char *buf);
-extern int32 GetLong(const unsigned char *buf);
-extern float GetFloat(const unsigned char *buf);
+HERCAPI_COMMON_EXPORT int16 MakeShortLE(int16 val);
+HERCAPI_COMMON_EXPORT int32 MakeLongLE(int32 val);
+HERCAPI_COMMON_EXPORT uint16 GetUShort(const unsigned char *buf);
+HERCAPI_COMMON_EXPORT uint32 GetULong(const unsigned char *buf);
+HERCAPI_COMMON_EXPORT int32 GetLong(const unsigned char *buf);
+HERCAPI_COMMON_EXPORT float GetFloat(const unsigned char *buf);
 
+#ifdef HERCULES_CORE
 HERCAPI_COMMON_EXPORT size_t hread(void *ptr, size_t size, size_t count, FILE *stream);
 HERCAPI_COMMON_EXPORT size_t hwrite(const void *ptr, size_t size, size_t count, FILE *stream);
 HERCAPI_COMMON_EXPORT int64 htell(FILE *stream);

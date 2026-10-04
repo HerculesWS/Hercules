@@ -79,21 +79,21 @@ bool needs_grfio;
   #include <unistd.h>
 #endif
 
-// Reads an uint32 in little-endian from the buffer
-uint32 GetULong(const unsigned char *buf)
-{
-	return (((uint32)(buf[0])))
-	     | (((uint32)(buf[1])) << 0x08)
-	     | (((uint32)(buf[2])) << 0x10)
-	     | (((uint32)(buf[3])) << 0x18);
-}
+// // Reads an uint32 in little-endian from the buffer
+// uint32 GetULong(const unsigned char *buf)
+// {
+// 	return (((uint32)(buf[0])))
+// 	     | (((uint32)(buf[1])) << 0x08)
+// 	     | (((uint32)(buf[2])) << 0x10)
+// 	     | (((uint32)(buf[3])) << 0x18);
+// }
 
-// Reads a float (32 bits) from the buffer
-float GetFloat(const unsigned char *buf)
-{
-	uint32 val = GetULong(buf);
-	return *((float *)(void *)&val);
-}
+// // Reads a float (32 bits) from the buffer
+// float GetFloat(const unsigned char *buf)
+// {
+// 	uint32 val = GetULong(buf);
+// 	return *((float *)(void *)&val);
+// }
 
 bool write_mapcache(const uint8 *buf, int32 buf_len, bool is_compressed, const char *mapname, int16 xs, int16 ys)
 {

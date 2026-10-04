@@ -350,7 +350,7 @@ uint16 GetUShort(const unsigned char *buf)
 }
 
 // Reads an uint32 in little-endian from the buffer
-uint32 GetULong(const unsigned char *buf)
+HERCAPI_COMMON_EXPORT uint32 GetULong(const unsigned char *buf)
 {
 	return (((uint32)(buf[0])))
 	     | (((uint32)(buf[1])) << 0x08)
@@ -365,7 +365,7 @@ int32 GetLong(const unsigned char *buf)
 }
 
 // Reads a float (32 bits) from the buffer
-float GetFloat(const unsigned char *buf)
+HERCAPI_COMMON_EXPORT float GetFloat(const unsigned char *buf)
 {
 	uint32 val = GetULong(buf);
 	return *((float *)(void *)&val);
