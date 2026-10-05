@@ -65,6 +65,7 @@ if(BUILD_HPMHOOKING)
     string(TOUPPER ${server} server_upper)
 
     add_plugin_target("${HERC_PLUGIN_NAME}_${server}"
+      TYPE ${server}
       CFILES
         ${HERC_PLUGIN_SRCS}
         ${HERC_PLUGIN_HDRS}

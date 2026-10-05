@@ -94,7 +94,7 @@ elseif ($args[0] -eq "run") {
 }
 elseif ($args[0] -eq "test") {
 	$serverArgs = "--run-once"
-	foreach ($plugin in @("HPMHooking", "httpsample", "constdb2doc", "db2sql", "generate-translations", "mapcache", "script_mapquit")) {
+	foreach ($plugin in @("HPMHooking", "httpsample_map", "constdb2doc", "db2sql", "generate-translations", "mapcache", "script_mapquit")) {
 		$serverArgs += " --load-plugin $plugin"
 	}
 	CatchProcessErrors "bin/map-server.exe" "$serverArgs --load-script npc/dev/test.txt --load-script npc/dev/ci_test.txt"

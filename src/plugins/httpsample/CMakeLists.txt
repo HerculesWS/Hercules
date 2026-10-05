@@ -24,6 +24,12 @@ set(HERC_PLUGIN_SRCS
   httpsample.cpp
 )
 
-add_plugin_target(${HERC_PLUGIN_NAME}
-  CFILES ${HERC_PLUGIN_SRCS}
-)
+# Create virtual httpsample plugin
+add_custom_target("plugin.${HERC_PLUGIN_NAME}")
+foreach(server IN ITEMS api char login map)
+  add_plugin_target(${HERC_PLUGIN_NAME}_${server}
+    TYPE ${server}
+    VIRTUAL_TARGET "plugin.${HERC_PLUGIN_NAME}"
+    CFILES ${HERC_PLUGIN_SRCS}
+  )
+endforeach()

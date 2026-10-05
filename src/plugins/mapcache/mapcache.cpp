@@ -38,11 +38,7 @@
 #include <stdio.h>
 #include <string.h>
 
-HPM_DECLARE_PLUGIN(
-	"Mapcache",      ///< Plugin name
-	SERVER_TYPE_MAP, ///< Which server types this plugin works with?
-	"1.0.0"          ///< Plugin version
-)
+HPM_DECLARE_PLUGIN("Mapcache", "1.0.0")
 
 /**
  * Yes.. old mapcache was never packed, and we loaded and wrote a compiler paded structs

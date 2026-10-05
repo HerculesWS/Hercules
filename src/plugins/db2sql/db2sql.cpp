@@ -38,11 +38,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-HPM_DECLARE_PLUGIN(
-	"DB2SQL",        // Plugin name
-	SERVER_TYPE_MAP, // Which server types this plugin works with?
-	"0.5"            // Plugin version
-)
+HPM_DECLARE_PLUGIN("DB2SQL", "0.5")
 
 #ifdef RENEWAL
   #define DBSUFFIX "_re"

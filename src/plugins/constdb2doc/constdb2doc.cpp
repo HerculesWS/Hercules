@@ -45,11 +45,7 @@
   #define OUTPUTFILENAME "doc" PATHSEP_STR "constants_pre-re.md"
 #endif
 
-HPM_DECLARE_PLUGIN(
-	"constdb2doc",   // Plugin name
-	SERVER_TYPE_MAP, // Which server types this plugin works with?
-	"0.1"            // Plugin version
-)
+HPM_DECLARE_PLUGIN("constdb2doc", "0.1")
 
 FILE *out_fp;
 bool torun = false;

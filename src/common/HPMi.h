@@ -36,7 +36,7 @@ struct hplugin_data_store;
 
 enum server_types : unsigned int;
 
-#define HPM_VERSION "1.3"
+#define HPM_VERSION "1.4"
 
 // Maximum length of the configuration path for configs added with add*Conf
 #define HPM_ADDCONF_LENGTH 40
@@ -289,11 +289,41 @@ struct HPMi_interface {
 };
 #ifdef HERCULES_CORE
   #define HPM_SYMBOL(n, s) (HPM->share((s), (n)), true)
-#else // ! HERCULES_CORE
+#elif defined(HERCULES_PLUGIN)
 HPExport struct HPMi_interface HPMi_s;
 HPExport struct HPMi_interface *HPMi;
 HPExport void *(*import_symbol)(const char *name, unsigned int pID);
 HPExport struct hplugin_info pinfo;
+
+static_assert(
+  1
+    == 0
+  #ifdef HERCULES_PLUGIN_API
+         + 1
+  #endif
+  #ifdef HERCULES_PLUGIN_CHAR
+         + 1
+  #endif
+  #ifdef HERCULES_PLUGIN_LOGIN
+         + 1
+  #endif
+  #ifdef HERCULES_PLUGIN_MAP
+         + 1
+  #endif
+  ,
+  "Invalid multi-server plugin configuration. Each plugin can support only one of api, char, login, map at a time.");
+
+  #if defined(HERCULES_PLUGIN_API)
+	#define HPM_SERVER_TYPE SERVER_TYPE_API
+  #elif defined(HERCULES_PLUGIN_CHAR)
+	#define HPM_SERVER_TYPE SERVER_TYPE_CHAR
+  #elif defined(HERCULES_PLUGIN_LOGIN)
+	#define HPM_SERVER_TYPE SERVER_TYPE_LOGIN
+  #elif defined(HERCULES_PLUGIN_MAP)
+	#define HPM_SERVER_TYPE SERVER_TYPE_MAP
+  #else
+	#define HPM_SERVER_TYPE SERVER_TYPE_UNKNOWN
+  #endif
 
   #define HPM_PLUGIN_DEFS_BASE \
 	  struct HPMi_interface HPMi_s; \
@@ -302,16 +332,16 @@ HPExport struct hplugin_info pinfo;
 
   #define HPM_PLUGIN_DEFS_ALL HPM_PLUGIN_DEFS_BASE
 
-  #define HPM_DECLARE_PLUGIN_BASE(n, t, v) \
+  #define HPM_DECLARE_PLUGIN_BASE(n, v) \
 	  struct hplugin_info pinfo = { \
 		  .name        = (n), \
-		  .type        = (t), \
+		  .type        = HPM_SERVER_TYPE, \
 		  .version     = (v), \
 		  .req_version = HPM_VERSION, \
 	  };
 
   #define HPM_SYMBOL(n, s) ((s) = static_cast<decltype(s)>(import_symbol((n), HPMi->pid)))
 
-#endif // !HERCULES_CORE
+#endif
 
 #endif /* COMMON_HPMI_H */

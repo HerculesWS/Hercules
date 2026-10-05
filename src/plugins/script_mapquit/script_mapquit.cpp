@@ -27,11 +27,7 @@
 
 #include "common/HPMDataCheck.h"
 
-HPM_DECLARE_PLUGIN(
-	"script_mapquit",    // Plugin name
-	SERVER_TYPE_MAP,     // Which server types this plugin works with?
-	"0.1"                // Plugin version
-)
+HPM_DECLARE_PLUGIN("script_mapquit", "0.1")
 
 BUILDIN(mapquit)
 {
