@@ -33,11 +33,7 @@
 
 #include <stdlib.h>
 
-HPM_DECLARE_PLUGIN(
-	"test_equippos", ///< Plugin name
-	SERVER_TYPE_MAP, ///< Plugin type
-	"0.1"            ///< Plugin version
-)
+HPM_DECLARE_PLUGIN("test_equippos", "0.1")
 
 #define TEST(name, function, ...) \
 	do { \

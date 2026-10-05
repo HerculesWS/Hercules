@@ -25,5 +25,6 @@ set(HERC_PLUGIN_SRCS
 )
 
 add_plugin_target(${HERC_PLUGIN_NAME}
+  TYPE map
   CFILES ${HERC_PLUGIN_SRCS}
 )

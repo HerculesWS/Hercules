@@ -29,7 +29,6 @@
 #include "common/packets.h"
 
 #if defined(HPMHOOKING_API)
-  #define HPM_SERVER_TYPE     SERVER_TYPE_API
   #define HPM_CORE_INCLUDE    "plugins/HPMHooking/HPMHooking_api.HPMHooksCore.inc"
   #define HPM_HOOKS_INCLUDE   "plugins/HPMHooking/HPMHooking_api.Hooks.inc"
   #define HPM_POINTS_INCLUDE  "plugins/HPMHooking/HPMHooking_api.HookingPoints.inc"
@@ -49,7 +48,6 @@
   #include "api/jsonwriter.h"
   #include "api/mimepart.h"
 #elif defined(HPMHOOKING_LOGIN)
-  #define HPM_SERVER_TYPE     SERVER_TYPE_LOGIN
   #define HPM_CORE_INCLUDE    "plugins/HPMHooking/HPMHooking_login.HPMHooksCore.inc"
   #define HPM_HOOKS_INCLUDE   "plugins/HPMHooking/HPMHooking_login.Hooks.inc"
   #define HPM_POINTS_INCLUDE  "plugins/HPMHooking/HPMHooking_login.HookingPoints.inc"
@@ -64,7 +62,6 @@
   #include "login/packets_ac_struct.h"
   #include "login/packets_ca_struct.h"
 #elif defined(HPMHOOKING_CHAR)
-  #define HPM_SERVER_TYPE     SERVER_TYPE_CHAR
   #define HPM_CORE_INCLUDE    "plugins/HPMHooking/HPMHooking_char.HPMHooksCore.inc"
   #define HPM_HOOKS_INCLUDE   "plugins/HPMHooking/HPMHooking_char.Hooks.inc"
   #define HPM_POINTS_INCLUDE  "plugins/HPMHooking/HPMHooking_char.HookingPoints.inc"
@@ -93,7 +90,6 @@
   #include "char/pincode.h"
   #include "common/mapindex.h"
 #elif defined(HPMHOOKING_MAP)
-  #define HPM_SERVER_TYPE     SERVER_TYPE_MAP
   #define HPM_CORE_INCLUDE    "plugins/HPMHooking/HPMHooking_map.HPMHooksCore.inc"
   #define HPM_HOOKS_INCLUDE   "plugins/HPMHooking/HPMHooking_map.Hooks.inc"
   #define HPM_POINTS_INCLUDE  "plugins/HPMHooking/HPMHooking_map.HookingPoints.inc"
@@ -145,7 +141,6 @@
   #include "common/grfio.h"
   #include "common/mapindex.h"
 #else
-  #define HPM_SERVER_TYPE     SERVER_TYPE_UNKNOWN
   #define HPM_CORE_INCLUDE    "plugins/HPMHooking/HPMHooking.HPMHooksCore.inc"
   #define HPM_HOOKS_INCLUDE   "plugins/HPMHooking/HPMHooking.Hooks.inc"
   #define HPM_POINTS_INCLUDE  "plugins/HPMHooking/HPMHooking.HookingPoints.inc"
@@ -177,11 +172,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-HPM_DECLARE_PLUGIN(
-	"HPMHooking",   // Plugin name
-	HPM_SERVER_TYPE,// Which server types this plugin works with?
-	"0.2"           // Plugin version
-)
+HPM_DECLARE_PLUGIN("HPMHooking", "0.2")
 
 #define HP_POP(x, y) #x, (void **)(&x), (void *)y, 0
 struct DBMap *hp_db; /* hooking points db -- for quick lookup */

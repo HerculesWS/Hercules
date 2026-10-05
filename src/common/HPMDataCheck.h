@@ -1281,10 +1281,10 @@ HPExport const struct s_HPMDataCheck *HPMDataCheck;
 HPExport unsigned int HPMDataCheckLen;
 HPExport int HPMDataCheckVer;
 #ifdef HPM_PLUGIN_DEFS_ALL
-  #define HPM_DECLARE_PLUGIN(plugin_name, plugin_type, plugin_version) \
+  #define HPM_DECLARE_PLUGIN(plugin_name, plugin_version) \
 	  HPMDATACHECK_DEFS \
 	  HPM_PLUGIN_DEFS_ALL \
-	  HPM_DECLARE_PLUGIN_BASE((plugin_name), (plugin_type), (plugin_version))
+	  HPM_DECLARE_PLUGIN_BASE((plugin_name), (plugin_version))
 #endif
 
 #endif /* HPM_DATA_CHECK_H */

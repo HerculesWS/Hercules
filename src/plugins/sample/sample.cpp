@@ -52,9 +52,8 @@
 #include <string.h>
 
 HPM_DECLARE_PLUGIN(
-	"Sample",    // Plugin name
-	(enum server_types)(SERVER_TYPE_CHAR | SERVER_TYPE_LOGIN | SERVER_TYPE_MAP | SERVER_TYPE_API),// Which server types this plugin works with?
-	"0.1"        // Plugin version
+	"Sample", // Plugin name
+	"0.1"     // Plugin version
 )
 
 /// @sample command - 5 params: const int fd, struct map_session_data* sd, const char* command, const char* message,

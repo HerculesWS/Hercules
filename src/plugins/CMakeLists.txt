@@ -23,7 +23,7 @@
 # CFLAGS list or lists of compiler options to be set
 # VIRTUAL_TARGET a name of a target that this plugin will be added as a dependency to
 function(add_plugin_target _plugin_name)
-  set(oneValueArgs VIRTUAL_TARGET)
+  set(oneValueArgs TYPE VIRTUAL_TARGET)
   set(multiValueArgs CFILES CDEFS CFLAGS)
   cmake_parse_arguments(PARSE_ARGV
     1
@@ -59,6 +59,20 @@ function(add_plugin_target _plugin_name)
 
   add_library("plugin.${_plugin_name}" SHARED ${_cfiles})
   add_dependencies(plugins "plugin.${_plugin_name}")
+
+  if(NOT arg_TYPE)
+    message(FATAL_ERROR "Plugins must define TYPE")
+  elseif(arg_TYPE STREQUAL "api")
+    target_compile_definitions("plugin.${_plugin_name}" PRIVATE HERCULES_PLUGIN_API)
+  elseif(arg_TYPE STREQUAL "char")
+    target_compile_definitions("plugin.${_plugin_name}" PRIVATE HERCULES_PLUGIN_CHAR)
+  elseif(arg_TYPE STREQUAL "login")
+    target_compile_definitions("plugin.${_plugin_name}" PRIVATE HERCULES_PLUGIN_LOGIN)
+  elseif(arg_TYPE STREQUAL "map")
+    target_compile_definitions("plugin.${_plugin_name}" PRIVATE HERCULES_PLUGIN_MAP)
+  else()
+    message(FATAL_ERROR "Invalid plugin type ${arg_TYPE} for plugin ${_plugin_name}. Valid types are: api, char, login, map.")
+  endif()
 
   target_compile_options("plugin.${_plugin_name}" PRIVATE ${PLUGIN_COMPILE_OPTIONS})
   if(PLUGIN_INSTALL_RPATH)

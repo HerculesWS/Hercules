@@ -56,9 +56,8 @@ enum apimessages {
 };
 
 HPM_DECLARE_PLUGIN(
-	"Http sample",    // Plugin name
-	(enum server_types)(SERVER_TYPE_CHAR | SERVER_TYPE_LOGIN | SERVER_TYPE_MAP | SERVER_TYPE_API), // Which server types this plugin works with?
-	"0.1"        // Plugin version
+	"Http sample", // Plugin name
+	"0.1"          // Plugin version
 )
 
 struct PACKET_API_sample_login_request_data {
