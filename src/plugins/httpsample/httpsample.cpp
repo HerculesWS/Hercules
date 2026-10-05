@@ -22,23 +22,32 @@
 /// Http sample Hercules Plugin
 
 #include "common/hercules.h" /* Should always be the first Hercules file included! (if you don't make it first, you won't be able to use interfaces) */
+#include "common/api.h"
 #include "common/memmgr.h"
 #include "common/mmo.h"
 #include "common/random.h"
 #include "common/socket.h"
 #include "common/strlib.h"
-#include "api/aclif.h"
-#include "api/aloginif.h"
-#include "api/apipackets.h"
-#include "api/apisessiondata.h"
-#include "api/httpsender.h"
-#include "api/postheader.h"
-#include "char/apipackets.h"
-#include "login/apipackets.h"
-#include "login/login.h"
-#include "map/apipackets.h"
-#include "map/map.h"
-#include "map/pc.h"
+#ifdef HERCULES_PLUGIN_API
+  #include "api/aclif.h"
+  #include "api/aloginif.h"
+  #include "api/apipackets.h"
+  #include "api/apisessiondata.h"
+  #include "api/httpsender.h"
+  #include "api/postheader.h"
+#endif
+#ifdef HERCULES_PLUGIN_CHAR
+  #include "char/apipackets.h"
+#endif
+#ifdef HERCULES_PLUGIN_LOGIN
+  #include "login/apipackets.h"
+  #include "login/login.h"
+#endif
+#ifdef HERCULES_PLUGIN_MAP
+  #include "map/apipackets.h"
+  #include "map/map.h"
+  #include "map/pc.h"
+#endif
 
 #include "plugins/HPMHooking/HPMHooking.h"
 #include "common/HPMDataCheck.h" /* should always be the last Hercules file included! (if you don't make it last, it'll intentionally break compile time) */
@@ -101,6 +110,7 @@ struct sample_player_id {
 	int account_id;
 };
 
+#ifdef HERCULES_PLUGIN_API
 // runs on api server
 HTTP_URL(my_sample_test_simple)
 {
@@ -126,7 +136,9 @@ HTTP_URL(my_sample_test_simple)
 
 	return true;
 }
+#endif
 
+#ifdef HERCULES_PLUGIN_API
 // runs on api server
 HTTP_URL(my_sample_test_login)
 {
@@ -149,7 +161,9 @@ HTTP_URL(my_sample_test_login)
 	// not terminating http connection here because waiting packet from login server with data...
 	return true;
 }
+#endif
 
+#ifdef HERCULES_PLUGIN_API
 // runs on api server
 // sample handler for receiving data from login server for http request /httpsample/login
 HTTP_DATA(my_sample_test_login)
@@ -171,7 +185,9 @@ HTTP_DATA(my_sample_test_login)
 	// terminating http connection here after we got requested data from login server
 	aclif->terminate_connection(fd);
 }
+#endif
 
+#ifdef HERCULES_PLUGIN_API
 // runs on api server
 HTTP_URL(my_sample_test_char)
 {
@@ -197,7 +213,9 @@ HTTP_URL(my_sample_test_char)
 	// not terminating http connection here because waiting packet from char server with data...
 	return true;
 }
+#endif
 
+#ifdef HERCULES_PLUGIN_API
 // runs on api server
 // sample handler for receiving data from char server for http request /httpsample/char
 HTTP_DATA(my_sample_test_char)
@@ -216,7 +234,9 @@ HTTP_DATA(my_sample_test_char)
 	// terminating http connection here after we got requested data from char server
 	aclif->terminate_connection(fd);
 }
+#endif
 
+#ifdef HERCULES_PLUGIN_API
 // runs on api server
 HTTP_URL(my_sample_test_map)
 {
@@ -242,7 +262,9 @@ HTTP_URL(my_sample_test_map)
 	// not terminating http connection here because waiting packet from map server with data...
 	return true;
 }
+#endif
 
+#ifdef HERCULES_PLUGIN_API
 // runs on api server
 // sample handler for receiving data from map server for http request /httpsample/map
 HTTP_DATA(my_sample_test_map)
@@ -261,7 +283,9 @@ HTTP_DATA(my_sample_test_map)
 	// terminating http connection here after we got requested data from char server
 	aclif->terminate_connection(fd);
 }
+#endif
 
+#ifdef HERCULES_PLUGIN_API
 HTTP_URL(my_sample_test_user)
 {
 	ShowInfo("/httpsample/user url called\n");
@@ -291,7 +315,9 @@ HTTP_URL(my_sample_test_user)
 
 	return true;
 }
+#endif
 
+#ifdef HERCULES_PLUGIN_API
 // runs on api server
 // sample handler for receiving data from map server for http request /httpsample/user
 HTTP_DATA(my_sample_test_user)
@@ -315,7 +341,9 @@ HTTP_DATA(my_sample_test_user)
 	// terminating http connection here after we got requested data from char server
 	aclif->terminate_connection(fd);
 }
+#endif
 
+#ifdef HERCULES_PLUGIN_LOGIN
 // runs on login server
 // sample handler for message from api server url /httpsample/login
 void sample_login_api_packet(int fd)
@@ -343,7 +371,9 @@ void sample_login_api_packet(int fd)
 	// send created packet
 	WFIFOSET(fd, packet->packet_len);
 }
+#endif
 
+#ifdef HERCULES_PLUGIN_CHAR
 // runs on char server
 // sample handler for message from api server url /httpsample/char
 void sample_char_api_packet(int fd)
@@ -358,7 +388,9 @@ void sample_char_api_packet(int fd)
 	// send created packet
 	WFIFOSET(chr->login_fd, packet->packet_len);
 }
+#endif
 
+#ifdef HERCULES_PLUGIN_MAP
 // runs on map server
 // sample handler for message from api server url /httpsample/map
 void sample_map_api_packet(int fd)
@@ -373,7 +405,9 @@ void sample_map_api_packet(int fd)
 	// send created packet
 	WFIFOSET(chrif->fd, packet->packet_len);
 }
+#endif
 
+#ifdef HERCULES_PLUGIN_MAP
 // runs on map server
 // sample handler for message from api server url /httpsample/user
 void sample_user_api_packet(int fd)
@@ -395,6 +429,7 @@ void sample_user_api_packet(int fd)
 	// send created packet
 	WFIFOSET(chrif->fd, packet->packet_len);
 }
+#endif
 
 /* run when server starts */
 HPExport void plugin_init(void)
@@ -421,19 +456,21 @@ HPExport void plugin_init(void)
 
 	ShowInfo("I'm being run from the '%s' filename\n", SERVER_NAME);
 
-	if (SERVER_TYPE == SERVER_TYPE_LOGIN) {
-		// Add handler for message from api server url /httpsample/login
-		addProxyPacket(API_MSG_SAMPLE_LOGIN, sample_login_request, sample_login_api_packet, hpProxy_ApiLogin);
-	}
-	if (SERVER_TYPE == SERVER_TYPE_CHAR) {
-		// Add handler for message from api server url /httpsample/char
-		addProxyPacket(API_MSG_SAMPLE_CHAR, sample_char_request, sample_char_api_packet, hpProxy_ApiChar);
-	}
-	if (SERVER_TYPE == SERVER_TYPE_MAP) {
-		// Add handler for message from api server url /httpsample/map
-		addProxyPacket(API_MSG_SAMPLE_MAP, sample_map_request, sample_map_api_packet, hpProxy_ApiMap);
-		addProxyPacket(API_MSG_SAMPLE_USER, sample_user_request, sample_user_api_packet, hpProxy_ApiMap);
-	}
+#ifdef HERCULES_PLUGIN_LOGIN
+	// Add handler for message from api server url /httpsample/login
+	addProxyPacket(API_MSG_SAMPLE_LOGIN, sample_login_request, sample_login_api_packet, hpProxy_ApiLogin);
+#endif
+
+#ifdef HERCULES_PLUGIN_CHAR
+	// Add handler for message from api server url /httpsample/char
+	addProxyPacket(API_MSG_SAMPLE_CHAR, sample_char_request, sample_char_api_packet, hpProxy_ApiChar);
+#endif
+
+#ifdef HERCULES_PLUGIN_MAP
+	// Add handler for message from api server url /httpsample/map
+	addProxyPacket(API_MSG_SAMPLE_MAP, sample_map_request, sample_map_api_packet, hpProxy_ApiMap);
+	addProxyPacket(API_MSG_SAMPLE_USER, sample_user_request, sample_user_api_packet, hpProxy_ApiMap);
+#endif
 }
 
 /* triggered when server starts loading, before any server-specific data is set */
@@ -444,25 +481,25 @@ HPExport void server_preinit(void)
 /* run when server is ready (online) */
 HPExport void server_online(void)
 {
+#ifdef HERCULES_PLUGIN_API
 	// Register url for GET request
-	if (SERVER_TYPE == SERVER_TYPE_API) {
-		addHttpHandler(HTTP_GET, "/httpsample/simple", my_sample_test_simple, REQ_DEFAULT);
-		addHttpHandler(HTTP_GET, "/httpsample/login", my_sample_test_login, REQ_DEFAULT);
-		addHttpHandler(HTTP_GET, "/httpsample/char", my_sample_test_char, REQ_DEFAULT);
-		addHttpHandler(HTTP_GET, "/httpsample/map", my_sample_test_map, REQ_DEFAULT);
-		// can be tested with command:
-		//  curl -X POST -F WorldName=Hercules -F AID=2000000 "http://127.0.0.1:7121/httpsample/user"
-		// REQ_WORLD_NAME - automatically parse header WorldName for select world aka char server
-		// REQ_EXTRA_HEADERS - allow any unparsed post header
-		// REQ_TRUSTED - allow use url only from trusted ip
-		addHttpHandler(HTTP_POST, "/httpsample/user", my_sample_test_user,
-		               REQ_WORLD_NAME | REQ_EXTRA_HEADERS | REQ_TRUSTED);
+	addHttpHandler(HTTP_GET, "/httpsample/simple", my_sample_test_simple, REQ_DEFAULT);
+	addHttpHandler(HTTP_GET, "/httpsample/login", my_sample_test_login, REQ_DEFAULT);
+	addHttpHandler(HTTP_GET, "/httpsample/char", my_sample_test_char, REQ_DEFAULT);
+	addHttpHandler(HTTP_GET, "/httpsample/map", my_sample_test_map, REQ_DEFAULT);
+	// can be tested with command:
+	//  curl -X POST -F WorldName=Hercules -F AID=2000000 "http://127.0.0.1:7121/httpsample/user"
+	// REQ_WORLD_NAME - automatically parse header WorldName for select world aka char server
+	// REQ_EXTRA_HEADERS - allow any unparsed post header
+	// REQ_TRUSTED - allow use url only from trusted ip
+	addHttpHandler(HTTP_POST, "/httpsample/user", my_sample_test_user,
+	               REQ_WORLD_NAME | REQ_EXTRA_HEADERS | REQ_TRUSTED);
 
-		addHttpDataHandler(my_sample_test_login, API_MSG_SAMPLE_LOGIN);
-		addHttpDataHandler(my_sample_test_char, API_MSG_SAMPLE_CHAR);
-		addHttpDataHandler(my_sample_test_map, API_MSG_SAMPLE_MAP);
-		addHttpDataHandler(my_sample_test_user, API_MSG_SAMPLE_USER);
-	}
+	addHttpDataHandler(my_sample_test_login, API_MSG_SAMPLE_LOGIN);
+	addHttpDataHandler(my_sample_test_char, API_MSG_SAMPLE_CHAR);
+	addHttpDataHandler(my_sample_test_map, API_MSG_SAMPLE_MAP);
+	addHttpDataHandler(my_sample_test_user, API_MSG_SAMPLE_USER);
+#endif
 }
 
 /* run when server is shutting down */
