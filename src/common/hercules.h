@@ -23,6 +23,7 @@
 #include "config/core.h"
 #include "common/cbasetypes.h"
 
+/// For C-style symbols exported by plugins, to be loaded by the core
 #ifdef HERCULES_CORE
   #define HPExport extern "C"
 #else // HERCULES_CORE
@@ -33,7 +34,62 @@
   #endif // WIN32
 #endif   // HERCULES_CORE
 
+/// For interfaces definitions used by both core and plugins (HACK)
 #define HPShared extern
+
+/// Helper (not used directly)
+#ifdef WIN32
+  #define HERCAPI_EXPORT_ __declspec(dllexport)
+  #define HERCAPI_IMPORT_ __declspec(dllimport)
+#else
+  #define HERCAPI_EXPORT_ __attribute__((visibility("default")))
+  #define HERCAPI_IMPORT_
+#endif
+
+/// For symbols exported by common
+#ifdef HERCULES_CORE_COMMON
+  #define HERCAPI_COMMON_EXPORT HERCAPI_EXPORT_
+  #define HERCAPI_COMMON_EXTERN extern HERCAPI_EXPORT_
+#else
+  #define HERCAPI_COMMON_EXPORT HERCAPI_IMPORT_
+  #define HERCAPI_COMMON_EXTERN extern HERCAPI_IMPORT_
+#endif
+
+/// For symbols exported by the api server
+#ifdef HERCULES_CORE_API
+  #define HERCAPI_API_EXPORT HERCAPI_EXPORT_
+  #define HERCAPI_API_EXTERN extern HERCAPI_EXPORT_
+#else
+  #define HERCAPI_API_EXPORT HERCAPI_IMPORT_
+  #define HERCAPI_API_EXTERN extern HERCAPI_IMPORT_
+#endif
+
+/// For symbols exported by the char server
+#ifdef HERCULES_CORE_CHAR
+  #define HERCAPI_CHAR_EXPORT HERCAPI_EXPORT_
+  #define HERCAPI_CHAR_EXTERN extern HERCAPI_EXPORT_
+#else
+  #define HERCAPI_CHAR_EXPORT HERCAPI_IMPORT_
+  #define HERCAPI_CHAR_EXTERN extern HERCAPI_IMPORT_
+#endif
+
+/// For symbols exported by the login server
+#ifdef HERCULES_CORE_LOGIN
+  #define HERCAPI_LOGIN_EXPORT HERCAPI_EXPORT_
+  #define HERCAPI_LOGIN_EXTERN extern HERCAPI_EXPORT_
+#else
+  #define HERCAPI_LOGIN_EXPORT HERCAPI_IMPORT_
+  #define HERCAPI_LOGIN_EXTERN extern HERCAPI_IMPORT_
+#endif
+
+/// For symbols exported by the map server
+#ifdef HERCULES_CORE_MAP
+  #define HERCAPI_MAP_EXPORT HERCAPI_EXPORT_
+  #define HERCAPI_MAP_EXTERN extern HERCAPI_EXPORT_
+#else
+  #define HERCAPI_MAP_EXPORT HERCAPI_IMPORT_
+  #define HERCAPI_MAP_EXTERN extern HERCAPI_IMPORT_
+#endif
 
 #ifndef HERCULES_CORE
   #include "common/HPMi.h"
