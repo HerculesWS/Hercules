@@ -541,7 +541,7 @@ void cmdline_defaults(void)
 /*======================================
  * CORE : MAINROUTINE
  *--------------------------------------*/
-int main(int argc, char **argv)
+int herc_main(int argc, char **argv)
 {
 	int retval = EXIT_SUCCESS;
 	{ // initialize program arguments

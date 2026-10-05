@@ -24,6 +24,7 @@ set(LOGIN_SRCS
   login.cpp
   loginlog.cpp
   lapiif.cpp
+  main.cpp
 )
 
 set(LOGIN_HDRS
