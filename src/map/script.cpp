@@ -18,8 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#define HERCULES_CORE
-
 #include "config/core.h" // RENEWAL, RENEWAL_ASPD, RENEWAL_CAST, RENEWAL_DROP, RENEWAL_EDP, RENEWAL_EXP, RENEWAL_LVDMG, SCRIPT_CALLFUNC_CHECK, SECURE_NPCTIMEOUT, SECURE_NPCTIMEOUT_INTERVAL
 #include "script.h"
 

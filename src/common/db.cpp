@@ -85,9 +85,6 @@
  * @encoding US-ASCII
  * @see #db.h
 \*****************************************************************************/
-
-#define HERCULES_CORE
-
 #include "db.h"
 
 #include "common/ers.h"

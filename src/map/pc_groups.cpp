@@ -18,8 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#define HERCULES_CORE
-
 #include "pc_groups.h"
 
 #include "map/atcommand.h" // atcommand-"exists(), atcommand-"load_groups()

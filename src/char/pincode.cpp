@@ -18,8 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#define HERCULES_CORE
-
 #include "pincode.h"
 
 #include "char/char.h"

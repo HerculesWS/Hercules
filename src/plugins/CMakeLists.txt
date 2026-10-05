@@ -67,6 +67,10 @@ function(add_plugin_target _plugin_name)
     )
   endif()
 
+  target_compile_definitions("plugin.${_plugin_name}"
+    PRIVATE
+      HERCULES_PLUGIN
+  )
   if(arg_CDEFS)
     target_compile_definitions("plugin.${_plugin_name}" PRIVATE ${_cdefs})
   endif()

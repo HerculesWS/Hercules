@@ -73,6 +73,12 @@ add_executable(api-server
   ${API_PRVT}
 )
 
+target_compile_definitions(api-server
+  PRIVATE
+    HERCULES_CORE
+    HERCULES_CORE_API
+)
+
 target_link_libraries(api-server PUBLIC common)
 if(WITH_HTTP_PARSER STREQUAL "http-parser")
   target_link_libraries(api-server PRIVATE hercules-http_parser)

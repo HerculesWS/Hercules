@@ -18,8 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#define HERCULES_CORE
-
 #include "config/core.h" // NPC_SECURE_TIMEOUT_INPUT, NPC_SECURE_TIMEOUT_MENU, NPC_SECURE_TIMEOUT_NEXT, SECURE_NPCTIMEOUT, SECURE_NPCTIMEOUT_INTERVAL
 #include "npc.h"
 

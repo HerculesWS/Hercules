@@ -129,6 +129,11 @@ add_library(common STATIC
   ${COMMON_PRVT}
   ${CONFIG_HDRS}
 )
+target_compile_definitions(common
+  PRIVATE
+    HERCULES_CORE
+    HERCULES_CORE_COMMON
+)
 
 target_link_libraries(common PRIVATE hercules-mt19937ar)
 target_link_libraries(common PRIVATE hercules-libconfig)

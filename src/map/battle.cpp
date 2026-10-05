@@ -18,8 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#define HERCULES_CORE
-
 #include "config/core.h" // CELL_NOSTACK, CIRCULAR_AREA, CONSOLE_INPUT, HMAP_ZONE_DAMAGE_CAP_TYPE, OFFICIAL_WALKPATH, RENEWAL, RENEWAL_ASPD, RENEWAL_CAST, RENEWAL_DROP, RENEWAL_EDP, RENEWAL_EXP, RENEWAL_LVDMG, RE_LVL_DMOD(), RE_LVL_MDMOD(), RE_LVL_TMDMOD(), RE_SKILL_REDUCTION(), SCRIPT_CALLFUNC_CHECK, SECURE_NPCTIMEOUT
 #include "battle.h"
 

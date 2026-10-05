@@ -57,9 +57,6 @@
  * @encoding US-ASCII                                                        *
  * @see common#ers.h                                                         *
 \*****************************************************************************/
-
-#define HERCULES_CORE
-
 #include "ers.h"
 
 #include "common/cbasetypes.h"
