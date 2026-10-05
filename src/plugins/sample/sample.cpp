@@ -38,11 +38,15 @@
 #include "common/random.h"
 #include "common/socket.h"
 #include "common/strlib.h"
-#include "login/login.h"
-#include "login/lclif.p.h"
-#include "map/clif.h"
-#include "map/pc.h"
-#include "map/script.h"
+#ifdef HERCULES_PLUGIN_LOGIN
+  #include "login/login.h"
+  #include "login/lclif.p.h"
+#endif
+#ifdef HERCULES_PLUGIN_MAP
+  #include "map/clif.h"
+  #include "map/pc.h"
+  #include "map/script.h"
+#endif
 
 #include "plugins/HPMHooking/HPMHooking.h"
 #include "common/HPMDataCheck.h" /* should always be the last Hercules file included! (if you don't make it last, it'll intentionally break compile time) */
@@ -56,6 +60,7 @@ HPM_DECLARE_PLUGIN(
 	"0.1"     // Plugin version
 )
 
+#ifdef HERCULES_PLUGIN_MAP
 /// @sample command - 5 params: const int fd, struct map_session_data* sd, const char* command, const char* message,
 /// struct AtCommandInfo *info
 ACMD(sample)
@@ -63,7 +68,9 @@ ACMD(sample)
 	atcmd_sample_message(message, sd->status.name);
 	return true;
 }
+#endif
 
+#ifdef HERCULES_PLUGIN_MAP
 /// script command 'sample(num);' - 1 param: struct script_state* st
 BUILDIN(sample)
 {
@@ -71,6 +78,7 @@ BUILDIN(sample)
 	ShowInfo("I'm being run! arg -> '%d'\n", arg);
 	return true;
 }
+#endif
 
 /// console command 'sample' - 1 param: char *line
 CPCMD(sample)
@@ -78,6 +86,7 @@ CPCMD(sample)
 	ShowInfo("I'm being run! arg -> '%s'\n", line ? line : "NONE");
 }
 
+#ifdef HERCULES_PLUGIN_MAP
 struct sample_data_struct {
 	struct point lastMSGPosition;
 	unsigned int someNumber;
@@ -172,7 +181,9 @@ int my_pc_dropitem_post(int retVal, struct map_session_data *sd, int n, int amou
 	}
 	return 1;
 }
+#endif
 
+#ifdef HERCULES_PLUGIN_LOGIN
 /**
  * pre-hook for lclif->p->parse_CA_CONNECT_INFO_CHANGED this is a private interface function and while in source it
  * cannot be used outside of lclif.cpp since it's private, plugin can use it and hook to private interface functions if
@@ -186,7 +197,9 @@ enum parsefunc_rcode my_lclif_parse_CA_CONNECT_INFO_CHANGED_pre(int *fd, struct 
 	ShowNotice("Player (AID: %d) has sent CA_CONNECT_INFO_CHANGED packet\n", (*sd)->account_id);
 	return PACKET_VALID;
 }
+#endif
 
+#ifdef HERCULES_PLUGIN_MAP
 /*
  * Key is the setting name in our example it's 'my_setting' while val is the value of it.
  * this way you can manage more than one setting in one function instead of define multiable ones
@@ -218,6 +231,7 @@ void atcmd_sample_message(const char *message, const char *sd_name)
 {
 	printf("I'm being run! message -> '%s' by %s\n", message, sd_name);
 }
+#endif
 
 /* run when server starts */
 HPExport void plugin_init(void)
@@ -244,21 +258,19 @@ HPExport void plugin_init(void)
 
 	ShowInfo("I'm being run from the '%s' filename\n", SERVER_NAME);
 
+#ifdef HERCULES_PLUGIN_MAP
 	// Atcommands only make sense on the map server
-	if (SERVER_TYPE == SERVER_TYPE_MAP) {
-		/* addAtcommand("command-key",command-function) tells map server to call ACMD(sample) when "sample" command is
-		 * used */
-		/* - it will print a warning when used on a non-map-server plugin */
-		addAtcommand("sample", sample); // link our '@sample' command
-	}
+	/* addAtcommand("command-key",command-function) tells map server to call ACMD(sample) when "sample" command is
+	 * used */
+	/* - it will print a warning when used on a non-map-server plugin */
+	addAtcommand("sample", sample); // link our '@sample' command
 
 	// Script commands only make sense on the map server
-	if (SERVER_TYPE == SERVER_TYPE_MAP) {
-		/* addScriptCommand("script-command-name","script-command-params-info",script-function) tells map server to call
-		 * BUILDIN(sample) for the "sample(i)" command */
-		/* - it will print a warning when used on a non-map-server plugin */
-		addScriptCommand("sample", "i", sample);
-	}
+	/* addScriptCommand("script-command-name","script-command-params-info",script-function) tells map server to call
+	 * BUILDIN(sample) for the "sample(i)" command */
+	/* - it will print a warning when used on a non-map-server plugin */
+	addScriptCommand("sample", "i", sample);
+#endif
 
 	/* addCPCommand("console-command-name",command-function) tells server to call CPCMD(sample) for the 'this is a
 	 * sample <optional-args>' console call */
@@ -269,6 +281,7 @@ HPExport void plugin_init(void)
 	 * help' would inform about 'is (category) -> a (category) -> sample (command)'*/
 	addCPCommand("this:is:a:sample", sample);
 
+#ifdef HERCULES_PLUGIN_MAP
 	/* addPacket(packetID,packetLength,packetFunction,packetIncomingPoint) */
 	/* adds packetID of packetLength (-1 for dynamic length where length is defined in the packet { packetID (2 Byte) ,
 	 * packetLength (2 Byte) , ... }) to trigger packetFunction in the packetIncomingPoint section ( available points
@@ -276,38 +289,39 @@ HPExport void plugin_init(void)
 	addPacket(0xF3, -1, sample_packet0f3, hpClif_Parse);
 
 	// The following hooks would show an error message where pc->dropitem doesn't exist (login or char server)
-	if (SERVER_TYPE == SERVER_TYPE_MAP) {
-		/* in this sample we add a PreHook to pc->dropitem */
-		/* to identify whether the item being dropped is on amount higher than 1 */
-		/* if so, it stores the amount on a variable (my_pc_dropitem_storage) and changes the amount to 1 */
-		addHookPre(pc, dropitem, my_pc_dropitem_pre);
+	/* in this sample we add a PreHook to pc->dropitem */
+	/* to identify whether the item being dropped is on amount higher than 1 */
+	/* if so, it stores the amount on a variable (my_pc_dropitem_storage) and changes the amount to 1 */
+	addHookPre(pc, dropitem, my_pc_dropitem_pre);
 
-		/* in this sample we add a PostHook to pc->dropitem */
-		/* if the original pc->dropitem was successful and the amount stored on my_pc_dropitem_storage is higher than 1,
-		 */
-		/* our posthook will display a message to the user about the cap */
-		/* - by checking whether it was successful (retVal value) it allows for the originals conditions to take place
-		 */
-		addHookPost(pc, dropitem, my_pc_dropitem_post);
-	}
+	/* in this sample we add a PostHook to pc->dropitem */
+	/* if the original pc->dropitem was successful and the amount stored on my_pc_dropitem_storage is higher than 1,
+	 */
+	/* our posthook will display a message to the user about the cap */
+	/* - by checking whether it was successful (retVal value) it allows for the originals conditions to take place
+	 */
+	addHookPost(pc, dropitem, my_pc_dropitem_post);
+#endif
 
-	if (SERVER_TYPE == SERVER_TYPE_LOGIN) {
-		/**
-		 * In this example we add a pre-hook to lclif->p->parse_CA_CONNECT_INFO_CHANGED
-		 * It's similar to nomral hooks except it have it own hooking macros which ends with Priv
-		 **/
-		addHookPrePriv(lclif, parse_CA_CONNECT_INFO_CHANGED, my_lclif_parse_CA_CONNECT_INFO_CHANGED_pre);
-	}
+#ifdef HERCULES_PLUGIN_LOGIN
+	/**
+	 * In this example we add a pre-hook to lclif->p->parse_CA_CONNECT_INFO_CHANGED
+	 * It's similar to nomral hooks except it have it own hooking macros which ends with Priv
+	 **/
+	addHookPrePriv(lclif, parse_CA_CONNECT_INFO_CHANGED, my_lclif_parse_CA_CONNECT_INFO_CHANGED_pre);
+#endif
 }
 
 /* triggered when server starts loading, before any server-specific data is set */
 HPExport void server_preinit(void)
 {
+#ifdef HERCULES_PLUGIN_MAP
 	/* makes map server listen to mysetting:value in any "battleconf" file (including imported or custom ones) */
 	/* value is not limited to numbers, its passed to our plugins handler (parse_my_setting) as const char *,
 	 * however for battle config to be returned to our script engine we need it to be number (int) so keep use it as int
 	 * only */
 	addBattleConf("my_setting", parse_my_setting, return_my_setting, false);
+#endif
 }
 
 /* run when server is ready (online) */
