@@ -18,8 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#define HERCULES_CORE
-
 #include "searchstore.h" // struct s_search_store_info
 
 #include "map/battle.h" // battle_config.*

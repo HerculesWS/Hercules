@@ -21,8 +21,6 @@
 /**
  * Base Author: shennetsind @ http://herc.ws
  */
-#define HERCULES_CORE
-
 #include "irc-bot.h"
 
 #include "map/channel.h"

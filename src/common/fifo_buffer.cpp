@@ -19,8 +19,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define HERCULES_CORE
-
 #include "fifo_buffer.h"
 
 #include "common/nullpo.h"

@@ -160,6 +160,12 @@ add_executable(map-server
   ${MAP_PRVT}
 )
 
+target_compile_definitions(map-server
+  PRIVATE
+    HERCULES_CORE
+    HERCULES_CORE_MAP
+)
+
 target_link_libraries(map-server PUBLIC common)
 target_link_libraries(map-server PRIVATE pcre::pcre)
 

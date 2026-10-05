@@ -51,6 +51,12 @@ function(add_test_target _test_name)
     "${_target_name}.cpp"
   )
 
+  target_compile_definitions(${_target_name}
+    PRIVATE
+      HERCULES_CORE
+      HERCULES_CORE_TEST
+  )
+
   target_link_libraries(${_target_name} PUBLIC common)
 
   add_dependencies(tests ${_target_name})

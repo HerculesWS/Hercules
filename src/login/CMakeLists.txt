@@ -62,6 +62,12 @@ add_executable(login-server
   ${LOGIN_PRVT}
 )
 
+target_compile_definitions(login-server
+  PRIVATE
+    HERCULES_CORE
+    HERCULES_CORE_LOGIN
+)
+
 target_link_libraries(login-server PUBLIC common)
 
 add_dependencies(sql login-server)

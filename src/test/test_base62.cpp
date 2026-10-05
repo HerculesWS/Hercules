@@ -19,8 +19,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define HERCULES_CORE
-
 #include "common/cbasetypes.h"
 #include "common/base62.h"
 #include "common/core.h"

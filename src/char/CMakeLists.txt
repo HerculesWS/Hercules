@@ -94,6 +94,12 @@ add_executable(char-server
   ${CHAR_PRVT}
 )
 
+target_compile_definitions(char-server
+  PRIVATE
+    HERCULES_CORE
+    HERCULES_CORE_CHAR
+)
+
 target_link_libraries(char-server PUBLIC common)
 
 add_dependencies(sql char-server)
