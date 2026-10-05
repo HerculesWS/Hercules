@@ -27,6 +27,7 @@ set(API_SRCS
   imageparser.cpp
   jsonparser.cpp
   jsonwriter.cpp
+  main.cpp
   postheader.cpp
 )
 

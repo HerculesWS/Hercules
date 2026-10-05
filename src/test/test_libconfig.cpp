@@ -975,3 +975,8 @@ void set_server_type(void)
 void cmdline_args_init_local(void)
 {
 }
+
+int main(int argc, char **argv)
+{
+	return herc_main(argc, argv);
+}

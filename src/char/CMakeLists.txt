@@ -20,6 +20,7 @@ set(CHAR_SRCS
   char.cpp
   HPMchar.cpp
   loginif.cpp
+  main.cpp
   mapif.cpp
   geoip.cpp
   inter.cpp

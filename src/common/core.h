@@ -111,6 +111,8 @@ extern int do_final(void);
 	  cmdline->arg_add(HPM_PID_CORE, "--" name, '\0', cmdline_arg_##funcname, help, options)
 
 void cmdline_defaults(void);
+
+int herc_main(int argc, char **argv);
 #endif // HERCULES_CORE
 
 HPShared struct core_interface *core;

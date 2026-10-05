@@ -43,6 +43,7 @@ set(MAP_SRCS
   log.cpp
   macro.cpp
   mail.cpp
+  main.cpp
   map.cpp
   mapiif.cpp
   mapreg_sql.cpp
