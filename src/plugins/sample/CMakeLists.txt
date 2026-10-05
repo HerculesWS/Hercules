@@ -37,7 +37,7 @@ set(HERC_PLUGIN_DEF
 
 # Create virtual sample plugin
 add_custom_target("plugin.${HERC_PLUGIN_NAME}")
-foreach(server IN ITEMS api char login map)
+foreach(server IN ITEMS api map)
   add_plugin_target(${HERC_PLUGIN_NAME}_${server}
     TYPE ${server}
     VIRTUAL_TARGET "plugin.${HERC_PLUGIN_NAME}"
