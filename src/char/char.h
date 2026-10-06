@@ -368,7 +368,7 @@ extern int guild_exp_rate;
 void char_load_defaults(void);
 void char_defaults(void);
 
-class hserver_char final : public hserver_i
+class HERCAPI_CHAR_EXPORT hserver_char final : public hserver_i
 {
   public:
 	~hserver_char() noexcept override

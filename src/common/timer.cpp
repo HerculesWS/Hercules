@@ -40,7 +40,7 @@
 #include <string.h>
 
 static struct timer_interface timer_s;
-struct timer_interface *timer;
+HERCAPI_COMMON_EXPORT struct timer_interface *timer;
 
 // If the server can't handle processing thousands of monsters
 // or many connected clients, please increase TIMER_MIN_INTERVAL.

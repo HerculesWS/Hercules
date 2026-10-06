@@ -129,6 +129,6 @@ struct grfio_interface {
 void grfio_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct grfio_interface *grfio; ///< Pointer to the grfio interface.
+HERCAPI_COMMON_EXTERN struct grfio_interface *grfio; ///< Pointer to the grfio interface.
 
 #endif /* COMMON_GRFIO_H */

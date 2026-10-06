@@ -66,6 +66,6 @@ struct sysinfo_interface {
 void sysinfo_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct sysinfo_interface *sysinfo;
+HERCAPI_COMMON_EXTERN struct sysinfo_interface *sysinfo;
 
 #endif /* COMMON_SYSINFO_H */

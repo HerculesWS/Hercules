@@ -43,7 +43,7 @@
  */
 
 static struct thread_interface thread_s;
-struct thread_interface *thread;
+HERCAPI_COMMON_EXPORT struct thread_interface *thread;
 
 /// The maximum amount of threads.
 #define THREADS_MAX 64

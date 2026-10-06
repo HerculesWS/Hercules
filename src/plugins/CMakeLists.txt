@@ -93,7 +93,7 @@ function(add_plugin_target _plugin_name)
   endif()
   set_target_properties("plugin.${_plugin_name}" PROPERTIES PREFIX "" OUTPUT_NAME ${_plugin_name})
 
-  target_link_libraries("plugin.${_plugin_name}" PUBLIC common)
+  target_link_libraries("plugin.${_plugin_name}" PUBLIC herc-common)
   target_link_libraries("plugin.${_plugin_name}" PRIVATE cjson::cjson)
   if(ENABLE_LIBBACKTRACE)
     target_link_libraries("plugin.${_plugin_name}" PRIVATE libbacktrace::libbacktrace)

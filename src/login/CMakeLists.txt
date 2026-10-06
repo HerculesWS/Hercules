@@ -69,7 +69,10 @@ target_compile_definitions(login-server
     HERCULES_CORE_LOGIN
 )
 
-target_link_libraries(login-server PUBLIC common)
+target_link_libraries(login-server PUBLIC herc-common)
+if(WIN32)
+  target_link_libraries(login-server PRIVATE wsock32 ws2_32)
+endif()
 
 add_dependencies(sql login-server)
 

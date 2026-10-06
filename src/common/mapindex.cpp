@@ -34,7 +34,7 @@
 
 /* mapindex interface source */
 static struct mapindex_interface mapindex_s;
-struct mapindex_interface *mapindex;
+HERCAPI_COMMON_EXPORT struct mapindex_interface *mapindex;
 
 /// Retrieves the map name from 'string' (removing .gat extension if present).
 /// Result gets placed either into 'buf' or in a static local buffer.

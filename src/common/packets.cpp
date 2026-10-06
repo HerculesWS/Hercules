@@ -27,7 +27,7 @@
 #include <string.h>
 
 static struct packets_interface packets_s;
-struct packets_interface *packets;
+HERCAPI_COMMON_EXPORT struct packets_interface *packets;
 
 static void packets_init(void)
 {

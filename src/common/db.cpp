@@ -98,7 +98,7 @@
 #include <stdlib.h>
 
 static struct db_interface DB_s;
-struct db_interface *DB;
+HERCAPI_COMMON_EXPORT struct db_interface *DB;
 
 /*****************************************************************************
  *  (1) Private enums, structures, defines and global variables of the       *

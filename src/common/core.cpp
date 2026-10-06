@@ -89,7 +89,7 @@
 //  Note: This feature is deprecated, and should not be used.
 
 static struct core_interface core_s;
-struct core_interface *core = &core_s;
+HERCAPI_COMMON_EXPORT struct core_interface *core = &core_s;
 #ifdef WIN32
 static char executable_path[MAX_PATH];
 #else
@@ -530,7 +530,7 @@ static void cmdline_final(void)
 }
 
 static struct cmdline_interface cmdline_s;
-struct cmdline_interface *cmdline;
+HERCAPI_COMMON_EXPORT struct cmdline_interface *cmdline;
 
 void cmdline_defaults(void)
 {
@@ -549,7 +549,7 @@ void cmdline_defaults(void)
 /*======================================
  * CORE : MAINROUTINE
  *--------------------------------------*/
-int herc_main(hserver_i *hs, int argc, char **argv)
+HERCAPI_COMMON_EXPORT int herc_main(hserver_i *hs, int argc, char **argv)
 {
 	int retval = EXIT_SUCCESS;
 	{ // initialize program arguments

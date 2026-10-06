@@ -40,6 +40,7 @@
 // Enable memory manager logging by default
 #define LOG_MEMMGR
 
+#ifdef HERCULES_CORE
 #define aMalloc(size)      (malloc_proxy((size), ALC_MARK))
 #define aCalloc(num, size) (calloc_proxy((num), (size), ALC_MARK))
 #define aFree(p)           (free_proxy((p), ALC_MARK))
@@ -47,6 +48,15 @@
 #define aStrndup(p, size)  (strndup_proxy((p), (size), ALC_MARK))
 #define aRealloc(p, size)  (iMalloc->realloc((p), (size), ALC_MARK))
 #define aReallocz(p, size) (iMalloc->reallocz((p), (size), ALC_MARK))
+#elif HERCULES_PLUGIN
+#define aMalloc(size)      (HPMi->memmgr->malloc((size), ALC_MARK))
+#define aCalloc(num, size) (HPMi->memmgr->calloc((num), (size), ALC_MARK))
+#define aFree(p)           (HPMi->memmgr->free((p), ALC_MARK))
+#define aStrdup(p)         (HPMi->memmgr->astrdup((p), ALC_MARK))
+#define aStrndup(p, size)  (HPMi->memmgr->astrndup((p), (size), ALC_MARK))
+#define aRealloc(p, size)  (HPMi->memmgr->realloc((p), (size), ALC_MARK))
+#define aReallocz(p, size) (HPMi->memmgr->reallocz((p), (size), ALC_MARK))
+#endif
 
 /////////////// Buffer Creation /////////////////
 // Full credit for this goes to Shinomori [Ajarn]
@@ -96,14 +106,14 @@ struct malloc_interface {
 	void (*init_messages)(void);
 };
 
-void free_proxy(void *p, const char *file, int line, const char *func);
-void *malloc_proxy(size_t size, const char *file, int line, const char *func) GCC11ATTR((malloc, malloc(free_proxy, 1)))
-__attribute__((alloc_size(1))) GCCATTR((returns_nonnull));
-void *calloc_proxy(size_t num, size_t size, const char *file, int line, const char *func)
+HERCAPI_COMMON_EXPORT void free_proxy(void *p, const char *file, int line, const char *func);
+HERCAPI_COMMON_EXPORT void *malloc_proxy(size_t size, const char *file, int line, const char *func)
+  GCC11ATTR((malloc, malloc(free_proxy, 1))) __attribute__((alloc_size(1))) GCCATTR((returns_nonnull));
+HERCAPI_COMMON_EXPORT void *calloc_proxy(size_t num, size_t size, const char *file, int line, const char *func)
   GCC11ATTR((malloc, malloc(free_proxy, 1))) __attribute__((alloc_size(1, 2))) GCCATTR((returns_nonnull));
-char *strdup_proxy(const char *p, const char *file, int line, const char *func)
+HERCAPI_COMMON_EXPORT char *strdup_proxy(const char *p, const char *file, int line, const char *func)
   GCC11ATTR((malloc, malloc(free_proxy, 1))) __attribute__((nonnull(1))) GCCATTR((returns_nonnull));
-char *strndup_proxy(const char *p, size_t size, const char *file, int line, const char *func)
+HERCAPI_COMMON_EXPORT char *strndup_proxy(const char *p, size_t size, const char *file, int line, const char *func)
   GCC11ATTR((malloc, malloc(free_proxy, 1))) __attribute__((nonnull(1))) GCCATTR((returns_nonnull));
 
 #ifdef HERCULES_CORE
@@ -112,14 +122,15 @@ void malloc_defaults(void);
 
 void memmgr_report(int extra);
 
-HPShared struct malloc_interface *iMalloc;
+HERCAPI_COMMON_EXTERN struct malloc_interface *iMalloc;
 #else
 
+	// FIXME
   #ifndef iMalloc
 	#define iMalloc HPMi->memmgr
   #endif // iMalloc
-  // include allocation proxy functions
-  #include "common/memmgr_inc.h"
-#endif // HERCULES_CORE
+	// include allocation proxy functions
+//   #include "common/memmgr_inc.h"
+#endif   // HERCULES_CORE
 
 #endif /* COMMON_MEMMGR_H */

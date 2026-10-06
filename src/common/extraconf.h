@@ -83,9 +83,9 @@ struct extraconf_interface {
 };
 
 #ifdef HERCULES_CORE
-void extraconf_defaults(void);
+HERCAPI_COMMON_EXPORT void extraconf_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct extraconf_interface *extraconf;
+HERCAPI_COMMON_EXTERN struct extraconf_interface *extraconf;
 
 #endif // COMMON_EXTRACONF_H

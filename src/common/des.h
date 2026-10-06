@@ -64,6 +64,6 @@ struct des_interface {
 void des_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct des_interface *des; ///< Pointer to the des interface implementation.
+HERCAPI_COMMON_EXTERN struct des_interface *des; ///< Pointer to the des interface implementation.
 
 #endif // COMMON_DES_H

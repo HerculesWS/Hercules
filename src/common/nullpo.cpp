@@ -53,7 +53,7 @@
 #endif // HAVE_LIBBACKTRACE
 
 static struct nullpo_interface nullpo_s;
-struct nullpo_interface *nullpo;
+HERCAPI_COMMON_EXPORT struct nullpo_interface *nullpo;
 
 #ifdef HAVE_LIBBACKTRACE
 

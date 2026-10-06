@@ -50,7 +50,7 @@
 #endif
 
 static struct console_interface console_s;
-struct console_interface *console;
+HERCAPI_COMMON_EXPORT struct console_interface *console;
 #ifdef CONSOLE_INPUT
 static struct console_input_interface console_input_s;
 static struct spin_lock console_ptlock_s;

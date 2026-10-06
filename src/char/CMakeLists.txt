@@ -101,7 +101,10 @@ target_compile_definitions(char-server
     HERCULES_CORE_CHAR
 )
 
-target_link_libraries(char-server PUBLIC common)
+target_link_libraries(char-server PUBLIC herc-common)
+if(WIN32)
+  target_link_libraries(char-server PRIVATE wsock32 ws2_32)
+endif()
 
 add_dependencies(sql char-server)
 

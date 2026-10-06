@@ -33,7 +33,7 @@
  */
 
 static struct md5_interface md5_s;
-struct md5_interface *md5;
+HERCAPI_COMMON_EXPORT struct md5_interface *md5;
 
 /// Global variable
 static unsigned int *pX;

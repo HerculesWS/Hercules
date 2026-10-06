@@ -1584,7 +1584,7 @@ class guard_map_lock
 void map_defaults(void);
 void mapit_defaults(void);
 
-class hserver_map final : public hserver_i
+class HERCAPI_MAP_EXPORT hserver_map final : public hserver_i
 {
   public:
 	~hserver_map() noexcept override

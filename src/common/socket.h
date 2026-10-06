@@ -271,6 +271,6 @@ struct socket_interface {
 void socket_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct socket_interface *sockt;
+HERCAPI_COMMON_EXTERN struct socket_interface *sockt;
 
 #endif /* COMMON_SOCKET_H */

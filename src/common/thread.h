@@ -152,6 +152,6 @@ struct thread_interface {
 void thread_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct thread_interface *thread; ///< Pointer to the thread interface.
+HERCAPI_COMMON_EXTERN struct thread_interface *thread; ///< Pointer to the thread interface.
 
 #endif /* COMMON_THREAD_H */

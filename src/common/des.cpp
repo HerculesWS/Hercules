@@ -28,7 +28,7 @@
  */
 
 static struct des_interface des_s;
-struct des_interface *des;
+HERCAPI_COMMON_EXPORT struct des_interface *des;
 
 /// Bitmask for accessing individual bits of a byte.
 static const uint8_t mask[8] = {0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01};

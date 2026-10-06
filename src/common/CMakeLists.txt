@@ -123,32 +123,35 @@ source_group("Common private header files"
   ${COMMON_PRVT}
 )
 
-add_library(common STATIC
+add_library(herc-common SHARED
   ${COMMON_SRCS}
   ${COMMON_HDRS}
   ${COMMON_PRVT}
   ${CONFIG_HDRS}
 )
-target_compile_definitions(common
+target_compile_definitions(herc-common
   PRIVATE
     HERCULES_CORE
     HERCULES_CORE_COMMON
 )
 
-target_link_libraries(common PRIVATE hercules-mt19937ar)
-target_link_libraries(common PRIVATE hercules-libconfig)
+target_link_libraries(herc-common PRIVATE hercules-mt19937ar)
+target_link_libraries(herc-common PUBLIC hercules-libconfig)
 if(ENABLE_LIBBACKTRACE)
-  target_link_libraries(common PRIVATE libbacktrace::libbacktrace)
+  target_link_libraries(herc-common PRIVATE libbacktrace::libbacktrace)
 endif()
-target_link_libraries(common PRIVATE mariadb-connector-c::mariadb-connector-c)
-target_link_libraries(common PRIVATE ZLIB::ZLIB)
+target_link_libraries(herc-common PRIVATE mariadb-connector-c::mariadb-connector-c)
+target_link_libraries(herc-common PRIVATE ZLIB::ZLIB)
 
 if(COMMON_MEMORY_MANAGER_LINK)
-  target_link_libraries(common PRIVATE ${COMMON_MEMORY_MANAGER_LINK})
+  target_link_libraries(herc-common PRIVATE ${COMMON_MEMORY_MANAGER_LINK})
+endif()
+if(WIN32)
+  target_link_libraries(herc-common PRIVATE wsock32 ws2_32)
 endif()
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
-  # Run sysinfogen.sh whenever common is required in a build
+  # Run sysinfogen.sh whenever herc-common is required in a build
   get_directory_property(SYSGEN_CFLAGS COMPILE_OPTIONS)
   get_directory_property(SYSGEN_DEFS COMPILE_DEFINITIONS)
   get_directory_property(SYSGEN_LDFLAGS LINK_OPTIONS)
@@ -167,5 +170,12 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
     BYPRODUCTS "${AUTOGEN_DIR}/sysinfo.inc"
   )
 
-  add_dependencies(common sysinfo)
+  add_dependencies(herc-common sysinfo)
 endif()
+
+install(
+  TARGETS herc-common
+  RUNTIME
+    DESTINATION
+    .
+)

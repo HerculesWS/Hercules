@@ -41,30 +41,30 @@
 
 #ifdef HERCULES_CORE
 // generate a hex dump of the first 'length' bytes of 'buffer'
-void WriteDump(FILE *fp, const void *buffer, size_t length);
-void ShowDump(const void *buffer, size_t length);
+HERCAPI_COMMON_EXPORT void WriteDump(FILE *fp, const void *buffer, size_t length);
+HERCAPI_COMMON_EXPORT void ShowDump(const void *buffer, size_t length);
 
-void findfile(const char *p, const char *pat, void(func)(const char *, void *), void *context);
-bool is_file(const char *path);
-bool exists(const char *filename);
+HERCAPI_COMMON_EXPORT void findfile(const char *p, const char *pat, void(func)(const char *, void *), void *context);
+HERCAPI_COMMON_EXPORT bool is_file(const char *path);
+HERCAPI_COMMON_EXPORT bool exists(const char *filename);
 
 /// calculates the value of A / B, in percent (rounded down)
-unsigned int get_percentage(const unsigned int A, const unsigned int B);
-uint64 get_percentage64(const uint64 A, const uint64 B);
+HERCAPI_COMMON_EXPORT unsigned int get_percentage(const unsigned int A, const unsigned int B);
+HERCAPI_COMMON_EXPORT uint64 get_percentage64(const uint64 A, const uint64 B);
 
-int64 apply_percentrate64(int64 value, int rate, int maxrate);
-int apply_percentrate(int value, int rate, int maxrate);
+HERCAPI_COMMON_EXPORT int64 apply_percentrate64(int64 value, int rate, int maxrate);
+HERCAPI_COMMON_EXPORT int apply_percentrate(int value, int rate, int maxrate);
 
-const char *timestamp2string(char *str, size_t size, time_t timestamp, const char *format);
+HERCAPI_COMMON_EXPORT const char *timestamp2string(char *str, size_t size, time_t timestamp, const char *format);
 
 //////////////////////////////////////////////////////////////////////////
 // byte word dword access [Shinomori]
 //////////////////////////////////////////////////////////////////////////
 
-extern uint8 GetByte(uint32 val, int idx);
-extern uint16 GetWord(uint32 val, int idx);
-extern uint16 MakeWord(uint8 byte0, uint8 byte1);
-extern uint32 MakeDWord(uint16 word0, uint16 word1);
+HERCAPI_COMMON_EXPORT uint8 GetByte(uint32 val, int idx);
+HERCAPI_COMMON_EXPORT uint16 GetWord(uint32 val, int idx);
+HERCAPI_COMMON_EXPORT uint16 MakeWord(uint8 byte0, uint8 byte1);
+HERCAPI_COMMON_EXPORT uint32 MakeDWord(uint16 word0, uint16 word1);
 
 //////////////////////////////////////////////////////////////////////////
 // Big-endian compatibility functions
@@ -76,10 +76,10 @@ extern uint32 GetULong(const unsigned char *buf);
 extern int32 GetLong(const unsigned char *buf);
 extern float GetFloat(const unsigned char *buf);
 
-size_t hread(void *ptr, size_t size, size_t count, FILE *stream);
-size_t hwrite(const void *ptr, size_t size, size_t count, FILE *stream);
-int64 htell(FILE *stream);
-int hseek(FILE *stream, int64 offset, int origin);
+HERCAPI_COMMON_EXPORT size_t hread(void *ptr, size_t size, size_t count, FILE *stream);
+HERCAPI_COMMON_EXPORT size_t hwrite(const void *ptr, size_t size, size_t count, FILE *stream);
+HERCAPI_COMMON_EXPORT int64 htell(FILE *stream);
+HERCAPI_COMMON_EXPORT int hseek(FILE *stream, int64 offset, int origin);
 #endif // HERCULES_CORE
 
 #ifdef WIN32
@@ -103,6 +103,6 @@ struct HCache_interface {
 void HCache_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct HCache_interface *HCache;
+HERCAPI_COMMON_EXTERN struct HCache_interface *HCache;
 
 #endif /* COMMON_UTILS_H */
