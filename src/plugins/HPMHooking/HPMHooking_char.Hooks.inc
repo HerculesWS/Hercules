@@ -5313,14 +5313,14 @@ bool HP_chr_config_read_top(const char *filename, const struct config_t *config,
 	return retVal___;
 }
 /* cmdline_interface */
-void HP_cmdline_init(void) {
+void HP_cmdline_init(hserver_i *hs) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_cmdline_init_pre > 0) {
-		void (*preHookFunc) (void);
+		void (*preHookFunc) (hserver_i **hs);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_cmdline_init_pre; hIndex++) {
-			preHookFunc = (void (*) (void))HPMHooks.list.HP_cmdline_init_pre[hIndex].func;
-			preHookFunc();
+			preHookFunc = (void (*) (hserver_i **hs))HPMHooks.list.HP_cmdline_init_pre[hIndex].func;
+			preHookFunc(&hs);
 		}
 		if (*HPMforce_return) {
 			*HPMforce_return = false;
@@ -5328,13 +5328,13 @@ void HP_cmdline_init(void) {
 		}
 	}
 	{
-		HPMHooks.source.cmdline.init();
+		HPMHooks.source.cmdline.init(hs);
 	}
 	if (HPMHooks.count.HP_cmdline_init_post > 0) {
-		void (*postHookFunc) (void);
+		void (*postHookFunc) (hserver_i *hs);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_cmdline_init_post; hIndex++) {
-			postHookFunc = (void (*) (void))HPMHooks.list.HP_cmdline_init_post[hIndex].func;
-			postHookFunc();
+			postHookFunc = (void (*) (hserver_i *hs))HPMHooks.list.HP_cmdline_init_post[hIndex].func;
+			postHookFunc(hs);
 		}
 	}
 	return;

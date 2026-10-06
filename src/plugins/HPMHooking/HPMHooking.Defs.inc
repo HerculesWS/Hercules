@@ -3180,8 +3180,8 @@ typedef void (*HPMHOOK_pre_clif_pAdventuterAgencyJoinResult) (int *fd, struct ma
 typedef void (*HPMHOOK_post_clif_pAdventuterAgencyJoinResult) (int fd, struct map_session_data *sd);
 #endif
 #ifdef COMMON_CORE_H /* cmdline */
-typedef void (*HPMHOOK_pre_cmdline_init) (void);
-typedef void (*HPMHOOK_post_cmdline_init) (void);
+typedef void (*HPMHOOK_pre_cmdline_init) (hserver_i **hs);
+typedef void (*HPMHOOK_post_cmdline_init) (hserver_i *hs);
 typedef void (*HPMHOOK_pre_cmdline_final) (void);
 typedef void (*HPMHOOK_post_cmdline_final) (void);
 typedef bool (*HPMHOOK_pre_cmdline_arg_add) (unsigned int *pluginID, const char **name, char *shortname, CmdlineExecFunc *func, const char **help, unsigned int *options);
