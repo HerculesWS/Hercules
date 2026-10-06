@@ -30,7 +30,7 @@
  * A class that manages a FIFO buffer, specifically designed for the use
  * with our sockets library
  */
-class fifo_buffer
+class HERCAPI_COMMON_EXPORT fifo_buffer
 {
 	friend void socket_inject_packet_id(int fd, uint16_t packet_id);
 

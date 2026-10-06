@@ -27,7 +27,7 @@
 #include <string.h>
 
 static struct base62_interface base62_s;
-struct base62_interface *base62;
+HERCAPI_COMMON_EXPORT struct base62_interface *base62;
 
 /**
  * Base 62 conversion table

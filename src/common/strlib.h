@@ -221,8 +221,8 @@ struct sv_interface {
 void strlib_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct strlib_interface *strlib;
-HPShared struct stringbuf_interface *StrBuf;
-HPShared struct sv_interface *sv;
+HERCAPI_COMMON_EXTERN struct strlib_interface *strlib;
+HERCAPI_COMMON_EXTERN struct stringbuf_interface *StrBuf;
+HERCAPI_COMMON_EXTERN struct sv_interface *sv;
 
 #endif /* COMMON_STRLIB_H */

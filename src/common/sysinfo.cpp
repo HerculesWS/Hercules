@@ -66,7 +66,7 @@ struct sysinfo_private {
 static struct sysinfo_interface sysinfo_s;
 static struct sysinfo_private sysinfo_p;
 
-struct sysinfo_interface *sysinfo;
+HERCAPI_COMMON_EXPORT struct sysinfo_interface *sysinfo;
 
 #define VCSTYPE_UNKNOWN 0
 #define VCSTYPE_GIT     1

@@ -108,7 +108,7 @@ struct core_interface {
 
 void cmdline_defaults(void);
 
-class hserver_i
+class HERCAPI_COMMON_EXPORT hserver_i
 {
   public:
 	virtual ~hserver_i() noexcept                        = 0;
@@ -119,11 +119,11 @@ class hserver_i
 	virtual int do_final() noexcept                      = 0;
 };
 
-int herc_main(hserver_i *hs, int argc, char **argv);
+HERCAPI_COMMON_EXPORT int herc_main(hserver_i *hs, int argc, char **argv);
 
 #endif // HERCULES_CORE
 
-HPShared struct core_interface *core;
-HPShared struct cmdline_interface *cmdline;
+HERCAPI_COMMON_EXTERN struct core_interface *core;
+HERCAPI_COMMON_EXTERN struct cmdline_interface *cmdline;
 
 #endif /* COMMON_CORE_H */

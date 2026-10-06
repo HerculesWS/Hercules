@@ -58,6 +58,7 @@
 #ifndef COMMON_ERS_H
 #define COMMON_ERS_H
 
+#include "common/hercules.h"
 #include "common/memmgr.h"
 #include "common/nullpo.h"
 #include "common/showmsg.h"
@@ -108,7 +109,7 @@ enum ERSOptions {
 /**
  * A common interface for ERS
  */
-class ERI
+class HERCAPI_COMMON_EXPORT ERI
 {
   public:
 	explicit ERI()
@@ -238,7 +239,7 @@ class ers_chunk
  * Public interface of the entry manager.
  */
 template<typename T, size_t blocks_per_chunk>
-class ERS final : public ERI
+class HERCAPI_COMMON_EXPORT ERS final : public ERI
 {
   public:
 	/**

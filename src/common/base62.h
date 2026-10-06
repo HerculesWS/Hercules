@@ -38,6 +38,6 @@ struct base62_interface {
 void base62_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct base62_interface *base62;
+HERCAPI_COMMON_EXTERN struct base62_interface *base62;
 
 #endif // COMMON_BASE62_H

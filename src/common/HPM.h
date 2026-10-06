@@ -185,7 +185,7 @@ struct HPM_interface {
 
 CMDLINEARG(loadplugin);
 
-extern struct HPM_interface *HPM;
+HERCAPI_COMMON_EXTERN struct HPM_interface *HPM;
 
 void hpm_defaults(void);
 

@@ -164,6 +164,7 @@ if(MSVC)
   add_compile_options(/wd4127) # Silence constant expression warning as we need them sometimes and they're heavily used
   add_compile_options(/wd4200 /wd4152) # Silence warning of non-standard extension being used in our code
   add_compile_options(/wd4244 /wd4267) # Disable int conversion possible lose of data
+  add_compile_options(/wd4251) # Disable 'foo' needs to have dll-interface to be used by clients of 'bar'
   add_compile_options(/wd4100) # Disable unused parameter warning mostly due to BUILDIN and similar functions having unused parameters
   add_compile_options(/wd4312) # Disable conversion to greater size warning (see 0xdeadbeef pointers)
   # Definations
@@ -278,8 +279,8 @@ else()
     set(CMAKE_REQUIRED_FLAGS "${OLD_CMAKE_REQUIRED_FLAGS}")
   endif()
 
-  # Plugin flags
-  testwrite_compiler_flag(PLUGIN_COMPILE_OPTIONS fPIC)
+  # Required for supporting thread_local in shared libraries
+  testadd_compiler_flag(fPIC)
 
   # Linker flags
 

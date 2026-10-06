@@ -38,7 +38,7 @@
  */
 
 static struct mutex_interface mutex_s;
-struct mutex_interface *mutex;
+HERCAPI_COMMON_EXPORT struct mutex_interface *mutex;
 
 struct mutex_data {
 #ifdef WIN32

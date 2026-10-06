@@ -266,7 +266,7 @@ struct lchrif_interface {
 void login_defaults(void);
 void lchrif_defaults(void);
 
-class hserver_login final : public hserver_i
+class HERCAPI_LOGIN_EXPORT hserver_login final : public hserver_i
 {
   public:
 	~hserver_login() noexcept override

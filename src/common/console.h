@@ -119,6 +119,6 @@ struct console_interface {
 void console_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct console_interface *console;
+HERCAPI_COMMON_EXTERN struct console_interface *console;
 
 #endif /* COMMON_CONSOLE_H */

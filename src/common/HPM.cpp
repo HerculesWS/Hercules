@@ -51,7 +51,7 @@
 static struct malloc_interface iMalloc_HPM;
 static struct malloc_interface *HPMiMalloc;
 static struct HPM_interface HPM_s;
-struct HPM_interface *HPM;
+HERCAPI_COMMON_EXPORT struct HPM_interface *HPM;
 static struct HPMHooking_core_interface HPMHooking_core_s;
 
 /**

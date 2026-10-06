@@ -57,7 +57,7 @@ function(add_test_target _test_name)
       HERCULES_CORE_TEST
   )
 
-  target_link_libraries(${_target_name} PUBLIC common)
+  target_link_libraries(${_target_name} PUBLIC herc-common)
 
   add_dependencies(tests ${_target_name})
 

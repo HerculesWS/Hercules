@@ -167,8 +167,11 @@ target_compile_definitions(map-server
     HERCULES_CORE_MAP
 )
 
-target_link_libraries(map-server PUBLIC common)
+target_link_libraries(map-server PUBLIC herc-common)
 target_link_libraries(map-server PRIVATE pcre::pcre)
+if(WIN32)
+  target_link_libraries(map-server PRIVATE wsock32 ws2_32)
+endif()
 
 install(
   TARGETS map-server

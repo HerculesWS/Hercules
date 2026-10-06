@@ -120,9 +120,9 @@ struct mapindex_interface {
 };
 
 #ifdef HERCULES_CORE
-void mapindex_defaults(void);
+HERCAPI_COMMON_EXPORT void mapindex_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct mapindex_interface *mapindex;
+HERCAPI_COMMON_EXTERN struct mapindex_interface *mapindex;
 
 #endif /* COMMON_MAPINDEX_H */

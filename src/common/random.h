@@ -96,6 +96,6 @@ struct rnd_interface {
 void rnd_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct rnd_interface *rnd; ///< Pointer to the random interface.
+HERCAPI_COMMON_EXTERN struct rnd_interface *rnd; ///< Pointer to the random interface.
 
 #endif /* COMMON_RANDOM_H */

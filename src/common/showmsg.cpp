@@ -44,7 +44,7 @@
 #endif
 
 static struct showmsg_interface showmsg_s;
-struct showmsg_interface *showmsg;
+HERCAPI_COMMON_EXPORT struct showmsg_interface *showmsg;
 
 ///////////////////////////////////////////////////////////////////////////////
 /// static/dynamic buffer for the messages

@@ -101,7 +101,7 @@ static std::vector<std::string> gentry_table;
 static char data_dir[1024] = "";
 
 static struct grfio_interface grfio_s;
-struct grfio_interface *grfio;
+HERCAPI_COMMON_EXPORT struct grfio_interface *grfio;
 
 // little endian char array to uint conversion
 static unsigned int getlong(unsigned char *p)
