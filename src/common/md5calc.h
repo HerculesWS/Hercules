@@ -61,6 +61,6 @@ struct md5_interface {
 void md5_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct md5_interface *md5; ///< Pointer to the md5 interface.
+HERCAPI_COMMON_EXTERN struct md5_interface *md5; ///< Pointer to the md5 interface.
 
 #endif /* COMMON_MD5CALC_H */

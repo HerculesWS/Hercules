@@ -83,7 +83,7 @@ struct api_interface {
 #ifdef HERCULES_CORE
 void api_defaults(void);
 
-class hserver_api final : public hserver_i
+class HERCAPI_API_EXPORT hserver_api final : public hserver_i
 {
   public:
 	~hserver_api() noexcept override

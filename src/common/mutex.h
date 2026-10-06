@@ -126,6 +126,6 @@ struct mutex_interface {
 void mutex_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct mutex_interface *mutex; ///< Pointer to the mutex interface.
+HERCAPI_COMMON_EXTERN struct mutex_interface *mutex; ///< Pointer to the mutex interface.
 
 #endif /* COMMON_MUTEX_H */

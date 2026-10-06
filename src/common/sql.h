@@ -271,11 +271,11 @@ void sql_defaults(void);
 
 void Sql_Init(void);
 
-void Sql_HerculesUpdateCheck(struct Sql *self);
+HERCAPI_COMMON_EXPORT void Sql_HerculesUpdateCheck(struct Sql *self);
 void Sql_HerculesUpdateSkip(struct Sql *self, const char *filename);
 #endif // HERCULES_CORE
 
-HPShared struct sql_interface *SQL;
+HERCAPI_COMMON_EXTERN struct sql_interface *SQL;
 
 #if defined(SQL_REMOVE_SHOWDEBUG)
   #define Sql_ShowDebug(self) (void)(self)

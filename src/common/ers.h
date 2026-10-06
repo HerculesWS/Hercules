@@ -58,7 +58,7 @@
 #ifndef COMMON_ERS_H
 #define COMMON_ERS_H
 
-#include "common/cbasetypes.h"
+#include "common/hercules.h"
 
 /*****************************************************************************\
  *  (1) All public parts of the Entry Reusage System.                        *
@@ -182,7 +182,7 @@ typedef struct eri {
  * @param The requested size of the entry in bytes
  * @return Interface of the object
  */
-ERS *ers_new(uint32 size, const char *name, enum ERSOptions options);
+HERCAPI_COMMON_EXPORT ERS *ers_new(uint32 size, const char *name, enum ERSOptions options);
 
 /**
  * Print a report about the current state of the Entry Reusage System.

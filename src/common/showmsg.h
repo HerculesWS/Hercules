@@ -146,6 +146,6 @@ struct showmsg_interface {
 void showmsg_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct showmsg_interface *showmsg;
+HERCAPI_COMMON_EXTERN struct showmsg_interface *showmsg;
 
 #endif /* COMMON_SHOWMSG_H */

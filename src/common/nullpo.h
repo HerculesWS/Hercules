@@ -187,6 +187,6 @@ struct nullpo_interface {
 void nullpo_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct nullpo_interface *nullpo;
+HERCAPI_COMMON_EXTERN struct nullpo_interface *nullpo;
 
 #endif /* COMMON_NULLPO_H */

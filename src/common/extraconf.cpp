@@ -46,7 +46,7 @@ CONFIG_END
 
 /* interface source */
 static struct extraconf_interface extraconf_s;
-struct extraconf_interface *extraconf;
+HERCAPI_COMMON_EXPORT struct extraconf_interface *extraconf;
 
 static bool extraconf_read_conf_file(const char *filename, bool imported, const char *node,
                                      const struct config_data *conf_vars)

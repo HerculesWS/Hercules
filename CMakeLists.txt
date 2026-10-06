@@ -278,8 +278,8 @@ else()
     set(CMAKE_REQUIRED_FLAGS "${OLD_CMAKE_REQUIRED_FLAGS}")
   endif()
 
-  # Plugin flags
-  testwrite_compiler_flag(PLUGIN_COMPILE_OPTIONS fPIC)
+  # Required for supporting thread_local in shared libraries
+  testadd_compiler_flag(fPIC)
 
   # Linker flags
 

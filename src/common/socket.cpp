@@ -83,7 +83,7 @@
  * Socket Interface Source
  **/
 static struct socket_interface sockt_s;
-struct socket_interface *sockt;
+HERCAPI_COMMON_EXPORT struct socket_interface *sockt;
 
 #ifdef SEND_SHORTLIST
 // Add a fd to the shortlist so that it'll be recognized as a fd that needs

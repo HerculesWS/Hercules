@@ -39,7 +39,7 @@
  */
 
 static struct rnd_interface rnd_s;
-struct rnd_interface *rnd;
+HERCAPI_COMMON_EXPORT struct rnd_interface *rnd;
 
 /// @copydoc rnd_interface::init()
 static void rnd_init(void)

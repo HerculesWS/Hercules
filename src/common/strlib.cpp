@@ -35,9 +35,9 @@ static struct strlib_interface strlib_s;
 static struct stringbuf_interface stringbuf_s;
 static struct sv_interface sv_s;
 
-struct strlib_interface *strlib;
-struct stringbuf_interface *StrBuf;
-struct sv_interface *sv;
+HERCAPI_COMMON_EXPORT struct strlib_interface *strlib;
+HERCAPI_COMMON_EXPORT struct stringbuf_interface *StrBuf;
+HERCAPI_COMMON_EXPORT struct sv_interface *sv;
 
 // escapes a string in-place (' -> \' , \ -> \\ , % -> _)
 static char *jstrescape(char *pt)

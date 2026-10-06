@@ -128,6 +128,6 @@ struct libconfig_interface {
 void libconfig_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct libconfig_interface *libconfig;
+HERCAPI_COMMON_EXTERN struct libconfig_interface *libconfig;
 
 #endif // COMMON_CONF_H

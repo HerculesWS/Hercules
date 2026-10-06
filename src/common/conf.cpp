@@ -30,7 +30,7 @@
 
 /* interface source */
 static struct libconfig_interface libconfig_s;
-struct libconfig_interface *libconfig;
+HERCAPI_COMMON_EXPORT struct libconfig_interface *libconfig;
 
 /**
  * Sets the server's db_path to be used by config_format_db_path

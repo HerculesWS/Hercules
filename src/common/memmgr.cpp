@@ -30,7 +30,7 @@
 #include <string.h>
 
 static struct malloc_interface iMalloc_s;
-struct malloc_interface *iMalloc;
+HERCAPI_COMMON_EXPORT struct malloc_interface *iMalloc;
 
 ////////////// Memory Libraries //////////////////
 

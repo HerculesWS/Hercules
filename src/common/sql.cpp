@@ -42,7 +42,7 @@ static int mysql_reconnect_type  = 2;
 static int mysql_reconnect_count = 1;
 
 static struct sql_interface sql_s;
-struct sql_interface *SQL;
+HERCAPI_COMMON_EXPORT struct sql_interface *SQL;
 
 /// Sql handle
 struct Sql {

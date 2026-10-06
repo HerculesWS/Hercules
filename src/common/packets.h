@@ -75,6 +75,6 @@ struct packets_interface {
 void packets_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct packets_interface *packets;
+HERCAPI_COMMON_EXTERN struct packets_interface *packets;
 
 #endif /* COMMON_PACKETS_H */

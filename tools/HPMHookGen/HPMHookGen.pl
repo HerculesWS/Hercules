@@ -542,6 +542,7 @@ EOF
 
 		foreach my $key (@$keysref) {
 			next if $fileguards{$key}->{private};
+			next if $fileguards{$key}->{guard} =~ /^COMMON_/;
 			print FH <<"EOF";
   #ifdef $fileguards{$key}->{guard} /* $key */
 struct $key2original{$key} *$key;
