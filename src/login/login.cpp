@@ -2166,7 +2166,7 @@ static void login_generate_token(unsigned char *token)
 //--------------------------------------
 // Function called at exit of the server
 //--------------------------------------
-int do_final(void)
+int hserver_login::do_final() noexcept
 {
 	ShowStatus("Terminating...\n");
 
@@ -2221,13 +2221,13 @@ int do_final(void)
 // Function called when the server
 // has received a crash signal.
 //------------------------------
-void do_abort(void)
+void hserver_login::do_abort() noexcept
 {
 }
 
-void set_server_type(void)
+server_types hserver_login::server_type() const noexcept
 {
-	SERVER_TYPE = SERVER_TYPE_LOGIN;
+	return SERVER_TYPE_LOGIN;
 }
 
 /// Called when a terminate signal is received.
@@ -2287,7 +2287,7 @@ static CMDLINEARG(netconfig)
 /**
  * Defines the local command line arguments
  */
-void cmdline_args_init_local(void)
+void hserver_login::cmdline_args_init_local() noexcept
 {
 	CMDLINEARG_DEF2("run-once", runonce, "Closes server after loading (testing).", CMDLINE_OPT_NORMAL);
 	CMDLINEARG_DEF2("login-config", loginconfig, "Alternative login-server configuration.", CMDLINE_OPT_PARAM);
@@ -2297,7 +2297,7 @@ void cmdline_args_init_local(void)
 //------------------------------
 // Login server initialization
 //------------------------------
-int do_init(int argc, char **argv)
+int hserver_login::do_init(int argc, char **argv) noexcept
 {
 	account_defaults();
 	login_defaults();

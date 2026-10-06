@@ -919,64 +919,73 @@ static const char *test_libconfig_special_string_syntax(void)
 	return NULL;
 }
 
-int do_init(int argc, char **argv)
+class hserver_test final : public hserver_i
 {
-	ShowMessage("===============================================================================\n");
-	ShowStatus("Starting tests.\n");
+  public:
+	~hserver_test() noexcept override
+	{
+	}
 
-	TEST("CONFIG_TRUE and CONFIG_FALSE", test_libconfig_truefalse);
-	TEST("libconfig availability", test_libconfig_defaults);
-	TEST("libconfig->init and libconfig->destroy", test_libconfig_init_destroy);
-	TEST("libconfig->read_file_src", test_libconfig_read_file_src);
-	TEST("libconfig->read", test_libconfig_read);
-	TEST("libconfig->load_file", test_libconfig_load_file);
+	int do_init(int argc, char **argv) noexcept override
+	{
+		ShowMessage("===============================================================================\n");
+		ShowStatus("Starting tests.\n");
+
+		TEST("CONFIG_TRUE and CONFIG_FALSE", test_libconfig_truefalse);
+		TEST("libconfig availability", test_libconfig_defaults);
+		TEST("libconfig->init and libconfig->destroy", test_libconfig_init_destroy);
+		TEST("libconfig->read_file_src", test_libconfig_read_file_src);
+		TEST("libconfig->read", test_libconfig_read);
+		TEST("libconfig->load_file", test_libconfig_load_file);
 #if 0
 	(void)test_libconfig_write;      // TEST("libconfig->write", test_libconfig_write);
 	(void)test_libconfig_write_file; // TEST("libconfig->write_file", test_libconfig_write_file);
 #endif // 0
-	TEST("libconfig->read_string", test_libconfig_read_string);
-	TEST("libconfig syntax", test_libconfig_syntax);
+		TEST("libconfig->read_string", test_libconfig_read_string);
+		TEST("libconfig syntax", test_libconfig_syntax);
 #if 0
 	(void)test_libconfig_set_include_dir; // TEST("libconfig->set_include_dir", test_libconfig_set_include_dir);
 #endif // 0
-	TEST("libconfig->lookup_*", test_libconfig_lookup);
-	TEST("libconfig->setting_get_*", test_libconfig_setting_get);
+		TEST("libconfig->lookup_*", test_libconfig_lookup);
+		TEST("libconfig->setting_get_*", test_libconfig_setting_get);
 #if 0
 	(void)test_libconfig_set; // TEST("libconfig->setting_set_*", test_libconfig_setting_set);
 #endif // 0
-	TEST("libconfig->setting_lookup_*", test_libconfig_setting_lookup);
-	TEST("setting types", test_libconfig_setting_types);
-	TEST("values", test_libconfig_values);
-	TEST("path lookup", test_libconfig_path_lookup);
-	TEST("setting key names", test_libconfig_setting_names);
-	TEST("duplicate keys", test_libconfig_duplicate_keys);
-	TEST("special string syntax", test_libconfig_special_string_syntax);
+		TEST("libconfig->setting_lookup_*", test_libconfig_setting_lookup);
+		TEST("setting types", test_libconfig_setting_types);
+		TEST("values", test_libconfig_values);
+		TEST("path lookup", test_libconfig_path_lookup);
+		TEST("setting key names", test_libconfig_setting_names);
+		TEST("duplicate keys", test_libconfig_duplicate_keys);
+		TEST("special string syntax", test_libconfig_special_string_syntax);
 
-	core->runflag = CORE_ST_STOP;
-	return EXIT_SUCCESS;
-}
+		core->runflag = CORE_ST_STOP;
+		return EXIT_SUCCESS;
+	}
 
-int do_final(void)
-{
-	ShowMessage("===============================================================================\n");
-	ShowStatus("All tests passed.\n");
-	return EXIT_SUCCESS;
-}
+	int do_final() noexcept override
+	{
+		ShowMessage("===============================================================================\n");
+		ShowStatus("All tests passed.\n");
+		return EXIT_SUCCESS;
+	}
 
-void do_abort(void)
-{
-}
+	void do_abort() noexcept override
+	{
+	}
 
-void set_server_type(void)
-{
-	SERVER_TYPE = SERVER_TYPE_UNKNOWN;
-}
+	server_types server_type() const noexcept override
+	{
+		return SERVER_TYPE_UNKNOWN;
+	}
 
-void cmdline_args_init_local(void)
-{
-}
+	void cmdline_args_init_local() noexcept override
+	{
+	}
+};
 
 int main(int argc, char **argv)
 {
-	return herc_main(argc, argv);
+	hserver_test hs;
+	return herc_main(&hs, argc, argv);
 }

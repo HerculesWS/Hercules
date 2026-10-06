@@ -108,38 +108,47 @@ static bool test_base62_encode_int_padded(void)
 	return passed;
 }
 
-int do_init(int argc, char **argv)
+class hserver_test final : public hserver_i
 {
-	ShowMessage("===============================================================================\n");
-	ShowStatus("Starting tests.\n");
+  public:
+	~hserver_test() noexcept override
+	{
+	}
 
-	TEST("Base62: encode int padded", test_base62_encode_int_padded);
+	int do_init(int argc, char **argv) noexcept override
+	{
+		ShowMessage("===============================================================================\n");
+		ShowStatus("Starting tests.\n");
 
-	core->runflag = CORE_ST_STOP;
-	return EXIT_SUCCESS;
-}
+		TEST("Base62: encode int padded", test_base62_encode_int_padded);
 
-int do_final(void)
-{
-	ShowMessage("===============================================================================\n");
-	ShowStatus("All tests passed.\n");
-	return EXIT_SUCCESS;
-}
+		core->runflag = CORE_ST_STOP;
+		return EXIT_SUCCESS;
+	}
 
-void do_abort(void)
-{
-}
+	int do_final() noexcept override
+	{
+		ShowMessage("===============================================================================\n");
+		ShowStatus("All tests passed.\n");
+		return EXIT_SUCCESS;
+	}
 
-void set_server_type(void)
-{
-	SERVER_TYPE = SERVER_TYPE_UNKNOWN;
-}
+	void do_abort() noexcept override
+	{
+	}
 
-void cmdline_args_init_local(void)
-{
-}
+	server_types server_type() const noexcept override
+	{
+		return SERVER_TYPE_UNKNOWN;
+	}
+
+	void cmdline_args_init_local() noexcept override
+	{
+	}
+};
 
 int main(int argc, char **argv)
 {
-	return herc_main(argc, argv);
+	hserver_test hs;
+	return herc_main(&hs, argc, argv);
 }

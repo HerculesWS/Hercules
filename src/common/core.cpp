@@ -155,6 +155,11 @@ static void cevents_init(void)
 }
 #endif
 
+namespace
+{
+hserver_i *signal_handler_hs = nullptr;
+} // namespace
+
 /*======================================
  * CORE : Signal Sub Function
  *--------------------------------------*/
@@ -174,7 +179,9 @@ static void sig_proc(int sn)
 		break;
 	case SIGSEGV:
 	case SIGFPE:
-		do_abort();
+		if (signal_handler_hs != nullptr) {
+			signal_handler_hs->do_abort();
+		}
 		// Pass the signal to the system's default handler
 		compat_signal(sn, SIG_DFL);
 		raise(sn);
@@ -192,8 +199,9 @@ static void sig_proc(int sn)
 	}
 }
 
-static void signals_init(void)
+static void signals_init(hserver_i *hs)
 {
+	signal_handler_hs = hs;
 	compat_signal(SIGTERM, sig_proc);
 	compat_signal(SIGINT, sig_proc);
 #ifndef _DEBUG // need unhandled exceptions to debug on Windows
@@ -502,13 +510,13 @@ static int cmdline_exec(int argc, char **argv, unsigned int options)
 /**
  * Defines the global command-line arguments.
  */
-static void cmdline_init(void)
+static void cmdline_init(hserver_i *hs)
 {
 	CMDLINEARG_DEF(help, 'h', "Displays this help screen", CMDLINE_OPT_NORMAL);
 	CMDLINEARG_DEF(version, 'v', "Displays the server's version.", CMDLINE_OPT_NORMAL);
 	CMDLINEARG_DEF2("load-plugin", loadplugin, "Loads an additional plugin (can be repeated).",
 	                CMDLINE_OPT_PARAM | CMDLINE_OPT_PREINIT);
-	cmdline_args_init_local();
+	hs->cmdline_args_init_local();
 }
 
 static void cmdline_final(void)
@@ -541,7 +549,7 @@ void cmdline_defaults(void)
 /*======================================
  * CORE : MAINROUTINE
  *--------------------------------------*/
-int herc_main(int argc, char **argv)
+int herc_main(hserver_i *hs, int argc, char **argv)
 {
 	int retval = EXIT_SUCCESS;
 	{ // initialize program arguments
@@ -567,7 +575,7 @@ int herc_main(int argc, char **argv)
 	showmsg->init();
 	nullpo->init();
 
-	cmdline->init();
+	cmdline->init(hs);
 
 	cmdline->exec(argc, argv, CMDLINE_OPT_SILENT);
 
@@ -583,12 +591,12 @@ int herc_main(int argc, char **argv)
 	if (!usercheck())
 		return EXIT_FAILURE;
 
-	set_server_type();
+	SERVER_TYPE = hs->server_type();
 
 	Sql_Init();
 	thread->init();
 	DB->init();
-	signals_init();
+	signals_init(hs);
 
 #ifdef _WIN32
 	cevents_init();
@@ -609,7 +617,7 @@ int herc_main(int argc, char **argv)
 
 	packets->init();
 
-	do_init(argc, argv);
+	hs->do_init(argc, argv);
 
 	// Main runtime cycle
 	while (core->runflag != CORE_ST_STOP) {
@@ -619,7 +627,7 @@ int herc_main(int argc, char **argv)
 
 	console->final();
 
-	retval = do_final();
+	retval = hs->do_final();
 	HPM->final();
 	timer->final();
 	packets->final();
@@ -637,3 +645,5 @@ int herc_main(int argc, char **argv)
 
 	return retval;
 }
+
+hserver_i::~hserver_i() noexcept = default;

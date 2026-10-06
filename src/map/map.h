@@ -1583,6 +1583,20 @@ class guard_map_lock
 #ifdef HERCULES_CORE
 void map_defaults(void);
 void mapit_defaults(void);
+
+class hserver_map final : public hserver_i
+{
+  public:
+	~hserver_map() noexcept override
+	{
+	}
+
+	void cmdline_args_init_local() noexcept override;
+	int do_init(int argc, char *argv[]) noexcept override;
+	server_types server_type() const noexcept override;
+	void do_abort() noexcept override;
+	int do_final() noexcept override;
+};
 #endif // HERCULES_CORE
 
 HPShared struct mapit_interface *mapit;

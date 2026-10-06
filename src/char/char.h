@@ -367,6 +367,20 @@ extern int guild_exp_rate;
 
 void char_load_defaults(void);
 void char_defaults(void);
+
+class hserver_char final : public hserver_i
+{
+  public:
+	~hserver_char() noexcept override
+	{
+	}
+
+	void cmdline_args_init_local() noexcept override;
+	int do_init(int argc, char *argv[]) noexcept override;
+	server_types server_type() const noexcept override;
+	void do_abort() noexcept override;
+	int do_final() noexcept override;
+};
 #endif // HERCULES_CORE
 
 HPShared struct char_interface *chr;

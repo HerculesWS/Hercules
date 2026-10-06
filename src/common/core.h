@@ -65,10 +65,12 @@ struct CmdlineArgData {
 	char *help;            ///< Help message
 };
 
+class hserver_i;
+
 struct cmdline_interface {
 	VECTOR_DECL(struct CmdlineArgData) args_data;
 
-	void (*init)(void);
+	void (*init)(hserver_i *hs);
 	void (*final)(void);
 	bool (*arg_add)(unsigned int pluginID, const char *name, char shortname, CmdlineExecFunc func, const char *help,
 	                unsigned int options);
@@ -96,12 +98,6 @@ struct core_interface {
 #define SERVER_TYPE   (core->server_type)
 
 #ifdef HERCULES_CORE
-extern void cmdline_args_init_local(void);
-extern int do_init(int, char **);
-extern void set_server_type(void);
-extern void do_abort(void);
-extern int do_final(void);
-
   /// Special plugin ID assigned to the Hercules core
   #define HPM_PID_CORE ((unsigned int)-1)
 
@@ -112,7 +108,19 @@ extern int do_final(void);
 
 void cmdline_defaults(void);
 
-int herc_main(int argc, char **argv);
+class hserver_i
+{
+  public:
+	virtual ~hserver_i() noexcept                        = 0;
+	virtual void cmdline_args_init_local() noexcept      = 0;
+	virtual int do_init(int argc, char *argv[]) noexcept = 0;
+	virtual server_types server_type() const noexcept    = 0;
+	virtual void do_abort() noexcept                     = 0;
+	virtual int do_final() noexcept                      = 0;
+};
+
+int herc_main(hserver_i *hs, int argc, char **argv);
+
 #endif // HERCULES_CORE
 
 HPShared struct core_interface *core;

@@ -6543,7 +6543,7 @@ static void char_clean_online_char_emblem_data(struct online_char_data *characte
 	character->data->emblem_guild_id = 0;
 }
 
-int do_final(void)
+int hserver_char::do_final() noexcept
 {
 	ShowStatus("Terminating...\n");
 
@@ -6598,13 +6598,13 @@ int do_final(void)
 // Function called when the server
 // has received a crash signal.
 //------------------------------
-void do_abort(void)
+void hserver_char::do_abort() noexcept
 {
 }
 
-void set_server_type(void)
+server_types hserver_char::server_type() const noexcept
 {
-	SERVER_TYPE = SERVER_TYPE_CHAR;
+	return SERVER_TYPE_CHAR;
 }
 
 /// Called when a terminate signal is received.
@@ -6675,7 +6675,7 @@ static CMDLINEARG(runonce)
 /**
  * Initializes the command line arguments handlers.
  */
-void cmdline_args_init_local(void)
+void hserver_char::cmdline_args_init_local() noexcept
 {
 	CMDLINEARG_DEF2("run-once", runonce, "Closes server after loading (testing).", CMDLINE_OPT_NORMAL);
 	CMDLINEARG_DEF2("char-config", charconfig, "Alternative char-server configuration.", CMDLINE_OPT_PARAM);
@@ -6683,7 +6683,7 @@ void cmdline_args_init_local(void)
 	CMDLINEARG_DEF2("net-config", netconfig, "Alternative network configuration.", CMDLINE_OPT_PARAM);
 }
 
-int do_init(int argc, char **argv)
+int hserver_char::do_init(int argc, char **argv) noexcept
 {
 	memset(&skillid2idx, 0, sizeof(skillid2idx));
 
