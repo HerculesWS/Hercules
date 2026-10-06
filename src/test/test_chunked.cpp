@@ -416,43 +416,52 @@ static void testChunked1(void)
 	}
 }
 
-int do_init(int argc, char **argv)
+class hserver_test final : public hserver_i
 {
-	ShowStatus("Testing chunked packets.\n");
+  public:
+	~hserver_test() noexcept override
+	{
+	}
 
-	testMacro();
-	testChunked1();
+	int do_init(int argc, char **argv) noexcept override
+	{
+		ShowStatus("Testing chunked packets.\n");
 
-	core->runflag = CORE_ST_STOP;
-	return EXIT_SUCCESS;
-}
+		testMacro();
+		testChunked1();
 
-void do_abort(void)
-{
-}
+		core->runflag = CORE_ST_STOP;
+		return EXIT_SUCCESS;
+	}
 
-void set_server_type(void)
-{
-	SERVER_TYPE = SERVER_TYPE_UNKNOWN;
-}
+	void do_abort() noexcept override
+	{
+	}
 
-int do_final(void)
-{
-	ShowStatus("Tests passed.\n");
+	server_types server_type() const noexcept override
+	{
+		return SERVER_TYPE_UNKNOWN;
+	}
 
-	return EXIT_SUCCESS;
-}
+	int do_final() noexcept override
+	{
+		ShowStatus("Tests passed.\n");
 
-int parse_console(const char *command)
-{
-	return 0;
-}
+		return EXIT_SUCCESS;
+	}
 
-void cmdline_args_init_local(void)
-{
-}
+	int parse_console(const char *command)
+	{
+		return 0;
+	}
+
+	void cmdline_args_init_local() noexcept override
+	{
+	}
+};
 
 int main(int argc, char **argv)
 {
-	return herc_main(argc, argv);
+	hserver_test hs;
+	return herc_main(&hs, argc, argv);
 }

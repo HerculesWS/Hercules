@@ -6694,7 +6694,7 @@ static void map_lock_check(const char *file, const char *func, int line, int loc
 /*==========================================
  * map destructor
  *------------------------------------------*/
-int do_final(void)
+int hserver_map::do_final() noexcept
 {
 	int i;
 	struct map_session_data *sd;
@@ -6838,7 +6838,7 @@ static int map_abort_sub(struct map_session_data *sd, va_list ap)
 // Function called when the server
 // has received a crash signal.
 //------------------------------
-void do_abort(void)
+void hserver_map::do_abort() noexcept
 {
 	static int run = 0;
 	// Save all characters and then flush the inter-connection.
@@ -6859,9 +6859,9 @@ void do_abort(void)
 	chrif->flush();
 }
 
-void set_server_type(void)
+server_types hserver_map::server_type() const noexcept
 {
-	SERVER_TYPE = SERVER_TYPE_MAP;
+	return SERVER_TYPE_MAP;
 }
 
 /// Called when a terminate signal is received.
@@ -7161,7 +7161,7 @@ static CMDLINEARG(loadscript)
 /**
  * Defines the local command line arguments
  */
-void cmdline_args_init_local(void)
+void hserver_map::cmdline_args_init_local() noexcept
 {
 	CMDLINEARG_DEF2("run-once", runonce, "Closes server after loading (testing).", CMDLINE_OPT_NORMAL);
 	CMDLINEARG_DEF2("map-config", mapconfig, "Alternative map-server configuration.",
@@ -7187,7 +7187,7 @@ void cmdline_args_init_local(void)
 	                CMDLINE_OPT_NORMAL | CMDLINE_OPT_PARAM);
 }
 
-int do_init(int argc, char *argv[])
+int hserver_map::do_init(int argc, char *argv[]) noexcept
 {
 	bool minimal = false;
 	int i;

@@ -62,7 +62,7 @@ static struct api_interface api_s;
 
 struct api_interface *api;
 
-int do_final(void)
+int hserver_api::do_final(void) noexcept
 {
 	HPM->event(HPET_FINAL);
 
@@ -84,7 +84,7 @@ int do_final(void)
 // Function called when the server
 // has received a crash signal.
 //------------------------------
-void do_abort(void)
+void hserver_api::do_abort() noexcept
 {
 	static int run = 0;
 	// Save all characters and then flush the inter-connection.
@@ -96,9 +96,9 @@ void do_abort(void)
 	ShowError("Server received crash signal! Attempting to save all online characters!\n");
 }
 
-void set_server_type(void)
+server_types hserver_api::server_type() const noexcept
 {
-	SERVER_TYPE = SERVER_TYPE_API;
+	return SERVER_TYPE_API;
 }
 
 /// Called when a terminate signal is received.
@@ -166,7 +166,7 @@ static CMDLINEARG(netconfig)
 /**
  * Defines the local command line arguments
  */
-void cmdline_args_init_local(void)
+void hserver_api::cmdline_args_init_local() noexcept
 {
 	CMDLINEARG_DEF2("run-once", runonce, "Closes server after loading (testing).", CMDLINE_OPT_NORMAL);
 	CMDLINEARG_DEF2("api-config", apiconfig, "Alternative api-server configuration.", CMDLINE_OPT_PARAM);
@@ -379,7 +379,7 @@ static bool api_config_read(const char *filename, bool imported)
 	return retval;
 }
 
-int do_init(int argc, char *argv[])
+int hserver_api::do_init(int argc, char *argv[]) noexcept
 {
 	bool minimal = false;
 

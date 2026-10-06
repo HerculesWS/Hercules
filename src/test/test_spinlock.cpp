@@ -63,81 +63,90 @@ static void *worker(void *p)
 	return NULL;
 } // end: worker()
 
-int do_init(int argc, char **argv)
-{
-	struct thread_handle *t[THRC];
-	int j, i;
-	int ok;
-
-	ShowStatus("==========\n");
-	ShowStatus("TEST: %d Runs,  (%d Threads)\n", LOOPS, THRC);
-	ShowStatus("This can take a while\n");
-	ShowStatus("\n\n");
-
-	ok = 0;
-	for (j = 0; j < LOOPS; j++) {
-		val          = 0;
-		done_threads = 0;
-
-		InitializeSpinLock(&lock);
-
-		for (i = 0; i < THRC; i++) {
-			t[i] = thread->create_opt(worker, NULL, 1024 * 512, THREADPRIO_NORMAL);
-		}
-		(void)t;
-
-		while (1) {
-			if (InterlockedCompareExchange(&done_threads, THRC, THRC) == THRC)
-				break;
-			thread->yield();
-		}
-
-		FinalizeSpinLock(&lock);
-
-		// Everything fine?
-		if (val != (THRC * PERINC)) {
-			printf("FAILED! (Result: %u, Expected: %d)\n", val, (THRC * PERINC));
-		} else {
-			printf("OK! (Result: %u, Expected: %d)\n", val, (THRC * PERINC));
-			ok++;
-		}
-	}
-
-	if (ok != LOOPS) {
-		ShowFatalError("Test failed.\n");
-		exit(1);
-	}
-
-	core->runflag = CORE_ST_STOP;
-	return EXIT_SUCCESS;
-} // end: do_init()
-
-void do_abort(void)
-{
-} // end: do_abort()
-
-void set_server_type(void)
-{
-	SERVER_TYPE = SERVER_TYPE_UNKNOWN;
-} // end: set_server_type()
-
-int do_final(void)
-{
-	ShowStatus("Test passed.\n");
-
-	return EXIT_SUCCESS;
-} // end: do_final()
-
 int parse_console(const char *command)
 {
 	return 0;
 } // end: parse_console
 
-void cmdline_args_init_local(void)
+class hserver_test final : public hserver_i
 {
-}
+  public:
+	~hserver_test() noexcept override
+	{
+	}
+
+	int do_init(int argc, char **argv) noexcept override
+	{
+		struct thread_handle *t[THRC];
+		int j, i;
+		int ok;
+
+		ShowStatus("==========\n");
+		ShowStatus("TEST: %d Runs,  (%d Threads)\n", LOOPS, THRC);
+		ShowStatus("This can take a while\n");
+		ShowStatus("\n\n");
+
+		ok = 0;
+		for (j = 0; j < LOOPS; j++) {
+			val          = 0;
+			done_threads = 0;
+
+			InitializeSpinLock(&lock);
+
+			for (i = 0; i < THRC; i++) {
+				t[i] = thread->create_opt(worker, NULL, 1024 * 512, THREADPRIO_NORMAL);
+			}
+			(void)t;
+
+			while (1) {
+				if (InterlockedCompareExchange(&done_threads, THRC, THRC) == THRC)
+					break;
+				thread->yield();
+			}
+
+			FinalizeSpinLock(&lock);
+
+			// Everything fine?
+			if (val != (THRC * PERINC)) {
+				printf("FAILED! (Result: %u, Expected: %d)\n", val, (THRC * PERINC));
+			} else {
+				printf("OK! (Result: %u, Expected: %d)\n", val, (THRC * PERINC));
+				ok++;
+			}
+		}
+
+		if (ok != LOOPS) {
+			ShowFatalError("Test failed.\n");
+			exit(1);
+		}
+
+		core->runflag = CORE_ST_STOP;
+		return EXIT_SUCCESS;
+	} // end: do_init()
+
+	void do_abort() noexcept override
+	{
+	}
+
+	server_types server_type() const noexcept override
+	{
+		return SERVER_TYPE_UNKNOWN;
+	}
+
+	int do_final() noexcept override
+	{
+		ShowStatus("Test passed.\n");
+
+		return EXIT_SUCCESS;
+	}
+
+	void cmdline_args_init_local() noexcept override
+	{
+	}
+};
 
 int main(int argc, char **argv)
 {
-	return herc_main(argc, argv);
+	hserver_test hs;
+	return herc_main(&hs, argc, argv);
 }

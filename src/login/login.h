@@ -265,6 +265,20 @@ struct lchrif_interface {
 #ifdef HERCULES_CORE
 void login_defaults(void);
 void lchrif_defaults(void);
+
+class hserver_login final : public hserver_i
+{
+  public:
+	~hserver_login() noexcept override
+	{
+	}
+
+	void cmdline_args_init_local() noexcept override;
+	int do_init(int argc, char *argv[]) noexcept override;
+	server_types server_type() const noexcept override;
+	void do_abort() noexcept override;
+	int do_final() noexcept override;
+};
 #endif // HERCULES_CORE
 
 HPShared struct login_interface *login;
