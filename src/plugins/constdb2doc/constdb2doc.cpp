@@ -193,9 +193,8 @@ void do_constdb2doc(void)
 		return;
 	}
 
-	fprintf(out_fp,
-		"# Constants\n\n"
-		"> This document contains all the constants available to the script engine.\n\n");
+	fprintf(out_fp, "# Constants\n\n");
+	fprintf(out_fp, "> This document contains all the constants available to the script engine.\n\n");
 
 	constdb2doc_constdb();
 

@@ -543,9 +543,9 @@ EOF
 		foreach my $key (@$keysref) {
 			next if $fileguards{$key}->{private};
 			print FH <<"EOF";
-#ifdef $fileguards{$key}->{guard} /* $key */
+  #ifdef $fileguards{$key}->{guard} /* $key */
 struct $key2original{$key} *$key;
-#endif // $fileguards{$key}->{guard}
+  #endif
 EOF
 		}
 
@@ -560,9 +560,9 @@ EOF
 			next if $fileguards{$key}->{private};
 			print FH <<"EOF";
 #ifdef $fileguards{$key}->{guard} /* $key */
-	if ((server_type&($fileguards{$key}->{type})) != 0 && !HPM_SYMBOL("$exportsymbols{$key}", $key))
+	if ((server_type & ($fileguards{$key}->{type})) != 0 && !HPM_SYMBOL("$exportsymbols{$key}", $key))
 		return "$exportsymbols{$key}";
-#endif // $fileguards{$key}->{guard}
+#endif
 EOF
 		}
 
@@ -596,7 +596,7 @@ typedef $postdef
 EOF
 			}
 			print FH <<"EOF";
-#endif // $fileguards{$key}->{guard}
+#endif
 EOF
 		}
 		close FH;

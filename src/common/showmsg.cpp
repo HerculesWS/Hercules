@@ -59,8 +59,7 @@ struct showmsg_interface *showmsg;
 		StringBuf *d_; \
 		char *v_; \
 		int l_; \
-	} buf ={"",NULL,NULL,0}; \
-//define NEWBUF
+	} buf ={"",NULL,NULL,0}
 
 #define BUFVPRINTF(buf,fmt,args) do { \
 	(buf).l_ = vsnprintf((buf).s_, SBUF_SIZE, (fmt), args); \

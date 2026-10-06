@@ -61,33 +61,39 @@ struct aclif_interface *aclif;
 //#define DEBUG_LOG
 
 #ifdef DEBUG_LOG
-#define LOG_HANDLED_HEADER(name) ShowInfo("Handled header: " name "\n");
-#define HANDLE_HEADER(name) handled_count ++; \
-	sd->valid_post_headers[CONST_POST_ ## name] = 1; \
-	ShowInfo("Handled header: %s\n", POST_ ## name);
+#define LOG_HANDLED_HEADER(name) ShowInfo("Handled header: " name "\n")
+#define HANDLE_HEADER(name) do { \
+		handled_count++; \
+		sd->valid_post_headers[CONST_POST_ ## name] = 1; \
+		ShowInfo("Handled header: %s\n", POST_ ## name); \
+	} while (false)
 #else  // DEBUG_LOG
-#define LOG_HANDLED_HEADER(name)
-#define HANDLE_HEADER(name) handled_count ++; \
-	sd->valid_post_headers[CONST_POST_ ## name] = 1;
+#define LOG_HANDLED_HEADER(name) ((void)0)
+#define HANDLE_HEADER(name) do { \
+		handled_count ++; \
+		sd->valid_post_headers[CONST_POST_ ## name] = 1; \
+	} while (false)
 #endif  // DEBUG_LOG
 
-#define CHECK_POST_HEADER_PRESENT(name) \
-	if ((sd->handler->flags & REQ_ ## name) != 0) { \
-		if (!aclif->is_post_header_present(sd, POST_ ## name)) { \
-			ShowError("Http request without %s %d\n", POST_ ## name, fd); \
-			return false; \
+#define CHECK_POST_HEADER_PRESENT(name) do { \
+		if ((sd->handler->flags & REQ_ ## name) != 0) { \
+			if (!aclif->is_post_header_present(sd, POST_ ## name)) { \
+				ShowError("Http request without %s %d\n", POST_ ## name, fd); \
+				return false; \
+			} \
+			HANDLE_HEADER(name); \
 		} \
-		HANDLE_HEADER(name); \
-	}
+	} while (false)
 
-#define CHECK_POST_HEADER_PRESENT_OR_EMPTY(name) \
-	if ((sd->handler->flags & REQ_ ## name) != 0) { \
-		if (!aclif->is_post_header_present_or_empty(sd, POST_ ## name)) { \
-			ShowError("Http request without %s %d\n", POST_ ## name, fd); \
-			return false; \
+#define CHECK_POST_HEADER_PRESENT_OR_EMPTY(name) do { \
+		if ((sd->handler->flags & REQ_ ## name) != 0) { \
+			if (!aclif->is_post_header_present_or_empty(sd, POST_ ## name)) { \
+				ShowError("Http request without %s %d\n", POST_ ## name, fd); \
+				return false; \
+			} \
+			HANDLE_HEADER(name); \
 		} \
-		HANDLE_HEADER(name); \
-	}
+	} while (false)
 
 
 static bool aclif_setip(const char *ip)
@@ -816,19 +822,19 @@ static bool aclif_decode_post_headers(int fd, struct api_session_data *sd)
 		HANDLE_HEADER(VERSION);
 	}
 
-	CHECK_POST_HEADER_PRESENT(DATA)
-	CHECK_POST_HEADER_PRESENT(PAGE)
-	CHECK_POST_HEADER_PRESENT(MINLV)
-	CHECK_POST_HEADER_PRESENT(MAXLV)
-	CHECK_POST_HEADER_PRESENT(HEALER)
-	CHECK_POST_HEADER_PRESENT(ASSIST)
-	CHECK_POST_HEADER_PRESENT(TANKER)
-	CHECK_POST_HEADER_PRESENT(DEALER)
-	CHECK_POST_HEADER_PRESENT(TYPE)
-	CHECK_POST_HEADER_PRESENT_OR_EMPTY(MEMO)
-	CHECK_POST_HEADER_PRESENT(CHAR_NAME)
-	CHECK_POST_HEADER_PRESENT(MASTER_AID)
-	CHECK_POST_HEADER_PRESENT(QUERY_AID)
+	CHECK_POST_HEADER_PRESENT(DATA);
+	CHECK_POST_HEADER_PRESENT(PAGE);
+	CHECK_POST_HEADER_PRESENT(MINLV);
+	CHECK_POST_HEADER_PRESENT(MAXLV);
+	CHECK_POST_HEADER_PRESENT(HEALER);
+	CHECK_POST_HEADER_PRESENT(ASSIST);
+	CHECK_POST_HEADER_PRESENT(TANKER);
+	CHECK_POST_HEADER_PRESENT(DEALER);
+	CHECK_POST_HEADER_PRESENT(TYPE);
+	CHECK_POST_HEADER_PRESENT_OR_EMPTY(MEMO);
+	CHECK_POST_HEADER_PRESENT(CHAR_NAME);
+	CHECK_POST_HEADER_PRESENT(MASTER_AID);
+	CHECK_POST_HEADER_PRESENT(QUERY_AID);
 
 	const int count = aclif->get_post_headers_count(sd);
 	if ((sd->handler->flags & REQ_EXTRA_HEADERS) != 0) {

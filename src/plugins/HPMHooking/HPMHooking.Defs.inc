@@ -32,7 +32,7 @@ typedef bool (*HPMHOOK_pre_HCache_check) (const char **file);
 typedef bool (*HPMHOOK_post_HCache_check) (bool retVal___, const char *file);
 typedef FILE * (*HPMHOOK_pre_HCache_open) (const char **file, const char **opt);
 typedef FILE * (*HPMHOOK_post_HCache_open) (FILE * retVal___, const char *file, const char *opt);
-#endif // COMMON_UTILS_H
+#endif
 #ifdef LOGIN_ACCOUNT_H /* account */
 typedef struct Sql * (*HPMHOOK_pre_account_db_sql_up) (AccountDB **self);
 typedef struct Sql * (*HPMHOOK_post_account_db_sql_up) (struct Sql * retVal___, AccountDB *self);
@@ -72,7 +72,7 @@ typedef bool (*HPMHOOK_pre_account_db_sql_iter_next) (AccountDBIterator **self, 
 typedef bool (*HPMHOOK_post_account_db_sql_iter_next) (bool retVal___, AccountDBIterator *self, struct mmo_account *acc);
 typedef bool (*HPMHOOK_pre_account_db_read_inter) (AccountDB_SQL **db, const char **filename, bool *imported);
 typedef bool (*HPMHOOK_post_account_db_read_inter) (bool retVal___, AccountDB_SQL *db, const char *filename, bool imported);
-#endif // LOGIN_ACCOUNT_H
+#endif
 #ifdef MAP_ACHIEVEMENT_H /* achievement */
 typedef void (*HPMHOOK_pre_achievement_init) (bool *minimal);
 typedef void (*HPMHOOK_post_achievement_init) (bool minimal);
@@ -182,7 +182,7 @@ typedef void (*HPMHOOK_pre_achievement_get_rewards_buffs) (struct map_session_da
 typedef void (*HPMHOOK_post_achievement_get_rewards_buffs) (struct map_session_data *sd, const struct achievement_data *ad);
 typedef void (*HPMHOOK_pre_achievement_get_rewards_items) (struct map_session_data **sd, const struct achievement_data **ad);
 typedef void (*HPMHOOK_post_achievement_get_rewards_items) (struct map_session_data *sd, const struct achievement_data *ad);
-#endif // MAP_ACHIEVEMENT_H
+#endif
 #ifdef API_ACLIF_H /* aclif */
 typedef int (*HPMHOOK_pre_aclif_init) (bool *minimal);
 typedef int (*HPMHOOK_post_aclif_init) (int retVal___, bool minimal);
@@ -302,7 +302,7 @@ typedef const char * (*HPMHOOK_pre_aclif_get_first_world_name) (void);
 typedef const char * (*HPMHOOK_post_aclif_get_first_world_name) (const char * retVal___);
 typedef void (*HPMHOOK_pre_aclif_show_request) (int *fd, struct api_session_data **sd, bool *show_http_headers);
 typedef void (*HPMHOOK_post_aclif_show_request) (int fd, struct api_session_data *sd, bool show_http_headers);
-#endif // API_ACLIF_H
+#endif
 #ifdef API_ALOGINIF_H /* aloginif */
 typedef void (*HPMHOOK_pre_aloginif_init) (bool *minimal);
 typedef void (*HPMHOOK_post_aloginif_init) (bool minimal);
@@ -352,7 +352,7 @@ typedef int (*HPMHOOK_pre_aloginif_parse_set_char_online) (int *fd);
 typedef int (*HPMHOOK_post_aloginif_parse_set_char_online) (int retVal___, int fd);
 typedef void (*HPMHOOK_pre_aloginif_parse_from_char) (int *fd, Handler_func *func);
 typedef void (*HPMHOOK_post_aloginif_parse_from_char) (int fd, Handler_func func);
-#endif // API_ALOGINIF_H
+#endif
 #ifdef API_API_H /* api */
 typedef int (*HPMHOOK_pre_api_setipport) (unsigned short *map_index, uint32 *ip, uint16 *port);
 typedef int (*HPMHOOK_post_api_setipport) (int retVal___, unsigned short map_index, uint32 ip, uint16 port);
@@ -368,7 +368,7 @@ typedef int (*HPMHOOK_pre_api_check_connect_login_server) (int *tid, int64 *tick
 typedef int (*HPMHOOK_post_api_check_connect_login_server) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 typedef void (*HPMHOOK_pre_api_do_shutdown) (void);
 typedef void (*HPMHOOK_post_api_do_shutdown) (void);
-#endif // API_API_H
+#endif
 #ifdef MAP_ATCOMMAND_H /* atcommand */
 typedef void (*HPMHOOK_pre_atcommand_init) (bool *minimal);
 typedef void (*HPMHOOK_post_atcommand_init) (bool minimal);
@@ -442,11 +442,11 @@ typedef const char * (*HPMHOOK_pre_atcommand_msgfd) (int *fd, int *msg_number);
 typedef const char * (*HPMHOOK_post_atcommand_msgfd) (const char * retVal___, int fd, int msg_number);
 typedef const char * (*HPMHOOK_pre_atcommand_msgsd) (struct map_session_data **sd, int *msg_number);
 typedef const char * (*HPMHOOK_post_atcommand_msgsd) (const char * retVal___, struct map_session_data *sd, int msg_number);
-#endif // MAP_ATCOMMAND_H
+#endif
 #ifdef COMMON_BASE62_H /* base62 */
 typedef bool (*HPMHOOK_pre_base62_encode_int_padded) (int *value, char **buf, int *min_len, int *buf_len);
 typedef bool (*HPMHOOK_post_base62_encode_int_padded) (bool retVal___, int value, char *buf, int min_len, int buf_len);
-#endif // COMMON_BASE62_H
+#endif
 #ifdef MAP_BATTLE_H /* battle */
 typedef void (*HPMHOOK_pre_battle_init) (bool *minimal);
 typedef void (*HPMHOOK_post_battle_init) (bool minimal);
@@ -570,7 +570,7 @@ typedef void (*HPMHOOK_pre_battle_calc_skillratio_weapon_unknown) (int **attack_
 typedef void (*HPMHOOK_post_battle_calc_skillratio_weapon_unknown) (int *attack_type, struct block_list *src, struct block_list *target, uint16 *skill_id, uint16 *skill_lv, int *skillratio, int *flag);
 typedef void (*HPMHOOK_pre_battle_calc_misc_attack_unknown) (struct block_list **src, struct block_list **target, uint16 **skill_id, uint16 **skill_lv, int **mflag, struct Damage **md);
 typedef void (*HPMHOOK_post_battle_calc_misc_attack_unknown) (struct block_list *src, struct block_list *target, uint16 *skill_id, uint16 *skill_lv, int *mflag, struct Damage *md);
-#endif // MAP_BATTLE_H
+#endif
 #ifdef MAP_BATTLEGROUND_H /* bg */
 typedef void (*HPMHOOK_pre_bg_init) (bool *minimal);
 typedef void (*HPMHOOK_post_bg_init) (bool minimal);
@@ -634,7 +634,7 @@ typedef enum bg_queue_types (*HPMHOOK_pre_bg_str2teamtype) (const char **str);
 typedef enum bg_queue_types (*HPMHOOK_post_bg_str2teamtype) (enum bg_queue_types retVal___, const char *str);
 typedef void (*HPMHOOK_pre_bg_config_read) (void);
 typedef void (*HPMHOOK_post_bg_config_read) (void);
-#endif // MAP_BATTLEGROUND_H
+#endif
 #ifdef MAP_BUYINGSTORE_H /* buyingstore */
 typedef bool (*HPMHOOK_pre_buyingstore_setup) (struct map_session_data **sd, unsigned char *slots);
 typedef bool (*HPMHOOK_post_buyingstore_setup) (bool retVal___, struct map_session_data *sd, unsigned char slots);
@@ -652,7 +652,7 @@ typedef bool (*HPMHOOK_pre_buyingstore_searchall) (struct map_session_data **sd,
 typedef bool (*HPMHOOK_post_buyingstore_searchall) (bool retVal___, struct map_session_data *sd, const struct s_search_store_search *s);
 typedef unsigned int (*HPMHOOK_pre_buyingstore_getuid) (void);
 typedef unsigned int (*HPMHOOK_post_buyingstore_getuid) (unsigned int retVal___);
-#endif // MAP_BUYINGSTORE_H
+#endif
 #ifdef CHAR_CAPIIF_H /* capiif */
 typedef void (*HPMHOOK_pre_capiif_init) (void);
 typedef void (*HPMHOOK_post_capiif_init) (void);
@@ -692,7 +692,7 @@ typedef void (*HPMHOOK_pre_capiif_parse_proxy_api_from_map) (int *fd);
 typedef void (*HPMHOOK_post_capiif_parse_proxy_api_from_map) (int fd);
 typedef void (*HPMHOOK_pre_capiif_send_emblem_upload_result) (int *fd, int *result);
 typedef void (*HPMHOOK_post_capiif_send_emblem_upload_result) (int fd, int result);
-#endif // CHAR_CAPIIF_H
+#endif
 #ifdef MAP_CHANNEL_H /* channel */
 typedef int (*HPMHOOK_pre_channel_init) (bool *minimal);
 typedef int (*HPMHOOK_post_channel_init) (int retVal___, bool minimal);
@@ -736,7 +736,7 @@ typedef void (*HPMHOOK_pre_channel_irc_join) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_channel_irc_join) (struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_channel_config_read) (void);
 typedef void (*HPMHOOK_post_channel_config_read) (void);
-#endif // MAP_CHANNEL_H
+#endif
 #ifdef CHAR_CHAR_H /* chr */
 typedef int (*HPMHOOK_pre_chr_waiting_disconnect) (int *tid, int64 *tick, int *id, intptr_t *data);
 typedef int (*HPMHOOK_post_chr_waiting_disconnect) (int retVal___, int tid, int64 tick, int id, intptr_t data);
@@ -1090,7 +1090,7 @@ typedef bool (*HPMHOOK_pre_chr_config_read_inter) (const char **filename, const 
 typedef bool (*HPMHOOK_post_chr_config_read_inter) (bool retVal___, const char *filename, const struct config_t *config, bool imported);
 typedef bool (*HPMHOOK_pre_chr_config_read_top) (const char **filename, const struct config_t **config, bool *imported);
 typedef bool (*HPMHOOK_post_chr_config_read_top) (bool retVal___, const char *filename, const struct config_t *config, bool imported);
-#endif // CHAR_CHAR_H
+#endif
 #ifdef MAP_CHAT_H /* chat */
 typedef bool (*HPMHOOK_pre_chat_create_pc_chat) (struct map_session_data **sd, const char **title, const char **pass, int *limit, bool *pub);
 typedef bool (*HPMHOOK_post_chat_create_pc_chat) (bool retVal___, struct map_session_data *sd, const char *title, const char *pass, int limit, bool pub);
@@ -1118,7 +1118,7 @@ typedef bool (*HPMHOOK_pre_chat_trigger_event) (struct chat_data **cd);
 typedef bool (*HPMHOOK_post_chat_trigger_event) (bool retVal___, struct chat_data *cd);
 typedef struct chat_data * (*HPMHOOK_pre_chat_create) (struct block_list **bl, const char **title, const char **pass, int *limit, bool *pub, int *trigger, const char **ev, int *zeny, int *min_level, int *max_level);
 typedef struct chat_data * (*HPMHOOK_post_chat_create) (struct chat_data * retVal___, struct block_list *bl, const char *title, const char *pass, int limit, bool pub, int trigger, const char *ev, int zeny, int min_level, int max_level);
-#endif // MAP_CHAT_H
+#endif
 #ifdef MAP_CHRIF_H /* chrif */
 typedef void (*HPMHOOK_pre_chrif_init) (bool *minimal);
 typedef void (*HPMHOOK_post_chrif_init) (bool minimal);
@@ -1250,7 +1250,7 @@ typedef void (*HPMHOOK_pre_chrif_save_scdata_single) (int *account_id, int *char
 typedef void (*HPMHOOK_post_chrif_save_scdata_single) (int account_id, int char_id, short type, struct status_change_entry *sce);
 typedef void (*HPMHOOK_pre_chrif_del_scdata_single) (int *account_id, int *char_id, short *type);
 typedef void (*HPMHOOK_post_chrif_del_scdata_single) (int account_id, int char_id, short type);
-#endif // MAP_CHRIF_H
+#endif
 #ifdef MAP_CLAN_H /* clan */
 typedef void (*HPMHOOK_pre_clan_init) (bool *minimal);
 typedef void (*HPMHOOK_post_clan_init) (bool minimal);
@@ -1306,7 +1306,7 @@ typedef int (*HPMHOOK_pre_clan_request_kickoffline) (int *tid, int64 *tick, int 
 typedef int (*HPMHOOK_post_clan_request_kickoffline) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 typedef int (*HPMHOOK_pre_clan_request_membercount) (int *tid, int64 *tick, int *id, intptr_t *data);
 typedef int (*HPMHOOK_post_clan_request_membercount) (int retVal___, int tid, int64 tick, int id, intptr_t data);
-#endif // MAP_CLAN_H
+#endif
 #ifdef MAP_CLIF_H /* clif */
 typedef int (*HPMHOOK_pre_clif_init) (bool *minimal);
 typedef int (*HPMHOOK_post_clif_init) (int retVal___, bool minimal);
@@ -3178,7 +3178,7 @@ typedef void (*HPMHOOK_pre_clif_adventurerAgencyJoinReq) (struct map_session_dat
 typedef void (*HPMHOOK_post_clif_adventurerAgencyJoinReq) (struct map_session_data *sd, struct map_session_data *tsd);
 typedef void (*HPMHOOK_pre_clif_pAdventuterAgencyJoinResult) (int *fd, struct map_session_data **sd);
 typedef void (*HPMHOOK_post_clif_pAdventuterAgencyJoinResult) (int fd, struct map_session_data *sd);
-#endif // MAP_CLIF_H
+#endif
 #ifdef COMMON_CORE_H /* cmdline */
 typedef void (*HPMHOOK_pre_cmdline_init) (void);
 typedef void (*HPMHOOK_post_cmdline_init) (void);
@@ -3192,7 +3192,7 @@ typedef bool (*HPMHOOK_pre_cmdline_arg_next_value) (const char **name, int *curr
 typedef bool (*HPMHOOK_post_cmdline_arg_next_value) (bool retVal___, const char *name, int current_arg, int argc);
 typedef const char * (*HPMHOOK_pre_cmdline_arg_source) (struct CmdlineArgData **arg);
 typedef const char * (*HPMHOOK_post_cmdline_arg_source) (const char * retVal___, struct CmdlineArgData *arg);
-#endif // COMMON_CORE_H
+#endif
 #ifdef COMMON_CONSOLE_H /* console */
 typedef void (*HPMHOOK_pre_console_init) (void);
 typedef void (*HPMHOOK_post_console_init) (void);
@@ -3202,11 +3202,11 @@ typedef void (*HPMHOOK_pre_console_display_title) (void);
 typedef void (*HPMHOOK_post_console_display_title) (void);
 typedef void (*HPMHOOK_pre_console_display_gplnotice) (void);
 typedef void (*HPMHOOK_post_console_display_gplnotice) (void);
-#endif // COMMON_CONSOLE_H
+#endif
 #ifdef COMMON_CORE_H /* core */
 typedef void (*HPMHOOK_pre_core_shutdown_callback) (void);
 typedef void (*HPMHOOK_post_core_shutdown_callback) (void);
-#endif // COMMON_CORE_H
+#endif
 #ifdef COMMON_DB_H /* DB */
 typedef enum DBOptions (*HPMHOOK_pre_DB_fix_options) (enum DBType *type, enum DBOptions *options);
 typedef enum DBOptions (*HPMHOOK_post_DB_fix_options) (enum DBOptions retVal___, enum DBType type, enum DBOptions options);
@@ -3246,13 +3246,13 @@ typedef void (*HPMHOOK_pre_DB_init) (void);
 typedef void (*HPMHOOK_post_DB_init) (void);
 typedef void (*HPMHOOK_pre_DB_final) (void);
 typedef void (*HPMHOOK_post_DB_final) (void);
-#endif // COMMON_DB_H
+#endif
 #ifdef COMMON_DES_H /* des */
 typedef void (*HPMHOOK_pre_des_decrypt_block) (struct des_bit64 **block);
 typedef void (*HPMHOOK_post_des_decrypt_block) (struct des_bit64 *block);
 typedef void (*HPMHOOK_pre_des_decrypt) (unsigned char **data, size_t *size);
 typedef void (*HPMHOOK_post_des_decrypt) (unsigned char *data, size_t size);
-#endif // COMMON_DES_H
+#endif
 #ifdef MAP_DUEL_H /* duel */
 typedef unsigned int (*HPMHOOK_pre_duel_create) (struct map_session_data **sd, const unsigned int *maxpl);
 typedef unsigned int (*HPMHOOK_post_duel_create) (unsigned int retVal___, struct map_session_data *sd, const unsigned int maxpl);
@@ -3272,7 +3272,7 @@ typedef void (*HPMHOOK_pre_duel_init) (bool *minimal);
 typedef void (*HPMHOOK_post_duel_init) (bool minimal);
 typedef void (*HPMHOOK_pre_duel_final) (void);
 typedef void (*HPMHOOK_post_duel_final) (void);
-#endif // MAP_DUEL_H
+#endif
 #ifdef MAP_ELEMENTAL_H /* elemental */
 typedef int (*HPMHOOK_pre_elemental_init) (bool *minimal);
 typedef int (*HPMHOOK_post_elemental_init) (int retVal___, bool minimal);
@@ -3338,7 +3338,7 @@ typedef int (*HPMHOOK_pre_elemental_ai_timer) (int *tid, int64 *tick, int *id, i
 typedef int (*HPMHOOK_post_elemental_ai_timer) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 typedef int (*HPMHOOK_pre_elemental_read_db) (void);
 typedef int (*HPMHOOK_post_elemental_read_db) (int retVal___);
-#endif // MAP_ELEMENTAL_H
+#endif
 #ifdef MAP_ENCHANTUI_H /* enchantui */
 typedef int (*HPMHOOK_pre_enchantui_init) (bool *minimal);
 typedef int (*HPMHOOK_post_enchantui_init) (int retVal___, bool minimal);
@@ -3392,7 +3392,7 @@ typedef void (*HPMHOOK_pre_enchantui_upgrade_request) (struct map_session_data *
 typedef void (*HPMHOOK_post_enchantui_upgrade_request) (struct map_session_data *sd, int64 enchant_group, int index, int slot_id);
 typedef void (*HPMHOOK_pre_enchantui_reset_request) (struct map_session_data **sd, int64 *enchant_group, int *index);
 typedef void (*HPMHOOK_post_enchantui_reset_request) (struct map_session_data *sd, int64 enchant_group, int index);
-#endif // MAP_ENCHANTUI_H
+#endif
 #ifdef COMMON_EXTRACONF_H /* extraconf */
 typedef void (*HPMHOOK_pre_extraconf_init) (void);
 typedef void (*HPMHOOK_post_extraconf_init) (void);
@@ -3410,7 +3410,7 @@ typedef bool (*HPMHOOK_pre_extraconf_set_var_str) (const struct config_data **co
 typedef bool (*HPMHOOK_post_extraconf_set_var_str) (bool retVal___, const struct config_data *conf_var, const char *val);
 typedef bool (*HPMHOOK_pre_extraconf_read_emblems) (void);
 typedef bool (*HPMHOOK_post_extraconf_read_emblems) (bool retVal___);
-#endif // COMMON_EXTRACONF_H
+#endif
 #ifdef CHAR_GEOIP_H /* geoip */
 typedef const char * (*HPMHOOK_pre_geoip_getcountry) (uint32 *ipnum);
 typedef const char * (*HPMHOOK_post_geoip_getcountry) (const char * retVal___, uint32 ipnum);
@@ -3418,7 +3418,7 @@ typedef void (*HPMHOOK_pre_geoip_final) (bool *shutdown);
 typedef void (*HPMHOOK_post_geoip_final) (bool shutdown);
 typedef void (*HPMHOOK_pre_geoip_init) (void);
 typedef void (*HPMHOOK_post_geoip_init) (void);
-#endif // CHAR_GEOIP_H
+#endif
 #ifdef MAP_GOLDPC_H /* goldpc */
 typedef int (*HPMHOOK_pre_goldpc_init) (bool *minimal);
 typedef int (*HPMHOOK_post_goldpc_init) (int retVal___, bool minimal);
@@ -3442,7 +3442,7 @@ typedef void (*HPMHOOK_pre_goldpc_start) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_goldpc_start) (struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_goldpc_stop) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_goldpc_stop) (struct map_session_data *sd);
-#endif // MAP_GOLDPC_H
+#endif
 #ifdef MAP_GRADER_H /* grader */
 typedef int (*HPMHOOK_pre_grader_init) (bool *minimal);
 typedef int (*HPMHOOK_post_grader_init) (int retVal___, bool minimal);
@@ -3470,7 +3470,7 @@ typedef void (*HPMHOOK_pre_grader_enchant_add_item) (struct map_session_data **s
 typedef void (*HPMHOOK_post_grader_enchant_add_item) (struct map_session_data *sd, int idx);
 typedef void (*HPMHOOK_pre_grader_enchant_start) (struct map_session_data **sd, int *idx, int *mat_idx, bool *use_blessing, int *blessing_amount);
 typedef void (*HPMHOOK_post_grader_enchant_start) (struct map_session_data *sd, int idx, int mat_idx, bool use_blessing, int blessing_amount);
-#endif // MAP_GRADER_H
+#endif
 #ifdef COMMON_GRFIO_H /* grfio */
 typedef void (*HPMHOOK_pre_grfio_init) (const char **fname);
 typedef void (*HPMHOOK_post_grfio_init) (const char *fname);
@@ -3490,7 +3490,7 @@ typedef void (*HPMHOOK_pre_grfio_report_error) (int *err);
 typedef void (*HPMHOOK_post_grfio_report_error) (int err);
 typedef char * (*HPMHOOK_pre_grfio_decode_filename) (unsigned char **buf, int *len);
 typedef char * (*HPMHOOK_post_grfio_decode_filename) (char * retVal___, unsigned char *buf, int len);
-#endif // COMMON_GRFIO_H
+#endif
 #ifdef MAP_GUILD_H /* guild */
 typedef void (*HPMHOOK_pre_guild_init) (bool *minimal);
 typedef void (*HPMHOOK_post_guild_init) (bool minimal);
@@ -3670,7 +3670,7 @@ typedef void (*HPMHOOK_pre_guild_castle_reconnect_sub) (void **key, void **data,
 typedef void (*HPMHOOK_post_guild_castle_reconnect_sub) (void *key, void *data, va_list ap);
 typedef int (*HPMHOOK_pre_guild_castle_owner_change_foreach) (struct map_session_data **sd, va_list ap);
 typedef int (*HPMHOOK_post_guild_castle_owner_change_foreach) (int retVal___, struct map_session_data *sd, va_list ap);
-#endif // MAP_GUILD_H
+#endif
 #ifdef MAP_STORAGE_H /* gstorage */
 typedef struct guild_storage * (*HPMHOOK_pre_gstorage_ensure) (int *guild_id);
 typedef struct guild_storage * (*HPMHOOK_post_gstorage_ensure) (struct guild_storage * retVal___, int guild_id);
@@ -3706,7 +3706,7 @@ typedef int (*HPMHOOK_pre_gstorage_saved) (int *guild_id);
 typedef int (*HPMHOOK_post_gstorage_saved) (int retVal___, int guild_id);
 typedef struct DBData (*HPMHOOK_pre_gstorage_create) (union DBKey *key, va_list args);
 typedef struct DBData (*HPMHOOK_post_gstorage_create) (struct DBData retVal___, union DBKey key, va_list args);
-#endif // MAP_STORAGE_H
+#endif
 #ifdef API_HANDLERS_H /* handlers */
 typedef int (*HPMHOOK_pre_handlers_init) (bool *minimal);
 typedef int (*HPMHOOK_post_handlers_init) (int retVal___, bool minimal);
@@ -3762,7 +3762,7 @@ typedef void (*HPMHOOK_pre_handlers_userconfig_load_emotes) (int *fd, struct api
 typedef void (*HPMHOOK_post_handlers_userconfig_load_emotes) (int fd, struct api_session_data *sd, const void *data, size_t data_size);
 typedef void (*HPMHOOK_pre_handlers_userconfig_load_hotkeys) (int *fd, struct api_session_data **sd, const void **data, size_t *data_size);
 typedef void (*HPMHOOK_post_handlers_userconfig_load_hotkeys) (int fd, struct api_session_data *sd, const void *data, size_t data_size);
-#endif // API_HANDLERS_H
+#endif
 #ifdef MAP_HOMUNCULUS_H /* homun */
 typedef void (*HPMHOOK_pre_homun_init) (bool *minimal);
 typedef void (*HPMHOOK_post_homun_init) (bool minimal);
@@ -3870,7 +3870,7 @@ typedef int (*HPMHOOK_pre_homun_get_max_level) (struct homun_data **hd);
 typedef int (*HPMHOOK_post_homun_get_max_level) (int retVal___, struct homun_data *hd);
 typedef uint64 (*HPMHOOK_pre_homun_get_exp_next) (struct homun_data **hd);
 typedef uint64 (*HPMHOOK_post_homun_get_exp_next) (uint64 retVal___, struct homun_data *hd);
-#endif // MAP_HOMUNCULUS_H
+#endif
 #ifdef API_HTTPPARSER_H /* httpparser */
 typedef int (*HPMHOOK_pre_httpparser_init) (bool *minimal);
 typedef int (*HPMHOOK_post_httpparser_init) (int retVal___, bool minimal);
@@ -3938,7 +3938,7 @@ typedef int (*HPMHOOK_pre_httpparser_on_multi_part_end) (struct multipartparser 
 typedef int (*HPMHOOK_post_httpparser_on_multi_part_end) (int retVal___, struct multipartparser *parser);
 typedef int (*HPMHOOK_pre_httpparser_on_multi_body_end) (struct multipartparser **parser);
 typedef int (*HPMHOOK_post_httpparser_on_multi_body_end) (int retVal___, struct multipartparser *parser);
-#endif // API_HTTPPARSER_H
+#endif
 #ifdef API_HTTPSENDER_H /* httpsender */
 typedef int (*HPMHOOK_pre_httpsender_init) (bool *minimal);
 typedef int (*HPMHOOK_post_httpsender_init) (int retVal___, bool minimal);
@@ -3958,7 +3958,7 @@ typedef bool (*HPMHOOK_pre_httpsender_send_json_text) (int *fd, const char **jso
 typedef bool (*HPMHOOK_post_httpsender_send_json_text) (bool retVal___, int fd, const char *json, enum http_status status);
 typedef bool (*HPMHOOK_pre_httpsender_send_binary) (int *fd, const char **data, const size_t *data_len);
 typedef bool (*HPMHOOK_post_httpsender_send_binary) (bool retVal___, int fd, const char *data, const size_t data_len);
-#endif // API_HTTPSENDER_H
+#endif
 #ifdef API_IMAGEPARSER_H /* imageparser */
 typedef int (*HPMHOOK_pre_imageparser_init) (bool *minimal);
 typedef int (*HPMHOOK_post_imageparser_init) (int retVal___, bool minimal);
@@ -3970,7 +3970,7 @@ typedef bool (*HPMHOOK_pre_imageparser_validate_gif_emblem) (const char **emblem
 typedef bool (*HPMHOOK_post_imageparser_validate_gif_emblem) (bool retVal___, const char *emblem, uint64 emblem_len);
 typedef int (*HPMHOOK_pre_imageparser_read_gif_func) (GifFileType **gif, GifByteType **buf, int *len);
 typedef int (*HPMHOOK_post_imageparser_read_gif_func) (int retVal___, GifFileType *gif, GifByteType *buf, int len);
-#endif // API_IMAGEPARSER_H
+#endif
 #ifdef MAP_INSTANCE_H /* instance */
 typedef void (*HPMHOOK_pre_instance_init) (bool *minimal);
 typedef void (*HPMHOOK_post_instance_init) (bool minimal);
@@ -4012,7 +4012,7 @@ typedef void (*HPMHOOK_pre_instance_force_destroy) (struct map_session_data **sd
 typedef void (*HPMHOOK_post_instance_force_destroy) (struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_instance_reload_map_flags) (int *instance_id);
 typedef void (*HPMHOOK_post_instance_reload_map_flags) (int instance_id);
-#endif // MAP_INSTANCE_H
+#endif
 #ifdef CHAR_INT_ACHIEVEMENT_H /* inter_achievement */
 typedef int (*HPMHOOK_pre_inter_achievement_sql_init) (void);
 typedef int (*HPMHOOK_post_inter_achievement_sql_init) (int retVal___);
@@ -4028,7 +4028,7 @@ typedef int (*HPMHOOK_pre_inter_achievement_char_achievements_clear) (union DBKe
 typedef int (*HPMHOOK_post_inter_achievement_char_achievements_clear) (int retVal___, union DBKey key, struct DBData *data, va_list args);
 typedef int (*HPMHOOK_pre_inter_achievement_parse_frommap) (int *fd);
 typedef int (*HPMHOOK_post_inter_achievement_parse_frommap) (int retVal___, int fd);
-#endif // CHAR_INT_ACHIEVEMENT_H
+#endif
 #ifdef CHAR_INT_ADVENTURER_AGENCY_H /* inter_adventurer_agency */
 typedef int (*HPMHOOK_pre_inter_adventurer_agency_parse_frommap) (int *fd);
 typedef int (*HPMHOOK_post_inter_adventurer_agency_parse_frommap) (int retVal___, int fd);
@@ -4052,7 +4052,7 @@ typedef int (*HPMHOOK_pre_inter_adventurer_agency_get_pages_count) (void);
 typedef int (*HPMHOOK_post_inter_adventurer_agency_get_pages_count) (int retVal___);
 typedef int (*HPMHOOK_pre_inter_adventurer_agency_get_player_request) (int *char_id, struct adventuter_agency_entry **entry);
 typedef int (*HPMHOOK_post_inter_adventurer_agency_get_player_request) (int retVal___, int char_id, struct adventuter_agency_entry *entry);
-#endif // CHAR_INT_ADVENTURER_AGENCY_H
+#endif
 #ifdef CHAR_INT_AUCTION_H /* inter_auction */
 typedef int (*HPMHOOK_pre_inter_auction_count) (int *char_id, bool *buy);
 typedef int (*HPMHOOK_post_inter_auction_count) (int retVal___, int char_id, bool buy);
@@ -4072,7 +4072,7 @@ typedef int (*HPMHOOK_pre_inter_auction_sql_init) (void);
 typedef int (*HPMHOOK_post_inter_auction_sql_init) (int retVal___);
 typedef void (*HPMHOOK_pre_inter_auction_sql_final) (void);
 typedef void (*HPMHOOK_post_inter_auction_sql_final) (void);
-#endif // CHAR_INT_AUCTION_H
+#endif
 #ifdef CHAR_INT_CLAN_H /* inter_clan */
 typedef int (*HPMHOOK_pre_inter_clan_kick_inactive_members) (int *clan_id, int *kick_interval);
 typedef int (*HPMHOOK_post_inter_clan_kick_inactive_members) (int retVal___, int clan_id, int kick_interval);
@@ -4080,7 +4080,7 @@ typedef int (*HPMHOOK_pre_inter_clan_count_members) (int *clan_id, int *kick_int
 typedef int (*HPMHOOK_post_inter_clan_count_members) (int retVal___, int clan_id, int kick_interval);
 typedef int (*HPMHOOK_pre_inter_clan_parse_frommap) (int *fd);
 typedef int (*HPMHOOK_post_inter_clan_parse_frommap) (int retVal___, int fd);
-#endif // CHAR_INT_CLAN_H
+#endif
 #ifdef CHAR_INT_ELEMENTAL_H /* inter_elemental */
 typedef void (*HPMHOOK_pre_inter_elemental_sql_init) (void);
 typedef void (*HPMHOOK_post_inter_elemental_sql_init) (void);
@@ -4096,7 +4096,7 @@ typedef bool (*HPMHOOK_pre_inter_elemental_load) (int *ele_id, int *char_id, str
 typedef bool (*HPMHOOK_post_inter_elemental_load) (bool retVal___, int ele_id, int char_id, struct s_elemental *ele);
 typedef bool (*HPMHOOK_pre_inter_elemental_delete_) (int *ele_id);
 typedef bool (*HPMHOOK_post_inter_elemental_delete_) (bool retVal___, int ele_id);
-#endif // CHAR_INT_ELEMENTAL_H
+#endif
 #ifdef CHAR_INT_GUILD_H /* inter_guild */
 typedef int (*HPMHOOK_pre_inter_guild_save_timer) (int *tid, int64 *tick, int *id, intptr_t *data);
 typedef int (*HPMHOOK_post_inter_guild_save_timer) (int retVal___, int tid, int64 tick, int id, intptr_t data);
@@ -4172,7 +4172,7 @@ typedef bool (*HPMHOOK_pre_inter_guild_change_leader) (int *guild_id, const char
 typedef bool (*HPMHOOK_post_inter_guild_change_leader) (bool retVal___, int guild_id, const char *name, int len);
 typedef bool (*HPMHOOK_pre_inter_guild_is_guild_master) (int *char_id, int *guild_id);
 typedef bool (*HPMHOOK_post_inter_guild_is_guild_master) (bool retVal___, int char_id, int guild_id);
-#endif // CHAR_INT_GUILD_H
+#endif
 #ifdef CHAR_INT_HOMUN_H /* inter_homunculus */
 typedef int (*HPMHOOK_pre_inter_homunculus_sql_init) (void);
 typedef int (*HPMHOOK_post_inter_homunculus_sql_init) (int retVal___);
@@ -4190,7 +4190,7 @@ typedef bool (*HPMHOOK_pre_inter_homunculus_delete_) (int *homun_id);
 typedef bool (*HPMHOOK_post_inter_homunculus_delete_) (bool retVal___, int homun_id);
 typedef bool (*HPMHOOK_pre_inter_homunculus_rename) (const char **name);
 typedef bool (*HPMHOOK_post_inter_homunculus_rename) (bool retVal___, const char *name);
-#endif // CHAR_INT_HOMUN_H
+#endif
 #ifdef CHAR_INTER_H /* inter */
 typedef const char * (*HPMHOOK_pre_inter_msg_txt) (int *msg_number);
 typedef const char * (*HPMHOOK_post_inter_msg_txt) (const char * retVal___, int msg_number);
@@ -4228,7 +4228,7 @@ typedef void (*HPMHOOK_pre_inter_accinfo) (int *u_fd, int *aid, int *castergroup
 typedef void (*HPMHOOK_post_inter_accinfo) (int u_fd, int aid, int castergroup, const char *query, int map_fd);
 typedef void (*HPMHOOK_pre_inter_accinfo2) (bool *success, int *map_fd, int *u_fd, int *u_aid, int *account_id, const char **userid, const char **user_pass, const char **email, const char **last_ip, const char **lastlogin, const char **pin_code, const char **birthdate, int *group_id, int *logincount, int *state);
 typedef void (*HPMHOOK_post_inter_accinfo2) (bool success, int map_fd, int u_fd, int u_aid, int account_id, const char *userid, const char *user_pass, const char *email, const char *last_ip, const char *lastlogin, const char *pin_code, const char *birthdate, int group_id, int logincount, int state);
-#endif // CHAR_INTER_H
+#endif
 #ifdef CHAR_INT_MAIL_H /* inter_mail */
 typedef int (*HPMHOOK_pre_inter_mail_sql_init) (void);
 typedef int (*HPMHOOK_post_inter_mail_sql_init) (int retVal___);
@@ -4256,7 +4256,7 @@ typedef bool (*HPMHOOK_pre_inter_mail_return_message) (int *char_id, int *mail_i
 typedef bool (*HPMHOOK_post_inter_mail_return_message) (bool retVal___, int char_id, int mail_id, int *new_mail);
 typedef bool (*HPMHOOK_pre_inter_mail_send) (int *account_id, struct mail_message **msg);
 typedef bool (*HPMHOOK_post_inter_mail_send) (bool retVal___, int account_id, struct mail_message *msg);
-#endif // CHAR_INT_MAIL_H
+#endif
 #ifdef CHAR_INT_MERCENARY_H /* inter_mercenary */
 typedef bool (*HPMHOOK_pre_inter_mercenary_owner_fromsql) (int *char_id, struct mmo_charstatus **status);
 typedef bool (*HPMHOOK_post_inter_mercenary_owner_fromsql) (bool retVal___, int char_id, struct mmo_charstatus *status);
@@ -4278,7 +4278,7 @@ typedef bool (*HPMHOOK_pre_inter_mercenary_load) (int *merc_id, int *char_id, st
 typedef bool (*HPMHOOK_post_inter_mercenary_load) (bool retVal___, int merc_id, int char_id, struct s_mercenary *merc);
 typedef bool (*HPMHOOK_pre_inter_mercenary_delete_) (int *merc_id);
 typedef bool (*HPMHOOK_post_inter_mercenary_delete_) (bool retVal___, int merc_id);
-#endif // CHAR_INT_MERCENARY_H
+#endif
 #ifdef CHAR_INT_PARTY_H /* inter_party */
 typedef int (*HPMHOOK_pre_inter_party_check_lv) (struct party_data **p);
 typedef int (*HPMHOOK_post_inter_party_check_lv) (int retVal___, struct party_data *p);
@@ -4324,7 +4324,7 @@ typedef bool (*HPMHOOK_pre_inter_party_change_leader) (int *party_id, int *accou
 typedef bool (*HPMHOOK_post_inter_party_change_leader) (bool retVal___, int party_id, int account_id, int char_id);
 typedef int (*HPMHOOK_pre_inter_party_is_leader) (struct party_data **p, int *char_id);
 typedef int (*HPMHOOK_post_inter_party_is_leader) (int retVal___, struct party_data *p, int char_id);
-#endif // CHAR_INT_PARTY_H
+#endif
 #ifdef CHAR_INT_PET_H /* inter_pet */
 typedef int (*HPMHOOK_pre_inter_pet_tosql) (const struct s_pet **p);
 typedef int (*HPMHOOK_post_inter_pet_tosql) (int retVal___, const struct s_pet *p);
@@ -4342,7 +4342,7 @@ typedef struct s_pet * (*HPMHOOK_pre_inter_pet_create) (int *account_id, int *ch
 typedef struct s_pet * (*HPMHOOK_post_inter_pet_create) (struct s_pet * retVal___, int account_id, int char_id, int pet_class, int pet_lv, int pet_egg_id, int pet_equip, short intimate, short hungry, char rename_flag, char incubate, const char *pet_name);
 typedef struct s_pet * (*HPMHOOK_pre_inter_pet_load) (int *account_id, int *char_id, int *pet_id);
 typedef struct s_pet * (*HPMHOOK_post_inter_pet_load) (struct s_pet * retVal___, int account_id, int char_id, int pet_id);
-#endif // CHAR_INT_PET_H
+#endif
 #ifdef CHAR_INT_QUEST_H /* inter_quest */
 typedef int (*HPMHOOK_pre_inter_quest_parse_frommap) (int *fd);
 typedef int (*HPMHOOK_post_inter_quest_parse_frommap) (int retVal___, int fd);
@@ -4356,7 +4356,7 @@ typedef bool (*HPMHOOK_pre_inter_quest_update) (int *char_id, struct quest *qd);
 typedef bool (*HPMHOOK_post_inter_quest_update) (bool retVal___, int char_id, struct quest qd);
 typedef bool (*HPMHOOK_pre_inter_quest_save) (int *char_id, const struct quest **new_qd, int *new_n);
 typedef bool (*HPMHOOK_post_inter_quest_save) (bool retVal___, int char_id, const struct quest *new_qd, int new_n);
-#endif // CHAR_INT_QUEST_H
+#endif
 #ifdef CHAR_INT_RODEX_H /* inter_rodex */
 typedef int (*HPMHOOK_pre_inter_rodex_sql_init) (void);
 typedef int (*HPMHOOK_post_inter_rodex_sql_init) (int retVal___);
@@ -4378,7 +4378,7 @@ typedef int64 (*HPMHOOK_pre_inter_rodex_getzeny) (int64 *mail_id);
 typedef int64 (*HPMHOOK_post_inter_rodex_getzeny) (int64 retVal___, int64 mail_id);
 typedef int (*HPMHOOK_pre_inter_rodex_getitems) (int64 *mail_id, struct rodex_item **items);
 typedef int (*HPMHOOK_post_inter_rodex_getitems) (int retVal___, int64 mail_id, struct rodex_item *items);
-#endif // CHAR_INT_RODEX_H
+#endif
 #ifdef CHAR_INT_STORAGE_H /* inter_storage */
 typedef int (*HPMHOOK_pre_inter_storage_tosql) (int *account_id, int *storage_id, const struct storage_data **p);
 typedef int (*HPMHOOK_post_inter_storage_tosql) (int retVal___, int account_id, int storage_id, const struct storage_data *p);
@@ -4400,7 +4400,7 @@ typedef int (*HPMHOOK_pre_inter_storage_parse_frommap) (int *fd);
 typedef int (*HPMHOOK_post_inter_storage_parse_frommap) (int retVal___, int fd);
 typedef bool (*HPMHOOK_pre_inter_storage_retrieve_bound_items) (int *char_id, int *account_id, int *guild_id);
 typedef bool (*HPMHOOK_post_inter_storage_retrieve_bound_items) (bool retVal___, int char_id, int account_id, int guild_id);
-#endif // CHAR_INT_STORAGE_H
+#endif
 #ifdef CHAR_INT_USERCONFIG_H /* inter_userconfig */
 typedef void (*HPMHOOK_pre_inter_userconfig_init) (void);
 typedef void (*HPMHOOK_post_inter_userconfig_init) (void);
@@ -4422,7 +4422,7 @@ typedef void (*HPMHOOK_pre_inter_userconfig_hotkey_tab_clear) (int *account_id, 
 typedef void (*HPMHOOK_post_inter_userconfig_hotkey_tab_clear) (int account_id, int tab_id);
 typedef bool (*HPMHOOK_pre_inter_userconfig_hotkey_tab_fromsql) (int *account_id, struct userconfig_userhotkeys_v2 **hotkeys, int *tab_id);
 typedef bool (*HPMHOOK_post_inter_userconfig_hotkey_tab_fromsql) (bool retVal___, int account_id, struct userconfig_userhotkeys_v2 *hotkeys, int tab_id);
-#endif // CHAR_INT_USERCONFIG_H
+#endif
 #ifdef MAP_INTIF_H /* intif */
 typedef void (*HPMHOOK_pre_intif_final) (void);
 typedef void (*HPMHOOK_post_intif_final) (void);
@@ -4710,7 +4710,7 @@ typedef void (*HPMHOOK_pre_intif_request_agency_join_party) (int *char_id, int *
 typedef void (*HPMHOOK_post_intif_request_agency_join_party) (int char_id, int party_id, int map_index);
 typedef void (*HPMHOOK_pre_intif_pAgencyJoinResult) (int *fd);
 typedef void (*HPMHOOK_post_intif_pAgencyJoinResult) (int fd);
-#endif // MAP_INTIF_H
+#endif
 #ifdef LOGIN_IPBAN_H /* ipban */
 typedef void (*HPMHOOK_pre_ipban_init) (void);
 typedef void (*HPMHOOK_post_ipban_init) (void);
@@ -4730,7 +4730,7 @@ typedef bool (*HPMHOOK_pre_ipban_check) (uint32 *ip);
 typedef bool (*HPMHOOK_post_ipban_check) (bool retVal___, uint32 ip);
 typedef void (*HPMHOOK_pre_ipban_log) (uint32 *ip);
 typedef void (*HPMHOOK_post_ipban_log) (uint32 ip);
-#endif // LOGIN_IPBAN_H
+#endif
 #ifdef MAP_IRC_BOT_H /* ircbot */
 typedef void (*HPMHOOK_pre_ircbot_init) (bool *minimal);
 typedef void (*HPMHOOK_post_ircbot_init) (bool minimal);
@@ -4770,7 +4770,7 @@ typedef void (*HPMHOOK_pre_ircbot_userleave) (int *fd, char **cmd, char **source
 typedef void (*HPMHOOK_post_ircbot_userleave) (int fd, char *cmd, char *source, char *target, char *msg);
 typedef void (*HPMHOOK_pre_ircbot_usernick) (int *fd, char **cmd, char **source, char **target, char **msg);
 typedef void (*HPMHOOK_post_ircbot_usernick) (int fd, char *cmd, char *source, char *target, char *msg);
-#endif // MAP_IRC_BOT_H
+#endif
 #ifdef MAP_ITEMDB_H /* itemdb */
 typedef void (*HPMHOOK_pre_itemdb_init) (bool *minimal);
 typedef void (*HPMHOOK_post_itemdb_init) (bool minimal);
@@ -4934,7 +4934,7 @@ typedef void (*HPMHOOK_pre_itemdb_item_reform) (struct map_session_data **sd, co
 typedef void (*HPMHOOK_post_itemdb_item_reform) (struct map_session_data *sd, const struct item_reform *ir, int idx);
 typedef const struct item_reform * (*HPMHOOK_pre_itemdb_search_reform_baseitem) (const struct item_data **itd, int *nameid);
 typedef const struct item_reform * (*HPMHOOK_post_itemdb_search_reform_baseitem) (const struct item_reform * retVal___, const struct item_data *itd, int nameid);
-#endif // MAP_ITEMDB_H
+#endif
 #ifdef API_JSONPARSER_H /* jsonparser */
 typedef int (*HPMHOOK_pre_jsonparser_init) (bool *minimal);
 typedef int (*HPMHOOK_post_jsonparser_init) (int retVal___, bool minimal);
@@ -4972,7 +4972,7 @@ typedef void (*HPMHOOK_pre_jsonparser_free) (char **ptr);
 typedef void (*HPMHOOK_post_jsonparser_free) (char *ptr);
 typedef void (*HPMHOOK_pre_jsonparser_delete_) (JsonP **ptr);
 typedef void (*HPMHOOK_post_jsonparser_delete_) (JsonP *ptr);
-#endif // API_JSONPARSER_H
+#endif
 #ifdef API_JSONWRITER_H /* jsonwriter */
 typedef int (*HPMHOOK_pre_jsonwriter_init) (bool *minimal);
 typedef int (*HPMHOOK_post_jsonwriter_init) (int retVal___, bool minimal);
@@ -5022,7 +5022,7 @@ typedef void (*HPMHOOK_pre_jsonwriter_free) (char **ptr);
 typedef void (*HPMHOOK_post_jsonwriter_free) (char *ptr);
 typedef void (*HPMHOOK_pre_jsonwriter_delete_) (JsonW **ptr);
 typedef void (*HPMHOOK_post_jsonwriter_delete_) (JsonW *ptr);
-#endif // API_JSONWRITER_H
+#endif
 #ifdef LOGIN_LAPIIF_H /* lapiif */
 typedef void (*HPMHOOK_pre_lapiif_init) (void);
 typedef void (*HPMHOOK_post_lapiif_init) (void);
@@ -5068,7 +5068,7 @@ typedef void (*HPMHOOK_pre_lapiif_parse_proxy_api_to_char) (int *fd);
 typedef void (*HPMHOOK_post_lapiif_parse_proxy_api_to_char) (int fd);
 typedef void (*HPMHOOK_pre_lapiif_parse_proxy_api_from_char) (int *fd);
 typedef void (*HPMHOOK_post_lapiif_parse_proxy_api_from_char) (int fd);
-#endif // LOGIN_LAPIIF_H
+#endif
 #ifdef LOGIN_LOGIN_H /* lchrif */
 typedef void (*HPMHOOK_pre_lchrif_server_init) (int *id);
 typedef void (*HPMHOOK_post_lchrif_server_init) (int id);
@@ -5078,7 +5078,7 @@ typedef void (*HPMHOOK_pre_lchrif_server_reset) (int *id);
 typedef void (*HPMHOOK_post_lchrif_server_reset) (int id);
 typedef void (*HPMHOOK_pre_lchrif_on_disconnect) (int *id);
 typedef void (*HPMHOOK_post_lchrif_on_disconnect) (int id);
-#endif // LOGIN_LOGIN_H
+#endif
 #ifdef LOGIN_LCLIF_H /* lclif */
 typedef void (*HPMHOOK_pre_lclif_init) (void);
 typedef void (*HPMHOOK_post_lclif_init) (void);
@@ -5100,7 +5100,7 @@ typedef enum parsefunc_rcode (*HPMHOOK_pre_lclif_parse_packet) (const struct log
 typedef enum parsefunc_rcode (*HPMHOOK_post_lclif_parse_packet) (enum parsefunc_rcode retVal___, const struct login_packet_db *lpd, int fd, struct login_session_data *sd);
 typedef int (*HPMHOOK_pre_lclif_parse) (int *fd);
 typedef int (*HPMHOOK_post_lclif_parse) (int retVal___, int fd);
-#endif // LOGIN_LCLIF_H
+#endif
 #ifdef LOGIN_LCLIF_P_H /* PRIV__lclif */
 typedef void (*HPMHOOK_pre_PRIV__lclif_packetdb_loaddb) (void);
 typedef void (*HPMHOOK_post_PRIV__lclif_packetdb_loaddb) (void);
@@ -5136,7 +5136,7 @@ typedef enum parsefunc_rcode (*HPMHOOK_pre_PRIV__lclif_parse_CA_CHARSERVERCONNEC
 typedef enum parsefunc_rcode (*HPMHOOK_post_PRIV__lclif_parse_CA_CHARSERVERCONNECT) (enum parsefunc_rcode retVal___, int fd, struct login_session_data *sd);
 typedef enum parsefunc_rcode (*HPMHOOK_pre_PRIV__lclif_parse_CA_APISERVERCONNECT) (int *fd, struct login_session_data **sd);
 typedef enum parsefunc_rcode (*HPMHOOK_post_PRIV__lclif_parse_CA_APISERVERCONNECT) (enum parsefunc_rcode retVal___, int fd, struct login_session_data *sd);
-#endif // LOGIN_LCLIF_P_H
+#endif
 #ifdef COMMON_CONF_H /* libconfig */
 typedef void (*HPMHOOK_pre_libconfig_set_db_path) (const char **db_path);
 typedef void (*HPMHOOK_post_libconfig_set_db_path) (const char *db_path);
@@ -5278,7 +5278,7 @@ typedef int (*HPMHOOK_pre_libconfig_setting_lookup_mutable_string) (const struct
 typedef int (*HPMHOOK_post_libconfig_setting_lookup_mutable_string) (int retVal___, const struct config_setting_t *setting, const char *name, char *out, size_t out_size);
 typedef int (*HPMHOOK_pre_libconfig_lookup_mutable_string) (const struct config_t **config, const char **name, char **out, size_t *out_size);
 typedef int (*HPMHOOK_post_libconfig_lookup_mutable_string) (int retVal___, const struct config_t *config, const char *name, char *out, size_t out_size);
-#endif // COMMON_CONF_H
+#endif
 #ifdef MAP_LOG_H /* logs */
 typedef void (*HPMHOOK_pre_logs_pick_pc) (struct map_session_data **sd, e_log_pick_type *type, int *amount, struct item **itm, struct item_data **data);
 typedef void (*HPMHOOK_post_logs_pick_pc) (struct map_session_data *sd, e_log_pick_type type, int amount, struct item *itm, struct item_data *data);
@@ -5324,7 +5324,7 @@ typedef char (*HPMHOOK_pre_logs_chattype2char) (e_log_chat_type *type);
 typedef char (*HPMHOOK_post_logs_chattype2char) (char retVal___, e_log_chat_type type);
 typedef bool (*HPMHOOK_pre_logs_should_log_item) (int *nameid, int *amount, int *refine_level, struct item_data **id);
 typedef bool (*HPMHOOK_post_logs_should_log_item) (bool retVal___, int nameid, int amount, int refine_level, struct item_data *id);
-#endif // MAP_LOG_H
+#endif
 #ifdef LOGIN_LOGIN_H /* login */
 typedef int (*HPMHOOK_pre_login_mmo_auth) (struct login_session_data **sd, bool *isServer);
 typedef int (*HPMHOOK_post_login_mmo_auth) (int retVal___, struct login_session_data *sd, bool isServer);
@@ -5464,7 +5464,7 @@ typedef int (*HPMHOOK_pre_login_check_client_version) (struct login_session_data
 typedef int (*HPMHOOK_post_login_check_client_version) (int retVal___, struct login_session_data *sd);
 typedef void (*HPMHOOK_pre_login_generate_token) (unsigned char **token);
 typedef void (*HPMHOOK_post_login_generate_token) (unsigned char *token);
-#endif // LOGIN_LOGIN_H
+#endif
 #ifdef CHAR_LOGINIF_H /* loginif */
 typedef void (*HPMHOOK_pre_loginif_init) (void);
 typedef void (*HPMHOOK_post_loginif_init) (void);
@@ -5494,7 +5494,7 @@ typedef void (*HPMHOOK_pre_loginif_connect_to_server) (void);
 typedef void (*HPMHOOK_post_loginif_connect_to_server) (void);
 typedef void (*HPMHOOK_pre_loginif_set_char_online) (int *char_id, int *account_id);
 typedef void (*HPMHOOK_post_loginif_set_char_online) (int char_id, int account_id);
-#endif // CHAR_LOGINIF_H
+#endif
 #ifdef LOGIN_LOGINLOG_H /* loginlog */
 typedef unsigned long (*HPMHOOK_pre_loginlog_failedattempts) (uint32 *ip, unsigned int *minutes);
 typedef unsigned long (*HPMHOOK_post_loginlog_failedattempts) (unsigned long retVal___, uint32 ip, unsigned int minutes);
@@ -5510,7 +5510,7 @@ typedef bool (*HPMHOOK_pre_loginlog_config_read_log) (const char **filename, str
 typedef bool (*HPMHOOK_post_loginlog_config_read_log) (bool retVal___, const char *filename, struct config_t *config, bool imported);
 typedef bool (*HPMHOOK_pre_loginlog_config_read) (const char **filename, bool *imported);
 typedef bool (*HPMHOOK_post_loginlog_config_read) (bool retVal___, const char *filename, bool imported);
-#endif // LOGIN_LOGINLOG_H
+#endif
 #ifdef MAP_MACRO_H /* macro */
 typedef int (*HPMHOOK_pre_macro_init) (bool *minimal);
 typedef int (*HPMHOOK_post_macro_init) (int retVal___, bool minimal);
@@ -5542,7 +5542,7 @@ typedef bool (*HPMHOOK_pre_macro_read_captcha_db_libconfig_sub) (const struct co
 typedef bool (*HPMHOOK_post_macro_read_captcha_db_libconfig_sub) (bool retVal___, const struct config_setting_t *it, int n, const char *source);
 typedef bool (*HPMHOOK_pre_macro_read_captcha_db_libconfig_sub_loadbmp) (const char **filepath, struct captcha_data **cd);
 typedef bool (*HPMHOOK_post_macro_read_captcha_db_libconfig_sub_loadbmp) (bool retVal___, const char *filepath, struct captcha_data *cd);
-#endif // MAP_MACRO_H
+#endif
 #ifdef MAP_MAIL_H /* mail */
 typedef void (*HPMHOOK_pre_mail_clear) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_mail_clear) (struct map_session_data *sd);
@@ -5562,7 +5562,7 @@ typedef void (*HPMHOOK_pre_mail_deliveryfail) (struct map_session_data **sd, str
 typedef void (*HPMHOOK_post_mail_deliveryfail) (struct map_session_data *sd, struct mail_message *msg);
 typedef bool (*HPMHOOK_pre_mail_invalid_operation) (struct map_session_data **sd);
 typedef bool (*HPMHOOK_post_mail_invalid_operation) (bool retVal___, struct map_session_data *sd);
-#endif // MAP_MAIL_H
+#endif
 #ifdef MAP_MAP_H /* map */
 typedef void (*HPMHOOK_pre_map_zone_init) (void);
 typedef void (*HPMHOOK_post_map_zone_init) (void);
@@ -5842,7 +5842,7 @@ typedef void (*HPMHOOK_pre_map_zone_clear_single) (struct map_zone_data **zone);
 typedef void (*HPMHOOK_post_map_zone_clear_single) (struct map_zone_data *zone);
 typedef void (*HPMHOOK_pre_map_lock_check) (const char **file, const char **func, int *line, int *lock_count);
 typedef void (*HPMHOOK_post_map_lock_check) (const char *file, const char *func, int line, int lock_count);
-#endif // MAP_MAP_H
+#endif
 #ifdef CHAR_MAPIF_H /* mapif */
 typedef void (*HPMHOOK_pre_mapif_final) (void);
 typedef void (*HPMHOOK_post_mapif_final) (void);
@@ -6160,7 +6160,7 @@ typedef int (*HPMHOOK_pre_mapif_parse_ClanMemberCount) (int *fd, int *clan_id, i
 typedef int (*HPMHOOK_post_mapif_parse_ClanMemberCount) (int retVal___, int fd, int clan_id, int kick_interval);
 typedef void (*HPMHOOK_pre_mapif_agency_joinPartyResult) (int *fd, int *char_id, enum adventurer_agency_result *result);
 typedef void (*HPMHOOK_post_mapif_agency_joinPartyResult) (int fd, int char_id, enum adventurer_agency_result result);
-#endif // CHAR_MAPIF_H
+#endif
 #ifdef MAP_MAPIIF_H /* mapiif */
 typedef void (*HPMHOOK_pre_mapiif_init) (bool *minimal);
 typedef void (*HPMHOOK_post_mapiif_init) (bool minimal);
@@ -6170,7 +6170,7 @@ typedef int (*HPMHOOK_pre_mapiif_parse_fromchar_api_proxy) (int *fd);
 typedef int (*HPMHOOK_post_mapiif_parse_fromchar_api_proxy) (int retVal___, int fd);
 typedef void (*HPMHOOK_pre_mapiif_parse_adventurer_agency_info) (int *fd);
 typedef void (*HPMHOOK_post_mapiif_parse_adventurer_agency_info) (int fd);
-#endif // MAP_MAPIIF_H
+#endif
 #ifdef COMMON_MAPINDEX_H /* mapindex */
 typedef bool (*HPMHOOK_pre_mapindex_config_read_dbpath) (const char **filename, const struct config_t **config);
 typedef bool (*HPMHOOK_post_mapindex_config_read_dbpath) (bool retVal___, const char *filename, const struct config_t *config);
@@ -6194,7 +6194,7 @@ typedef const char * (*HPMHOOK_pre_mapindex_id2name) (uint16 *id, const char **f
 typedef const char * (*HPMHOOK_post_mapindex_id2name) (const char * retVal___, uint16 id, const char *file, int line, const char *func);
 typedef bool (*HPMHOOK_pre_mapindex_check_default) (void);
 typedef bool (*HPMHOOK_post_mapindex_check_default) (bool retVal___);
-#endif // COMMON_MAPINDEX_H
+#endif
 #ifdef MAP_MAP_H /* mapit */
 typedef struct s_mapiterator * (*HPMHOOK_pre_mapit_alloc) (enum e_mapitflags *flags, enum bl_type *types);
 typedef struct s_mapiterator * (*HPMHOOK_post_mapit_alloc) (struct s_mapiterator * retVal___, enum e_mapitflags flags, enum bl_type types);
@@ -6210,7 +6210,7 @@ typedef struct block_list * (*HPMHOOK_pre_mapit_prev) (struct s_mapiterator **it
 typedef struct block_list * (*HPMHOOK_post_mapit_prev) (struct block_list * retVal___, struct s_mapiterator *iter);
 typedef bool (*HPMHOOK_pre_mapit_exists) (struct s_mapiterator **iter);
 typedef bool (*HPMHOOK_post_mapit_exists) (bool retVal___, struct s_mapiterator *iter);
-#endif // MAP_MAP_H
+#endif
 #ifdef MAP_MAPREG_H /* mapreg */
 typedef int (*HPMHOOK_pre_mapreg_readreg) (int64 *uid);
 typedef int (*HPMHOOK_post_mapreg_readreg) (int retVal___, int64 uid);
@@ -6252,7 +6252,7 @@ typedef void (*HPMHOOK_pre_mapreg_final) (void);
 typedef void (*HPMHOOK_post_mapreg_final) (void);
 typedef void (*HPMHOOK_pre_mapreg_init) (void);
 typedef void (*HPMHOOK_post_mapreg_init) (void);
-#endif // MAP_MAPREG_H
+#endif
 #ifdef COMMON_MD5CALC_H /* md5 */
 typedef void (*HPMHOOK_pre_md5_string) (const char **string, char **output);
 typedef void (*HPMHOOK_post_md5_string) (const char *string, char *output);
@@ -6260,7 +6260,7 @@ typedef void (*HPMHOOK_pre_md5_binary) (const uint8 **buf, const int *buf_size, 
 typedef void (*HPMHOOK_post_md5_binary) (const uint8 *buf, const int buf_size, uint8 *output);
 typedef void (*HPMHOOK_pre_md5_salt) (int *len, char **output);
 typedef void (*HPMHOOK_post_md5_salt) (int len, char *output);
-#endif // COMMON_MD5CALC_H
+#endif
 #ifdef MAP_MERCENARY_H /* mercenary */
 typedef void (*HPMHOOK_pre_mercenary_init) (bool *minimal);
 typedef void (*HPMHOOK_post_mercenary_init) (bool minimal);
@@ -6312,7 +6312,7 @@ typedef bool (*HPMHOOK_pre_mercenary_read_db_sub) (char **str[], int *columns, i
 typedef bool (*HPMHOOK_post_mercenary_read_db_sub) (bool retVal___, char *str[], int columns, int current);
 typedef bool (*HPMHOOK_pre_mercenary_read_skill_db_sub) (char **str[], int *columns, int *current);
 typedef bool (*HPMHOOK_post_mercenary_read_skill_db_sub) (bool retVal___, char *str[], int columns, int current);
-#endif // MAP_MERCENARY_H
+#endif
 #ifdef MAP_MOB_H /* mob */
 typedef int (*HPMHOOK_pre_mob_init) (bool *mimimal);
 typedef int (*HPMHOOK_post_mob_init) (int retVal___, bool mimimal);
@@ -6562,7 +6562,7 @@ typedef bool (*HPMHOOK_pre_mob_read_group_db_libconfig_sub) (struct config_setti
 typedef bool (*HPMHOOK_post_mob_read_group_db_libconfig_sub) (bool retVal___, struct config_setting_t *it, const char *source);
 typedef bool (*HPMHOOK_pre_mob_read_group_db_libconfig_sub_group) (struct config_setting_t **it, enum mob_groups *group_id, const char **source);
 typedef bool (*HPMHOOK_post_mob_read_group_db_libconfig_sub_group) (bool retVal___, struct config_setting_t *it, enum mob_groups group_id, const char *source);
-#endif // MAP_MOB_H
+#endif
 #ifdef COMMON_MUTEX_H /* mutex */
 typedef struct mutex_data * (*HPMHOOK_pre_mutex_create) (void);
 typedef struct mutex_data * (*HPMHOOK_post_mutex_create) (struct mutex_data * retVal___);
@@ -6584,7 +6584,7 @@ typedef void (*HPMHOOK_pre_mutex_cond_signal) (struct cond_data **c);
 typedef void (*HPMHOOK_post_mutex_cond_signal) (struct cond_data *c);
 typedef void (*HPMHOOK_pre_mutex_cond_broadcast) (struct cond_data **c);
 typedef void (*HPMHOOK_post_mutex_cond_broadcast) (struct cond_data *c);
-#endif // COMMON_MUTEX_H
+#endif
 #ifdef MAP_NPC_H /* npc_chat */
 typedef int (*HPMHOOK_pre_npc_chat_sub) (struct block_list **bl, va_list ap);
 typedef int (*HPMHOOK_post_npc_chat_sub) (int retVal___, struct block_list *bl, va_list ap);
@@ -6604,7 +6604,7 @@ typedef struct pcrematch_set * (*HPMHOOK_pre_npc_chat_lookup_pcreset) (struct np
 typedef struct pcrematch_set * (*HPMHOOK_post_npc_chat_lookup_pcreset) (struct pcrematch_set * retVal___, struct npc_data *nd, int setid);
 typedef void (*HPMHOOK_pre_npc_chat_finalize_pcrematch_entry) (struct pcrematch_entry **e);
 typedef void (*HPMHOOK_post_npc_chat_finalize_pcrematch_entry) (struct pcrematch_entry *e);
-#endif // MAP_NPC_H
+#endif
 #ifdef MAP_NPC_H /* npc */
 typedef int (*HPMHOOK_pre_npc_init) (bool *minimal);
 typedef int (*HPMHOOK_post_npc_init) (int retVal___, bool minimal);
@@ -6860,7 +6860,7 @@ typedef int (*HPMHOOK_pre_npc_dynamic_npc_despawn) (int *tid, int64 *tick, int *
 typedef int (*HPMHOOK_post_npc_dynamic_npc_despawn) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 typedef void (*HPMHOOK_pre_npc_update_interaction_tick) (struct npc_data **nd);
 typedef void (*HPMHOOK_post_npc_update_interaction_tick) (struct npc_data *nd);
-#endif // MAP_NPC_H
+#endif
 #ifdef COMMON_NULLPO_H /* nullpo */
 typedef void (*HPMHOOK_pre_nullpo_init) (void);
 typedef void (*HPMHOOK_post_nullpo_init) (void);
@@ -6868,7 +6868,7 @@ typedef void (*HPMHOOK_pre_nullpo_final) (void);
 typedef void (*HPMHOOK_post_nullpo_final) (void);
 typedef void (*HPMHOOK_pre_nullpo_assert_report) (const char **file, int *line, const char **func, const char **targetname, const char **title);
 typedef void (*HPMHOOK_post_nullpo_assert_report) (const char *file, int line, const char *func, const char *targetname, const char *title);
-#endif // COMMON_NULLPO_H
+#endif
 #ifdef COMMON_PACKETS_H /* packets */
 typedef void (*HPMHOOK_pre_packets_init) (void);
 typedef void (*HPMHOOK_post_packets_init) (void);
@@ -6884,7 +6884,7 @@ typedef void (*HPMHOOK_pre_packets_addLenInter) (int *id, int *len);
 typedef void (*HPMHOOK_post_packets_addLenInter) (int id, int len);
 typedef void (*HPMHOOK_pre_packets_addLenChrif) (int *id, int *len);
 typedef void (*HPMHOOK_post_packets_addLenChrif) (int id, int len);
-#endif // COMMON_PACKETS_H
+#endif
 #ifdef MAP_PARTY_H /* party */
 typedef void (*HPMHOOK_pre_party_init) (bool *minimal);
 typedef void (*HPMHOOK_post_party_init) (bool minimal);
@@ -6986,7 +6986,7 @@ typedef bool (*HPMHOOK_pre_party_is_leader) (struct map_session_data **sd, const
 typedef bool (*HPMHOOK_post_party_is_leader) (bool retVal___, struct map_session_data *sd, const struct party_data *p);
 typedef void (*HPMHOOK_pre_party_agency_request_join) (struct map_session_data **sd, struct map_session_data **tsd);
 typedef void (*HPMHOOK_post_party_agency_request_join) (struct map_session_data *sd, struct map_session_data *tsd);
-#endif // MAP_PARTY_H
+#endif
 #ifdef MAP_PATH_H /* path */
 typedef int (*HPMHOOK_pre_path_blownpos) (struct block_list **bl, int16 *m, int16 *x0, int16 *y0, enum unit_dir *dir, int *count);
 typedef int (*HPMHOOK_post_path_blownpos) (int retVal___, struct block_list *bl, int16 m, int16 x0, int16 y0, enum unit_dir dir, int count);
@@ -7002,7 +7002,7 @@ typedef bool (*HPMHOOK_pre_path_check_distance_client) (int *dx, int *dy, int *d
 typedef bool (*HPMHOOK_post_path_check_distance_client) (bool retVal___, int dx, int dy, int distance);
 typedef int (*HPMHOOK_pre_path_distance_client) (int *dx, int *dy);
 typedef int (*HPMHOOK_post_path_distance_client) (int retVal___, int dx, int dy);
-#endif // MAP_PATH_H
+#endif
 #ifdef MAP_PC_GROUPS_H /* pcg */
 typedef void (*HPMHOOK_pre_pcg_init) (void);
 typedef void (*HPMHOOK_post_pcg_init) (void);
@@ -7026,7 +7026,7 @@ typedef int (*HPMHOOK_pre_pcg_get_level) (GroupSettings **group);
 typedef int (*HPMHOOK_post_pcg_get_level) (int retVal___, GroupSettings *group);
 typedef int (*HPMHOOK_pre_pcg_get_idx) (GroupSettings **group);
 typedef int (*HPMHOOK_post_pcg_get_idx) (int retVal___, GroupSettings *group);
-#endif // MAP_PC_GROUPS_H
+#endif
 #ifdef MAP_PC_H /* pc */
 typedef void (*HPMHOOK_pre_pc_init) (bool *minimal);
 typedef void (*HPMHOOK_post_pc_init) (bool minimal);
@@ -7562,7 +7562,7 @@ typedef void (*HPMHOOK_pre_pc_clear_existing_cloneskill) (struct map_session_dat
 typedef void (*HPMHOOK_post_pc_clear_existing_cloneskill) (struct map_session_data *sd, bool clear_vars);
 typedef void (*HPMHOOK_pre_pc_clear_existing_reproduceskill) (struct map_session_data **sd, bool *clear_vars);
 typedef void (*HPMHOOK_post_pc_clear_existing_reproduceskill) (struct map_session_data *sd, bool clear_vars);
-#endif // MAP_PC_H
+#endif
 #ifdef MAP_NPC_H /* libpcre */
 typedef pcre * (*HPMHOOK_pre_libpcre_compile) (const char **pattern, int *options, const char ***errptr, int **erroffset, const unsigned char **tableptr);
 typedef pcre * (*HPMHOOK_post_libpcre_compile) (pcre * retVal___, const char *pattern, int options, const char **errptr, int *erroffset, const unsigned char *tableptr);
@@ -7580,7 +7580,7 @@ typedef int (*HPMHOOK_pre_libpcre_copy_named_substring) (const pcre **code, cons
 typedef int (*HPMHOOK_post_libpcre_copy_named_substring) (int retVal___, const pcre *code, const char *subject, int *ovector, int stringcount, const char *stringname, char *buffer, int buffersize);
 typedef int (*HPMHOOK_pre_libpcre_get_substring) (const char **subject, int **ovector, int *stringcount, int *stringnumber, const char ***stringptr);
 typedef int (*HPMHOOK_post_libpcre_get_substring) (int retVal___, const char *subject, int *ovector, int stringcount, int stringnumber, const char **stringptr);
-#endif // MAP_NPC_H
+#endif
 #ifdef MAP_PET_H /* pet */
 typedef int (*HPMHOOK_pre_pet_init) (bool *minimal);
 typedef int (*HPMHOOK_post_pet_init) (int retVal___, bool minimal);
@@ -7674,7 +7674,7 @@ typedef void (*HPMHOOK_pre_pet_read_db_clear) (void);
 typedef void (*HPMHOOK_post_pet_read_db_clear) (void);
 typedef bool (*HPMHOOK_pre_pet_read_db_sub_evolution) (struct s_pet_db **entry, struct config_setting_t **t);
 typedef bool (*HPMHOOK_post_pet_read_db_sub_evolution) (bool retVal___, struct s_pet_db *entry, struct config_setting_t *t);
-#endif // MAP_PET_H
+#endif
 #ifdef CHAR_PINCODE_H /* pincode */
 typedef void (*HPMHOOK_pre_pincode_handle) (int *fd, struct char_session_data **sd);
 typedef void (*HPMHOOK_post_pincode_handle) (int fd, struct char_session_data *sd);
@@ -7708,7 +7708,7 @@ typedef void (*HPMHOOK_pre_pincode_init) (void);
 typedef void (*HPMHOOK_post_pincode_init) (void);
 typedef void (*HPMHOOK_pre_pincode_final) (void);
 typedef void (*HPMHOOK_post_pincode_final) (void);
-#endif // CHAR_PINCODE_H
+#endif
 #ifdef MAP_QUEST_H /* quest */
 typedef void (*HPMHOOK_pre_quest_init) (bool *minimal);
 typedef void (*HPMHOOK_post_quest_init) (bool minimal);
@@ -7772,7 +7772,7 @@ typedef enum quest_mobtype (*HPMHOOK_pre_quest_mobele2client) (uint8 *type);
 typedef enum quest_mobtype (*HPMHOOK_post_quest_mobele2client) (enum quest_mobtype retVal___, uint8 type);
 typedef enum quest_mobtype (*HPMHOOK_pre_quest_mobrace2client) (uint8 *type);
 typedef enum quest_mobtype (*HPMHOOK_post_quest_mobrace2client) (enum quest_mobtype retVal___, uint8 type);
-#endif // MAP_QUEST_H
+#endif
 #ifdef MAP_REFINE_H /* refine */
 typedef int (*HPMHOOK_pre_refine_init) (bool *minimal);
 typedef int (*HPMHOOK_post_refine_init) (int retVal___, bool minimal);
@@ -7788,7 +7788,7 @@ typedef void (*HPMHOOK_pre_refine_refinery_add_item) (struct map_session_data **
 typedef void (*HPMHOOK_post_refine_refinery_add_item) (struct map_session_data *sd, int item_index);
 typedef void (*HPMHOOK_pre_refine_refinery_refine_request) (struct map_session_data **sd, int *item_index, int *material_id, bool *use_blacksmith_blessing);
 typedef void (*HPMHOOK_post_refine_refinery_refine_request) (struct map_session_data *sd, int item_index, int material_id, bool use_blacksmith_blessing);
-#endif // MAP_REFINE_H
+#endif
 #ifdef MAP_REFINE_P_H /* PRIV__refine */
 typedef int (*HPMHOOK_pre_PRIV__refine_readdb_refine_libconfig_sub) (struct config_setting_t **r, const char **name, const char **source);
 typedef int (*HPMHOOK_post_PRIV__refine_readdb_refine_libconfig_sub) (int retVal___, struct config_setting_t *r, const char *name, const char *source);
@@ -7806,7 +7806,7 @@ typedef int (*HPMHOOK_pre_PRIV__refine_readdb_refinery_ui_settings) (const struc
 typedef int (*HPMHOOK_post_PRIV__refine_readdb_refinery_ui_settings) (int retVal___, const struct config_setting_t *r, int type, const char *name, const char *source);
 typedef bool (*HPMHOOK_pre_PRIV__refine_is_refinable) (struct map_session_data **sd, int *item_index);
 typedef bool (*HPMHOOK_post_PRIV__refine_is_refinable) (bool retVal___, struct map_session_data *sd, int item_index);
-#endif // MAP_REFINE_P_H
+#endif
 #ifdef COMMON_RANDOM_H /* rnd */
 typedef void (*HPMHOOK_pre_rnd_init) (void);
 typedef void (*HPMHOOK_post_rnd_init) (void);
@@ -7824,7 +7824,7 @@ typedef double (*HPMHOOK_pre_rnd_uniform) (void);
 typedef double (*HPMHOOK_post_rnd_uniform) (double retVal___);
 typedef double (*HPMHOOK_pre_rnd_uniform53) (void);
 typedef double (*HPMHOOK_post_rnd_uniform53) (double retVal___);
-#endif // COMMON_RANDOM_H
+#endif
 #ifdef MAP_RODEX_H /* rodex */
 typedef void (*HPMHOOK_pre_rodex_init) (bool *minimal);
 typedef void (*HPMHOOK_post_rodex_init) (bool minimal);
@@ -7864,7 +7864,7 @@ typedef void (*HPMHOOK_pre_rodex_getZenyAck) (struct map_session_data **sd, int6
 typedef void (*HPMHOOK_post_rodex_getZenyAck) (struct map_session_data *sd, int64 mail_id, int8 opentype, int64 zeny);
 typedef void (*HPMHOOK_pre_rodex_getItemsAck) (struct map_session_data **sd, int64 *mail_id, int8 *opentype, int *count, const struct rodex_item **items);
 typedef void (*HPMHOOK_post_rodex_getItemsAck) (struct map_session_data *sd, int64 mail_id, int8 opentype, int count, const struct rodex_item *items);
-#endif // MAP_RODEX_H
+#endif
 #ifdef MAP_SCRIPT_H /* script */
 typedef void (*HPMHOOK_pre_script_init) (bool *minimal);
 typedef void (*HPMHOOK_post_script_init) (bool minimal);
@@ -8260,7 +8260,7 @@ typedef bool (*HPMHOOK_pre_script_sellitemcurrency_add) (struct npc_data **nd, s
 typedef bool (*HPMHOOK_post_script_sellitemcurrency_add) (bool retVal___, struct npc_data *nd, struct script_state *st, int argIndex);
 typedef void (*HPMHOOK_pre_script_declare_conditional_feature) (const char **feature, bool *enabled);
 typedef void (*HPMHOOK_post_script_declare_conditional_feature) (const char *feature, bool enabled);
-#endif // MAP_SCRIPT_H
+#endif
 #ifdef MAP_SEARCHSTORE_H /* searchstore */
 typedef bool (*HPMHOOK_pre_searchstore_open) (struct map_session_data **sd, unsigned int *uses, unsigned short *effect);
 typedef bool (*HPMHOOK_post_searchstore_open) (bool retVal___, struct map_session_data *sd, unsigned int uses, unsigned short effect);
@@ -8282,7 +8282,7 @@ typedef void (*HPMHOOK_pre_searchstore_clearremote) (struct map_session_data **s
 typedef void (*HPMHOOK_post_searchstore_clearremote) (struct map_session_data *sd);
 typedef bool (*HPMHOOK_pre_searchstore_result) (struct map_session_data **sd, unsigned int *store_id, int *account_id, const char **store_name, int *nameid, unsigned short *amount, unsigned int *price, const int **card, unsigned char *refine_level, unsigned char *grade_level, const struct item_option **option);
 typedef bool (*HPMHOOK_post_searchstore_result) (bool retVal___, struct map_session_data *sd, unsigned int store_id, int account_id, const char *store_name, int nameid, unsigned short amount, unsigned int price, const int *card, unsigned char refine_level, unsigned char grade_level, const struct item_option *option);
-#endif // MAP_SEARCHSTORE_H
+#endif
 #ifdef COMMON_SHOWMSG_H /* showmsg */
 typedef void (*HPMHOOK_pre_showmsg_init) (void);
 typedef void (*HPMHOOK_post_showmsg_init) (void);
@@ -8294,7 +8294,7 @@ typedef int (*HPMHOOK_pre_showmsg_showMessageV) (const char **string, va_list ap
 typedef int (*HPMHOOK_post_showmsg_showMessageV) (int retVal___, const char *string, va_list ap);
 typedef const char * (*HPMHOOK_pre_showmsg_getLogFileName) (void);
 typedef const char * (*HPMHOOK_post_showmsg_getLogFileName) (const char * retVal___);
-#endif // COMMON_SHOWMSG_H
+#endif
 #ifdef MAP_SKILL_H /* skill */
 typedef int (*HPMHOOK_pre_skill_init) (bool *minimal);
 typedef int (*HPMHOOK_post_skill_init) (int retVal___, bool minimal);
@@ -8922,7 +8922,7 @@ typedef int (*HPMHOOK_pre_skill_count_wos) (struct block_list **bl, va_list ap);
 typedef int (*HPMHOOK_post_skill_count_wos) (int retVal___, struct block_list *bl, va_list ap);
 typedef void (*HPMHOOK_pre_skill_add_bard_dancer_soullink_songs) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_skill_add_bard_dancer_soullink_songs) (struct map_session_data *sd);
-#endif // MAP_SKILL_H
+#endif
 #ifdef COMMON_SOCKET_H /* sockt */
 typedef void (*HPMHOOK_pre_sockt_init) (void);
 typedef void (*HPMHOOK_post_sockt_init) (void);
@@ -8994,7 +8994,7 @@ typedef int (*HPMHOOK_pre_sockt_net_config_read_sub) (struct config_setting_t **
 typedef int (*HPMHOOK_post_sockt_net_config_read_sub) (int retVal___, struct config_setting_t *t, struct s_subnet_vector *list, const char *filename, const char *groupname);
 typedef void (*HPMHOOK_pre_sockt_net_config_read) (const char **filename);
 typedef void (*HPMHOOK_post_sockt_net_config_read) (const char *filename);
-#endif // COMMON_SOCKET_H
+#endif
 #ifdef COMMON_SQL_H /* SQL */
 typedef int (*HPMHOOK_pre_SQL_Connect) (struct Sql **self, const char **user, const char **passwd, const char **host, uint16 *port, const char **db);
 typedef int (*HPMHOOK_post_SQL_Connect) (int retVal___, struct Sql *self, const char *user, const char *passwd, const char *host, uint16 port, const char *db);
@@ -9062,7 +9062,7 @@ typedef void (*HPMHOOK_pre_SQL_StmtFree) (struct SqlStmt **self);
 typedef void (*HPMHOOK_post_SQL_StmtFree) (struct SqlStmt *self);
 typedef void (*HPMHOOK_pre_SQL_StmtShowDebug_) (struct SqlStmt **self, const char **debug_file, const unsigned long *debug_line);
 typedef void (*HPMHOOK_post_SQL_StmtShowDebug_) (struct SqlStmt *self, const char *debug_file, const unsigned long debug_line);
-#endif // COMMON_SQL_H
+#endif
 #ifdef MAP_STATUS_H /* status */
 typedef int (*HPMHOOK_pre_status_init) (bool *minimal);
 typedef int (*HPMHOOK_post_status_init) (int retVal___, bool minimal);
@@ -9372,7 +9372,7 @@ typedef int (*HPMHOOK_pre_status_base_matk_max) (const struct status_data **st);
 typedef int (*HPMHOOK_post_status_base_matk_max) (int retVal___, const struct status_data *st);
 typedef void (*HPMHOOK_pre_status_check_job_bonus) (int *idx, const char **name, int *class_);
 typedef void (*HPMHOOK_post_status_check_job_bonus) (int idx, const char *name, int class_);
-#endif // MAP_STATUS_H
+#endif
 #ifdef MAP_STORAGE_H /* storage */
 typedef void (*HPMHOOK_pre_storage_init) (bool *minimal);
 typedef void (*HPMHOOK_post_storage_init) (bool minimal);
@@ -9414,7 +9414,7 @@ typedef void (*HPMHOOK_pre_storage_sortitem) (struct item **items, unsigned int 
 typedef void (*HPMHOOK_post_storage_sortitem) (struct item *items, unsigned int size);
 typedef int (*HPMHOOK_pre_storage_reconnect_sub) (union DBKey *key, struct DBData **data, va_list ap);
 typedef int (*HPMHOOK_post_storage_reconnect_sub) (int retVal___, union DBKey key, struct DBData *data, va_list ap);
-#endif // MAP_STORAGE_H
+#endif
 #ifdef COMMON_STRLIB_H /* StrBuf */
 typedef StringBuf * (*HPMHOOK_pre_StrBuf_Malloc) (void);
 typedef StringBuf * (*HPMHOOK_post_StrBuf_Malloc) (StringBuf * retVal___);
@@ -9436,7 +9436,7 @@ typedef void (*HPMHOOK_pre_StrBuf_Destroy) (StringBuf **self);
 typedef void (*HPMHOOK_post_StrBuf_Destroy) (StringBuf *self);
 typedef void (*HPMHOOK_pre_StrBuf_Free) (StringBuf **self);
 typedef void (*HPMHOOK_post_StrBuf_Free) (StringBuf *self);
-#endif // COMMON_STRLIB_H
+#endif
 #ifdef COMMON_STRLIB_H /* strlib */
 typedef char * (*HPMHOOK_pre_strlib_jstrescape) (char **pt);
 typedef char * (*HPMHOOK_post_strlib_jstrescape) (char * retVal___, char *pt);
@@ -9468,7 +9468,7 @@ typedef int (*HPMHOOK_pre_strlib_strline_) (const char **str, size_t *pos);
 typedef int (*HPMHOOK_post_strlib_strline_) (int retVal___, const char *str, size_t pos);
 typedef bool (*HPMHOOK_pre_strlib_bin2hex_) (char **output, const unsigned char **input, size_t *count);
 typedef bool (*HPMHOOK_post_strlib_bin2hex_) (bool retVal___, char *output, const unsigned char *input, size_t count);
-#endif // COMMON_STRLIB_H
+#endif
 #ifdef MAP_STYLIST_H /* stylist */
 typedef void (*HPMHOOK_pre_stylist_init) (bool *minimal);
 typedef void (*HPMHOOK_post_stylist_init) (bool minimal);
@@ -9488,7 +9488,7 @@ typedef bool (*HPMHOOK_pre_stylist_validate_requirements) (struct map_session_da
 typedef bool (*HPMHOOK_post_stylist_validate_requirements) (bool retVal___, struct map_session_data *sd, int type, int16 idx);
 typedef void (*HPMHOOK_pre_stylist_send_rodexitem) (struct map_session_data **sd, int *itemid);
 typedef void (*HPMHOOK_post_stylist_send_rodexitem) (struct map_session_data *sd, int itemid);
-#endif // MAP_STYLIST_H
+#endif
 #ifdef COMMON_STRLIB_H /* sv */
 typedef int (*HPMHOOK_pre_sv_parse_next) (struct s_svstate **svstate);
 typedef int (*HPMHOOK_post_sv_parse_next) (int retVal___, struct s_svstate *svstate);
@@ -9504,7 +9504,7 @@ typedef const char * (*HPMHOOK_pre_sv_skip_escaped_c) (const char **p);
 typedef const char * (*HPMHOOK_post_sv_skip_escaped_c) (const char * retVal___, const char *p);
 typedef bool (*HPMHOOK_pre_sv_readdb) (const char **directory, const char **filename, char *delim, int *mincols, int *maxcols, int *maxrows, bool ( **parseproc ) (char *fields[], int columns, int current));
 typedef bool (*HPMHOOK_post_sv_readdb) (bool retVal___, const char *directory, const char *filename, char delim, int mincols, int maxcols, int maxrows, bool ( *parseproc ) (char *fields[], int columns, int current));
-#endif // COMMON_STRLIB_H
+#endif
 #ifdef COMMON_SYSINFO_H /* sysinfo */
 typedef long (*HPMHOOK_pre_sysinfo_getpagesize) (void);
 typedef long (*HPMHOOK_post_sysinfo_getpagesize) (long retVal___);
@@ -9548,7 +9548,7 @@ typedef void (*HPMHOOK_pre_sysinfo_init) (void);
 typedef void (*HPMHOOK_post_sysinfo_init) (void);
 typedef void (*HPMHOOK_pre_sysinfo_final) (void);
 typedef void (*HPMHOOK_post_sysinfo_final) (void);
-#endif // COMMON_SYSINFO_H
+#endif
 #ifdef COMMON_THREAD_H /* thread */
 typedef void (*HPMHOOK_pre_thread_init) (void);
 typedef void (*HPMHOOK_post_thread_init) (void);
@@ -9572,7 +9572,7 @@ typedef enum thread_priority (*HPMHOOK_pre_thread_prio_get) (struct thread_handl
 typedef enum thread_priority (*HPMHOOK_post_thread_prio_get) (enum thread_priority retVal___, struct thread_handle *handle);
 typedef void (*HPMHOOK_pre_thread_yield) (void);
 typedef void (*HPMHOOK_post_thread_yield) (void);
-#endif // COMMON_THREAD_H
+#endif
 #ifdef COMMON_TIMER_H /* timer */
 typedef int64 (*HPMHOOK_pre_timer_gettick) (void);
 typedef int64 (*HPMHOOK_post_timer_gettick) (int64 retVal___);
@@ -9606,7 +9606,7 @@ typedef bool (*HPMHOOK_pre_timer_get_current_clocksource) (char **buf, int *buf_
 typedef bool (*HPMHOOK_post_timer_get_current_clocksource) (bool retVal___, char *buf, int buf_size);
 typedef bool (*HPMHOOK_pre_timer_get_available_clocksource) (char **buf, int *buf_size);
 typedef bool (*HPMHOOK_post_timer_get_available_clocksource) (bool retVal___, char *buf, int buf_size);
-#endif // COMMON_TIMER_H
+#endif
 #ifdef MAP_TRADE_H /* trade */
 typedef void (*HPMHOOK_pre_trade_request) (struct map_session_data **sd, struct map_session_data **target_sd);
 typedef void (*HPMHOOK_post_trade_request) (struct map_session_data *sd, struct map_session_data *target_sd);
@@ -9626,7 +9626,7 @@ typedef void (*HPMHOOK_pre_trade_cancel) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_trade_cancel) (struct map_session_data *sd);
 typedef void (*HPMHOOK_pre_trade_commit) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_trade_commit) (struct map_session_data *sd);
-#endif // MAP_TRADE_H
+#endif
 #ifdef MAP_UNIT_H /* unit */
 typedef int (*HPMHOOK_pre_unit_init) (bool *minimal);
 typedef int (*HPMHOOK_post_unit_init) (int retVal___, bool minimal);
@@ -9732,7 +9732,7 @@ typedef void (*HPMHOOK_pre_unit_free_pc) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_unit_free_pc) (struct map_session_data *sd);
 typedef int (*HPMHOOK_pre_unit_free) (struct block_list **bl, enum clr_type *clrtype);
 typedef int (*HPMHOOK_post_unit_free) (int retVal___, struct block_list *bl, enum clr_type clrtype);
-#endif // MAP_UNIT_H
+#endif
 #ifdef MAP_VENDING_H /* vending */
 typedef void (*HPMHOOK_pre_vending_init) (bool *minimal);
 typedef void (*HPMHOOK_post_vending_init) (bool minimal);
@@ -9750,4 +9750,4 @@ typedef bool (*HPMHOOK_pre_vending_search) (struct map_session_data **sd, int *n
 typedef bool (*HPMHOOK_post_vending_search) (bool retVal___, struct map_session_data *sd, int nameid);
 typedef bool (*HPMHOOK_pre_vending_searchall) (struct map_session_data **sd, const struct s_search_store_search **s);
 typedef bool (*HPMHOOK_post_vending_searchall) (bool retVal___, struct map_session_data *sd, const struct s_search_store_search *s);
-#endif // MAP_VENDING_H
+#endif

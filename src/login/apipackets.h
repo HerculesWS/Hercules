@@ -29,7 +29,7 @@
 	struct PACKET_API_PROXY *packet = WP2PTR(struct PACKET_API_PROXY *, (wfd)); \
 	memcpy(packet, RP2PTR(struct PACKET_API_PROXY *, fd), WFIFO_APICHAR_SIZE); \
 	packet->packet_id = HEADER_API_PROXY_REPLY; \
-	packet->packet_len = WFIFO_APICHAR_SIZE; \
+	packet->packet_len = WFIFO_APICHAR_SIZE \
 
 #define WFIFO_APILOGIN_PACKET_REPLY(wfd, type) \
 	WFIFOHEAD((wfd), WFIFO_APICHAR_SIZE + sizeof(struct PACKET_API_REPLY_ ## type)); \

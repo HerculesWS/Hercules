@@ -1093,8 +1093,10 @@ static int do_sockets(int next)
 
 		if (sockt->session[i]->rdata_tick && DIFF_TICK(sockt->last_tick, sockt->session[i]->rdata_tick) > sockt->stall_time) {
 			if( sockt->session[i]->flag.server ) {/* server is special */
-				if( sockt->session[i]->flag.ping != 2 )/* only update if necessary otherwise it'd resend the ping unnecessarily */
+				if( sockt->session[i]->flag.ping != 2 ) {
+					// only update if necessary otherwise it'd resend the ping unnecessarily
 					sockt->session[i]->flag.ping = 1;
+				}
 			} else {
 				ShowInfo("Session #%d timed out\n", i);
 				sockt->eof(i);
@@ -1248,18 +1250,23 @@ static int connect_check_(uint32 ip)
 	}
 
 	// Inspect connection history
-	if ((hist = (struct connect_history *)uidb_get(connect_history, ip)) != NULL) { //IP found
-		if( hist->ddos ) {// flagged as DDoS
+	if ((hist = (struct connect_history *)uidb_get(connect_history, ip)) != NULL) {
+		//IP found
+		if( hist->ddos ) {
+			// flagged as DDoS
 			return (connect_ok == 2 ? 1 : 0);
-		} else if( DIFF_TICK(timer->gettick(),hist->tick) < ddos_interval ) {// connection within ddos_interval
+		} else if( DIFF_TICK(timer->gettick(),hist->tick) < ddos_interval ) {
+			// connection within ddos_interval
 				hist->tick = timer->gettick();
-				if( ++hist->count >= ddos_count ) {// DDoS attack detected
+				if( ++hist->count >= ddos_count ) {
+					// DDoS attack detected
 					hist->ddos = 1;
 					ShowWarning("connect_check: DDoS Attack detected from %u.%u.%u.%u!\n", CONVIP(ip));
 					return (connect_ok == 2 ? 1 : 0);
 				}
 				return connect_ok;
-		} else {// not within ddos_interval, clear data
+		} else {
+			// not within ddos_interval, clear data
 			hist->tick  = timer->gettick();
 			hist->count = 0;
 			return connect_ok;
@@ -1289,7 +1296,8 @@ static int connect_check_clear(int tid, int64 tick, int id, intptr_t data)
 	for (struct connect_history *hist = (struct connect_history *)dbi_first(iter); dbi_exists(iter); hist = (struct connect_history *)dbi_next(iter)) {
 		if( (!hist->ddos && DIFF_TICK(tick,hist->tick) > ddos_interval*3) ||
 			(hist->ddos && DIFF_TICK(tick,hist->tick) > ddos_autoreset) )
-			{// Remove connection history
+			{
+				// Remove connection history
 				uidb_remove(connect_history, hist->ip);
 				clear++;
 			}
@@ -1321,27 +1329,31 @@ static int access_ipmask(const char *str, struct access_control *acc)
 		unsigned int a[4];
 		unsigned int m[4];
 		int n;
-		if( ((n=sscanf(str,"%u.%u.%u.%u/%u.%u.%u.%u",a,a+1,a+2,a+3,m,m+1,m+2,m+3)) != 8 && // not an ip + standard mask
-				(n=sscanf(str,"%u.%u.%u.%u/%u",a,a+1,a+2,a+3,m)) != 5 && // not an ip + bit mask
-				(n=sscanf(str,"%u.%u.%u.%u",a,a+1,a+2,a+3)) != 4 ) || // not an ip
-				a[0] > 255 || a[1] > 255 || a[2] > 255 || a[3] > 255 || // invalid ip
-				(n == 8 && (m[0] > 255 || m[1] > 255 || m[2] > 255 || m[3] > 255)) || // invalid standard mask
-				(n == 5 && m[0] > 32) ){ // invalid bit mask
+		if( ((n=sscanf(str,"%u.%u.%u.%u/%u.%u.%u.%u",a,a+1,a+2,a+3,m,m+1,m+2,m+3)) != 8 /* not an ip + standard mask */
+				&& (n=sscanf(str,"%u.%u.%u.%u/%u",a,a+1,a+2,a+3,m)) != 5 /* not an ip + bit mask */
+				&& (n=sscanf(str,"%u.%u.%u.%u",a,a+1,a+2,a+3)) != 4 ) /* not an ip */
+				|| a[0] > 255 || a[1] > 255 || a[2] > 255 || a[3] > 255 /* invalid ip */
+				|| (n == 8 && (m[0] > 255 || m[1] > 255 || m[2] > 255 || m[3] > 255)) /* invalid standard mask */
+				|| (n == 5 && m[0] > 32) /* invalid bit mask */
+		) {
 			return 0;
 		}
 		ip = MAKEIP(a[0],a[1],a[2],a[3]);
 		if( n == 8 )
-		{// standard mask
+		{
+			// standard mask
 			mask = MAKEIP(m[0],m[1],m[2],m[3]);
 		} else if( n == 5 )
-		{// bit mask
+		{
+			// bit mask
 			mask = 0;
 			while( m[0] ){
 				mask = (mask >> 1) | 0x80000000;
 				--m[0];
 			}
 		} else
-		{// just this ip
+		{
+			// just this ip
 			mask = 0xFFFFFFFF;
 		}
 	}
@@ -1595,15 +1607,16 @@ static void socket_close(int fd)
 #ifndef SOCKET_EPOLL
 	// Select based Event Dispatcher
 	sFD_CLR(fd, &readfds);// this needs to be done before closing the socket
-#else  // SOCKET_EPOLL
+#else
 	// Epoll based Event Dispatcher
 	epevent.data.fd = fd;
 	epevent.events = EPOLLIN;
 	epoll_ctl(epfd, EPOLL_CTL_DEL, fd, &epevent); // removing the socket from epoll when it's being closed is not required but recommended
-#endif  // SOCKET_EPOLL
+#endif
 
 	sShutdown(fd, SHUT_RDWR); // Disallow further reads/writes
-	sClose(fd); // We don't really care if these closing functions return an error, we are just shutting down and not reusing this socket.
+	// We don't really care if these closing functions return an error, we are just shutting down and not reusing this socket.
+	sClose(fd);
 	if (sockt->session[fd])
 		sockt->delete_session(fd);
 }
@@ -1696,7 +1709,8 @@ static void socket_init(void)
 	uint64 rlim_cur = MAXCONN;
 
 #ifdef WIN32
-	{// Start up windows networking
+	{
+		// Start up windows networking
 		WSADATA wsaData;
 		WORD wVersionRequested = MAKEWORD(2, 0);
 		if( WSAStartup(wVersionRequested, &wsaData) != 0 )
@@ -1713,16 +1727,19 @@ static void socket_init(void)
 #elif defined(HAVE_SETRLIMIT) && !defined(CYGWIN)
 	// NOTE: getrlimit and setrlimit have bogus behavior in cygwin.
 	//       "Number of fds is virtually unlimited in cygwin" (sys/param.h)
-	{// set socket limit to MAXCONN
+	{
+		// set socket limit to MAXCONN
 		struct rlimit rlp;
 		if( 0 == getrlimit(RLIMIT_NOFILE, &rlp) )
 		{
 			rlp.rlim_cur = MAXCONN;
 			if( 0 != setrlimit(RLIMIT_NOFILE, &rlp) )
-			{// failed, try setting the maximum too (permission to change system limits is required)
+			{
+				// failed, try setting the maximum too (permission to change system limits is required)
 				rlp.rlim_max = MAXCONN;
 				if( 0 != setrlimit(RLIMIT_NOFILE, &rlp) )
-				{// failed
+				{
+					// failed
 					const char *errmsg = error_msg();
 					int rlim_ori;
 					// set to maximum allowed

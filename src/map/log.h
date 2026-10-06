@@ -101,17 +101,17 @@ typedef enum e_log_filter {
 	LOG_FILTER_NONE     = 0x000,
 	LOG_FILTER_ALL      = 0x001,
 	// bits
-	LOG_FILTER_HEALING  = 0x002,  // Healing items (0)
-	LOG_FILTER_ETC_AMMO = 0x004,  // Etc Items(3) + Arrows (10)
-	LOG_FILTER_USABLE   = 0x008,  // Usable Items(2) + Scrolls, Lures(11) + Usable Cash Items(18)
-	LOG_FILTER_WEAPON   = 0x010,  // Weapons(4)
-	LOG_FILTER_ARMOR    = 0x020,  // Shields, Armors, Headgears, Accessories, Garments and Shoes(5)
-	LOG_FILTER_CARD     = 0x040,  // Cards(6)
-	LOG_FILTER_PETITEM  = 0x080,  // Pet Accessories(8) + Eggs(7) (well, monsters don't drop 'em but we'll use the same system for ALL logs)
-	LOG_FILTER_PRICE    = 0x100,  // Log expensive items ( >= price_log )
-	LOG_FILTER_AMOUNT   = 0x200,  // Log large amount of items ( >= amount_log )
-	LOG_FILTER_REFINE   = 0x400,  // Log refined items ( refine >= refine_log ) [not implemented]
-	LOG_FILTER_CHANCE   = 0x800,  // Log rare items and Emperium ( drop chance <= rare_log )
+	LOG_FILTER_HEALING  = 0x002,  ///< Healing items (0)
+	LOG_FILTER_ETC_AMMO = 0x004,  ///< Etc Items(3) + Arrows (10)
+	LOG_FILTER_USABLE   = 0x008,  ///< Usable Items(2) + Scrolls, Lures(11) + Usable Cash Items(18)
+	LOG_FILTER_WEAPON   = 0x010,  ///< Weapons(4)
+	LOG_FILTER_ARMOR    = 0x020,  ///< Shields, Armors, Headgears, Accessories, Garments and Shoes(5)
+	LOG_FILTER_CARD     = 0x040,  ///< Cards(6)
+	LOG_FILTER_PETITEM  = 0x080,  ///< Pet Accessories(8) + Eggs(7)
+	LOG_FILTER_PRICE    = 0x100,  ///< Log expensive items ( >= price_log )
+	LOG_FILTER_AMOUNT   = 0x200,  ///< Log large amount of items ( >= amount_log )
+	LOG_FILTER_REFINE   = 0x400,  ///< Log refined items ( refine >= refine_log ) [not implemented]
+	LOG_FILTER_CHANCE   = 0x800,  ///< Log rare items and Emperium ( drop chance <= rare_log )
 } e_log_filter;
 
 struct log_interface {

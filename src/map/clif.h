@@ -272,7 +272,8 @@ enum map_property { // clif_map_property
 	MAPPROPERTY_FREEPVPZONE   = 1,
 	MAPPROPERTY_EVENTPVPZONE  = 2,
 	MAPPROPERTY_AGITZONE      = 3,
-	MAPPROPERTY_PKSERVERZONE  = 4, // message "You are in a PK area. Please beware of sudden attacks." in color 0x9B9BFF (light red)
+	// message "You are in a PK area. Please beware of sudden attacks." in color 0x9B9BFF (light red)
+	MAPPROPERTY_PKSERVERZONE  = 4,
 	MAPPROPERTY_PVPSERVERZONE = 5,
 	MAPPROPERTY_DENYSKILLZONE = 6,
 };
@@ -426,16 +427,26 @@ typedef enum useskill_fail_cause { // clif_skill_fail
  * Used to answer CZ_PC_BUY_CASH_POINT_ITEM (clif_parse_cashshop_buy)
  **/
 enum cashshop_error {
-	ERROR_TYPE_NONE             = 0, ///< The deal has successfully completed. (ERROR_TYPE_NONE)
-	ERROR_TYPE_NPC              = 1, ///< The Purchase has failed because the NPC does not exist. (ERROR_TYPE_NPC)
-	ERROR_TYPE_SYSTEM           = 2, ///< The Purchase has failed because the Kafra Shop System is not working correctly. (ERROR_TYPE_SYSTEM)
-	ERROR_TYPE_INVENTORY_WEIGHT = 3, ///< You are over your Weight Limit. (ERROR_TYPE_INVENTORY_WEIGHT)
-	ERROR_TYPE_EXCHANGE         = 4, ///< You cannot purchase items while you are in a trade. (ERROR_TYPE_EXCHANGE)
-	ERROR_TYPE_ITEM_ID          = 5, ///< The Purchase has failed because the Item Information was incorrect. (ERROR_TYPE_ITEM_ID)
-	ERROR_TYPE_MONEY            = 6, ///< You do not have enough Kafra Credit Points. (ERROR_TYPE_MONEY)
+	/// The deal has successfully completed.
+	ERROR_TYPE_NONE             = 0,
+	/// The Purchase has failed because the NPC does not exist.
+	ERROR_TYPE_NPC              = 1,
+	/// The Purchase has failed because the Kafra Shop System is not working correctly.
+	ERROR_TYPE_SYSTEM           = 2,
+	/// You are over your Weight Limit.
+	ERROR_TYPE_INVENTORY_WEIGHT = 3,
+	/// You cannot purchase items while you are in a trade.
+	ERROR_TYPE_EXCHANGE         = 4,
+	/// The Purchase has failed because the Item Information was incorrect.
+	ERROR_TYPE_ITEM_ID          = 5,
+	/// You do not have enough Kafra Credit Points.
+	ERROR_TYPE_MONEY            = 6,
+
 	// Unofficial type names
-	ERROR_TYPE_QUANTITY         = 7, ///< You can purchase up to 10 items. (ERROR_TYPE_QUANTITY)
-	ERROR_TYPE_NOT_ALL          = 8, ///< Some items could not be purchased. (ERROR_TYPE_NOT_ALL)
+	/// You can purchase up to 10 items.
+	ERROR_TYPE_QUANTITY         = 7,
+	/// Some items could not be purchased.
+	ERROR_TYPE_NOT_ALL          = 8,
 };
 
 enum CASH_SHOP_TABS {

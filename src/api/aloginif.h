@@ -34,11 +34,6 @@ struct api_session_data;
 /**
  * Defines
  **/
-//Interval at which api server updates online listing. [Valaris]
-#define CHECK_INTERVAL 3600000
-//Interval at which api server sends number of connected users. [Skotlex]
-#define UPDATE_INTERVAL 10000
-
 #define ALOGINIF_PACKET_LEN_TABLE_START 0x2810
 #define ALOGINIF_PACKET_LEN_TABLE_SIZE 0x10
 

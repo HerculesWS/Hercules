@@ -1074,6 +1074,7 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x0947,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD
 	packet(0x0890,clif->pDull); // CZ_GANGSI_RANK
 	packet(0x095a,clif->pDull); // CZ_JOIN_BATTLE_FIELD
+
 	// Shuffle End
 
 	// New Packets (wrong version or packet not exists)
@@ -1133,6 +1134,7 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x093E,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD
 	packet(0x0862,clif->pDull); // CZ_GANGSI_RANK
 	packet(0x08aa,clif->pDull); // CZ_JOIN_BATTLE_FIELD
+
 	// Shuffle End
 #endif
 
@@ -1172,6 +1174,7 @@ packet(0x96e,clif->ackmergeitems);
 	packet(0x088E,clif->pStoragePassword,0);  // CZ_ACK_STORE_PASSWORD
 	packet(0x08ac,clif->pDull); // CZ_GANGSI_RANK
 	packet(0x0965,clif->pDull); // CZ_JOIN_BATTLE_FIELD
+
 	// Shuffle End
 #endif
 

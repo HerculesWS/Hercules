@@ -34,6 +34,6 @@
 
 #define CHECK_PACKET_HEADER(name, id) \
 	static_assert((int32)(PACKET_LEN_##id) == -1 || sizeof(struct PACKET_##name) == \
-		(size_t)PACKET_LEN_##id, "Wrong size PACKET_"#name); \
+		(size_t)PACKET_LEN_##id, "Wrong size PACKET_"#name)
 
 #endif /* COMMON_PACKETSMACRO_H */

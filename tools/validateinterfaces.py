@@ -213,7 +213,7 @@ def searchPossibleInterfacesInCFile(tracker, cFile):
 def addCInterfaceMethods(tracker, r, ifname):
     methods = set()
     shortIfName = ""
-    lineRe = re.compile("(?P<ifname>[a-z_]+)->(?P<method>[\w_]+)[ ][=][ ](?P<fullmethod>[^;]+);")
+    lineRe = re.compile(r"(?P<ifname>[a-z_]+)->(?P<method>[\w_]+)[ ][=][ ](?P<fullmethod>[^;]+);")
     for line in r:
         test = line.strip()
         if len(test) > 2 and test[0:2] == "//":
@@ -367,7 +367,7 @@ def reportMethods(tracker):
 
 def checkLostFile(tracker, cFile):
 #    print "Checking: " + cFile
-    methodRe = re.compile("^([a-zA-Z0-9* _]*)([ ]|[*])(?P<ifname>[a-z_]+)_(?P<method>[\w_]+)(|[ ])[(]")
+    methodRe = re.compile(r"^([a-zA-Z0-9* _]*)([ ]|[*])(?P<ifname>[a-z_]+)_(?P<method>[\w_]+)(|[ ])[(]")
     with open(cFile, "r") as r:
         for line in r:
             if line.find("(") < 1 or len(line) < 3 or line[0] == "\t" or line[0] == " " or line.find("_defaults") > 0:

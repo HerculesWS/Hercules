@@ -57,16 +57,19 @@ HPM_DECLARE_PLUGIN(
 	"0.1"        // Plugin version
 )
 
-ACMD(sample) {//@sample command - 5 params: const int fd, struct map_session_data* sd, const char* command, const char* message, struct AtCommandInfo *info
+/// @sample command - 5 params: const int fd, struct map_session_data* sd, const char* command, const char* message, struct AtCommandInfo *info
+ACMD(sample) {
 	atcmd_sample_message(message, sd->status.name);
 	return true;
 }
-BUILDIN(sample) {//script command 'sample(num);' - 1 param: struct script_state* st
+/// script command 'sample(num);' - 1 param: struct script_state* st
+BUILDIN(sample) {
 	int arg = script_getnum(st,2);
 	ShowInfo("I'm being run! arg -> '%d'\n",arg);
 	return true;
 }
-CPCMD(sample) {//console command 'sample' - 1 param: char *line
+/// console command 'sample' - 1 param: char *line
+CPCMD(sample) {
 	ShowInfo("I'm being run! arg -> '%s'\n",line ? line : "NONE");
 }
 struct sample_data_struct {
@@ -143,6 +146,7 @@ int my_pc_dropitem_post(int retVal, struct map_session_data *sd, int n, int amou
 {
 	if (retVal != 1)
 		return retVal;/* we don't do anything if pc_dropitem didn't return 1 (success) */
+
 	if (my_pc_dropitem_storage) {/* signs whether pre-hook did this */
 		char output[99];
 		snprintf(output, 99, "[ Warning ] you can only drop 1 item at a time, capped from %d to 1", my_pc_dropitem_storage);

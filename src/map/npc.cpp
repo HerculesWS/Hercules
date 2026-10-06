@@ -129,20 +129,21 @@ static bool npc_db_checkid(int id)
 /// Fatal error if nothing is available.
 static int npc_get_new_npc_id(void)
 {
-	if (npc->npc_id >= START_NPC_NUM && !map->blid_exists(npc->npc_id))
-		return npc->npc_id++;// available
-	else {// find next id
-		int base_id = npc->npc_id;
-		while (base_id != ++npc->npc_id) {
-			if (npc->npc_id < START_NPC_NUM)
-				npc->npc_id = START_NPC_NUM;
-			if (!map->blid_exists(npc->npc_id))
-				return npc->npc_id++;// available
-		}
-		// full loop, nothing available
-		ShowFatalError("npc_get_new_npc_id: All ids are taken. Exiting...");
-		exit(1);
+	if (npc->npc_id >= START_NPC_NUM && !map->blid_exists(npc->npc_id)) {
+		// available
+		return npc->npc_id++;
 	}
+	// find next id
+	int base_id = npc->npc_id;
+	while (base_id != ++npc->npc_id) {
+		if (npc->npc_id < START_NPC_NUM)
+			npc->npc_id = START_NPC_NUM;
+		if (!map->blid_exists(npc->npc_id))
+			return npc->npc_id++;// available
+	}
+	// full loop, nothing available
+	ShowFatalError("npc_get_new_npc_id: All ids are taken. Exiting...");
+	exit(1);
 }
 
 static int npc_isnear_sub(struct block_list *bl, va_list args)
@@ -235,7 +236,8 @@ static int npc_enable_sub(struct block_list *bl, va_list ap)
 			return 1;
 
 		if( npc->ontouch_event(sd,nd) > 0 && npc->ontouch2_event(sd,nd) > 0 )
-		{ // failed to run OnTouch event, so just click the npc
+		{
+			// failed to run OnTouch event, so just click the npc
 			if (sd->npc_id != 0)
 				return 0;
 
@@ -261,16 +263,18 @@ static int npc_enable(const char *name, int flag)
 	if (flag&1) {
 		nd->option&=~OPTION_INVISIBLE;
 		clif->spawn(&nd->bl);
-	} else if (flag&2)
+	} else if (flag&2) {
 		nd->option&=~OPTION_HIDE;
-	else if (flag&4)
+	} else if (flag&4) {
 		nd->option|= OPTION_HIDE;
-	else { //Can't change the view_data to invisible class because the view_data for all npcs is shared! [Skotlex]
+	} else {
+		//Can't change the view_data to invisible class because the view_data for all npcs is shared! [Skotlex]
 		nd->option|= OPTION_INVISIBLE;
 		clif->clearunit_area(&nd->bl,CLR_OUTSIGHT);  // Hack to trick maya purple card [Xazax]
 	}
 
-	if (nd->class_ == WARP_CLASS || nd->class_ == FLAG_CLASS) { //Client won't display option changes for these classes [Toms]
+	if (nd->class_ == WARP_CLASS || nd->class_ == FLAG_CLASS) {
+		//Client won't display option changes for these classes [Toms]
 		if (nd->option&(OPTION_HIDE|OPTION_INVISIBLE))
 			clif->clearunit_area(&nd->bl, CLR_OUTSIGHT);
 		else
@@ -278,8 +282,10 @@ static int npc_enable(const char *name, int flag)
 	} else
 		clif->changeoption(&nd->bl);
 
-	if( flag&3 && (nd->u.scr.xs >= 0 || nd->u.scr.ys >= 0) ) //check if player standing on a OnTouchArea
+	if( flag&3 && (nd->u.scr.xs >= 0 || nd->u.scr.ys >= 0) ) {
+		//check if player standing on a OnTouchArea
 		map->foreachinarea( npc->enable_sub, nd->bl.m, nd->bl.x-nd->u.scr.xs, nd->bl.y-nd->u.scr.ys, nd->bl.x+nd->u.scr.xs, nd->bl.y+nd->u.scr.ys, BL_PC, nd );
+	}
 
 	return 0;
 }
@@ -586,9 +592,12 @@ static int npc_timerevent_export(struct npc_data *nd, int i)
 }
 
 struct timer_event_data {
-	int rid; //Attached player for this timer.
-	int next; //timer index (starts with 0, then goes up to nd->u.scr.timeramount)
-	int time; //holds total time elapsed for the script from when timer was started to when last time the event triggered.
+	/// Attached player for this timer.
+	int rid;
+	/// timer index (starts with 0, then goes up to nd->u.scr.timeramount)
+	int next;
+	/// holds total time elapsed for the script from when timer was started to when last time the event triggered.
+	int time;
 };
 
 /*==========================================
@@ -790,7 +799,9 @@ static void npc_timerevent_quit(struct map_session_data *sd)
 			nullpo_retv(ted);
 
 			//Set timer related info.
-			old_rid = (nd->u.scr.rid == sd->bl.id ? 0 : nd->u.scr.rid); // Detach rid if the last attached player logged off.
+
+			// Detach rid if the last attached player logged off.
+			old_rid = (nd->u.scr.rid == sd->bl.id ? 0 : nd->u.scr.rid);
 			old_tick = nd->u.scr.timertick;
 			old_timer = nd->u.scr.timer;
 
@@ -1084,10 +1095,12 @@ static int npc_touch_areanpc(struct map_session_data *sd, int16 m, int16 x, int1
 			}
 
 			if( npc->ontouch_event(sd,map->list[m].npc[i]) > 0 && npc->ontouch2_event(sd,map->list[m].npc[i]) > 0 )
-			{ // failed to run OnTouch event, so just click the npc
+			{
+				// failed to run OnTouch event, so just click the npc
 				struct unit_data *ud = unit->bl2ud(&sd->bl);
 				if( ud && ud->walkpath.path_pos < ud->walkpath.path_len )
-				{ // Since walktimer always == INVALID_TIMER at this time, we stop walking manually. [Inkfish]
+				{
+					// Since walktimer always == INVALID_TIMER at this time, we stop walking manually. [Inkfish]
 					clif->fixpos(&sd->bl);
 					ud->walkpath.path_pos = ud->walkpath.path_len;
 				}
@@ -1331,17 +1344,20 @@ static void run_tomb(struct map_session_data *sd, struct npc_data *nd)
 	strftime(time, sizeof(time), "%H:%M", localtime(&nd->u.tomb.kill_time));
 
 	// TODO: Find exact color?
-	snprintf(buffer, sizeof(buffer), msg_sd(sd, MSGTBL_TOMB_MONSTER_NAME), nd->u.tomb.md->db->name); // "[ ^EE0000%s^000000 ]"
+	// "[ ^EE0000%s^000000 ]"
+	snprintf(buffer, sizeof(buffer), msg_sd(sd, MSGTBL_TOMB_MONSTER_NAME), nd->u.tomb.md->db->name);
 	clif->scriptmes(sd, nd->bl.id, buffer);
 
 	clif->scriptmes(sd, nd->bl.id, msg_sd(sd, MSGTBL_TOMB_MET_ITS_DEMISE)); // "Has met its demise"
 
-	snprintf(buffer, sizeof(buffer), msg_sd(sd, MSGTBL_TOMB_TIME_OF_DEATH), time); // "Time of death : ^EE0000%s^000000"
+	// "Time of death : ^EE0000%s^000000"
+	snprintf(buffer, sizeof(buffer), msg_sd(sd, MSGTBL_TOMB_TIME_OF_DEATH), time);
 	clif->scriptmes(sd, nd->bl.id, buffer);
 
 	clif->scriptmes(sd, nd->bl.id, msg_sd(sd, MSGTBL_TOMB_DEFATED_BY)); // "Defeated by"
 
-	snprintf(buffer, sizeof(buffer), msg_sd(sd, MSGTBL_TOMB_PLAYER_NAME), nd->u.tomb.killer_name[0] ? nd->u.tomb.killer_name : msg_sd(sd, MSGTBL_UNKNOWN)); // "[^EE0000%s^000000]" / "Unknown"
+	// "[^EE0000%s^000000]" / "Unknown"
+	snprintf(buffer, sizeof(buffer), msg_sd(sd, MSGTBL_TOMB_PLAYER_NAME), nd->u.tomb.killer_name[0] ? nd->u.tomb.killer_name : msg_sd(sd, MSGTBL_UNKNOWN));
 	clif->scriptmes(sd, nd->bl.id, buffer);
 
 	clif->scriptclose(sd, nd->bl.id);
@@ -1511,7 +1527,8 @@ static int npc_buysellsel(struct map_session_data *sd, int id, int type)
 	if (nd->dyn.isdynamic && nd->dyn.owner_id != sd->status.char_id)
 		return 1;
 
-	if( nd->class_ < 0 && !sd->state.callshop ) {// not called through a script and is not a visible NPC so an invalid call
+	if( nd->class_ < 0 && !sd->state.callshop ) {
+		// not called through a script and is not a visible NPC so an invalid call
 		return 1;
 	}
 
@@ -3598,7 +3615,7 @@ static const char *npc_parse_warp(const char *w1, const char *w2, const char *w3
 	if( m != -1 && ( x < 0 || x >= map->list[m].xs || y < 0 || y >= map->list[m].ys ) ) {
 		ShowError("npc_parse_warp: out-of-bounds coordinates (\"%s\",%d,%d), map is %dx%d, in file '%s', line '%d'\n", map->list[m].name, x, y, map->list[m].xs, map->list[m].ys,filepath,strline(buffer,start-buffer));
 		if (retval) *retval = EXIT_FAILURE;
-		return strchr(start,'\n');;//try next
+		return strchr(start,'\n');//try next
 	}
 
 	nd = npc->create_npc(WARP, m, x, y, UNIT_DIR_NORTH, battle_config.warp_point_debug ? WARP_DEBUG_CLASS : WARP_CLASS);
@@ -4199,7 +4216,8 @@ static const char *npc_parse_duplicate(const char *w1, const char *w2, const cha
 
 	// get the npc being duplicated
 	if( w2[length-1] != ')' || length <= 11 || length-11 >= sizeof(srcname) )
-	{// does not match 'duplicate(%127s)', name is empty or too long
+	{
+		// does not match 'duplicate(%127s)', name is empty or too long
 		ShowError("npc_parse_script: bad duplicate name in file '%s', line '%d': %s\n", filepath, strline(buffer,start-buffer), w2);
 		if (retval) *retval = EXIT_FAILURE;
 		return end;// next line, try to continue
@@ -4244,9 +4262,11 @@ static const char *npc_parse_duplicate(const char *w1, const char *w2, const cha
 		return end;//try next
 	}
 
-	if (dnd->subtype == WARP && sscanf(w4, "%d,%d", &xs, &ys) == 2) { // <spanx>,<spany>
+	if (dnd->subtype == WARP && sscanf(w4, "%d,%d", &xs, &ys) == 2) {
+		// <spanx>,<spany>
 		;
-	} else if (dnd->subtype == SCRIPT && sscanf(w4, "%*[^,],%d,%d", &xs, &ys) == 2) { // <sprite id>,<triggerX>,<triggerY>
+	} else if (dnd->subtype == SCRIPT && sscanf(w4, "%*[^,],%d,%d", &xs, &ys) == 2) {
+		// <sprite id>,<triggerX>,<triggerY>
 		;
 	} else if (dnd->subtype == WARP) {
 		ShowError("npc_parse_duplicate: Invalid span format for duplicate warp in file '%s', line '%d'. Skipping line...\n * w1=%s\n * w2=%s\n * w3=%s\n * w4=%s\n", filepath, strline(buffer,start-buffer), w1, w2, w3, w4);
@@ -5671,7 +5691,7 @@ static void npc_read_event_script(void)
 #ifdef ENABLE_CASE_CHECK
 			} else if( p && strcasecmp(name, p) == 0 ) {
 				DeprecationCaseWarning("npc_read_event_script", p, name, config[i].event_name); // TODO
-#endif // ENABLE_CASE_CHECK
+#endif
 			}
 		}
 		dbi_destroy(iter);
@@ -5720,12 +5740,12 @@ static void npc_process_files(int npc_min)
 		if (npc->parsesrcfile(file->name, false) != EXIT_SUCCESS)
 			map->retval = EXIT_FAILURE;
 	}
-	ShowInfo ("Done loading '" CL_WHITE "%d" CL_RESET "' NPCs:" CL_CLL "\n"
-		"\t-'" CL_WHITE "%d" CL_RESET "' Warps\n"
-		"\t-'" CL_WHITE "%d" CL_RESET "' Shops\n"
-		"\t-'" CL_WHITE "%d" CL_RESET "' Scripts\n"
-		"\t-'" CL_WHITE "%d" CL_RESET "' Spawn sets\n"
-		"\t-'" CL_WHITE "%d" CL_RESET "' Mobs Cached\n"
+	ShowInfo ("Done loading '" CL_WHITE "%d" CL_RESET "' NPCs:" CL_CLL "\n" //
+		"\t-'" CL_WHITE "%d" CL_RESET "' Warps\n" //
+		"\t-'" CL_WHITE "%d" CL_RESET "' Shops\n" //
+		"\t-'" CL_WHITE "%d" CL_RESET "' Scripts\n" //
+		"\t-'" CL_WHITE "%d" CL_RESET "' Spawn sets\n" //
+		"\t-'" CL_WHITE "%d" CL_RESET "' Mobs Cached\n" //
 		"\t-'" CL_WHITE "%d" CL_RESET "' Mobs Not Cached\n",
 		npc->npc_id - npc_min, npc->npc_warp, npc->npc_shop, npc->npc_script, npc->npc_mob, npc->npc_cache_mob, npc->npc_delay_mob);
 }
@@ -5789,7 +5809,8 @@ static int npc_reload(void)
 					map->list[m].moblist[i] = NULL;
 				}
 
-				if (map->list[m].mob_delete_timer != INVALID_TIMER) { /// Mobs were removed anyway, so delete the timer. [Inkfish]
+				if (map->list[m].mob_delete_timer != INVALID_TIMER) {
+					// Mobs were removed anyway, so delete the timer. [Inkfish]
 					timer->delete_(map->list[m].mob_delete_timer, map->removemobs_timer);
 					map->list[m].mob_delete_timer = INVALID_TIMER;
 				}
@@ -5867,9 +5888,11 @@ static bool npc_unloadfile(const char *filepath, bool unload_mobs)
 	bool found = false;
 
 	for (struct npc_data *nd = (struct npc_data *)dbi_first(iter); dbi_exists(iter); nd = (struct npc_data *)dbi_next(iter)) {
-		if (nd->path != NULL && strcasecmp(nd->path, filepath) == 0) { // FIXME: This can break in case-sensitive file systems.
+		// FIXME: This can break in case-sensitive file systems.
+		if (nd->path != NULL && strcasecmp(nd->path, filepath) == 0) {
 			found = true;
-			npc->unload_duplicates(nd, unload_mobs); /// Unload any NPC which could duplicate this but be in a different file.
+			// Unload any NPC which could duplicate this but be in a different file.
+			npc->unload_duplicates(nd, unload_mobs);
 			npc->unload(nd, true, unload_mobs);
 		}
 	}

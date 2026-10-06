@@ -260,7 +260,7 @@ static int battle_delay_damage_sub(int tid, int64 tick, int id, intptr_t data)
 {
 	struct delay_damage *dat = (struct delay_damage *)data;
 
-	GUARD_MAP_LOCK
+	GUARD_MAP_LOCK;
 
 	if ( dat ) {
 		struct block_list *src = map->id2bl(dat->src_id);
@@ -270,7 +270,7 @@ static int battle_delay_damage_sub(int tid, int64 tick, int id, intptr_t data)
 		if (target != NULL && !status->isdead(target)) {
 			//Check to see if you haven't teleported. [Skotlex]
 			if (src != NULL && (
-				(dat->skill_id == MO_EXTREMITYFIST && (target->m != src->m || !battle_config.snap_dodge)) // Extremity fist always hits
+				(dat->skill_id == MO_EXTREMITYFIST && (target->m != src->m || !battle_config.snap_dodge) /* Extremity fist always hits */)
 				|| (battle_config.fix_warp_hit_delay_abuse && target->m != src->m)
 				|| ((target->type != BL_PC || BL_UCAST(BL_PC, target)->invincible_timer == INVALID_TIMER)
 					&& (target->m == src->m && check_distance_bl(src, target, dat->distance)))
@@ -301,7 +301,7 @@ static int battle_delay_damage_sub(int tid, int64 tick, int id, intptr_t data)
 
 static int battle_delay_damage(int64 tick, int amotion, struct block_list *src, struct block_list *target, int attack_type, uint16 skill_id, uint16 skill_lv, int64 damage, enum damage_lv dmg_lv, int ddelay, bool additional_effects)
 {
-	GUARD_MAP_LOCK
+	GUARD_MAP_LOCK;
 
 	struct delay_damage *dat;
 	struct status_change *sc;
@@ -324,7 +324,8 @@ static int battle_delay_damage(int64 tick, int amotion, struct block_list *src, 
 
 	if ( !battle_config.delay_battle_damage || amotion <= 1 ) {
 		map->freeblock_lock();
-		status_fix_damage(src, target, damage, ddelay); // We have to separate here between reflect damage and others [icescope]
+		// We have to separate here between reflect damage and others [icescope]
+		status_fix_damage(src, target, damage, ddelay);
 		if( attack_type && !status->isdead(target) && additional_effects )
 			skill->additional_effect(src, target, skill_id, skill_lv, attack_type, dmg_lv, timer->gettick());
 		if( dmg_lv > ATK_BLOCK && attack_type )
@@ -344,8 +345,9 @@ static int battle_delay_damage(int64 tick, int amotion, struct block_list *src, 
 	dat->distance = distance_bl(src, target) + (battle_config.snap_dodge ? 10 : battle_config.area_size);
 	dat->additional_effects = additional_effects;
 	dat->src_type = src->type;
+	//Aegis places a damage-delay cap of 1 sec to non player attacks. [Skotlex]
 	if (src->type != BL_PC && amotion > 1000)
-		amotion = 1000; //Aegis places a damage-delay cap of 1 sec to non player attacks. [Skotlex]
+		amotion = 1000;
 
 	if (src->type == BL_PC) {
 		BL_UCAST(BL_PC, src)->delayed_damage++;
@@ -715,8 +717,8 @@ static int64 battle_addmastery(struct map_session_data *sd, struct block_list *t
 	nullpo_retr(damage, sd);
 	nullpo_retr(damage, target);
 	if((skill_lv = pc->checkskill(sd,AL_DEMONBANE)) > 0 &&
-		target->type == BL_MOB && //This bonus doesn't work against players.
-		(battle->check_undead(st->race,st->def_ele) || st->race==RC_DEMON) )
+		target->type == BL_MOB /* This bonus doesn't work against players */
+		&& (battle->check_undead(st->race,st->def_ele) || st->race==RC_DEMON) )
 		damage += (int)(skill_lv*(3+sd->status.base_level/20.0));
 		//damage += (skill_lv * 3);
 	if( (skill_lv = pc->checkskill(sd, RA_RANGERMAIN)) > 0 && (st->race == RC_BRUTE || st->race == RC_PLANT || st->race == RC_FISH) )
@@ -788,7 +790,6 @@ static int64 battle_addmastery(struct map_session_data *sd, struct block_list *t
 		case W_FIST:
 			if((skill_lv = pc->checkskill(sd,TK_RUN)) > 0)
 				damage += (skill_lv * 10);
-			// No break, fall through to Knuckles
 			[[fallthrough]];
 		case W_KNUCKLE:
 			if((skill_lv = pc->checkskill(sd,MO_IRONHAND)) > 0)
@@ -868,7 +869,7 @@ static int64 battle_calc_masteryfix(struct block_list *src, struct block_list *t
 		case RA_WUGDASH://(Caster Current Weight x 10 / 8)
 			if( sd->weight )
 				damage += sd->weight / 8;
-			/* Fall through */
+			[[fallthrough]];
 		case RA_WUGSTRIKE:
 		case RA_WUGBITE:
 			damage += 30*pc->checkskill(sd, RA_TOOTHOFWUG);
@@ -927,7 +928,8 @@ static int64 battle_calc_masteryfix(struct block_list *src, struct block_list *t
 			damage += (damage /*+ unknown value*/) * 2 * skill2_lv * i / 100 /*+ unknown value*/;
 	}
 #else
-	if( skill_id != ASC_BREAKER && weapon ) // Adv Katar Mastery is does not applies to ASC_BREAKER, but other masteries DO apply >_>
+	// Adv Katar Mastery is does not applies to ASC_BREAKER, but other masteries DO apply >_>
+	if( skill_id != ASC_BREAKER && weapon )
 		if (sd->weapontype == W_KATAR && (skill2_lv=pc->checkskill(sd,ASC_KATAR)) > 0)
 			damage += damage * (10 + 2 * skill2_lv) / 100;
 #endif
@@ -996,7 +998,8 @@ static int64 battle_calc_elefix(struct block_list *src, struct block_list *targe
 		sstatus = status->get_status_data(src);
 		sc = status->get_sc(src);
 
-		if( sc && sc->data[SC_SUB_WEAPONPROPERTY] ) { // Descriptions indicate this means adding a percent of a normal attack in another element. [Skotlex]
+		if( sc && sc->data[SC_SUB_WEAPONPROPERTY] ) {
+			// Descriptions indicate this means adding a percent of a normal attack in another element. [Skotlex]
 			int64 temp = battle->calc_base_damage2(sstatus, &sstatus->rhw, sc, tstatus->size, BL_CAST(BL_PC, src), (flag?2:0)) * sc->data[SC_SUB_WEAPONPROPERTY]->val2 / 100;
 			damage += battle->attr_fix(src, target, temp, sc->data[SC_SUB_WEAPONPROPERTY]->val1, tstatus->def_ele, tstatus->ele_lv);
 			if( left ) {
@@ -1522,9 +1525,11 @@ static int64 battle_calc_defense(int attack_type, struct block_list *src, struct
 			* Pierce defense gains 1 atk per def/2
 			**/
 
-			if( def1 < -399 ) // it stops at -399
-				def1 = 399; // in aegis it set to 1 but in our case it may lead to exploitation so limit it to 399
+			if( def1 < -399 ) { // it stops at -399
+				// in aegis it set to 1 but in our case it may lead to exploitation so limit it to 399
+				def1 = 399;
 				//return 1;
+			}
 
 			if( flag&2 )
 				damage += def1 >> 1;
@@ -1577,9 +1582,11 @@ static int64 battle_calc_defense(int attack_type, struct block_list *src, struct
 			/**
 			 * RE MDEF Reduction
 			 **/
-			if( mdef < -99 ) // it stops at -99
-				mdef = 99; // in aegis it set to 1 but in our case it may lead to exploitation so limit it to 99
+			if( mdef < -99 ) { // it stops at -99
+				// in aegis it set to 1 but in our case it may lead to exploitation so limit it to 99
+				mdef = 99;
 				//return 1;
+			}
 
 			damage = (int)((100.0f - mdef / (mdef + 100.0f) * 90.0f) / 100.0f * damage - mdef2);
 		#else
@@ -1792,7 +1799,7 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 				case NJ_KAMAITACHI:
 					if (sd && sd->charm_type == CHARM_TYPE_WIND && sd->charm_count > 0)
 						skillratio += 10 * sd->charm_count;
-					/* Fall through */
+					[[fallthrough]];
 				case NPC_ENERGYDRAIN:
 					skillratio += 100 * skill_lv;
 					break;
@@ -1854,11 +1861,13 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 				/**
 					* Warlock
 					**/
-				case WL_SOULEXPANSION: // MATK [{( Skill Level + 4 ) x 100 ) + ( Caster's INT )} x ( Caster's Base Level / 100 )] %
+				case WL_SOULEXPANSION:
+					// MATK [{( Skill Level + 4 ) x 100 ) + ( Caster's INT )} x ( Caster's Base Level / 100 )] %
 					skillratio = 100 * (skill_lv + 4) + st->int_;
 					RE_LVL_DMOD(100);
 					break;
-				case WL_FROSTMISTY: // MATK [{( Skill Level x 100 ) + 200 } x ( Caster's Base Level / 100 )] %
+				case WL_FROSTMISTY:
+					// MATK [{( Skill Level x 100 ) + 200 } x ( Caster's Base Level / 100 )] %
 					skillratio += 100 + 100 * skill_lv;
 					RE_LVL_DMOD(100);
 					break;
@@ -1909,7 +1918,8 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 						c = ( c > 1 ? rnd()%c : 0 );
 
 						if( (psd = map->id2sd(p_sd[c])) && pc->checkskill(psd,WL_COMET) > 0 ){
-							skillratio = skill_lv * 400; //MATK [{( Skill Level x 400 ) x ( Caster's Base Level / 120 )} + 2500 ] %
+							//MATK [{( Skill Level x 400 ) x ( Caster's Base Level / 120 )} + 2500 ] %
+							skillratio = skill_lv * 400;
 							RE_LVL_DMOD(120);
 							skillratio += 2500;
 							status_zap(&psd->bl, 0, skill->get_sp(skill_id, skill_lv) / 2);
@@ -2784,36 +2794,45 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					RE_LVL_DMOD(100);
 					break;
 				case SR_SKYNETBLOW:
-					if( sc && sc->data[SC_COMBOATTACK] && sc->data[SC_COMBOATTACK]->val1 == SR_DRAGONCOMBO )//ATK [{(Skill Level x 100) + (Caster AGI) + 150} x Caster Base Level / 100] %
+					if( sc && sc->data[SC_COMBOATTACK] && sc->data[SC_COMBOATTACK]->val1 == SR_DRAGONCOMBO ) {
+						//ATK [{(Skill Level x 100) + (Caster AGI) + 150} x Caster Base Level / 100] %
 						skillratio += 100 * skill_lv + status_get_agi(src) + 50;
-					else //ATK [{(Skill Level x 80) + (Caster AGI)} x Caster Base Level / 100] %
+					} else {
+						//ATK [{(Skill Level x 80) + (Caster AGI)} x Caster Base Level / 100] %
 						skillratio += -100 + 80 * skill_lv + status_get_agi(src);
+					}
 					RE_LVL_DMOD(100);
 					break;
 				case SR_EARTHSHAKER:
-					if( tsc && (tsc->data[SC_HIDING] || tsc->data[SC_CLOAKING] || // [(Skill Level x 150) x (Caster Base Level / 100) + (Caster INT x 3)] %
+					if( tsc && (tsc->data[SC_HIDING] || tsc->data[SC_CLOAKING] ||
 						tsc->data[SC_CHASEWALK] || tsc->data[SC_CLOAKINGEXCEED] || tsc->data[SC__INVISIBILITY]) ){
+						// [(Skill Level x 150) x (Caster Base Level / 100) + (Caster INT x 3)] %
 						skillratio += -100 + 150 * skill_lv;
 						RE_LVL_DMOD(100);
 						skillratio += status_get_int(src) * 3;
-					}else{ //[(Skill Level x 50) x (Caster Base Level / 100) + (Caster INT x 2)] %
+					}else{
+						//[(Skill Level x 50) x (Caster Base Level / 100) + (Caster INT x 2)] %
 						skillratio += 50 * (skill_lv-2);
 						RE_LVL_DMOD(100);
 						skillratio += status_get_int(src) * 2;
 					}
 					break;
-				case SR_FALLENEMPIRE:// ATK [(Skill Level x 150 + 100) x Caster Base Level / 150] %
+				case SR_FALLENEMPIRE:
+					// ATK [(Skill Level x 150 + 100) x Caster Base Level / 150] %
 					skillratio += 150 *skill_lv;
 					RE_LVL_DMOD(150);
 					break;
-				case SR_TIGERCANNON:// ATK [((Caster consumed HP + SP) / 4) x Caster Base Level / 100] %
+				case SR_TIGERCANNON:
 					{
-						int hp = status_get_max_hp(src) * (10 + 2 * skill_lv) / 100,
-							sp = status_get_max_sp(src) * (6 + skill_lv) / 100;
-						if( sc && sc->data[SC_COMBOATTACK] && sc->data[SC_COMBOATTACK]->val1 == SR_FALLENEMPIRE ) // ATK [((Caster consumed HP + SP) / 2) x Caster Base Level / 100] %
+						int hp = status_get_max_hp(src) * (10 + 2 * skill_lv) / 100;
+						int sp = status_get_max_sp(src) * (6 + skill_lv) / 100;
+						if( sc && sc->data[SC_COMBOATTACK] && sc->data[SC_COMBOATTACK]->val1 == SR_FALLENEMPIRE ) {
+							// ATK [((Caster consumed HP + SP) / 2) x Caster Base Level / 100] %
 							skillratio += -100 + (hp+sp) / 2;
-						else
+						} else {
+							// ATK [((Caster consumed HP + SP) / 4) x Caster Base Level / 100] %
 							skillratio += -100 + (hp+sp) / 4;
+						}
 						RE_LVL_DMOD(100);
 					}
 						break;
@@ -2832,8 +2851,10 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 						skillratio = 150 * skill_lv + status->get_lv(target) * 5 * (status->get_lv(src) / 100) ;
 						if( tsd && tsd->weight )
 							skillratio += 100 * (tsd->weight / tsd->max_weight);
-					}else // ATK [(Skill Level x 100 + 500) x Caster Base Level / 100] %
+					}else {
+						// ATK [(Skill Level x 100 + 500) x Caster Base Level / 100] %
 						skillratio += 400 + (100 * skill_lv);
+					}
 					RE_LVL_DMOD(100);
 					break;
 				case SR_WINDMILL: // ATK [(Caster Base Level + Caster DEX) x Caster Base Level / 100] %
@@ -2883,8 +2904,9 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 				case GN_CART_TORNADO:
 				{
 					int strbonus = bst->str;
-					if (strbonus > 130) //Max base stat limit on official is 130. So well allow no higher then 130 STR here. This limit prevents
-						strbonus = 130; //the division from going any lower then 20 so the server wont divide by 0 if someone has 150 STR. [Rytech]
+					//Max base stat limit on official is 130. So well allow no higher then 130 STR here. This limit prevents the division from going any lower then 20 so the server wont divide by 0 if someone has 150 STR. [Rytech]
+					if (strbonus > 130)
+						strbonus = 130;
 					skillratio = 50 * skill_lv + (sd ? sd->cart_weight : battle_config.max_cart_weight) / 10 / (150 - strbonus) + 50 * (sd ? pc->checkskill(sd, GN_REMODELING_CART) : 5);
 				}
 					break;
@@ -2893,7 +2915,7 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 					break;
 				case GN_SPORE_EXPLOSION:
 					skillratio = 100 * skill_lv + (200 + st->int_) * status->get_lv(src) / 100;
-					/* Fall through */
+					[[fallthrough]];
 				case GN_CRAZYWEED_ATK:
 					skillratio += 400 + 100 * skill_lv;
 					break;
@@ -2923,7 +2945,8 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 						}
 					}
 					break;
-				case SO_VARETYR_SPEAR://ATK [{( Striking Level x 50 ) + ( Varetyr Spear Skill Level x 50 )} x Caster Base Level / 100 ] %
+				case SO_VARETYR_SPEAR:
+					//ATK [{( Striking Level x 50 ) + ( Varetyr Spear Skill Level x 50 )} x Caster Base Level / 100 ] %
 					skillratio += -100 + 50 * skill_lv + ( sd ? pc->checkskill(sd, SO_STRIKING) * 50 : 0 );
 					if( sc && sc->data[SC_BLAST_OPTION] )
 						skillratio += (sd ? sd->status.job_level * 5 : 0);
@@ -2975,8 +2998,10 @@ static int battle_calc_skillratio(int attack_type, struct block_list *src, struc
 						|| (sce = tsc->data[SC_SOULGOLEM]) != NULL
 						|| (sce = tsc->data[SC_SOULSHADOW]) != NULL
 						|| (sce = tsc->data[SC_SOULFALCON]) != NULL
-						|| (sce = tsc->data[SC_SOULFAIRY]) != NULL) // Bonus damage added when target is soul linked.
+						|| (sce = tsc->data[SC_SOULFAIRY]) != NULL) {
+							// Bonus damage added when target is soul linked.
 							skillratio += 200 * sce->val1;
+						}
 					}
 					break;
 				case MH_NEEDLE_OF_PARALYZE:
@@ -3189,7 +3214,8 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 			d->dmg_lv = ATK_BLOCK;
 			return 0;
 		}
-		if( sc->data[SC_WHITEIMPRISON] && skill_id != HW_GRAVITATION ) { // Gravitation and Pressure do damage without removing the effect
+		if( sc->data[SC_WHITEIMPRISON] && skill_id != HW_GRAVITATION ) {
+			// Gravitation and Pressure do damage without removing the effect
 			if( skill_id == MG_NAPALMBEAT ||
 				skill_id == MG_SOULSTRIKE ||
 				skill_id == WL_SOULEXPANSION ||
@@ -3318,7 +3344,8 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 			clif->skill_nodamage(bl, bl, RK_MILLENNIUMSHIELD, 1, 1);
 			sce->val3 -= (int)std::clamp(damage, (int64)INT_MIN, (int64)INT_MAX); // absorb damage
 			d->dmg_lv = ATK_BLOCK;
-			sc_start(src, bl, SC_STUN, 15, 0, skill->get_time2(RK_MILLENNIUMSHIELD, sce->val1), RK_MILLENNIUMSHIELD); // There is a chance to be stunned when one shield is broken.
+			// There is a chance to be stunned when one shield is broken.
+			sc_start(src, bl, SC_STUN, 15, 0, skill->get_time2(RK_MILLENNIUMSHIELD, sce->val1), RK_MILLENNIUMSHIELD);
 			if( sce->val3 <= 0 ) { // Shield Down
 				sce->val2--;
 				if( sce->val2 > 0 ) {
@@ -3402,8 +3429,10 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 			if( src->type != BL_MER || skill_id == 0 )
 				damage <<= 1; // Lex Aeterna only doubles damage of regular attacks from mercenaries
 
-			if( skill_id != ASC_BREAKER || !(flag&BF_WEAPON) )
-				status_change_end(bl, SC_LEXAETERNA, INVALID_TIMER); //Shouldn't end until Breaker's non-weapon part connects.
+			if( skill_id != ASC_BREAKER || !(flag&BF_WEAPON) ) {
+				//Shouldn't end until Breaker's non-weapon part connects.
+				status_change_end(bl, SC_LEXAETERNA, INVALID_TIMER);
+			}
 		}
 
 #ifdef RENEWAL
@@ -3461,7 +3490,8 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 #ifdef RENEWAL
 			((flag&(BF_LONG|BF_WEAPON)) == (BF_LONG|BF_WEAPON) || skill_id == CR_ACIDDEMONSTRATION))
 #else
-			(flag&(BF_LONG|BF_WEAPON)) == (BF_LONG|BF_WEAPON)) // In pre-re Defender doesn't reduce damage from Acid Demonstration
+			/* In pre-re Defender doesn't reduce damage from Acid Demonstration */
+			(flag&(BF_LONG|BF_WEAPON)) == (BF_LONG|BF_WEAPON))
 #endif
 			damage = damage * ( 100 - sc->data[SC_DEFENDER]->val2 ) / 100;
 
@@ -3783,7 +3813,8 @@ static int64 battle_calc_pc_damage(struct block_list *src, struct block_list *bl
 	int flag = d->flag;
 
 	switch (skill_id) {
-		//case PA_PRESSURE: /* pressure also belongs to this list but it doesn't reach this area -- so don't worry about it */
+		//case PA_PRESSURE:
+		/* pressure also belongs to this list but it doesn't reach this area -- so don't worry about it */
 #ifndef RENEWAL // 2018.10 rebalance - HW_GRAVITATION is a basic magic damage skill now
 		case HW_GRAVITATION:
 #endif
@@ -3939,7 +3970,8 @@ static int battle_range_type(struct block_list *src, struct block_list *target, 
 
 	if (battle_config.skillrange_by_distance &&
 		(src->type&battle_config.skillrange_by_distance)
-	) { //based on distance between src/target [Skotlex]
+	) {
+		//based on distance between src/target [Skotlex]
 		if (check_distance_bl(src, target, 5))
 			return BF_SHORT;
 		return BF_LONG;
@@ -4020,7 +4052,8 @@ static struct Damage battle_calc_magic_attack(struct block_list *src, struct blo
 	//Initial Values
 	ad.damage = 1;
 	ad.div_=skill->get_num(skill_id,skill_lv);
-	ad.amotion = (skill->get_inf(skill_id)&INF_GROUND_SKILL) ? 0 : sstatus->amotion; //Amotion should be 0 for ground skills.
+	//Amotion should be 0 for ground skills.
+	ad.amotion = (skill->get_inf(skill_id)&INF_GROUND_SKILL) ? 0 : sstatus->amotion;
 	ad.dmotion=tstatus->dmotion;
 	ad.blewcount = skill->get_blewcount(skill_id,skill_lv);
 	ad.flag=BF_MAGIC|BF_SKILL;
@@ -4131,7 +4164,8 @@ static struct Damage battle_calc_magic_attack(struct block_list *src, struct blo
 			case PR_TURNUNDEAD:
 				//Undead check is on skill_castend_damageid code.
 				i = 20*skill_lv + sstatus->luk + sstatus->int_ + status->get_lv(src)
-				  + 200 - 200*tstatus->hp/tstatus->max_hp; // there is no changed in success chance in renewal. [malufett]
+				  + 200 - 200*tstatus->hp/tstatus->max_hp;
+				// there is no changed in success chance in renewal. [malufett]
 				if(i > 700) i = 700;
 				if(rnd()%1000 < i && !(tstatus->mode&MD_BOSS))
 					ad.damage = tstatus->hp;
@@ -4178,12 +4212,13 @@ static struct Damage battle_calc_magic_attack(struct block_list *src, struct blo
 					case MG_COLDBOLT:
 					case MG_LIGHTNINGBOLT:
 						if ( sc && sc->data[SC_SPELLFIST] && mflag&BF_SHORT )  {
-							skillratio = sc->data[SC_SPELLFIST]->val2 * 50 + sc->data[SC_SPELLFIST]->val4 * 100;// val4 = used bolt level, val2 = used spellfist level. [Rytech]
+							// val4 = used bolt level, val2 = used spellfist level. [Rytech]
+							skillratio = sc->data[SC_SPELLFIST]->val2 * 50 + sc->data[SC_SPELLFIST]->val4 * 100;
 							ad.div_ = 1;// ad mods, to make it work similar to regular hits [Xazax]
 							ad.flag = BF_WEAPON|BF_SHORT;
 							ad.type = BDT_NORMAL;
 						}
-					/* Fall through */
+						[[fallthrough]];
 					default:
 						MATK_RATE(battle->calc_skillratio(BF_MAGIC, src, target, skill_id, skill_lv, skillratio, mflag));
 				}
@@ -4292,7 +4327,8 @@ static struct Damage battle_calc_magic_attack(struct block_list *src, struct blo
 			ad.damage=battle->attr_fix(src, target, ad.damage, s_ele, tstatus->def_ele, tstatus->ele_lv);
 
 		if( skill_id == CR_GRANDCROSS || skill_id == NPC_GRANDDARKNESS )
-		{ //Apply the physical part of the skill's damage. [Skotlex]
+		{
+			//Apply the physical part of the skill's damage. [Skotlex]
 			struct Damage wd = battle->calc_weapon_attack(src,target,skill_id,skill_lv,mflag);
 			ad.damage = battle->attr_fix(src, target, wd.damage + ad.damage, s_ele, tstatus->def_ele, tstatus->ele_lv) * (100 + 40*skill_lv)/100;
 			if( src == target )
@@ -4480,12 +4516,14 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 		break;
 	case CR_ACIDDEMONSTRATION:
 #ifdef RENEWAL
-		{// [malufett]
+			// [malufett]
+		{
 			int64 matk=0, atk;
 			short tdef = status->get_total_def(target);
 			short tmdef =  status->get_total_mdef(target);
 			int targetVit = std::min(120, (int)status_get_vit(target));
-			short totaldef = (tmdef + tdef - ((uint64)(tmdef + tdef) >> 32)) >> 1; // FIXME: What's the >> 32 supposed to do here? tmdef and tdef are both 16-bit...
+			// FIXME: What's the >> 32 supposed to do here? tmdef and tdef are both 16-bit...
+			short totaldef = (tmdef + tdef - ((uint64)(tmdef + tdef) >> 32)) >> 1;
 
 			matk = battle->calc_magic_attack(src, target, skill_id, skill_lv, mflag).damage;
 			atk = battle->calc_base_damage(src, target, skill_id, skill_lv, nk, false, s_ele, ELE_NEUTRAL, EQI_HAND_R, (sc && sc->data[SC_MAXIMIZEPOWER]?1:0)|(sc && sc->data[SC_WEAPONPERFECT]?8:0), md.flag);
@@ -4493,12 +4531,13 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 			if( src->type == BL_MOB ){
 				totaldef = (tdef + tmdef) >> 1;
 				md.damage = (int64)7 * targetVit * skill_lv * (atk + matk) / 100;
-				/*
+#if 0
 				// Pending [malufett]
 				if( unknown condition ){
 					md.damage = 7 * md.damage % 20;
 					md.damage = 7 * md.damage / 20;
-				}*/
+				}
+#endif // 0
 			}else{
 				float vitfactor = 0.0f, ftemp;
 
@@ -4804,7 +4843,7 @@ static void battle_calc_misc_attack_unknown(struct block_list *src, struct block
 // FIXME: wflag is undocumented
 static struct Damage battle_calc_weapon_attack(struct block_list *src, struct block_list *target, uint16 skill_id, uint16 skill_lv, int wflag)
 {
-	GUARD_MAP_LOCK
+	GUARD_MAP_LOCK;
 
 	short temp=0;
 	short s_ele, s_ele_;
@@ -4864,9 +4903,12 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 		wd.amotion >>= 1;
 	wd.dmotion=tstatus->dmotion;
 	wd.blewcount = skill_id ? skill->get_blewcount(skill_id,skill_lv) : 0;
-	wd.flag = BF_WEAPON; //Initial Flag
-	wd.flag |= (skill_id||wflag)?BF_SKILL:BF_NORMAL; // Baphomet card's splash damage is counted as a skill. [Inkfish]
-	wd.dmg_lv=ATK_DEF; //This assumption simplifies the assignation later
+	//Initial Flag
+	wd.flag = BF_WEAPON;
+	// Baphomet card's splash damage is counted as a skill. [Inkfish]
+	wd.flag |= (skill_id||wflag)?BF_SKILL:BF_NORMAL;
+	//This assumption simplifies the assignation later
+	wd.dmg_lv=ATK_DEF;
 	nk = skill->get_nk(skill_id);
 	if( !skill_id && wflag ) //If flag, this is splash damage from Baphomet Card and it always hits.
 		nk |= NK_NO_CARDFIX_ATK|NK_IGNORE_FLEE;
@@ -5014,7 +5056,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 			case NJ_SYURIKEN:
 			case KO_BAKURETSU:
 				flag.distinct = 1;
-				/* Fall through */
+				[[fallthrough]];
 			case NJ_KUNAI:
 			case HW_MAGICCRASHER:
 				flag.tdef = 1;
@@ -5092,8 +5134,8 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 	if (sd != NULL && skill_id == 0) {
 		//Check for double attack.
 		if (((skill_lv = pc->checkskill(sd, TF_DOUBLE)) > 0 && sd->weapontype1 == W_DAGGER)
-		 || (sd->bonus.double_rate > 0 && sd->weapontype1 != W_FIST) //Will fail bare-handed
-		 || (sc != NULL && sc->data[SC_KAGEMUSYA] != NULL && sd->weapontype1 != W_FIST) // Need confirmation
+		 || (sd->bonus.double_rate > 0 && sd->weapontype1 != W_FIST) /* Will fail bare-handed */
+		 || (sc != NULL && sc->data[SC_KAGEMUSYA] != NULL && sd->weapontype1 != W_FIST) /* Need confirmation */
 		) {
 			// Success chance is not added, the higher one is used [Skotlex]
 			if (rnd() % 100 < (5 * skill_lv > sd->bonus.double_rate ? 5 * skill_lv : sc != NULL && sc->data[SC_KAGEMUSYA] != NULL ? sc->data[SC_KAGEMUSYA]->val1 * 3 : sd->bonus.double_rate))
@@ -5270,8 +5312,9 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 
 		hitrate+= sstatus->hit - flee;
 
-		if(wd.flag&BF_LONG && !skill_id && //Fogwall's hit penalty is only for normal ranged attacks.
-			tsc && tsc->data[SC_FOGWALL])
+		// Fogwall's hit penalty is only for normal ranged attacks
+		if(wd.flag&BF_LONG && !skill_id
+			&& tsc && tsc->data[SC_FOGWALL])
 			hitrate -= 50;
 
 		if(sd && flag.arrow)
@@ -5380,6 +5423,7 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 
 	if (flag.hit && !flag.infdef) { //No need to do the math for plants
 		unsigned int skillratio = 100; //Skill dmg modifiers.
+
 		//Hitting attack
 
 //Assuming that 99% of the cases we will not need to check for the flag.rh... we don't.
@@ -5442,7 +5486,8 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 						wd.damage = sd->inventory_data[index]->weight*8/100; //80% of weight
 					ATK_ADDRATE(50*skill_lv); //Skill modifier applies to weight only.
 				} else {
-					wd.damage = battle->calc_base_damage2(sstatus, &sstatus->rhw, sc, tstatus->size, sd, 0); //Monsters have no weight and use ATK instead
+					//Monsters have no weight and use ATK instead
+					wd.damage = battle->calc_base_damage2(sstatus, &sstatus->rhw, sc, tstatus->size, sd, 0);
 				}
 				i = sstatus->str/10;
 				i*=i;
@@ -5800,7 +5845,8 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 					ATK_ADD((sstatus->sp * (1 + skill_lv * 2 / 10)) + 10 * status->get_lv(src));
 				}
 				break;
-			case SR_FALLENEMPIRE:// [(Target Size value + Skill Level - 1) x Caster STR] + [(Target current weight x Caster DEX / 120)]
+			case SR_FALLENEMPIRE:
+				// [(Target Size value + Skill Level - 1) x Caster STR] + [(Target current weight x Caster DEX / 120)]
 				ATK_ADD( ((tstatus->size+1)*2 + (int64)skill_lv - 1) * sstatus->str);
 				if( tsd && tsd->weight ){
 					ATK_ADD( (tsd->weight/10) * sstatus->dex / 120 );
@@ -5982,7 +6028,8 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 #ifdef RENEWAL
 			&& (!flag.distinct || flag.tdef)
 #endif
-			) { //Defense reduction
+			) {
+			//Defense reduction
 			wd.damage = battle->calc_defense(BF_WEAPON, src, target, skill_id, skill_lv, wd.damage,
 											 (flag.idef?1:0)|(flag.pdef?2:0)
 #ifdef RENEWAL
@@ -6007,7 +6054,8 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 		}
 		//Div fix.
 		damage_div_fix(wd.damage, wd.div_);
-		if ( skill_id > 0 && (skill->get_ele(skill_id, skill_lv) == ELE_NEUTRAL || flag.distinct) ) { // re-evaluate forced neutral skills
+		if ( skill_id > 0 && (skill->get_ele(skill_id, skill_lv) == ELE_NEUTRAL || flag.distinct) ) {
+			// re-evaluate forced neutral skills
 			wd.damage = battle->attr_fix(src, target, wd.damage, s_ele, tstatus->def_ele, tstatus->ele_lv);
 			if ( flag.lh )
 				wd.damage2 = battle->attr_fix(src, target, wd.damage2, s_ele_, tstatus->def_ele, tstatus->ele_lv);
@@ -6057,7 +6105,8 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 #ifndef RENEWAL
 		//Refine bonus
 		if( sd && flag.weapon && skill_id != MO_INVESTIGATE && skill_id != MO_EXTREMITYFIST )
-		{ // Counts refine bonus multiple times
+		{
+			// Counts refine bonus multiple times
 			if( skill_id == MO_FINGEROFFENSIVE )
 			{
 				ATK_ADD2(wd.div_*sstatus->rhw.atk2, wd.div_*sstatus->lhw.atk2);
@@ -6081,9 +6130,12 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 		if( sd && flag.cri )
 			ATK_ADDRATE(40);
 #endif
-	} //Here ends flag.hit section, the rest of the function applies to both hitting and missing attacks
-	else if(wd.div_ < 0) //Since the attack missed...
+	//Here ends flag.hit section, the rest of the function applies to both hitting and missing attacks
+	}
+	else if(wd.div_ < 0) {
+		//Since the attack missed...
 		wd.div_ *= -1;
+	}
 #ifndef RENEWAL
 	if(sd && (temp=pc->checkskill(sd,BS_WEAPONRESEARCH)) > 0)
 		ATK_ADD(temp*2);
@@ -6134,7 +6186,8 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 			wd.damage2 = battle->calc_cardfix(BF_WEAPON, src, target, nk, s_ele, s_ele_, wd.damage2, 3, wd.flag);
 
 		if( skill_id == CR_SHIELDBOOMERANG || skill_id == PA_SHIELDCHAIN )
-		{ //Refine bonus applies after cards and elements.
+		{
+			//Refine bonus applies after cards and elements.
 			short index= sd->equip_index[EQI_HAND_L];
 			if( index >= 0 && sd->inventory_data[index] && sd->inventory_data[index]->type == IT_ARMOR )
 				ATK_ADD(10*sd->status.inventory[index].refine);
@@ -6381,11 +6434,13 @@ static struct Damage battle_calc_attack(int attack_type, struct block_list *bl, 
 
 	if( d.damage + d.damage2 < 1 ) { //Miss/Absorbed
 		//Weapon attacks should go through to cause additional effects.
-		if (d.dmg_lv == ATK_DEF /*&& attack_type&(BF_MAGIC|BF_MISC)*/) // Isn't it that additional effects don't apply if miss?
+		if (d.dmg_lv == ATK_DEF /* && attack_type&(BF_MAGIC|BF_MISC) Isn't it that additional effects don't apply if miss? */)
 			d.dmg_lv = ATK_MISS;
 		d.dmotion = 0;
-	} else // Some skills like Weaponry Research will cause damage even if attack is dodged
+	} else {
+		// Some skills like Weaponry Research will cause damage even if attack is dodged
 		d.dmg_lv = ATK_DEF;
+	}
 
 	if (sd && d.damage + d.damage2 > 1) {
 		// HPVanishRate
@@ -6441,8 +6496,9 @@ static void battle_reflect_damage(struct block_list *target, struct block_list *
 				if (ratio > 5000) ratio = 5000; // Maximum of 5000% ATK
 				rdamage = ratio + (damage)* (10 + sc->data[SC_CRESCENTELBOW]->val1 * 20 / 10) / 10;
 				skill->blown(target, src, skill->get_blewcount(SR_CRESCENTELBOW_AUTOSPELL, sc->data[SC_CRESCENTELBOW]->val1), unit->getdir(src), 0);
+				// This is how official does
 				clif->skill_damage(target, src, tick, status_get_amotion(src), 0, rdamage,
-						   1, SR_CRESCENTELBOW_AUTOSPELL, sc->data[SC_CRESCENTELBOW]->val1, BDT_SKILL); // This is how official does
+						   1, SR_CRESCENTELBOW_AUTOSPELL, sc->data[SC_CRESCENTELBOW]->val1, BDT_SKILL);
 				clif->delay_damage(tick + delay, src, target,status_get_amotion(src)+1000,0, rdamage/10, 1, BDT_NORMAL);
 				status->damage(src, target, status->damage(target, src, rdamage, 0, 0, 1)/10, 0, 0, 1);
 				status_change_end(target, SC_CRESCENTELBOW, INVALID_TIMER);
@@ -6507,8 +6563,8 @@ static void battle_reflect_damage(struct block_list *target, struct block_list *
 					d_bl = map->id2bl(sce_d->val1);
 
 				if( sc->data[SC_REFLECTSHIELD] && skill_id != WS_CARTTERMINATION && skill_id != GS_DESPERADO
-				  && !(d_bl && !(wd->flag&BF_SKILL)) // It should not be a basic attack if the target is under devotion
-				  && !(d_bl && sce_d && !check_distance_bl(target, d_bl, sce_d->val3)) // It should not be out of range if the target is under devotion
+				  && !(d_bl && !(wd->flag&BF_SKILL)) /* It shouldn't be a basic attack if the target is under devotion */
+				  && !(d_bl && sce_d && !check_distance_bl(target, d_bl, sce_d->val3)) /* It shouldn't be out of range if the target is under devotion */
 				) {
 
 					NORMALIZE_RDAMAGE(damage * sc->data[SC_REFLECTSHIELD]->val2 / 100);
@@ -6704,7 +6760,7 @@ static void battle_drain(struct map_session_data *sd, struct block_list *tbl, in
 // Deals the same damage to targets in area. [pakpil]
 static int battle_damage_area(struct block_list *bl, va_list ap)
 {
-	GUARD_MAP_LOCK
+	GUARD_MAP_LOCK;
 
 	int64 tick;
 	int amotion, dmotion, damage;
@@ -6818,7 +6874,7 @@ static bool battle_should_bladestop_attacker(struct block_list *attacker, struct
 // FIXME: flag is undocumented
 static enum damage_lv battle_weapon_attack(struct block_list *src, struct block_list *target, int64 tick, int flag)
 {
-	GUARD_MAP_LOCK
+	GUARD_MAP_LOCK;
 
 	struct map_session_data *sd = NULL;
 	struct status_data *sstatus, *tstatus;
@@ -7652,9 +7708,11 @@ static int battle_check_target(struct block_list *src, struct block_list *target
 			)
 				state &= ~BCT_ENEMY;
 		}
-	}//end map_flag_vs chk rivality
+		//end map_flag_vs chk rivality
+	}
 	else
-	{ //Non pvp/gvg, check party/guild settings.
+	{
+		//Non pvp/gvg, check party/guild settings.
 		if( flag&BCT_PARTY || state&BCT_ENEMY ) {
 			int s_party = status->get_party_id(s_bl);
 			if(s_party && s_party == status->get_party_id(t_bl))
@@ -7666,7 +7724,8 @@ static int battle_check_target(struct block_list *src, struct block_list *target
 			if(s_guild && t_guild && (s_guild == t_guild || (!(flag&BCT_SAMEGUILD) && guild->isallied(s_guild, t_guild))))
 				state |= BCT_GUILD;
 		}
-	} //end non pvp/gvg chk rivality
+		//end non pvp/gvg chk rivality
+	}
 
 	if( !state ) //If not an enemy, nor a guild, nor party, nor yourself, it's neutral.
 		state = BCT_NEUTRAL;
@@ -7710,369 +7769,369 @@ static bool battle_check_range(struct block_list *src, struct block_list *bl, in
 
 // can be converted in future into macroses from common/config
 static const struct config_data_old battle_data[] = {
-	{ "warp_point_debug",                   &battle_config.warp_point_debug,                0,      0,      1,              },
-	{ "enable_critical",                    &battle_config.enable_critical,                 BL_PC,  BL_NUL, BL_ALL,         },
-	{ "mob_critical_rate",                  &battle_config.mob_critical_rate,               100,    0,      INT_MAX,        },
-	{ "critical_rate",                      &battle_config.critical_rate,                   100,    0,      INT_MAX,        },
-	{ "enable_baseatk",                     &battle_config.enable_baseatk,                  BL_PC|BL_HOM, BL_NUL, BL_ALL,   },
-	{ "enable_perfect_flee",                &battle_config.enable_perfect_flee,             BL_PC|BL_PET, BL_NUL, BL_ALL,   },
-	{ "casting_rate",                       &battle_config.cast_rate,                       100,    0,      INT_MAX,        },
-	{ "delay_rate",                         &battle_config.delay_rate,                      100,    0,      INT_MAX,        },
-	{ "delay_dependon_dex",                 &battle_config.delay_dependon_dex,              0,      0,      1,              },
-	{ "delay_dependon_agi",                 &battle_config.delay_dependon_agi,              0,      0,      1,              },
-	{ "skill_delay_attack_enable",          &battle_config.sdelay_attack_enable,            0,      0,      1,              },
-	{ "left_cardfix_to_right",              &battle_config.left_cardfix_to_right,           0,      0,      1,              },
-	{ "skill_add_range",                    &battle_config.skill_add_range,                 0,      0,      INT_MAX,        },
-	{ "skill_out_range_consume",            &battle_config.skill_out_range_consume,         1,      0,      1,              },
-	{ "skillrange_by_distance",             &battle_config.skillrange_by_distance,          (BL_ALL & ~BL_PC), BL_NUL, BL_ALL, },
-	{ "skillrange_from_weapon",             &battle_config.use_weapon_skill_range,          BL_NUL, BL_NUL, BL_ALL,         },
-	{ "player_damage_delay_rate",           &battle_config.pc_damage_delay_rate,            100,    0,      INT_MAX,        },
-	{ "defunit_not_enemy",                  &battle_config.defnotenemy,                     0,      0,      1,              },
-	{ "gvg_traps_target_all",               &battle_config.vs_traps_bctall,                 BL_PC,  BL_NUL, BL_ALL,         },
-	{ "trap_options/visibility",            &battle_config.trap_visibility,                 2,      0,      2,              },
-	{ "trap_options/display_on_trigger",    &battle_config.trap_trigger,                    1,      0,      1,              },
-	{ "summon_flora_setting",               &battle_config.summon_flora,                    1|2,    0,      1|2,            },
-	{ "clear_skills_on_death",              &battle_config.clear_unit_ondeath,              BL_NUL, BL_NUL, BL_ALL,         },
-	{ "clear_skills_on_warp",               &battle_config.clear_unit_onwarp,               BL_ALL, BL_NUL, BL_ALL,         },
-	{ "random_monster_checklv",             &battle_config.random_monster_checklv,          0,      0,      1,              },
-	{ "attribute_recover",                  &battle_config.attr_recover,                    1,      0,      1,              },
-	{ "flooritem_lifetime",                 &battle_config.flooritem_lifetime,              60000,  1000,   INT_MAX,        },
-	{ "item_auto_get",                      &battle_config.item_auto_get,                   0,      0,      1,              },
-	{ "item_first_get_time",                &battle_config.item_first_get_time,             3000,   0,      INT_MAX,        },
-	{ "item_second_get_time",               &battle_config.item_second_get_time,            1000,   0,      INT_MAX,        },
-	{ "item_third_get_time",                &battle_config.item_third_get_time,             1000,   0,      INT_MAX,        },
-	{ "mvp_item_first_get_time",            &battle_config.mvp_item_first_get_time,         10000,  0,      INT_MAX,        },
-	{ "mvp_item_second_get_time",           &battle_config.mvp_item_second_get_time,        10000,  0,      INT_MAX,        },
-	{ "mvp_item_third_get_time",            &battle_config.mvp_item_third_get_time,         2000,   0,      INT_MAX,        },
-	{ "drop_rate0item",                     &battle_config.drop_rate0item,                  0,      0,      1,              },
-	{ "base_exp_rate",                      &battle_config.base_exp_rate,                   100,    0,      INT_MAX,        },
-	{ "job_exp_rate",                       &battle_config.job_exp_rate,                    100,    0,      INT_MAX,        },
-	{ "pvp_exp",                            &battle_config.pvp_exp,                         1,      0,      1,              },
-	{ "death_penalty_type",                 &battle_config.death_penalty_type,              0,      0,      2,              },
-	{ "death_penalty_base",                 &battle_config.death_penalty_base,              0,      0,      INT_MAX,        },
-	{ "death_penalty_job",                  &battle_config.death_penalty_job,               0,      0,      INT_MAX,        },
-	{ "zeny_penalty",                       &battle_config.zeny_penalty,                    0,      0,      INT_MAX,        },
-	{ "hp_rate",                            &battle_config.hp_rate,                         100,    1,      INT_MAX,        },
-	{ "sp_rate",                            &battle_config.sp_rate,                         100,    1,      INT_MAX,        },
-	{ "restart_hp_rate",                    &battle_config.restart_hp_rate,                 0,      0,      100,            },
-	{ "restart_sp_rate",                    &battle_config.restart_sp_rate,                 0,      0,      100,            },
-	{ "guild_aura",                         &battle_config.guild_aura,                      31,     0,      31,             },
-	{ "mvp_hp_rate",                        &battle_config.mvp_hp_rate,                     100,    1,      INT_MAX,        },
-	{ "mvp_exp_rate",                       &battle_config.mvp_exp_rate,                    100,    0,      INT_MAX,        },
-	{ "monster_hp_rate",                    &battle_config.monster_hp_rate,                 100,    1,      INT_MAX,        },
-	{ "monster_max_aspd",                   &battle_config.monster_max_aspd,                199,    100,    199,            },
-	{ "view_range_rate",                    &battle_config.view_range_rate,                 100,    0,      INT_MAX,        },
-	{ "chase_range_rate",                   &battle_config.chase_range_rate,                100,    0,      INT_MAX,        },
-	{ "gtb_sc_immunity",                    &battle_config.gtb_sc_immunity,                 50,     0,      INT_MAX,        },
-	{ "guild_max_castles",                  &battle_config.guild_max_castles,               0,      0,      INT_MAX,        },
-	{ "guild_skill_relog_delay",            &battle_config.guild_skill_relog_delay,         0,      0,      2,              },
-	{ "emergency_call",                     &battle_config.emergency_call,                  11,     0,      31,             },
-	{ "atcommand_spawn_quantity_limit",     &battle_config.atc_spawn_quantity_limit,        100,    0,      INT_MAX,        },
-	{ "atcommand_slave_clone_limit",        &battle_config.atc_slave_clone_limit,           25,     0,      INT_MAX,        },
-	{ "partial_name_scan",                  &battle_config.partial_name_scan,               0,      0,      1,              },
-	{ "player_skillfree",                   &battle_config.skillfree,                       0,      0,      1,              },
-	{ "player_skillup_limit",               &battle_config.skillup_limit,                   1,      0,      1,              },
-	{ "weapon_produce_rate",                &battle_config.wp_rate,                         100,    0,      INT_MAX,        },
-	{ "potion_produce_rate",                &battle_config.pp_rate,                         100,    0,      INT_MAX,        },
-	{ "monster_active_enable",              &battle_config.monster_active_enable,           1,      0,      1,              },
-	{ "monster_damage_delay_rate",          &battle_config.monster_damage_delay_rate,       100,    0,      INT_MAX,        },
-	{ "monster_loot_type",                  &battle_config.monster_loot_type,               0,      0,      1,              },
-	{ "mob_skill_rate",                     &battle_config.mob_skill_rate,                  100,    0,      INT_MAX,        },
-	{ "mob_skill_delay",                    &battle_config.mob_skill_delay,                 100,    0,      INT_MAX,        },
-	{ "mob_count_rate",                     &battle_config.mob_count_rate,                  100,    0,      INT_MAX,        },
-	{ "mob_spawn_delay",                    &battle_config.mob_spawn_delay,                 100,    0,      INT_MAX,        },
-	{ "plant_spawn_delay",                  &battle_config.plant_spawn_delay,               100,    0,      INT_MAX,        },
-	{ "boss_spawn_delay",                   &battle_config.boss_spawn_delay,                100,    0,      INT_MAX,        },
-	{ "no_spawn_on_player",                 &battle_config.no_spawn_on_player,              0,      0,      100,            },
-	{ "force_random_spawn",                 &battle_config.force_random_spawn,              0,      0,      1,              },
-	{ "slaves_inherit_mode",                &battle_config.slaves_inherit_mode,             2,      0,      3,              },
-	{ "slaves_inherit_speed",               &battle_config.slaves_inherit_speed,            3,      0,      3,              },
-	{ "summons_trigger_autospells",         &battle_config.summons_trigger_autospells,      1,      0,      1,              },
-	{ "pc_damage_walk_delay_rate",          &battle_config.pc_walk_delay_rate,              20,     0,      INT_MAX,        },
-	{ "damage_walk_delay_rate",             &battle_config.walk_delay_rate,                 100,    0,      INT_MAX,        },
-	{ "multihit_delay",                     &battle_config.multihit_delay,                  80,     0,      INT_MAX,        },
-	{ "quest_skill_learn",                  &battle_config.quest_skill_learn,               0,      0,      1,              },
-	{ "quest_skill_reset",                  &battle_config.quest_skill_reset,               0,      0,      1,              },
-	{ "basic_skill_check",                  &battle_config.basic_skill_check,               1,      0,      1,              },
-	{ "guild_emperium_check",               &battle_config.guild_emperium_check,            1,      0,      1,              },
-	{ "guild_exp_limit",                    &battle_config.guild_exp_limit,                 50,     0,      99,             },
-	{ "player_invincible_time",             &battle_config.pc_invincible_time,              5000,   0,      INT_MAX,        },
-	{ "pet_catch_rate_official_formula",    &battle_config.pet_catch_rate_official_formula, 1,      0,      1,              },
-	{ "pet_catch_rate",                     &battle_config.pet_catch_rate,                  100,    0,      INT_MAX,        },
-	{ "pet_rename",                         &battle_config.pet_rename,                      0,      0,      1,              },
-	{ "pet_friendly_rate",                  &battle_config.pet_friendly_rate,               100,    0,      INT_MAX,        },
-	{ "pet_hungry_delay_rate",              &battle_config.pet_hungry_delay_rate,           100,    10,     INT_MAX,        },
-	{ "pet_status_support",                 &battle_config.pet_status_support,              0,      0,      1,              },
-	{ "pet_attack_support",                 &battle_config.pet_attack_support,              0,      0,      1,              },
-	{ "pet_damage_support",                 &battle_config.pet_damage_support,              0,      0,      1,              },
-	{ "pet_support_min_friendly",           &battle_config.pet_support_min_friendly,        900,    0,      950,            },
-	{ "pet_support_rate",                   &battle_config.pet_support_rate,                100,    0,      INT_MAX,        },
-	{ "pet_attack_exp_to_master",           &battle_config.pet_attack_exp_to_master,        0,      0,      1,              },
-	{ "pet_attack_exp_rate",                &battle_config.pet_attack_exp_rate,             100,    0,      INT_MAX,        },
-	{ "pet_lv_rate",                        &battle_config.pet_lv_rate,                     0,      0,      INT_MAX,        },
-	{ "pet_max_stats",                      &battle_config.pet_max_stats,                   99,     1,      INT_MAX,        },
-	{ "pet_max_atk1",                       &battle_config.pet_max_atk1,                    750,    1,      INT_MAX,        },
-	{ "pet_max_atk2",                       &battle_config.pet_max_atk2,                    1000,   2,      INT_MAX,        },
-	{ "pet_remove_immediately",             &battle_config.pet_remove_immediately,          1,      0,      1,              },
-	{ "skill_min_damage",                   &battle_config.skill_min_damage,                2|4,    0,      1|2|4,          },
-	{ "finger_offensive_type",              &battle_config.finger_offensive_type,           0,      0,      1,              },
-	{ "heal_exp",                           &battle_config.heal_exp,                        0,      0,      INT_MAX,        },
-	{ "resurrection_exp",                   &battle_config.resurrection_exp,                0,      0,      INT_MAX,        },
-	{ "shop_exp",                           &battle_config.shop_exp,                        0,      0,      INT_MAX,        },
-	{ "max_heal_lv",                        &battle_config.max_heal_lv,                     11,     1,      INT_MAX,        },
-	{ "max_heal",                           &battle_config.max_heal,                        9999,   0,      INT_MAX,        },
-	{ "combo_delay_rate",                   &battle_config.combo_delay_rate,                100,    0,      INT_MAX,        },
-	{ "combo_cache_skill",                  &battle_config.combo_cache_skill,               0,      0,      1,              },
-	{ "item_check",                         &battle_config.item_check,                      0,      0,      0xF,            },
-	{ "item_use_interval",                  &battle_config.item_use_interval,               100,    0,      INT_MAX,        },
-	{ "wedding_modifydisplay",              &battle_config.wedding_modifydisplay,           0,      0,      1,              },
-	{ "wedding_ignorepalette",              &battle_config.wedding_ignorepalette,           0,      0,      1,              },
-	{ "xmas_ignorepalette",                 &battle_config.xmas_ignorepalette,              0,      0,      1,              },
-	{ "summer_ignorepalette",               &battle_config.summer_ignorepalette,            0,      0,      1,              },
-	{ "hanbok_ignorepalette",               &battle_config.hanbok_ignorepalette,            0,      0,      1,              },
-	{ "oktoberfest_ignorepalette",          &battle_config.oktoberfest_ignorepalette,       0,      0,      1,              },
-	{ "summer2_ignorepalette",              &battle_config.summer2_ignorepalette,           0,      0,      1,              },
-	{ "natural_healhp_interval",            &battle_config.natural_healhp_interval,         6000,   NATURAL_HEAL_INTERVAL, INT_MAX, },
-	{ "natural_healsp_interval",            &battle_config.natural_healsp_interval,         8000,   NATURAL_HEAL_INTERVAL, INT_MAX, },
-	{ "natural_heal_cap",                   &battle_config.natural_heal_cap,                1000,   1,      INT_MAX,        },
-	{ "natural_heal_skill_interval",        &battle_config.natural_heal_skill_interval,     10000,  NATURAL_HEAL_INTERVAL, INT_MAX, },
-	{ "arrow_decrement",                    &battle_config.arrow_decrement,                 1,      0,      2,              },
-	{ "max_aspd",                           &battle_config.max_aspd,                        190,    100,    199,            },
-	{ "max_walk_speed",                     &battle_config.max_walk_speed,                  300,    100,    100*DEFAULT_WALK_SPEED, },
-	{ "max_lv",                             &battle_config.max_lv,                          99,     0,      MAX_LEVEL,      },
-	{ "aura_lv",                            &battle_config.aura_lv,                         99,     0,      INT_MAX,        },
-	{ "max_sp",                             &battle_config.max_sp,                          1000000, 100,   21474836,       },
-	{ "max_cart_weight",                    &battle_config.max_cart_weight,                 8000,   100,    1000000,        },
-	{ "max_parameter",                      &battle_config.max_parameter,                   99,     10,     10000,          },
-	{ "max_def",                            &battle_config.max_def,                         99,     0,      INT_MAX,        },
-	{ "over_def_bonus",                     &battle_config.over_def_bonus,                  0,      0,      1000,           },
-	{ "skill_log",                          &battle_config.skill_log,                       BL_NUL, BL_NUL, BL_ALL,         },
-	{ "battle_log",                         &battle_config.battle_log,                      0,      0,      1,              },
-	{ "etc_log",                            &battle_config.etc_log,                         1,      0,      1,              },
-	{ "save_clothcolor",                    &battle_config.save_clothcolor,                 1,      0,      1,              },
-	{ "undead_detect_type",                 &battle_config.undead_detect_type,              0,      0,      2,              },
-	{ "auto_counter_type",                  &battle_config.auto_counter_type,               BL_ALL, BL_NUL, BL_ALL,         },
-	{ "min_hitrate",                        &battle_config.min_hitrate,                     5,      0,      100,            },
-	{ "max_hitrate",                        &battle_config.max_hitrate,                     100,    0,      100,            },
-	{ "agi_penalty_target",                 &battle_config.agi_penalty_target,              BL_PC,  BL_NUL, BL_ALL,         },
-	{ "agi_penalty_type",                   &battle_config.agi_penalty_type,                1,      0,      2,              },
-	{ "agi_penalty_count",                  &battle_config.agi_penalty_count,               3,      2,      INT_MAX,        },
-	{ "agi_penalty_num",                    &battle_config.agi_penalty_num,                 10,     0,      INT_MAX,        },
-	{ "vit_penalty_target",                 &battle_config.vit_penalty_target,              BL_PC,  BL_NUL, BL_ALL,         },
-	{ "vit_penalty_type",                   &battle_config.vit_penalty_type,                1,      0,      2,              },
-	{ "vit_penalty_count",                  &battle_config.vit_penalty_count,               3,      2,      INT_MAX,        },
-	{ "vit_penalty_num",                    &battle_config.vit_penalty_num,                 5,      0,      INT_MAX,        },
-	{ "weapon_defense_type",                &battle_config.weapon_defense_type,             0,      0,      INT_MAX,        },
-	{ "magic_defense_type",                 &battle_config.magic_defense_type,              0,      0,      INT_MAX,        },
-	{ "skill_reiteration",                  &battle_config.skill_reiteration,               BL_NUL, BL_NUL, BL_ALL,         },
-	{ "skill_nofootset",                    &battle_config.skill_nofootset,                 BL_PC,  BL_NUL, BL_ALL,         },
-	{ "player_cloak_check_type",            &battle_config.pc_cloak_check_type,             1,      0,      1|2|4,          },
-	{ "monster_cloak_check_type",           &battle_config.monster_cloak_check_type,        4,      0,      1|2|4,          },
-	{ "sense_type",                         &battle_config.estimation_type,                 1|2,    0,      1|2,            },
-	{ "gvg_flee_penalty",                   &battle_config.gvg_flee_penalty,                20,     0,      INT_MAX,        },
-	{ "mob_changetarget_byskill",           &battle_config.mob_changetarget_byskill,        0,      0,      1,              },
-	{ "attack_direction_change",            &battle_config.attack_direction_change,         BL_ALL, BL_NUL, BL_ALL,         },
-	{ "land_skill_limit",                   &battle_config.land_skill_limit,                BL_ALL, BL_NUL, BL_ALL,         },
-	{ "monster_class_change_full_recover",  &battle_config.monster_class_change_recover,    1,      0,      1,              },
-	{ "produce_item_name_input",            &battle_config.produce_item_name_input,         0x1|0x2, 0,     0x9F,           },
-	{ "display_skill_fail",                 &battle_config.display_skill_fail,              2,      0,      1|2|4|8,        },
-	{ "chat_warpportal",                    &battle_config.chat_warpportal,                 0,      0,      1,              },
-	{ "mob_warp",                           &battle_config.mob_warp,                        0,      0,      1|2|4,          },
-	{ "dead_branch_active",                 &battle_config.dead_branch_active,              1,      0,      1,              },
-	{ "vending_max_value",                  &battle_config.vending_max_value,               10000000, 1,    MAX_ZENY,       },
-	{ "vending_over_max",                   &battle_config.vending_over_max,                1,      0,      1,              },
-	{ "show_steal_in_same_party",           &battle_config.show_steal_in_same_party,        0,      0,      1,              },
-	{ "party_hp_mode",                      &battle_config.party_hp_mode,                   0,      0,      1,              },
-	{ "party_change_leader_same_map",       &battle_config.party_change_leader_same_map,    0,      0,      1,              },
-	{ "show_party_share_picker",            &battle_config.party_show_share_picker,         1,      0,      1,              },
-	{ "show_picker_item_type",              &battle_config.show_picker_item_type,           112,    0,      INT_MAX,        },
-	{ "party_update_interval",              &battle_config.party_update_interval,           1000,   100,    INT_MAX,        },
-	{ "party_item_share_type",              &battle_config.party_share_type,                0,      0,      1|2|3,          },
-	{ "attack_attr_none",                   &battle_config.attack_attr_none,                (BL_ALL & ~BL_PC), BL_NUL, BL_ALL, },
-	{ "gx_allhit",                          &battle_config.gx_allhit,                       0,      0,      1,              },
-	{ "gx_disptype",                        &battle_config.gx_disptype,                     1,      0,      1,              },
-	{ "devotion_level_difference",          &battle_config.devotion_level_difference,       10,     0,      INT_MAX,        },
-	{ "player_skill_partner_check",         &battle_config.player_skill_partner_check,      1,      0,      1,              },
-	{ "invite_request_check",               &battle_config.invite_request_check,            1,      0,      1,              },
-	{ "skill_removetrap_type",              &battle_config.skill_removetrap_type,           0,      0,      1,              },
-	{ "disp_experience",                    &battle_config.disp_experience,                 0,      0,      1,              },
-	{ "disp_zeny",                          &battle_config.disp_zeny,                       0,      0,      1,              },
-	{ "bone_drop",                          &battle_config.bone_drop,                       0,      0,      2,              },
-	{ "buyer_name",                         &battle_config.buyer_name,                      1,      0,      1,              },
-	{ "skill_wall_check",                   &battle_config.skill_wall_check,                1,      0,      1,              },
-	{ "official_cell_stack_limit",          &battle_config.official_cell_stack_limit,       1,      0,      255,            },
-	{ "custom_cell_stack_limit",            &battle_config.custom_cell_stack_limit,         1,      1,      255,            },
-	{ "dancing_weaponswitch_fix",           &battle_config.dancing_weaponswitch_fix,        1,      0,      1,              },
-	{ "keep_dir_free_cell",                 &battle_config.keep_dir_free_cell,              0,      0,      1,              },
-	{ "check_occupied_cells",               &battle_config.check_occupied_cells,            1,      0,      1,              },
+	{ "warp_point_debug",                   &battle_config.warp_point_debug,                0,      0,      1              },
+	{ "enable_critical",                    &battle_config.enable_critical,                 BL_PC,  BL_NUL, BL_ALL         },
+	{ "mob_critical_rate",                  &battle_config.mob_critical_rate,               100,    0,      INT_MAX        },
+	{ "critical_rate",                      &battle_config.critical_rate,                   100,    0,      INT_MAX        },
+	{ "enable_baseatk",                     &battle_config.enable_baseatk,                  BL_PC|BL_HOM, BL_NUL, BL_ALL   },
+	{ "enable_perfect_flee",                &battle_config.enable_perfect_flee,             BL_PC|BL_PET, BL_NUL, BL_ALL   },
+	{ "casting_rate",                       &battle_config.cast_rate,                       100,    0,      INT_MAX        },
+	{ "delay_rate",                         &battle_config.delay_rate,                      100,    0,      INT_MAX        },
+	{ "delay_dependon_dex",                 &battle_config.delay_dependon_dex,              0,      0,      1              },
+	{ "delay_dependon_agi",                 &battle_config.delay_dependon_agi,              0,      0,      1              },
+	{ "skill_delay_attack_enable",          &battle_config.sdelay_attack_enable,            0,      0,      1              },
+	{ "left_cardfix_to_right",              &battle_config.left_cardfix_to_right,           0,      0,      1              },
+	{ "skill_add_range",                    &battle_config.skill_add_range,                 0,      0,      INT_MAX        },
+	{ "skill_out_range_consume",            &battle_config.skill_out_range_consume,         1,      0,      1              },
+	{ "skillrange_by_distance",             &battle_config.skillrange_by_distance,          (BL_ALL & ~BL_PC), BL_NUL, BL_ALL },
+	{ "skillrange_from_weapon",             &battle_config.use_weapon_skill_range,          BL_NUL, BL_NUL, BL_ALL         },
+	{ "player_damage_delay_rate",           &battle_config.pc_damage_delay_rate,            100,    0,      INT_MAX        },
+	{ "defunit_not_enemy",                  &battle_config.defnotenemy,                     0,      0,      1              },
+	{ "gvg_traps_target_all",               &battle_config.vs_traps_bctall,                 BL_PC,  BL_NUL, BL_ALL         },
+	{ "trap_options/visibility",            &battle_config.trap_visibility,                 2,      0,      2              },
+	{ "trap_options/display_on_trigger",    &battle_config.trap_trigger,                    1,      0,      1              },
+	{ "summon_flora_setting",               &battle_config.summon_flora,                    1|2,    0,      1|2            },
+	{ "clear_skills_on_death",              &battle_config.clear_unit_ondeath,              BL_NUL, BL_NUL, BL_ALL         },
+	{ "clear_skills_on_warp",               &battle_config.clear_unit_onwarp,               BL_ALL, BL_NUL, BL_ALL         },
+	{ "random_monster_checklv",             &battle_config.random_monster_checklv,          0,      0,      1              },
+	{ "attribute_recover",                  &battle_config.attr_recover,                    1,      0,      1              },
+	{ "flooritem_lifetime",                 &battle_config.flooritem_lifetime,              60000,  1000,   INT_MAX        },
+	{ "item_auto_get",                      &battle_config.item_auto_get,                   0,      0,      1              },
+	{ "item_first_get_time",                &battle_config.item_first_get_time,             3000,   0,      INT_MAX        },
+	{ "item_second_get_time",               &battle_config.item_second_get_time,            1000,   0,      INT_MAX        },
+	{ "item_third_get_time",                &battle_config.item_third_get_time,             1000,   0,      INT_MAX        },
+	{ "mvp_item_first_get_time",            &battle_config.mvp_item_first_get_time,         10000,  0,      INT_MAX        },
+	{ "mvp_item_second_get_time",           &battle_config.mvp_item_second_get_time,        10000,  0,      INT_MAX        },
+	{ "mvp_item_third_get_time",            &battle_config.mvp_item_third_get_time,         2000,   0,      INT_MAX        },
+	{ "drop_rate0item",                     &battle_config.drop_rate0item,                  0,      0,      1              },
+	{ "base_exp_rate",                      &battle_config.base_exp_rate,                   100,    0,      INT_MAX        },
+	{ "job_exp_rate",                       &battle_config.job_exp_rate,                    100,    0,      INT_MAX        },
+	{ "pvp_exp",                            &battle_config.pvp_exp,                         1,      0,      1              },
+	{ "death_penalty_type",                 &battle_config.death_penalty_type,              0,      0,      2              },
+	{ "death_penalty_base",                 &battle_config.death_penalty_base,              0,      0,      INT_MAX        },
+	{ "death_penalty_job",                  &battle_config.death_penalty_job,               0,      0,      INT_MAX        },
+	{ "zeny_penalty",                       &battle_config.zeny_penalty,                    0,      0,      INT_MAX        },
+	{ "hp_rate",                            &battle_config.hp_rate,                         100,    1,      INT_MAX        },
+	{ "sp_rate",                            &battle_config.sp_rate,                         100,    1,      INT_MAX        },
+	{ "restart_hp_rate",                    &battle_config.restart_hp_rate,                 0,      0,      100            },
+	{ "restart_sp_rate",                    &battle_config.restart_sp_rate,                 0,      0,      100            },
+	{ "guild_aura",                         &battle_config.guild_aura,                      31,     0,      31             },
+	{ "mvp_hp_rate",                        &battle_config.mvp_hp_rate,                     100,    1,      INT_MAX        },
+	{ "mvp_exp_rate",                       &battle_config.mvp_exp_rate,                    100,    0,      INT_MAX        },
+	{ "monster_hp_rate",                    &battle_config.monster_hp_rate,                 100,    1,      INT_MAX        },
+	{ "monster_max_aspd",                   &battle_config.monster_max_aspd,                199,    100,    199            },
+	{ "view_range_rate",                    &battle_config.view_range_rate,                 100,    0,      INT_MAX        },
+	{ "chase_range_rate",                   &battle_config.chase_range_rate,                100,    0,      INT_MAX        },
+	{ "gtb_sc_immunity",                    &battle_config.gtb_sc_immunity,                 50,     0,      INT_MAX        },
+	{ "guild_max_castles",                  &battle_config.guild_max_castles,               0,      0,      INT_MAX        },
+	{ "guild_skill_relog_delay",            &battle_config.guild_skill_relog_delay,         0,      0,      2              },
+	{ "emergency_call",                     &battle_config.emergency_call,                  11,     0,      31             },
+	{ "atcommand_spawn_quantity_limit",     &battle_config.atc_spawn_quantity_limit,        100,    0,      INT_MAX        },
+	{ "atcommand_slave_clone_limit",        &battle_config.atc_slave_clone_limit,           25,     0,      INT_MAX        },
+	{ "partial_name_scan",                  &battle_config.partial_name_scan,               0,      0,      1              },
+	{ "player_skillfree",                   &battle_config.skillfree,                       0,      0,      1              },
+	{ "player_skillup_limit",               &battle_config.skillup_limit,                   1,      0,      1              },
+	{ "weapon_produce_rate",                &battle_config.wp_rate,                         100,    0,      INT_MAX        },
+	{ "potion_produce_rate",                &battle_config.pp_rate,                         100,    0,      INT_MAX        },
+	{ "monster_active_enable",              &battle_config.monster_active_enable,           1,      0,      1              },
+	{ "monster_damage_delay_rate",          &battle_config.monster_damage_delay_rate,       100,    0,      INT_MAX        },
+	{ "monster_loot_type",                  &battle_config.monster_loot_type,               0,      0,      1              },
+	{ "mob_skill_rate",                     &battle_config.mob_skill_rate,                  100,    0,      INT_MAX        },
+	{ "mob_skill_delay",                    &battle_config.mob_skill_delay,                 100,    0,      INT_MAX        },
+	{ "mob_count_rate",                     &battle_config.mob_count_rate,                  100,    0,      INT_MAX        },
+	{ "mob_spawn_delay",                    &battle_config.mob_spawn_delay,                 100,    0,      INT_MAX        },
+	{ "plant_spawn_delay",                  &battle_config.plant_spawn_delay,               100,    0,      INT_MAX        },
+	{ "boss_spawn_delay",                   &battle_config.boss_spawn_delay,                100,    0,      INT_MAX        },
+	{ "no_spawn_on_player",                 &battle_config.no_spawn_on_player,              0,      0,      100            },
+	{ "force_random_spawn",                 &battle_config.force_random_spawn,              0,      0,      1              },
+	{ "slaves_inherit_mode",                &battle_config.slaves_inherit_mode,             2,      0,      3              },
+	{ "slaves_inherit_speed",               &battle_config.slaves_inherit_speed,            3,      0,      3              },
+	{ "summons_trigger_autospells",         &battle_config.summons_trigger_autospells,      1,      0,      1              },
+	{ "pc_damage_walk_delay_rate",          &battle_config.pc_walk_delay_rate,              20,     0,      INT_MAX        },
+	{ "damage_walk_delay_rate",             &battle_config.walk_delay_rate,                 100,    0,      INT_MAX        },
+	{ "multihit_delay",                     &battle_config.multihit_delay,                  80,     0,      INT_MAX        },
+	{ "quest_skill_learn",                  &battle_config.quest_skill_learn,               0,      0,      1              },
+	{ "quest_skill_reset",                  &battle_config.quest_skill_reset,               0,      0,      1              },
+	{ "basic_skill_check",                  &battle_config.basic_skill_check,               1,      0,      1              },
+	{ "guild_emperium_check",               &battle_config.guild_emperium_check,            1,      0,      1              },
+	{ "guild_exp_limit",                    &battle_config.guild_exp_limit,                 50,     0,      99             },
+	{ "player_invincible_time",             &battle_config.pc_invincible_time,              5000,   0,      INT_MAX        },
+	{ "pet_catch_rate_official_formula",    &battle_config.pet_catch_rate_official_formula, 1,      0,      1              },
+	{ "pet_catch_rate",                     &battle_config.pet_catch_rate,                  100,    0,      INT_MAX        },
+	{ "pet_rename",                         &battle_config.pet_rename,                      0,      0,      1              },
+	{ "pet_friendly_rate",                  &battle_config.pet_friendly_rate,               100,    0,      INT_MAX        },
+	{ "pet_hungry_delay_rate",              &battle_config.pet_hungry_delay_rate,           100,    10,     INT_MAX        },
+	{ "pet_status_support",                 &battle_config.pet_status_support,              0,      0,      1              },
+	{ "pet_attack_support",                 &battle_config.pet_attack_support,              0,      0,      1              },
+	{ "pet_damage_support",                 &battle_config.pet_damage_support,              0,      0,      1              },
+	{ "pet_support_min_friendly",           &battle_config.pet_support_min_friendly,        900,    0,      950            },
+	{ "pet_support_rate",                   &battle_config.pet_support_rate,                100,    0,      INT_MAX        },
+	{ "pet_attack_exp_to_master",           &battle_config.pet_attack_exp_to_master,        0,      0,      1              },
+	{ "pet_attack_exp_rate",                &battle_config.pet_attack_exp_rate,             100,    0,      INT_MAX        },
+	{ "pet_lv_rate",                        &battle_config.pet_lv_rate,                     0,      0,      INT_MAX        },
+	{ "pet_max_stats",                      &battle_config.pet_max_stats,                   99,     1,      INT_MAX        },
+	{ "pet_max_atk1",                       &battle_config.pet_max_atk1,                    750,    1,      INT_MAX        },
+	{ "pet_max_atk2",                       &battle_config.pet_max_atk2,                    1000,   2,      INT_MAX        },
+	{ "pet_remove_immediately",             &battle_config.pet_remove_immediately,          1,      0,      1              },
+	{ "skill_min_damage",                   &battle_config.skill_min_damage,                2|4,    0,      1|2|4          },
+	{ "finger_offensive_type",              &battle_config.finger_offensive_type,           0,      0,      1              },
+	{ "heal_exp",                           &battle_config.heal_exp,                        0,      0,      INT_MAX        },
+	{ "resurrection_exp",                   &battle_config.resurrection_exp,                0,      0,      INT_MAX        },
+	{ "shop_exp",                           &battle_config.shop_exp,                        0,      0,      INT_MAX        },
+	{ "max_heal_lv",                        &battle_config.max_heal_lv,                     11,     1,      INT_MAX        },
+	{ "max_heal",                           &battle_config.max_heal,                        9999,   0,      INT_MAX        },
+	{ "combo_delay_rate",                   &battle_config.combo_delay_rate,                100,    0,      INT_MAX        },
+	{ "combo_cache_skill",                  &battle_config.combo_cache_skill,               0,      0,      1              },
+	{ "item_check",                         &battle_config.item_check,                      0,      0,      0xF            },
+	{ "item_use_interval",                  &battle_config.item_use_interval,               100,    0,      INT_MAX        },
+	{ "wedding_modifydisplay",              &battle_config.wedding_modifydisplay,           0,      0,      1              },
+	{ "wedding_ignorepalette",              &battle_config.wedding_ignorepalette,           0,      0,      1              },
+	{ "xmas_ignorepalette",                 &battle_config.xmas_ignorepalette,              0,      0,      1              },
+	{ "summer_ignorepalette",               &battle_config.summer_ignorepalette,            0,      0,      1              },
+	{ "hanbok_ignorepalette",               &battle_config.hanbok_ignorepalette,            0,      0,      1              },
+	{ "oktoberfest_ignorepalette",          &battle_config.oktoberfest_ignorepalette,       0,      0,      1              },
+	{ "summer2_ignorepalette",              &battle_config.summer2_ignorepalette,           0,      0,      1              },
+	{ "natural_healhp_interval",            &battle_config.natural_healhp_interval,         6000,   NATURAL_HEAL_INTERVAL, INT_MAX },
+	{ "natural_healsp_interval",            &battle_config.natural_healsp_interval,         8000,   NATURAL_HEAL_INTERVAL, INT_MAX },
+	{ "natural_heal_cap",                   &battle_config.natural_heal_cap,                1000,   1,      INT_MAX        },
+	{ "natural_heal_skill_interval",        &battle_config.natural_heal_skill_interval,     10000,  NATURAL_HEAL_INTERVAL, INT_MAX },
+	{ "arrow_decrement",                    &battle_config.arrow_decrement,                 1,      0,      2              },
+	{ "max_aspd",                           &battle_config.max_aspd,                        190,    100,    199            },
+	{ "max_walk_speed",                     &battle_config.max_walk_speed,                  300,    100,    100*DEFAULT_WALK_SPEED },
+	{ "max_lv",                             &battle_config.max_lv,                          99,     0,      MAX_LEVEL      },
+	{ "aura_lv",                            &battle_config.aura_lv,                         99,     0,      INT_MAX        },
+	{ "max_sp",                             &battle_config.max_sp,                          1000000, 100,   21474836       },
+	{ "max_cart_weight",                    &battle_config.max_cart_weight,                 8000,   100,    1000000        },
+	{ "max_parameter",                      &battle_config.max_parameter,                   99,     10,     10000          },
+	{ "max_def",                            &battle_config.max_def,                         99,     0,      INT_MAX        },
+	{ "over_def_bonus",                     &battle_config.over_def_bonus,                  0,      0,      1000           },
+	{ "skill_log",                          &battle_config.skill_log,                       BL_NUL, BL_NUL, BL_ALL         },
+	{ "battle_log",                         &battle_config.battle_log,                      0,      0,      1              },
+	{ "etc_log",                            &battle_config.etc_log,                         1,      0,      1              },
+	{ "save_clothcolor",                    &battle_config.save_clothcolor,                 1,      0,      1              },
+	{ "undead_detect_type",                 &battle_config.undead_detect_type,              0,      0,      2              },
+	{ "auto_counter_type",                  &battle_config.auto_counter_type,               BL_ALL, BL_NUL, BL_ALL         },
+	{ "min_hitrate",                        &battle_config.min_hitrate,                     5,      0,      100            },
+	{ "max_hitrate",                        &battle_config.max_hitrate,                     100,    0,      100            },
+	{ "agi_penalty_target",                 &battle_config.agi_penalty_target,              BL_PC,  BL_NUL, BL_ALL         },
+	{ "agi_penalty_type",                   &battle_config.agi_penalty_type,                1,      0,      2              },
+	{ "agi_penalty_count",                  &battle_config.agi_penalty_count,               3,      2,      INT_MAX        },
+	{ "agi_penalty_num",                    &battle_config.agi_penalty_num,                 10,     0,      INT_MAX        },
+	{ "vit_penalty_target",                 &battle_config.vit_penalty_target,              BL_PC,  BL_NUL, BL_ALL         },
+	{ "vit_penalty_type",                   &battle_config.vit_penalty_type,                1,      0,      2              },
+	{ "vit_penalty_count",                  &battle_config.vit_penalty_count,               3,      2,      INT_MAX        },
+	{ "vit_penalty_num",                    &battle_config.vit_penalty_num,                 5,      0,      INT_MAX        },
+	{ "weapon_defense_type",                &battle_config.weapon_defense_type,             0,      0,      INT_MAX        },
+	{ "magic_defense_type",                 &battle_config.magic_defense_type,              0,      0,      INT_MAX        },
+	{ "skill_reiteration",                  &battle_config.skill_reiteration,               BL_NUL, BL_NUL, BL_ALL         },
+	{ "skill_nofootset",                    &battle_config.skill_nofootset,                 BL_PC,  BL_NUL, BL_ALL         },
+	{ "player_cloak_check_type",            &battle_config.pc_cloak_check_type,             1,      0,      1|2|4          },
+	{ "monster_cloak_check_type",           &battle_config.monster_cloak_check_type,        4,      0,      1|2|4          },
+	{ "sense_type",                         &battle_config.estimation_type,                 1|2,    0,      1|2            },
+	{ "gvg_flee_penalty",                   &battle_config.gvg_flee_penalty,                20,     0,      INT_MAX        },
+	{ "mob_changetarget_byskill",           &battle_config.mob_changetarget_byskill,        0,      0,      1              },
+	{ "attack_direction_change",            &battle_config.attack_direction_change,         BL_ALL, BL_NUL, BL_ALL         },
+	{ "land_skill_limit",                   &battle_config.land_skill_limit,                BL_ALL, BL_NUL, BL_ALL         },
+	{ "monster_class_change_full_recover",  &battle_config.monster_class_change_recover,    1,      0,      1              },
+	{ "produce_item_name_input",            &battle_config.produce_item_name_input,         0x1|0x2, 0,     0x9F           },
+	{ "display_skill_fail",                 &battle_config.display_skill_fail,              2,      0,      1|2|4|8        },
+	{ "chat_warpportal",                    &battle_config.chat_warpportal,                 0,      0,      1              },
+	{ "mob_warp",                           &battle_config.mob_warp,                        0,      0,      1|2|4          },
+	{ "dead_branch_active",                 &battle_config.dead_branch_active,              1,      0,      1              },
+	{ "vending_max_value",                  &battle_config.vending_max_value,               10000000, 1,    MAX_ZENY       },
+	{ "vending_over_max",                   &battle_config.vending_over_max,                1,      0,      1              },
+	{ "show_steal_in_same_party",           &battle_config.show_steal_in_same_party,        0,      0,      1              },
+	{ "party_hp_mode",                      &battle_config.party_hp_mode,                   0,      0,      1              },
+	{ "party_change_leader_same_map",       &battle_config.party_change_leader_same_map,    0,      0,      1              },
+	{ "show_party_share_picker",            &battle_config.party_show_share_picker,         1,      0,      1              },
+	{ "show_picker_item_type",              &battle_config.show_picker_item_type,           112,    0,      INT_MAX        },
+	{ "party_update_interval",              &battle_config.party_update_interval,           1000,   100,    INT_MAX        },
+	{ "party_item_share_type",              &battle_config.party_share_type,                0,      0,      1|2|3          },
+	{ "attack_attr_none",                   &battle_config.attack_attr_none,                (BL_ALL & ~BL_PC), BL_NUL, BL_ALL },
+	{ "gx_allhit",                          &battle_config.gx_allhit,                       0,      0,      1              },
+	{ "gx_disptype",                        &battle_config.gx_disptype,                     1,      0,      1              },
+	{ "devotion_level_difference",          &battle_config.devotion_level_difference,       10,     0,      INT_MAX        },
+	{ "player_skill_partner_check",         &battle_config.player_skill_partner_check,      1,      0,      1              },
+	{ "invite_request_check",               &battle_config.invite_request_check,            1,      0,      1              },
+	{ "skill_removetrap_type",              &battle_config.skill_removetrap_type,           0,      0,      1              },
+	{ "disp_experience",                    &battle_config.disp_experience,                 0,      0,      1              },
+	{ "disp_zeny",                          &battle_config.disp_zeny,                       0,      0,      1              },
+	{ "bone_drop",                          &battle_config.bone_drop,                       0,      0,      2              },
+	{ "buyer_name",                         &battle_config.buyer_name,                      1,      0,      1              },
+	{ "skill_wall_check",                   &battle_config.skill_wall_check,                1,      0,      1              },
+	{ "official_cell_stack_limit",          &battle_config.official_cell_stack_limit,       1,      0,      255            },
+	{ "custom_cell_stack_limit",            &battle_config.custom_cell_stack_limit,         1,      1,      255            },
+	{ "dancing_weaponswitch_fix",           &battle_config.dancing_weaponswitch_fix,        1,      0,      1              },
+	{ "keep_dir_free_cell",                 &battle_config.keep_dir_free_cell,              0,      0,      1              },
+	{ "check_occupied_cells",               &battle_config.check_occupied_cells,            1,      0,      1              },
 
 // eAthena additions
-	{ "item_logarithmic_drops",             &battle_config.logarithmic_drops,               0,      0,      1,              },
-	{ "item_drop_common_min",               &battle_config.item_drop_common_min,            1,      1,      10000,          },
-	{ "item_drop_common_max",               &battle_config.item_drop_common_max,            10000,  1,      10000,          },
-	{ "item_drop_equip_min",                &battle_config.item_drop_equip_min,             1,      1,      10000,          },
-	{ "item_drop_equip_max",                &battle_config.item_drop_equip_max,             10000,  1,      10000,          },
-	{ "item_drop_card_min",                 &battle_config.item_drop_card_min,              1,      1,      10000,          },
-	{ "item_drop_card_max",                 &battle_config.item_drop_card_max,              10000,  1,      10000,          },
-	{ "item_drop_mvp_min",                  &battle_config.item_drop_mvp_min,               1,      1,      10000,          },
-	{ "item_drop_mvp_max",                  &battle_config.item_drop_mvp_max,               10000,  1,      10000,          },
-	{ "item_drop_heal_min",                 &battle_config.item_drop_heal_min,              1,      1,      10000,          },
-	{ "item_drop_heal_max",                 &battle_config.item_drop_heal_max,              10000,  1,      10000,          },
-	{ "item_drop_use_min",                  &battle_config.item_drop_use_min,               1,      1,      10000,          },
-	{ "item_drop_use_max",                  &battle_config.item_drop_use_max,               10000,  1,      10000,          },
-	{ "item_drop_add_min",                  &battle_config.item_drop_adddrop_min,           1,      1,      10000,          },
-	{ "item_drop_add_max",                  &battle_config.item_drop_adddrop_max,           10000,  1,      10000,          },
-	{ "item_drop_add_chain_min",            &battle_config.item_drop_add_chain_min,         1,      1,      10000,          },
-	{ "item_drop_add_chain_max",            &battle_config.item_drop_add_chain_max,         10000,  1,      10000,          },
-	{ "item_drop_treasure_min",             &battle_config.item_drop_treasure_min,          1,      1,      10000,          },
-	{ "item_drop_treasure_max",             &battle_config.item_drop_treasure_max,          10000,  1,      10000,          },
-	{ "item_rate_mvp",                      &battle_config.item_rate_mvp,                   100,    0,      1000000,        },
-	{ "item_rate_common",                   &battle_config.item_rate_common,                100,    0,      1000000,        },
-	{ "item_rate_common_boss",              &battle_config.item_rate_common_boss,           100,    0,      1000000,        },
-	{ "item_rate_equip",                    &battle_config.item_rate_equip,                 100,    0,      1000000,        },
-	{ "item_rate_equip_boss",               &battle_config.item_rate_equip_boss,            100,    0,      1000000,        },
-	{ "item_rate_card",                     &battle_config.item_rate_card,                  100,    0,      1000000,        },
-	{ "item_rate_card_boss",                &battle_config.item_rate_card_boss,             100,    0,      1000000,        },
-	{ "item_rate_heal",                     &battle_config.item_rate_heal,                  100,    0,      1000000,        },
-	{ "item_rate_heal_boss",                &battle_config.item_rate_heal_boss,             100,    0,      1000000,        },
-	{ "item_rate_use",                      &battle_config.item_rate_use,                   100,    0,      1000000,        },
-	{ "item_rate_use_boss",                 &battle_config.item_rate_use_boss,              100,    0,      1000000,        },
-	{ "item_rate_adddrop",                  &battle_config.item_rate_adddrop,               100,    0,      1000000,        },
-	{ "item_rate_add_chain",                &battle_config.item_rate_add_chain,             100,    0,      1000000,        },
-	{ "item_rate_treasure",                 &battle_config.item_rate_treasure,              100,    0,      1000000,        },
-	{ "item_drop_bonus_max_threshold",      &battle_config.item_drop_bonus_max_threshold,   9000,   0,      10000,          },
-	{ "prevent_logout",                     &battle_config.prevent_logout,                  10000,  0,      60000,          },
-	{ "alchemist_summon_reward",            &battle_config.alchemist_summon_reward,         1,      0,      2,              },
-	{ "drops_by_luk",                       &battle_config.drops_by_luk,                    0,      0,      INT_MAX,        },
-	{ "drops_by_luk2",                      &battle_config.drops_by_luk2,                   0,      0,      INT_MAX,        },
-	{ "equip_natural_break_rate",           &battle_config.equip_natural_break_rate,        0,      0,      INT_MAX,        },
-	{ "equip_self_break_rate",              &battle_config.equip_self_break_rate,           100,    0,      INT_MAX,        },
-	{ "equip_skill_break_rate",             &battle_config.equip_skill_break_rate,          100,    0,      INT_MAX,        },
-	{ "pk_mode",                            &battle_config.pk_mode,                         0,      0,      2,              },
-	{ "pk_level_range",                     &battle_config.pk_level_range,                  0,      0,      INT_MAX,        },
-	{ "manner_system",                      &battle_config.manner_system,                   0xFFF,  0,      0xFFF,          },
-	{ "pet_equip_required",                 &battle_config.pet_equip_required,              0,      0,      1,              },
-	{ "multi_level_up",                     &battle_config.multi_level_up,                  0,      0,      1,              },
-	{ "max_exp_gain_rate",                  &battle_config.max_exp_gain_rate,               0,      0,      INT_MAX,        },
-	{ "backstab_bow_penalty",               &battle_config.backstab_bow_penalty,            0,      0,      1,              },
-	{ "night_at_start",                     &battle_config.night_at_start,                  0,      0,      1,              },
-	{ "show_mob_info",                      &battle_config.show_mob_info,                   0,      0,      1|2|4,          },
-	{ "ban_hack_trade",                     &battle_config.ban_hack_trade,                  0,      0,      INT_MAX,        },
-	{ "min_hair_style",                     &battle_config.min_hair_style,                  0,      0,      INT_MAX,        },
-	{ "max_hair_style",                     &battle_config.max_hair_style,                  23,     0,      INT_MAX,        },
-	{ "min_hair_color",                     &battle_config.min_hair_color,                  0,      0,      INT_MAX,        },
-	{ "max_hair_color",                     &battle_config.max_hair_color,                  9,      0,      INT_MAX,        },
-	{ "min_cloth_color",                    &battle_config.min_cloth_color,                 0,      0,      INT_MAX,        },
-	{ "max_cloth_color",                    &battle_config.max_cloth_color,                 4,      0,      INT_MAX,        },
-	{ "pet_hair_style",                     &battle_config.pet_hair_style,                  100,    0,      INT_MAX,        },
-	{ "castrate_dex_scale",                 &battle_config.castrate_dex_scale,              150,    1,      INT_MAX,        },
-	{ "vcast_stat_scale",                   &battle_config.vcast_stat_scale,                530,    1,      INT_MAX,        },
-	{ "area_size",                          &battle_config.area_size,                       14,     0,      INT_MAX,        },
-	{ "chat_area_size",                     &battle_config.chat_area_size,                  9,      0,      INT_MAX,        },
-	{ "dead_area_size",                     &battle_config.dead_area_size,                  32,     0,      INT_MAX,        },
-	{ "zeny_from_mobs",                     &battle_config.zeny_from_mobs,                  0,      0,      1,              },
-	{ "mobs_level_up",                      &battle_config.mobs_level_up,                   0,      0,      1,              },
-	{ "mobs_level_up_exp_rate",             &battle_config.mobs_level_up_exp_rate,          1,      1,      INT_MAX,        },
-	{ "pk_min_level",                       &battle_config.pk_min_level,                    55,     1,      INT_MAX,        },
-	{ "skill_steal_max_tries",              &battle_config.skill_steal_max_tries,           0,      0,      UCHAR_MAX,      },
-	{ "exp_calc_type",                      &battle_config.exp_calc_type,                   0,      0,      1,              },
-	{ "exp_bonus_attacker",                 &battle_config.exp_bonus_attacker,              25,     0,      INT_MAX,        },
-	{ "exp_bonus_max_attacker",             &battle_config.exp_bonus_max_attacker,          12,     2,      INT_MAX,        },
-	{ "min_skill_delay_limit",              &battle_config.min_skill_delay_limit,           100,    10,     INT_MAX,        },
-	{ "default_walk_delay",                 &battle_config.default_walk_delay,              300,    0,      INT_MAX,        },
-	{ "no_skill_delay",                     &battle_config.no_skill_delay,                  BL_MOB, BL_NUL, BL_ALL,         },
-	{ "attack_walk_delay",                  &battle_config.attack_walk_delay,               BL_ALL, BL_NUL, BL_ALL,         },
-	{ "require_glory_guild",                &battle_config.require_glory_guild,             0,      0,      1,              },
-	{ "idle_no_share",                      &battle_config.idle_no_share,                   0,      0,      INT_MAX,        },
-	{ "party_even_share_bonus",             &battle_config.party_even_share_bonus,          0,      0,      INT_MAX,        },
-	{ "delay_battle_damage",                &battle_config.delay_battle_damage,             1,      0,      1,              },
-	{ "hide_woe_damage",                    &battle_config.hide_woe_damage,                 0,      0,      1,              },
-	{ "display_version",                    &battle_config.display_version,                 1,      0,      1,              },
-	{ "display_hallucination",              &battle_config.display_hallucination,           1,      0,      1,              },
-	{ "use_statpoint_table",                &battle_config.use_statpoint_table,             1,      0,      1,              },
-	{ "ignore_items_gender",                &battle_config.ignore_items_gender,             1,      0,      1,              },
-	{ "berserk_cancels_buffs",              &battle_config.berserk_cancels_buffs,           0,      0,      1,              },
-	{ "monster_ai",                         &battle_config.mob_ai,                          0x000,  0x000,  0x77F,          },
-	{ "hom_setting",                        &battle_config.hom_setting,                     0xFFFF, 0x0000, 0xFFFF,         },
-	{ "dynamic_mobs",                       &battle_config.dynamic_mobs,                    1,      0,      1,              },
-	{ "mob_remove_damaged",                 &battle_config.mob_remove_damaged,              1,      0,      1,              },
-	{ "show_hp_sp_drain",                   &battle_config.show_hp_sp_drain,                0,      0,      1,              },
-	{ "show_hp_sp_gain",                    &battle_config.show_hp_sp_gain,                 1,      0,      1,              },
-	{ "show_katar_crit_bonus",              &battle_config.show_katar_crit_bonus,           0,      0,      1,              },
-	{ "mob_npc_event_type",                 &battle_config.mob_npc_event_type,              1,      0,      1,              },
-	{ "character_size",                     &battle_config.character_size,                  1|2,    0,      1|2,            },
-	{ "retaliate_to_master",                &battle_config.retaliate_to_master,             1,      0,      1,              },
-	{ "duel_allow_pvp",                     &battle_config.duel_allow_pvp,                  0,      0,      1,              },
-	{ "duel_allow_gvg",                     &battle_config.duel_allow_gvg,                  0,      0,      1,              },
-	{ "duel_allow_teleport",                &battle_config.duel_allow_teleport,             0,      0,      1,              },
-	{ "duel_autoleave_when_die",            &battle_config.duel_autoleave_when_die,         1,      0,      1,              },
-	{ "duel_time_interval",                 &battle_config.duel_time_interval,              60,     0,      INT_MAX,        },
-	{ "duel_only_on_same_map",              &battle_config.duel_only_on_same_map,           0,      0,      1,              },
-	{ "skip_teleport_lv1_menu",             &battle_config.skip_teleport_lv1_menu,          0,      0,      1,              },
-	{ "mob_max_skilllvl",                   &battle_config.mob_max_skilllvl,                100,    1,      INT_MAX,        },
-	{ "allow_skill_without_day",            &battle_config.allow_skill_without_day,         0,      0,      1,              },
-	{ "allow_es_magic_player",              &battle_config.allow_es_magic_pc,               0,      0,      1,              },
-	{ "skill_caster_check",                 &battle_config.skill_caster_check,              1,      0,      1,              },
-	{ "status_cast_cancel",                 &battle_config.sc_castcancel,                   BL_NUL, BL_NUL, BL_ALL,         },
-	{ "pc_status_def_rate",                 &battle_config.pc_sc_def_rate,                  100,    0,      INT_MAX,        },
-	{ "mob_status_def_rate",                &battle_config.mob_sc_def_rate,                 100,    0,      INT_MAX,        },
-	{ "pc_max_status_def",                  &battle_config.pc_max_sc_def,                   100,    0,      INT_MAX,        },
-	{ "mob_max_status_def",                 &battle_config.mob_max_sc_def,                  100,    0,      INT_MAX,        },
-	{ "sg_miracle_skill_ratio",             &battle_config.sg_miracle_skill_ratio,          1,      0,      10000,          },
-	{ "sg_angel_skill_ratio",               &battle_config.sg_angel_skill_ratio,            10,     0,      10000,          },
-	{ "autospell_stacking",                 &battle_config.autospell_stacking,              0,      0,      1,              },
-	{ "override_mob_names",                 &battle_config.override_mob_names,              0,      0,      2,              },
-	{ "min_chat_delay",                     &battle_config.min_chat_delay,                  0,      0,      INT_MAX,        },
-	{ "friend_auto_add",                    &battle_config.friend_auto_add,                 1,      0,      1,              },
-	{ "hom_rename",                         &battle_config.hom_rename,                      0,      0,      1,              },
-	{ "homunculus_show_growth",             &battle_config.homunculus_show_growth,          0,      0,      1,              },
-	{ "homunculus_friendly_rate",           &battle_config.homunculus_friendly_rate,        100,    0,      INT_MAX,        },
-	{ "vending_tax",                        &battle_config.vending_tax,                     0,      0,      10000,          },
-	{ "day_duration",                       &battle_config.day_duration,                    0,      0,      INT_MAX,        },
-	{ "night_duration",                     &battle_config.night_duration,                  0,      0,      INT_MAX,        },
-	{ "mob_remove_delay",                   &battle_config.mob_remove_delay,                60000,  1000,   INT_MAX,        },
-	{ "mob_active_time",                    &battle_config.mob_active_time,                 0,      0,      INT_MAX,        },
-	{ "boss_active_time",                   &battle_config.boss_active_time,                0,      0,      INT_MAX,        },
-	{ "slave_chase_masters_chasetarget",    &battle_config.slave_chase_masters_chasetarget, 1,      0,      1,              },
-	{ "sg_miracle_skill_duration",          &battle_config.sg_miracle_skill_duration,       3600000, 0,     INT_MAX,        },
-	{ "hvan_explosion_intimate",            &battle_config.hvan_explosion_intimate,         45000,  0,      100000,         },
-	{ "quest_exp_rate",                     &battle_config.quest_exp_rate,                  100,    0,      INT_MAX,        },
-	{ "at_mapflag",                         &battle_config.autotrade_mapflag,               0,      0,      1,              },
-	{ "at_timeout",                         &battle_config.at_timeout,                      0,      0,      INT_MAX,        },
-	{ "homunculus_autoloot",                &battle_config.homunculus_autoloot,             0,      0,      1,              },
-	{ "idle_no_autoloot",                   &battle_config.idle_no_autoloot,                0,      0,      INT_MAX,        },
-	{ "max_guild_alliance",                 &battle_config.max_guild_alliance,              3,      0,      3,              },
-	{ "ksprotection",                       &battle_config.ksprotection,                    5000,   0,      INT_MAX,        },
-	{ "auction_feeperhour",                 &battle_config.auction_feeperhour,              12000,  0,      INT_MAX,        },
-	{ "auction_maximumprice",               &battle_config.auction_maximumprice,            500000000, 0,   MAX_ZENY,       },
-	{ "homunculus_auto_vapor",              &battle_config.homunculus_auto_vapor,           1,      0,      1,              },
-	{ "display_status_timers",              &battle_config.display_status_timers,           1,      0,      1,              },
-	{ "skill_add_heal_rate",                &battle_config.skill_add_heal_rate,             7,      0,      INT_MAX,        },
-	{ "eq_single_target_reflectable",       &battle_config.eq_single_target_reflectable,    1,      0,      1,              },
-	{ "invincible_nodamage",                &battle_config.invincible_nodamage,             0,      0,      1,              },
-	{ "mob_slave_keep_target",              &battle_config.mob_slave_keep_target,           0,      0,      1,              },
-	{ "autospell_check_range",              &battle_config.autospell_check_range,           0,      0,      1,              },
-	{ "knockback_left",                     &battle_config.knockback_left,                  1,      0,      1,              },
-	{ "client_reshuffle_dice",              &battle_config.client_reshuffle_dice,           0,      0,      1,              },
-	{ "client_sort_storage",                &battle_config.client_sort_storage,             0,      0,      1,              },
-	{ "features/buying_store",              &battle_config.feature_buying_store,            1,      0,      1,              },
-	{ "features/search_stores",             &battle_config.feature_search_stores,           1,      0,      1,              },
-	{ "searchstore_querydelay",             &battle_config.searchstore_querydelay,          10,     0,      INT_MAX,        },
-	{ "searchstore_maxresults",             &battle_config.searchstore_maxresults,          30,     1,      INT_MAX,        },
-	{ "display_party_name",                 &battle_config.display_party_name,              0,      0,      1,              },
-	{ "send_party_options",                 &battle_config.send_party_options,              0x31F9, 0,      0x1FFFF,        },
-	{ "cashshop_show_points",               &battle_config.cashshop_show_points,            0,      0,      1,              },
-	{ "mail_show_status",                   &battle_config.mail_show_status,                0,      0,      2,              },
-	{ "client_limit_unit_lv",               &battle_config.client_limit_unit_lv,            0,      0,      BL_ALL,         },
-	{ "client_emblem_max_blank_percent",    &battle_config.client_emblem_max_blank_percent, 100,    0,      100,            },
+	{ "item_logarithmic_drops",             &battle_config.logarithmic_drops,               0,      0,      1              },
+	{ "item_drop_common_min",               &battle_config.item_drop_common_min,            1,      1,      10000          },
+	{ "item_drop_common_max",               &battle_config.item_drop_common_max,            10000,  1,      10000          },
+	{ "item_drop_equip_min",                &battle_config.item_drop_equip_min,             1,      1,      10000          },
+	{ "item_drop_equip_max",                &battle_config.item_drop_equip_max,             10000,  1,      10000          },
+	{ "item_drop_card_min",                 &battle_config.item_drop_card_min,              1,      1,      10000          },
+	{ "item_drop_card_max",                 &battle_config.item_drop_card_max,              10000,  1,      10000          },
+	{ "item_drop_mvp_min",                  &battle_config.item_drop_mvp_min,               1,      1,      10000          },
+	{ "item_drop_mvp_max",                  &battle_config.item_drop_mvp_max,               10000,  1,      10000          },
+	{ "item_drop_heal_min",                 &battle_config.item_drop_heal_min,              1,      1,      10000          },
+	{ "item_drop_heal_max",                 &battle_config.item_drop_heal_max,              10000,  1,      10000          },
+	{ "item_drop_use_min",                  &battle_config.item_drop_use_min,               1,      1,      10000          },
+	{ "item_drop_use_max",                  &battle_config.item_drop_use_max,               10000,  1,      10000          },
+	{ "item_drop_add_min",                  &battle_config.item_drop_adddrop_min,           1,      1,      10000          },
+	{ "item_drop_add_max",                  &battle_config.item_drop_adddrop_max,           10000,  1,      10000          },
+	{ "item_drop_add_chain_min",            &battle_config.item_drop_add_chain_min,         1,      1,      10000          },
+	{ "item_drop_add_chain_max",            &battle_config.item_drop_add_chain_max,         10000,  1,      10000          },
+	{ "item_drop_treasure_min",             &battle_config.item_drop_treasure_min,          1,      1,      10000          },
+	{ "item_drop_treasure_max",             &battle_config.item_drop_treasure_max,          10000,  1,      10000          },
+	{ "item_rate_mvp",                      &battle_config.item_rate_mvp,                   100,    0,      1000000        },
+	{ "item_rate_common",                   &battle_config.item_rate_common,                100,    0,      1000000        },
+	{ "item_rate_common_boss",              &battle_config.item_rate_common_boss,           100,    0,      1000000        },
+	{ "item_rate_equip",                    &battle_config.item_rate_equip,                 100,    0,      1000000        },
+	{ "item_rate_equip_boss",               &battle_config.item_rate_equip_boss,            100,    0,      1000000        },
+	{ "item_rate_card",                     &battle_config.item_rate_card,                  100,    0,      1000000        },
+	{ "item_rate_card_boss",                &battle_config.item_rate_card_boss,             100,    0,      1000000        },
+	{ "item_rate_heal",                     &battle_config.item_rate_heal,                  100,    0,      1000000        },
+	{ "item_rate_heal_boss",                &battle_config.item_rate_heal_boss,             100,    0,      1000000        },
+	{ "item_rate_use",                      &battle_config.item_rate_use,                   100,    0,      1000000        },
+	{ "item_rate_use_boss",                 &battle_config.item_rate_use_boss,              100,    0,      1000000        },
+	{ "item_rate_adddrop",                  &battle_config.item_rate_adddrop,               100,    0,      1000000        },
+	{ "item_rate_add_chain",                &battle_config.item_rate_add_chain,             100,    0,      1000000        },
+	{ "item_rate_treasure",                 &battle_config.item_rate_treasure,              100,    0,      1000000        },
+	{ "item_drop_bonus_max_threshold",      &battle_config.item_drop_bonus_max_threshold,   9000,   0,      10000          },
+	{ "prevent_logout",                     &battle_config.prevent_logout,                  10000,  0,      60000          },
+	{ "alchemist_summon_reward",            &battle_config.alchemist_summon_reward,         1,      0,      2              },
+	{ "drops_by_luk",                       &battle_config.drops_by_luk,                    0,      0,      INT_MAX        },
+	{ "drops_by_luk2",                      &battle_config.drops_by_luk2,                   0,      0,      INT_MAX        },
+	{ "equip_natural_break_rate",           &battle_config.equip_natural_break_rate,        0,      0,      INT_MAX        },
+	{ "equip_self_break_rate",              &battle_config.equip_self_break_rate,           100,    0,      INT_MAX        },
+	{ "equip_skill_break_rate",             &battle_config.equip_skill_break_rate,          100,    0,      INT_MAX        },
+	{ "pk_mode",                            &battle_config.pk_mode,                         0,      0,      2              },
+	{ "pk_level_range",                     &battle_config.pk_level_range,                  0,      0,      INT_MAX        },
+	{ "manner_system",                      &battle_config.manner_system,                   0xFFF,  0,      0xFFF          },
+	{ "pet_equip_required",                 &battle_config.pet_equip_required,              0,      0,      1              },
+	{ "multi_level_up",                     &battle_config.multi_level_up,                  0,      0,      1              },
+	{ "max_exp_gain_rate",                  &battle_config.max_exp_gain_rate,               0,      0,      INT_MAX        },
+	{ "backstab_bow_penalty",               &battle_config.backstab_bow_penalty,            0,      0,      1              },
+	{ "night_at_start",                     &battle_config.night_at_start,                  0,      0,      1              },
+	{ "show_mob_info",                      &battle_config.show_mob_info,                   0,      0,      1|2|4          },
+	{ "ban_hack_trade",                     &battle_config.ban_hack_trade,                  0,      0,      INT_MAX        },
+	{ "min_hair_style",                     &battle_config.min_hair_style,                  0,      0,      INT_MAX        },
+	{ "max_hair_style",                     &battle_config.max_hair_style,                  23,     0,      INT_MAX        },
+	{ "min_hair_color",                     &battle_config.min_hair_color,                  0,      0,      INT_MAX        },
+	{ "max_hair_color",                     &battle_config.max_hair_color,                  9,      0,      INT_MAX        },
+	{ "min_cloth_color",                    &battle_config.min_cloth_color,                 0,      0,      INT_MAX        },
+	{ "max_cloth_color",                    &battle_config.max_cloth_color,                 4,      0,      INT_MAX        },
+	{ "pet_hair_style",                     &battle_config.pet_hair_style,                  100,    0,      INT_MAX        },
+	{ "castrate_dex_scale",                 &battle_config.castrate_dex_scale,              150,    1,      INT_MAX        },
+	{ "vcast_stat_scale",                   &battle_config.vcast_stat_scale,                530,    1,      INT_MAX        },
+	{ "area_size",                          &battle_config.area_size,                       14,     0,      INT_MAX        },
+	{ "chat_area_size",                     &battle_config.chat_area_size,                  9,      0,      INT_MAX        },
+	{ "dead_area_size",                     &battle_config.dead_area_size,                  32,     0,      INT_MAX        },
+	{ "zeny_from_mobs",                     &battle_config.zeny_from_mobs,                  0,      0,      1              },
+	{ "mobs_level_up",                      &battle_config.mobs_level_up,                   0,      0,      1              },
+	{ "mobs_level_up_exp_rate",             &battle_config.mobs_level_up_exp_rate,          1,      1,      INT_MAX        },
+	{ "pk_min_level",                       &battle_config.pk_min_level,                    55,     1,      INT_MAX        },
+	{ "skill_steal_max_tries",              &battle_config.skill_steal_max_tries,           0,      0,      UCHAR_MAX      },
+	{ "exp_calc_type",                      &battle_config.exp_calc_type,                   0,      0,      1              },
+	{ "exp_bonus_attacker",                 &battle_config.exp_bonus_attacker,              25,     0,      INT_MAX        },
+	{ "exp_bonus_max_attacker",             &battle_config.exp_bonus_max_attacker,          12,     2,      INT_MAX        },
+	{ "min_skill_delay_limit",              &battle_config.min_skill_delay_limit,           100,    10,     INT_MAX        },
+	{ "default_walk_delay",                 &battle_config.default_walk_delay,              300,    0,      INT_MAX        },
+	{ "no_skill_delay",                     &battle_config.no_skill_delay,                  BL_MOB, BL_NUL, BL_ALL         },
+	{ "attack_walk_delay",                  &battle_config.attack_walk_delay,               BL_ALL, BL_NUL, BL_ALL         },
+	{ "require_glory_guild",                &battle_config.require_glory_guild,             0,      0,      1              },
+	{ "idle_no_share",                      &battle_config.idle_no_share,                   0,      0,      INT_MAX        },
+	{ "party_even_share_bonus",             &battle_config.party_even_share_bonus,          0,      0,      INT_MAX        },
+	{ "delay_battle_damage",                &battle_config.delay_battle_damage,             1,      0,      1              },
+	{ "hide_woe_damage",                    &battle_config.hide_woe_damage,                 0,      0,      1              },
+	{ "display_version",                    &battle_config.display_version,                 1,      0,      1              },
+	{ "display_hallucination",              &battle_config.display_hallucination,           1,      0,      1              },
+	{ "use_statpoint_table",                &battle_config.use_statpoint_table,             1,      0,      1              },
+	{ "ignore_items_gender",                &battle_config.ignore_items_gender,             1,      0,      1              },
+	{ "berserk_cancels_buffs",              &battle_config.berserk_cancels_buffs,           0,      0,      1              },
+	{ "monster_ai",                         &battle_config.mob_ai,                          0x000,  0x000,  0x77F          },
+	{ "hom_setting",                        &battle_config.hom_setting,                     0xFFFF, 0x0000, 0xFFFF         },
+	{ "dynamic_mobs",                       &battle_config.dynamic_mobs,                    1,      0,      1              },
+	{ "mob_remove_damaged",                 &battle_config.mob_remove_damaged,              1,      0,      1              },
+	{ "show_hp_sp_drain",                   &battle_config.show_hp_sp_drain,                0,      0,      1              },
+	{ "show_hp_sp_gain",                    &battle_config.show_hp_sp_gain,                 1,      0,      1              },
+	{ "show_katar_crit_bonus",              &battle_config.show_katar_crit_bonus,           0,      0,      1              },
+	{ "mob_npc_event_type",                 &battle_config.mob_npc_event_type,              1,      0,      1              },
+	{ "character_size",                     &battle_config.character_size,                  1|2,    0,      1|2            },
+	{ "retaliate_to_master",                &battle_config.retaliate_to_master,             1,      0,      1              },
+	{ "duel_allow_pvp",                     &battle_config.duel_allow_pvp,                  0,      0,      1              },
+	{ "duel_allow_gvg",                     &battle_config.duel_allow_gvg,                  0,      0,      1              },
+	{ "duel_allow_teleport",                &battle_config.duel_allow_teleport,             0,      0,      1              },
+	{ "duel_autoleave_when_die",            &battle_config.duel_autoleave_when_die,         1,      0,      1              },
+	{ "duel_time_interval",                 &battle_config.duel_time_interval,              60,     0,      INT_MAX        },
+	{ "duel_only_on_same_map",              &battle_config.duel_only_on_same_map,           0,      0,      1              },
+	{ "skip_teleport_lv1_menu",             &battle_config.skip_teleport_lv1_menu,          0,      0,      1              },
+	{ "mob_max_skilllvl",                   &battle_config.mob_max_skilllvl,                100,    1,      INT_MAX        },
+	{ "allow_skill_without_day",            &battle_config.allow_skill_without_day,         0,      0,      1              },
+	{ "allow_es_magic_player",              &battle_config.allow_es_magic_pc,               0,      0,      1              },
+	{ "skill_caster_check",                 &battle_config.skill_caster_check,              1,      0,      1              },
+	{ "status_cast_cancel",                 &battle_config.sc_castcancel,                   BL_NUL, BL_NUL, BL_ALL         },
+	{ "pc_status_def_rate",                 &battle_config.pc_sc_def_rate,                  100,    0,      INT_MAX        },
+	{ "mob_status_def_rate",                &battle_config.mob_sc_def_rate,                 100,    0,      INT_MAX        },
+	{ "pc_max_status_def",                  &battle_config.pc_max_sc_def,                   100,    0,      INT_MAX        },
+	{ "mob_max_status_def",                 &battle_config.mob_max_sc_def,                  100,    0,      INT_MAX        },
+	{ "sg_miracle_skill_ratio",             &battle_config.sg_miracle_skill_ratio,          1,      0,      10000          },
+	{ "sg_angel_skill_ratio",               &battle_config.sg_angel_skill_ratio,            10,     0,      10000          },
+	{ "autospell_stacking",                 &battle_config.autospell_stacking,              0,      0,      1              },
+	{ "override_mob_names",                 &battle_config.override_mob_names,              0,      0,      2              },
+	{ "min_chat_delay",                     &battle_config.min_chat_delay,                  0,      0,      INT_MAX        },
+	{ "friend_auto_add",                    &battle_config.friend_auto_add,                 1,      0,      1              },
+	{ "hom_rename",                         &battle_config.hom_rename,                      0,      0,      1              },
+	{ "homunculus_show_growth",             &battle_config.homunculus_show_growth,          0,      0,      1              },
+	{ "homunculus_friendly_rate",           &battle_config.homunculus_friendly_rate,        100,    0,      INT_MAX        },
+	{ "vending_tax",                        &battle_config.vending_tax,                     0,      0,      10000          },
+	{ "day_duration",                       &battle_config.day_duration,                    0,      0,      INT_MAX        },
+	{ "night_duration",                     &battle_config.night_duration,                  0,      0,      INT_MAX        },
+	{ "mob_remove_delay",                   &battle_config.mob_remove_delay,                60000,  1000,   INT_MAX        },
+	{ "mob_active_time",                    &battle_config.mob_active_time,                 0,      0,      INT_MAX        },
+	{ "boss_active_time",                   &battle_config.boss_active_time,                0,      0,      INT_MAX        },
+	{ "slave_chase_masters_chasetarget",    &battle_config.slave_chase_masters_chasetarget, 1,      0,      1              },
+	{ "sg_miracle_skill_duration",          &battle_config.sg_miracle_skill_duration,       3600000, 0,     INT_MAX        },
+	{ "hvan_explosion_intimate",            &battle_config.hvan_explosion_intimate,         45000,  0,      100000         },
+	{ "quest_exp_rate",                     &battle_config.quest_exp_rate,                  100,    0,      INT_MAX        },
+	{ "at_mapflag",                         &battle_config.autotrade_mapflag,               0,      0,      1              },
+	{ "at_timeout",                         &battle_config.at_timeout,                      0,      0,      INT_MAX        },
+	{ "homunculus_autoloot",                &battle_config.homunculus_autoloot,             0,      0,      1              },
+	{ "idle_no_autoloot",                   &battle_config.idle_no_autoloot,                0,      0,      INT_MAX        },
+	{ "max_guild_alliance",                 &battle_config.max_guild_alliance,              3,      0,      3              },
+	{ "ksprotection",                       &battle_config.ksprotection,                    5000,   0,      INT_MAX        },
+	{ "auction_feeperhour",                 &battle_config.auction_feeperhour,              12000,  0,      INT_MAX        },
+	{ "auction_maximumprice",               &battle_config.auction_maximumprice,            500000000, 0,   MAX_ZENY       },
+	{ "homunculus_auto_vapor",              &battle_config.homunculus_auto_vapor,           1,      0,      1              },
+	{ "display_status_timers",              &battle_config.display_status_timers,           1,      0,      1              },
+	{ "skill_add_heal_rate",                &battle_config.skill_add_heal_rate,             7,      0,      INT_MAX        },
+	{ "eq_single_target_reflectable",       &battle_config.eq_single_target_reflectable,    1,      0,      1              },
+	{ "invincible_nodamage",                &battle_config.invincible_nodamage,             0,      0,      1              },
+	{ "mob_slave_keep_target",              &battle_config.mob_slave_keep_target,           0,      0,      1              },
+	{ "autospell_check_range",              &battle_config.autospell_check_range,           0,      0,      1              },
+	{ "knockback_left",                     &battle_config.knockback_left,                  1,      0,      1              },
+	{ "client_reshuffle_dice",              &battle_config.client_reshuffle_dice,           0,      0,      1              },
+	{ "client_sort_storage",                &battle_config.client_sort_storage,             0,      0,      1              },
+	{ "features/buying_store",              &battle_config.feature_buying_store,            1,      0,      1              },
+	{ "features/search_stores",             &battle_config.feature_search_stores,           1,      0,      1              },
+	{ "searchstore_querydelay",             &battle_config.searchstore_querydelay,          10,     0,      INT_MAX        },
+	{ "searchstore_maxresults",             &battle_config.searchstore_maxresults,          30,     1,      INT_MAX        },
+	{ "display_party_name",                 &battle_config.display_party_name,              0,      0,      1              },
+	{ "send_party_options",                 &battle_config.send_party_options,              0x31F9, 0,      0x1FFFF        },
+	{ "cashshop_show_points",               &battle_config.cashshop_show_points,            0,      0,      1              },
+	{ "mail_show_status",                   &battle_config.mail_show_status,                0,      0,      2              },
+	{ "client_limit_unit_lv",               &battle_config.client_limit_unit_lv,            0,      0,      BL_ALL         },
+	{ "client_emblem_max_blank_percent",    &battle_config.client_emblem_max_blank_percent, 100,    0,      100            },
 	// BattleGround Settings
-	{ "bg_update_interval",                 &battle_config.bg_update_interval,              1000,   100,    INT_MAX,        },
-	{ "bg_flee_penalty",                    &battle_config.bg_flee_penalty,                 20,     0,      INT_MAX,        },
+	{ "bg_update_interval",                 &battle_config.bg_update_interval,              1000,   100,    INT_MAX        },
+	{ "bg_flee_penalty",                    &battle_config.bg_flee_penalty,                 20,     0,      INT_MAX        },
 	/**
 	 * rAthena
 	 **/
-	{ "max_third_parameter",                &battle_config.max_third_parameter,             130,    10,     10000,          },
-	{ "atcommand_max_stat_bypass",          &battle_config.atcommand_max_stat_bypass,       0,      0,      100,            },
+	{ "max_third_parameter",                &battle_config.max_third_parameter,             130,    10,     10000          },
+	{ "atcommand_max_stat_bypass",          &battle_config.atcommand_max_stat_bypass,       0,      0,      100            },
 	{ "skill_amotion_leniency",             &battle_config.skill_amotion_leniency,          0,      0,      300             },
 	{ "mvp_tomb_enabled",                   &battle_config.mvp_tomb_enabled,                1,      0,      1               },
 	{ "mvp_tomb_spawn_delay",               &battle_config.mvp_tomb_spawn_delay,            10000,  0,      INT_MAX         },
@@ -8080,115 +8139,115 @@ static const struct config_data_old battle_data[] = {
 	{ "min_npc_vendchat_distance",          &battle_config.min_npc_vendchat_distance,       3,      0,      100             },
 	{ "vendchat_near_hiddennpc",            &battle_config.vendchat_near_hiddennpc,         0,      0,      1               },
 	{ "atcommand_mobinfo_type",             &battle_config.atcommand_mobinfo_type,          0,      0,      1               },
-	{ "mob_size_influence",                 &battle_config.mob_size_influence,              0,      0,      1,              },
-	{ "bowling_bash_area",                  &battle_config.bowling_bash_area,               0,      0,      20,             },
+	{ "mob_size_influence",                 &battle_config.mob_size_influence,              0,      0,      1              },
+	{ "bowling_bash_area",                  &battle_config.bowling_bash_area,               0,      0,      20             },
 	/**
 	 * Hercules
 	 **/
-	{ "skill_trap_type",                    &battle_config.skill_trap_type,                 0,      0,      1,              },
-	{ "trap_reflect",                       &battle_config.trap_reflect,                    1,      0,      1,              },
-	{ "item_restricted_consumption_type",   &battle_config.item_restricted_consumption_type,1,      0,      1,              },
-	{ "unequip_restricted_equipment",       &battle_config.unequip_restricted_equipment,    0,      0,      3,              },
-	{ "max_walk_path",                      &battle_config.max_walk_path,                   17,     1,      MAX_WALKPATH,   },
-	{ "item_enabled_npc",                   &battle_config.item_enabled_npc,                1,      0,      3,              },
-	{ "gm_ignore_warpable_area",            &battle_config.gm_ignore_warpable_area,         0,      2,      100,            },
-	{ "packet_obfuscation",                 &battle_config.packet_obfuscation,              1,      0,      3,              },
-	{ "client_accept_chatdori",             &battle_config.client_accept_chatdori,          0,      0,      INT_MAX,        },
-	{ "snovice_call_type",                  &battle_config.snovice_call_type,               0,      0,      1,              },
-	{ "guild_notice_changemap",             &battle_config.guild_notice_changemap,          7,      0,      7,              },
-	{ "features/banking",                   &battle_config.feature_banking,                 1,      0,      1,              },
-	{ "features/auction",                   &battle_config.feature_auction,                 0,      0,      2,              },
-	{ "idletime_criteria",                  &battle_config.idletime_criteria,               0x25,   1,      INT_MAX,        },
-	{ "mon_trans_disable_in_gvg",           &battle_config.mon_trans_disable_in_gvg,        0,      0,      1,              },
-	{ "case_sensitive_aegisnames",          &battle_config.case_sensitive_aegisnames,       1,      0,      1,              },
-	{ "search_freecell_map_margin",         &battle_config.search_freecell_map_margin,      15,     0,      INT_MAX,        },
-	{ "guild_castle_invite",                &battle_config.guild_castle_invite,             0,      0,      1,              },
-	{ "guild_castle_expulsion",             &battle_config.guild_castle_expulsion,          0,      0,      1,              },
-	{ "song_timer_reset",                   &battle_config.song_timer_reset,                0,      0,      1,              },
-	{ "snap_dodge",                         &battle_config.snap_dodge,                      0,      0,      1,              },
-	{ "stormgust_knockback",                &battle_config.stormgust_knockback,             1,      0,      1,              },
-	{ "monster_chase_refresh",              &battle_config.mob_chase_refresh,               1,      0,      30,             },
-	{ "mob_icewall_walk_block",             &battle_config.mob_icewall_walk_block,          75,     0,      255,            },
-	{ "boss_icewall_walk_block",            &battle_config.boss_icewall_walk_block,         0,      0,      255,            },
-	{ "features/roulette",                  &battle_config.feature_roulette,                1,      0,      1,              },
-	{ "show_monster_hp_bar",                &battle_config.show_monster_hp_bar,             1,      0,      1|2|4,          },
-	{ "fix_warp_hit_delay_abuse",           &battle_config.fix_warp_hit_delay_abuse,        0,      0,      1,              },
-	{ "costume_refine_def",                 &battle_config.costume_refine_def,              1,      0,      1,              },
-	{ "shadow_refine_def",                  &battle_config.shadow_refine_def,               1,      0,      1,              },
-	{ "shadow_refine_atk",                  &battle_config.shadow_refine_atk,               1,      0,      1,              },
-	{ "min_body_style",                     &battle_config.min_body_style,                  0,      0,      SHRT_MAX,       },
-	{ "max_body_style",                     &battle_config.max_body_style,                  4,      0,      SHRT_MAX,       },
-	{ "save_body_style",                    &battle_config.save_body_style,                 0,      0,      1,              },
-	{ "player_warp_keep_direction",         &battle_config.player_warp_keep_direction,      0,      0,      1,              },
-	{ "atcommand_levelup_events",           &battle_config.atcommand_levelup_events,        0,      0,      1,              },
-	{ "bow_unequip_arrow",                  &battle_config.bow_unequip_arrow,               1,      0,      1,              },
-	{ "mvp_exp_reward_message",             &battle_config.mvp_exp_reward_message,          0,      0,      1,              },
-	{ "monster_eye_range_bonus",            &battle_config.mob_eye_range_bonus,             0,      0,      10,             },
-	{ "prevent_logout_trigger",             &battle_config.prevent_logout_trigger,          0xE,    0,      0xF,            },
-	{ "boarding_halter_speed",              &battle_config.boarding_halter_speed,           25,     0,      100,            },
-	{ "features/rodex",                     &battle_config.feature_rodex,                   1,      0,      1,              },
-	{ "features/rodex_use_accountmail",     &battle_config.feature_rodex_use_accountmail,   0,      0,      1,              },
-	{ "features/enable_homun_autofeed",     &battle_config.feature_enable_homun_autofeed,   1,      0,      1,              },
-	{ "features/enable_pet_autofeed",       &battle_config.feature_enable_pet_autofeed,     1,      0,      1,              },
-	{ "storage_use_item",                   &battle_config.storage_use_item,                0,      0,      1,              },
-	{ "features/enable_attendance_system",  &battle_config.feature_enable_attendance_system,1,      0,      1,              },
-	{ "features/feature_attendance_endtime",&battle_config.feature_attendance_endtime,      1,      0,      99999999,       },
-	{ "min_item_buy_price",                 &battle_config.min_item_buy_price,              1,      0,      INT_MAX,        },
-	{ "min_item_sell_price",                &battle_config.min_item_sell_price,             0,      0,      INT_MAX,        },
-	{ "display_fake_hp_when_dead",          &battle_config.display_fake_hp_when_dead,       1,      0,      1,              },
-	{ "magicrod_type",                      &battle_config.magicrod_type,                   0,      0,      1,              },
-	{ "skill_enabled_npc",                  &battle_config.skill_enabled_npc,               0,      0,      INT_MAX,        },
-	{ "features/enable_achievement_system", &battle_config.feature_enable_achievement,      1,      0,      1,              },
-	{ "ping_timer_inverval",                &battle_config.ping_timer_interval,             30,     0,      99999999,       },
-	{ "ping_time",                          &battle_config.ping_time,                       20,     0,      99999999,       },
-	{ "option_drop_max_loop",               &battle_config.option_drop_max_loop,            10,     1,      100000,         },
-	{ "enchant_ui_max_loop",                &battle_config.enchant_ui_max_loop,             10,     1,      100000,         },
-	{ "drop_connection_on_quit",            &battle_config.drop_connection_on_quit,         0,      0,      1,              },
-	{ "display_rate_messages",              &battle_config.display_rate_messages,           1,      0,      7,              },
-	{ "display_config_messages",            &battle_config.display_config_messages,         0x1F1,  0,      0x1F7,          },
-	{ "display_overweight_messages",        &battle_config.display_overweight_messages,     3,      0,      3,              },
-	{ "show_tip_window",                    &battle_config.show_tip_window,                 1,      0,      1,              },
-	{ "features/enable_refinery_ui",        &battle_config.enable_refinery_ui,              1,      0,      1,              },
-	{ "features/replace_refine_npcs",       &battle_config.replace_refine_npcs,             1,      0,      1,              },
-	{ "batk_min_limit",                     &battle_config.batk_min,                        0,      0,      INT_MAX,        },
-	{ "batk_max_limit",                     &battle_config.batk_max,                        USHRT_MAX, 1,   INT_MAX,        },
-	{ "matk_min_limit",                     &battle_config.matk_min,                        0,      0,      INT_MAX,        },
-	{ "matk_max_limit",                     &battle_config.matk_max,                        USHRT_MAX, 1,   INT_MAX,        },
-	{ "watk_min_limit",                     &battle_config.watk_min,                        0,      0,      INT_MAX,        },
-	{ "watk_max_limit",                     &battle_config.watk_max,                        USHRT_MAX, 1,   INT_MAX,        },
-	{ "flee_min_limit",                     &battle_config.flee_min,                        1,      1,      INT_MAX,        },
-	{ "flee_max_limit",                     &battle_config.flee_max,                        SHRT_MAX, 1,    INT_MAX,        },
-	{ "flee2_min_limit",                    &battle_config.flee2_min,                       10,     1,      INT_MAX,        },
-	{ "flee2_max_limit",                    &battle_config.flee2_max,                       SHRT_MAX, 1,    INT_MAX,        },
-	{ "critical_min_limit",                 &battle_config.critical_min,                    10,     1,      INT_MAX,        },
-	{ "critical_max_limit",                 &battle_config.critical_max,                    SHRT_MAX, 1,    INT_MAX,        },
-	{ "hit_min_limit",                      &battle_config.hit_min,                         1,      1,      INT_MAX,        },
-	{ "hit_max_limit",                      &battle_config.hit_max,                         SHRT_MAX, 1,    INT_MAX,        },
-	{ "autoloot_adjust",                    &battle_config.autoloot_adjust,                 0,      0,      1,              },
-	{ "hom_bonus_exp_from_master",          &battle_config.hom_bonus_exp_from_master,       10,     0,      100,            },
-	{ "allowed_actions_when_dead",          &battle_config.allowed_actions_when_dead,       0,      0,      3,              },
-	{ "teleport_close_storage",             &battle_config.teleport_close_storage,          1,      0,      1,              },
-	{ "features/show_attendance_window",    &battle_config.show_attendance_window,          1,      0,      1,              },
-	{ "elem_natural_heal_hp",               &battle_config.elem_natural_heal_hp,            6000, NATURAL_HEAL_INTERVAL, INT_MAX,},
-	{ "elem_natural_heal_sp",               &battle_config.elem_natural_heal_sp,            8000, NATURAL_HEAL_INTERVAL, INT_MAX,},
-	{ "elem_natural_heal_cap",              &battle_config.elem_natural_heal_cap,           1000,   1,      INT_MAX,        },
-	{ "hom_natural_heal_hp",                &battle_config.hom_natural_heal_hp,             2000, NATURAL_HEAL_INTERVAL, INT_MAX,},
-	{ "hom_natural_heal_sp",                &battle_config.hom_natural_heal_sp,             4000, NATURAL_HEAL_INTERVAL, INT_MAX,},
-	{ "hom_natural_heal_cap",               &battle_config.hom_natural_heal_cap,            1000,   1,      INT_MAX,        },
-	{ "merc_natural_heal_hp",               &battle_config.merc_natural_heal_hp,            6000, NATURAL_HEAL_INTERVAL, INT_MAX,},
-	{ "merc_natural_heal_sp",               &battle_config.merc_natural_heal_sp,            8000, NATURAL_HEAL_INTERVAL, INT_MAX,},
-	{ "merc_natural_heal_cap",              &battle_config.merc_natural_heal_cap,           1000,   1,      INT_MAX,        },
-	{ "macro_detect_retry",                 &battle_config.macro_detect_retry,              1,      1,      INT_MAX,        },
-	{ "macro_detect_timeout",               &battle_config.macro_detect_timeout,            0,      0,      INT_MAX,        },
-	{ "roulette_gold_step",                 &battle_config.roulette_gold_step,              10,     1,      INT_MAX,        },
-	{ "roulette_silver_step",               &battle_config.roulette_silver_step,            10,     1,      INT_MAX,        },
-	{ "roulette_bronze_step",               &battle_config.roulette_bronze_step,            1,      1,      INT_MAX,        },
-	{ "features/grader_max_used",           &battle_config.grader_max_used,                 0,      0,      MAX_ITEM_GRADE, },
-	{ "dynamic_npc_timeout",                &battle_config.dynamic_npc_timeout,             0,      0,      INT_MAX,        },
-	{ "dynamic_npc_range",                  &battle_config.dynamic_npc_range,               0,      0,      INT_MAX,        },
-	{ "features/goldpc/enable",             &battle_config.feature_goldpc_enable,           0,      0,      1,              },
-	{ "features/goldpc/default_mode",       &battle_config.feature_goldpc_default_mode,     1,      0,      INT_MAX,        },
-	{ "venom_dust_exp",                     &battle_config.venom_dust_exp,                  0,      0,      1,              },
+	{ "skill_trap_type",                    &battle_config.skill_trap_type,                 0,      0,      1              },
+	{ "trap_reflect",                       &battle_config.trap_reflect,                    1,      0,      1              },
+	{ "item_restricted_consumption_type",   &battle_config.item_restricted_consumption_type,1,      0,      1              },
+	{ "unequip_restricted_equipment",       &battle_config.unequip_restricted_equipment,    0,      0,      3              },
+	{ "max_walk_path",                      &battle_config.max_walk_path,                   17,     1,      MAX_WALKPATH   },
+	{ "item_enabled_npc",                   &battle_config.item_enabled_npc,                1,      0,      3              },
+	{ "gm_ignore_warpable_area",            &battle_config.gm_ignore_warpable_area,         0,      2,      100            },
+	{ "packet_obfuscation",                 &battle_config.packet_obfuscation,              1,      0,      3              },
+	{ "client_accept_chatdori",             &battle_config.client_accept_chatdori,          0,      0,      INT_MAX        },
+	{ "snovice_call_type",                  &battle_config.snovice_call_type,               0,      0,      1              },
+	{ "guild_notice_changemap",             &battle_config.guild_notice_changemap,          7,      0,      7              },
+	{ "features/banking",                   &battle_config.feature_banking,                 1,      0,      1              },
+	{ "features/auction",                   &battle_config.feature_auction,                 0,      0,      2              },
+	{ "idletime_criteria",                  &battle_config.idletime_criteria,               0x25,   1,      INT_MAX        },
+	{ "mon_trans_disable_in_gvg",           &battle_config.mon_trans_disable_in_gvg,        0,      0,      1              },
+	{ "case_sensitive_aegisnames",          &battle_config.case_sensitive_aegisnames,       1,      0,      1              },
+	{ "search_freecell_map_margin",         &battle_config.search_freecell_map_margin,      15,     0,      INT_MAX        },
+	{ "guild_castle_invite",                &battle_config.guild_castle_invite,             0,      0,      1              },
+	{ "guild_castle_expulsion",             &battle_config.guild_castle_expulsion,          0,      0,      1              },
+	{ "song_timer_reset",                   &battle_config.song_timer_reset,                0,      0,      1              },
+	{ "snap_dodge",                         &battle_config.snap_dodge,                      0,      0,      1              },
+	{ "stormgust_knockback",                &battle_config.stormgust_knockback,             1,      0,      1              },
+	{ "monster_chase_refresh",              &battle_config.mob_chase_refresh,               1,      0,      30             },
+	{ "mob_icewall_walk_block",             &battle_config.mob_icewall_walk_block,          75,     0,      255            },
+	{ "boss_icewall_walk_block",            &battle_config.boss_icewall_walk_block,         0,      0,      255            },
+	{ "features/roulette",                  &battle_config.feature_roulette,                1,      0,      1              },
+	{ "show_monster_hp_bar",                &battle_config.show_monster_hp_bar,             1,      0,      1|2|4          },
+	{ "fix_warp_hit_delay_abuse",           &battle_config.fix_warp_hit_delay_abuse,        0,      0,      1              },
+	{ "costume_refine_def",                 &battle_config.costume_refine_def,              1,      0,      1              },
+	{ "shadow_refine_def",                  &battle_config.shadow_refine_def,               1,      0,      1              },
+	{ "shadow_refine_atk",                  &battle_config.shadow_refine_atk,               1,      0,      1              },
+	{ "min_body_style",                     &battle_config.min_body_style,                  0,      0,      SHRT_MAX       },
+	{ "max_body_style",                     &battle_config.max_body_style,                  4,      0,      SHRT_MAX       },
+	{ "save_body_style",                    &battle_config.save_body_style,                 0,      0,      1              },
+	{ "player_warp_keep_direction",         &battle_config.player_warp_keep_direction,      0,      0,      1              },
+	{ "atcommand_levelup_events",           &battle_config.atcommand_levelup_events,        0,      0,      1              },
+	{ "bow_unequip_arrow",                  &battle_config.bow_unequip_arrow,               1,      0,      1              },
+	{ "mvp_exp_reward_message",             &battle_config.mvp_exp_reward_message,          0,      0,      1              },
+	{ "monster_eye_range_bonus",            &battle_config.mob_eye_range_bonus,             0,      0,      10             },
+	{ "prevent_logout_trigger",             &battle_config.prevent_logout_trigger,          0xE,    0,      0xF            },
+	{ "boarding_halter_speed",              &battle_config.boarding_halter_speed,           25,     0,      100            },
+	{ "features/rodex",                     &battle_config.feature_rodex,                   1,      0,      1              },
+	{ "features/rodex_use_accountmail",     &battle_config.feature_rodex_use_accountmail,   0,      0,      1              },
+	{ "features/enable_homun_autofeed",     &battle_config.feature_enable_homun_autofeed,   1,      0,      1              },
+	{ "features/enable_pet_autofeed",       &battle_config.feature_enable_pet_autofeed,     1,      0,      1              },
+	{ "storage_use_item",                   &battle_config.storage_use_item,                0,      0,      1              },
+	{ "features/enable_attendance_system",  &battle_config.feature_enable_attendance_system,1,      0,      1              },
+	{ "features/feature_attendance_endtime",&battle_config.feature_attendance_endtime,      1,      0,      99999999       },
+	{ "min_item_buy_price",                 &battle_config.min_item_buy_price,              1,      0,      INT_MAX        },
+	{ "min_item_sell_price",                &battle_config.min_item_sell_price,             0,      0,      INT_MAX        },
+	{ "display_fake_hp_when_dead",          &battle_config.display_fake_hp_when_dead,       1,      0,      1              },
+	{ "magicrod_type",                      &battle_config.magicrod_type,                   0,      0,      1              },
+	{ "skill_enabled_npc",                  &battle_config.skill_enabled_npc,               0,      0,      INT_MAX        },
+	{ "features/enable_achievement_system", &battle_config.feature_enable_achievement,      1,      0,      1              },
+	{ "ping_timer_inverval",                &battle_config.ping_timer_interval,             30,     0,      99999999       },
+	{ "ping_time",                          &battle_config.ping_time,                       20,     0,      99999999       },
+	{ "option_drop_max_loop",               &battle_config.option_drop_max_loop,            10,     1,      100000         },
+	{ "enchant_ui_max_loop",                &battle_config.enchant_ui_max_loop,             10,     1,      100000         },
+	{ "drop_connection_on_quit",            &battle_config.drop_connection_on_quit,         0,      0,      1              },
+	{ "display_rate_messages",              &battle_config.display_rate_messages,           1,      0,      7              },
+	{ "display_config_messages",            &battle_config.display_config_messages,         0x1F1,  0,      0x1F7          },
+	{ "display_overweight_messages",        &battle_config.display_overweight_messages,     3,      0,      3              },
+	{ "show_tip_window",                    &battle_config.show_tip_window,                 1,      0,      1              },
+	{ "features/enable_refinery_ui",        &battle_config.enable_refinery_ui,              1,      0,      1              },
+	{ "features/replace_refine_npcs",       &battle_config.replace_refine_npcs,             1,      0,      1              },
+	{ "batk_min_limit",                     &battle_config.batk_min,                        0,      0,      INT_MAX        },
+	{ "batk_max_limit",                     &battle_config.batk_max,                        USHRT_MAX, 1,   INT_MAX        },
+	{ "matk_min_limit",                     &battle_config.matk_min,                        0,      0,      INT_MAX        },
+	{ "matk_max_limit",                     &battle_config.matk_max,                        USHRT_MAX, 1,   INT_MAX        },
+	{ "watk_min_limit",                     &battle_config.watk_min,                        0,      0,      INT_MAX        },
+	{ "watk_max_limit",                     &battle_config.watk_max,                        USHRT_MAX, 1,   INT_MAX        },
+	{ "flee_min_limit",                     &battle_config.flee_min,                        1,      1,      INT_MAX        },
+	{ "flee_max_limit",                     &battle_config.flee_max,                        SHRT_MAX, 1,    INT_MAX        },
+	{ "flee2_min_limit",                    &battle_config.flee2_min,                       10,     1,      INT_MAX        },
+	{ "flee2_max_limit",                    &battle_config.flee2_max,                       SHRT_MAX, 1,    INT_MAX        },
+	{ "critical_min_limit",                 &battle_config.critical_min,                    10,     1,      INT_MAX        },
+	{ "critical_max_limit",                 &battle_config.critical_max,                    SHRT_MAX, 1,    INT_MAX        },
+	{ "hit_min_limit",                      &battle_config.hit_min,                         1,      1,      INT_MAX        },
+	{ "hit_max_limit",                      &battle_config.hit_max,                         SHRT_MAX, 1,    INT_MAX        },
+	{ "autoloot_adjust",                    &battle_config.autoloot_adjust,                 0,      0,      1              },
+	{ "hom_bonus_exp_from_master",          &battle_config.hom_bonus_exp_from_master,       10,     0,      100            },
+	{ "allowed_actions_when_dead",          &battle_config.allowed_actions_when_dead,       0,      0,      3              },
+	{ "teleport_close_storage",             &battle_config.teleport_close_storage,          1,      0,      1              },
+	{ "features/show_attendance_window",    &battle_config.show_attendance_window,          1,      0,      1              },
+	{ "elem_natural_heal_hp",               &battle_config.elem_natural_heal_hp,            6000, NATURAL_HEAL_INTERVAL, INT_MAX},
+	{ "elem_natural_heal_sp",               &battle_config.elem_natural_heal_sp,            8000, NATURAL_HEAL_INTERVAL, INT_MAX},
+	{ "elem_natural_heal_cap",              &battle_config.elem_natural_heal_cap,           1000,   1,      INT_MAX        },
+	{ "hom_natural_heal_hp",                &battle_config.hom_natural_heal_hp,             2000, NATURAL_HEAL_INTERVAL, INT_MAX},
+	{ "hom_natural_heal_sp",                &battle_config.hom_natural_heal_sp,             4000, NATURAL_HEAL_INTERVAL, INT_MAX},
+	{ "hom_natural_heal_cap",               &battle_config.hom_natural_heal_cap,            1000,   1,      INT_MAX        },
+	{ "merc_natural_heal_hp",               &battle_config.merc_natural_heal_hp,            6000, NATURAL_HEAL_INTERVAL, INT_MAX},
+	{ "merc_natural_heal_sp",               &battle_config.merc_natural_heal_sp,            8000, NATURAL_HEAL_INTERVAL, INT_MAX},
+	{ "merc_natural_heal_cap",              &battle_config.merc_natural_heal_cap,           1000,   1,      INT_MAX        },
+	{ "macro_detect_retry",                 &battle_config.macro_detect_retry,              1,      1,      INT_MAX        },
+	{ "macro_detect_timeout",               &battle_config.macro_detect_timeout,            0,      0,      INT_MAX        },
+	{ "roulette_gold_step",                 &battle_config.roulette_gold_step,              10,     1,      INT_MAX        },
+	{ "roulette_silver_step",               &battle_config.roulette_silver_step,            10,     1,      INT_MAX        },
+	{ "roulette_bronze_step",               &battle_config.roulette_bronze_step,            1,      1,      INT_MAX        },
+	{ "features/grader_max_used",           &battle_config.grader_max_used,                 0,      0,      MAX_ITEM_GRADE },
+	{ "dynamic_npc_timeout",                &battle_config.dynamic_npc_timeout,             0,      0,      INT_MAX        },
+	{ "dynamic_npc_range",                  &battle_config.dynamic_npc_range,               0,      0,      INT_MAX        },
+	{ "features/goldpc/enable",             &battle_config.feature_goldpc_enable,           0,      0,      1              },
+	{ "features/goldpc/default_mode",       &battle_config.feature_goldpc_default_mode,     1,      0,      INT_MAX        },
+	{ "venom_dust_exp",                     &battle_config.venom_dust_exp,                  0,      0,      1              },
 };
 
 static bool battle_set_value_sub(int index, int value)
@@ -8401,7 +8460,7 @@ static void battle_config_check_deprecated(const char *filename, struct config_t
 		"max_summoner_parameter",
 		"max_baby_parameter",
 		"max_baby_third_parameter",
-		"natural_heal_weight_rate"
+		"natural_heal_weight_rate",
 	};
 	for (int i = 0; i < ARRAYLENGTH(unit_params_keys); ++i) {
 		char conf_name[100];

@@ -41,13 +41,13 @@ enum login_packet_ca_id {
 	HEADER_CA_REQ_HASH             = 0x01db,
 	HEADER_CA_CHARSERVERCONNECT    = 0x2710, // Custom Hercules Packet
 	HEADER_CA_APISERVERCONNECT     = 0x2720, // Custom Hercules Packet
-	//HEADER_CA_SSO_LOGIN_REQa       = 0x825a, /* unused */
+
+	// HEADER_CA_SSO_LOGIN_REQa       = 0x825A, /* unused */
 };
 
 /* Packets Structs */
-#if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
-#pragma pack(push, 1)
-#endif // not NetBSD < 6 / Solaris
+
+PRAGMA_PACK_PUSH(1)
 
 /**
  * Packet structure for CA_LOGIN.
@@ -151,7 +151,7 @@ struct PACKET_CA_ACK_MOBILE_OTP {
 	uint32 aid;           ///< Account ID
 	char code[6];         ///< Code
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CA_ACK_MOBILE_OTP, 0x09a3);
+DEFINE_PACKET_HEADER(CA_ACK_MOBILE_OTP, 0x09A3);
 #endif
 
 #if PACKETVER_MAIN_NUM >= 20181114 || PACKETVER_RE_NUM >= 20181114 || defined(PACKETVER_ZERO)
@@ -159,7 +159,7 @@ struct PACKET_CA_OTP_CODE {
 	int16 packet_id;      ///< Packet ID (#HEADER_CA_OTP_CODE)
 	char code[9];         ///< Code
 } __attribute__((packed));
-DEFINE_PACKET_HEADER(CA_OTP_CODE, 0x0ad0);
+DEFINE_PACKET_HEADER(CA_OTP_CODE, 0x0AD0);
 #endif
 
 /**
@@ -244,8 +244,6 @@ struct PACKET_CA_APISERVERCONNECT {
 	char password[24]; ///< Password
 } __attribute__((packed));
 
-#if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
-#pragma pack(pop)
-#endif // not NetBSD < 6 / Solaris
+PRAGMA_PACK_POP()
 
 #endif // LOGIN_PACKETS_CA_STRUCT_H

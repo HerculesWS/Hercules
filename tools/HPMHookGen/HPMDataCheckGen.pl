@@ -111,39 +111,39 @@ EOF
 
 foreach my $key (sort keys %out) {
 	print FH <<"EOF";
-	#ifdef $key
+#ifdef $key
 EOF
 	foreach my $entry (@{ $out{$key} }) {
 		my $entryname = $$entry{name};
 		my $entrytype = $$entry{type};
 		print FH <<"EOF"
-		{ "$entryname", sizeof(struct $entryname), $entrytype },
+    {"$entryname", sizeof(struct $entryname), $entrytype},
 EOF
 	}
 	print FH <<"EOF"
-	#else
-		#define $key
-	#endif // $key
+#else
+  #define $key
+#endif // $key
 EOF
 }
 print FH <<"EOF";
 };
 constexpr unsigned int HPMDataCheckLen_s = ARRAYLENGTH(HPMDataCheck_s);
-constexpr int HPMDataCheckVer_s = $HPMDataCheckAPIVer;
-}
+constexpr int HPMDataCheckVer_s          = $HPMDataCheckAPIVer;
+} // namespace
 
 #define HPMDATACHECK_DEFS \\
 	const struct s_HPMDataCheck *HPMDataCheck = HPMDataCheck_s; \\
-	unsigned int HPMDataCheckLen = HPMDataCheckLen_s; \\
-	int HPMDataCheckVer = HPMDataCheckVer_s;
+	unsigned int HPMDataCheckLen              = HPMDataCheckLen_s; \\
+	int HPMDataCheckVer                       = HPMDataCheckVer_s;
 HPExport const struct s_HPMDataCheck *HPMDataCheck;
 HPExport unsigned int HPMDataCheckLen;
 HPExport int HPMDataCheckVer;
 #ifdef HPM_PLUGIN_DEFS_ALL
-#define HPM_DECLARE_PLUGIN(plugin_name, plugin_type, plugin_version) \\
-	HPMDATACHECK_DEFS \\
-	HPM_PLUGIN_DEFS_ALL \\
-	HPM_DECLARE_PLUGIN_BASE((plugin_name), (plugin_type), (plugin_version))
+  #define HPM_DECLARE_PLUGIN(plugin_name, plugin_type, plugin_version) \\
+	  HPMDATACHECK_DEFS \\
+	  HPM_PLUGIN_DEFS_ALL \\
+	  HPM_DECLARE_PLUGIN_BASE((plugin_name), (plugin_type), (plugin_version))
 #endif
 
 #endif /* HPM_DATA_CHECK_H */

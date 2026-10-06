@@ -586,14 +586,15 @@ static struct skill_unit *map_find_skill_unit_oncell(struct block_list *target, 
  */
 static int bl_vforeach(int (*func)(struct block_list*, va_list), int blockcount, int max, va_list args)
 {
-	GUARD_MAP_LOCK
+	GUARD_MAP_LOCK;
 
 	int i;
 	int returnCount = 0;
 
 	map->freeblock_lock();
 	for (i = blockcount; i < map->bl_list_count && returnCount < max; i++) {
-		if (map->bl_list[i]->prev) { //func() may delete this bl_list[] slot, checking for prev ensures it wasn't queued for deletion.
+		if (map->bl_list[i]->prev) {
+			//func() may delete this bl_list[] slot, checking for prev ensures it wasn't queued for deletion.
 			va_list argscopy;
 			va_copy(argscopy, args);
 			returnCount += func(map->bl_list[i], argscopy);
@@ -1254,11 +1255,21 @@ static int map_vforeachinmovearea(int (*func)(struct block_list*, va_list), stru
 
 	if (dx == 0 || dy == 0) { // Movement along one axis only.
 		if (dx == 0) {
-			if (dy < 0) { y0 = y1 + dy + 1; } // Moving south
-			else        { y1 = y0 + dy - 1; } // North
+			if (dy < 0) {
+				// Moving south
+				y0 = y1 + dy + 1;
+			} else {
+				// North
+				y1 = y0 + dy - 1;
+			}
 		} else { //dy == 0
-			if (dx < 0) { x0 = x1 + dx + 1; } // West
-			else        { x1 = x0 + dx - 1; } // East
+			if (dx < 0) {
+				// West
+				x0 = x1 + dx + 1;
+			} else {
+				// East
+				x1 = x0 + dx - 1;
+			}
 		}
 		bl_getall_area(type, m, x0, y0, x1, y1, NULL);
 	}
@@ -2038,9 +2049,10 @@ static int map_quit(struct map_session_data *sd)
 	if(!sd->state.active) { //Removing a player that is not active.
 		struct auth_node *node = chrif->search(sd->status.account_id);
 		if (node && node->char_id == sd->status.char_id &&
-			node->state != ST_LOGOUT)
+			node->state != ST_LOGOUT) {
 			//Except when logging out, clear the auth-connect data immediately.
 			chrif->auth_delete(node->account_id, node->char_id, node->state);
+		}
 		//Non-active players should not have loaded any data yet (or it was cleared already) so no additional cleanups are needed.
 		return 0;
 	}
@@ -2725,6 +2737,7 @@ static struct block_list *mapit_next(struct s_mapiterator *iter)
 			break;// end
 		if( MAPIT_MATCHES(iter,bl) )
 			break;// found a match
+
 		// try next
 	}
 	return bl;
@@ -2747,6 +2760,7 @@ static struct block_list *mapit_prev(struct s_mapiterator *iter)
 			break;// end
 		if( MAPIT_MATCHES(iter,bl) )
 			break;// found a match
+
 		// try prev
 	}
 	return bl;
@@ -6009,7 +6023,8 @@ static void read_map_zone_db(void)
 						--h;
 						continue;
 					}
-					if( !map->zone_bl_type(libconfig->setting_get_string_elem(skills,h),&subtype) )/* we don't remove it from the three due to inheritance */
+					/* we don't remove it from the three due to inheritance */
+					if( !map->zone_bl_type(libconfig->setting_get_string_elem(skills,h),&subtype) )
 						--disabled_skills_count;
 				}
 				/* all ok, process */
@@ -6020,7 +6035,8 @@ static void read_map_zone_db(void)
 					enum bl_type type;
 					name = config_setting_name(skillinfo);
 
-					if( (type = map->zone_bl_type(libconfig->setting_get_string_elem(skills,h),&subtype)) ) { /* only add if enabled */
+					/* only add if enabled */
+					if( (type = map->zone_bl_type(libconfig->setting_get_string_elem(skills,h),&subtype)) ) {
 						CREATE( entry, struct map_zone_disabled_skill_entry, 1 );
 
 						entry->nameid = map->zone_str2skillid(name);
@@ -6047,7 +6063,8 @@ static void read_map_zone_db(void)
 						--h;
 						continue;
 					}
-					if( !libconfig->setting_get_bool(item) )/* we don't remove it from the three due to inheritance */
+					/* we don't remove it from the three due to inheritance */
+					if( !libconfig->setting_get_bool(item) )
 						--disabled_items_count;
 				}
 				/* all ok, process */
@@ -6145,7 +6162,8 @@ static void read_map_zone_db(void)
 					enum bl_type type;
 					name = config_setting_name(cap);
 
-					if( (type = map->zone_bl_type(libconfig->setting_get_string_elem(cap,1),&subtype)) ) { /* only add if enabled */
+					if( (type = map->zone_bl_type(libconfig->setting_get_string_elem(cap,1),&subtype)) ) {
+						/* only add if enabled */
 						CREATE( entry, struct map_zone_skill_damage_cap_entry, 1 );
 
 						entry->nameid = map->zone_str2skillid(name);
@@ -6173,7 +6191,8 @@ static void read_map_zone_db(void)
 			libconfig->setting_lookup_string(zone_e, "name", &zonename);
 
 			if( strncmpi(zonename,MAP_ZONE_ALL_NAME,MAP_ZONE_NAME_LENGTH) == 0 ) {
-				continue;/* all zone doesn't inherit anything (if it did, everything would link to each other and boom endless loop) */
+				// all zone doesn't inherit anything (if it did, everything would link to each other and boom endless loop)
+				continue;
 			}
 
 			if( (inherit_tree = libconfig->setting_get_member(zone_e, "inherit")) != NULL ) {
@@ -6196,7 +6215,8 @@ static void read_map_zone_db(void)
 				int capped_skills_count_i = 0; /* skill capped count from inherit zone */
 
 				name = libconfig->setting_get_string_elem(inherit_tree, h);
-				libconfig->setting_lookup_string(zone_e, "name", &zonename);/* will succeed for we validated it earlier */
+				/* will succeed for we validated it earlier */
+				libconfig->setting_lookup_string(zone_e, "name", &zonename);
 
 				if ((izone = (struct map_zone_data *)strdb_get(map->zone_db, name)) == NULL) {
 					ShowError("map_zone_db: Unknown zone '%s' being inherit by zone '%s', skipping...\n",name,zonename);
@@ -6207,8 +6227,10 @@ static void read_map_zone_db(void)
 					zone = &map->zone_all;
 				} else if( strncmpi(zonename,MAP_ZONE_PK_NAME,MAP_ZONE_NAME_LENGTH) == 0 ) {
 					zone = &map->zone_pk;
-				} else
-					zone = (struct map_zone_data *)strdb_get(map->zone_db, zonename);/* will succeed for we just put it in here */
+				} else {
+					/* will succeed for we just put it in here */
+					zone = (struct map_zone_data *)strdb_get(map->zone_db, zonename);
+				}
 
 				disabled_skills_count_i = izone->disabled_skills_count;
 				disabled_items_count_i = izone->disabled_items_count;
@@ -6925,18 +6947,18 @@ static CMDLINEARG(loadscript)
  */
 void cmdline_args_init_local(void)
 {
-	CMDLINEARG_DEF2(run-once, runonce, "Closes server after loading (testing).", CMDLINE_OPT_NORMAL);
-	CMDLINEARG_DEF2(map-config, mapconfig, "Alternative map-server configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(battle-config, battleconfig, "Alternative battle configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(atcommand-config, atcommandconfig, "Alternative atcommand configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(script-config, scriptconfig, "Alternative script configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(msg-config, msgconfig, "Alternative message configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(grf-path, grfpath, "Alternative GRF path configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(storage-path, storagepath, "Alternative Storage configuration path.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(inter-config, interconfig, "Alternative inter-server configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(log-config, logconfig, "Alternative logging configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
-	CMDLINEARG_DEF2(script-check, scriptcheck, "Doesn't run the server, only tests the scripts passed through --load-script.", CMDLINE_OPT_SILENT);
-	CMDLINEARG_DEF2(load-script, loadscript, "Loads an additional script (can be repeated).", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2("run-once", runonce, "Closes server after loading (testing).", CMDLINE_OPT_NORMAL);
+	CMDLINEARG_DEF2("map-config", mapconfig, "Alternative map-server configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2("battle-config", battleconfig, "Alternative battle configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2("atcommand-config", atcommandconfig, "Alternative atcommand configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2("script-config", scriptconfig, "Alternative script configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2("msg-config", msgconfig, "Alternative message configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2("grf-path", grfpath, "Alternative GRF path configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2("storage-path", storagepath, "Alternative Storage configuration path.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2("inter-config", interconfig, "Alternative inter-server configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2("log-config", logconfig, "Alternative logging configuration.", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
+	CMDLINEARG_DEF2("script-check", scriptcheck, "Doesn't run the server, only tests the scripts passed through --load-script.", CMDLINE_OPT_SILENT);
+	CMDLINEARG_DEF2("load-script", loadscript, "Loads an additional script (can be repeated).", CMDLINE_OPT_NORMAL|CMDLINE_OPT_PARAM);
 }
 
 int do_init(int argc, char *argv[])
@@ -6968,7 +6990,8 @@ int do_init(int argc, char *argv[])
 	HPM->event(HPET_PRE_INIT);
 
 	cmdline->exec(argc, argv, CMDLINE_OPT_NORMAL);
-	minimal = map->minimal;/* temp (perhaps make minimal a mask with options of what to load? e.g. plugin 1 does minimal |= mob_db; */
+	/* temp (perhaps make minimal a mask with options of what to load? e.g. plugin 1 does minimal |= mob_db; */
+	minimal = map->minimal;
 	if (!minimal) {
 		map->config_read(map->MAP_CONF_NAME, false);
 
@@ -7209,8 +7232,10 @@ void map_defaults(void)
 	map->save_settings = 0xFFFF;
 	map->agit_flag = 0;
 	map->agit2_flag = 0;
-	map->night_flag = 0; // 0=day, 1=night [Yor]
-	map->enable_spy = 0; //To enable/disable @spy commands, which consume too much cpu time when sending packets. [Skotlex]
+	// 0=day, 1=night [Yor]
+	map->night_flag = 0;
+	//To enable/disable @spy commands, which consume too much cpu time when sending packets. [Skotlex]
+	map->enable_spy = 0;
 
 	map->INTER_CONF_NAME = NULL;
 	map->LOG_CONF_NAME = NULL;

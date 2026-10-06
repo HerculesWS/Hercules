@@ -252,20 +252,21 @@ struct mob_data {
 	struct {
 		int id;
 		unsigned int dmg;
-		unsigned int flag : 2; //0: Normal. 1: Homunc exp. 2: Pet exp
+		unsigned int flag : 2; ///< 0: Normal. 1: Homunc exp. 2: Pet exp
 	} dmglog[DAMAGELOG_SIZE];
 	int dmg_taken_rate;
-	struct spawn_data *spawn; //Spawn data.
-	int spawn_timer; //Required for Convex Mirror
+	struct spawn_data *spawn; ///< Spawn data.
+	int spawn_timer; ///< Required for Convex Mirror
 	struct item *lootitem;
 	int class_;
-	unsigned int tdmg; //Stores total damage given to the mob, for exp calculations. [Skotlex]
+	unsigned int tdmg; ///< Stores total damage given to the mob, for exp calculations. [Skotlex]
 	int level;
 	int target_id,attacked_id;
-	int areanpc_id; //Required in OnTouchNPC (to avoid multiple area touchs)
-	unsigned int bg_id; // BattleGround System
-	int clan_id; // Clan System
-	int npc_id; // NPC ID if spawned with monster/areamonster/guardian/bg_monster/atcommand("@monster xy") (Used to kill mob on NPC unload.)
+	int areanpc_id; ///< Required in OnTouchNPC (to avoid multiple area touchs)
+	unsigned int bg_id; ///< BattleGround System
+	int clan_id; ///< Clan System
+	/// NPC ID if spawned with monster/areamonster/guardian/bg_monster/atcommand("@monster xy") (Used to kill mob on NPC unload.)
+	int npc_id;
 
 	int64 next_walktime, last_thinktime, last_linktime, last_pcneartime, dmgtick;
 	short move_fail_count;
