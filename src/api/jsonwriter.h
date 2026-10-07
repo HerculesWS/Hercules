@@ -67,6 +67,6 @@ struct jsonwriter_interface {
 void jsonwriter_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct jsonwriter_interface *jsonwriter;
+HERCAPI_API_EXTERN struct jsonwriter_interface *jsonwriter;
 
 #endif /* API_JSONWRITER_H */

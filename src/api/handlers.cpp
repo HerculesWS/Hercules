@@ -81,7 +81,7 @@
 #define GET_INT_HEADER(name, var) aclif->get_valid_header_data_int(sd, CONST_POST_##name, POST_##name, (var))
 
 static struct handlers_interface handlers_s;
-struct handlers_interface *handlers;
+HERCAPI_API_EXPORT struct handlers_interface *handlers;
 
 // #define DEBUG_LOG
 // #define REQUEST_LOG

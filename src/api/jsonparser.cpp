@@ -29,7 +29,7 @@
 #include <stdlib.h>
 
 static struct jsonparser_interface jsonparser_s;
-struct jsonparser_interface *jsonparser;
+HERCAPI_API_EXPORT struct jsonparser_interface *jsonparser;
 
 static int do_init_jsonparser(bool minimal)
 {

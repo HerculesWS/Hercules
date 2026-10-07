@@ -60,7 +60,7 @@
 
 static struct api_interface api_s;
 
-struct api_interface *api;
+HERCAPI_API_EXPORT struct api_interface *api;
 
 int hserver_api::do_final(void) noexcept
 {
