@@ -30,7 +30,7 @@
 // struct HCache_interface *HCache;
   #endif
   #ifdef LOGIN_ACCOUNT_H /* account */
-struct account_interface *account;
+// struct account_interface *account;
   #endif
   #ifdef MAP_ACHIEVEMENT_H /* achievement */
 struct achievement_interface *achievement;
@@ -195,7 +195,7 @@ struct inter_userconfig_interface *inter_userconfig;
 struct intif_interface *intif;
   #endif
   #ifdef LOGIN_IPBAN_H /* ipban */
-struct ipban_interface *ipban;
+// struct ipban_interface *ipban;
   #endif
   #ifdef MAP_IRC_BOT_H /* ircbot */
 struct ircbot_interface *ircbot;
@@ -210,13 +210,13 @@ struct itemdb_interface *itemdb;
 // struct jsonwriter_interface *jsonwriter;
   #endif
   #ifdef LOGIN_LAPIIF_H /* lapiif */
-struct lapiif_interface *lapiif;
+// struct lapiif_interface *lapiif;
   #endif
   #ifdef LOGIN_LOGIN_H /* lchrif */
-struct lchrif_interface *lchrif;
+// struct lchrif_interface *lchrif;
   #endif
   #ifdef LOGIN_LCLIF_H /* lclif */
-struct lclif_interface *lclif;
+// struct lclif_interface *lclif;
   #endif
   #ifdef COMMON_CONF_H /* libconfig */
 // struct libconfig_interface *libconfig;
@@ -225,13 +225,13 @@ struct lclif_interface *lclif;
 struct log_interface *logs;
   #endif
   #ifdef LOGIN_LOGIN_H /* login */
-struct login_interface *login;
+// struct login_interface *login;
   #endif
   #ifdef CHAR_LOGINIF_H /* loginif */
 struct loginif_interface *loginif;
   #endif
   #ifdef LOGIN_LOGINLOG_H /* loginlog */
-struct loginlog_interface *loginlog;
+// struct loginlog_interface *loginlog;
   #endif
   #ifdef MAP_MACRO_H /* macro */
 struct macro_interface *macro;

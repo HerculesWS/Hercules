@@ -32,7 +32,7 @@
 #include <stdlib.h> // exit
 
 static struct loginlog_interface loginlog_s;
-struct loginlog_interface *loginlog;
+HERCAPI_LOGIN_EXPORT struct loginlog_interface *loginlog;
 static struct s_loginlog_dbs loginlogdbs;
 
 // Returns the number of failed login attempts by the ip in the last minutes.

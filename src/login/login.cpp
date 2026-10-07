@@ -56,10 +56,10 @@
  */
 
 static struct login_interface login_s;
-struct login_interface *login;
+HERCAPI_LOGIN_EXPORT struct login_interface *login;
 static struct s_login_dbs logindbs;
 static struct lchrif_interface lchrif_s;
-struct lchrif_interface *lchrif;
+HERCAPI_LOGIN_EXPORT struct lchrif_interface *lchrif;
 static struct Login_Config login_config_;
 
 static struct Account_engine account_engine;

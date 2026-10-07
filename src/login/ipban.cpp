@@ -33,7 +33,7 @@
 #include <stdlib.h>
 
 static struct ipban_interface ipban_s;
-struct ipban_interface *ipban;
+HERCAPI_LOGIN_EXPORT struct ipban_interface *ipban;
 static struct s_ipban_dbs ipbandbs;
 
 // initialize

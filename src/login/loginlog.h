@@ -56,6 +56,6 @@ struct loginlog_interface {
 void loginlog_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct loginlog_interface *loginlog;
+HERCAPI_LOGIN_EXTERN struct loginlog_interface *loginlog;
 
 #endif /* LOGIN_LOGINLOG_H */
