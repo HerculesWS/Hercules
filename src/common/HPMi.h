@@ -288,9 +288,9 @@ struct HPMi_interface {
 	struct malloc_interface *memmgr;
 };
 #if defined(HERCULES_PLUGIN)
-HPExport struct HPMi_interface HPMi_s;
-HPExport struct HPMi_interface *HPMi;
-HPExport struct hplugin_info pinfo;
+HPM_EXPORT struct HPMi_interface HPMi_s;
+HPM_EXPORT struct HPMi_interface *HPMi;
+HPM_EXPORT struct hplugin_info pinfo;
 
 static_assert(
   1
