@@ -209,9 +209,6 @@ HPExport void server_post_final(void)
 
 HPExport const char *Hooked(bool *fr)
 {
-	const char *ret = HPM_shared_symbols(HPM_SERVER_TYPE);
-	if (ret)
-		return ret;
 	HPMforce_return = fr;
 	HPM_HP_load();
 	return NULL;

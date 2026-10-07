@@ -84,17 +84,11 @@ void HPM_login_plugin_load_sub(struct hplugin *plugin)
 	plugin->hpi->sql_handle = account->db_sql_up(login->accounts);
 }
 
-HERCAPI_LOGIN_EXPORT const char *HPM_shared_symbols(int server_type)
-{
-	return nullptr;
-}
-
 void HPM_login_do_init(void)
 {
 	HPM->load_sub                = HPM_login_plugin_load_sub;
 	HPM->data_store_validate_sub = HPM_login_data_store_validate;
 	HPM->datacheck_init(HPMDataCheck, HPMDataCheckLen, HPMDataCheckVer);
-	HPM_shared_symbols(SERVER_TYPE_LOGIN);
 }
 
 void HPM_login_do_final(void)

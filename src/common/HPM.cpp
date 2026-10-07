@@ -516,7 +516,6 @@ static struct hplugin *hplugin_load(const char *filename)
 	int *HPMDataCheckVer;
 	unsigned int *HPMDataCheckLen;
 	const struct s_HPMDataCheck *const *HPMDataCheck;
-	const char *(*HPMLoadEvent)(int server_type);
 
 	if (HPM->exists(filename)) {
 		ShowWarning("HPM:plugin_load: attempting to load duplicate '" CL_WHITE "%s" CL_RESET "', skipping...\n",
@@ -590,28 +589,6 @@ static struct hplugin *hplugin_load(const char *filename)
 	if (!anyEvent) {
 		ShowWarning("HPM:plugin_load: no events found for '" CL_WHITE "%s" CL_RESET "'!\n", filename);
 		exit(EXIT_FAILURE);
-	}
-
-	if (
-	  info->type != SERVER_TYPE_API
-	  && info->type != SERVER_TYPE_LOGIN
-	  && info->type != SERVER_TYPE_CHAR
-	  && info->type != SERVER_TYPE_MAP
-	) {
-		if (!(HPMLoadEvent = plugin_import(plugin->dll, "HPM_shared_symbols", const char *(*)(int)))) {
-			ShowFatalError("HPM:plugin_load: failed to retrieve 'HPM_shared_symbols' for '" CL_WHITE "%s" CL_RESET
-			               "', most likely not including HPMDataCheck.h!\n",
-			               filename);
-			exit(EXIT_FAILURE);
-		}
-		{
-			const char *failure = HPMLoadEvent(SERVER_TYPE);
-			if (failure) {
-				ShowFatalError("HPM:plugin_load: failed to import symbol '%s' into '" CL_WHITE "%s" CL_RESET "'.\n",
-				               failure, filename);
-				exit(EXIT_FAILURE);
-			}
-		}
 	}
 
 	if (!(HPMDataCheckLen = plugin_import(plugin->dll, "HPMDataCheckLen", unsigned int *))) {

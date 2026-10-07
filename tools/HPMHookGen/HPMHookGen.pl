@@ -531,47 +531,6 @@ foreach my $servertype (keys %keys) {
 	my $fname;
 
 	if ($servertype eq 'all') {
-		$fname = "../../src/common/HPMSymbols.inc.h";
-		open(FH, ">", $fname)
-			or die "cannot open > $fname: $!";
-
-		print FH <<"EOF";
-$fileheader
-#if !defined(HERCULES_CORE)
-EOF
-
-		foreach my $key (@$keysref) {
-			next if $fileguards{$key}->{private};
-			print FH <<"EOF";
-  #ifdef $fileguards{$key}->{guard} /* $key */
-struct $key2original{$key} *$key;
-  #endif
-EOF
-		}
-
-		print FH <<"EOF";
-#endif // ! HERCULES_CORE
-
-HPExport const char *HPM_shared_symbols(int server_type)
-{
-EOF
-
-		foreach my $key (@$keysref) {
-			next if $fileguards{$key}->{private};
-			print FH <<"EOF";
-#ifdef $fileguards{$key}->{guard} /* $key */
-	if ((server_type & ($fileguards{$key}->{type})) != 0 && !HPM_SYMBOL("$exportsymbols{$key}", $key))
-		return "$exportsymbols{$key}";
-#endif
-EOF
-		}
-
-		print FH <<"EOF";
-	return NULL;
-}
-EOF
-		close FH;
-
 		$fname = "../../src/plugins/HPMHooking/HPMHooking.Defs.inc";
 		open(FH, ">", $fname)
 			or die "cannot open > $fname: $!";

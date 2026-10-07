@@ -101,9 +101,6 @@ print FH <<"EOF";
 #if !defined(HPMHOOKGEN)
 #include "common/HPMSymbols.inc.h"
 #endif // ! HPMHOOKGEN
-#ifdef HPM_SYMBOL
-#undef HPM_SYMBOL
-#endif // HPM_SYMBOL
 
 namespace {
 const struct s_HPMDataCheck HPMDataCheck_s[] = {
