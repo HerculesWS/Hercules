@@ -432,7 +432,7 @@ void sample_user_api_packet(int fd)
 #endif
 
 /* run when server starts */
-HPExport void plugin_init(void)
+HPM_EXPORT void plugin_init(void)
 {
 	ShowInfo("Server type is ");
 
@@ -474,12 +474,12 @@ HPExport void plugin_init(void)
 }
 
 /* triggered when server starts loading, before any server-specific data is set */
-HPExport void server_preinit(void)
+HPM_EXPORT void server_preinit(void)
 {
 }
 
 /* run when server is ready (online) */
-HPExport void server_online(void)
+HPM_EXPORT void server_online(void)
 {
 #ifdef HERCULES_PLUGIN_API
 	// Register url for GET request
@@ -503,7 +503,7 @@ HPExport void server_online(void)
 }
 
 /* run when server is shutting down */
-HPExport void plugin_final(void)
+HPM_EXPORT void plugin_final(void)
 {
 	ShowInfo("%s says ~Bye world\n", pinfo.name);
 }

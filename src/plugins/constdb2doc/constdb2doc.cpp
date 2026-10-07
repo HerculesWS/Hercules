@@ -225,17 +225,17 @@ CMDLINEARG(constdb2doc)
 	return true;
 }
 
-HPExport void server_preinit(void)
+HPM_EXPORT void server_preinit(void)
 {
 	addArg("--constdb2doc", false, constdb2doc, NULL);
 }
 
-HPExport void plugin_init(void)
+HPM_EXPORT void plugin_init(void)
 {
 	addCPCommand("server:tools:constdb2doc", constdb2doc);
 }
 
-HPExport void server_online(void)
+HPM_EXPORT void server_online(void)
 {
 	if (torun)
 		do_constdb2doc();

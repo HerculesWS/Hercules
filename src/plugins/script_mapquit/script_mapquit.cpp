@@ -38,11 +38,11 @@ BUILDIN(mapquit)
 	return true;
 }
 
-HPExport void server_preinit(void)
+HPM_EXPORT void server_preinit(void)
 {
 }
 
-HPExport void plugin_init(void)
+HPM_EXPORT void plugin_init(void)
 {
 	addScriptCommand("mapquit", "?", mapquit);
 }

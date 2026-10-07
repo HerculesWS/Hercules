@@ -369,7 +369,7 @@ int npc_parsesrcfile_posthook(int retVal, const char *filepath, bool runOnInit)
 	return retVal;
 }
 
-HPExport void server_preinit(void)
+HPM_EXPORT void server_preinit(void)
 {
 	addArg(
 	  "--generate-translations", false, generatetranslations,
@@ -387,11 +387,11 @@ HPExport void server_preinit(void)
 	lang_export_stringcount_current = 0;
 }
 
-HPExport void plugin_init(void)
+HPM_EXPORT void plugin_init(void)
 {
 }
 
-HPExport void server_online(void)
+HPM_EXPORT void server_online(void)
 {
 	if (generating_translations) {
 		ShowInfo("Translations template exported to '%s' with %d strings.\n", DIRECTORYNAME,
@@ -400,6 +400,6 @@ HPExport void server_online(void)
 	core->runflag = CORE_ST_STOP;
 }
 
-HPExport void plugin_final(void)
+HPM_EXPORT void plugin_final(void)
 {
 }

@@ -1269,21 +1269,21 @@ CMDLINEARG(mobdb2sql)
 	return true;
 }
 
-HPExport void server_preinit(void)
+HPM_EXPORT void server_preinit(void)
 {
 	addArg("--db2sql", false, db2sql, NULL);
 	addArg("--itemdb2sql", false, itemdb2sql, NULL);
 	addArg("--mobdb2sql", false, mobdb2sql, NULL);
 }
 
-HPExport void plugin_init(void)
+HPM_EXPORT void plugin_init(void)
 {
 	addCPCommand("server:tools:db2sql", db2sql);
 	addCPCommand("server:tools:itemdb2sql", itemdb2sql);
 	addCPCommand("server:tools:mobdb2sql", mobdb2sql);
 }
 
-HPExport void server_online(void)
+HPM_EXPORT void server_online(void)
 {
 	sql_handle = SQL->Malloc();
 	if (itemdb2sql_torun)
@@ -1292,7 +1292,7 @@ HPExport void server_online(void)
 		do_mobdb2sql();
 }
 
-HPExport void plugin_final(void)
+HPM_EXPORT void plugin_final(void)
 {
 	SQL->Free(sql_handle);
 	sql_handle = NULL;
