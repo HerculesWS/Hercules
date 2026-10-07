@@ -287,12 +287,9 @@ struct HPMi_interface {
 	struct HPMHooking_interface *hooking;
 	struct malloc_interface *memmgr;
 };
-#ifdef HERCULES_CORE
-  #define HPM_SYMBOL(n, s) (HPM->share((s), (n)), true)
-#elif defined(HERCULES_PLUGIN)
+#if defined(HERCULES_PLUGIN)
 HPExport struct HPMi_interface HPMi_s;
 HPExport struct HPMi_interface *HPMi;
-HPExport void *(*import_symbol)(const char *name, unsigned int pID);
 HPExport struct hplugin_info pinfo;
 
 static_assert(
@@ -327,8 +324,7 @@ static_assert(
 
   #define HPM_PLUGIN_DEFS_BASE \
 	  struct HPMi_interface HPMi_s; \
-	  struct HPMi_interface *HPMi; \
-	  void *(*import_symbol)(const char *name, unsigned int pID);
+	  struct HPMi_interface *HPMi;
 
   #define HPM_PLUGIN_DEFS_ALL HPM_PLUGIN_DEFS_BASE
 
@@ -339,8 +335,6 @@ static_assert(
 		  .version     = (v), \
 		  .req_version = HPM_VERSION, \
 	  };
-
-  #define HPM_SYMBOL(n, s) ((s) = static_cast<decltype(s)>(import_symbol((n), HPMi->pid)))
 
 #endif
 

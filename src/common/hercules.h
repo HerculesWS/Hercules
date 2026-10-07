@@ -34,9 +34,6 @@
   #endif // WIN32
 #endif   // HERCULES_CORE
 
-/// For interfaces definitions used by both core and plugins (HACK)
-#define HPShared extern
-
 /// Helper (not used directly)
 #ifdef WIN32
   #define HERCAPI_EXPORT_ __declspec(dllexport)

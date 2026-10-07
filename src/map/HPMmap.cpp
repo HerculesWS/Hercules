@@ -201,17 +201,11 @@ void HPM_map_add_group_permission(unsigned int pluginID, const char *name, unsig
 	pcg->HPMpermissions[index].mask = mask;
 }
 
-HERCAPI_MAP_EXPORT const char *HPM_shared_symbols(int server_type)
-{
-	return nullptr;
-}
-
 void HPM_map_do_init(void)
 {
 	HPM->load_sub                = HPM_map_plugin_load_sub;
 	HPM->data_store_validate_sub = HPM_map_data_store_validate;
 	HPM->datacheck_init(HPMDataCheck, HPMDataCheckLen, HPMDataCheckVer);
-	HPM_shared_symbols(SERVER_TYPE_MAP);
 }
 
 void HPM_map_do_final(void)
