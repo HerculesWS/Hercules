@@ -482,7 +482,7 @@ CMDLINEARG(fixmd5)
 	return fix_md5_truncation();
 }
 
-HPExport void server_preinit(void)
+HPM_EXPORT void server_preinit(void)
 {
 	addArg("--convert-old-mapcache", false, convertmapcache,
 	       "Converts an old db/" DBPATH "map_cache.dat file to the new format.");
@@ -497,7 +497,7 @@ HPExport void server_preinit(void)
 	VECTOR_INIT(maplist);
 }
 
-HPExport void plugin_final(void)
+HPM_EXPORT void plugin_final(void)
 {
 	while (VECTOR_LENGTH(maplist) > 0) {
 		char *name = VECTOR_POP(maplist);

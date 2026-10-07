@@ -202,19 +202,19 @@ bool *HPMforce_return;
 void HPM_HP_final(void);
 void HPM_HP_load(void);
 
-HPExport void server_post_final(void)
+HPM_EXPORT void server_post_final(void)
 {
 	HPM_HP_final();
 }
 
-HPExport const char *Hooked(bool *fr)
+HPM_EXPORT const char *Hooked(bool *fr)
 {
 	HPMforce_return = fr;
 	HPM_HP_load();
 	return NULL;
 }
 
-HPExport bool HPM_Plugin_AddHook(enum HPluginHookType type, const char *target, void *hook, unsigned int pID)
+HPM_EXPORT bool HPM_Plugin_AddHook(enum HPluginHookType type, const char *target, void *hook, unsigned int pID)
 {
 	struct HookingPointData *hpd;
 

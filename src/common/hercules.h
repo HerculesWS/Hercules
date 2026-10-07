@@ -23,17 +23,6 @@
 #include "config/core.h"
 #include "common/cbasetypes.h"
 
-/// For C-style symbols exported by plugins, to be loaded by the core
-#ifdef HERCULES_CORE
-  #define HPExport extern "C"
-#else // HERCULES_CORE
-  #ifdef WIN32
-	#define HPExport extern "C" __declspec(dllexport)
-  #else // WIN32
-	#define HPExport extern "C" __attribute__((visibility("default")))
-  #endif // WIN32
-#endif   // HERCULES_CORE
-
 /// Helper (not used directly)
 #ifdef WIN32
   #define HERCAPI_EXPORT_ __declspec(dllexport)
@@ -86,6 +75,13 @@
 #else
   #define HERCAPI_MAP_EXPORT HERCAPI_IMPORT_
   #define HERCAPI_MAP_EXTERN extern HERCAPI_IMPORT_
+#endif
+
+/// For C-style symbols exported by plugins, to be loaded by the core
+#ifdef HERCULES_PLUGIN
+  #define HPM_EXPORT extern "C" HERCAPI_EXPORT_
+#else
+  #define HPM_EXPORT extern "C"
 #endif
 
 #ifndef HERCULES_CORE

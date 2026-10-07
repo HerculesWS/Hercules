@@ -42,7 +42,7 @@ struct HPMHooking_core_interface {
 };
 #else // ! HERCULES_CORE
 
-HPExport struct HPMHooking_interface HPMHooking_s;
+HPM_EXPORT struct HPMHooking_interface HPMHooking_s;
   #undef HPM_PLUGIN_DEFS_ALL
   #define HPM_PLUGIN_DEFS_ALL \
 	  HPM_PLUGIN_DEFS_BASE \
