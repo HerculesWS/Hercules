@@ -48,6 +48,6 @@ struct imageparser_interface {
 void imageparser_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct imageparser_interface *imageparser;
+HERCAPI_API_EXTERN struct imageparser_interface *imageparser;
 
 #endif /* API_IMAGEPARSER_H */

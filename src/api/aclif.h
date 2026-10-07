@@ -235,6 +235,6 @@ void aclif_defaults(void);
 
 #endif // HERCULES_CORE
 
-HPShared struct aclif_interface *aclif;
+HERCAPI_API_EXTERN struct aclif_interface *aclif;
 
 #endif /* API_ACLIF_H */

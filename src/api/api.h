@@ -98,6 +98,6 @@ class HERCAPI_API_EXPORT hserver_api final : public hserver_i
 };
 #endif // HERCULES_CORE
 
-HPShared struct api_interface *api;
+HERCAPI_API_EXTERN struct api_interface *api;
 
 #endif /* API_API_H */

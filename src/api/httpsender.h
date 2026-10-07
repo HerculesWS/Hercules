@@ -62,6 +62,6 @@ struct httpsender_interface {
 void httpsender_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct httpsender_interface *httpsender;
+HERCAPI_API_EXTERN struct httpsender_interface *httpsender;
 
 #endif /* API_HTTPSENDER_H */

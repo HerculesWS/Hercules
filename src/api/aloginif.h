@@ -95,6 +95,6 @@ struct aloginif_interface {
 void aloginif_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct aloginif_interface *aloginif;
+HERCAPI_API_EXTERN struct aloginif_interface *aloginif;
 
 #endif /* API_ALOGINIF_H */

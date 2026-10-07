@@ -45,7 +45,7 @@
 #include <sys/types.h>
 
 static struct aloginif_interface aloginif_s;
-struct aloginif_interface *aloginif;
+HERCAPI_API_EXPORT aloginif_interface *aloginif;
 
 // #define DEBUG_LOG
 

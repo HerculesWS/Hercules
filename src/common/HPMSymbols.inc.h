@@ -36,13 +36,13 @@ struct account_interface *account;
 struct achievement_interface *achievement;
   #endif
   #ifdef API_ACLIF_H /* aclif */
-struct aclif_interface *aclif;
+// struct aclif_interface *aclif;
   #endif
   #ifdef API_ALOGINIF_H /* aloginif */
-struct aloginif_interface *aloginif;
+// struct aloginif_interface *aloginif;
   #endif
   #ifdef API_API_H /* api */
-struct api_interface *api;
+// struct api_interface *api;
   #endif
   #ifdef MAP_ATCOMMAND_H /* atcommand */
 struct atcommand_interface *atcommand;
@@ -126,19 +126,19 @@ struct guild_interface *guild;
 struct guild_storage_interface *gstorage;
   #endif
   #ifdef API_HANDLERS_H /* handlers */
-struct handlers_interface *handlers;
+// struct handlers_interface *handlers;
   #endif
   #ifdef MAP_HOMUNCULUS_H /* homun */
 struct homunculus_interface *homun;
   #endif
   #ifdef API_HTTPPARSER_H /* httpparser */
-struct httpparser_interface *httpparser;
+// struct httpparser_interface *httpparser;
   #endif
   #ifdef API_HTTPSENDER_H /* httpsender */
-struct httpsender_interface *httpsender;
+// struct httpsender_interface *httpsender;
   #endif
   #ifdef API_IMAGEPARSER_H /* imageparser */
-struct imageparser_interface *imageparser;
+// struct imageparser_interface *imageparser;
   #endif
   #ifdef MAP_INSTANCE_H /* instance */
 struct instance_interface *instance;
@@ -204,10 +204,10 @@ struct ircbot_interface *ircbot;
 struct itemdb_interface *itemdb;
   #endif
   #ifdef API_JSONPARSER_H /* jsonparser */
-struct jsonparser_interface *jsonparser;
+// struct jsonparser_interface *jsonparser;
   #endif
   #ifdef API_JSONWRITER_H /* jsonwriter */
-struct jsonwriter_interface *jsonwriter;
+// struct jsonwriter_interface *jsonwriter;
   #endif
   #ifdef LOGIN_LAPIIF_H /* lapiif */
 struct lapiif_interface *lapiif;

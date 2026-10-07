@@ -29,7 +29,7 @@
 #include <stdlib.h>
 
 static struct jsonwriter_interface jsonwriter_s;
-struct jsonwriter_interface *jsonwriter;
+HERCAPI_API_EXPORT struct jsonwriter_interface *jsonwriter;
 
 static int do_init_jsonwriter(bool minimal)
 {

@@ -82,6 +82,6 @@ struct httpparser_interface {
 void httpparser_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct httpparser_interface *httpparser;
+HERCAPI_API_EXTERN struct httpparser_interface *httpparser;
 
 #endif /* API_HTTPPARSER_H */

@@ -59,7 +59,7 @@
 	} while (false)
 
 static struct httpsender_interface httpsender_s;
-struct httpsender_interface *httpsender;
+HERCAPI_API_EXPORT struct httpsender_interface *httpsender;
 static char tmp_buffer[MAX_RESPONSE_SIZE];
 
 // #define DEBUG_LOG
