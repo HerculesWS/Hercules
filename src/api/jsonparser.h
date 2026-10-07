@@ -61,6 +61,6 @@ struct jsonparser_interface {
 void jsonparser_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct jsonparser_interface *jsonparser;
+HERCAPI_API_EXTERN struct jsonparser_interface *jsonparser;
 
 #endif /* API_JSONPARSER_H */

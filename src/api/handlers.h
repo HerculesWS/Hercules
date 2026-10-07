@@ -55,6 +55,6 @@ struct handlers_interface {
 void handlers_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct handlers_interface *handlers;
+HERCAPI_API_EXTERN struct handlers_interface *handlers;
 
 #endif /* API_HANDLERS_H */

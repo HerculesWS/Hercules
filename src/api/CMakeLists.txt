@@ -27,7 +27,6 @@ set(API_SRCS
   imageparser.cpp
   jsonparser.cpp
   jsonwriter.cpp
-  main.cpp
   postheader.cpp
 )
 
@@ -68,32 +67,45 @@ source_group("API private header files"
   ${API_PRVT}
 )
 
-add_executable(api-server
+add_library(herc-api SHARED
   ${API_SRCS}
   ${API_HDRS}
   ${API_PRVT}
 )
 
-target_compile_definitions(api-server
+target_compile_definitions(herc-api
   PRIVATE
     HERCULES_CORE
     HERCULES_CORE_API
 )
 
-target_link_libraries(api-server PUBLIC herc-common)
+target_link_libraries(herc-api PUBLIC herc-common)
 if(WITH_HTTP_PARSER STREQUAL "http-parser")
-  target_link_libraries(api-server PRIVATE hercules-http_parser)
+  target_link_libraries(herc-api PRIVATE hercules-http_parser)
 else()
-  target_link_libraries(api-server PRIVATE hercules-llhttp)
+  target_link_libraries(herc-api PRIVATE hercules-llhttp)
 endif()
-target_link_libraries(api-server PRIVATE hercules-multipart-parser)
-target_link_libraries(api-server PRIVATE cjson::cjson)
-target_link_libraries(api-server PRIVATE GIF::GIF)
+target_link_libraries(herc-api PRIVATE hercules-multipart-parser)
+target_link_libraries(herc-api PRIVATE cjson::cjson)
+target_link_libraries(herc-api PRIVATE GIF::GIF)
+
+add_executable(api-server
+  main.cpp
+)
+
+target_compile_definitions(api-server
+  PRIVATE
+    HERCULES_CORE
+)
+
+target_link_libraries(api-server PUBLIC herc-api)
 
 add_dependencies(sql api-server)
 
 install(
-  TARGETS api-server
+  TARGETS
+    api-server
+    herc-api
   RUNTIME
     DESTINATION
     .

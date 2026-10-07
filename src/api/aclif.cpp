@@ -53,7 +53,7 @@
 #include <time.h>
 
 static struct aclif_interface aclif_s;
-struct aclif_interface *aclif;
+HERCAPI_API_EXPORT struct aclif_interface *aclif;
 
 // #define DEBUG_ONLINEDB_LOG
 // #define DEBUG_LOG

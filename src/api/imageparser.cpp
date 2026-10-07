@@ -33,7 +33,7 @@
 #define DEBUG_ERRORS
 
 static struct imageparser_interface imageparser_s;
-struct imageparser_interface *imageparser;
+HERCAPI_API_EXPORT struct imageparser_interface *imageparser;
 
 static int do_init_imageparser(bool minimal)
 {

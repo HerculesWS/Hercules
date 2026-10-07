@@ -49,7 +49,7 @@
 #include <time.h>
 
 static struct httpparser_interface httpparser_s;
-struct httpparser_interface *httpparser;
+HERCAPI_API_EXPORT struct httpparser_interface *httpparser;
 // #define DEBUG_LOG
 
 // parser handlers

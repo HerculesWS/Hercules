@@ -543,6 +543,7 @@ EOF
 		foreach my $key (@$keysref) {
 			next if $fileguards{$key}->{private};
 			next if $fileguards{$key}->{guard} =~ /^COMMON_/;
+			next if $fileguards{$key}->{guard} =~ /^API_/;
 			print FH <<"EOF";
   #ifdef $fileguards{$key}->{guard} /* $key */
 struct $key2original{$key} *$key;
@@ -559,6 +560,7 @@ EOF
 
 		foreach my $key (@$keysref) {
 			next if $fileguards{$key}->{private};
+			next if $fileguards{$key}->{guard} =~ /^API_/;
 			print FH <<"EOF";
 #ifdef $fileguards{$key}->{guard} /* $key */
 	if ((server_type & ($fileguards{$key}->{type})) != 0 && !HPM_SYMBOL("$exportsymbols{$key}", $key))
