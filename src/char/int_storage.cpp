@@ -36,7 +36,7 @@
 #include <stdlib.h>
 
 static struct inter_storage_interface inter_storage_s;
-struct inter_storage_interface *inter_storage;
+HERCAPI_CHAR_EXPORT struct inter_storage_interface *inter_storage;
 
 /// Save storage data to sql
 static int inter_storage_tosql(int account_id, int storage_id, const struct storage_data *p)

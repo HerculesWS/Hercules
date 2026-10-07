@@ -54,7 +54,7 @@
 #include <stdlib.h>
 
 static struct mapif_interface mapif_s;
-struct mapif_interface *mapif;
+HERCAPI_CHAR_EXPORT struct mapif_interface *mapif;
 
 static void mapif_ban(int id, unsigned int flag, int status)
 {

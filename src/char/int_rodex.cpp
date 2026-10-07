@@ -36,7 +36,7 @@
 #include <stdlib.h>
 
 static struct inter_rodex_interface inter_rodex_s;
-struct inter_rodex_interface *inter_rodex;
+HERCAPI_CHAR_EXPORT struct inter_rodex_interface *inter_rodex;
 
 // Loads new mails of this char_id/account_id
 static int inter_rodex_fromsql(int char_id, int account_id, int8 opentype, int64 mail_id, struct rodex_maillist *mails)

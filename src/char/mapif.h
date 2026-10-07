@@ -204,6 +204,6 @@ struct mapif_interface {
 void mapif_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct mapif_interface *mapif;
+HERCAPI_CHAR_EXTERN struct mapif_interface *mapif;
 
 #endif /* CHAR_MAPIF_H */

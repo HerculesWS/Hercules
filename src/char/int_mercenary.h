@@ -47,6 +47,6 @@ struct inter_mercenary_interface {
 void inter_mercenary_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct inter_mercenary_interface *inter_mercenary;
+HERCAPI_CHAR_EXTERN struct inter_mercenary_interface *inter_mercenary;
 
 #endif /* CHAR_INT_MERCENARY_H */

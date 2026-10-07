@@ -51,6 +51,6 @@ struct inter_mail_interface {
 void inter_mail_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct inter_mail_interface *inter_mail;
+HERCAPI_CHAR_EXTERN struct inter_mail_interface *inter_mail;
 
 #endif /* CHAR_INT_MAIL_H */

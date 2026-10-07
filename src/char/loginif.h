@@ -49,6 +49,6 @@ struct loginif_interface {
 void loginif_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct loginif_interface *loginif;
+HERCAPI_CHAR_EXTERN struct loginif_interface *loginif;
 
 #endif /* CHAR_LOGINIF_H */

@@ -92,6 +92,6 @@ struct inter_guild_interface {
 void inter_guild_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct inter_guild_interface *inter_guild;
+HERCAPI_CHAR_EXTERN struct inter_guild_interface *inter_guild;
 
 #endif /* CHAR_INT_GUILD_H */

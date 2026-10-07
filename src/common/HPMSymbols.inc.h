@@ -60,13 +60,13 @@ struct battleground_interface *bg;
 struct buyingstore_interface *buyingstore;
   #endif
   #ifdef CHAR_CAPIIF_H /* capiif */
-struct capiif_interface *capiif;
+// struct capiif_interface *capiif;
   #endif
   #ifdef MAP_CHANNEL_H /* channel */
 struct channel_interface *channel;
   #endif
   #ifdef CHAR_CHAR_H /* chr */
-struct char_interface *chr;
+// struct char_interface *chr;
   #endif
   #ifdef MAP_CHAT_H /* chat */
 struct chat_interface *chat;
@@ -108,7 +108,7 @@ struct enchantui_interface *enchantui;
 // struct extraconf_interface *extraconf;
   #endif
   #ifdef CHAR_GEOIP_H /* geoip */
-struct geoip_interface *geoip;
+// struct geoip_interface *geoip;
   #endif
   #ifdef MAP_GOLDPC_H /* goldpc */
 struct goldpc_interface *goldpc;
@@ -144,52 +144,52 @@ struct homunculus_interface *homun;
 struct instance_interface *instance;
   #endif
   #ifdef CHAR_INT_ACHIEVEMENT_H /* inter_achievement */
-struct inter_achievement_interface *inter_achievement;
+// struct inter_achievement_interface *inter_achievement;
   #endif
   #ifdef CHAR_INT_ADVENTURER_AGENCY_H /* inter_adventurer_agency */
-struct inter_adventurer_agency_interface *inter_adventurer_agency;
+// struct inter_adventurer_agency_interface *inter_adventurer_agency;
   #endif
   #ifdef CHAR_INT_AUCTION_H /* inter_auction */
-struct inter_auction_interface *inter_auction;
+// struct inter_auction_interface *inter_auction;
   #endif
   #ifdef CHAR_INT_CLAN_H /* inter_clan */
-struct inter_clan_interface *inter_clan;
+// struct inter_clan_interface *inter_clan;
   #endif
   #ifdef CHAR_INT_ELEMENTAL_H /* inter_elemental */
-struct inter_elemental_interface *inter_elemental;
+// struct inter_elemental_interface *inter_elemental;
   #endif
   #ifdef CHAR_INT_GUILD_H /* inter_guild */
-struct inter_guild_interface *inter_guild;
+// struct inter_guild_interface *inter_guild;
   #endif
   #ifdef CHAR_INT_HOMUN_H /* inter_homunculus */
-struct inter_homunculus_interface *inter_homunculus;
+// struct inter_homunculus_interface *inter_homunculus;
   #endif
   #ifdef CHAR_INTER_H /* inter */
-struct inter_interface *inter;
+// struct inter_interface *inter;
   #endif
   #ifdef CHAR_INT_MAIL_H /* inter_mail */
-struct inter_mail_interface *inter_mail;
+// struct inter_mail_interface *inter_mail;
   #endif
   #ifdef CHAR_INT_MERCENARY_H /* inter_mercenary */
-struct inter_mercenary_interface *inter_mercenary;
+// struct inter_mercenary_interface *inter_mercenary;
   #endif
   #ifdef CHAR_INT_PARTY_H /* inter_party */
-struct inter_party_interface *inter_party;
+// struct inter_party_interface *inter_party;
   #endif
   #ifdef CHAR_INT_PET_H /* inter_pet */
-struct inter_pet_interface *inter_pet;
+// struct inter_pet_interface *inter_pet;
   #endif
   #ifdef CHAR_INT_QUEST_H /* inter_quest */
-struct inter_quest_interface *inter_quest;
+// struct inter_quest_interface *inter_quest;
   #endif
   #ifdef CHAR_INT_RODEX_H /* inter_rodex */
-struct inter_rodex_interface *inter_rodex;
+// struct inter_rodex_interface *inter_rodex;
   #endif
   #ifdef CHAR_INT_STORAGE_H /* inter_storage */
-struct inter_storage_interface *inter_storage;
+// struct inter_storage_interface *inter_storage;
   #endif
   #ifdef CHAR_INT_USERCONFIG_H /* inter_userconfig */
-struct inter_userconfig_interface *inter_userconfig;
+// struct inter_userconfig_interface *inter_userconfig;
   #endif
   #ifdef MAP_INTIF_H /* intif */
 struct intif_interface *intif;
@@ -228,7 +228,7 @@ struct log_interface *logs;
 // struct login_interface *login;
   #endif
   #ifdef CHAR_LOGINIF_H /* loginif */
-struct loginif_interface *loginif;
+// struct loginif_interface *loginif;
   #endif
   #ifdef LOGIN_LOGINLOG_H /* loginlog */
 // struct loginlog_interface *loginlog;
@@ -243,7 +243,7 @@ struct mail_interface *mail;
 struct map_interface *map;
   #endif
   #ifdef CHAR_MAPIF_H /* mapif */
-struct mapif_interface *mapif;
+// struct mapif_interface *mapif;
   #endif
   #ifdef MAP_MAPIIF_H /* mapiif */
 struct mapiif_interface *mapiif;
@@ -300,7 +300,7 @@ struct pcre_interface *libpcre;
 struct pet_interface *pet;
   #endif
   #ifdef CHAR_PINCODE_H /* pincode */
-struct pincode_interface *pincode;
+// struct pincode_interface *pincode;
   #endif
   #ifdef MAP_QUEST_H /* quest */
 struct quest_interface *quest;

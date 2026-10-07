@@ -119,7 +119,7 @@ char hotkeys_db[256]             = "hotkeys";
 char adventurer_agency_db[256]   = "adventurer_agency";
 
 static struct char_interface char_s;
-struct char_interface *chr;
+HERCAPI_CHAR_EXPORT struct char_interface *chr;
 
 static char wisp_server_name[NAME_LENGTH] = "Server";
 static char login_ip_str[128];

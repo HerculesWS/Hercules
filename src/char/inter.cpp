@@ -55,7 +55,7 @@
 #include <stdlib.h>
 
 static struct inter_interface inter_s;
-struct inter_interface *inter;
+HERCAPI_CHAR_EXPORT struct inter_interface *inter;
 
 static int char_server_port      = 3306;
 static char char_server_ip[32]   = "127.0.0.1";

@@ -47,6 +47,6 @@ struct inter_storage_interface {
 void inter_storage_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct inter_storage_interface *inter_storage;
+HERCAPI_CHAR_EXTERN struct inter_storage_interface *inter_storage;
 
 #endif /* CHAR_INT_STORAGE_H */
