@@ -67,6 +67,6 @@ extern int party_share_level; ///< Share range for parties.
 void inter_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct inter_interface *inter;
+HERCAPI_CHAR_EXTERN struct inter_interface *inter;
 
 #endif /* CHAR_INTER_H */

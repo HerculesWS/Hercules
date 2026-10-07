@@ -36,7 +36,7 @@
 #include <stdlib.h>
 
 static struct pincode_interface pincode_s;
-struct pincode_interface *pincode;
+HERCAPI_CHAR_EXPORT struct pincode_interface *pincode;
 
 static void pincode_handle(int fd, struct char_session_data *sd)
 {

@@ -95,6 +95,6 @@ struct pincode_interface {
 void pincode_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct pincode_interface *pincode;
+HERCAPI_CHAR_EXTERN struct pincode_interface *pincode;
 
 #endif /* CHAR_PINCODE_H */

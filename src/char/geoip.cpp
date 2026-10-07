@@ -32,7 +32,7 @@
 static struct s_geoip geoip_data;
 
 static struct geoip_interface geoip_s;
-struct geoip_interface *geoip;
+HERCAPI_CHAR_EXPORT struct geoip_interface *geoip;
 
 /* [Dekamaster/Nightroad] */
 #define GEOIP_MAX_COUNTRIES           255

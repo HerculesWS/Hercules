@@ -46,6 +46,6 @@ struct inter_pet_interface {
 void inter_pet_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct inter_pet_interface *inter_pet;
+HERCAPI_CHAR_EXTERN struct inter_pet_interface *inter_pet;
 
 #endif /* CHAR_INT_PET_H */

@@ -41,7 +41,7 @@
 #include <stdlib.h>
 
 static struct inter_adventurer_agency_interface inter_adventurer_agency_s;
-struct inter_adventurer_agency_interface *inter_adventurer_agency;
+HERCAPI_CHAR_EXPORT struct inter_adventurer_agency_interface *inter_adventurer_agency;
 
 static int inter_adventurer_agency_parse_frommap(int fd)
 {

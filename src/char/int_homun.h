@@ -43,6 +43,6 @@ struct inter_homunculus_interface {
 void inter_homunculus_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct inter_homunculus_interface *inter_homunculus;
+HERCAPI_CHAR_EXTERN struct inter_homunculus_interface *inter_homunculus;
 
 #endif /* CHAR_INT_HOMUN_H */

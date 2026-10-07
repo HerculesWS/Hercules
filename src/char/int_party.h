@@ -79,6 +79,6 @@ struct inter_party_interface {
 void inter_party_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct inter_party_interface *inter_party;
+HERCAPI_CHAR_EXTERN struct inter_party_interface *inter_party;
 
 #endif /* CHAR_INT_PARTY_H */

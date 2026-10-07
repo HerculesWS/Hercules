@@ -47,6 +47,6 @@ struct inter_auction_interface {
 void inter_auction_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct inter_auction_interface *inter_auction;
+HERCAPI_CHAR_EXTERN struct inter_auction_interface *inter_auction;
 
 #endif /* CHAR_INT_AUCTION_H */

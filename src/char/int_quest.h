@@ -40,6 +40,6 @@ struct inter_quest_interface {
 void inter_quest_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct inter_quest_interface *inter_quest;
+HERCAPI_CHAR_EXTERN struct inter_quest_interface *inter_quest;
 
 #endif /* CHAR_INT_QUEST_H */

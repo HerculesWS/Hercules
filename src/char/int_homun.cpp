@@ -37,7 +37,7 @@
 #include <stdlib.h>
 
 static struct inter_homunculus_interface inter_homunculus_s;
-struct inter_homunculus_interface *inter_homunculus;
+HERCAPI_CHAR_EXPORT struct inter_homunculus_interface *inter_homunculus;
 
 static int inter_homunculus_sql_init(void)
 {

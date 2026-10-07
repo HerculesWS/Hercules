@@ -383,6 +383,6 @@ class HERCAPI_CHAR_EXPORT hserver_char final : public hserver_i
 };
 #endif // HERCULES_CORE
 
-HPShared struct char_interface *chr;
+HERCAPI_CHAR_EXTERN struct char_interface *chr;
 
 #endif /* CHAR_CHAR_H */
