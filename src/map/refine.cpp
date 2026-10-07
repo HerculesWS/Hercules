@@ -42,7 +42,7 @@
 static struct refine_interface refine_s;
 static struct refine_interface_private refine_p;
 static struct refine_interface_dbs refine_dbs;
-struct refine_interface *refine;
+HERCAPI_MAP_EXPORT struct refine_interface *refine;
 
 /// @copydoc refine_interface::refinery_refine_request()
 static void refine_refinery_refine_request(struct map_session_data *sd, int item_index, int material_id,

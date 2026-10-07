@@ -62,7 +62,7 @@
 static struct homunculus_interface homunculus_s;
 static struct homun_dbs homundbs;
 
-struct homunculus_interface *homun;
+HERCAPI_MAP_EXPORT struct homunculus_interface *homun;
 
 // Returns the viewdata for homunculus
 static struct view_data *homunculus_get_viewdata(int class_)

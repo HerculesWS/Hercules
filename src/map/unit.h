@@ -164,6 +164,6 @@ extern const short diry[8];
 void unit_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct unit_interface *unit;
+HERCAPI_MAP_EXTERN struct unit_interface *unit;
 
 #endif /* MAP_UNIT_H */

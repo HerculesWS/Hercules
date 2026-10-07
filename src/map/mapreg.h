@@ -84,6 +84,6 @@ struct mapreg_interface {
 void mapreg_defaults(void);
 #endif /** HERCULES_CORE **/
 
-HPShared struct mapreg_interface *mapreg;
+HERCAPI_MAP_EXTERN struct mapreg_interface *mapreg;
 
 #endif /** MAP_MAPREG_H **/

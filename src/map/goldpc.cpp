@@ -31,7 +31,7 @@
 #include <stdlib.h>
 
 static struct goldpc_interface goldpc_s;
-struct goldpc_interface *goldpc;
+HERCAPI_MAP_EXPORT struct goldpc_interface *goldpc;
 
 void goldpc_read_db_libconfig(void)
 {

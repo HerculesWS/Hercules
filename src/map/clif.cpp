@@ -89,7 +89,7 @@
 #include <time.h>
 
 static struct clif_interface clif_s;
-struct clif_interface *clif;
+HERCAPI_MAP_EXPORT struct clif_interface *clif;
 
 static struct s_packet_db packet_db[MAX_PACKET_DB + 1];
 

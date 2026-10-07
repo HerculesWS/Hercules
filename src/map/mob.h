@@ -664,6 +664,6 @@ struct mob_interface {
 void mob_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct mob_interface *mob;
+HERCAPI_MAP_EXTERN struct mob_interface *mob;
 
 #endif /* MAP_MOB_H */

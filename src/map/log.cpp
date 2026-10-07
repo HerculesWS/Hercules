@@ -38,7 +38,7 @@
 #include <string.h>
 
 static struct log_interface log_s;
-struct log_interface *logs;
+HERCAPI_MAP_EXPORT struct log_interface *logs;
 
 /// obtain log type character for item/zeny logs
 static char log_picktype2char(e_log_pick_type type)

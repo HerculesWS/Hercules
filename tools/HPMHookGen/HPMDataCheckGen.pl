@@ -105,7 +105,9 @@ print FH <<"EOF";
   && !defined(HERCULES_CORE_LOGIN) \\
   && !defined(HERCULES_PLUGIN_LOGIN) \\
   && !defined(HERCULES_CORE_CHAR) \\
-  && !defined(HERCULES_PLUGIN_CHAR)
+  && !defined(HERCULES_PLUGIN_CHAR) \\
+  && !defined(HERCULES_CORE_MAP) \\
+  && !defined(HERCULES_PLUGIN_MAP)
   #include "common/HPMSymbols.inc.h"
 #endif
 #if defined(HERCULES_PLUGIN_API) // FIXME: Temporary
@@ -114,6 +116,8 @@ HERCAPI_API_EXTERN const char *HPM_shared_symbols(int server_type);
 HERCAPI_LOGIN_EXTERN const char *HPM_shared_symbols(int server_type);
 #elif defined(HERCULES_PLUGIN_CHAR) // FIXME: Temporary
 HERCAPI_CHAR_EXTERN const char *HPM_shared_symbols(int server_type);
+#elif defined(HERCULES_PLUGIN_MAP) // FIXME: Temporary
+HERCAPI_MAP_EXTERN const char *HPM_shared_symbols(int server_type);
 #endif
 #ifdef HPM_SYMBOL
 #undef HPM_SYMBOL

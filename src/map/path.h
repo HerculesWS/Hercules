@@ -78,6 +78,6 @@ struct path_interface {
 void path_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct path_interface *path;
+HERCAPI_MAP_EXTERN struct path_interface *path;
 
 #endif /* MAP_PATH_H */

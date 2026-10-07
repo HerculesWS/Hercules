@@ -42,7 +42,7 @@
 #include <string.h>
 
 static struct vending_interface vending_s;
-struct vending_interface *vending;
+HERCAPI_MAP_EXPORT struct vending_interface *vending;
 
 /// Returns an unique vending shop id.
 static inline unsigned int getid(void)

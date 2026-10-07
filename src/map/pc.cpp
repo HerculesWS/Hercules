@@ -79,7 +79,7 @@
 #include <time.h>
 
 static struct pc_interface pc_s;
-struct pc_interface *pc;
+HERCAPI_MAP_EXPORT struct pc_interface *pc;
 
 static struct class_exp_tables exptables;
 

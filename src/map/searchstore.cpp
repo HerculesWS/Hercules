@@ -32,7 +32,7 @@
 #include <utility>
 
 static struct searchstore_interface searchstore_s;
-struct searchstore_interface *searchstore;
+HERCAPI_MAP_EXPORT struct searchstore_interface *searchstore;
 
 /// retrieves search function by type
 static inline searchstore_search_t searchstore_getsearchfunc(unsigned char type)

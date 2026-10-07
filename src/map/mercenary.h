@@ -163,6 +163,6 @@ struct mercenary_interface {
 void mercenary_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct mercenary_interface *mercenary;
+HERCAPI_MAP_EXTERN struct mercenary_interface *mercenary;
 
 #endif /* MAP_MERCENARY_H */

@@ -120,6 +120,6 @@ struct pc_groups_interface {
 void pc_groups_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct pc_groups_interface *pcg;
+HERCAPI_MAP_EXTERN struct pc_groups_interface *pcg;
 
 #endif /* MAP_PC_GROUPS_H */

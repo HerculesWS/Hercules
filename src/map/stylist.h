@@ -63,6 +63,6 @@ struct stylist_interface {
 void stylist_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct stylist_interface *stylist; ///< Pointer to the stylist interface.
+HERCAPI_MAP_EXTERN struct stylist_interface *stylist; ///< Pointer to the stylist interface.
 
 #endif /* MAP_STYLIST_H */

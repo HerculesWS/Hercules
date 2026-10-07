@@ -33,7 +33,7 @@
 #include <time.h>
 
 static struct duel_interface duel_s;
-struct duel_interface *duel;
+HERCAPI_MAP_EXPORT struct duel_interface *duel;
 
 /*==========================================
  * Duel organizing functions [LuzZza]

@@ -84,6 +84,6 @@ struct rodex_interface {
 void rodex_defaults(void);
 #endif
 
-HPShared struct rodex_interface *rodex;
+HERCAPI_MAP_EXTERN struct rodex_interface *rodex;
 
 #endif

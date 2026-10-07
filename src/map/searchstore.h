@@ -121,6 +121,6 @@ struct searchstore_interface {
 void searchstore_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct searchstore_interface *searchstore;
+HERCAPI_MAP_EXTERN struct searchstore_interface *searchstore;
 
 #endif /* MAP_SEARCHSTORE_H */

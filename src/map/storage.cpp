@@ -47,8 +47,8 @@
 static struct storage_interface storage_s;
 static struct guild_storage_interface gstorage_s;
 
-struct storage_interface *storage;
-struct guild_storage_interface *gstorage;
+HERCAPI_MAP_EXPORT struct storage_interface *storage;
+HERCAPI_MAP_EXPORT struct guild_storage_interface *gstorage;
 
 /*==========================================
  * Sort items in the warehouse

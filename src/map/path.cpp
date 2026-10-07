@@ -45,7 +45,7 @@
 #define DIR_EAST  8
 
 static struct path_interface path_s;
-struct path_interface *path;
+HERCAPI_MAP_EXPORT struct path_interface *path;
 
 /// @name Structures and defines for A* pathfinding
 /// @{

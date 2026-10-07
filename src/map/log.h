@@ -168,6 +168,6 @@ struct log_interface {
 void log_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct log_interface *logs;
+HERCAPI_MAP_EXTERN struct log_interface *logs;
 
 #endif /* MAP_LOG_H */

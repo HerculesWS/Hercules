@@ -193,6 +193,6 @@ struct guild_interface {
 void guild_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct guild_interface *guild;
+HERCAPI_MAP_EXTERN struct guild_interface *guild;
 
 #endif /* MAP_GUILD_H */

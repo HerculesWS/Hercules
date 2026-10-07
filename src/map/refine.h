@@ -145,5 +145,5 @@ struct refine_interface {
 void refine_defaults(void);
 #endif
 
-HPShared struct refine_interface *refine;
+HERCAPI_MAP_EXTERN struct refine_interface *refine;
 #endif

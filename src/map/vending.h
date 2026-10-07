@@ -55,6 +55,6 @@ struct vending_interface {
 void vending_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct vending_interface *vending;
+HERCAPI_MAP_EXTERN struct vending_interface *vending;
 
 #endif /* MAP_VENDING_H */

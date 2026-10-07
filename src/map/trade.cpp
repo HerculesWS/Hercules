@@ -40,7 +40,7 @@
 #include <string.h>
 
 static struct trade_interface trade_s;
-struct trade_interface *trade;
+HERCAPI_MAP_EXPORT struct trade_interface *trade;
 
 /*==========================================
  * Initiates a trade request.

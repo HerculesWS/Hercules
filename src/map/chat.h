@@ -79,6 +79,6 @@ struct chat_interface {
 void chat_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct chat_interface *chat;
+HERCAPI_MAP_EXTERN struct chat_interface *chat;
 
 #endif /* MAP_CHAT_H */

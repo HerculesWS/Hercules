@@ -592,7 +592,12 @@ static struct hplugin *hplugin_load(const char *filename)
 		exit(EXIT_FAILURE);
 	}
 
-	if (info->type != SERVER_TYPE_API && info->type != SERVER_TYPE_LOGIN && info->type != SERVER_TYPE_CHAR) {
+	if (
+	  info->type != SERVER_TYPE_API
+	  && info->type != SERVER_TYPE_LOGIN
+	  && info->type != SERVER_TYPE_CHAR
+	  && info->type != SERVER_TYPE_MAP
+	) {
 		if (!(HPMLoadEvent = plugin_import(plugin->dll, "HPM_shared_symbols", const char *(*)(int)))) {
 			ShowFatalError("HPM:plugin_load: failed to retrieve 'HPM_shared_symbols' for '" CL_WHITE "%s" CL_RESET
 			               "', most likely not including HPMDataCheck.h!\n",

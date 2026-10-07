@@ -1599,7 +1599,7 @@ class HERCAPI_MAP_EXPORT hserver_map final : public hserver_i
 };
 #endif // HERCULES_CORE
 
-HPShared struct mapit_interface *mapit;
-HPShared struct map_interface *map;
+HERCAPI_MAP_EXTERN struct mapit_interface *mapit;
+HERCAPI_MAP_EXTERN struct map_interface *map;
 
 #endif /* MAP_MAP_H */

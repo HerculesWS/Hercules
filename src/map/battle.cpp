@@ -60,7 +60,7 @@
 
 struct Battle_Config battle_config;
 static struct battle_interface battle_s;
-struct battle_interface *battle;
+HERCAPI_MAP_EXPORT struct battle_interface *battle;
 
 /**
  * Returns the current/last skill in use by this bl.

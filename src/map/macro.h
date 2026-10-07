@@ -106,6 +106,6 @@ struct macro_interface {
 void macro_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct macro_interface *macro;
+HERCAPI_MAP_EXTERN struct macro_interface *macro;
 
 #endif /* MAP_MACRO_H */

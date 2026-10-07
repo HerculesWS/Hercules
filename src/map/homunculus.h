@@ -219,6 +219,6 @@ struct homunculus_interface {
 void homunculus_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct homunculus_interface *homun;
+HERCAPI_MAP_EXTERN struct homunculus_interface *homun;
 
 #endif /* MAP_HOMUNCULUS_H */

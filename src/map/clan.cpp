@@ -52,7 +52,7 @@
 #include <string.h>
 
 static struct clan_interface clan_s;
-struct clan_interface *clan;
+HERCAPI_MAP_EXPORT struct clan_interface *clan;
 
 /**
  * Searches a Clan by clan_id

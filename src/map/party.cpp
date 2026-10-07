@@ -53,7 +53,7 @@
 #include <string.h>
 
 static struct party_interface party_s;
-struct party_interface *party;
+HERCAPI_MAP_EXPORT struct party_interface *party;
 
 /*==========================================
  * Fills the given party_member structure according to the sd provided.

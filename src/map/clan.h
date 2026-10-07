@@ -80,6 +80,6 @@ struct clan_interface {
 void clan_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct clan_interface *clan;
+HERCAPI_MAP_EXTERN struct clan_interface *clan;
 
 #endif /* MAP_CLAN_H */
