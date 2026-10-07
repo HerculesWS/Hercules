@@ -209,6 +209,6 @@ struct account_interface {
 void account_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct account_interface *account;
+HERCAPI_LOGIN_EXTERN struct account_interface *account;
 
 #endif /* LOGIN_ACCOUNT_H */

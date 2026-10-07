@@ -145,6 +145,6 @@ struct lclif_interface {
 void lclif_defaults(void);
 #endif
 
-HPShared struct lclif_interface *lclif;
+HERCAPI_LOGIN_EXTERN struct lclif_interface *lclif;
 
 #endif // LOGIN_LCLIF_H

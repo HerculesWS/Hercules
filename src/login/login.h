@@ -281,7 +281,7 @@ class HERCAPI_LOGIN_EXPORT hserver_login final : public hserver_i
 };
 #endif // HERCULES_CORE
 
-HPShared struct login_interface *login;
-HPShared struct lchrif_interface *lchrif;
+HERCAPI_LOGIN_EXTERN struct login_interface *login;
+HERCAPI_LOGIN_EXTERN struct lchrif_interface *lchrif;
 
 #endif /* LOGIN_LOGIN_H */

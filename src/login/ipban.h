@@ -60,6 +60,6 @@ struct ipban_interface {
 void ipban_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct ipban_interface *ipban;
+HERCAPI_LOGIN_EXTERN struct ipban_interface *ipban;
 
 #endif /* LOGIN_IPBAN_H */

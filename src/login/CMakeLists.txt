@@ -24,7 +24,6 @@ set(LOGIN_SRCS
   login.cpp
   loginlog.cpp
   lapiif.cpp
-  main.cpp
 )
 
 set(LOGIN_HDRS
@@ -57,27 +56,40 @@ source_group("Login private header files"
   ${LOGIN_PRVT}
 )
 
-add_executable(login-server
+add_library(herc-login SHARED
   ${LOGIN_SRCS}
   ${LOGIN_HDRS}
   ${LOGIN_PRVT}
 )
 
-target_compile_definitions(login-server
+target_compile_definitions(herc-login
   PRIVATE
     HERCULES_CORE
     HERCULES_CORE_LOGIN
 )
 
-target_link_libraries(login-server PUBLIC herc-common)
+target_link_libraries(herc-login PUBLIC herc-common)
 if(WIN32)
-  target_link_libraries(login-server PRIVATE wsock32 ws2_32)
+  target_link_libraries(herc-login PRIVATE wsock32 ws2_32)
 endif()
+
+add_executable(login-server
+  main.cpp
+)
+
+target_compile_definitions(login-server
+  PRIVATE
+    HERCULES_CORE
+)
+
+target_link_libraries(login-server PUBLIC herc-login)
 
 add_dependencies(sql login-server)
 
 install(
-  TARGETS login-server
+  TARGETS
+    login-server
+    herc-login
   RUNTIME
     DESTINATION
     .

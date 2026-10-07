@@ -47,7 +47,7 @@
 static struct lclif_interface lclif_s;
 static struct lclif_interface_private lclif_p;
 static struct lclif_interface_dbs lclif_dbs;
-struct lclif_interface *lclif;
+HERCAPI_LOGIN_EXPORT struct lclif_interface *lclif;
 
 /// @copydoc lclif_interface::connection_error()
 static void lclif_connection_error(int fd, uint8 error)
