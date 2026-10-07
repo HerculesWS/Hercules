@@ -392,7 +392,7 @@ struct npc_interface {
 void npc_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct npc_interface *npc;
+HERCAPI_MAP_EXTERN struct npc_interface *npc;
 
 /**
  * Structure containing all info associated with a single pattern block
@@ -462,7 +462,7 @@ struct pcre_interface {
 void npc_chat_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct npc_chat_interface *npc_chat;
-HPShared struct pcre_interface *libpcre;
+HERCAPI_MAP_EXTERN struct npc_chat_interface *npc_chat;
+HERCAPI_MAP_EXTERN struct pcre_interface *libpcre;
 
 #endif /* MAP_NPC_H */

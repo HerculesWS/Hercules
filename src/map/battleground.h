@@ -151,6 +151,6 @@ struct battleground_interface {
 void battleground_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct battleground_interface *bg;
+HERCAPI_MAP_EXTERN struct battleground_interface *bg;
 
 #endif /* MAP_BATTLEGROUND_H */

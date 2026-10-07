@@ -75,6 +75,6 @@ struct goldpc_interface {
 void goldpc_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct goldpc_interface *goldpc;
+HERCAPI_MAP_EXTERN struct goldpc_interface *goldpc;
 
 #endif // MAP_GOLDPC_H

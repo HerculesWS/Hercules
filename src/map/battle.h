@@ -829,6 +829,6 @@ extern struct Battle_Config battle_config;
 void battle_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct battle_interface *battle;
+HERCAPI_MAP_EXTERN struct battle_interface *battle;
 
 #endif /* MAP_BATTLE_H */

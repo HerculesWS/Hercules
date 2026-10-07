@@ -166,7 +166,7 @@ struct atcommand_interface {
 void atcommand_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct atcommand_interface *atcommand;
+HERCAPI_MAP_EXTERN struct atcommand_interface *atcommand;
 
 /* stay here */
 #define ACMD(x) \

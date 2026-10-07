@@ -44,7 +44,7 @@
 // #define IRCBOT_DEBUG
 
 static struct ircbot_interface ircbot_s;
-struct ircbot_interface *ircbot;
+HERCAPI_MAP_EXPORT struct ircbot_interface *ircbot;
 
 static char send_string[IRC_MESSAGE_LENGTH];
 

@@ -136,6 +136,6 @@ struct channel_interface {
 void channel_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct channel_interface *channel;
+HERCAPI_MAP_EXTERN struct channel_interface *channel;
 
 #endif /* MAP_CHANNEL_H */

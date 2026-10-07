@@ -53,7 +53,7 @@
 #include <string.h>
 
 static struct guild_interface guild_s;
-struct guild_interface *guild;
+HERCAPI_MAP_EXPORT struct guild_interface *guild;
 
 /*==========================================
  * Retrieves and validates the sd pointer for this guild member [Skotlex]

@@ -33,7 +33,7 @@
 // struct account_interface *account;
   #endif
   #ifdef MAP_ACHIEVEMENT_H /* achievement */
-struct achievement_interface *achievement;
+// struct achievement_interface *achievement;
   #endif
   #ifdef API_ACLIF_H /* aclif */
 // struct aclif_interface *aclif;
@@ -45,40 +45,40 @@ struct achievement_interface *achievement;
 // struct api_interface *api;
   #endif
   #ifdef MAP_ATCOMMAND_H /* atcommand */
-struct atcommand_interface *atcommand;
+// struct atcommand_interface *atcommand;
   #endif
   #ifdef COMMON_BASE62_H /* base62 */
 // struct base62_interface *base62;
   #endif
   #ifdef MAP_BATTLE_H /* battle */
-struct battle_interface *battle;
+// struct battle_interface *battle;
   #endif
   #ifdef MAP_BATTLEGROUND_H /* bg */
-struct battleground_interface *bg;
+// struct battleground_interface *bg;
   #endif
   #ifdef MAP_BUYINGSTORE_H /* buyingstore */
-struct buyingstore_interface *buyingstore;
+// struct buyingstore_interface *buyingstore;
   #endif
   #ifdef CHAR_CAPIIF_H /* capiif */
 // struct capiif_interface *capiif;
   #endif
   #ifdef MAP_CHANNEL_H /* channel */
-struct channel_interface *channel;
+// struct channel_interface *channel;
   #endif
   #ifdef CHAR_CHAR_H /* chr */
 // struct char_interface *chr;
   #endif
   #ifdef MAP_CHAT_H /* chat */
-struct chat_interface *chat;
+// struct chat_interface *chat;
   #endif
   #ifdef MAP_CHRIF_H /* chrif */
-struct chrif_interface *chrif;
+// struct chrif_interface *chrif;
   #endif
   #ifdef MAP_CLAN_H /* clan */
-struct clan_interface *clan;
+// struct clan_interface *clan;
   #endif
   #ifdef MAP_CLIF_H /* clif */
-struct clif_interface *clif;
+// struct clif_interface *clif;
   #endif
   #ifdef COMMON_CORE_H /* cmdline */
 // struct cmdline_interface *cmdline;
@@ -96,13 +96,13 @@ struct clif_interface *clif;
 // struct des_interface *des;
   #endif
   #ifdef MAP_DUEL_H /* duel */
-struct duel_interface *duel;
+// struct duel_interface *duel;
   #endif
   #ifdef MAP_ELEMENTAL_H /* elemental */
-struct elemental_interface *elemental;
+// struct elemental_interface *elemental;
   #endif
   #ifdef MAP_ENCHANTUI_H /* enchantui */
-struct enchantui_interface *enchantui;
+// struct enchantui_interface *enchantui;
   #endif
   #ifdef COMMON_EXTRACONF_H /* extraconf */
 // struct extraconf_interface *extraconf;
@@ -111,25 +111,25 @@ struct enchantui_interface *enchantui;
 // struct geoip_interface *geoip;
   #endif
   #ifdef MAP_GOLDPC_H /* goldpc */
-struct goldpc_interface *goldpc;
+// struct goldpc_interface *goldpc;
   #endif
   #ifdef MAP_GRADER_H /* grader */
-struct grader_interface *grader;
+// struct grader_interface *grader;
   #endif
   #ifdef COMMON_GRFIO_H /* grfio */
 // struct grfio_interface *grfio;
   #endif
   #ifdef MAP_GUILD_H /* guild */
-struct guild_interface *guild;
+// struct guild_interface *guild;
   #endif
   #ifdef MAP_STORAGE_H /* gstorage */
-struct guild_storage_interface *gstorage;
+// struct guild_storage_interface *gstorage;
   #endif
   #ifdef API_HANDLERS_H /* handlers */
 // struct handlers_interface *handlers;
   #endif
   #ifdef MAP_HOMUNCULUS_H /* homun */
-struct homunculus_interface *homun;
+// struct homunculus_interface *homun;
   #endif
   #ifdef API_HTTPPARSER_H /* httpparser */
 // struct httpparser_interface *httpparser;
@@ -141,7 +141,7 @@ struct homunculus_interface *homun;
 // struct imageparser_interface *imageparser;
   #endif
   #ifdef MAP_INSTANCE_H /* instance */
-struct instance_interface *instance;
+// struct instance_interface *instance;
   #endif
   #ifdef CHAR_INT_ACHIEVEMENT_H /* inter_achievement */
 // struct inter_achievement_interface *inter_achievement;
@@ -192,16 +192,16 @@ struct instance_interface *instance;
 // struct inter_userconfig_interface *inter_userconfig;
   #endif
   #ifdef MAP_INTIF_H /* intif */
-struct intif_interface *intif;
+// struct intif_interface *intif;
   #endif
   #ifdef LOGIN_IPBAN_H /* ipban */
 // struct ipban_interface *ipban;
   #endif
   #ifdef MAP_IRC_BOT_H /* ircbot */
-struct ircbot_interface *ircbot;
+// struct ircbot_interface *ircbot;
   #endif
   #ifdef MAP_ITEMDB_H /* itemdb */
-struct itemdb_interface *itemdb;
+// struct itemdb_interface *itemdb;
   #endif
   #ifdef API_JSONPARSER_H /* jsonparser */
 // struct jsonparser_interface *jsonparser;
@@ -222,7 +222,7 @@ struct itemdb_interface *itemdb;
 // struct libconfig_interface *libconfig;
   #endif
   #ifdef MAP_LOG_H /* logs */
-struct log_interface *logs;
+// struct log_interface *logs;
   #endif
   #ifdef LOGIN_LOGIN_H /* login */
 // struct login_interface *login;
@@ -234,46 +234,46 @@ struct log_interface *logs;
 // struct loginlog_interface *loginlog;
   #endif
   #ifdef MAP_MACRO_H /* macro */
-struct macro_interface *macro;
+// struct macro_interface *macro;
   #endif
   #ifdef MAP_MAIL_H /* mail */
-struct mail_interface *mail;
+// struct mail_interface *mail;
   #endif
   #ifdef MAP_MAP_H /* map */
-struct map_interface *map;
+// struct map_interface *map;
   #endif
   #ifdef CHAR_MAPIF_H /* mapif */
 // struct mapif_interface *mapif;
   #endif
   #ifdef MAP_MAPIIF_H /* mapiif */
-struct mapiif_interface *mapiif;
+// struct mapiif_interface *mapiif;
   #endif
   #ifdef COMMON_MAPINDEX_H /* mapindex */
 // struct mapindex_interface *mapindex;
   #endif
   #ifdef MAP_MAP_H /* mapit */
-struct mapit_interface *mapit;
+// struct mapit_interface *mapit;
   #endif
   #ifdef MAP_MAPREG_H /* mapreg */
-struct mapreg_interface *mapreg;
+// struct mapreg_interface *mapreg;
   #endif
   #ifdef COMMON_MD5CALC_H /* md5 */
 // struct md5_interface *md5;
   #endif
   #ifdef MAP_MERCENARY_H /* mercenary */
-struct mercenary_interface *mercenary;
+// struct mercenary_interface *mercenary;
   #endif
   #ifdef MAP_MOB_H /* mob */
-struct mob_interface *mob;
+// struct mob_interface *mob;
   #endif
   #ifdef COMMON_MUTEX_H /* mutex */
 // struct mutex_interface *mutex;
   #endif
   #ifdef MAP_NPC_H /* npc_chat */
-struct npc_chat_interface *npc_chat;
+// struct npc_chat_interface *npc_chat;
   #endif
   #ifdef MAP_NPC_H /* npc */
-struct npc_interface *npc;
+// struct npc_interface *npc;
   #endif
   #ifdef COMMON_NULLPO_H /* nullpo */
 // struct nullpo_interface *nullpo;
@@ -282,49 +282,49 @@ struct npc_interface *npc;
 // struct packets_interface *packets;
   #endif
   #ifdef MAP_PARTY_H /* party */
-struct party_interface *party;
+// struct party_interface *party;
   #endif
   #ifdef MAP_PATH_H /* path */
-struct path_interface *path;
+// struct path_interface *path;
   #endif
   #ifdef MAP_PC_GROUPS_H /* pcg */
-struct pc_groups_interface *pcg;
+// struct pc_groups_interface *pcg;
   #endif
   #ifdef MAP_PC_H /* pc */
-struct pc_interface *pc;
+// struct pc_interface *pc;
   #endif
   #ifdef MAP_NPC_H /* libpcre */
-struct pcre_interface *libpcre;
+// struct pcre_interface *libpcre;
   #endif
   #ifdef MAP_PET_H /* pet */
-struct pet_interface *pet;
+// struct pet_interface *pet;
   #endif
   #ifdef CHAR_PINCODE_H /* pincode */
 // struct pincode_interface *pincode;
   #endif
   #ifdef MAP_QUEST_H /* quest */
-struct quest_interface *quest;
+// struct quest_interface *quest;
   #endif
   #ifdef MAP_REFINE_H /* refine */
-struct refine_interface *refine;
+// struct refine_interface *refine;
   #endif
   #ifdef COMMON_RANDOM_H /* rnd */
 // struct rnd_interface *rnd;
   #endif
   #ifdef MAP_RODEX_H /* rodex */
-struct rodex_interface *rodex;
+// struct rodex_interface *rodex;
   #endif
   #ifdef MAP_SCRIPT_H /* script */
-struct script_interface *script;
+// struct script_interface *script;
   #endif
   #ifdef MAP_SEARCHSTORE_H /* searchstore */
-struct searchstore_interface *searchstore;
+// struct searchstore_interface *searchstore;
   #endif
   #ifdef COMMON_SHOWMSG_H /* showmsg */
 // struct showmsg_interface *showmsg;
   #endif
   #ifdef MAP_SKILL_H /* skill */
-struct skill_interface *skill;
+// struct skill_interface *skill;
   #endif
   #ifdef COMMON_SOCKET_H /* sockt */
 // struct socket_interface *sockt;
@@ -333,10 +333,10 @@ struct skill_interface *skill;
 // struct sql_interface *SQL;
   #endif
   #ifdef MAP_STATUS_H /* status */
-struct status_interface *status;
+// struct status_interface *status;
   #endif
   #ifdef MAP_STORAGE_H /* storage */
-struct storage_interface *storage;
+// struct storage_interface *storage;
   #endif
   #ifdef COMMON_STRLIB_H /* StrBuf */
 // struct stringbuf_interface *StrBuf;
@@ -345,7 +345,7 @@ struct storage_interface *storage;
 // struct strlib_interface *strlib;
   #endif
   #ifdef MAP_STYLIST_H /* stylist */
-struct stylist_interface *stylist;
+// struct stylist_interface *stylist;
   #endif
   #ifdef COMMON_STRLIB_H /* sv */
 // struct sv_interface *sv;
@@ -360,13 +360,13 @@ struct stylist_interface *stylist;
 // struct timer_interface *timer;
   #endif
   #ifdef MAP_TRADE_H /* trade */
-struct trade_interface *trade;
+// struct trade_interface *trade;
   #endif
   #ifdef MAP_UNIT_H /* unit */
-struct unit_interface *unit;
+// struct unit_interface *unit;
   #endif
   #ifdef MAP_VENDING_H /* vending */
-struct vending_interface *vending;
+// struct vending_interface *vending;
   #endif
 #endif // ! HERCULES_CORE
 

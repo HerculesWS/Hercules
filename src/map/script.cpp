@@ -88,7 +88,7 @@
 #endif
 
 static struct script_interface script_s;
-struct script_interface *script;
+HERCAPI_MAP_EXPORT struct script_interface *script;
 
 static inline int GETVALUE(const struct script_buf *buf, int i) __attribute__((nonnull(1)));
 

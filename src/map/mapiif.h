@@ -40,6 +40,6 @@ struct mapiif_interface {
 void mapiif_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct mapiif_interface *mapiif;
+HERCAPI_MAP_EXTERN struct mapiif_interface *mapiif;
 
 #endif /* MAP_MAPIIF_H */

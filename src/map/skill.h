@@ -2461,6 +2461,6 @@ struct skill_interface {
 void skill_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct skill_interface *skill;
+HERCAPI_MAP_EXTERN struct skill_interface *skill;
 
 #endif /* MAP_SKILL_H */

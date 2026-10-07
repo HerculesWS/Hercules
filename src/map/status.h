@@ -1566,6 +1566,6 @@ struct status_interface {
 void status_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct status_interface *status;
+HERCAPI_MAP_EXTERN struct status_interface *status;
 
 #endif /* MAP_STATUS_H */

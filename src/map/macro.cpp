@@ -39,7 +39,7 @@
 #include <stdlib.h>
 
 static struct macro_interface macro_s;
-struct macro_interface *macro;
+HERCAPI_MAP_EXPORT struct macro_interface *macro;
 const char *macro_allowed_answer_chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 
 static void macro_captcha_register(struct map_session_data *sd, const int image_size, const char *captcha_answer)

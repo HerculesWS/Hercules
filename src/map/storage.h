@@ -111,7 +111,7 @@ void storage_defaults(void);
 void gstorage_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct storage_interface *storage;
-HPShared struct guild_storage_interface *gstorage;
+HERCAPI_MAP_EXTERN struct storage_interface *storage;
+HERCAPI_MAP_EXTERN struct guild_storage_interface *gstorage;
 
 #endif /* MAP_STORAGE_H */

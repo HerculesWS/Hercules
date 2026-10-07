@@ -47,7 +47,7 @@
 #include <string.h>
 
 static struct battleground_interface bg_s;
-struct battleground_interface *bg;
+HERCAPI_MAP_EXPORT struct battleground_interface *bg;
 
 /// Search a BG Team using bg_id
 static struct battleground_data *bg_team_search(int bg_id)

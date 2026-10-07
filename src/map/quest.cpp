@@ -55,7 +55,7 @@
 static struct quest_interface quest_s;
 static struct quest_db *db_data[MAX_QUEST_DB]; ///< Quest database
 
-struct quest_interface *quest;
+HERCAPI_MAP_EXPORT struct quest_interface *quest;
 
 /**
  * Searches a quest by ID.

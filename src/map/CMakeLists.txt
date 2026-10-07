@@ -43,7 +43,6 @@ set(MAP_SRCS
   log.cpp
   macro.cpp
   mail.cpp
-  main.cpp
   map.cpp
   mapiif.cpp
   mapreg_sql.cpp
@@ -155,29 +154,43 @@ source_group("Map private header files"
   ${MAP_PRVT}
 )
 
-add_executable(map-server
+add_library(herc-map SHARED
   ${MAP_SRCS}
   ${MAP_HDRS}
   ${MAP_PRVT}
 )
 
-target_compile_definitions(map-server
+target_compile_definitions(herc-map
   PRIVATE
     HERCULES_CORE
     HERCULES_CORE_MAP
 )
 
-target_link_libraries(map-server PUBLIC herc-common)
-target_link_libraries(map-server PRIVATE pcre::pcre)
+target_link_libraries(herc-map PUBLIC herc-common)
+target_link_libraries(herc-map PRIVATE pcre::pcre)
 if(WIN32)
-  target_link_libraries(map-server PRIVATE wsock32 ws2_32)
+  target_link_libraries(herc-map PRIVATE wsock32 ws2_32)
 endif()
 
+add_executable(map-server
+  main.cpp
+)
+
+target_compile_definitions(map-server
+  PRIVATE
+    HERCULES_CORE
+)
+
+target_link_libraries(map-server PUBLIC herc-map)
+
+
+add_dependencies(sql map-server)
+
 install(
-  TARGETS map-server
+  TARGETS
+    map-server
+    herc-map
   RUNTIME
     DESTINATION
     .
 )
-
-add_dependencies(sql map-server)

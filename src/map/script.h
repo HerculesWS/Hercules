@@ -1253,6 +1253,6 @@ struct script_interface {
 void script_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct script_interface *script;
+HERCAPI_MAP_EXTERN struct script_interface *script;
 
 #endif /* MAP_SCRIPT_H */

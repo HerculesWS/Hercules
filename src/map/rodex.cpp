@@ -40,7 +40,7 @@
 #define DAILY_MAX_MAILS 100
 
 static struct rodex_interface rodex_s;
-struct rodex_interface *rodex;
+HERCAPI_MAP_EXPORT struct rodex_interface *rodex;
 
 /// Checks if RoDEX System is enabled in the server
 /// Returns true if it's enabled, false otherwise

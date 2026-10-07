@@ -206,6 +206,6 @@ struct pet_interface {
 void pet_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct pet_interface *pet;
+HERCAPI_MAP_EXTERN struct pet_interface *pet;
 
 #endif /* MAP_PET_H */

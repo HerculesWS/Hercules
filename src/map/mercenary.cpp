@@ -59,7 +59,7 @@
 static struct mercenary_interface mercenary_s;
 static struct s_mercenary_db mercdb[MAX_MERCENARY_CLASS];
 
-struct mercenary_interface *mercenary;
+HERCAPI_MAP_EXPORT struct mercenary_interface *mercenary;
 
 static int merc_search_index(int class_)
 {

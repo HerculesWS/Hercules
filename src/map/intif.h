@@ -224,6 +224,6 @@ struct intif_interface {
 void intif_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct intif_interface *intif;
+HERCAPI_MAP_EXTERN struct intif_interface *intif;
 
 #endif /* MAP_INTIF_H */

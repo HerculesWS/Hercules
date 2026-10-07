@@ -35,7 +35,7 @@
 #include "common/strlib.h"  // safestrncpy
 
 static struct buyingstore_interface buyingstore_s;
-struct buyingstore_interface *buyingstore;
+HERCAPI_MAP_EXPORT struct buyingstore_interface *buyingstore;
 
 /// Returns unique buying store id
 static unsigned int buyingstore_getuid(void)

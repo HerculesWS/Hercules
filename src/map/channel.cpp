@@ -44,7 +44,7 @@
 #include <string.h>
 
 static struct channel_interface channel_s;
-struct channel_interface *channel;
+HERCAPI_MAP_EXPORT struct channel_interface *channel;
 
 static struct Channel_Config channel_config;
 

@@ -97,8 +97,8 @@
 static struct map_interface map_s;
 static struct mapit_interface mapit_s;
 
-struct map_interface *map;
-struct mapit_interface *mapit;
+HERCAPI_MAP_EXPORT struct map_interface *map;
+HERCAPI_MAP_EXPORT struct mapit_interface *mapit;
 
 /*==========================================
  * server player count (of all mapservers)

@@ -33,7 +33,7 @@
 #include "map/script.h"
 
 static struct stylist_interface stylist_s;
-struct stylist_interface *stylist;
+HERCAPI_MAP_EXPORT struct stylist_interface *stylist;
 
 static bool stylist_read_db_libconfig(void)
 {

@@ -2067,6 +2067,6 @@ struct clif_interface {
 void clif_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct clif_interface *clif;
+HERCAPI_MAP_EXTERN struct clif_interface *clif;
 
 #endif /* MAP_CLIF_H */

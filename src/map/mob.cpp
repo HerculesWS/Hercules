@@ -66,7 +66,7 @@
 #include <string.h>
 
 static struct mob_interface mob_s;
-struct mob_interface *mob;
+HERCAPI_MAP_EXPORT struct mob_interface *mob;
 
 #define ACTIVE_AI_RANGE 2 // Distance added on top of 'AREA_SIZE' at which mobs enter active AI mode.
 

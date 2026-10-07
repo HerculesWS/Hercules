@@ -201,6 +201,6 @@ struct ircbot_interface {
 void ircbot_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct ircbot_interface *ircbot;
+HERCAPI_MAP_EXTERN struct ircbot_interface *ircbot;
 
 #endif /* MAP_IRC_BOT_H */

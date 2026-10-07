@@ -61,6 +61,6 @@ struct duel_interface {
 void duel_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct duel_interface *duel;
+HERCAPI_MAP_EXTERN struct duel_interface *duel;
 
 #endif /* MAP_DUEL_H */
