@@ -43,6 +43,6 @@ struct mail_interface {
 void mail_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct mail_interface *mail;
+HERCAPI_MAP_EXTERN struct mail_interface *mail;
 
 #endif /* MAP_MAIL_H */

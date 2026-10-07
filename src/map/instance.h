@@ -132,6 +132,6 @@ struct instance_interface {
 void instance_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct instance_interface *instance;
+HERCAPI_MAP_EXTERN struct instance_interface *instance;
 
 #endif /* MAP_INSTANCE_H */

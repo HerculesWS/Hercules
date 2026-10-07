@@ -41,7 +41,7 @@
 #include <string.h>
 
 static struct chat_interface chat_s;
-struct chat_interface *chat;
+HERCAPI_MAP_EXPORT struct chat_interface *chat;
 
 /// Initializes a chatroom object (common functionality for both pc and npc chatrooms).
 /// Returns a chatroom object on success, or NULL on failure.

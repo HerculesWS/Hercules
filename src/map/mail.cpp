@@ -33,7 +33,7 @@
 #include <string.h>
 
 static struct mail_interface mail_s;
-struct mail_interface *mail;
+HERCAPI_MAP_EXPORT struct mail_interface *mail;
 
 static void mail_clear(struct map_session_data *sd)
 {

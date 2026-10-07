@@ -165,6 +165,6 @@ struct party_interface {
 void party_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct party_interface *party;
+HERCAPI_MAP_EXTERN struct party_interface *party;
 
 #endif /* MAP_PARTY_H */

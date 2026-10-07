@@ -56,7 +56,7 @@
 #include <string.h>
 
 static struct pet_interface pet_s;
-struct pet_interface *pet;
+HERCAPI_MAP_EXPORT struct pet_interface *pet;
 
 #define MIN_PETTHINKTIME 100
 

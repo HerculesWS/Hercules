@@ -804,6 +804,6 @@ struct itemdb_interface {
 void itemdb_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct itemdb_interface *itemdb;
+HERCAPI_MAP_EXTERN struct itemdb_interface *itemdb;
 
 #endif /* MAP_ITEMDB_H */

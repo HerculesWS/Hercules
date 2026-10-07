@@ -47,7 +47,7 @@
 #include <time.h>
 
 static struct instance_interface instance_s;
-struct instance_interface *instance;
+HERCAPI_MAP_EXPORT struct instance_interface *instance;
 
 /// Checks whether given instance id is valid or not.
 static bool instance_is_valid(int instance_id)

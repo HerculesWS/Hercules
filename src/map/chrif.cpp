@@ -55,7 +55,7 @@
 #include <sys/types.h>
 
 static struct chrif_interface chrif_s;
-struct chrif_interface *chrif;
+HERCAPI_MAP_EXPORT struct chrif_interface *chrif;
 
 // This define should spare writing the check in every function. [Skotlex]
 #define chrif_check(a) \

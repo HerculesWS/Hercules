@@ -56,7 +56,7 @@
 #include <string.h>
 
 static struct elemental_interface elemental_s;
-struct elemental_interface *elemental;
+HERCAPI_MAP_EXPORT struct elemental_interface *elemental;
 
 static int elemental_search_index(int class_)
 {

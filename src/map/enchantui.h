@@ -140,6 +140,6 @@ struct enchantui_interface {
 void enchantui_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct enchantui_interface *enchantui;
+HERCAPI_MAP_EXTERN struct enchantui_interface *enchantui;
 
 #endif /* MAP_ENCHANTUI_H */

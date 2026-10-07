@@ -81,7 +81,7 @@
 #include <string.h>
 
 static struct atcommand_interface atcommand_s;
-struct atcommand_interface *atcommand;
+HERCAPI_MAP_EXPORT struct atcommand_interface *atcommand;
 
 static char atcmd_output[CHAT_SIZE_MAX];
 static char atcmd_player_name[NAME_LENGTH];

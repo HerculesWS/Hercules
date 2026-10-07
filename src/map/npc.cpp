@@ -63,7 +63,7 @@
 #include <time.h>
 
 static struct npc_interface npc_s;
-struct npc_interface *npc;
+HERCAPI_MAP_EXPORT struct npc_interface *npc;
 
 // For holding the view data of npc classes. [Skotlex]
 static struct view_data npc_viewdb[MAX_NPC_CLASS];

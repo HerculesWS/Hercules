@@ -45,6 +45,6 @@ struct trade_interface {
 void trade_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct trade_interface *trade;
+HERCAPI_MAP_EXTERN struct trade_interface *trade;
 
 #endif /* MAP_TRADE_H */

@@ -42,7 +42,7 @@
 #include <string.h>
 
 static struct itemdb_interface itemdb_s;
-struct itemdb_interface *itemdb;
+HERCAPI_MAP_EXPORT struct itemdb_interface *itemdb;
 
 /**
  * Search for item name

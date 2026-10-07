@@ -161,6 +161,6 @@ struct elemental_interface {
 void elemental_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct elemental_interface *elemental;
+HERCAPI_MAP_EXTERN struct elemental_interface *elemental;
 
 #endif /* MAP_ELEMENTAL_H */

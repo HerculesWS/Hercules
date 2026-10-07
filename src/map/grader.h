@@ -119,6 +119,6 @@ struct grader_interface {
 void grader_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct grader_interface *grader;
+HERCAPI_MAP_EXTERN struct grader_interface *grader;
 
 #endif /* MAP_GRADER_H */

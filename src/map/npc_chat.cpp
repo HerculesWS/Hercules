@@ -41,8 +41,8 @@
 static struct npc_chat_interface npc_chat_s;
 static struct pcre_interface libpcre_s;
 
-struct npc_chat_interface *npc_chat;
-struct pcre_interface *libpcre;
+HERCAPI_MAP_EXPORT struct npc_chat_interface *npc_chat;
+HERCAPI_MAP_EXPORT struct pcre_interface *libpcre;
 
 /**
  *  Written by MouseJstr in a vision... (2/21/2005)

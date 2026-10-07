@@ -40,7 +40,7 @@
 #include <string.h>
 
 static struct achievement_interface achievement_s;
-struct achievement_interface *achievement;
+HERCAPI_MAP_EXPORT struct achievement_interface *achievement;
 
 /**
  * Retrieve an achievement via it's ID.

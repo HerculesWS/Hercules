@@ -36,8 +36,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-static struct mapreg_interface mapreg_s; //!< Private interface structure.
-struct mapreg_interface *mapreg;         //!< Public interface structure.
+static struct mapreg_interface mapreg_s;            //!< Private interface structure.
+HERCAPI_MAP_EXPORT struct mapreg_interface *mapreg; //!< Public interface structure.
 
 /**
  * Looks up the value of a global integer variable using its unique ID.

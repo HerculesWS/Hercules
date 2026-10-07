@@ -39,7 +39,7 @@
 
 static struct grade_interface_dbs grade_dbs;
 static struct grader_interface grader_s;
-struct grader_interface *grader;
+HERCAPI_MAP_EXPORT struct grader_interface *grader;
 
 static bool grader_read_db_libconfig(void)
 {

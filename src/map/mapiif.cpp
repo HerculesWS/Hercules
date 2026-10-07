@@ -42,7 +42,7 @@
 #include <string.h>
 
 static struct mapiif_interface mapiif_s;
-struct mapiif_interface *mapiif;
+HERCAPI_MAP_EXPORT struct mapiif_interface *mapiif;
 
 #define DEBUG_LOG
 

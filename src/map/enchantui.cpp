@@ -35,7 +35,7 @@
 #include <stdlib.h>
 
 static struct enchantui_interface enchantui_s;
-struct enchantui_interface *enchantui;
+HERCAPI_MAP_EXPORT struct enchantui_interface *enchantui;
 
 static void enchantui_read_db_libconfig(void)
 {

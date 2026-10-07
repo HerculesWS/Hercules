@@ -292,6 +292,6 @@ struct achievement_interface {
 void achievement_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct achievement_interface *achievement;
+HERCAPI_MAP_EXTERN struct achievement_interface *achievement;
 
 #endif // MAP_ACHIEVEMENT_H

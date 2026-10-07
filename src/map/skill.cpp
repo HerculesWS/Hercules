@@ -71,7 +71,7 @@
 static struct skill_interface skill_s;
 static struct s_skill_dbs skilldbs;
 
-struct skill_interface *skill;
+HERCAPI_MAP_EXPORT struct skill_interface *skill;
 
 static const struct {
 	int start;

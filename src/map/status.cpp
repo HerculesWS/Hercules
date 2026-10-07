@@ -65,7 +65,7 @@
 static struct status_interface status_s;
 static struct s_status_dbs statusdbs;
 
-struct status_interface *status;
+HERCAPI_MAP_EXPORT struct status_interface *status;
 
 /**
  * Returns the FIRST skill (in order of definition in initChangeTables) to use a given status change.

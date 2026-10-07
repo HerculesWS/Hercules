@@ -165,6 +165,6 @@ struct chrif_interface {
 void chrif_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct chrif_interface *chrif;
+HERCAPI_MAP_EXTERN struct chrif_interface *chrif;
 
 #endif /* MAP_CHRIF_H */

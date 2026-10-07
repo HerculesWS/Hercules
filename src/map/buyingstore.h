@@ -104,6 +104,6 @@ struct buyingstore_interface {
 void buyingstore_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct buyingstore_interface *buyingstore;
+HERCAPI_MAP_EXTERN struct buyingstore_interface *buyingstore;
 
 #endif // MAP_BUYINGSTORE_H

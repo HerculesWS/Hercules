@@ -198,6 +198,6 @@ struct quest_interface {
 void quest_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct quest_interface *quest;
+HERCAPI_MAP_EXTERN struct quest_interface *quest;
 
 #endif /* MAP_QUEST_H */

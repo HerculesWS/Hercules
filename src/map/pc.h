@@ -1489,6 +1489,6 @@ struct pc_interface {
 void pc_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct pc_interface *pc;
+HERCAPI_MAP_EXTERN struct pc_interface *pc;
 
 #endif /* MAP_PC_H */
