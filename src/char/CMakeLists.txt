@@ -20,7 +20,6 @@ set(CHAR_SRCS
   char.cpp
   HPMchar.cpp
   loginif.cpp
-  main.cpp
   mapif.cpp
   geoip.cpp
   inter.cpp
@@ -89,27 +88,40 @@ source_group("Char private header files"
   ${CHAR_PRVT}
 )
 
-add_executable(char-server
+add_library(herc-char SHARED
   ${CHAR_SRCS}
   ${CHAR_HDRS}
   ${CHAR_PRVT}
 )
 
-target_compile_definitions(char-server
+target_compile_definitions(herc-char
   PRIVATE
     HERCULES_CORE
     HERCULES_CORE_CHAR
 )
 
-target_link_libraries(char-server PUBLIC herc-common)
+target_link_libraries(herc-char PUBLIC herc-common)
 if(WIN32)
-  target_link_libraries(char-server PRIVATE wsock32 ws2_32)
+  target_link_libraries(herc-char PRIVATE wsock32 ws2_32)
 endif()
+
+add_executable(char-server
+  main.cpp
+)
+
+target_compile_definitions(char-server
+  PRIVATE
+    HERCULES_CORE
+)
+
+target_link_libraries(char-server PUBLIC herc-char)
 
 add_dependencies(sql char-server)
 
 install(
-  TARGETS char-server
+  TARGETS
+    char-server
+    herc-char
   RUNTIME
     DESTINATION
     .

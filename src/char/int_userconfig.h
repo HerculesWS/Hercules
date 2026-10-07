@@ -59,6 +59,6 @@ struct inter_userconfig_interface {
 void inter_userconfig_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct inter_userconfig_interface *inter_userconfig;
+HERCAPI_CHAR_EXTERN struct inter_userconfig_interface *inter_userconfig;
 
 #endif /* CHAR_INT_USERCONFIG_H */

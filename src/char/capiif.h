@@ -56,6 +56,6 @@ struct capiif_interface {
 void capiif_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct capiif_interface *capiif;
+HERCAPI_CHAR_EXTERN struct capiif_interface *capiif;
 
 #endif /* CHAR_CAPIIF_H */

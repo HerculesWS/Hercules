@@ -45,6 +45,6 @@ struct inter_rodex_interface {
 void inter_rodex_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct inter_rodex_interface *inter_rodex;
+HERCAPI_CHAR_EXTERN struct inter_rodex_interface *inter_rodex;
 
 #endif /* CHAR_INT_RODEX_H */

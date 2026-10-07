@@ -34,7 +34,7 @@
 #include <string.h>
 
 static struct loginif_interface loginif_s;
-struct loginif_interface *loginif;
+HERCAPI_CHAR_EXPORT struct loginif_interface *loginif;
 
 /// Resets all the data.
 static void loginif_reset(void) __attribute__((noreturn));

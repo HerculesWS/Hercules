@@ -43,7 +43,7 @@
 // #define DEBUG_EMOTES
 
 static struct inter_userconfig_interface inter_userconfig_s;
-struct inter_userconfig_interface *inter_userconfig;
+HERCAPI_CHAR_EXPORT struct inter_userconfig_interface *inter_userconfig;
 static struct inter_userconfig_dbs inter_userconfigdbs;
 
 static bool inter_userconfig_load_emotes(int account_id, struct userconfig_emotes *emotes)

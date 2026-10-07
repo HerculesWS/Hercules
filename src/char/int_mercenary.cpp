@@ -37,7 +37,7 @@
 #include <stdlib.h>
 
 static struct inter_mercenary_interface inter_mercenary_s;
-struct inter_mercenary_interface *inter_mercenary;
+HERCAPI_CHAR_EXPORT struct inter_mercenary_interface *inter_mercenary;
 
 static bool inter_mercenary_owner_fromsql(int char_id, struct mmo_charstatus *status)
 {

@@ -37,7 +37,7 @@
 #include <stdlib.h>
 
 static struct inter_achievement_interface inter_achievement_s;
-struct inter_achievement_interface *inter_achievement;
+HERCAPI_CHAR_EXPORT struct inter_achievement_interface *inter_achievement;
 
 /**
  * Saves changed achievements for a character.

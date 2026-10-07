@@ -98,6 +98,11 @@ void HPM_char_plugin_load_sub(struct hplugin *plugin)
 	plugin->hpi->sql_handle = inter->sql_handle;
 }
 
+HERCAPI_CHAR_EXPORT const char *HPM_shared_symbols(int server_type)
+{
+	return nullptr;
+}
+
 void HPM_char_do_init(void)
 {
 	HPM->load_sub                = HPM_char_plugin_load_sub;

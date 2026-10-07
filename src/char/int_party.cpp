@@ -39,7 +39,7 @@
 #include <stdlib.h>
 
 static struct inter_party_interface inter_party_s;
-struct inter_party_interface *inter_party;
+HERCAPI_CHAR_EXPORT struct inter_party_interface *inter_party;
 
 /**
  * Updates party's level range and disables even share if requirements are not fulfilled.

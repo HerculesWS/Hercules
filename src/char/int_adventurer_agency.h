@@ -48,6 +48,6 @@ struct inter_adventurer_agency_interface {
 void inter_adventurer_agency_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct inter_adventurer_agency_interface *inter_adventurer_agency;
+HERCAPI_CHAR_EXTERN struct inter_adventurer_agency_interface *inter_adventurer_agency;
 
 #endif /* CHAR_INT_ADVENTURER_AGENCY_H */

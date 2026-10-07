@@ -35,5 +35,5 @@ struct inter_clan_interface {
 void inter_clan_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct inter_clan_interface *inter_clan;
+HERCAPI_CHAR_EXTERN struct inter_clan_interface *inter_clan;
 #endif /* CHAR_INT_CLAN_H */

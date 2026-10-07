@@ -49,5 +49,5 @@ struct inter_achievement_interface {
 void inter_achievement_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct inter_achievement_interface *inter_achievement;
+HERCAPI_CHAR_EXTERN struct inter_achievement_interface *inter_achievement;
 #endif /* CHAR_INT_ACHIEVEMENT_H */

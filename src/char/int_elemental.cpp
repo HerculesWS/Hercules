@@ -36,7 +36,7 @@
 #include <stdlib.h>
 
 static struct inter_elemental_interface inter_elemental_s;
-struct inter_elemental_interface *inter_elemental;
+HERCAPI_CHAR_EXPORT struct inter_elemental_interface *inter_elemental;
 
 /**
  * Creates a new elemental with the given data.

@@ -37,7 +37,7 @@
 #include <stdlib.h>
 
 static struct inter_pet_interface inter_pet_s;
-struct inter_pet_interface *inter_pet;
+HERCAPI_CHAR_EXPORT struct inter_pet_interface *inter_pet;
 
 /**
  * Saves a pet to the SQL database.

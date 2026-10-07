@@ -43,7 +43,7 @@
 #include <string.h>
 
 static struct capiif_interface capiif_s;
-struct capiif_interface *capiif;
+HERCAPI_CHAR_EXPORT struct capiif_interface *capiif;
 
 #define DEBUG_LOG
 

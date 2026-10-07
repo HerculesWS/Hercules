@@ -42,6 +42,6 @@ struct inter_elemental_interface {
 void inter_elemental_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct inter_elemental_interface *inter_elemental;
+HERCAPI_CHAR_EXTERN struct inter_elemental_interface *inter_elemental;
 
 #endif /* CHAR_INT_ELEMENTAL_H */

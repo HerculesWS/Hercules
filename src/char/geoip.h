@@ -45,6 +45,6 @@ struct geoip_interface {
 void geoip_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct geoip_interface *geoip;
+HERCAPI_CHAR_EXTERN struct geoip_interface *geoip;
 
 #endif /* CHAR_GEOIP_H */

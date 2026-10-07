@@ -37,7 +37,7 @@
 #include <stdlib.h>
 
 static struct inter_clan_interface inter_clan_s;
-struct inter_clan_interface *inter_clan;
+HERCAPI_CHAR_EXPORT struct inter_clan_interface *inter_clan;
 
 /**
  * Kick offline members of a clan
