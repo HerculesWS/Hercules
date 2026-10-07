@@ -39,7 +39,7 @@
 #define ACCOUNT_SQL_DB_VERSION 20110114
 
 static struct account_interface account_s;
-struct account_interface *account;
+HERCAPI_LOGIN_EXPORT struct account_interface *account;
 
 /// public constructor
 static AccountDB *account_db_sql(void)

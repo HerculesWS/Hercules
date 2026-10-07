@@ -64,6 +64,6 @@ struct lapiif_interface {
 void lapiif_defaults(void);
 #endif // HERCULES_CORE
 
-HPShared struct lapiif_interface *lapiif;
+HERCAPI_LOGIN_EXTERN struct lapiif_interface *lapiif;
 
 #endif /* LOGIN_LAPIIF_H */

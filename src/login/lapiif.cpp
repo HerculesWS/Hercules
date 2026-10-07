@@ -38,7 +38,7 @@
 // #define DEBUG_LOG
 
 static struct lapiif_interface lapiif_s;
-struct lapiif_interface *lapiif;
+HERCAPI_LOGIN_EXPORT struct lapiif_interface *lapiif;
 
 static void lapiif_disconnect_user(int account_id)
 {
