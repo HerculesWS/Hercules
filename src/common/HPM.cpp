@@ -75,19 +75,19 @@ static void hplugin_trigger_event(enum hp_event_types type)
 		struct hplugin *plugin = VECTOR_INDEX(HPM->plugins, i);
 		switch (type) {
 		case HPET_INIT:
-			plugin->handle->init();
+			plugin->info->init();
 			break;
 		case HPET_FINAL:
-			plugin->handle->final();
+			plugin->info->final();
 			break;
 		case HPET_READY:
-			plugin->handle->server_online();
+			plugin->info->server_online();
 			break;
 		case HPET_POST_FINAL:
-			plugin->handle->server_post_final();
+			plugin->info->server_post_final();
 			break;
 		case HPET_PRE_INIT:
-			plugin->handle->server_preinit();
+			plugin->info->server_preinit();
 			break;
 		case HPET_MAX:
 			break;
@@ -490,7 +490,6 @@ static bool hplugins_addconf(unsigned int pluginID, enum HPluginConfType type, c
 static struct hplugin *hplugin_load(const char *filename)
 {
 	struct hplugin *plugin;
-	struct hplugin_info *info;
 
 	if (HPM->exists(filename)) {
 		ShowWarning("HPM:plugin_load: attempting to load duplicate '" CL_WHITE "%s" CL_RESET "', skipping...\n",
@@ -507,38 +506,31 @@ static struct hplugin *hplugin_load(const char *filename)
 		exit(EXIT_FAILURE);
 	}
 
-	if (!(info = plugin_import(plugin->dll, "pinfo", struct hplugin_info *))) {
-		ShowFatalError("HPM:plugin_load: failed to retrieve 'plugin_info' for '" CL_WHITE "%s" CL_RESET "'!\n",
-		               filename);
-		exit(EXIT_FAILURE);
-	}
-
-	plugin->handle = *plugin_import(plugin->dll, "hpm_plugin", hpm_plugin_i **);
-	if (plugin->handle == nullptr) {
+	plugin->info = *plugin_import(plugin->dll, "hpm_plugin", hpm_plugin_i **);
+	if (plugin->info == nullptr) {
 		ShowFatalError("HPM:plugin_load: failed to retrieve 'hpm_plugin' for '" CL_WHITE "%s" CL_RESET "'!\n",
 		               filename);
 		exit(EXIT_FAILURE);
 	}
 
-	if (!(info->type & SERVER_TYPE)) {
+	if (!(plugin->info->type & SERVER_TYPE)) {
 		HPM->unload(plugin);
 		return NULL;
 	}
 
-	if (!HPM->iscompatible(info->req_version)) {
+	if (!HPM->iscompatible(plugin->info->req_version)) {
 		ShowFatalError("HPM:plugin_load: '" CL_WHITE "%s" CL_RESET "' incompatible version '%s' -> '%s'!\n", filename,
-		               info->req_version, HPM_VERSION);
+		               plugin->info->req_version, HPM_VERSION);
 		exit(EXIT_FAILURE);
 	}
 
-	plugin->info      = info;
-	plugin->filename  = aStrdup(filename);
-	plugin->info->pid = plugin->idx;
+	plugin->filename = aStrdup(filename);
+	plugin->info->set_pid(plugin->idx);
 
 	// TODO: Remove the HPM->DataCheck != NULL check once login and char support is complete
 	if (
 	  HPM->DataCheck != NULL
-	  && !HPM->DataCheck(plugin->handle->HPMDataCheck, plugin->handle->HPMDataCheckLen, plugin->handle->HPMDataCheckVer,
+	  && !HPM->DataCheck(plugin->info->HPMDataCheck, plugin->info->HPMDataCheckLen, plugin->info->HPMDataCheckVer,
 	                     plugin->info->name)
 	) {
 		ShowFatalError("HPM:plugin_load: '" CL_WHITE "%s" CL_RESET

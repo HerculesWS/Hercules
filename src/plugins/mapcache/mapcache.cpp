@@ -41,7 +41,7 @@
 class hpm_plugin_mapcache : public hpm_plugin_i
 {
   public:
-	hpm_plugin_mapcache() : HPM_INITIALIZE_PLUGIN()
+	hpm_plugin_mapcache() : HPM_INITIALIZE_PLUGIN("Mapcache", "1.0.0")
 	{
 	}
 
@@ -62,9 +62,7 @@ class hpm_plugin_mapcache : public hpm_plugin_i
 	void server_preinit() override;
 };
 
-hpm_plugin_mapcache plugin;
-
-HPM_DECLARE_PLUGIN(plugin, "Mapcache", "1.0.0")
+HPM_DECLARE_PLUGIN(hpm_plugin_mapcache{})
 
 /**
  * Yes.. old mapcache was never packed, and we loaded and wrote a compiler paded structs
@@ -526,8 +524,8 @@ void hpm_plugin_mapcache::server_preinit()
 void hpm_plugin_mapcache::final()
 {
 	while (VECTOR_LENGTH(maplist) > 0) {
-		char *name = VECTOR_POP(maplist);
-		aFree(name);
+		char *map_name = VECTOR_POP(maplist);
+		aFree(map_name);
 	}
 	VECTOR_CLEAR(maplist);
 	if (needs_grfio)

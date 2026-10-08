@@ -41,7 +41,7 @@
 class hpm_plugin_db2sql : public hpm_plugin_i
 {
   public:
-	hpm_plugin_db2sql() : HPM_INITIALIZE_PLUGIN()
+	hpm_plugin_db2sql() : HPM_INITIALIZE_PLUGIN("DB2SQL", "0.5")
 	{
 	}
 
@@ -56,9 +56,7 @@ class hpm_plugin_db2sql : public hpm_plugin_i
 	void server_preinit() override;
 };
 
-hpm_plugin_db2sql plugin;
-
-HPM_DECLARE_PLUGIN(plugin, "DB2SQL", "0.5")
+HPM_DECLARE_PLUGIN(hpm_plugin_db2sql{})
 
 #ifdef RENEWAL
   #define DBSUFFIX "_re"

@@ -58,7 +58,7 @@
 class hpm_plugin_sample : public hpm_plugin_i
 {
   public:
-	hpm_plugin_sample() : HPM_INITIALIZE_PLUGIN()
+	hpm_plugin_sample() : HPM_INITIALIZE_PLUGIN("Sample", "0.1")
 	{
 	}
 
@@ -73,13 +73,7 @@ class hpm_plugin_sample : public hpm_plugin_i
 	void server_preinit() override;
 };
 
-hpm_plugin_sample plugin;
-
-HPM_DECLARE_PLUGIN(
-	plugin,
-	"Sample", // Plugin name
-	"0.1"     // Plugin version
-)
+HPM_DECLARE_PLUGIN(hpm_plugin_sample{})
 
 #ifdef HERCULES_PLUGIN_MAP
 /// @sample command - 5 params: const int fd, struct map_session_data* sd, const char* command, const char* message,
@@ -353,5 +347,5 @@ void hpm_plugin_sample::server_online()
 /* run when server is shutting down */
 void hpm_plugin_sample::final()
 {
-	ShowInfo("%s says ~Bye world\n", pinfo.name);
+	ShowInfo("%s says ~Bye world\n", hpm_plugin->name);
 }

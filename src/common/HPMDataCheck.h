@@ -317,7 +317,6 @@ const struct s_HPMDataCheck HPMDataCheck_s[] = {
 #endif // COMMON_GRFIO_H
 #ifdef COMMON_HPMI_H
     {"HPMi_interface", sizeof(struct HPMi_interface), SERVER_TYPE_ALL},
-    {"hplugin_info", sizeof(struct hplugin_info), SERVER_TYPE_ALL},
     {"s_HPMDataCheck", sizeof(struct s_HPMDataCheck), SERVER_TYPE_ALL},
 #else
   #define COMMON_HPMI_H
@@ -1271,11 +1270,10 @@ constexpr int HPMDataCheckVer_s          = 2;
 	unsigned int HPMDataCheckLen              = HPMDataCheckLen_s; \
 	int HPMDataCheckVer                       = HPMDataCheckVer_s;
 #ifdef HPM_PLUGIN_DEFS_ALL
-  #define HPM_INITIALIZE_PLUGIN() hpm_plugin_i(HPMDataCheck_s, HPMDataCheckLen_s, HPMDataCheckVer_s)
-  #define HPM_DECLARE_PLUGIN(plugin, plugin_name, plugin_version) \
-	  HPMDATACHECK_DEFS \
+  #define HPM_PLUGIN_DEFS_HPMDATACHECK HPMDataCheck_s, HPMDataCheckLen_s, HPMDataCheckVer_s
+  #define HPM_DECLARE_PLUGIN(plugin_initializer) \
 	  HPM_PLUGIN_DEFS_ALL \
-	  HPM_DECLARE_PLUGIN_BASE((plugin), (plugin_name), (plugin_version))
+	  HPM_DECLARE_PLUGIN_BASE(plugin_initializer)
 #endif
 
 #endif /* HPM_DATA_CHECK_H */
