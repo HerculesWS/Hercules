@@ -72,7 +72,7 @@ struct hplugin {
 	unsigned int idx;
 	char *filename;
 	struct hplugin_info *info;
-	void (*event[HPET_MAX])(void);
+	hpm_plugin_i *handle;
 };
 
 /**

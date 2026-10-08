@@ -172,7 +172,31 @@
 #include <stdlib.h>
 #include <string.h>
 
-HPM_DECLARE_PLUGIN("HPMHooking", "0.2")
+class hpm_plugin_hpmhooking : public hpm_plugin_i
+{
+  public:
+	void init() override
+	{
+	}
+
+	void final() override
+	{
+	}
+
+	void server_online() override
+	{
+	}
+
+	void server_post_final() override;
+
+	void server_preinit() override
+	{
+	}
+};
+
+hpm_plugin_hpmhooking plugin;
+
+HPM_DECLARE_PLUGIN(plugin, "HPMHooking", "0.2")
 
 #define HP_POP(x, y) #x, (void **)(&x), (void *)y, 0
 struct DBMap *hp_db; /* hooking points db -- for quick lookup */
@@ -202,7 +226,7 @@ bool *HPMforce_return;
 void HPM_HP_final(void);
 void HPM_HP_load(void);
 
-HPM_EXPORT void server_post_final(void)
+void hpm_plugin_hpmhooking::server_post_final()
 {
 	HPM_HP_final();
 }

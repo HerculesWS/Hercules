@@ -287,6 +287,16 @@ struct HPMi_interface {
 };
 HERCAPI_COMMON_EXTERN struct HPMi_interface *HPMi;
 
+class hpm_plugin_i
+{
+  public:
+	virtual void init()              = 0;
+	virtual void final()             = 0;
+	virtual void server_online()     = 0;
+	virtual void server_post_final() = 0;
+	virtual void server_preinit()    = 0;
+};
+
 #if defined(HERCULES_PLUGIN)
 HPM_EXPORT struct hplugin_info pinfo;
 
@@ -326,8 +336,9 @@ static_assert(
 
   #define HPM_PLUGIN_HPMHOOKING_SUPPORT false
 
-  #define HPM_DECLARE_PLUGIN_BASE(n, v) \
-	  struct hplugin_info pinfo = { \
+  #define HPM_DECLARE_PLUGIN_BASE(p, n, v) \
+	  HPM_EXPORT hpm_plugin_i *hpm_plugin = &p; \
+	  struct hplugin_info pinfo           = { \
 		  .name           = (n), \
 		  .type           = HPM_SERVER_TYPE, \
 		  .version        = (v), \

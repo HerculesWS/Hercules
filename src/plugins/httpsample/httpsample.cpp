@@ -64,7 +64,26 @@ enum apimessages {
 	API_MSG_SAMPLE_USER  = API_MSG_CUSTOM + 3
 };
 
+class hpm_plugin_httpsample : public hpm_plugin_i
+{
+  public:
+	void init() override;
+	void final() override;
+	void server_online() override;
+
+	void server_post_final() override
+	{
+	}
+
+	void server_preinit() override
+	{
+	}
+};
+
+hpm_plugin_httpsample plugin;
+
 HPM_DECLARE_PLUGIN(
+	plugin,
 	"Http sample", // Plugin name
 	"0.1"          // Plugin version
 )
@@ -432,7 +451,7 @@ void sample_user_api_packet(int fd)
 #endif
 
 /* run when server starts */
-HPM_EXPORT void plugin_init(void)
+void hpm_plugin_httpsample::init()
 {
 	ShowInfo("Server type is ");
 
@@ -473,13 +492,8 @@ HPM_EXPORT void plugin_init(void)
 #endif
 }
 
-/* triggered when server starts loading, before any server-specific data is set */
-HPM_EXPORT void server_preinit(void)
-{
-}
-
 /* run when server is ready (online) */
-HPM_EXPORT void server_online(void)
+void hpm_plugin_httpsample::server_online()
 {
 #ifdef HERCULES_PLUGIN_API
 	// Register url for GET request
@@ -503,7 +517,7 @@ HPM_EXPORT void server_online(void)
 }
 
 /* run when server is shutting down */
-HPM_EXPORT void plugin_final(void)
+void hpm_plugin_httpsample::final()
 {
 	ShowInfo("%s says ~Bye world\n", pinfo.name);
 }

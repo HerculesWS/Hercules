@@ -38,7 +38,29 @@
 #include <stdio.h>
 #include <string.h>
 
-HPM_DECLARE_PLUGIN("Mapcache", "1.0.0")
+class hpm_plugin_mapcache : public hpm_plugin_i
+{
+  public:
+	void init() override
+	{
+	}
+
+	void final() override;
+
+	void server_online() override
+	{
+	}
+
+	void server_post_final() override
+	{
+	}
+
+	void server_preinit() override;
+};
+
+hpm_plugin_mapcache plugin;
+
+HPM_DECLARE_PLUGIN(plugin, "Mapcache", "1.0.0")
 
 /**
  * Yes.. old mapcache was never packed, and we loaded and wrote a compiler paded structs
@@ -482,7 +504,7 @@ CMDLINEARG(fixmd5)
 	return fix_md5_truncation();
 }
 
-HPM_EXPORT void server_preinit(void)
+void hpm_plugin_mapcache::server_preinit()
 {
 	addArg("--convert-old-mapcache", false, convertmapcache,
 	       "Converts an old db/" DBPATH "map_cache.dat file to the new format.");
@@ -497,7 +519,7 @@ HPM_EXPORT void server_preinit(void)
 	VECTOR_INIT(maplist);
 }
 
-HPM_EXPORT void plugin_final(void)
+void hpm_plugin_mapcache::final()
 {
 	while (VECTOR_LENGTH(maplist) > 0) {
 		char *name = VECTOR_POP(maplist);

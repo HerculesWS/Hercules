@@ -45,7 +45,27 @@
   #define OUTPUTFILENAME "doc" PATHSEP_STR "constants_pre-re.md"
 #endif
 
-HPM_DECLARE_PLUGIN("constdb2doc", "0.1")
+class hpm_plugin_constdb : public hpm_plugin_i
+{
+  public:
+	void init() override;
+
+	void final() override
+	{
+	}
+
+	void server_online() override;
+
+	void server_post_final() override
+	{
+	}
+
+	void server_preinit() override;
+};
+
+hpm_plugin_constdb plugin;
+
+HPM_DECLARE_PLUGIN(plugin, "constdb2doc", "0.1")
 
 FILE *out_fp;
 bool torun = false;
@@ -225,17 +245,17 @@ CMDLINEARG(constdb2doc)
 	return true;
 }
 
-HPM_EXPORT void server_preinit(void)
+void hpm_plugin_constdb::server_preinit()
 {
 	addArg("--constdb2doc", false, constdb2doc, NULL);
 }
 
-HPM_EXPORT void plugin_init(void)
+void hpm_plugin_constdb::init()
 {
 	addCPCommand("server:tools:constdb2doc", constdb2doc);
 }
 
-HPM_EXPORT void server_online(void)
+void hpm_plugin_constdb::server_online()
 {
 	if (torun)
 		do_constdb2doc();

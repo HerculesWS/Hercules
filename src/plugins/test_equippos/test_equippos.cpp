@@ -33,7 +33,27 @@
 
 #include <stdlib.h>
 
-HPM_DECLARE_PLUGIN("test_equippos", "0.1")
+class hpm_plugin_equippos : public hpm_plugin_i
+{
+  public:
+	void init() override;
+
+	void final() override
+	{
+	}
+
+	void server_online() override;
+
+	void server_post_final() override
+	{
+	}
+
+	void server_preinit() override;
+};
+
+hpm_plugin_equippos plugin;
+
+HPM_DECLARE_PLUGIN(plugin, "test_equippos", "0.1")
 
 #define TEST(name, function, ...) \
 	do { \
@@ -218,7 +238,7 @@ static void my_status_calc_bl_(struct block_list *bl, e_scb_flag flag, enum e_st
 {
 }
 
-HPM_EXPORT void plugin_init(void)
+void hpm_plugin_equippos::init()
 {
 	for (int i = 0; i < ARRAYLENGTH(items); i++) {
 		items[i].nameid = dummy_items_info[i].nameid;
@@ -230,13 +250,13 @@ HPM_EXPORT void plugin_init(void)
 	}
 }
 
-HPM_EXPORT void server_preinit(void)
+void hpm_plugin_equippos::server_preinit()
 {
 	clif->equipitemack = my_clif_equipitemack;
 	status->calc_bl_   = my_status_calc_bl_;
 }
 
-HPM_EXPORT void server_online(void)
+void hpm_plugin_equippos::server_online()
 {
 	ShowMessage("===============================================================================\n");
 	ShowStatus("Starting tests.\n");
@@ -4405,8 +4425,4 @@ HPM_EXPORT void server_online(void)
 	ShowMessage("===============================================================================\n");
 	ShowStatus("All tests passed.\n");
 	map->do_shutdown();
-}
-
-HPM_EXPORT void plugin_final(void)
-{
 }

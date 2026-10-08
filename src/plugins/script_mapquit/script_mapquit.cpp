@@ -27,7 +27,31 @@
 
 #include "common/HPMDataCheck.h"
 
-HPM_DECLARE_PLUGIN("script_mapquit", "0.1")
+class hpm_plugin_mapquit : public hpm_plugin_i
+{
+  public:
+	void init() override;
+
+	void final() override
+	{
+	}
+
+	void server_online() override
+	{
+	}
+
+	void server_post_final() override
+	{
+	}
+
+	void server_preinit() override
+	{
+	}
+};
+
+hpm_plugin_mapquit plugin;
+
+HPM_DECLARE_PLUGIN(plugin, "script_mapquit", "0.1")
 
 BUILDIN(mapquit)
 {
@@ -38,11 +62,7 @@ BUILDIN(mapquit)
 	return true;
 }
 
-HPM_EXPORT void server_preinit(void)
-{
-}
-
-HPM_EXPORT void plugin_init(void)
+void hpm_plugin_mapquit::init()
 {
 	addScriptCommand("mapquit", "?", mapquit);
 }
