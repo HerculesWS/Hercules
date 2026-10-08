@@ -30,6 +30,10 @@
 class hpm_plugin_mapquit : public hpm_plugin_i
 {
   public:
+	hpm_plugin_mapquit() : HPM_INITIALIZE_PLUGIN()
+	{
+	}
+
 	void init() override;
 
 	void final() override

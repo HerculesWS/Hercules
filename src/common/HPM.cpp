@@ -491,9 +491,6 @@ static struct hplugin *hplugin_load(const char *filename)
 {
 	struct hplugin *plugin;
 	struct hplugin_info *info;
-	int *HPMDataCheckVer;
-	unsigned int *HPMDataCheckLen;
-	const struct s_HPMDataCheck *const *HPMDataCheck;
 
 	if (HPM->exists(filename)) {
 		ShowWarning("HPM:plugin_load: attempting to load duplicate '" CL_WHITE "%s" CL_RESET "', skipping...\n",
@@ -538,30 +535,11 @@ static struct hplugin *hplugin_load(const char *filename)
 	plugin->filename  = aStrdup(filename);
 	plugin->info->pid = plugin->idx;
 
-	if (!(HPMDataCheckLen = plugin_import(plugin->dll, "HPMDataCheckLen", unsigned int *))) {
-		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMDataCheckLen' for '" CL_WHITE "%s" CL_RESET
-		               "', most likely not including HPMDataCheck.h!\n",
-		               filename);
-		exit(EXIT_FAILURE);
-	}
-
-	if (!(HPMDataCheckVer = plugin_import(plugin->dll, "HPMDataCheckVer", int *))) {
-		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMDataCheckVer' for '" CL_WHITE "%s" CL_RESET
-		               "', most likely an outdated plugin!\n",
-		               filename);
-		exit(EXIT_FAILURE);
-	}
-
-	if (!(HPMDataCheck = plugin_import(plugin->dll, "HPMDataCheck", const struct s_HPMDataCheck *const *))) {
-		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMDataCheck' for '" CL_WHITE "%s" CL_RESET
-		               "', most likely not including HPMDataCheck.h!\n",
-		               filename);
-		exit(EXIT_FAILURE);
-	}
-
 	// TODO: Remove the HPM->DataCheck != NULL check once login and char support is complete
 	if (
-	  HPM->DataCheck != NULL && !HPM->DataCheck(*HPMDataCheck, *HPMDataCheckLen, *HPMDataCheckVer, plugin->info->name)
+	  HPM->DataCheck != NULL
+	  && !HPM->DataCheck(plugin->handle->HPMDataCheck, plugin->handle->HPMDataCheckLen, plugin->handle->HPMDataCheckVer,
+	                     plugin->info->name)
 	) {
 		ShowFatalError("HPM:plugin_load: '" CL_WHITE "%s" CL_RESET
 		               "' failed DataCheck, out of sync from the core (recompile plugin)!\n",

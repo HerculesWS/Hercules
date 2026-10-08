@@ -129,10 +129,8 @@ constexpr int HPMDataCheckVer_s          = $HPMDataCheckAPIVer;
 	const struct s_HPMDataCheck *HPMDataCheck = HPMDataCheck_s; \\
 	unsigned int HPMDataCheckLen              = HPMDataCheckLen_s; \\
 	int HPMDataCheckVer                       = HPMDataCheckVer_s;
-HPM_EXPORT const struct s_HPMDataCheck *HPMDataCheck;
-HPM_EXPORT unsigned int HPMDataCheckLen;
-HPM_EXPORT int HPMDataCheckVer;
 #ifdef HPM_PLUGIN_DEFS_ALL
+  #define HPM_INITIALIZE_PLUGIN() hpm_plugin_i(HPMDataCheck_s, HPMDataCheckLen_s, HPMDataCheckVer_s)
   #define HPM_DECLARE_PLUGIN(plugin, plugin_name, plugin_version) \\
 	  HPMDATACHECK_DEFS \\
 	  HPM_PLUGIN_DEFS_ALL \\
