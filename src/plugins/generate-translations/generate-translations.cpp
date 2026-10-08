@@ -40,7 +40,29 @@
 #include <sys/stat.h>
 #include <time.h>
 
-HPM_DECLARE_PLUGIN("generate-translations", "0.1")
+class hpm_plugin_translations : public hpm_plugin_i
+{
+  public:
+	void init() override
+	{
+	}
+
+	void final() override
+	{
+	}
+
+	void server_online() override;
+
+	void server_post_final() override
+	{
+	}
+
+	void server_preinit() override;
+};
+
+hpm_plugin_translations plugin;
+
+HPM_DECLARE_PLUGIN(plugin, "generate-translations", "0.1")
 
 struct DBMap *translatable_strings; // string map parsed (used when exporting strings only)
 /* Set during startup when attempting to export the lang, unset after server initialization is over */
@@ -369,7 +391,7 @@ int npc_parsesrcfile_posthook(int retVal, const char *filepath, bool runOnInit)
 	return retVal;
 }
 
-HPM_EXPORT void server_preinit(void)
+void hpm_plugin_translations::server_preinit()
 {
 	addArg(
 	  "--generate-translations", false, generatetranslations,
@@ -387,19 +409,11 @@ HPM_EXPORT void server_preinit(void)
 	lang_export_stringcount_current = 0;
 }
 
-HPM_EXPORT void plugin_init(void)
-{
-}
-
-HPM_EXPORT void server_online(void)
+void hpm_plugin_translations::server_online()
 {
 	if (generating_translations) {
 		ShowInfo("Translations template exported to '%s' with %d strings.\n", DIRECTORYNAME,
 		         lang_export_stringcount_total);
 	}
 	core->runflag = CORE_ST_STOP;
-}
-
-HPM_EXPORT void plugin_final(void)
-{
 }

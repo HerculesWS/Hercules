@@ -38,7 +38,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-HPM_DECLARE_PLUGIN("DB2SQL", "0.5")
+class hpm_plugin_db2sql : public hpm_plugin_i
+{
+  public:
+	void init() override;
+	void final() override;
+	void server_online() override;
+
+	void server_post_final() override
+	{
+	}
+
+	void server_preinit() override;
+};
+
+hpm_plugin_db2sql plugin;
+
+HPM_DECLARE_PLUGIN(plugin, "DB2SQL", "0.5")
 
 #ifdef RENEWAL
   #define DBSUFFIX "_re"
@@ -1269,14 +1285,14 @@ CMDLINEARG(mobdb2sql)
 	return true;
 }
 
-HPM_EXPORT void server_preinit(void)
+void hpm_plugin_db2sql::server_preinit()
 {
 	addArg("--db2sql", false, db2sql, NULL);
 	addArg("--itemdb2sql", false, itemdb2sql, NULL);
 	addArg("--mobdb2sql", false, mobdb2sql, NULL);
 }
 
-HPM_EXPORT void plugin_init(void)
+void hpm_plugin_db2sql::init()
 {
 	addCPCommand("server:tools:db2sql", db2sql);
 	addCPCommand("server:tools:itemdb2sql", itemdb2sql);
@@ -1288,7 +1304,7 @@ HPM_EXPORT void plugin_init(void)
 	}
 }
 
-HPM_EXPORT void server_online(void)
+void hpm_plugin_db2sql::server_online()
 {
 	sql_handle = SQL->Malloc();
 	if (itemdb2sql_torun)
@@ -1297,7 +1313,7 @@ HPM_EXPORT void server_online(void)
 		do_mobdb2sql();
 }
 
-HPM_EXPORT void plugin_final(void)
+void hpm_plugin_db2sql::final()
 {
 	SQL->Free(sql_handle);
 	sql_handle = NULL;
