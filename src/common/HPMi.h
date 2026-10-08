@@ -46,6 +46,8 @@ struct hplugin_info {
 	enum server_types type;
 	const char *version;
 	const char *req_version;
+	int pid;
+	bool has_hpmhooking;
 };
 
 struct s_HPMDataCheck {
@@ -115,79 +117,79 @@ enum HPluginConfType {
 	HPCT_MAX,
 };
 
-#define addArg(name, param, func, help) (HPMi->addArg(HPMi->pid, (name), (param), (cmdline_arg_##func), (help)))
+#define addArg(name, param, func, help) (HPMi->addArg(pinfo.pid, (name), (param), (cmdline_arg_##func), (help)))
 /* HPData handy redirects */
 /* session[] */
 #define addToSession(ptr, data, classid, autofree) \
-	(HPMi->addToHPData(HPDT_SESSION, HPMi->pid, &(ptr)->hdata, (data), (classid), (autofree)))
-#define getFromSession(ptr, classid)    (HPMi->getFromHPData(HPDT_SESSION, HPMi->pid, (ptr)->hdata, (classid)))
-#define removeFromSession(ptr, classid) (HPMi->removeFromHPData(HPDT_SESSION, HPMi->pid, (ptr)->hdata, (classid)))
+	(HPMi->addToHPData(HPDT_SESSION, pinfo.pid, &(ptr)->hdata, (data), (classid), (autofree)))
+#define getFromSession(ptr, classid)    (HPMi->getFromHPData(HPDT_SESSION, pinfo.pid, (ptr)->hdata, (classid)))
+#define removeFromSession(ptr, classid) (HPMi->removeFromHPData(HPDT_SESSION, pinfo.pid, (ptr)->hdata, (classid)))
 /* map_session_data */
 #define addToMSD(ptr, data, classid, autofree) \
-	(HPMi->addToHPData(HPDT_MSD, HPMi->pid, &(ptr)->hdata, (data), (classid), (autofree)))
-#define getFromMSD(ptr, classid)    (HPMi->getFromHPData(HPDT_MSD, HPMi->pid, (ptr)->hdata, (classid)))
-#define removeFromMSD(ptr, classid) (HPMi->removeFromHPData(HPDT_MSD, HPMi->pid, (ptr)->hdata, (classid)))
+	(HPMi->addToHPData(HPDT_MSD, pinfo.pid, &(ptr)->hdata, (data), (classid), (autofree)))
+#define getFromMSD(ptr, classid)    (HPMi->getFromHPData(HPDT_MSD, pinfo.pid, (ptr)->hdata, (classid)))
+#define removeFromMSD(ptr, classid) (HPMi->removeFromHPData(HPDT_MSD, pinfo.pid, (ptr)->hdata, (classid)))
 /* npc_data */
 #define addToNPCD(ptr, data, classid, autofree) \
-	(HPMi->addToHPData(HPDT_NPCD, HPMi->pid, &(ptr)->hdata, (data), (classid), (autofree)))
-#define getFromNPCD(ptr, classid)    (HPMi->getFromHPData(HPDT_NPCD, HPMi->pid, (ptr)->hdata, (classid)))
-#define removeFromNPCD(ptr, classid) (HPMi->removeFromHPData(HPDT_NPCD, HPMi->pid, (ptr)->hdata, (classid)))
+	(HPMi->addToHPData(HPDT_NPCD, pinfo.pid, &(ptr)->hdata, (data), (classid), (autofree)))
+#define getFromNPCD(ptr, classid)    (HPMi->getFromHPData(HPDT_NPCD, pinfo.pid, (ptr)->hdata, (classid)))
+#define removeFromNPCD(ptr, classid) (HPMi->removeFromHPData(HPDT_NPCD, pinfo.pid, (ptr)->hdata, (classid)))
 /* map_data */
 #define addToMAPD(ptr, data, classid, autofree) \
-	(HPMi->addToHPData(HPDT_MAP, HPMi->pid, &(ptr)->hdata, (data), (classid), (autofree)))
-#define getFromMAPD(ptr, classid)    (HPMi->getFromHPData(HPDT_MAP, HPMi->pid, (ptr)->hdata, (classid)))
-#define removeFromMAPD(ptr, classid) (HPMi->removeFromHPData(HPDT_MAP, HPMi->pid, (ptr)->hdata, (classid)))
+	(HPMi->addToHPData(HPDT_MAP, pinfo.pid, &(ptr)->hdata, (data), (classid), (autofree)))
+#define getFromMAPD(ptr, classid)    (HPMi->getFromHPData(HPDT_MAP, pinfo.pid, (ptr)->hdata, (classid)))
+#define removeFromMAPD(ptr, classid) (HPMi->removeFromHPData(HPDT_MAP, pinfo.pid, (ptr)->hdata, (classid)))
 /* party_data */
 #define addToPAD(ptr, data, classid, autofree) \
-	(HPMi->addToHPData(HPDT_PARTY, HPMi->pid, &(ptr)->hdata, (data), (classid), (autofree)))
-#define getFromPAD(ptr, classid)    (HPMi->getFromHPData(HPDT_PARTY, HPMi->pid, (ptr)->hdata, (classid)))
-#define removeFromPAD(ptr, classid) (HPMi->removeFromHPData(HPDT_PARTY, HPMi->pid, (ptr)->hdata, (classid)))
+	(HPMi->addToHPData(HPDT_PARTY, pinfo.pid, &(ptr)->hdata, (data), (classid), (autofree)))
+#define getFromPAD(ptr, classid)    (HPMi->getFromHPData(HPDT_PARTY, pinfo.pid, (ptr)->hdata, (classid)))
+#define removeFromPAD(ptr, classid) (HPMi->removeFromHPData(HPDT_PARTY, pinfo.pid, (ptr)->hdata, (classid)))
 /* guild */
 #define addToGLD(ptr, data, classid, autofree) \
-	(HPMi->addToHPData(HPDT_GUILD, HPMi->pid, &(ptr)->hdata, (data), (classid), (autofree)))
-#define getFromGLD(ptr, classid)    (HPMi->getFromHPData(HPDT_GUILD, HPMi->pid, (ptr)->hdata, (classid)))
-#define removeFromGLD(ptr, classid) (HPMi->removeFromHPData(HPDT_GUILD, HPMi->pid, (ptr)->hdata, (classid)))
+	(HPMi->addToHPData(HPDT_GUILD, pinfo.pid, &(ptr)->hdata, (data), (classid), (autofree)))
+#define getFromGLD(ptr, classid)    (HPMi->getFromHPData(HPDT_GUILD, pinfo.pid, (ptr)->hdata, (classid)))
+#define removeFromGLD(ptr, classid) (HPMi->removeFromHPData(HPDT_GUILD, pinfo.pid, (ptr)->hdata, (classid)))
 /* instance_data */
 #define addToINSTD(ptr, data, classid, autofree) \
-	(HPMi->addToHPData(HPDT_INSTANCE, HPMi->pid, &(ptr)->hdata, (data), (classid), (autofree)))
-#define getFromINSTD(ptr, classid)    (HPMi->getFromHPData(HPDT_INSTANCE, HPMi->pid, (ptr)->hdata, (classid)))
-#define removeFromINSTD(ptr, classid) (HPMi->removeFromHPData(HPDT_INSTANCE, HPMi->pid, (ptr)->hdata, (classid)))
+	(HPMi->addToHPData(HPDT_INSTANCE, pinfo.pid, &(ptr)->hdata, (data), (classid), (autofree)))
+#define getFromINSTD(ptr, classid)    (HPMi->getFromHPData(HPDT_INSTANCE, pinfo.pid, (ptr)->hdata, (classid)))
+#define removeFromINSTD(ptr, classid) (HPMi->removeFromHPData(HPDT_INSTANCE, pinfo.pid, (ptr)->hdata, (classid)))
 /* mob_db */
 #define addToMOBDB(ptr, data, classid, autofree) \
-	(HPMi->addToHPData(HPDT_MOBDB, HPMi->pid, &(ptr)->hdata, (data), (classid), (autofree)))
-#define getFromMOBDB(ptr, classid)    (HPMi->getFromHPData(HPDT_MOBDB, HPMi->pid, (ptr)->hdata, (classid)))
-#define removeFromMOBDB(ptr, classid) (HPMi->removeFromHPData(HPDT_MOBDB, HPMi->pid, (ptr)->hdata, (classid)))
+	(HPMi->addToHPData(HPDT_MOBDB, pinfo.pid, &(ptr)->hdata, (data), (classid), (autofree)))
+#define getFromMOBDB(ptr, classid)    (HPMi->getFromHPData(HPDT_MOBDB, pinfo.pid, (ptr)->hdata, (classid)))
+#define removeFromMOBDB(ptr, classid) (HPMi->removeFromHPData(HPDT_MOBDB, pinfo.pid, (ptr)->hdata, (classid)))
 /* mob_data */
 #define addToMOBDATA(ptr, data, classid, autofree) \
-	(HPMi->addToHPData(HPDT_MOBDATA, HPMi->pid, &(ptr)->hdata, (data), (classid), (autofree)))
-#define getFromMOBDATA(ptr, classid)    (HPMi->getFromHPData(HPDT_MOBDATA, HPMi->pid, (ptr)->hdata, (classid)))
-#define removeFromMOBDATA(ptr, classid) (HPMi->removeFromHPData(HPDT_MOBDATA, HPMi->pid, (ptr)->hdata, (classid)))
+	(HPMi->addToHPData(HPDT_MOBDATA, pinfo.pid, &(ptr)->hdata, (data), (classid), (autofree)))
+#define getFromMOBDATA(ptr, classid)    (HPMi->getFromHPData(HPDT_MOBDATA, pinfo.pid, (ptr)->hdata, (classid)))
+#define removeFromMOBDATA(ptr, classid) (HPMi->removeFromHPData(HPDT_MOBDATA, pinfo.pid, (ptr)->hdata, (classid)))
 /* item_data */
 #define addToITEMDATA(ptr, data, classid, autofree) \
-	(HPMi->addToHPData(HPDT_ITEMDATA, HPMi->pid, &(ptr)->hdata, (data), (classid), (autofree)))
-#define getFromITEMDATA(ptr, classid)    (HPMi->getFromHPData(HPDT_ITEMDATA, HPMi->pid, (ptr)->hdata, (classid)))
-#define removeFromITEMDATA(ptr, classid) (HPMi->removeFromHPData(HPDT_ITEMDATA, HPMi->pid, (ptr)->hdata, (classid)))
+	(HPMi->addToHPData(HPDT_ITEMDATA, pinfo.pid, &(ptr)->hdata, (data), (classid), (autofree)))
+#define getFromITEMDATA(ptr, classid)    (HPMi->getFromHPData(HPDT_ITEMDATA, pinfo.pid, (ptr)->hdata, (classid)))
+#define removeFromITEMDATA(ptr, classid) (HPMi->removeFromHPData(HPDT_ITEMDATA, pinfo.pid, (ptr)->hdata, (classid)))
 /* battleground_data */
 #define addToBGDATA(ptr, data, classid, autofree) \
-	(HPMi->addToHPData(HPDT_BGDATA, HPMi->pid, &(ptr)->hdata, (data), (classid), (autofree)))
-#define getFromBGDATA(ptr, classid)    (HPMi->getFromHPData(HPDT_BGDATA, HPMi->pid, (ptr)->hdata, (classid)))
-#define removeFromBGDATA(ptr, classid) (HPMi->removeFromHPData(HPDT_BGDATA, HPMi->pid, (ptr)->hdata, (classid)))
+	(HPMi->addToHPData(HPDT_BGDATA, pinfo.pid, &(ptr)->hdata, (data), (classid), (autofree)))
+#define getFromBGDATA(ptr, classid)    (HPMi->getFromHPData(HPDT_BGDATA, pinfo.pid, (ptr)->hdata, (classid)))
+#define removeFromBGDATA(ptr, classid) (HPMi->removeFromHPData(HPDT_BGDATA, pinfo.pid, (ptr)->hdata, (classid)))
 /* autotrade_vending */
 #define addToATVEND(ptr, data, classid, autofree) \
-	(HPMi->addToHPData(HPDT_AUTOTRADE_VEND, HPMi->pid, &(ptr)->hdata, (data), (classid), (autofree)))
-#define getFromATVEND(ptr, classid)    (HPMi->getFromHPData(HPDT_AUTOTRADE_VEND, HPMi->pid, (ptr)->hdata, (classid)))
-#define removeFromATVEND(ptr, classid) (HPMi->removeFromHPData(HPDT_AUTOTRADE_VEND, HPMi->pid, (ptr)->hdata, (classid)))
+	(HPMi->addToHPData(HPDT_AUTOTRADE_VEND, pinfo.pid, &(ptr)->hdata, (data), (classid), (autofree)))
+#define getFromATVEND(ptr, classid)    (HPMi->getFromHPData(HPDT_AUTOTRADE_VEND, pinfo.pid, (ptr)->hdata, (classid)))
+#define removeFromATVEND(ptr, classid) (HPMi->removeFromHPData(HPDT_AUTOTRADE_VEND, pinfo.pid, (ptr)->hdata, (classid)))
 /* clan */
 #define addtoCLAN(ptr, data, classid, autofree) \
-	(HPMi->addToHPData(HPDT_CLAN, HPMi->pid, &(ptr)->hdata, (data), (classid), (autofree)))
-#define getfromCLAN(ptr, classid)    (HPMi->getFromHPData(HPDT_CLAN, HPMi->pid, (ptr)->hdata, (classid)))
-#define removefromCLAN(ptr, classid) (HPMi->removeFromHPData(HPDT_CLAN, HPMi->pid, (ptr)->hdata, (classid)))
+	(HPMi->addToHPData(HPDT_CLAN, pinfo.pid, &(ptr)->hdata, (data), (classid), (autofree)))
+#define getfromCLAN(ptr, classid)    (HPMi->getFromHPData(HPDT_CLAN, pinfo.pid, (ptr)->hdata, (classid)))
+#define removefromCLAN(ptr, classid) (HPMi->removeFromHPData(HPDT_CLAN, pinfo.pid, (ptr)->hdata, (classid)))
 /* unit parameters */
 #define addToUnitParam(ptr, data, classid, autofree) \
-	(HPMi->addToHPData(HPDT_UNIT_PARAMETER, HPMi->pid, &(ptr)->hdata, (data), (classid), (autofree)))
-#define getfromUnitParam(ptr, classid) (HPMi->getFromHPData(HPDT_UNIT_PARAMETER, HPMi->pid, (ptr)->hdata, (classid)))
+	(HPMi->addToHPData(HPDT_UNIT_PARAMETER, pinfo.pid, &(ptr)->hdata, (data), (classid), (autofree)))
+#define getfromUnitParam(ptr, classid) (HPMi->getFromHPData(HPDT_UNIT_PARAMETER, pinfo.pid, (ptr)->hdata, (classid)))
 #define removefromUnitParam(ptr, classid) \
-	(HPMi->removeFromHPData(HPDT_UNIT_PARAMETER, HPMi->pid, (ptr)->hdata, (classid)))
+	(HPMi->removeFromHPData(HPDT_UNIT_PARAMETER, pinfo.pid, (ptr)->hdata, (classid)))
 
 /// HPMi->addCommand
 #define addAtcommand(cname, funcname) \
@@ -229,34 +231,31 @@ enum HPluginConfType {
 		} \
 	} while (0)
 /* HPMi->addPacket */
-#define addPacket(cmd, len, receive, point) HPMi->addPacket(cmd, len, receive, point, HPMi->pid)
+#define addPacket(cmd, len, receive, point) HPMi->addPacket(cmd, len, receive, point, pinfo.pid)
 /* HPMi->addBattleConf */
 #define addBattleConf(bcname, funcname, returnfunc, required) \
-	HPMi->addConf(HPMi->pid, HPCT_BATTLE, bcname, funcname, returnfunc, required)
+	HPMi->addConf(pinfo.pid, HPCT_BATTLE, bcname, funcname, returnfunc, required)
 /* HPMi->addLogin */
-#define addLoginConf(bcname, funcname)     HPMi->addConf(HPMi->pid, HPCT_LOGIN, bcname, funcname, NULL, false)
+#define addLoginConf(bcname, funcname)     HPMi->addConf(pinfo.pid, HPCT_LOGIN, bcname, funcname, NULL, false)
 /* HPMi->addChar */
-#define addCharConf(bcname, funcname)      HPMi->addConf(HPMi->pid, HPCT_CHAR, bcname, funcname, NULL, false)
+#define addCharConf(bcname, funcname)      HPMi->addConf(pinfo.pid, HPCT_CHAR, bcname, funcname, NULL, false)
 /* HPMi->addCharInter */
-#define addCharInterConf(bcname, funcname) HPMi->addConf(HPMi->pid, HPCT_CHAR_INTER, bcname, funcname, NULL, false)
+#define addCharInterConf(bcname, funcname) HPMi->addConf(pinfo.pid, HPCT_CHAR_INTER, bcname, funcname, NULL, false)
 /* HPMi->addMapInter */
-#define addMapInterConf(bcname, funcname)  HPMi->addConf(HPMi->pid, HPCT_MAP_INTER, bcname, funcname, NULL, false)
+#define addMapInterConf(bcname, funcname)  HPMi->addConf(pinfo.pid, HPCT_MAP_INTER, bcname, funcname, NULL, false)
 /* HPMi->addLog */
-#define addLogConf(bcname, funcname)       HPMi->addConf(HPMi->pid, HPCT_LOG, bcname, funcname, NULL, false)
+#define addLogConf(bcname, funcname)       HPMi->addConf(pinfo.pid, HPCT_LOG, bcname, funcname, NULL, false)
 /* HPMi->addScript */
-#define addScriptConf(bcname, funcname)    HPMi->addConf(HPMi->pid, HPCT_SCRIPT, bcname, funcname, NULL, false)
+#define addScriptConf(bcname, funcname)    HPMi->addConf(pinfo.pid, HPCT_SCRIPT, bcname, funcname, NULL, false)
 
 /* HPMi->addPCGPermission */
-#define addGroupPermission(pcgname, maskptr) HPMi->addPCGPermission(HPMi->pid, pcgname, &maskptr)
+#define addGroupPermission(pcgname, maskptr) HPMi->addPCGPermission(pinfo.pid, pcgname, &maskptr)
 
 #define addProxyPacket(cmd, structname, receive, point) \
 	addPacket(cmd, WFIFO_APICHAR_SIZE + sizeof(struct PACKET_API_##structname##_data), receive, point)
 
 /* Hercules Plugin Mananger Include Interface */
 struct HPMi_interface {
-	/* */
-	unsigned int pid;
-	/* */
 	bool (*addCommand)(const char *name, bool (*func)(const int fd, struct map_session_data *sd, const char *command,
 	                                                  const char *message, struct AtCommandInfo *info));
 	bool (*addScript)(const char *name, const char *args, bool (*func)(struct script_state *st), bool isDeprecated);
@@ -286,9 +285,9 @@ struct HPMi_interface {
 	struct HPMHooking_interface *hooking;
 	struct malloc_interface *memmgr;
 };
+HERCAPI_COMMON_EXTERN struct HPMi_interface *HPMi;
+
 #if defined(HERCULES_PLUGIN)
-HPM_EXPORT struct HPMi_interface HPMi_s;
-HPM_EXPORT struct HPMi_interface *HPMi;
 HPM_EXPORT struct hplugin_info pinfo;
 
 static_assert(
@@ -321,18 +320,20 @@ static_assert(
 	#define HPM_SERVER_TYPE SERVER_TYPE_UNKNOWN
   #endif
 
-  #define HPM_PLUGIN_DEFS_BASE \
-	  struct HPMi_interface HPMi_s; \
-	  struct HPMi_interface *HPMi;
+  #define HPM_PLUGIN_DEFS_BASE
 
   #define HPM_PLUGIN_DEFS_ALL HPM_PLUGIN_DEFS_BASE
 
+  #define HPM_PLUGIN_HPMHOOKING_SUPPORT false
+
   #define HPM_DECLARE_PLUGIN_BASE(n, v) \
 	  struct hplugin_info pinfo = { \
-		  .name        = (n), \
-		  .type        = HPM_SERVER_TYPE, \
-		  .version     = (v), \
-		  .req_version = HPM_VERSION, \
+		  .name           = (n), \
+		  .type           = HPM_SERVER_TYPE, \
+		  .version        = (v), \
+		  .req_version    = HPM_VERSION, \
+		  .pid            = INT_MIN, \
+		  .has_hpmhooking = HPM_PLUGIN_HPMHOOKING_SUPPORT, \
 	  };
 
 #endif

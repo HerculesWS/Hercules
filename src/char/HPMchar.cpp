@@ -95,13 +95,15 @@ bool HPM_char_data_store_validate(enum HPluginDataTypes type, struct hplugin_dat
 
 void HPM_char_plugin_load_sub(struct hplugin *plugin)
 {
-	plugin->hpi->sql_handle = inter->sql_handle;
 }
 
 void HPM_char_do_init(void)
 {
 	HPM->load_sub                = HPM_char_plugin_load_sub;
 	HPM->data_store_validate_sub = HPM_char_data_store_validate;
+
+	HPMi->sql_handle = inter->sql_handle;
+
 	HPM->datacheck_init(HPMDataCheck, HPMDataCheckLen, HPMDataCheckVer);
 }
 

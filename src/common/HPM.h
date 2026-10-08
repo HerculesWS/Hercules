@@ -72,7 +72,6 @@ struct hplugin {
 	unsigned int idx;
 	char *filename;
 	struct hplugin_info *info;
-	struct HPMi_interface *hpi;
 	void (*event[HPET_MAX])(void);
 };
 
