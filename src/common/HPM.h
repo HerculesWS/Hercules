@@ -133,7 +133,6 @@ struct HPM_interface {
 	bool off;
 	/* data */
 	VECTOR_DECL(struct hplugin *) plugins;
-	VECTOR_DECL(struct hpm_symbol *) symbols;
 	/* packet hooking points */
 	VECTOR_DECL(struct HPluginPacket) packets[hpPHP_MAX];
 
@@ -157,8 +156,6 @@ struct HPM_interface {
 	bool (*exists)(const char *filename);
 	bool (*iscompatible)(const char *version);
 	void (*event)(enum hp_event_types type);
-	void *(*import_symbol)(const char *name, unsigned int pID);
-	void (*share)(void *value, const char *name);
 	void (*config_read)(void);
 	bool (*parse_battle_conf)(const struct config_t *config, const char *filename, bool imported);
 	const char *(*pid2name)(unsigned int pid);

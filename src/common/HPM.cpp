@@ -76,43 +76,6 @@ static void hplugin_trigger_event(enum hp_event_types type)
 	}
 }
 
-/**
- * Exports a symbol to the shared symbols list.
- *
- * @param value The symbol value.
- * @param name  The symbol name.
- */
-static void hplugin_export_symbol(void *value, const char *name)
-{
-	struct hpm_symbol *symbol = NULL;
-	CREATE(symbol, struct hpm_symbol, 1);
-	symbol->name = name;
-	symbol->ptr  = value;
-	VECTOR_ENSURE(HPM->symbols, 1, 1);
-	VECTOR_PUSH(HPM->symbols, symbol);
-}
-
-/**
- * Imports a shared symbol.
- *
- * @param name The symbol name.
- * @param pID  The requesting plugin ID.
- * @return The symbol value.
- * @retval NULL if the symbol wasn't found.
- */
-static void *hplugin_import_symbol(const char *name, unsigned int pID)
-{
-	int i;
-	nullpo_retr(NULL, name);
-	ARR_FIND(0, VECTOR_LENGTH(HPM->symbols), i, strcmp(VECTOR_INDEX(HPM->symbols, i)->name, name) == 0);
-
-	if (i != VECTOR_LENGTH(HPM->symbols))
-		return VECTOR_INDEX(HPM->symbols, i)->ptr;
-
-	ShowError("HPM:get_symbol:%s: '" CL_WHITE "%s" CL_RESET "' not found!\n", HPM->pid2name(pID), name);
-	return NULL;
-}
-
 static bool hplugin_iscompatible(const char *version)
 {
 	unsigned int req_major = 0, req_minor = 0;
@@ -507,12 +470,10 @@ static bool hplugins_addconf(unsigned int pluginID, enum HPluginConfType type, c
 
 static struct hplugin *hplugin_load(const char *filename)
 {
-	typedef void *(ImportSymbolFunc)(const char *, unsigned int);
 	struct hplugin *plugin;
 	struct hplugin_info *info;
 	struct HPMi_interface **HPMi;
 	bool anyEvent = false;
-	ImportSymbolFunc **import_symbol_ref;
 	int *HPMDataCheckVer;
 	unsigned int *HPMDataCheckLen;
 	const struct s_HPMDataCheck *const *HPMDataCheck;
@@ -551,14 +512,6 @@ static struct hplugin *hplugin_load(const char *filename)
 
 	plugin->info     = info;
 	plugin->filename = aStrdup(filename);
-
-	if ((import_symbol_ref = plugin_import(plugin->dll, "import_symbol", ImportSymbolFunc **)) == NULL) {
-		ShowFatalError("HPM:plugin_load: failed to retrieve 'import_symbol' for '" CL_WHITE "%s" CL_RESET "'!\n",
-		               filename);
-		exit(EXIT_FAILURE);
-	}
-
-	*import_symbol_ref = HPM->import_symbol;
 
 	if (!(HPMi = plugin_import(plugin->dll, "HPMi", struct HPMi_interface **))) {
 		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMi' for '" CL_WHITE "%s" CL_RESET "'!\n", filename);
@@ -1183,7 +1136,6 @@ static void hpm_init(void)
 	datacheck_version = 0;
 
 	VECTOR_INIT(HPM->plugins);
-	VECTOR_INIT(HPM->symbols);
 
 	HPM->off = false;
 
@@ -1245,11 +1197,6 @@ static void hpm_final(void)
 	}
 	VECTOR_CLEAR(HPM->plugins);
 
-	while (VECTOR_LENGTH(HPM->symbols)) {
-		aFree(VECTOR_POP(HPM->symbols));
-	}
-	VECTOR_CLEAR(HPM->symbols);
-
 	for (i = 0; i < hpPHP_MAX; i++) {
 		VECTOR_CLEAR(HPM->packets[i]);
 	}
@@ -1286,8 +1233,6 @@ void hpm_defaults(void)
 	HPM->event             = hplugin_trigger_event;
 	HPM->exists            = hplugin_exists;
 	HPM->iscompatible      = hplugin_iscompatible;
-	HPM->import_symbol     = hplugin_import_symbol;
-	HPM->share             = hplugin_export_symbol;
 	HPM->config_read       = hplugins_config_read;
 	HPM->pid2name          = hplugins_id2name;
 	HPM->parse_packets     = hplugins_parse_packets;

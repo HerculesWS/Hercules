@@ -290,7 +290,6 @@ struct HPMi_interface {
 #if defined(HERCULES_PLUGIN)
 HPExport struct HPMi_interface HPMi_s;
 HPExport struct HPMi_interface *HPMi;
-HPExport void *(*import_symbol)(const char *name, unsigned int pID);
 HPExport struct hplugin_info pinfo;
 
 static_assert(
@@ -325,8 +324,7 @@ static_assert(
 
   #define HPM_PLUGIN_DEFS_BASE \
 	  struct HPMi_interface HPMi_s; \
-	  struct HPMi_interface *HPMi; \
-	  void *(*import_symbol)(const char *name, unsigned int pID);
+	  struct HPMi_interface *HPMi;
 
   #define HPM_PLUGIN_DEFS_ALL HPM_PLUGIN_DEFS_BASE
 
