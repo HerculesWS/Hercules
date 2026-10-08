@@ -73,8 +73,25 @@ static void hplugin_trigger_event(enum hp_event_types type)
 	int i;
 	for (i = 0; i < VECTOR_LENGTH(HPM->plugins); i++) {
 		struct hplugin *plugin = VECTOR_INDEX(HPM->plugins, i);
-		if (plugin->event[type] != NULL)
-			plugin->event[type]();
+		switch (type) {
+		case HPET_INIT:
+			plugin->handle->init();
+			break;
+		case HPET_FINAL:
+			plugin->handle->final();
+			break;
+		case HPET_READY:
+			plugin->handle->server_online();
+			break;
+		case HPET_POST_FINAL:
+			plugin->handle->server_post_final();
+			break;
+		case HPET_PRE_INIT:
+			plugin->handle->server_preinit();
+			break;
+		case HPET_MAX:
+			break;
+		}
 	}
 }
 
@@ -474,7 +491,6 @@ static struct hplugin *hplugin_load(const char *filename)
 {
 	struct hplugin *plugin;
 	struct hplugin_info *info;
-	bool anyEvent = false;
 	int *HPMDataCheckVer;
 	unsigned int *HPMDataCheckLen;
 	const struct s_HPMDataCheck *const *HPMDataCheck;
@@ -500,6 +516,13 @@ static struct hplugin *hplugin_load(const char *filename)
 		exit(EXIT_FAILURE);
 	}
 
+	plugin->handle = *plugin_import(plugin->dll, "hpm_plugin", hpm_plugin_i **);
+	if (plugin->handle == nullptr) {
+		ShowFatalError("HPM:plugin_load: failed to retrieve 'hpm_plugin' for '" CL_WHITE "%s" CL_RESET "'!\n",
+		               filename);
+		exit(EXIT_FAILURE);
+	}
+
 	if (!(info->type & SERVER_TYPE)) {
 		HPM->unload(plugin);
 		return NULL;
@@ -514,26 +537,6 @@ static struct hplugin *hplugin_load(const char *filename)
 	plugin->info      = info;
 	plugin->filename  = aStrdup(filename);
 	plugin->info->pid = plugin->idx;
-
-	if ((plugin->event[HPET_INIT] = plugin_import(plugin->dll, "plugin_init", void (*)(void))))
-		anyEvent = true;
-
-	if ((plugin->event[HPET_FINAL] = plugin_import(plugin->dll, "plugin_final", void (*)(void))))
-		anyEvent = true;
-
-	if ((plugin->event[HPET_READY] = plugin_import(plugin->dll, "server_online", void (*)(void))))
-		anyEvent = true;
-
-	if ((plugin->event[HPET_POST_FINAL] = plugin_import(plugin->dll, "server_post_final", void (*)(void))))
-		anyEvent = true;
-
-	if ((plugin->event[HPET_PRE_INIT] = plugin_import(plugin->dll, "server_preinit", void (*)(void))))
-		anyEvent = true;
-
-	if (!anyEvent) {
-		ShowWarning("HPM:plugin_load: no events found for '" CL_WHITE "%s" CL_RESET "'!\n", filename);
-		exit(EXIT_FAILURE);
-	}
 
 	if (!(HPMDataCheckLen = plugin_import(plugin->dll, "HPMDataCheckLen", unsigned int *))) {
 		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMDataCheckLen' for '" CL_WHITE "%s" CL_RESET

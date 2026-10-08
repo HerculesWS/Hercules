@@ -55,7 +55,24 @@
 #include <stdlib.h>
 #include <string.h>
 
+class hpm_plugin_sample : public hpm_plugin_i
+{
+  public:
+	void init() override;
+	void final() override;
+	void server_online() override;
+
+	void server_post_final() override
+	{
+	}
+
+	void server_preinit() override;
+};
+
+hpm_plugin_sample plugin;
+
 HPM_DECLARE_PLUGIN(
+	plugin,
 	"Sample", // Plugin name
 	"0.1"     // Plugin version
 )
@@ -234,7 +251,7 @@ void atcmd_sample_message(const char *message, const char *sd_name)
 #endif
 
 /* run when server starts */
-HPM_EXPORT void plugin_init(void)
+void hpm_plugin_sample::init()
 {
 	ShowInfo("Server type is ");
 
@@ -313,7 +330,7 @@ HPM_EXPORT void plugin_init(void)
 }
 
 /* triggered when server starts loading, before any server-specific data is set */
-HPM_EXPORT void server_preinit(void)
+void hpm_plugin_sample::server_preinit()
 {
 #ifdef HERCULES_PLUGIN_MAP
 	/* makes map server listen to mysetting:value in any "battleconf" file (including imported or custom ones) */
@@ -325,12 +342,12 @@ HPM_EXPORT void server_preinit(void)
 }
 
 /* run when server is ready (online) */
-HPM_EXPORT void server_online(void)
+void hpm_plugin_sample::server_online()
 {
 }
 
 /* run when server is shutting down */
-HPM_EXPORT void plugin_final(void)
+void hpm_plugin_sample::final()
 {
 	ShowInfo("%s says ~Bye world\n", pinfo.name);
 }
