@@ -58,6 +58,10 @@
 class hpm_plugin_sample : public hpm_plugin_i
 {
   public:
+	hpm_plugin_sample() : HPM_INITIALIZE_PLUGIN()
+	{
+	}
+
 	void init() override;
 	void final() override;
 	void server_online() override;

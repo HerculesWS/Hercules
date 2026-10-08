@@ -67,6 +67,10 @@ enum apimessages {
 class hpm_plugin_httpsample : public hpm_plugin_i
 {
   public:
+	hpm_plugin_httpsample() : HPM_INITIALIZE_PLUGIN()
+	{
+	}
+
 	void init() override;
 	void final() override;
 	void server_online() override;

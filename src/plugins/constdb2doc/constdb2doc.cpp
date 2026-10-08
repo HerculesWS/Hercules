@@ -48,6 +48,10 @@
 class hpm_plugin_constdb : public hpm_plugin_i
 {
   public:
+	hpm_plugin_constdb() : HPM_INITIALIZE_PLUGIN()
+	{
+	}
+
 	void init() override;
 
 	void final() override

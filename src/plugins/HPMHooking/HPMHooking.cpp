@@ -175,6 +175,10 @@
 class hpm_plugin_hpmhooking : public hpm_plugin_i
 {
   public:
+	hpm_plugin_hpmhooking() : HPM_INITIALIZE_PLUGIN()
+	{
+	}
+
 	void init() override
 	{
 	}

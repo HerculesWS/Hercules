@@ -41,6 +41,10 @@
 class hpm_plugin_db2sql : public hpm_plugin_i
 {
   public:
+	hpm_plugin_db2sql() : HPM_INITIALIZE_PLUGIN()
+	{
+	}
+
 	void init() override;
 	void final() override;
 	void server_online() override;
