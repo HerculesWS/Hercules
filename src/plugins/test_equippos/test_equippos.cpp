@@ -36,7 +36,7 @@
 class hpm_plugin_equippos : public hpm_plugin_i
 {
   public:
-	hpm_plugin_equippos() : HPM_INITIALIZE_PLUGIN()
+	hpm_plugin_equippos() : HPM_INITIALIZE_PLUGIN("test_equippos", "0.1")
 	{
 	}
 
@@ -55,9 +55,7 @@ class hpm_plugin_equippos : public hpm_plugin_i
 	void server_preinit() override;
 };
 
-hpm_plugin_equippos plugin;
-
-HPM_DECLARE_PLUGIN(plugin, "test_equippos", "0.1")
+HPM_DECLARE_PLUGIN(hpm_plugin_equippos{})
 
 #define TEST(name, function, ...) \
 	do { \

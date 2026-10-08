@@ -30,7 +30,7 @@
 class hpm_plugin_mapquit : public hpm_plugin_i
 {
   public:
-	hpm_plugin_mapquit() : HPM_INITIALIZE_PLUGIN()
+	hpm_plugin_mapquit() : HPM_INITIALIZE_PLUGIN("script_mapquit", "0.1")
 	{
 	}
 
@@ -53,9 +53,7 @@ class hpm_plugin_mapquit : public hpm_plugin_i
 	}
 };
 
-hpm_plugin_mapquit plugin;
-
-HPM_DECLARE_PLUGIN(plugin, "script_mapquit", "0.1")
+HPM_DECLARE_PLUGIN(hpm_plugin_mapquit{})
 
 BUILDIN(mapquit)
 {

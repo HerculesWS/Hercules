@@ -67,7 +67,7 @@ enum apimessages {
 class hpm_plugin_httpsample : public hpm_plugin_i
 {
   public:
-	hpm_plugin_httpsample() : HPM_INITIALIZE_PLUGIN()
+	hpm_plugin_httpsample() : HPM_INITIALIZE_PLUGIN("Http sample", "0.1")
 	{
 	}
 
@@ -84,13 +84,7 @@ class hpm_plugin_httpsample : public hpm_plugin_i
 	}
 };
 
-hpm_plugin_httpsample plugin;
-
-HPM_DECLARE_PLUGIN(
-	plugin,
-	"Http sample", // Plugin name
-	"0.1"          // Plugin version
-)
+HPM_DECLARE_PLUGIN(hpm_plugin_httpsample{})
 
 struct PACKET_API_sample_login_request_data {
 	char text[100];
@@ -523,5 +517,5 @@ void hpm_plugin_httpsample::server_online()
 /* run when server is shutting down */
 void hpm_plugin_httpsample::final()
 {
-	ShowInfo("%s says ~Bye world\n", pinfo.name);
+	ShowInfo("%s says ~Bye world\n", hpm_plugin->name);
 }

@@ -48,7 +48,7 @@
 class hpm_plugin_constdb : public hpm_plugin_i
 {
   public:
-	hpm_plugin_constdb() : HPM_INITIALIZE_PLUGIN()
+	hpm_plugin_constdb() : HPM_INITIALIZE_PLUGIN("constdb2doc", "0.1")
 	{
 	}
 
@@ -67,9 +67,7 @@ class hpm_plugin_constdb : public hpm_plugin_i
 	void server_preinit() override;
 };
 
-hpm_plugin_constdb plugin;
-
-HPM_DECLARE_PLUGIN(plugin, "constdb2doc", "0.1")
+HPM_DECLARE_PLUGIN(hpm_plugin_constdb{})
 
 FILE *out_fp;
 bool torun = false;

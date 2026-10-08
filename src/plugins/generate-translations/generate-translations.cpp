@@ -43,7 +43,7 @@
 class hpm_plugin_translations : public hpm_plugin_i
 {
   public:
-	hpm_plugin_translations() : HPM_INITIALIZE_PLUGIN()
+	hpm_plugin_translations() : HPM_INITIALIZE_PLUGIN("generate-translations", "0.1")
 	{
 	}
 
@@ -64,9 +64,7 @@ class hpm_plugin_translations : public hpm_plugin_i
 	void server_preinit() override;
 };
 
-hpm_plugin_translations plugin;
-
-HPM_DECLARE_PLUGIN(plugin, "generate-translations", "0.1")
+HPM_DECLARE_PLUGIN(hpm_plugin_translations{})
 
 struct DBMap *translatable_strings; // string map parsed (used when exporting strings only)
 /* Set during startup when attempting to export the lang, unset after server initialization is over */
