@@ -82,13 +82,15 @@ bool HPM_api_data_store_validate(enum HPluginDataTypes type, struct hplugin_data
 
 void HPM_api_plugin_load_sub(struct hplugin *plugin)
 {
-	plugin->hpi->sql_handle = api->mysql_handle;
 }
 
 void HPM_api_do_init(void)
 {
 	HPM->load_sub                = HPM_api_plugin_load_sub;
 	HPM->data_store_validate_sub = HPM_api_data_store_validate;
+
+	HPMi->sql_handle = api->mysql_handle;
+
 	HPM->datacheck_init(HPMDataCheck, HPMDataCheckLen, HPMDataCheckVer);
 }
 
