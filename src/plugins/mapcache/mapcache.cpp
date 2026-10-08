@@ -41,6 +41,10 @@
 class hpm_plugin_mapcache : public hpm_plugin_i
 {
   public:
+	hpm_plugin_mapcache() : HPM_INITIALIZE_PLUGIN()
+	{
+	}
+
 	void init() override
 	{
 	}

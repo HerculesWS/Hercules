@@ -36,6 +36,10 @@
 class hpm_plugin_equippos : public hpm_plugin_i
 {
   public:
+	hpm_plugin_equippos() : HPM_INITIALIZE_PLUGIN()
+	{
+	}
+
 	void init() override;
 
 	void final() override

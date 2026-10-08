@@ -290,11 +290,21 @@ HERCAPI_COMMON_EXTERN struct HPMi_interface *HPMi;
 class hpm_plugin_i
 {
   public:
+	hpm_plugin_i(const struct s_HPMDataCheck *the_HPMDataCheck, unsigned int the_HPMDataCheckLen,
+	             int the_HPMDataCheckVer)
+	    : HPMDataCheck(the_HPMDataCheck), HPMDataCheckLen(the_HPMDataCheckLen), HPMDataCheckVer(the_HPMDataCheckVer)
+	{
+	}
+
 	virtual void init()              = 0;
 	virtual void final()             = 0;
 	virtual void server_online()     = 0;
 	virtual void server_post_final() = 0;
 	virtual void server_preinit()    = 0;
+
+	const struct s_HPMDataCheck *HPMDataCheck;
+	const unsigned int HPMDataCheckLen;
+	const int HPMDataCheckVer;
 };
 
 #if defined(HERCULES_PLUGIN)

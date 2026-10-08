@@ -43,6 +43,10 @@
 class hpm_plugin_translations : public hpm_plugin_i
 {
   public:
+	hpm_plugin_translations() : HPM_INITIALIZE_PLUGIN()
+	{
+	}
+
 	void init() override
 	{
 	}
