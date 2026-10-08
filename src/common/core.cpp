@@ -317,7 +317,6 @@ static bool get_executable_path(char *buf, size_t length)
 static void core_defaults(void)
 {
 	nullpo_defaults();
-	hpm_defaults();
 	HCache_defaults();
 	sysinfo_defaults();
 	console_defaults();
@@ -339,6 +338,7 @@ static void core_defaults(void)
 	md5_defaults();
 	thread_defaults();
 	base62_defaults();
+	hpm_defaults();
 }
 
 /**

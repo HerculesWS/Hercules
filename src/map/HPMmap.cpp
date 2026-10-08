@@ -151,10 +151,6 @@ bool HPM_map_data_store_validate(enum HPluginDataTypes type, struct hplugin_data
 
 void HPM_map_plugin_load_sub(struct hplugin *plugin)
 {
-	plugin->hpi->sql_handle       = map->mysql_handle;
-	plugin->hpi->addCommand       = atcommand->create;
-	plugin->hpi->addScript        = script->addScript;
-	plugin->hpi->addPCGPermission = HPM_map_add_group_permission;
 }
 
 bool HPM_map_add_atcommand(const char *name, AtCommandFunc func)
@@ -205,6 +201,12 @@ void HPM_map_do_init(void)
 {
 	HPM->load_sub                = HPM_map_plugin_load_sub;
 	HPM->data_store_validate_sub = HPM_map_data_store_validate;
+
+	HPMi->sql_handle       = map->mysql_handle;
+	HPMi->addCommand       = atcommand->create;
+	HPMi->addScript        = script->addScript;
+	HPMi->addPCGPermission = HPM_map_add_group_permission;
+
 	HPM->datacheck_init(HPMDataCheck, HPMDataCheckLen, HPMDataCheckVer);
 }
 

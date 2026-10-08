@@ -49,10 +49,12 @@
 #endif
 
 static struct malloc_interface iMalloc_HPM;
-static struct malloc_interface *HPMiMalloc;
 static struct HPM_interface HPM_s;
 HERCAPI_COMMON_EXPORT struct HPM_interface *HPM;
 static struct HPMHooking_core_interface HPMHooking_core_s;
+static struct HPMHooking_interface HPMHooking_s;
+static struct HPMi_interface HPMi_s;
+HERCAPI_COMMON_EXPORT struct HPMi_interface *HPMi;
 
 /**
  * (char*) data name -> (unsigned int) HPMDataCheck[] index
@@ -472,7 +474,6 @@ static struct hplugin *hplugin_load(const char *filename)
 {
 	struct hplugin *plugin;
 	struct hplugin_info *info;
-	struct HPMi_interface **HPMi;
 	bool anyEvent = false;
 	int *HPMDataCheckVer;
 	unsigned int *HPMDataCheckLen;
@@ -510,19 +511,9 @@ static struct hplugin *hplugin_load(const char *filename)
 		exit(EXIT_FAILURE);
 	}
 
-	plugin->info     = info;
-	plugin->filename = aStrdup(filename);
-
-	if (!(HPMi = plugin_import(plugin->dll, "HPMi", struct HPMi_interface **))) {
-		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMi' for '" CL_WHITE "%s" CL_RESET "'!\n", filename);
-		exit(EXIT_FAILURE);
-	}
-
-	if (!(*HPMi = plugin_import(plugin->dll, "HPMi_s", struct HPMi_interface *))) {
-		ShowFatalError("HPM:plugin_load: failed to retrieve 'HPMi_s' for '" CL_WHITE "%s" CL_RESET "'!\n", filename);
-		exit(EXIT_FAILURE);
-	}
-	plugin->hpi = *HPMi;
+	plugin->info      = info;
+	plugin->filename  = aStrdup(filename);
+	plugin->info->pid = plugin->idx;
 
 	if ((plugin->event[HPET_INIT] = plugin_import(plugin->dll, "plugin_init", void (*)(void))))
 		anyEvent = true;
@@ -575,30 +566,12 @@ static struct hplugin *hplugin_load(const char *filename)
 		exit(EXIT_FAILURE);
 	}
 
-	/* id */
-	plugin->hpi->pid    = plugin->idx;
-	/* core */
-	plugin->hpi->memmgr = HPMiMalloc;
-#ifdef CONSOLE_INPUT
-	plugin->hpi->addCPCommand = console->input->addCommand;
-#endif // CONSOLE_INPUT
-	plugin->hpi->addPacket        = hplugins_addpacket;
-	plugin->hpi->addToHPData      = hplugins_addToHPData;
-	plugin->hpi->getFromHPData    = hplugins_getFromHPData;
-	plugin->hpi->removeFromHPData = hplugins_removeFromHPData;
-	plugin->hpi->addArg           = hpm_add_arg;
-	plugin->hpi->addConf          = hplugins_addconf;
-	if ((plugin->hpi->hooking = plugin_import(plugin->dll, "HPMHooking_s", struct HPMHooking_interface *)) != NULL) {
-		plugin->hpi->hooking->AddHook     = HPM_AddHook;
-		plugin->hpi->hooking->HookStop    = HPM_HookStop;
-		plugin->hpi->hooking->HookStopped = HPM_HookStopped;
-	}
 	/* server specific */
 	if (HPM->load_sub)
 		HPM->load_sub(plugin);
 
 	ShowStatus("HPM: Loaded plugin '" CL_WHITE "%s" CL_RESET "' (%s)%s.\n", plugin->info->name, plugin->info->version,
-	           plugin->hpi->hooking != NULL ? " built with HPMHooking support" : "");
+	           plugin->info->has_hpmhooking ? " built with HPMHooking support" : "");
 
 	return plugin;
 }
@@ -1139,14 +1112,6 @@ static void hpm_init(void)
 
 	HPM->off = false;
 
-	HPMiMalloc           = &iMalloc_HPM;
-	*HPMiMalloc          = *iMalloc;
-	HPMiMalloc->malloc   = HPM_mmalloc;
-	HPMiMalloc->calloc   = HPM_calloc;
-	HPMiMalloc->realloc  = HPM_realloc;
-	HPMiMalloc->reallocz = HPM_reallocz;
-	HPMiMalloc->astrdup  = HPM_astrdup;
-
 	sscanf(HPM_VERSION, "%u.%u", &HPM->version[0], &HPM->version[1]);
 
 	if (HPM->version[0] == 0 && HPM->version[1] == 0) {
@@ -1254,4 +1219,33 @@ void hpm_defaults(void)
 	HPM->hooking->force_return = false;
 	HPM->hooking->addhook_sub  = NULL;
 	HPM->hooking->Hooked       = NULL;
+
+	HPMi             = &HPMi_s;
+	HPMi->addCommand = nullptr; // Overridden by the map server
+	HPMi->addScript  = nullptr; // Overridden by the map server
+#ifdef CONSOLE_INPUT
+	HPMi->addCPCommand = console->input->addCommand;
+#else
+	HPM->addCPCommand = nullptr;
+#endif // CONSOLE_INPUT
+	HPMi->addToHPData      = hplugins_addToHPData;
+	HPMi->getFromHPData    = hplugins_getFromHPData;
+	HPMi->removeFromHPData = hplugins_removeFromHPData;
+	HPMi->addPacket        = hplugins_addpacket;
+	HPMi->addArg           = hpm_add_arg;
+	HPMi->addConf          = hplugins_addconf;
+	HPMi->addPCGPermission = nullptr; // Overridden by the map server
+
+	HPMi->memmgr           = &iMalloc_HPM;
+	*HPMi->memmgr          = *iMalloc; // Clone and override selectively
+	HPMi->memmgr->malloc   = HPM_mmalloc;
+	HPMi->memmgr->calloc   = HPM_calloc;
+	HPMi->memmgr->realloc  = HPM_realloc;
+	HPMi->memmgr->reallocz = HPM_reallocz;
+	HPMi->memmgr->astrdup  = HPM_astrdup;
+
+	HPMi->hooking              = &HPMHooking_s;
+	HPMi->hooking->AddHook     = HPM_AddHook;
+	HPMi->hooking->HookStop    = HPM_HookStop;
+	HPMi->hooking->HookStopped = HPM_HookStopped;
 }
