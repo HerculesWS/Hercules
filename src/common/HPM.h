@@ -71,8 +71,7 @@ struct hplugin {
 	DLL dll;
 	unsigned int idx;
 	char *filename;
-	struct hplugin_info *info;
-	hpm_plugin_i *handle;
+	hpm_plugin_i *info;
 };
 
 /**

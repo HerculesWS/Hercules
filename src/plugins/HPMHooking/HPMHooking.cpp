@@ -175,7 +175,7 @@
 class hpm_plugin_hpmhooking : public hpm_plugin_i
 {
   public:
-	hpm_plugin_hpmhooking() : HPM_INITIALIZE_PLUGIN()
+	hpm_plugin_hpmhooking() : HPM_INITIALIZE_PLUGIN("HPMHooking", "0.2")
 	{
 	}
 
@@ -198,9 +198,7 @@ class hpm_plugin_hpmhooking : public hpm_plugin_i
 	}
 };
 
-hpm_plugin_hpmhooking plugin;
-
-HPM_DECLARE_PLUGIN(plugin, "HPMHooking", "0.2")
+HPM_DECLARE_PLUGIN(hpm_plugin_hpmhooking{})
 
 #define HP_POP(x, y) #x, (void **)(&x), (void *)y, 0
 struct DBMap *hp_db; /* hooking points db -- for quick lookup */

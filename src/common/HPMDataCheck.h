@@ -1275,7 +1275,7 @@ constexpr int HPMDataCheckVer_s          = 2;
   #define HPM_DECLARE_PLUGIN(plugin, plugin_name, plugin_version) \
 	  HPMDATACHECK_DEFS \
 	  HPM_PLUGIN_DEFS_ALL \
-	  HPM_DECLARE_PLUGIN_BASE((plugin), (plugin_name), (plugin_version))
+	  HPM_DECLARE_PLUGIN_BASE(plugin_initializer)
 #endif
 
 #endif /* HPM_DATA_CHECK_H */
