@@ -395,8 +395,8 @@ int npc_parsesrcfile_posthook(int retVal, const char *filepath, bool runOnInit)
 
 void hpm_plugin_translations::server_preinit()
 {
-	addArg(
-	  "--generate-translations", false, generatetranslations,
+	add_cmdline_arg(
+	  "--generate-translations", false, CMDLINEARG_N(generatetranslations),
 	  "Creates 'generated_translations/**/*.pot' file with all translateable strings from scripts, server terminates afterwards.");
 	VECTOR_INIT(lang_export_line_buf);
 	VECTOR_INIT(lang_export_escaped_buf);

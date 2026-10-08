@@ -93,9 +93,10 @@ struct core_interface {
 	void (*shutdown_callback)(void);
 };
 
-#define CMDLINEARG(x) bool cmdline_arg_##x(const char *name, const char *params)
-#define SERVER_NAME   (core->server_name)
-#define SERVER_TYPE   (core->server_type)
+#define CMDLINEARG(x)   bool cmdline_arg_##x(const char *name, const char *params)
+#define CMDLINEARG_N(x) cmdline_arg_##x
+#define SERVER_NAME     (core->server_name)
+#define SERVER_TYPE     (core->server_type)
 
 #ifdef HERCULES_CORE
   /// Special plugin ID assigned to the Hercules core

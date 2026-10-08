@@ -1289,9 +1289,9 @@ CMDLINEARG(mobdb2sql)
 
 void hpm_plugin_db2sql::server_preinit()
 {
-	addArg("--db2sql", false, db2sql, NULL);
-	addArg("--itemdb2sql", false, itemdb2sql, NULL);
-	addArg("--mobdb2sql", false, mobdb2sql, NULL);
+	add_cmdline_arg("--db2sql", false, CMDLINEARG_N(db2sql), nullptr);
+	add_cmdline_arg("--itemdb2sql", false, CMDLINEARG_N(itemdb2sql), nullptr);
+	add_cmdline_arg("--mobdb2sql", false, CMDLINEARG_N(mobdb2sql), nullptr);
 }
 
 void hpm_plugin_db2sql::init()
