@@ -249,7 +249,7 @@ CMDLINEARG(constdb2doc)
 
 void hpm_plugin_constdb::server_preinit()
 {
-	addArg("--constdb2doc", false, constdb2doc, NULL);
+	add_cmdline_arg("--constdb2doc", false, CMDLINEARG_N(constdb2doc), nullptr);
 }
 
 void hpm_plugin_constdb::init()

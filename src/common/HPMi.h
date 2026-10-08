@@ -108,7 +108,6 @@ enum HPluginConfType {
 	HPCT_MAX,
 };
 
-#define addArg(name, param, func, help) (HPMi->addArg(hpm_plugin->pid(), (name), (param), (cmdline_arg_##func), (help)))
 /* HPData handy redirects */
 /* session[] */
 #define addToSession(ptr, data, classid, autofree) \
@@ -292,7 +291,7 @@ class hpm_plugin_i
   public:
 	hpm_plugin_i(const char *name, enum server_types type, const char *version, const char *req_version,
 	             bool has_hpmhooking, const struct s_HPMDataCheck *HPMDataCheck, unsigned int HPMDataCheckLen,
-	             int HPMDataCheckVer)
+	             int HPMDataCheckVer, const struct HPMi_interface *a_HPMi)
 	    : name(name),
 	      type(type),
 	      version(version),
@@ -300,7 +299,8 @@ class hpm_plugin_i
 	      has_hpmhooking(has_hpmhooking),
 	      HPMDataCheck(HPMDataCheck),
 	      HPMDataCheckLen(HPMDataCheckLen),
-	      HPMDataCheckVer(HPMDataCheckVer)
+	      HPMDataCheckVer(HPMDataCheckVer),
+	      m_HPMi(a_HPMi)
 	{
 	}
 
@@ -320,6 +320,12 @@ class hpm_plugin_i
 		return m_pid;
 	}
 
+	/* program --arg/-a */
+	bool add_cmdline_arg(const char *arg_name, bool has_param, CmdlineExecFunc func, const char *help)
+	{
+		return m_HPMi->addArg(m_pid, arg_name, has_param, func, help);
+	}
+
 	const char *name;
 	const server_types type;
 	const char *version;
@@ -331,6 +337,7 @@ class hpm_plugin_i
 
   private:
 	int m_pid;
+	const struct HPMi_interface *m_HPMi;
 };
 
 #if defined(HERCULES_PLUGIN)
@@ -372,7 +379,7 @@ static_assert(
 
   #define HPM_INITIALIZE_PLUGIN(plugin_name, plugin_version) \
 	  hpm_plugin_i((plugin_name), HPM_SERVER_TYPE, (plugin_version), HPM_VERSION, HPM_PLUGIN_HPMHOOKING_SUPPORT, \
-		           HPM_PLUGIN_DEFS_HPMDATACHECK)
+		           HPM_PLUGIN_DEFS_HPMDATACHECK, HPMi)
   #define HPM_DECLARE_PLUGIN_BASE(p) \
 	  namespace \
 	  { \

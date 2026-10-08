@@ -508,14 +508,16 @@ CMDLINEARG(fixmd5)
 
 void hpm_plugin_mapcache::server_preinit()
 {
-	addArg("--convert-old-mapcache", false, convertmapcache,
-	       "Converts an old db/" DBPATH "map_cache.dat file to the new format.");
-	addArg("--rebuild-mapcache", false, rebuild,
-	       "Rebuilds the entire mapcache folder (maps/" DBPATH "), using db/map_index.txt as index.");
-	addArg("--map", true, cachemap,
-	       "Rebuilds an individual map's cache into maps/" DBPATH " (usage: --map <map_name_without_extension>).");
-	addArg("--fix-md5", false, fixmd5,
-	       "Updates the checksum for the files in maps/" DBPATH ", using db/map_index.txt as index (see PR #1981).");
+	add_cmdline_arg("--convert-old-mapcache", false, CMDLINEARG_N(convertmapcache),
+	                "Converts an old db/" DBPATH "map_cache.dat file to the new format.");
+	add_cmdline_arg("--rebuild-mapcache", false, CMDLINEARG_N(rebuild),
+	                "Rebuilds the entire mapcache folder (maps/" DBPATH "), using db/map_index.txt as index.");
+	add_cmdline_arg("--map", true, CMDLINEARG_N(cachemap),
+	                "Rebuilds an individual map's cache into maps/" DBPATH
+	                " (usage: --map <map_name_without_extension>).");
+	add_cmdline_arg("--fix-md5", false, CMDLINEARG_N(fixmd5),
+	                "Updates the checksum for the files in maps/" DBPATH
+	                ", using db/map_index.txt as index (see PR #1981).");
 
 	needs_grfio = false;
 	VECTOR_INIT(maplist);
