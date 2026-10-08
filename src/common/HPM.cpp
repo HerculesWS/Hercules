@@ -71,8 +71,8 @@ static void hplugin_trigger_event(enum hp_event_types type)
 	int i;
 	for (i = 0; i < VECTOR_LENGTH(HPM->plugins); i++) {
 		struct hplugin *plugin = VECTOR_INDEX(HPM->plugins, i);
-		if (plugin->hpi->event[type] != NULL)
-			plugin->hpi->event[type]();
+		if (plugin->event[type] != NULL)
+			plugin->event[type]();
 	}
 }
 
@@ -524,19 +524,19 @@ static struct hplugin *hplugin_load(const char *filename)
 	}
 	plugin->hpi = *HPMi;
 
-	if ((plugin->hpi->event[HPET_INIT] = plugin_import(plugin->dll, "plugin_init", void (*)(void))))
+	if ((plugin->event[HPET_INIT] = plugin_import(plugin->dll, "plugin_init", void (*)(void))))
 		anyEvent = true;
 
-	if ((plugin->hpi->event[HPET_FINAL] = plugin_import(plugin->dll, "plugin_final", void (*)(void))))
+	if ((plugin->event[HPET_FINAL] = plugin_import(plugin->dll, "plugin_final", void (*)(void))))
 		anyEvent = true;
 
-	if ((plugin->hpi->event[HPET_READY] = plugin_import(plugin->dll, "server_online", void (*)(void))))
+	if ((plugin->event[HPET_READY] = plugin_import(plugin->dll, "server_online", void (*)(void))))
 		anyEvent = true;
 
-	if ((plugin->hpi->event[HPET_POST_FINAL] = plugin_import(plugin->dll, "server_post_final", void (*)(void))))
+	if ((plugin->event[HPET_POST_FINAL] = plugin_import(plugin->dll, "server_post_final", void (*)(void))))
 		anyEvent = true;
 
-	if ((plugin->hpi->event[HPET_PRE_INIT] = plugin_import(plugin->dll, "server_preinit", void (*)(void))))
+	if ((plugin->event[HPET_PRE_INIT] = plugin_import(plugin->dll, "server_preinit", void (*)(void))))
 		anyEvent = true;
 
 	if (!anyEvent) {

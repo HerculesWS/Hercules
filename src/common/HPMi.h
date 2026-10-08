@@ -257,7 +257,6 @@ struct HPMi_interface {
 	/* */
 	unsigned int pid;
 	/* */
-	void (*event[HPET_MAX])(void);
 	bool (*addCommand)(const char *name, bool (*func)(const int fd, struct map_session_data *sd, const char *command,
 	                                                  const char *message, struct AtCommandInfo *info));
 	bool (*addScript)(const char *name, const char *args, bool (*func)(struct script_state *st), bool isDeprecated);
