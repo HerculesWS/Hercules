@@ -24,6 +24,7 @@
 #include "common/apipackets.h"
 #include "common/console.h"
 #include "common/core.h"
+#include "common/nullpo.h"
 #include "common/showmsg.h"
 
 struct HPMHooking_interface;
@@ -188,16 +189,6 @@ enum HPluginConfType {
 #define removefromUnitParam(ptr, classid) \
 	(HPMi->removeFromHPData(HPDT_UNIT_PARAMETER, hpm_plugin->pid(), (ptr)->hdata, (classid)))
 
-/// HPMi->addCommand
-#define addAtcommand(cname, funcname) \
-	do { \
-		if (HPMi->addCommand != NULL) { \
-			HPMi->addCommand(cname, atcommand_##funcname); \
-		} else { \
-			ShowWarning("HPM (%s):addAtcommand(\"%s\",%s) failed, addCommand sub is NULL!\n", hpm_plugin->name, cname, \
-			            #funcname); \
-		} \
-	} while (0)
 /// HPMi->addScript
 #define addScriptCommand(cname, scinfo, funcname) \
 	do { \
@@ -318,6 +309,13 @@ class hpm_plugin_i
 	int pid() const
 	{
 		return m_pid;
+	}
+
+	bool add_atcommand(const char *cname, bool (*func)(const int fd, struct map_session_data *sd, const char *command,
+	                                                   const char *message, struct AtCommandInfo *info))
+	{
+		nullpo_retr(false, HPMi->addCommand);
+		return HPMi->addCommand(cname, func);
 	}
 
 	/* program --arg/-a */

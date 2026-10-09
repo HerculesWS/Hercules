@@ -169,6 +169,7 @@ void atcommand_defaults(void);
 HERCAPI_MAP_EXTERN struct atcommand_interface *atcommand;
 
 /* stay here */
+#define ACMD_N(x) (atcommand_##x)
 #define ACMD(x) \
 	static bool atcommand_##x(const int fd, struct map_session_data *sd, const char *command, const char *message, \
 	                          struct AtCommandInfo *info) __attribute__((nonnull(2, 3, 4, 5))); \
