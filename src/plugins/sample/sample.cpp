@@ -287,14 +287,14 @@ void hpm_plugin_sample::init()
 	add_script_command("sample", "i", BUILDIN_N(sample), false);
 #endif
 
-	/* addCPCommand("console-command-name",command-function) tells server to call CPCMD(sample) for the 'this is a
-	 * sample <optional-args>' console call */
+	/* add_console_command("console-command-name",command-function) tells server to call CPCMD(sample) for the 'this is
+	 * a sample <optional-args>' console call */
 	/* in "console-command-name" usage of ':' indicates a category, for example 'this:is:a:sample' translates to 'this
 	 * is a sample', therefore 'this -> is -> a -> sample', it can be used to aggregate multiple commands under the same
 	 * category or to append commands to existing categories categories inherit the special keyword 'help' which prints
 	 * the subsequent commands, e.g. 'server help' prints all categories and commands under 'server' therefore 'this
 	 * help' would inform about 'is (category) -> a (category) -> sample (command)'*/
-	addCPCommand("this:is:a:sample", sample);
+	add_console_command("this:is:a:sample", CPCMD_A(sample));
 
 #ifdef HERCULES_PLUGIN_MAP
 	/* addPacket(packetID,packetLength,packetFunction,packetIncomingPoint) */

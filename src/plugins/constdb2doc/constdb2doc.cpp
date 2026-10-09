@@ -254,7 +254,7 @@ void hpm_plugin_constdb::server_preinit()
 
 void hpm_plugin_constdb::init()
 {
-	addCPCommand("server:tools:constdb2doc", constdb2doc);
+	add_console_command("server:tools:constdb2doc", CPCMD_A(constdb2doc));
 }
 
 void hpm_plugin_constdb::server_online()
