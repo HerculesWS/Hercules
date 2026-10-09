@@ -335,7 +335,7 @@ void hpm_plugin_sample::server_preinit()
 	/* value is not limited to numbers, its passed to our plugins handler (parse_my_setting) as const char *,
 	 * however for battle config to be returned to our script engine we need it to be number (int) so keep use it as int
 	 * only */
-	addBattleConf("my_setting", parse_my_setting, return_my_setting, false);
+	add_battle_conf("my_setting", parse_my_setting, return_my_setting, false);
 #endif
 }
 

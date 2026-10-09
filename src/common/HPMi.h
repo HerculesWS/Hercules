@@ -189,24 +189,6 @@ enum HPluginConfType {
 #define removefromUnitParam(ptr, classid) \
 	(HPMi->removeFromHPData(HPDT_UNIT_PARAMETER, hpm_plugin->pid(), (ptr)->hdata, (classid)))
 
-/* HPMi->addBattleConf */
-#define addBattleConf(bcname, funcname, returnfunc, required) \
-	HPMi->addConf(hpm_plugin->pid(), HPCT_BATTLE, bcname, funcname, returnfunc, required)
-/* HPMi->addLogin */
-#define addLoginConf(bcname, funcname) HPMi->addConf(hpm_plugin->pid(), HPCT_LOGIN, bcname, funcname, NULL, false)
-/* HPMi->addChar */
-#define addCharConf(bcname, funcname)  HPMi->addConf(hpm_plugin->pid(), HPCT_CHAR, bcname, funcname, NULL, false)
-/* HPMi->addCharInter */
-#define addCharInterConf(bcname, funcname) \
-	HPMi->addConf(hpm_plugin->pid(), HPCT_CHAR_INTER, bcname, funcname, NULL, false)
-/* HPMi->addMapInter */
-#define addMapInterConf(bcname, funcname) \
-	HPMi->addConf(hpm_plugin->pid(), HPCT_MAP_INTER, bcname, funcname, NULL, false)
-/* HPMi->addLog */
-#define addLogConf(bcname, funcname)    HPMi->addConf(hpm_plugin->pid(), HPCT_LOG, bcname, funcname, NULL, false)
-/* HPMi->addScript */
-#define addScriptConf(bcname, funcname) HPMi->addConf(hpm_plugin->pid(), HPCT_SCRIPT, bcname, funcname, NULL, false)
-
 /* HPMi->addPCGPermission */
 #define addGroupPermission(pcgname, maskptr) HPMi->addPCGPermission(hpm_plugin->pid(), pcgname, &maskptr)
 
@@ -309,6 +291,48 @@ class hpm_plugin_i
 	bool add_cmdline_arg(const char *arg_name, bool has_param, CmdlineExecFunc func, const char *help)
 	{
 		return m_HPMi->addArg(m_pid, arg_name, has_param, func, help);
+	}
+
+	bool add_conf(HPluginConfType ctype, const char *cname, void (*parse_func)(const char *key, const char *val),
+	              int (*return_func)(const char *key), bool required)
+	{
+		return HPMi->addConf(m_pid, ctype, cname, parse_func, return_func, required);
+	}
+
+	bool add_battle_conf(const char *bcname, void (*parse_func)(const char *key, const char *val),
+	                     int (*return_func)(const char *key), bool required)
+	{
+		return this->add_conf(HPCT_BATTLE, bcname, parse_func, return_func, required);
+	}
+
+	bool add_login_conf(const char *bcname, void (*parse_func)(const char *key, const char *val))
+	{
+		return this->add_conf(HPCT_LOGIN, bcname, parse_func, nullptr, false);
+	}
+
+	bool add_char_conf(const char *bcname, void (*parse_func)(const char *key, const char *val))
+	{
+		return this->add_conf(HPCT_CHAR, bcname, parse_func, nullptr, false);
+	}
+
+	bool add_char_inter_conf(const char *bcname, void (*parse_func)(const char *key, const char *val))
+	{
+		return this->add_conf(HPCT_CHAR_INTER, bcname, parse_func, nullptr, false);
+	}
+
+	bool add_map_inter_conf(const char *bcname, void (*parse_func)(const char *key, const char *val))
+	{
+		return this->add_conf(HPCT_MAP_INTER, bcname, parse_func, nullptr, false);
+	}
+
+	bool add_log_conf(const char *bcname, void (*parse_func)(const char *key, const char *val))
+	{
+		return this->add_conf(HPCT_LOG, bcname, parse_func, nullptr, false);
+	}
+
+	bool add_script_conf(const char *bcname, void (*parse_func)(const char *key, const char *val))
+	{
+		return this->add_conf(HPCT_SCRIPT, bcname, parse_func, nullptr, false);
 	}
 
 	const char *name;
