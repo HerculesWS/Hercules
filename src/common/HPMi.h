@@ -189,16 +189,6 @@ enum HPluginConfType {
 #define removefromUnitParam(ptr, classid) \
 	(HPMi->removeFromHPData(HPDT_UNIT_PARAMETER, hpm_plugin->pid(), (ptr)->hdata, (classid)))
 
-/// HPMi->addCPCommand
-#define addCPCommand(cname, funcname) \
-	do { \
-		if (HPMi->addCPCommand != NULL) { \
-			HPMi->addCPCommand(cname, console_parse_##funcname); \
-		} else { \
-			ShowWarning("HPM (%s):addCPCommand(\"%s\",%s) failed, addCPCommand sub is NULL!\n", hpm_plugin->name, \
-			            cname, #funcname); \
-		} \
-	} while (0)
 /* HPMi->addPacket */
 #define addPacket(cmd, len, receive, point) HPMi->addPacket(cmd, len, receive, point, hpm_plugin->pid())
 /* HPMi->addBattleConf */
@@ -304,6 +294,12 @@ class hpm_plugin_i
 	{
 		nullpo_retr(false, HPMi->addScript);
 		return HPMi->addScript(cname, args, func, is_deprecated);
+	}
+
+	void add_console_command(const char *cname, CParseFunc func)
+	{
+		nullpo_retv(HPMi->addCPCommand);
+		HPMi->addCPCommand(cname, func);
 	}
 
 	/* program --arg/-a */
