@@ -475,18 +475,18 @@ void hpm_plugin_httpsample::init()
 
 #ifdef HERCULES_PLUGIN_LOGIN
 	// Add handler for message from api server url /httpsample/login
-	addProxyPacket(API_MSG_SAMPLE_LOGIN, sample_login_request, sample_login_api_packet, hpProxy_ApiLogin);
+	addProxyPacket(this, API_MSG_SAMPLE_LOGIN, sample_login_request, sample_login_api_packet, hpProxy_ApiLogin);
 #endif
 
 #ifdef HERCULES_PLUGIN_CHAR
 	// Add handler for message from api server url /httpsample/char
-	addProxyPacket(API_MSG_SAMPLE_CHAR, sample_char_request, sample_char_api_packet, hpProxy_ApiChar);
+	addProxyPacket(this, API_MSG_SAMPLE_CHAR, sample_char_request, sample_char_api_packet, hpProxy_ApiChar);
 #endif
 
 #ifdef HERCULES_PLUGIN_MAP
 	// Add handler for message from api server url /httpsample/map
-	addProxyPacket(API_MSG_SAMPLE_MAP, sample_map_request, sample_map_api_packet, hpProxy_ApiMap);
-	addProxyPacket(API_MSG_SAMPLE_USER, sample_user_request, sample_user_api_packet, hpProxy_ApiMap);
+	addProxyPacket(this, API_MSG_SAMPLE_MAP, sample_map_request, sample_map_api_packet, hpProxy_ApiMap);
+	addProxyPacket(this, API_MSG_SAMPLE_USER, sample_user_request, sample_user_api_packet, hpProxy_ApiMap);
 #endif
 }
 
