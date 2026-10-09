@@ -281,10 +281,10 @@ void hpm_plugin_sample::init()
 	add_atcommand("sample", ACMD_N(sample)); // link our '@sample' command
 
 	// Script commands only make sense on the map server
-	/* addScriptCommand("script-command-name","script-command-params-info",script-function) tells map server to call
+	/* add_script_command("script-command-name","script-command-params-info",script-function) tells map server to call
 	 * BUILDIN(sample) for the "sample(i)" command */
 	/* - it will print a warning when used on a non-map-server plugin */
-	addScriptCommand("sample", "i", sample);
+	add_script_command("sample", "i", BUILDIN_N(sample), false);
 #endif
 
 	/* addCPCommand("console-command-name",command-function) tells server to call CPCMD(sample) for the 'this is a

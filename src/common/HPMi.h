@@ -189,25 +189,6 @@ enum HPluginConfType {
 #define removefromUnitParam(ptr, classid) \
 	(HPMi->removeFromHPData(HPDT_UNIT_PARAMETER, hpm_plugin->pid(), (ptr)->hdata, (classid)))
 
-/// HPMi->addScript
-#define addScriptCommand(cname, scinfo, funcname) \
-	do { \
-		if (HPMi->addScript != NULL) { \
-			HPMi->addScript(cname, scinfo, buildin_##funcname, false); \
-		} else { \
-			ShowWarning("HPM (%s):addScriptCommand(\"%s\",\"%s\",%s) failed, addScript sub is NULL!\n", \
-			            hpm_plugin->name, cname, scinfo, #funcname); \
-		} \
-	} while (0)
-#define addScriptCommandDeprecated(cname, scinfo, funcname) \
-	do { \
-		if (HPMi->addScript != NULL) { \
-			HPMi->addScript(cname, scinfo, buildin_##funcname, true); \
-		} else { \
-			ShowWarning("HPM (%s):addScriptCommandDeprecated(\"%s\",\"%s\",%s) failed, addScript sub is NULL!\n", \
-			            hpm_plugin->name, cname, scinfo, #funcname); \
-		} \
-	} while (0)
 /// HPMi->addCPCommand
 #define addCPCommand(cname, funcname) \
 	do { \
@@ -316,6 +297,13 @@ class hpm_plugin_i
 	{
 		nullpo_retr(false, HPMi->addCommand);
 		return HPMi->addCommand(cname, func);
+	}
+
+	bool add_script_command(const char *cname, const char *args, bool (*func)(struct script_state *st),
+	                        bool is_deprecated)
+	{
+		nullpo_retr(false, HPMi->addScript);
+		return HPMi->addScript(cname, args, func, is_deprecated);
 	}
 
 	/* program --arg/-a */

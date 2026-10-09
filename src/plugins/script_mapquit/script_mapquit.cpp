@@ -66,5 +66,5 @@ BUILDIN(mapquit)
 
 void hpm_plugin_mapquit::init()
 {
-	addScriptCommand("mapquit", "?", mapquit);
+	add_script_command("mapquit", "?", BUILDIN_N(mapquit), false);
 }
