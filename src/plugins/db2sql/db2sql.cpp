@@ -1296,9 +1296,9 @@ void hpm_plugin_db2sql::server_preinit()
 
 void hpm_plugin_db2sql::init()
 {
-	addCPCommand("server:tools:db2sql", db2sql);
-	addCPCommand("server:tools:itemdb2sql", itemdb2sql);
-	addCPCommand("server:tools:mobdb2sql", mobdb2sql);
+	add_console_command("server:tools:db2sql", CPCMD_A(db2sql));
+	add_console_command("server:tools:itemdb2sql", CPCMD_A(itemdb2sql));
+	add_console_command("server:tools:mobdb2sql", CPCMD_A(mobdb2sql));
 	{
 		printf("Plugin's foo:\n");
 		Foo foo{1};
