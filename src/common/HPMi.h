@@ -189,8 +189,6 @@ enum HPluginConfType {
 #define removefromUnitParam(ptr, classid) \
 	(HPMi->removeFromHPData(HPDT_UNIT_PARAMETER, hpm_plugin->pid(), (ptr)->hdata, (classid)))
 
-/* HPMi->addPacket */
-#define addPacket(cmd, len, receive, point) HPMi->addPacket(cmd, len, receive, point, hpm_plugin->pid())
 /* HPMi->addBattleConf */
 #define addBattleConf(bcname, funcname, returnfunc, required) \
 	HPMi->addConf(hpm_plugin->pid(), HPCT_BATTLE, bcname, funcname, returnfunc, required)
@@ -213,7 +211,7 @@ enum HPluginConfType {
 #define addGroupPermission(pcgname, maskptr) HPMi->addPCGPermission(hpm_plugin->pid(), pcgname, &maskptr)
 
 #define addProxyPacket(cmd, structname, receive, point) \
-	addPacket(cmd, WFIFO_APICHAR_SIZE + sizeof(struct PACKET_API_##structname##_data), receive, point)
+	this->add_packet(cmd, WFIFO_APICHAR_SIZE + sizeof(struct PACKET_API_##structname##_data), receive, point)
 
 /* Hercules Plugin Mananger Include Interface */
 struct HPMi_interface {
@@ -300,6 +298,11 @@ class hpm_plugin_i
 	{
 		nullpo_retv(HPMi->addCPCommand);
 		HPMi->addCPCommand(cname, func);
+	}
+
+	bool add_packet(unsigned short cmd, int length, void (*receive)(int fd), HPluginPacketHookingPoints point)
+	{
+		return HPMi->addPacket(cmd, length, receive, point, m_pid);
 	}
 
 	/* program --arg/-a */
