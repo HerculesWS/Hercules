@@ -275,10 +275,10 @@ void hpm_plugin_sample::init()
 
 #ifdef HERCULES_PLUGIN_MAP
 	// Atcommands only make sense on the map server
-	/* addAtcommand("command-key",command-function) tells map server to call ACMD(sample) when "sample" command is
+	/* add_atcommand("command-key",command-function) tells map server to call ACMD(sample) when "sample" command is
 	 * used */
 	/* - it will print a warning when used on a non-map-server plugin */
-	addAtcommand("sample", sample); // link our '@sample' command
+	add_atcommand("sample", ACMD_N(sample)); // link our '@sample' command
 
 	// Script commands only make sense on the map server
 	/* addScriptCommand("script-command-name","script-command-params-info",script-function) tells map server to call
