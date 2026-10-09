@@ -185,7 +185,8 @@ struct item_data;
 #define is_int_variable(name)       ((name)[strlen(name) - 1] != '$')
 #define is_string_variable(name)    ((name)[strlen(name) - 1] == '$')
 
-#define BUILDIN(x) bool buildin_##x(struct script_state *st)
+#define BUILDIN(x)   bool buildin_##x(struct script_state *st)
+#define BUILDIN_N(x) (buildin_##x)
 
 #define get_buildin_name(st) (script->get_str((int)(script_getdata((st), 0)->u.num)))
 
