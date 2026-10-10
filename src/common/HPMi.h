@@ -209,14 +209,16 @@ class hpm_plugin_i
 	}
 
 	/* session[] */
-	void add_to_session(struct socket_data *session, void *data, uint32 classid, bool autofree)
+	template<class T>
+	void add_to_session(struct socket_data *session, T *data, uint32 classid, bool autofree)
 	{
 		HPMi->addToHPData(HPDT_SESSION, m_pid, &session->hdata, data, classid, autofree);
 	}
 
-	void *get_from_session(struct socket_data *session, uint32 classid)
+	template<class T>
+	T *get_from_session(struct socket_data *session, uint32 classid)
 	{
-		return HPMi->getFromHPData(HPDT_SESSION, m_pid, session->hdata, classid);
+		return (T *)HPMi->getFromHPData(HPDT_SESSION, m_pid, session->hdata, classid);
 	}
 
 	void remove_from_session(struct socket_data *session, uint32 classid)
