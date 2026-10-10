@@ -275,6 +275,11 @@ class hpm_plugin_imap : public hpm_plugin_i
 	{
 		HPMi->removeFromHPData(HPDT_UNIT_PARAMETER, pid(), ud->hdata, classid);
 	}
+
+	void add_group_permission(const char *pcgname, unsigned int *maskptr)
+	{
+		HPMi->addPCGPermission(pid(), pcgname, maskptr);
+	}
 };
 
 #endif /* MAP_HPMI_MAP_H */
