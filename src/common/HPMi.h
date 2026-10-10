@@ -111,7 +111,7 @@ enum HPluginConfType {
 };
 
 #define addProxyPacket(plugin, cmd, structname, receive, point) \
-	(plugin)->add_packet((cmd), WFIFO_APICHAR_SIZE + sizeof(struct PACKET_API_##structname##_data), (receive), (point))
+	(plugin)->add_packet<point>((cmd), WFIFO_APICHAR_SIZE + sizeof(struct PACKET_API_##structname##_data), (receive))
 
 /* Hercules Plugin Mananger Include Interface */
 struct HPMi_interface {
@@ -186,8 +186,25 @@ class hpm_plugin_i
 		HPMi->addCPCommand(cname, func);
 	}
 
-	bool add_packet(unsigned short cmd, int length, void (*receive)(int fd), HPluginPacketHookingPoints point)
+	template<HPluginPacketHookingPoints point>
+	bool add_packet(unsigned short cmd, int length, void (*receive)(int fd))
 	{
+#if defined(HERCULES_PLUGIN_API)
+		static_assert(point == hpParse_LoginApi, "Invalid packet type for api server plugins");
+#elif defined(HERCULES_PLUGIN_CHAR)
+		static_assert(
+		  point == hpParse_FromMap || point == hpParse_FromLogin || point == hpParse_Char || point == hpProxy_ApiChar,
+		  "Invalid packet type for char server plugins");
+#elif defined(HERCULES_PLUGIN_LOGIN)
+		static_assert(
+		  point == hpParse_FromChar || point == hpParse_Login || point == hpParse_ApiLogin || point == hpProxy_ApiLogin,
+		  "Invalid packet type for login server plugins");
+#elif defined(HERCULES_PLUGIN_MAP)
+		static_assert(point == hpClif_Parse || point == hpChrif_Parse || point == hpProxy_ApiMap,
+		              "Invalid packet type for map server plugins");
+#else
+		static_assert(false, "This method can only be used in a plugin");
+#endif
 		return HPMi->addPacket(cmd, length, receive, point, m_pid);
 	}
 
