@@ -57,17 +57,11 @@
 
 class hpm_plugin_sample;
 
-namespace
-{
-hpm_plugin_sample *self;
-} // namespace
-
 class hpm_plugin_sample : public hpm_plugin_t
 {
   public:
 	hpm_plugin_sample() : HPM_INITIALIZE_PLUGIN("Sample", "0.1")
 	{
-		self = this;
 	}
 
 	void init() override;
@@ -79,6 +73,10 @@ class hpm_plugin_sample : public hpm_plugin_t
 	}
 
 	void server_preinit() override;
+
+#ifdef HERCULES_PLUGIN_MAP
+	void sample_packet0f3(int fd);
+#endif
 };
 
 HPM_DECLARE_PLUGIN(hpm_plugin_sample{})
@@ -120,7 +118,12 @@ int my_setting;
 /* sample packet implementation */
 /* cmd 0xf3 - it is a client-server existent id, for clif_parse_GlobalMessage */
 /* in this sample we do nothing and simply redirect */
-void sample_packet0f3(int fd)
+void sample_packet0f3_wrapper(hpm_plugin_i *self, int fd)
+{
+	reinterpret_cast<hpm_plugin_sample *>(self)->sample_packet0f3(fd);
+}
+
+void hpm_plugin_sample::sample_packet0f3(int fd)
 {
 	struct map_session_data *sd = (struct map_session_data *)sockt->session[fd]->session_data;
 	struct sample_data_struct *data;
@@ -131,7 +134,7 @@ void sample_packet0f3(int fd)
 	ShowInfo("sample_packet0f3: Hello World! received 0xf3 for '%s', redirecting!\n", sd->status.name);
 
 	/* sample usage of appending data to a socket_data (sockt->session[]) entry */
-	if (!(data = self->get_from_session<sample_data_struct>(sockt->session[fd], 0))) {
+	if (!(data = get_from_session<sample_data_struct>(sockt->session[fd], 0))) {
 		CREATE(data, struct sample_data_struct, 1);
 
 		data->lastMSGPosition.map = sd->status.last_point.map;
@@ -141,18 +144,18 @@ void sample_packet0f3(int fd)
 
 		ShowInfo("Created Appended sockt->session[] data, %d %d %d %u\n", data->lastMSGPosition.map,
 		         data->lastMSGPosition.x, data->lastMSGPosition.y, data->someNumber);
-		self->add_to_session(sockt->session[fd], data, 0, true);
+		add_to_session(sockt->session[fd], data, 0, true);
 	} else {
 		ShowInfo("Existent Appended sockt->session[] data, %d %d %d %u\n", data->lastMSGPosition.map,
 		         data->lastMSGPosition.x, data->lastMSGPosition.y, data->someNumber);
 		if (rnd() % 4 == 2) {
 			ShowInfo("Removing Appended sockt->session[] data\n");
-			self->remove_from_session(sockt->session[fd], 0);
+			remove_from_session(sockt->session[fd], 0);
 		}
 	}
 
 	/* sample usage of appending data to a map_session_data (sd) entry */
-	if (!(data = self->get_from_map_session_data<sample_data_struct>(sd, 0))) {
+	if (!(data = get_from_map_session_data<sample_data_struct>(sd, 0))) {
 		CREATE(data, struct sample_data_struct, 1);
 
 		data->lastMSGPosition.map = sd->status.last_point.map;
@@ -162,13 +165,13 @@ void sample_packet0f3(int fd)
 
 		ShowInfo("Created Appended map_session_data data, %d %d %d %u\n", data->lastMSGPosition.map,
 		         data->lastMSGPosition.x, data->lastMSGPosition.y, data->someNumber);
-		self->add_to_map_session_data(sd, data, 0, true);
+		add_to_map_session_data(sd, data, 0, true);
 	} else {
 		ShowInfo("Existent Appended map_session_data data, %d %d %d %u\n", data->lastMSGPosition.map,
 		         data->lastMSGPosition.x, data->lastMSGPosition.y, data->someNumber);
 		if (rnd() % 4 == 2) {
 			ShowInfo("Removing Appended map_session_data data\n");
-			self->remove_from_map_session_data(sd, 0);
+			remove_from_map_session_data(sd, 0);
 		}
 	}
 
@@ -309,7 +312,7 @@ void hpm_plugin_sample::init()
 	/* adds packetID of packetLength (-1 for dynamic length where length is defined in the packet { packetID (2 Byte) ,
 	 * packetLength (2 Byte) , ... }) to trigger packetFunction in the packetIncomingPoint section ( available points
 	 * listed in enum HPluginPacketHookingPoints within src/common/HPMi.h ) */
-	add_packet<hpClif_Parse>(0xF3, -1, sample_packet0f3);
+	add_packet<hpClif_Parse>(0xF3, -1, sample_packet0f3_wrapper);
 
 	// The following hooks would show an error message where pc->dropitem doesn't exist (login or char server)
 	/* in this sample we add a PreHook to pc->dropitem */

@@ -110,6 +110,8 @@ enum HPluginConfType {
 	HPCT_MAX,
 };
 
+class hpm_plugin_i;
+
 #define addProxyPacket(plugin, cmd, structname, receive, point) \
 	(plugin)->add_packet<point>((cmd), WFIFO_APICHAR_SIZE + sizeof(struct PACKET_API_##structname##_data), (receive))
 
@@ -127,7 +129,7 @@ struct HPMi_interface {
 	void (*removeFromHPData)(enum HPluginDataTypes type, uint32 pluginID, struct hplugin_data_store *store,
 	                         uint32 classid);
 	/* packet */
-	bool (*addPacket)(unsigned short cmd, int length, void (*receive)(int fd), unsigned int point,
+	bool (*addPacket)(unsigned short cmd, int length, void (*receive)(hpm_plugin_i *self, int fd), unsigned int point,
 	                  unsigned int pluginID);
 	/* program --arg/-a */
 	bool (*addArg)(unsigned int pluginID, const char *name, bool has_param, CmdlineExecFunc func, const char *help);
@@ -187,7 +189,7 @@ class hpm_plugin_i
 	}
 
 	template<HPluginPacketHookingPoints point>
-	bool add_packet(unsigned short cmd, int length, void (*receive)(int fd))
+	bool add_packet(unsigned short cmd, int length, void (*receive)(hpm_plugin_i *self, int fd))
 	{
 #if defined(HERCULES_PLUGIN_API)
 		static_assert(point == hpParse_LoginApi, "Invalid packet type for api server plugins");

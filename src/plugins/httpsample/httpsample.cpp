@@ -363,7 +363,7 @@ HTTP_DATA(my_sample_test_user)
 #ifdef HERCULES_PLUGIN_LOGIN
 // runs on login server
 // sample handler for message from api server url /httpsample/login
-void sample_login_api_packet(int fd)
+void sample_login_api_packet(hpm_plugin_i * /*self*/, int fd)
 {
 	// define variable with received data from packet
 	RFIFO_API_DATA(sdata, sample_login_request);
@@ -393,7 +393,7 @@ void sample_login_api_packet(int fd)
 #ifdef HERCULES_PLUGIN_CHAR
 // runs on char server
 // sample handler for message from api server url /httpsample/char
-void sample_char_api_packet(int fd)
+void sample_char_api_packet(hpm_plugin_i * /*self*/, int fd)
 {
 	// define variable with received data from packet
 	RFIFO_API_DATA(sdata, sample_char_request);
@@ -410,7 +410,7 @@ void sample_char_api_packet(int fd)
 #ifdef HERCULES_PLUGIN_MAP
 // runs on map server
 // sample handler for message from api server url /httpsample/map
-void sample_map_api_packet(int fd)
+void sample_map_api_packet(hpm_plugin_i * /*self*/, int fd)
 {
 	// define variable with received data from packet
 	RFIFO_API_DATA(sdata, sample_map_request);
@@ -427,7 +427,7 @@ void sample_map_api_packet(int fd)
 #ifdef HERCULES_PLUGIN_MAP
 // runs on map server
 // sample handler for message from api server url /httpsample/user
-void sample_user_api_packet(int fd)
+void sample_user_api_packet(hpm_plugin_i * /*self*/, int fd)
 {
 	// define variable with received data from packet
 	RFIFO_API_DATA(sdata, sample_user_request);
