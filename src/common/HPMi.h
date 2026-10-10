@@ -110,9 +110,6 @@ enum HPluginConfType {
 	HPCT_MAX,
 };
 
-/* HPMi->addPCGPermission */
-#define addGroupPermission(pcgname, maskptr) HPMi->addPCGPermission(hpm_plugin->pid(), pcgname, &maskptr)
-
 #define addProxyPacket(plugin, cmd, structname, receive, point) \
 	(plugin)->add_packet((cmd), WFIFO_APICHAR_SIZE + sizeof(struct PACKET_API_##structname##_data), (receive), (point))
 
