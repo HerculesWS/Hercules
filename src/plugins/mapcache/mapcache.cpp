@@ -38,7 +38,7 @@
 #include <stdio.h>
 #include <string.h>
 
-class hpm_plugin_mapcache : public hpm_plugin_i
+class hpm_plugin_mapcache : public hpm_plugin_t
 {
   public:
 	hpm_plugin_mapcache() : HPM_INITIALIZE_PLUGIN("Mapcache", "1.0.0")

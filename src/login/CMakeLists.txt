@@ -30,6 +30,7 @@ set(LOGIN_HDRS
   login.h
   account.h
   apipackets.h
+  HPMi_login.h
   HPMlogin.h
   ipban.h
   lclif.h

@@ -172,7 +172,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-class hpm_plugin_hpmhooking : public hpm_plugin_i
+class hpm_plugin_hpmhooking : public hpm_plugin_t
 {
   public:
 	hpm_plugin_hpmhooking() : HPM_INITIALIZE_PLUGIN("HPMHooking", "0.2")

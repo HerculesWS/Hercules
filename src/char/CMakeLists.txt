@@ -45,6 +45,7 @@ set(CHAR_SRCS
 set(CHAR_HDRS
   char.h
   HPMchar.h
+  HPMi_char.h
   apipackets.h
   loginif.h
   mapif.h

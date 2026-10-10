@@ -38,7 +38,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-class hpm_plugin_db2sql : public hpm_plugin_i
+class hpm_plugin_db2sql : public hpm_plugin_t
 {
   public:
 	hpm_plugin_db2sql() : HPM_INITIALIZE_PLUGIN("DB2SQL", "0.5")

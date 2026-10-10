@@ -262,20 +262,6 @@ class hpm_plugin_i
 		return m_pid;
 	}
 
-	bool add_atcommand(const char *cname, bool (*func)(const int fd, struct map_session_data *sd, const char *command,
-	                                                   const char *message, struct AtCommandInfo *info))
-	{
-		nullpo_retr(false, HPMi->addCommand);
-		return HPMi->addCommand(cname, func);
-	}
-
-	bool add_script_command(const char *cname, const char *args, bool (*func)(struct script_state *st),
-	                        bool is_deprecated)
-	{
-		nullpo_retr(false, HPMi->addScript);
-		return HPMi->addScript(cname, args, func, is_deprecated);
-	}
-
 	void add_console_command(const char *cname, CParseFunc func)
 	{
 		nullpo_retv(HPMi->addCPCommand);
@@ -299,40 +285,9 @@ class hpm_plugin_i
 		return HPMi->addConf(m_pid, ctype, cname, parse_func, return_func, required);
 	}
 
-	bool add_battle_conf(const char *bcname, void (*parse_func)(const char *key, const char *val),
-	                     int (*return_func)(const char *key), bool required)
-	{
-		return this->add_conf(HPCT_BATTLE, bcname, parse_func, return_func, required);
-	}
-
-	bool add_login_conf(const char *bcname, void (*parse_func)(const char *key, const char *val))
-	{
-		return this->add_conf(HPCT_LOGIN, bcname, parse_func, nullptr, false);
-	}
-
-	bool add_char_conf(const char *bcname, void (*parse_func)(const char *key, const char *val))
-	{
-		return this->add_conf(HPCT_CHAR, bcname, parse_func, nullptr, false);
-	}
-
-	bool add_char_inter_conf(const char *bcname, void (*parse_func)(const char *key, const char *val))
-	{
-		return this->add_conf(HPCT_CHAR_INTER, bcname, parse_func, nullptr, false);
-	}
-
-	bool add_map_inter_conf(const char *bcname, void (*parse_func)(const char *key, const char *val))
-	{
-		return this->add_conf(HPCT_MAP_INTER, bcname, parse_func, nullptr, false);
-	}
-
 	bool add_log_conf(const char *bcname, void (*parse_func)(const char *key, const char *val))
 	{
 		return this->add_conf(HPCT_LOG, bcname, parse_func, nullptr, false);
-	}
-
-	bool add_script_conf(const char *bcname, void (*parse_func)(const char *key, const char *val))
-	{
-		return this->add_conf(HPCT_SCRIPT, bcname, parse_func, nullptr, false);
 	}
 
 	const char *name;
@@ -370,14 +325,23 @@ static_assert(
 
   #if defined(HERCULES_PLUGIN_API)
 	#define HPM_SERVER_TYPE SERVER_TYPE_API
+	#include "api/HPMi_api.h"
+using hpm_plugin_t = hpm_plugin_iapi;
   #elif defined(HERCULES_PLUGIN_CHAR)
 	#define HPM_SERVER_TYPE SERVER_TYPE_CHAR
+	#include "char/HPMi_char.h"
+using hpm_plugin_t = hpm_plugin_ichar;
   #elif defined(HERCULES_PLUGIN_LOGIN)
+	#include "login/HPMi_login.h"
 	#define HPM_SERVER_TYPE SERVER_TYPE_LOGIN
+using hpm_plugin_t = hpm_plugin_ilogin;
   #elif defined(HERCULES_PLUGIN_MAP)
 	#define HPM_SERVER_TYPE SERVER_TYPE_MAP
+	#include "map/HPMi_map.h"
+using hpm_plugin_t = hpm_plugin_imap;
   #else
 	#define HPM_SERVER_TYPE SERVER_TYPE_UNKNOWN
+using hpm_plugin_t = hpm_plugin_i;
   #endif
 
   #define HPM_PLUGIN_DEFS_BASE
@@ -387,15 +351,15 @@ static_assert(
   #define HPM_PLUGIN_HPMHOOKING_SUPPORT false
 
   #define HPM_INITIALIZE_PLUGIN(plugin_name, plugin_version) \
-	  hpm_plugin_i((plugin_name), HPM_SERVER_TYPE, (plugin_version), HPM_VERSION, HPM_PLUGIN_HPMHOOKING_SUPPORT, \
+	  hpm_plugin_t((plugin_name), HPM_SERVER_TYPE, (plugin_version), HPM_VERSION, HPM_PLUGIN_HPMHOOKING_SUPPORT, \
 		           HPM_PLUGIN_DEFS_HPMDATACHECK, HPMi)
   #define HPM_DECLARE_PLUGIN_BASE(p) \
 	  namespace \
 	  { \
 	  auto hpm_plugin_s = p; \
 	  } \
-	  HPM_EXPORT hpm_plugin_i *hpm_plugin; \
-	  hpm_plugin_i *hpm_plugin = &hpm_plugin_s;
+	  HPM_EXPORT hpm_plugin_t *hpm_plugin; \
+	  hpm_plugin_t *hpm_plugin = &hpm_plugin_s;
 
 #endif
 

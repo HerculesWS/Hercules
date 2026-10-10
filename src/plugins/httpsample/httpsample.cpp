@@ -64,7 +64,7 @@ enum apimessages {
 	API_MSG_SAMPLE_USER  = API_MSG_CUSTOM + 3
 };
 
-class hpm_plugin_httpsample : public hpm_plugin_i
+class hpm_plugin_httpsample : public hpm_plugin_t
 {
   public:
 	hpm_plugin_httpsample() : HPM_INITIALIZE_PLUGIN("Http sample", "0.1")
