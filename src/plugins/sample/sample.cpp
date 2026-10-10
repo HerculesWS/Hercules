@@ -131,7 +131,7 @@ void sample_packet0f3(int fd)
 	ShowInfo("sample_packet0f3: Hello World! received 0xf3 for '%s', redirecting!\n", sd->status.name);
 
 	/* sample usage of appending data to a socket_data (sockt->session[]) entry */
-	if (!(data = (struct sample_data_struct *)self->get_from_session(sockt->session[fd], 0))) {
+	if (!(data = self->get_from_session<sample_data_struct>(sockt->session[fd], 0))) {
 		CREATE(data, struct sample_data_struct, 1);
 
 		data->lastMSGPosition.map = sd->status.last_point.map;
@@ -152,7 +152,7 @@ void sample_packet0f3(int fd)
 	}
 
 	/* sample usage of appending data to a map_session_data (sd) entry */
-	if (!(data = (struct sample_data_struct *)self->get_from_map_session_data(sd, 0))) {
+	if (!(data = self->get_from_map_session_data<sample_data_struct>(sd, 0))) {
 		CREATE(data, struct sample_data_struct, 1);
 
 		data->lastMSGPosition.map = sd->status.last_point.map;

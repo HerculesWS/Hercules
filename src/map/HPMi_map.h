@@ -69,14 +69,16 @@ class hpm_plugin_imap : public hpm_plugin_i
 	}
 
 	/* map_session_data */
-	void add_to_map_session_data(struct map_session_data *sd, void *data, uint32 classid, bool autofree)
+	template<class T>
+	void add_to_map_session_data(struct map_session_data *sd, T *data, uint32 classid, bool autofree)
 	{
 		HPMi->addToHPData(HPDT_MSD, pid(), &sd->hdata, data, classid, autofree);
 	}
 
-	void *get_from_map_session_data(struct map_session_data *sd, uint32 classid)
+	template<class T>
+	T *get_from_map_session_data(struct map_session_data *sd, uint32 classid)
 	{
-		return HPMi->getFromHPData(HPDT_MSD, pid(), sd->hdata, classid);
+		return (T *)HPMi->getFromHPData(HPDT_MSD, pid(), sd->hdata, classid);
 	}
 
 	void remove_from_map_session_data(struct map_session_data *sd, uint32 classid)
@@ -85,14 +87,16 @@ class hpm_plugin_imap : public hpm_plugin_i
 	}
 
 	/* npc_data */
-	void add_to_npc_data(struct npc_data *nd, void *data, uint32 classid, bool autofree)
+	template<class T>
+	void add_to_npc_data(struct npc_data *nd, T *data, uint32 classid, bool autofree)
 	{
 		HPMi->addToHPData(HPDT_NPCD, pid(), &nd->hdata, data, classid, autofree);
 	}
 
-	void *get_from_npc_data(struct npc_data *nd, uint32 classid)
+	template<class T>
+	T *get_from_npc_data(struct npc_data *nd, uint32 classid)
 	{
-		return HPMi->getFromHPData(HPDT_NPCD, pid(), nd->hdata, classid);
+		return (T *)HPMi->getFromHPData(HPDT_NPCD, pid(), nd->hdata, classid);
 	}
 
 	void remove_from_npc_data(struct npc_data *nd, uint32 classid)
@@ -101,14 +105,16 @@ class hpm_plugin_imap : public hpm_plugin_i
 	}
 
 	/* map_data */
-	void add_to_map_data(struct map_data *m, void *data, uint32 classid, bool autofree)
+	template<class T>
+	void add_to_map_data(struct map_data *m, T *data, uint32 classid, bool autofree)
 	{
 		HPMi->addToHPData(HPDT_MAP, pid(), &m->hdata, data, classid, autofree);
 	}
 
-	void *get_from_map_data(struct map_data *m, uint32 classid)
+	template<class T>
+	T *get_from_map_data(struct map_data *m, uint32 classid)
 	{
-		return HPMi->getFromHPData(HPDT_MAP, pid(), m->hdata, classid);
+		return (T *)HPMi->getFromHPData(HPDT_MAP, pid(), m->hdata, classid);
 	}
 
 	void remove_from_map_data(struct map_data *m, uint32 classid)
@@ -117,14 +123,16 @@ class hpm_plugin_imap : public hpm_plugin_i
 	}
 
 	/* party_data */
-	void add_to_party_data(struct party_data *p, void *data, uint32 classid, bool autofree)
+	template<class T>
+	void add_to_party_data(struct party_data *p, T *data, uint32 classid, bool autofree)
 	{
 		HPMi->addToHPData(HPDT_PARTY, pid(), &p->hdata, data, classid, autofree);
 	}
 
-	void *get_from_party_data(struct party_data *p, uint32 classid)
+	template<class T>
+	T *get_from_party_data(struct party_data *p, uint32 classid)
 	{
-		return HPMi->getFromHPData(HPDT_PARTY, pid(), p->hdata, classid);
+		return (T *)HPMi->getFromHPData(HPDT_PARTY, pid(), p->hdata, classid);
 	}
 
 	void remove_from_party_data(struct party_data *p, uint32 classid)
@@ -133,14 +141,16 @@ class hpm_plugin_imap : public hpm_plugin_i
 	}
 
 	/* guild */
-	void add_to_guild_data(struct guild *g, void *data, uint32 classid, bool autofree)
+	template<class T>
+	void add_to_guild_data(struct guild *g, T *data, uint32 classid, bool autofree)
 	{
 		HPMi->addToHPData(HPDT_GUILD, pid(), &g->hdata, data, classid, autofree);
 	}
 
-	void *get_from_guild_data(struct guild *g, uint32 classid)
+	template<class T>
+	T *get_from_guild_data(struct guild *g, uint32 classid)
 	{
-		return HPMi->getFromHPData(HPDT_GUILD, pid(), g->hdata, classid);
+		return (T *)HPMi->getFromHPData(HPDT_GUILD, pid(), g->hdata, classid);
 	}
 
 	void remove_from_guild_data(struct guild *g, uint32 classid)
@@ -149,14 +159,16 @@ class hpm_plugin_imap : public hpm_plugin_i
 	}
 
 	/* instance_data */
-	void add_to_instance_data(struct instance_data *inst, void *data, uint32 classid, bool autofree)
+	template<class T>
+	void add_to_instance_data(struct instance_data *inst, T *data, uint32 classid, bool autofree)
 	{
 		HPMi->addToHPData(HPDT_INSTANCE, pid(), &inst->hdata, data, classid, autofree);
 	}
 
-	void *get_from_instance_data(struct instance_data *inst, uint32 classid)
+	template<class T>
+	T *get_from_instance_data(struct instance_data *inst, uint32 classid)
 	{
-		return HPMi->getFromHPData(HPDT_INSTANCE, pid(), inst->hdata, classid);
+		return (T *)HPMi->getFromHPData(HPDT_INSTANCE, pid(), inst->hdata, classid);
 	}
 
 	void remove_from_instance_data(struct instance_data *inst, uint32 classid)
@@ -165,14 +177,16 @@ class hpm_plugin_imap : public hpm_plugin_i
 	}
 
 	/* mob_db */
-	void add_to_mob_db(struct mob_db *mdb, void *data, uint32 classid, bool autofree)
+	template<class T>
+	void add_to_mob_db(struct mob_db *mdb, T *data, uint32 classid, bool autofree)
 	{
 		HPMi->addToHPData(HPDT_MOBDB, pid(), &mdb->hdata, data, classid, autofree);
 	}
 
-	void *get_from_mob_db(struct mob_db *mdb, uint32 classid)
+	template<class T>
+	T *get_from_mob_db(struct mob_db *mdb, uint32 classid)
 	{
-		return HPMi->getFromHPData(HPDT_MOBDB, pid(), mdb->hdata, classid);
+		return (T *)HPMi->getFromHPData(HPDT_MOBDB, pid(), mdb->hdata, classid);
 	}
 
 	void remove_from_mob_db(struct mob_db *mdb, uint32 classid)
@@ -181,14 +195,16 @@ class hpm_plugin_imap : public hpm_plugin_i
 	}
 
 	/* mob_data */
-	void add_to_mob_data(struct mob_data *md, void *data, uint32 classid, bool autofree)
+	template<class T>
+	void add_to_mob_data(struct mob_data *md, T *data, uint32 classid, bool autofree)
 	{
 		HPMi->addToHPData(HPDT_MOBDATA, pid(), &md->hdata, data, classid, autofree);
 	}
 
-	void *get_from_mob_data(struct mob_data *md, uint32 classid)
+	template<class T>
+	T *get_from_mob_data(struct mob_data *md, uint32 classid)
 	{
-		return HPMi->getFromHPData(HPDT_MOBDATA, pid(), md->hdata, classid);
+		return (T *)HPMi->getFromHPData(HPDT_MOBDATA, pid(), md->hdata, classid);
 	}
 
 	void remove_from_mob_data(struct mob_data *md, uint32 classid)
@@ -197,14 +213,16 @@ class hpm_plugin_imap : public hpm_plugin_i
 	}
 
 	/* item_data */
-	void add_to_item_data(struct item_data *itd, void *data, uint32 classid, bool autofree)
+	template<class T>
+	void add_to_item_data(struct item_data *itd, T *data, uint32 classid, bool autofree)
 	{
 		HPMi->addToHPData(HPDT_ITEMDATA, pid(), &itd->hdata, data, classid, autofree);
 	}
 
-	void *get_from_item_data(struct item_data *itd, uint32 classid)
+	template<class T>
+	T *get_from_item_data(struct item_data *itd, uint32 classid)
 	{
-		return HPMi->getFromHPData(HPDT_ITEMDATA, pid(), itd->hdata, classid);
+		return (T *)HPMi->getFromHPData(HPDT_ITEMDATA, pid(), itd->hdata, classid);
 	}
 
 	void remove_from_item_data(struct item_data *itd, uint32 classid)
@@ -213,14 +231,16 @@ class hpm_plugin_imap : public hpm_plugin_i
 	}
 
 	/* battleground_data */
-	void add_to_battleground_data(struct battleground_data *bgd, void *data, uint32 classid, bool autofree)
+	template<class T>
+	void add_to_battleground_data(struct battleground_data *bgd, T *data, uint32 classid, bool autofree)
 	{
 		HPMi->addToHPData(HPDT_BGDATA, pid(), &bgd->hdata, data, classid, autofree);
 	}
 
-	void *get_from_battleground_data(struct battleground_data *bgd, uint32 classid)
+	template<class T>
+	T *get_from_battleground_data(struct battleground_data *bgd, uint32 classid)
 	{
-		return HPMi->getFromHPData(HPDT_BGDATA, pid(), bgd->hdata, classid);
+		return (T *)HPMi->getFromHPData(HPDT_BGDATA, pid(), bgd->hdata, classid);
 	}
 
 	void remove_from_battleground_data(struct battleground_data *bgd, uint32 classid)
@@ -229,14 +249,16 @@ class hpm_plugin_imap : public hpm_plugin_i
 	}
 
 	/* autotrade_vending */
-	void add_to_autotrade_vending(struct autotrade_vending *atv, void *data, uint32 classid, bool autofree)
+	template<class T>
+	void add_to_autotrade_vending(struct autotrade_vending *atv, T *data, uint32 classid, bool autofree)
 	{
 		HPMi->addToHPData(HPDT_AUTOTRADE_VEND, pid(), &atv->hdata, data, classid, autofree);
 	}
 
-	void *get_from_autotrade_vending(struct autotrade_vending *atv, uint32 classid)
+	template<class T>
+	T *get_from_autotrade_vending(struct autotrade_vending *atv, uint32 classid)
 	{
-		return HPMi->getFromHPData(HPDT_AUTOTRADE_VEND, pid(), atv->hdata, classid);
+		return (T *)HPMi->getFromHPData(HPDT_AUTOTRADE_VEND, pid(), atv->hdata, classid);
 	}
 
 	void remove_from_autotrade_vending(struct autotrade_vending *atv, uint32 classid)
@@ -245,14 +267,16 @@ class hpm_plugin_imap : public hpm_plugin_i
 	}
 
 	/* clan */
-	void add_to_clan(struct clan *c, void *data, uint32 classid, bool autofree)
+	template<class T>
+	void add_to_clan(struct clan *c, T *data, uint32 classid, bool autofree)
 	{
 		HPMi->addToHPData(HPDT_CLAN, pid(), &c->hdata, data, classid, autofree);
 	}
 
-	void *get_from_clan(struct clan *c, uint32 classid)
+	template<class T>
+	T *get_from_clan(struct clan *c, uint32 classid)
 	{
-		return HPMi->getFromHPData(HPDT_CLAN, pid(), c->hdata, classid);
+		return (T *)HPMi->getFromHPData(HPDT_CLAN, pid(), c->hdata, classid);
 	}
 
 	void remove_from_clan(struct clan *c, uint32 classid)
@@ -261,14 +285,16 @@ class hpm_plugin_imap : public hpm_plugin_i
 	}
 
 	/* unit parameters */
-	void add_to_unit_params(struct s_unit_params *ud, void *data, uint32 classid, bool autofree)
+	template<class T>
+	void add_to_unit_params(struct s_unit_params *ud, T *data, uint32 classid, bool autofree)
 	{
 		HPMi->addToHPData(HPDT_UNIT_PARAMETER, pid(), &ud->hdata, data, classid, autofree);
 	}
 
-	void *get_from_unit_params(struct s_unit_params *ud, uint32 classid)
+	template<class T>
+	T *get_from_unit_params(struct s_unit_params *ud, uint32 classid)
 	{
-		return HPMi->getFromHPData(HPDT_UNIT_PARAMETER, pid(), ud->hdata, classid);
+		return (T *)HPMi->getFromHPData(HPDT_UNIT_PARAMETER, pid(), ud->hdata, classid);
 	}
 
 	void remove_from_unit_params(struct s_unit_params *ud, uint32 classid)
