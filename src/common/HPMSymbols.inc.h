@@ -26,9 +26,6 @@
 /* GENERATED FILE DO NOT EDIT */
 
 #if !defined(HERCULES_CORE)
-  #ifdef LOGIN_ACCOUNT_H /* account */
-struct account_interface *account;
-  #endif
   #ifdef MAP_ACHIEVEMENT_H /* achievement */
 struct achievement_interface *achievement;
   #endif
@@ -146,35 +143,17 @@ struct inter_userconfig_interface *inter_userconfig;
   #ifdef MAP_INTIF_H /* intif */
 struct intif_interface *intif;
   #endif
-  #ifdef LOGIN_IPBAN_H /* ipban */
-struct ipban_interface *ipban;
-  #endif
   #ifdef MAP_IRC_BOT_H /* ircbot */
 struct ircbot_interface *ircbot;
   #endif
   #ifdef MAP_ITEMDB_H /* itemdb */
 struct itemdb_interface *itemdb;
   #endif
-  #ifdef LOGIN_LAPIIF_H /* lapiif */
-struct lapiif_interface *lapiif;
-  #endif
-  #ifdef LOGIN_LOGIN_H /* lchrif */
-struct lchrif_interface *lchrif;
-  #endif
-  #ifdef LOGIN_LCLIF_H /* lclif */
-struct lclif_interface *lclif;
-  #endif
   #ifdef MAP_LOG_H /* logs */
 struct log_interface *logs;
   #endif
-  #ifdef LOGIN_LOGIN_H /* login */
-struct login_interface *login;
-  #endif
   #ifdef CHAR_LOGINIF_H /* loginif */
 struct loginif_interface *loginif;
-  #endif
-  #ifdef LOGIN_LOGINLOG_H /* loginlog */
-struct loginlog_interface *loginlog;
   #endif
   #ifdef MAP_MACRO_H /* macro */
 struct macro_interface *macro;
@@ -273,10 +252,6 @@ HPExport const char *HPM_shared_symbols(int server_type)
 #ifdef COMMON_UTILS_H /* HCache */
 	if ((server_type & (SERVER_TYPE_ALL)) != 0 && !HPM_SYMBOL("HCache", HCache))
 		return "HCache";
-#endif
-#ifdef LOGIN_ACCOUNT_H /* account */
-	if ((server_type & (SERVER_TYPE_LOGIN)) != 0 && !HPM_SYMBOL("account", account))
-		return "account";
 #endif
 #ifdef MAP_ACHIEVEMENT_H /* achievement */
 	if ((server_type & (SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("achievement", achievement))
@@ -466,10 +441,6 @@ HPExport const char *HPM_shared_symbols(int server_type)
 	if ((server_type & (SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("intif", intif))
 		return "intif";
 #endif
-#ifdef LOGIN_IPBAN_H /* ipban */
-	if ((server_type & (SERVER_TYPE_LOGIN)) != 0 && !HPM_SYMBOL("ipban", ipban))
-		return "ipban";
-#endif
 #ifdef MAP_IRC_BOT_H /* ircbot */
 	if ((server_type & (SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("ircbot", ircbot))
 		return "ircbot";
@@ -477,18 +448,6 @@ HPExport const char *HPM_shared_symbols(int server_type)
 #ifdef MAP_ITEMDB_H /* itemdb */
 	if ((server_type & (SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("itemdb", itemdb))
 		return "itemdb";
-#endif
-#ifdef LOGIN_LAPIIF_H /* lapiif */
-	if ((server_type & (SERVER_TYPE_LOGIN)) != 0 && !HPM_SYMBOL("lapiif", lapiif))
-		return "lapiif";
-#endif
-#ifdef LOGIN_LOGIN_H /* lchrif */
-	if ((server_type & (SERVER_TYPE_LOGIN)) != 0 && !HPM_SYMBOL("lchrif", lchrif))
-		return "lchrif";
-#endif
-#ifdef LOGIN_LCLIF_H /* lclif */
-	if ((server_type & (SERVER_TYPE_LOGIN)) != 0 && !HPM_SYMBOL("lclif", lclif))
-		return "lclif";
 #endif
 #ifdef COMMON_CONF_H /* libconfig */
 	if ((server_type & (SERVER_TYPE_ALL)) != 0 && !HPM_SYMBOL("libconfig", libconfig))
@@ -498,17 +457,9 @@ HPExport const char *HPM_shared_symbols(int server_type)
 	if ((server_type & (SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("logs", logs))
 		return "logs";
 #endif
-#ifdef LOGIN_LOGIN_H /* login */
-	if ((server_type & (SERVER_TYPE_LOGIN)) != 0 && !HPM_SYMBOL("login", login))
-		return "login";
-#endif
 #ifdef CHAR_LOGINIF_H /* loginif */
 	if ((server_type & (SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("loginif", loginif))
 		return "loginif";
-#endif
-#ifdef LOGIN_LOGINLOG_H /* loginlog */
-	if ((server_type & (SERVER_TYPE_LOGIN)) != 0 && !HPM_SYMBOL("loginlog", loginlog))
-		return "loginlog";
 #endif
 #ifdef MAP_MACRO_H /* macro */
 	if ((server_type & (SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("macro", macro))
