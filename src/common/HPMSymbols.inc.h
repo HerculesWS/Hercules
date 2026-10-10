@@ -41,14 +41,8 @@ struct battleground_interface *bg;
   #ifdef MAP_BUYINGSTORE_H /* buyingstore */
 struct buyingstore_interface *buyingstore;
   #endif
-  #ifdef CHAR_CAPIIF_H /* capiif */
-struct capiif_interface *capiif;
-  #endif
   #ifdef MAP_CHANNEL_H /* channel */
 struct channel_interface *channel;
-  #endif
-  #ifdef CHAR_CHAR_H /* chr */
-struct char_interface *chr;
   #endif
   #ifdef MAP_CHAT_H /* chat */
 struct chat_interface *chat;
@@ -71,9 +65,6 @@ struct elemental_interface *elemental;
   #ifdef MAP_ENCHANTUI_H /* enchantui */
 struct enchantui_interface *enchantui;
   #endif
-  #ifdef CHAR_GEOIP_H /* geoip */
-struct geoip_interface *geoip;
-  #endif
   #ifdef MAP_GOLDPC_H /* goldpc */
 struct goldpc_interface *goldpc;
   #endif
@@ -92,54 +83,6 @@ struct homunculus_interface *homun;
   #ifdef MAP_INSTANCE_H /* instance */
 struct instance_interface *instance;
   #endif
-  #ifdef CHAR_INT_ACHIEVEMENT_H /* inter_achievement */
-struct inter_achievement_interface *inter_achievement;
-  #endif
-  #ifdef CHAR_INT_ADVENTURER_AGENCY_H /* inter_adventurer_agency */
-struct inter_adventurer_agency_interface *inter_adventurer_agency;
-  #endif
-  #ifdef CHAR_INT_AUCTION_H /* inter_auction */
-struct inter_auction_interface *inter_auction;
-  #endif
-  #ifdef CHAR_INT_CLAN_H /* inter_clan */
-struct inter_clan_interface *inter_clan;
-  #endif
-  #ifdef CHAR_INT_ELEMENTAL_H /* inter_elemental */
-struct inter_elemental_interface *inter_elemental;
-  #endif
-  #ifdef CHAR_INT_GUILD_H /* inter_guild */
-struct inter_guild_interface *inter_guild;
-  #endif
-  #ifdef CHAR_INT_HOMUN_H /* inter_homunculus */
-struct inter_homunculus_interface *inter_homunculus;
-  #endif
-  #ifdef CHAR_INTER_H /* inter */
-struct inter_interface *inter;
-  #endif
-  #ifdef CHAR_INT_MAIL_H /* inter_mail */
-struct inter_mail_interface *inter_mail;
-  #endif
-  #ifdef CHAR_INT_MERCENARY_H /* inter_mercenary */
-struct inter_mercenary_interface *inter_mercenary;
-  #endif
-  #ifdef CHAR_INT_PARTY_H /* inter_party */
-struct inter_party_interface *inter_party;
-  #endif
-  #ifdef CHAR_INT_PET_H /* inter_pet */
-struct inter_pet_interface *inter_pet;
-  #endif
-  #ifdef CHAR_INT_QUEST_H /* inter_quest */
-struct inter_quest_interface *inter_quest;
-  #endif
-  #ifdef CHAR_INT_RODEX_H /* inter_rodex */
-struct inter_rodex_interface *inter_rodex;
-  #endif
-  #ifdef CHAR_INT_STORAGE_H /* inter_storage */
-struct inter_storage_interface *inter_storage;
-  #endif
-  #ifdef CHAR_INT_USERCONFIG_H /* inter_userconfig */
-struct inter_userconfig_interface *inter_userconfig;
-  #endif
   #ifdef MAP_INTIF_H /* intif */
 struct intif_interface *intif;
   #endif
@@ -152,9 +95,6 @@ struct itemdb_interface *itemdb;
   #ifdef MAP_LOG_H /* logs */
 struct log_interface *logs;
   #endif
-  #ifdef CHAR_LOGINIF_H /* loginif */
-struct loginif_interface *loginif;
-  #endif
   #ifdef MAP_MACRO_H /* macro */
 struct macro_interface *macro;
   #endif
@@ -163,9 +103,6 @@ struct mail_interface *mail;
   #endif
   #ifdef MAP_MAP_H /* map */
 struct map_interface *map;
-  #endif
-  #ifdef CHAR_MAPIF_H /* mapif */
-struct mapif_interface *mapif;
   #endif
   #ifdef MAP_MAPIIF_H /* mapiif */
 struct mapiif_interface *mapiif;
@@ -205,9 +142,6 @@ struct pcre_interface *libpcre;
   #endif
   #ifdef MAP_PET_H /* pet */
 struct pet_interface *pet;
-  #endif
-  #ifdef CHAR_PINCODE_H /* pincode */
-struct pincode_interface *pincode;
   #endif
   #ifdef MAP_QUEST_H /* quest */
 struct quest_interface *quest;
@@ -277,17 +211,9 @@ HPExport const char *HPM_shared_symbols(int server_type)
 	if ((server_type & (SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("buyingstore", buyingstore))
 		return "buyingstore";
 #endif
-#ifdef CHAR_CAPIIF_H /* capiif */
-	if ((server_type & (SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("capiif", capiif))
-		return "capiif";
-#endif
 #ifdef MAP_CHANNEL_H /* channel */
 	if ((server_type & (SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("channel", channel))
 		return "channel";
-#endif
-#ifdef CHAR_CHAR_H /* chr */
-	if ((server_type & (SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("chr", chr))
-		return "chr";
 #endif
 #ifdef MAP_CHAT_H /* chat */
 	if ((server_type & (SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("chat", chat))
@@ -341,10 +267,6 @@ HPExport const char *HPM_shared_symbols(int server_type)
 	if ((server_type & (SERVER_TYPE_ALL)) != 0 && !HPM_SYMBOL("extraconf", extraconf))
 		return "extraconf";
 #endif
-#ifdef CHAR_GEOIP_H /* geoip */
-	if ((server_type & (SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("geoip", geoip))
-		return "geoip";
-#endif
 #ifdef MAP_GOLDPC_H /* goldpc */
 	if ((server_type & (SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("goldpc", goldpc))
 		return "goldpc";
@@ -373,70 +295,6 @@ HPExport const char *HPM_shared_symbols(int server_type)
 	if ((server_type & (SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("instance", instance))
 		return "instance";
 #endif
-#ifdef CHAR_INT_ACHIEVEMENT_H /* inter_achievement */
-	if ((server_type & (SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("inter_achievement", inter_achievement))
-		return "inter_achievement";
-#endif
-#ifdef CHAR_INT_ADVENTURER_AGENCY_H /* inter_adventurer_agency */
-	if ((server_type & (SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("inter_adventurer_agency", inter_adventurer_agency))
-		return "inter_adventurer_agency";
-#endif
-#ifdef CHAR_INT_AUCTION_H /* inter_auction */
-	if ((server_type & (SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("inter_auction", inter_auction))
-		return "inter_auction";
-#endif
-#ifdef CHAR_INT_CLAN_H /* inter_clan */
-	if ((server_type & (SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("inter_clan", inter_clan))
-		return "inter_clan";
-#endif
-#ifdef CHAR_INT_ELEMENTAL_H /* inter_elemental */
-	if ((server_type & (SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("inter_elemental", inter_elemental))
-		return "inter_elemental";
-#endif
-#ifdef CHAR_INT_GUILD_H /* inter_guild */
-	if ((server_type & (SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("inter_guild", inter_guild))
-		return "inter_guild";
-#endif
-#ifdef CHAR_INT_HOMUN_H /* inter_homunculus */
-	if ((server_type & (SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("inter_homunculus", inter_homunculus))
-		return "inter_homunculus";
-#endif
-#ifdef CHAR_INTER_H /* inter */
-	if ((server_type & (SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("inter", inter))
-		return "inter";
-#endif
-#ifdef CHAR_INT_MAIL_H /* inter_mail */
-	if ((server_type & (SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("inter_mail", inter_mail))
-		return "inter_mail";
-#endif
-#ifdef CHAR_INT_MERCENARY_H /* inter_mercenary */
-	if ((server_type & (SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("inter_mercenary", inter_mercenary))
-		return "inter_mercenary";
-#endif
-#ifdef CHAR_INT_PARTY_H /* inter_party */
-	if ((server_type & (SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("inter_party", inter_party))
-		return "inter_party";
-#endif
-#ifdef CHAR_INT_PET_H /* inter_pet */
-	if ((server_type & (SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("inter_pet", inter_pet))
-		return "inter_pet";
-#endif
-#ifdef CHAR_INT_QUEST_H /* inter_quest */
-	if ((server_type & (SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("inter_quest", inter_quest))
-		return "inter_quest";
-#endif
-#ifdef CHAR_INT_RODEX_H /* inter_rodex */
-	if ((server_type & (SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("inter_rodex", inter_rodex))
-		return "inter_rodex";
-#endif
-#ifdef CHAR_INT_STORAGE_H /* inter_storage */
-	if ((server_type & (SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("inter_storage", inter_storage))
-		return "inter_storage";
-#endif
-#ifdef CHAR_INT_USERCONFIG_H /* inter_userconfig */
-	if ((server_type & (SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("inter_userconfig", inter_userconfig))
-		return "inter_userconfig";
-#endif
 #ifdef MAP_INTIF_H /* intif */
 	if ((server_type & (SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("intif", intif))
 		return "intif";
@@ -457,10 +315,6 @@ HPExport const char *HPM_shared_symbols(int server_type)
 	if ((server_type & (SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("logs", logs))
 		return "logs";
 #endif
-#ifdef CHAR_LOGINIF_H /* loginif */
-	if ((server_type & (SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("loginif", loginif))
-		return "loginif";
-#endif
 #ifdef MAP_MACRO_H /* macro */
 	if ((server_type & (SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("macro", macro))
 		return "macro";
@@ -472,10 +326,6 @@ HPExport const char *HPM_shared_symbols(int server_type)
 #ifdef MAP_MAP_H /* map */
 	if ((server_type & (SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("map", map))
 		return "map";
-#endif
-#ifdef CHAR_MAPIF_H /* mapif */
-	if ((server_type & (SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("mapif", mapif))
-		return "mapif";
 #endif
 #ifdef MAP_MAPIIF_H /* mapiif */
 	if ((server_type & (SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("mapiif", mapiif))
@@ -548,10 +398,6 @@ HPExport const char *HPM_shared_symbols(int server_type)
 #ifdef MAP_PET_H /* pet */
 	if ((server_type & (SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("pet", pet))
 		return "pet";
-#endif
-#ifdef CHAR_PINCODE_H /* pincode */
-	if ((server_type & (SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("pincode", pincode))
-		return "pincode";
 #endif
 #ifdef MAP_QUEST_H /* quest */
 	if ((server_type & (SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("quest", quest))
