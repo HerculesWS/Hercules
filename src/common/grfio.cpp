@@ -81,13 +81,6 @@ static char data_dir[1024] = "";
 static struct grfio_interface grfio_s;
 HERCAPI_COMMON_EXPORT struct grfio_interface *grfio;
 
-// little endian char array to uint conversion
-static unsigned int getlong(unsigned char *p)
-{
-	nullpo_ret(p);
-	return (p[0] << 0 | p[1] << 8 | p[2] << 16 | p[3] << 24);
-}
-
 static void NibbleSwap(unsigned char *src, int len)
 {
 	nullpo_retv(src);
@@ -653,14 +646,14 @@ static int grfio_entryread(const char *grfname, int gentry)
 		return 2; // 2:file format error
 	}
 	if (
-	  strcmp((const char *)grf_header, "Master of Magic") != 0 || hseek(fp, getlong(grf_header + 0x1E), SEEK_CUR) != 0
+	  strcmp((const char *)grf_header, "Master of Magic") != 0 || hseek(fp, GetULong(grf_header + 0x1E), SEEK_CUR) != 0
 	) {
 		fclose(fp);
 		ShowError("GRF %s read error\n", grfname);
 		return 2; // 2:file format error
 	}
 
-	grf_version = getlong(grf_header + 0x2A) >> 8;
+	grf_version = GetULong(grf_header + 0x2A) >> 8;
 
 	if (grf_version == 0x01) {
 		// ****** Grf version 01xx ******
@@ -674,16 +667,16 @@ static int grfio_entryread(const char *grfname, int gentry)
 		}
 		fclose(fp);
 
-		entrys = getlong(grf_header + 0x26) - getlong(grf_header + 0x22) - 7;
+		entrys = GetULong(grf_header + 0x26) - GetULong(grf_header + 0x22) - 7;
 
 		// Get an entry
 		for (entry = 0, ofs = 0; entry < entrys; ++entry) {
 			struct grf_filelist aentry{};
-			int ofs2           = ofs + getlong(grf_filelist + ofs) + 4;
+			int ofs2           = ofs + GetULong(grf_filelist + ofs) + 4;
 			unsigned char type = grf_filelist[ofs2 + 12];
 			if (type & FILELIST_TYPE_FILE) {
 				char *fname = grfio->decode_filename(grf_filelist + ofs + 6, grf_filelist[ofs] - 6);
-				int srclen  = getlong(grf_filelist + ofs2 + 0) - getlong(grf_filelist + ofs2 + 8) - 715;
+				int srclen  = GetULong(grf_filelist + ofs2 + 0) - GetULong(grf_filelist + ofs2 + 8) - 715;
 
 				if (strlen(fname) > sizeof(aentry.fn) - 1) {
 					ShowFatalError("GRF file name %s is too long\n", fname);
@@ -694,9 +687,9 @@ static int grfio_entryread(const char *grfname, int gentry)
 				type |= grfio_is_full_encrypt(fname) ? FILELIST_TYPE_ENCRYPT_MIXED : FILELIST_TYPE_ENCRYPT_HEADER;
 
 				aentry.srclen         = srclen;
-				aentry.srclen_aligned = getlong(grf_filelist + ofs2 + 4) - 37579;
-				aentry.declen         = getlong(grf_filelist + ofs2 + 8);
-				aentry.srcpos         = getlong(grf_filelist + ofs2 + 13) + 0x2E;
+				aentry.srclen_aligned = GetULong(grf_filelist + ofs2 + 4) - 37579;
+				aentry.declen         = GetULong(grf_filelist + ofs2 + 8);
+				aentry.srcpos         = GetULong(grf_filelist + ofs2 + 13) + 0x2E;
 				aentry.type           = type;
 				safestrncpy(aentry.fn, fname, sizeof(aentry.fn));
 				aentry.fnd = NULL;
@@ -723,8 +716,8 @@ static int grfio_entryread(const char *grfname, int gentry)
 			fclose(fp);
 			return 4;
 		}
-		rSize = getlong(eheader);     // Read Size
-		eSize = getlong(eheader + 4); // Extend Size
+		rSize = GetULong(eheader);     // Read Size
+		eSize = GetULong(eheader + 4); // Extend Size
 
 		if ((long)rSize > grf_size - htell(fp)) {
 			fclose(fp);
@@ -744,7 +737,7 @@ static int grfio_entryread(const char *grfname, int gentry)
 		grfio->decode_zip(grf_filelist, &eSize, rBuf, rSize);          // Decode function
 		aFree(rBuf);
 
-		entrys = getlong(grf_header + 0x26) - 7;
+		entrys = GetULong(grf_header + 0x26) - 7;
 		Assert_retr(4, entrys >= 0);
 
 		// Get an entry
@@ -762,10 +755,10 @@ static int grfio_entryread(const char *grfname, int gentry)
 
 			if (type & FILELIST_TYPE_FILE) {
 				// file
-				aentry.srclen         = getlong(grf_filelist + ofs2 + 0);
-				aentry.srclen_aligned = getlong(grf_filelist + ofs2 + 4);
-				aentry.declen         = getlong(grf_filelist + ofs2 + 8);
-				aentry.srcpos         = getlong(grf_filelist + ofs2 + 13) + 0x2E;
+				aentry.srclen         = GetULong(grf_filelist + ofs2 + 0);
+				aentry.srclen_aligned = GetULong(grf_filelist + ofs2 + 4);
+				aentry.declen         = GetULong(grf_filelist + ofs2 + 8);
+				aentry.srcpos         = GetULong(grf_filelist + ofs2 + 13) + 0x2E;
 				aentry.type           = (char)type;
 				safestrncpy(aentry.fn, fname, sizeof(aentry.fn));
 				aentry.fnd = NULL;
@@ -785,7 +778,7 @@ static int grfio_entryread(const char *grfname, int gentry)
 	} else {
 		// ****** Grf Other version ******
 		fclose(fp);
-		ShowError("GRF version %04x not supported\n", getlong(grf_header + 0x2A));
+		ShowError("GRF version %04x not supported\n", GetULong(grf_header + 0x2A));
 		return 4;
 	}
 
