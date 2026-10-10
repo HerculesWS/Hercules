@@ -89,6 +89,7 @@ set(MAP_HDRS
   grader.h
   guild.h
   homunculus.h
+  HPMi_map.h
   HPMmap.h
   instance.h
   intif.h

@@ -27,7 +27,7 @@
 
 #include "common/HPMDataCheck.h"
 
-class hpm_plugin_mapquit : public hpm_plugin_i
+class hpm_plugin_mapquit : public hpm_plugin_t
 {
   public:
 	hpm_plugin_mapquit() : HPM_INITIALIZE_PLUGIN("script_mapquit", "0.1")

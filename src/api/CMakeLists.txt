@@ -36,6 +36,7 @@ set(API_HDRS
   aclif.h
   aloginif.h
   HPMapi.h
+  HPMi_api.h
   apisessiondata.h
   httpparser.h
   httpparsehandler.h

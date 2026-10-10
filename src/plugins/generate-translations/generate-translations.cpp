@@ -40,7 +40,7 @@
 #include <sys/stat.h>
 #include <time.h>
 
-class hpm_plugin_translations : public hpm_plugin_i
+class hpm_plugin_translations : public hpm_plugin_t
 {
   public:
 	hpm_plugin_translations() : HPM_INITIALIZE_PLUGIN("generate-translations", "0.1")

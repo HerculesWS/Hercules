@@ -55,7 +55,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-class hpm_plugin_sample : public hpm_plugin_i
+class hpm_plugin_sample : public hpm_plugin_t
 {
   public:
 	hpm_plugin_sample() : HPM_INITIALIZE_PLUGIN("Sample", "0.1")

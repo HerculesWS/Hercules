@@ -33,7 +33,7 @@
 
 #include <stdlib.h>
 
-class hpm_plugin_equippos : public hpm_plugin_i
+class hpm_plugin_equippos : public hpm_plugin_t
 {
   public:
 	hpm_plugin_equippos() : HPM_INITIALIZE_PLUGIN("test_equippos", "0.1")

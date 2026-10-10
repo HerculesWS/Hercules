@@ -45,7 +45,7 @@
   #define OUTPUTFILENAME "doc" PATHSEP_STR "constants_pre-re.md"
 #endif
 
-class hpm_plugin_constdb : public hpm_plugin_i
+class hpm_plugin_constdb : public hpm_plugin_t
 {
   public:
 	hpm_plugin_constdb() : HPM_INITIALIZE_PLUGIN("constdb2doc", "0.1")
