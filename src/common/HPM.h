@@ -108,7 +108,8 @@ struct HPluginPacket {
 	unsigned int pluginID;
 	unsigned short cmd;
 	short len;
-	void (*receive)(int fd);
+	hpm_plugin_i *self;
+	void (*receive)(hpm_plugin_i *self, int fd);
 };
 
 struct HPMFileNameCache {

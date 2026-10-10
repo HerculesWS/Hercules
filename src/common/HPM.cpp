@@ -141,8 +141,8 @@ static struct hplugin *hplugin_create(void)
 	return plugin;
 }
 
-static bool hplugins_addpacket(unsigned short cmd, int length, void (*receive)(int fd), unsigned int point,
-                               unsigned int pluginID)
+static bool hplugins_addpacket(unsigned short cmd, int length, void (*receive)(hpm_plugin_i *self, int fd),
+                               unsigned int point, unsigned int pluginID)
 {
 	struct HPluginPacket *packet;
 	int i;
@@ -738,7 +738,7 @@ static unsigned char hplugins_parse_packets(int fd, int packet_id, enum HPluginP
 	if (length > (int)RFIFOREST(fd))
 		return 2;
 
-	packet->receive(fd);
+	packet->receive(packet->self, fd);
 	RFIFOSKIP(fd, length);
 	return 1;
 }
