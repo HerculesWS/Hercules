@@ -32,15 +32,6 @@ struct account_interface *account;
   #ifdef MAP_ACHIEVEMENT_H /* achievement */
 struct achievement_interface *achievement;
   #endif
-  #ifdef API_ACLIF_H /* aclif */
-struct aclif_interface *aclif;
-  #endif
-  #ifdef API_ALOGINIF_H /* aloginif */
-struct aloginif_interface *aloginif;
-  #endif
-  #ifdef API_API_H /* api */
-struct api_interface *api;
-  #endif
   #ifdef MAP_ATCOMMAND_H /* atcommand */
 struct atcommand_interface *atcommand;
   #endif
@@ -98,20 +89,8 @@ struct guild_interface *guild;
   #ifdef MAP_STORAGE_H /* gstorage */
 struct guild_storage_interface *gstorage;
   #endif
-  #ifdef API_HANDLERS_H /* handlers */
-struct handlers_interface *handlers;
-  #endif
   #ifdef MAP_HOMUNCULUS_H /* homun */
 struct homunculus_interface *homun;
-  #endif
-  #ifdef API_HTTPPARSER_H /* httpparser */
-struct httpparser_interface *httpparser;
-  #endif
-  #ifdef API_HTTPSENDER_H /* httpsender */
-struct httpsender_interface *httpsender;
-  #endif
-  #ifdef API_IMAGEPARSER_H /* imageparser */
-struct imageparser_interface *imageparser;
   #endif
   #ifdef MAP_INSTANCE_H /* instance */
 struct instance_interface *instance;
@@ -175,12 +154,6 @@ struct ircbot_interface *ircbot;
   #endif
   #ifdef MAP_ITEMDB_H /* itemdb */
 struct itemdb_interface *itemdb;
-  #endif
-  #ifdef API_JSONPARSER_H /* jsonparser */
-struct jsonparser_interface *jsonparser;
-  #endif
-  #ifdef API_JSONWRITER_H /* jsonwriter */
-struct jsonwriter_interface *jsonwriter;
   #endif
   #ifdef LOGIN_LAPIIF_H /* lapiif */
 struct lapiif_interface *lapiif;
@@ -309,18 +282,6 @@ HPExport const char *HPM_shared_symbols(int server_type)
 	if ((server_type & (SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("achievement", achievement))
 		return "achievement";
 #endif
-#ifdef API_ACLIF_H /* aclif */
-	if ((server_type & (SERVER_TYPE_API)) != 0 && !HPM_SYMBOL("aclif", aclif))
-		return "aclif";
-#endif
-#ifdef API_ALOGINIF_H /* aloginif */
-	if ((server_type & (SERVER_TYPE_API)) != 0 && !HPM_SYMBOL("aloginif", aloginif))
-		return "aloginif";
-#endif
-#ifdef API_API_H /* api */
-	if ((server_type & (SERVER_TYPE_API)) != 0 && !HPM_SYMBOL("api", api))
-		return "api";
-#endif
 #ifdef MAP_ATCOMMAND_H /* atcommand */
 	if ((server_type & (SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("atcommand", atcommand))
 		return "atcommand";
@@ -429,25 +390,9 @@ HPExport const char *HPM_shared_symbols(int server_type)
 	if ((server_type & (SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("gstorage", gstorage))
 		return "gstorage";
 #endif
-#ifdef API_HANDLERS_H /* handlers */
-	if ((server_type & (SERVER_TYPE_API)) != 0 && !HPM_SYMBOL("handlers", handlers))
-		return "handlers";
-#endif
 #ifdef MAP_HOMUNCULUS_H /* homun */
 	if ((server_type & (SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("homun", homun))
 		return "homun";
-#endif
-#ifdef API_HTTPPARSER_H /* httpparser */
-	if ((server_type & (SERVER_TYPE_API)) != 0 && !HPM_SYMBOL("httpparser", httpparser))
-		return "httpparser";
-#endif
-#ifdef API_HTTPSENDER_H /* httpsender */
-	if ((server_type & (SERVER_TYPE_API)) != 0 && !HPM_SYMBOL("httpsender", httpsender))
-		return "httpsender";
-#endif
-#ifdef API_IMAGEPARSER_H /* imageparser */
-	if ((server_type & (SERVER_TYPE_API)) != 0 && !HPM_SYMBOL("imageparser", imageparser))
-		return "imageparser";
 #endif
 #ifdef MAP_INSTANCE_H /* instance */
 	if ((server_type & (SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("instance", instance))
@@ -532,14 +477,6 @@ HPExport const char *HPM_shared_symbols(int server_type)
 #ifdef MAP_ITEMDB_H /* itemdb */
 	if ((server_type & (SERVER_TYPE_MAP)) != 0 && !HPM_SYMBOL("itemdb", itemdb))
 		return "itemdb";
-#endif
-#ifdef API_JSONPARSER_H /* jsonparser */
-	if ((server_type & (SERVER_TYPE_API)) != 0 && !HPM_SYMBOL("jsonparser", jsonparser))
-		return "jsonparser";
-#endif
-#ifdef API_JSONWRITER_H /* jsonwriter */
-	if ((server_type & (SERVER_TYPE_API)) != 0 && !HPM_SYMBOL("jsonwriter", jsonwriter))
-		return "jsonwriter";
 #endif
 #ifdef LOGIN_LAPIIF_H /* lapiif */
 	if ((server_type & (SERVER_TYPE_LOGIN)) != 0 && !HPM_SYMBOL("lapiif", lapiif))
