@@ -305,11 +305,11 @@ void hpm_plugin_sample::init()
 	add_console_command("this:is:a:sample", CPCMD_A(sample));
 
 #ifdef HERCULES_PLUGIN_MAP
-	/* add_packet(packetID,packetLength,packetFunction,packetIncomingPoint) */
+	/* add_packet<packetIncomingPoint>(packetID,packetLength,packetFunction) */
 	/* adds packetID of packetLength (-1 for dynamic length where length is defined in the packet { packetID (2 Byte) ,
 	 * packetLength (2 Byte) , ... }) to trigger packetFunction in the packetIncomingPoint section ( available points
 	 * listed in enum HPluginPacketHookingPoints within src/common/HPMi.h ) */
-	add_packet(0xF3, -1, sample_packet0f3, hpClif_Parse);
+	add_packet<hpClif_Parse>(0xF3, -1, sample_packet0f3);
 
 	// The following hooks would show an error message where pc->dropitem doesn't exist (login or char server)
 	/* in this sample we add a PreHook to pc->dropitem */
