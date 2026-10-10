@@ -28,9 +28,13 @@
 #ifndef HPM_DATA_CHECK_H
 #define HPM_DATA_CHECK_H
 
-#if !defined(HPMHOOKGEN)
-#include "common/HPMSymbols.inc.h"
-#endif // ! HPMHOOKGEN
+// FIXME: Temporary
+#if !defined(HPMHOOKGEN) && !defined(HERCULES_CORE_API) && !defined(HERCULES_PLUGIN_API)
+  #include "common/HPMSymbols.inc.h"
+#endif
+#if defined(HERCULES_PLUGIN_API) // FIXME: Temporary
+HERCAPI_API_EXTERN const char *HPM_shared_symbols(int server_type);
+#endif
 #ifdef HPM_SYMBOL
 #undef HPM_SYMBOL
 #endif // HPM_SYMBOL
