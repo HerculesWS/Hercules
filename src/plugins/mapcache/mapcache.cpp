@@ -172,15 +172,15 @@ bool write_mapcache(const uint8 *buf, int32 buf_len, bool is_compressed, const c
 
 bool convert_old_mapcache(void)
 {
-	const char *path  = "db/" DBPATH "map_cache.dat";
-	FILE *mapcache_fp = fopen(path, "rb");
+	const char *mapcache_path = "db/" DBPATH "map_cache.dat";
+	FILE *mapcache_fp         = fopen(mapcache_path, "rb");
 	struct old_mapcache_main_header header{};
 	uint8 *p, *cursor;
 	uint32 file_size;
 	int i;
 
 	if (mapcache_fp == NULL) {
-		ShowError("Could not open mapcache file in the following path '%s' \n", path);
+		ShowError("Could not open mapcache file in the following path '%s' \n", mapcache_path);
 		return false;
 	}
 

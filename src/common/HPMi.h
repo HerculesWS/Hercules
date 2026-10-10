@@ -26,6 +26,7 @@
 #include "common/core.h"
 #include "common/nullpo.h"
 #include "common/showmsg.h"
+#include "common/socket.h"
 
 struct HPMHooking_interface;
 struct Sql; // common/sql.h
@@ -108,86 +109,6 @@ enum HPluginConfType {
 	HPCT_SCRIPT,     ///< script.conf (map-server)
 	HPCT_MAX,
 };
-
-/* HPData handy redirects */
-/* session[] */
-#define addToSession(ptr, data, classid, autofree) \
-	(HPMi->addToHPData(HPDT_SESSION, hpm_plugin->pid(), &(ptr)->hdata, (data), (classid), (autofree)))
-#define getFromSession(ptr, classid) (HPMi->getFromHPData(HPDT_SESSION, hpm_plugin->pid(), (ptr)->hdata, (classid)))
-#define removeFromSession(ptr, classid) \
-	(HPMi->removeFromHPData(HPDT_SESSION, hpm_plugin->pid(), (ptr)->hdata, (classid)))
-/* map_session_data */
-#define addToMSD(ptr, data, classid, autofree) \
-	(HPMi->addToHPData(HPDT_MSD, hpm_plugin->pid(), &(ptr)->hdata, (data), (classid), (autofree)))
-#define getFromMSD(ptr, classid)    (HPMi->getFromHPData(HPDT_MSD, hpm_plugin->pid(), (ptr)->hdata, (classid)))
-#define removeFromMSD(ptr, classid) (HPMi->removeFromHPData(HPDT_MSD, hpm_plugin->pid(), (ptr)->hdata, (classid)))
-/* npc_data */
-#define addToNPCD(ptr, data, classid, autofree) \
-	(HPMi->addToHPData(HPDT_NPCD, hpm_plugin->pid(), &(ptr)->hdata, (data), (classid), (autofree)))
-#define getFromNPCD(ptr, classid)    (HPMi->getFromHPData(HPDT_NPCD, hpm_plugin->pid(), (ptr)->hdata, (classid)))
-#define removeFromNPCD(ptr, classid) (HPMi->removeFromHPData(HPDT_NPCD, hpm_plugin->pid(), (ptr)->hdata, (classid)))
-/* map_data */
-#define addToMAPD(ptr, data, classid, autofree) \
-	(HPMi->addToHPData(HPDT_MAP, hpm_plugin->pid(), &(ptr)->hdata, (data), (classid), (autofree)))
-#define getFromMAPD(ptr, classid)    (HPMi->getFromHPData(HPDT_MAP, hpm_plugin->pid(), (ptr)->hdata, (classid)))
-#define removeFromMAPD(ptr, classid) (HPMi->removeFromHPData(HPDT_MAP, hpm_plugin->pid(), (ptr)->hdata, (classid)))
-/* party_data */
-#define addToPAD(ptr, data, classid, autofree) \
-	(HPMi->addToHPData(HPDT_PARTY, hpm_plugin->pid(), &(ptr)->hdata, (data), (classid), (autofree)))
-#define getFromPAD(ptr, classid)    (HPMi->getFromHPData(HPDT_PARTY, hpm_plugin->pid(), (ptr)->hdata, (classid)))
-#define removeFromPAD(ptr, classid) (HPMi->removeFromHPData(HPDT_PARTY, hpm_plugin->pid(), (ptr)->hdata, (classid)))
-/* guild */
-#define addToGLD(ptr, data, classid, autofree) \
-	(HPMi->addToHPData(HPDT_GUILD, hpm_plugin->pid(), &(ptr)->hdata, (data), (classid), (autofree)))
-#define getFromGLD(ptr, classid)    (HPMi->getFromHPData(HPDT_GUILD, hpm_plugin->pid(), (ptr)->hdata, (classid)))
-#define removeFromGLD(ptr, classid) (HPMi->removeFromHPData(HPDT_GUILD, hpm_plugin->pid(), (ptr)->hdata, (classid)))
-/* instance_data */
-#define addToINSTD(ptr, data, classid, autofree) \
-	(HPMi->addToHPData(HPDT_INSTANCE, hpm_plugin->pid(), &(ptr)->hdata, (data), (classid), (autofree)))
-#define getFromINSTD(ptr, classid) (HPMi->getFromHPData(HPDT_INSTANCE, hpm_plugin->pid(), (ptr)->hdata, (classid)))
-#define removeFromINSTD(ptr, classid) \
-	(HPMi->removeFromHPData(HPDT_INSTANCE, hpm_plugin->pid(), (ptr)->hdata, (classid)))
-/* mob_db */
-#define addToMOBDB(ptr, data, classid, autofree) \
-	(HPMi->addToHPData(HPDT_MOBDB, hpm_plugin->pid(), &(ptr)->hdata, (data), (classid), (autofree)))
-#define getFromMOBDB(ptr, classid)    (HPMi->getFromHPData(HPDT_MOBDB, hpm_plugin->pid(), (ptr)->hdata, (classid)))
-#define removeFromMOBDB(ptr, classid) (HPMi->removeFromHPData(HPDT_MOBDB, hpm_plugin->pid(), (ptr)->hdata, (classid)))
-/* mob_data */
-#define addToMOBDATA(ptr, data, classid, autofree) \
-	(HPMi->addToHPData(HPDT_MOBDATA, hpm_plugin->pid(), &(ptr)->hdata, (data), (classid), (autofree)))
-#define getFromMOBDATA(ptr, classid) (HPMi->getFromHPData(HPDT_MOBDATA, hpm_plugin->pid(), (ptr)->hdata, (classid)))
-#define removeFromMOBDATA(ptr, classid) \
-	(HPMi->removeFromHPData(HPDT_MOBDATA, hpm_plugin->pid(), (ptr)->hdata, (classid)))
-/* item_data */
-#define addToITEMDATA(ptr, data, classid, autofree) \
-	(HPMi->addToHPData(HPDT_ITEMDATA, hpm_plugin->pid(), &(ptr)->hdata, (data), (classid), (autofree)))
-#define getFromITEMDATA(ptr, classid) (HPMi->getFromHPData(HPDT_ITEMDATA, hpm_plugin->pid(), (ptr)->hdata, (classid)))
-#define removeFromITEMDATA(ptr, classid) \
-	(HPMi->removeFromHPData(HPDT_ITEMDATA, hpm_plugin->pid(), (ptr)->hdata, (classid)))
-/* battleground_data */
-#define addToBGDATA(ptr, data, classid, autofree) \
-	(HPMi->addToHPData(HPDT_BGDATA, hpm_plugin->pid(), &(ptr)->hdata, (data), (classid), (autofree)))
-#define getFromBGDATA(ptr, classid)    (HPMi->getFromHPData(HPDT_BGDATA, hpm_plugin->pid(), (ptr)->hdata, (classid)))
-#define removeFromBGDATA(ptr, classid) (HPMi->removeFromHPData(HPDT_BGDATA, hpm_plugin->pid(), (ptr)->hdata, (classid)))
-/* autotrade_vending */
-#define addToATVEND(ptr, data, classid, autofree) \
-	(HPMi->addToHPData(HPDT_AUTOTRADE_VEND, hpm_plugin->pid(), &(ptr)->hdata, (data), (classid), (autofree)))
-#define getFromATVEND(ptr, classid) \
-	(HPMi->getFromHPData(HPDT_AUTOTRADE_VEND, hpm_plugin->pid(), (ptr)->hdata, (classid)))
-#define removeFromATVEND(ptr, classid) \
-	(HPMi->removeFromHPData(HPDT_AUTOTRADE_VEND, hpm_plugin->pid(), (ptr)->hdata, (classid)))
-/* clan */
-#define addtoCLAN(ptr, data, classid, autofree) \
-	(HPMi->addToHPData(HPDT_CLAN, hpm_plugin->pid(), &(ptr)->hdata, (data), (classid), (autofree)))
-#define getfromCLAN(ptr, classid)    (HPMi->getFromHPData(HPDT_CLAN, hpm_plugin->pid(), (ptr)->hdata, (classid)))
-#define removefromCLAN(ptr, classid) (HPMi->removeFromHPData(HPDT_CLAN, hpm_plugin->pid(), (ptr)->hdata, (classid)))
-/* unit parameters */
-#define addToUnitParam(ptr, data, classid, autofree) \
-	(HPMi->addToHPData(HPDT_UNIT_PARAMETER, hpm_plugin->pid(), &(ptr)->hdata, (data), (classid), (autofree)))
-#define getfromUnitParam(ptr, classid) \
-	(HPMi->getFromHPData(HPDT_UNIT_PARAMETER, hpm_plugin->pid(), (ptr)->hdata, (classid)))
-#define removefromUnitParam(ptr, classid) \
-	(HPMi->removeFromHPData(HPDT_UNIT_PARAMETER, hpm_plugin->pid(), (ptr)->hdata, (classid)))
 
 /* HPMi->addPCGPermission */
 #define addGroupPermission(pcgname, maskptr) HPMi->addPCGPermission(hpm_plugin->pid(), pcgname, &maskptr)
@@ -288,6 +209,22 @@ class hpm_plugin_i
 	bool add_log_conf(const char *bcname, void (*parse_func)(const char *key, const char *val))
 	{
 		return this->add_conf(HPCT_LOG, bcname, parse_func, nullptr, false);
+	}
+
+	/* session[] */
+	void add_to_session(struct socket_data *session, void *data, uint32 classid, bool autofree)
+	{
+		HPMi->addToHPData(HPDT_SESSION, m_pid, &session->hdata, data, classid, autofree);
+	}
+
+	void *get_from_session(struct socket_data *session, uint32 classid)
+	{
+		return HPMi->getFromHPData(HPDT_SESSION, m_pid, session->hdata, classid);
+	}
+
+	void remove_from_session(struct socket_data *session, uint32 classid)
+	{
+		HPMi->removeFromHPData(HPDT_SESSION, m_pid, session->hdata, classid);
 	}
 
 	const char *name;
