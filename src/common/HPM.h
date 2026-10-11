@@ -28,6 +28,9 @@
 #include "common/db.h"
 #include "common/HPMi.h"
 
+#include <typeindex>
+#include <typeinfo>
+
 #ifdef WIN32
   #ifndef WIN32_LEAN_AND_MEAN
 	#define WIN32_LEAN_AND_MEAN
@@ -178,6 +181,7 @@ struct HPM_interface {
 
 	/* hooking */
 	struct HPMHooking_core_interface *hooking;
+	std::unordered_map<std::type_index, hpm_interface_factory_handler> factories;
 };
 
 CMDLINEARG(loadplugin);

@@ -36,6 +36,7 @@
 #include "common/mutex.h"
 #include "common/nullpo.h"
 #include "common/packets.h"
+#include "common/poc.h"
 #include "common/random.h"
 #include "common/showmsg.h"
 #include "common/socket.h"
@@ -338,6 +339,7 @@ static void core_defaults(void)
 	md5_defaults();
 	thread_defaults();
 	base62_defaults();
+	herc::poc_defaults();
 	hpm_defaults();
 }
 
@@ -619,11 +621,16 @@ HERCAPI_COMMON_EXPORT int herc_main(hserver_i *hs, int argc, char **argv)
 
 	hs->do_init(argc, argv);
 
+	herc::poc->init(false);
+
 	// Main runtime cycle
 	while (core->runflag != CORE_ST_STOP) {
 		int next = timer->perform(timer->gettick_nocache());
 		sockt->perform(next);
 	}
+
+	herc::poc->final();
+	herc::poc->bleh_destroy_self();
 
 	console->final();
 

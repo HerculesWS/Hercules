@@ -41,6 +41,7 @@ set(COMMON_SRCS
   console.cpp
   core.cpp
   memmgr.cpp
+  poc.cpp
   socket.cpp
   sql.cpp
 )
@@ -74,6 +75,7 @@ set(COMMON_HDRS
   packets_struct.h
   random.h
   showmsg.h
+  poc.h
   socket.h
   spinlock.h
   sql.h
