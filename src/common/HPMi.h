@@ -28,6 +28,9 @@
 #include "common/showmsg.h"
 #include "common/socket.h"
 
+#include <functional>
+#include <typeindex>
+
 struct HPMHooking_interface;
 struct Sql; // common/sql.h
 struct script_state;
@@ -115,6 +118,14 @@ class hpm_plugin_i;
 #define addProxyPacket(plugin, cmd, structname, receive, point) \
 	(plugin)->add_packet<point>((cmd), WFIFO_APICHAR_SIZE + sizeof(struct PACKET_API_##structname##_data), (receive))
 
+class hpm_interface_factory_handler
+{
+  public:
+	std::function<void(void)> handler;
+	std::type_index interface_type;
+	int pid;
+};
+
 /* Hercules Plugin Mananger Include Interface */
 struct HPMi_interface {
 	bool (*addCommand)(const char *name, bool (*func)(const int fd, struct map_session_data *sd, const char *command,
@@ -139,6 +150,8 @@ struct HPMi_interface {
 	                bool required);
 	/* pc group permission */
 	void (*addPCGPermission)(unsigned int pluginID, const char *name, unsigned int *mask);
+
+	void (*register_factory)(hpm_interface_factory_handler factory);
 
 	struct Sql *sql_handle;
 
@@ -243,6 +256,17 @@ class hpm_plugin_i
 	void remove_from_session(struct socket_data *session, uint32 classid)
 	{
 		HPMi->removeFromHPData(HPDT_SESSION, m_pid, session->hdata, classid);
+	}
+
+	template<class T>
+	void register_interface_factory(std::function<T *(void)> factory, T **interface)
+	{
+		auto handler = [factory = factory, interface = interface]() {
+			(*interface)->bleh_destroy_self();
+			*interface = factory();
+		};
+		HPMi->register_factory(
+		  hpm_interface_factory_handler{.handler = std::move(handler), .interface_type = typeid(T *), .pid = m_pid});
 	}
 
 	const char *name;

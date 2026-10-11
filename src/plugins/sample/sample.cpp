@@ -35,6 +35,7 @@
 #include "common/hercules.h" /* Should always be the first Hercules file included! (if you don't make it first, you won't be able to use interfaces) */
 #include "common/memmgr.h"
 #include "common/mmo.h"
+#include "common/poc.h"
 #include "common/random.h"
 #include "common/socket.h"
 #include "common/strlib.h"
@@ -80,6 +81,63 @@ class hpm_plugin_sample : public hpm_plugin_t
 };
 
 HPM_DECLARE_PLUGIN(hpm_plugin_sample{})
+
+class poc_interface_custom final : public herc::poc_interface
+{
+  public:
+	poc_interface_custom() : herc::poc_interface()
+	{
+		ShowDebug("constructing poc (plugin version, has called the core version before)\n");
+	}
+
+	virtual ~poc_interface_custom() override
+	{
+		ShowDebug("destructing poc (plugin version, core version will be called automatically after)\n");
+	}
+
+	virtual void init(bool minimal) override
+	{
+		ShowDebug("initializing poc (plugin version, will call the core version after)\n");
+		this->herc::poc_interface::init(minimal);
+		m_foo -= 1;
+		m_bar  = -1;
+	}
+
+	virtual void final() override
+	{
+		ShowDebug("finalizing poc (plugin version, will call the core version after)\n");
+		this->herc::poc_interface::final();
+	}
+
+	virtual int do_stuff(int foo) override
+	{
+		auto res  = this->herc::poc_interface::do_stuff(foo);
+		m_foo    += 5;
+		m_bar    -= foo % 5;
+		ShowDebug("Doing stuff from poc (plugin version, has called the core version before): %d %" PRId64 "\n", m_foo,
+		          m_foo_vec.size());
+		return res;
+	}
+
+	virtual int do_const_stuff(int foo) const override
+	{
+		ShowDebug("Doing const stuff from poc (plugin version, has decided not to call the core version): %d %" PRId64
+		          "\n",
+		          m_foo, m_foo_vec.size());
+		return m_foo + m_bar;
+	}
+
+	static poc_interface *create_custom()
+	{
+		ShowDebug("creating poc (plugin version)\n");
+		poc_interface_custom *obj = nullptr;
+		CREATE(obj, poc_interface_custom, 1);
+		return new (obj) poc_interface_custom;
+	}
+
+  private:
+	int m_bar{0};
+};
 
 #ifdef HERCULES_PLUGIN_MAP
 /// @sample command - 5 params: const int fd, struct map_session_data* sd, const char* command, const char* message,
@@ -341,6 +399,8 @@ void hpm_plugin_sample::init()
 /* triggered when server starts loading, before any server-specific data is set */
 void hpm_plugin_sample::server_preinit()
 {
+	register_interface_factory<herc::poc_interface>([]() -> auto { return poc_interface_custom::create_custom(); },
+	                                                &herc::poc);
 #ifdef HERCULES_PLUGIN_MAP
 	/* makes map server listen to mysetting:value in any "battleconf" file (including imported or custom ones) */
 	/* value is not limited to numbers, its passed to our plugins handler (parse_my_setting) as const char *,

@@ -93,6 +93,12 @@ static void hplugin_trigger_event(enum hp_event_types type)
 			break;
 		}
 	}
+	// HACK: This should be moved out of this function
+	if (type == HPET_PRE_INIT) {
+		for (const auto &[tidx, factory] : HPM->factories) {
+			factory.handler();
+		}
+	}
 }
 
 static bool hplugin_iscompatible(const char *version)
@@ -1154,6 +1160,17 @@ static void hpm_final(void)
 	return;
 }
 
+static void hpm_register_factory(hpm_interface_factory_handler factory)
+{
+	if (const auto &old = HPM->factories.find(factory.interface_type); old != HPM->factories.end()) {
+		ShowFatalError(
+		  "Plugin %d is registering as handler for interface %d, but plugin %d already registered for the same\n",
+		  factory.pid, factory.interface_type, old->second.pid);
+		exit(EXIT_FAILURE);
+	}
+	HPM->factories.insert(std::make_pair(factory.interface_type, factory));
+}
+
 void hpm_defaults(void)
 {
 	HPM          = &HPM_s;
@@ -1208,6 +1225,7 @@ void hpm_defaults(void)
 	HPMi->addArg           = hpm_add_arg;
 	HPMi->addConf          = hplugins_addconf;
 	HPMi->addPCGPermission = nullptr; // Overridden by the map server
+	HPMi->register_factory = hpm_register_factory;
 
 	HPMi->memmgr           = &iMalloc_HPM;
 	*HPMi->memmgr          = *iMalloc; // Clone and override selectively
