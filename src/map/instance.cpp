@@ -230,8 +230,10 @@ static int instance_add_map(const char *name, int instance_id, bool usebasename,
 	if( map_name != NULL ) {
 		snprintf(map->list[im].name, MAP_NAME_LENGTH, "%s", map_name);
 		map->list[im].custom_name = true;
-	} else
-		snprintf(map->list[im].name, MAP_NAME_LENGTH, (usebasename ? "%.3d#%s" : "%.3d%s"), instance_id, name); // Generate Name for Instance Map
+	} else {
+		// Generate Name for Instance Map
+		snprintf(map->list[im].name, MAP_NAME_LENGTH, (usebasename ? "%.3d#%s" : "%.3d%s"), instance_id, name);
+	}
 	map->list[im].index = mapindex->addmap(-1, map->list[im].name); // Add map index
 
 	map->list[im].channel = NULL;
@@ -357,9 +359,11 @@ static int instance_mapname2imap(const char *map_name, int instance_id)
 static int instance_mapid2imapid(int16 m, int instance_id)
 {
 	Assert_retr(-1, m >= 0 && m < map->count);
-	if( map->list[m].flag.src4instance == 0 )
-		return m; // not instances found for this map
-	else if( map->list[m].instance_id >= 0 ) { // This map is a instance, not a src map instance
+	if( map->list[m].flag.src4instance == 0 ) {
+		// not instances found for this map
+		return m;
+	} else if( map->list[m].instance_id >= 0 ) {
+		// This map is a instance, not a src map instance
 		ShowError("map_instance_mapid2imapid: already instanced (%d / %d)\n", m, instance_id);
 		return -1;
 	}

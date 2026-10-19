@@ -1965,23 +1965,28 @@ static int itemdb_validate_entry(struct item_data *entry, int n, const char *sou
 	// Validated. Finally insert it
 	item = itemdb->load(entry->nameid);
 
-	if (item->script && item->script != entry->script) { // Don't free if it's inheriting the same script
+	if (item->script && item->script != entry->script) {
+		// Don't free if it's inheriting the same script
 		script->free_code(item->script);
 		item->script = NULL;
 	}
-	if (item->equip_script && item->equip_script != entry->equip_script) { // Don't free if it's inheriting the same script
+	if (item->equip_script && item->equip_script != entry->equip_script) {
+		// Don't free if it's inheriting the same script
 		script->free_code(item->equip_script);
 		item->equip_script = NULL;
 	}
-	if (item->unequip_script && item->unequip_script != entry->unequip_script) { // Don't free if it's inheriting the same script
+	if (item->unequip_script && item->unequip_script != entry->unequip_script) {
+		// Don't free if it's inheriting the same script
 		script->free_code(item->unequip_script);
 		item->unequip_script = NULL;
 	}
-	if (item->rental_start_script != NULL && item->rental_start_script != entry->rental_start_script) { // Don't free if it's inheriting the same script
+	if (item->rental_start_script != NULL && item->rental_start_script != entry->rental_start_script) {
+		// Don't free if it's inheriting the same script
 		script->free_code(item->rental_start_script);
 		item->rental_start_script = NULL;
 	}
-	if (item->rental_end_script != NULL && item->rental_end_script != entry->rental_end_script) { // Don't free if it's inheriting the same script
+	if (item->rental_end_script != NULL && item->rental_end_script != entry->rental_end_script) {
+		// Don't free if it's inheriting the same script
 		script->free_code(item->rental_end_script);
 		item->rental_end_script = NULL;
 	}

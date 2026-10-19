@@ -27,9 +27,8 @@
 #include "common/packetsmacro.h"
 
 /* Packets Structs */
-#if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
-#pragma pack(push, 1)
-#endif // not NetBSD < 6 / Solaris
+
+PRAGMA_PACK_PUSH(1)
 
 struct PACKET_CHARLOGIN_SET_ACCOUNT_ONLINE {
 	int16 packetType;
@@ -46,8 +45,6 @@ struct PACKET_CHARLOGIN_ONLINE_ACCOUNTS {
 } __attribute__((packed));
 DEFINE_PACKET_ID(CHARLOGIN_ONLINE_ACCOUNTS, 0x272d)
 
-#if !defined(sun) && (!defined(__NETBSD__) || __NetBSD_Version__ >= 600000000) // NetBSD 5 and Solaris don't like pragma pack but accept the packed attribute
-#pragma pack(pop)
-#endif // not NetBSD < 6 / Solaris
+PRAGMA_PACK_POP()
 
 #endif /* COMMON_CHARLOGINPACKETS_H */

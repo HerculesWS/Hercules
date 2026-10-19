@@ -64,7 +64,8 @@ static bool inter_userconfig_load_emotes(int account_id, struct userconfig_emote
 
 static enum userconfig_from_sql_result inter_userconfig_emotes_from_sql(int account_id, struct userconfig_emotes *emotes)
 {
-	nullpo_retr(USERCONFIG_FROM_SQL_SUCCESS, emotes); // FIXME: We're preserving old behavior here but probably a failure should be returned
+	// FIXME: We're preserving old behavior here but probably a failure should be returned
+	nullpo_retr(USERCONFIG_FROM_SQL_SUCCESS, emotes);
 
 	StringBuf buf;
 	StrBuf->Init(&buf);

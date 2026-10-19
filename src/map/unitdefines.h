@@ -23,6 +23,8 @@
 
 /**
  * Used for directions, @see unit_data.dir
+ *
+ * IMPORTANT: Changing the order would break the macros below and several usages of directions anywhere
  */
 enum unit_dir {
 	UNIT_DIR_UNDEFINED = -1,
@@ -36,9 +38,7 @@ enum unit_dir {
 	UNIT_DIR_EAST      = 6,
 	UNIT_DIR_NORTHEAST = 7,
 	UNIT_DIR_MAX       = 8,
-	UNIT_DIR_9         = 9,  // unknown legacy usage
-	/* IMPORTANT: Changing the order would break the above macros
-	 * and several usages of directions anywhere */
+	UNIT_DIR_9         = 9,  ///< unknown legacy usage
 };
 
 /* Returns the opposite of the facing direction */

@@ -130,14 +130,16 @@ enum e_skill_nk {
 enum e_skill_inf2 {
 	INF2_NONE               = 0x00000000,
 	INF2_QUEST_SKILL        = 0x00000001,
-	INF2_NPC_SKILL          = 0x00000002, ///< NPC skills are those that players can't have in their skill tree.
+	/// NPC skills are those that players can't have in their skill tree.
+	INF2_NPC_SKILL          = 0x00000002,
 	INF2_WEDDING_SKILL      = 0x00000004,
 	INF2_SPIRIT_SKILL       = 0x00000008,
 	INF2_GUILD_SKILL        = 0x00000010,
 	INF2_SONG_DANCE         = 0x00000020,
 	INF2_ENSEMBLE_SKILL     = 0x00000040,
 	INF2_TRAP               = 0x00000080,
-	INF2_TARGET_SELF        = 0x00000100, ///< Refers to ground placed skills that will target the caster as well (like Grandcross)
+	/// Refers to ground placed skills that will target the caster as well (like Grandcross)
+	INF2_TARGET_SELF        = 0x00000100,
 	INF2_NO_TARGET_SELF     = 0x00000200,
 	INF2_PARTY_ONLY         = 0x00000400,
 	INF2_GUILD_ONLY         = 0x00000800,
@@ -161,12 +163,16 @@ enum e_skill_inf2 {
 };
 
 
-// Flags passed to skill_attack/skill_area_sub
+/// Flags passed to skill_attack/skill_area_sub
 enum e_skill_display {
-	SD_LEVEL     = 0x1000, // skill_attack will send -1 instead of skill level (affects display of some skills)
-	SD_ANIMATION = 0x2000, // skill_attack will use '5' instead of the skill's 'type' (this makes skills show an animation)
-	SD_SPLASH    = 0x4000, // skill_area_sub will count targets in skill_area_temp[2]
-	SD_PREAMBLE  = 0x8000, // skill_area_sub will transmit a 'magic' damage packet (-30000 dmg) for the first target selected
+	/// skill_attack will send -1 instead of skill level (affects display of some skills)
+	SD_LEVEL     = 0x1000,
+	/// skill_attack will use '5' instead of the skill's 'type' (this makes skills show an animation)
+	SD_ANIMATION = 0x2000,
+	/// skill_area_sub will count targets in skill_area_temp[2]
+	SD_SPLASH    = 0x4000,
+	/// skill_area_sub will transmit a 'magic' damage packet (-30000 dmg) for the first target selected
+	SD_PREAMBLE  = 0x8000,
 };
 
 enum {
@@ -1805,10 +1811,11 @@ enum {
 /** Constants to identify the auto-cast type. **/
 enum autocast_type {
 	AUTOCAST_NONE = 0,
-	AUTOCAST_TEMP, // Used when type is only required during the execution of the calling instance. (For example bAutoSpell* skills.)
-	AUTOCAST_ABRA, // Used for Abracadabra (Hocus pocus).
-	AUTOCAST_IMPROVISE, // Used for Improvised Song.
-	AUTOCAST_ITEM, // Used for itemskill() script command.
+	/// Used when type is only required during the execution of the calling instance. (For example bAutoSpell* skills.)
+	AUTOCAST_TEMP,
+	AUTOCAST_ABRA, ///< Used for Abracadabra (Hocus pocus).
+	AUTOCAST_IMPROVISE, ///< Used for Improvised Song.
+	AUTOCAST_ITEM, ///< Used for itemskill() script command.
 };
 
 /** Constants for allowed skill use while interacting with NPC. **/
@@ -1824,10 +1831,11 @@ enum skill_enabled_npc_flags {
 
 /** Information about a possible skill for AutoSpell */
 struct s_autospell_db {
-	int autospell_level; //< Minimum AutoSpell level to show this skill
-	int skill_id; //< Skill Id
-	int skill_lv[MAX_SKILL_LEVEL]; //< Maximum usable skill level at each AutoSpell level (also accepts HALF_AUTOSPELL_LEVEL as level)
-	bool spirit_boost; //< Whether Sage's Spirit boosts this skill to maximum level
+	int autospell_level; ///< Minimum AutoSpell level to show this skill
+	int skill_id; ///< Skill Id
+	/// Maximum usable skill level at each AutoSpell level (also accepts HALF_AUTOSPELL_LEVEL as level)
+	int skill_lv[MAX_SKILL_LEVEL];
+	bool spirit_boost; ///< Whether Sage's Spirit boosts this skill to maximum level
 };
 
 /** A container holding all required items. **/

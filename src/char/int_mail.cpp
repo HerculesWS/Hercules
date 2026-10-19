@@ -54,8 +54,7 @@ static int inter_mail_fromsql(int char_id, struct mail_data *md)
 	md->full = false;
 
 	StrBuf->Init(&buf);
-	StrBuf->AppendStr(&buf, "SELECT `id`,`send_name`,`send_id`,`dest_name`,`dest_id`,`title`,`message`,`time`,`status`,"
-		"`zeny`,`amount`,`nameid`,`refine`,`grade`,`attribute`,`identify`,`unique_id`");
+	StrBuf->AppendStr(&buf, "SELECT `id`,`send_name`,`send_id`,`dest_name`,`dest_id`,`title`,`message`,`time`,`status`,`zeny`,`amount`,`nameid`,`refine`,`grade`,`attribute`,`identify`,`unique_id`");
 	for (i = 0; i < MAX_SLOTS; i++)
 		StrBuf->Printf(&buf, ",`card%d`", i);
 	for (i = 0; i < MAX_ITEM_OPTIONS; i++)
@@ -189,8 +188,7 @@ static bool inter_mail_loadmessage(int mail_id, struct mail_message *msg)
 	memset(msg, 0, sizeof(struct mail_message)); // Initialize data
 
 	StrBuf->Init(&buf);
-	StrBuf->AppendStr(&buf, "SELECT `id`,`send_name`,`send_id`,`dest_name`,`dest_id`,`title`,`message`,`time`,`status`,"
-		"`zeny`,`amount`,`nameid`,`refine`,`grade`,`attribute`,`identify`,`unique_id`");
+	StrBuf->AppendStr(&buf, "SELECT `id`,`send_name`,`send_id`,`dest_name`,`dest_id`,`title`,`message`,`time`,`status`,`zeny`,`amount`,`nameid`,`refine`,`grade`,`attribute`,`identify`,`unique_id`");
 	for (j = 0; j < MAX_SLOTS; j++)
 		StrBuf->Printf(&buf, ",`card%d`", j);
 	for (j = 0; j < MAX_ITEM_OPTIONS; j++)

@@ -203,7 +203,8 @@ static void read_config(void)
 					continue;
 
 				if ((inherit = group_settings->inherit) == NULL ||
-				    (inherit_count = libconfig->setting_length(inherit)) <= 0) { // this group does not inherit from others
+				    (inherit_count = libconfig->setting_length(inherit)) <= 0) {
+					// this group does not inherit from others
 					++i;
 					group_settings->inheritance_done = true;
 					continue;

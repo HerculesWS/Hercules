@@ -697,7 +697,7 @@ static int elemental_ai_sub_timer_activesearch(struct block_list *bl, va_list ap
 		case BL_PC:
 			if( !map_flag_vs(ed->bl.m) )
 				return 0;
-			/* Fall through */
+			[[fallthrough]];
 		case BL_NUL:
 		case BL_ITEM:
 		case BL_NPC:
@@ -711,7 +711,8 @@ static int elemental_ai_sub_timer_activesearch(struct block_list *bl, va_list ap
 		case BL_ALL:
 		default:
 			dist = distance_bl(&ed->bl, bl);
-			if( ((*target) == NULL || !check_distance_bl(&ed->bl, *target, dist)) && battle->check_range(&ed->bl,bl,ed->db->range2) ) { //Pick closest target?
+			if( ((*target) == NULL || !check_distance_bl(&ed->bl, *target, dist)) && battle->check_range(&ed->bl,bl,ed->db->range2) ) {
+				//Pick closest target?
 				(*target) = bl;
 				ed->target_id = bl->id;
 				ed->min_chase = dist + ed->db->range3;

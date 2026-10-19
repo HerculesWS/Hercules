@@ -51,18 +51,19 @@ struct aloginif_interface *aloginif;
 
 //#define DEBUG_LOG
 
-#define INIT_PACKET_PROXY_FIELDS(p, sd, param) \
-	(p)->msg_id = msg_id; \
-	if ((param & (proxy_flag_char | proxy_flag_map)) != 0) { \
-		(p)->char_server_id = aclif->get_char_server_id(sd); \
-	} else { \
-		(p)->char_server_id = -1; \
-	} \
-	(p)->client_fd = sd->fd; \
-	(p)->account_id = sd->account_id; \
-	(p)->char_id = sd->char_id; \
-	(p)->client_random_id = sd->id; \
-	(p)->flags = param
+#define INIT_PACKET_PROXY_FIELDS(p, sd, param) do { \
+		(p)->msg_id = msg_id; \
+		if ((param & (proxy_flag_char | proxy_flag_map)) != 0) { \
+			(p)->char_server_id = aclif->get_char_server_id(sd); \
+		} else { \
+			(p)->char_server_id = -1; \
+		} \
+		(p)->client_fd = (sd)->fd; \
+		(p)->account_id = (sd)->account_id; \
+		(p)->char_id = (sd)->char_id; \
+		(p)->client_random_id = (sd)->id; \
+		(p)->flags = (param); \
+	} while (false)
 
 // sets login-server's user id
 static void aloginif_setuserid(char *id)
@@ -155,15 +156,15 @@ static int aloginif_parse(int fd)
 	while (RFIFOREST(fd) >= 2) {
 		int cmd = RFIFOW(fd, 0);
 
-/*
+#if 0
 		if (VECTOR_LENGTH(HPM->packets[hpChrif_Parse]) > 0) {
-			int result = HPM->parse_packets(fd,cmd,hpChrif_Parse);
+			int result = HPM->parse_packets(fd, cmd, hpChrif_Parse);
 			if (result == 1)
 				continue;
 			if (result == 2)
 				return 0;
 		}
-*/
+#endif // 0
 
 		if (cmd < ALOGINIF_PACKET_LEN_TABLE_START || cmd >= ALOGINIF_PACKET_LEN_TABLE_START + ARRAYLENGTH(aloginif->packet_len_table) || aloginif->packet_len_table[cmd - ALOGINIF_PACKET_LEN_TABLE_START] == 0) {
 			ShowWarning("aloginif_parse: session #%d, failed (unrecognized command 0x%.4x).\n", fd, (unsigned int)cmd);
@@ -209,7 +210,9 @@ static int aloginif_parse(int fd)
 				sockt->eof(fd);
 				return 0;
 		}
-		if (fd == aloginif->fd) //There's the slight chance we lost the connection during parse, in which case this would segfault if not checked [Skotlex]
+		// There's the slight chance we lost the connection during parse, in which case this would segfault if
+		// not checked [Skotlex]
+		if (fd == aloginif->fd)
 			RFIFOSKIP(fd, packet_len);
 	}
 

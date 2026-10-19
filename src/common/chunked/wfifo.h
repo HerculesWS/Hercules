@@ -42,34 +42,38 @@
 	const int p ## _full_chunks_count = p ## data_len / (chunk_size); \
 	for (int p ## _cnt = 0; p ## _cnt < p ## _full_chunks_count; p ## _cnt ++, p ## _offset += (chunk_size))
 
-#define WFIFO_CHUNKED_BLOCK_START_RAW1(p, _dataField, chunk_size) \
+#define WFIFO_CHUNKED_BLOCK_START_RAW1(p, _dataField, chunk_size) do { \
 		p ## _len = p ## _fixed_len + (chunk_size); \
 		WFIFOHEAD(p ## _fd, p ## _len); \
 		p = WP2PTR(decltype(p), p ## _fd); \
 		WFIFOW(p ## _fd, 0) = p ## _header_id; \
 		WFIFOW(p ## _fd, 2) = p ## _len; \
-		memcpy((p)->_dataField, p ## data + p ## _offset, (chunk_size))
-#define WFIFO_CHUNKED_BLOCK_START_RAW_FLAG(p) \
+		memcpy((p)->_dataField, p ## data + p ## _offset, (chunk_size)); \
+	} while (false)
+#define WFIFO_CHUNKED_BLOCK_START_RAW_FLAG(p) do { \
 		if (p ## _cnt == 0) \
 			(p)->flag = 0; \
 		else \
-			(p)->flag = 1
+			(p)->flag = 1; \
+	} while (false)
 
 #define WFIFO_CHUNKED_BLOCK_END_RAW() \
 		WFIFOSET(p ## _fd, p ## _len)
 
 #define WFIFO_CHUNKED_FINAL_START_RAW1(p, _dataField, chunk_size) \
 	const uint32 p ## _left_size = p ## data_len - p ## _full_chunks_count * (chunk_size); \
-	p ## _len = p ## _fixed_len + p ## _left_size; \
-	WFIFOHEAD(p ## _fd, p ## _len); \
-	p = WFIFOP(decltype(p), p ## _fd, 0); \
-	WFIFOW(p ## _fd, 0) = p ## _header_id; \
-	WFIFOW(p ## _fd, 2) = p ## _len; \
-	if (p ## _left_size > 0) \
-		memcpy((p)->_dataField, p ## data + p ## _offset, p ## _left_size)
+	do { \
+		p ## _len = p ## _fixed_len + p ## _left_size; \
+		WFIFOHEAD(p ## _fd, p ## _len); \
+		p = WFIFOP(decltype(p), p ## _fd, 0); \
+		WFIFOW(p ## _fd, 0) = p ## _header_id; \
+		WFIFOW(p ## _fd, 2) = p ## _len; \
+		if (p ## _left_size > 0) \
+			memcpy((p)->_dataField, p ## data + p ## _offset, p ## _left_size); \
+	} while (false)
 
 #define WFIFO_CHUNKED_FINAL_START_RAW_FLAG(p) \
-	(p)->flag = 2
+	((p)->flag = 2)
 
 #define WFIFO_CHUNKED_FINAL_END_RAW() \
 		WFIFOSET(p ## _fd, p ## _len)
@@ -78,9 +82,10 @@
 #define WFIFO_CHUNKED_INIT(p, fd, header, pname, pdata, pdata_len) \
 	WFIFO_CHUNKED_INIT_RAW(p, fd, header, pname, pdata, pdata_len, WFIFO_CHUNK_SIZE)
 
-#define WFIFO_CHUNKED_BLOCK_START(p) \
-	WFIFO_CHUNKED_BLOCK_START_RAW1(p, data, WFIFO_CHUNK_SIZE); \
-	WFIFO_CHUNKED_BLOCK_START_RAW_FLAG(p)
+#define WFIFO_CHUNKED_BLOCK_START(p) do { \
+		WFIFO_CHUNKED_BLOCK_START_RAW1(p, data, WFIFO_CHUNK_SIZE); \
+		WFIFO_CHUNKED_BLOCK_START_RAW_FLAG(p); \
+	} while (false)
 
 #define WFIFO_CHUNKED_BLOCK_END() \
 	WFIFO_CHUNKED_BLOCK_END_RAW()

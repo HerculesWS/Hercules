@@ -47,8 +47,9 @@ static unsigned long loginlog_failedattempts(uint32 ip, unsigned int minutes)
 	if( !loginlog->enabled )
 		return 0;
 
+	// how many times failed account? in one ip.
 	if( SQL_ERROR == SQL->Query(loginlog->sql_handle, "SELECT count(*) FROM `%s` WHERE `ip` = '%s' AND `rcode` = '1' AND `time` > NOW() - INTERVAL %u MINUTE",
-		loginlog->dbs->log_login_db, sockt->ip2str(ip,NULL), minutes) )// how many times failed account? in one ip.
+		loginlog->dbs->log_login_db, sockt->ip2str(ip,NULL), minutes) )
 		Sql_ShowDebug(loginlog->sql_handle);
 
 	if( SQL_SUCCESS == SQL->NextRow(loginlog->sql_handle) )

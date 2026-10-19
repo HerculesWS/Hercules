@@ -94,14 +94,16 @@ static void buyingstore_create(struct map_session_data *sd, int zenylimit, unsig
 
 	if (battle_config.feature_buying_store == 0 || pc_istrading_except_npc(sd) || sd->state.prevend != 0
 	    || (sd->npc_id != 0 && sd->state.using_megaphone == 0) || sd->buyingstore.slots == 0
-	    || count > sd->buyingstore.slots || zenylimit <= 0 || zenylimit > sd->status.zeny || *storename == '\0') { // Disabled or invalid input.
+	    || count > sd->buyingstore.slots || zenylimit <= 0 || zenylimit > sd->status.zeny || *storename == '\0') {
+		// Disabled or invalid input.
 		sd->buyingstore.slots = 0;
 		clif->buyingstore_open_failed(sd, BUYINGSTORE_CREATE, 0);
 		return;
 	}
 
 	if( !pc_can_give_items(sd) )
-	{// custom: GM is not allowed to buy (give zeny)
+	{
+		// custom: GM is not allowed to buy (give zeny)
 		sd->buyingstore.slots = 0;
 		clif->message(sd->fd, msg_sd(sd, MSGTBL_CANT_GIVE_ITEMS)); // Your GM level doesn't authorize you to perform this action.
 		clif->buyingstore_open_failed(sd, BUYINGSTORE_CREATE, 0);
@@ -109,7 +111,8 @@ static void buyingstore_create(struct map_session_data *sd, int zenylimit, unsig
 	}
 
 	if(pc_ismuted(&sd->sc, MANNER_NOROOM))
-	{// custom: mute limitation
+	{
+		// custom: mute limitation
 		return;
 	}
 
@@ -140,31 +143,37 @@ static void buyingstore_create(struct map_session_data *sd, int zenylimit, unsig
 		price  = itemlist[i].price;
 
 		if( ( id = itemdb->exists(nameid) ) == NULL || amount == 0 )
-		{// invalid input
+		{
+			// invalid input
 			break;
 		}
 
 		if( price <= 0 || price > BUYINGSTORE_MAX_PRICE )
-		{// invalid price: unlike vending, items cannot be bought at 0 Zeny
+		{
+			// invalid price: unlike vending, items cannot be bought at 0 Zeny
 			break;
 		}
 
 		if (!id->flag.buyingstore || !itemdb->cantrade_sub(id, pc_get_group_level(sd), pc_get_group_level(sd))
 		 || (idx = pc->search_inventory(sd, nameid)) == INDEX_NOT_FOUND
-		 ) { // restrictions: allowed, no character-bound items and at least one must be owned
+		 ) {
+			// restrictions: allowed, no character-bound items and at least one must be owned
 			break;
 		}
 
 		if( sd->status.inventory[idx].amount+amount > BUYINGSTORE_MAX_AMOUNT )
-		{// too many items of same kind
+		{
+			// too many items of same kind
 			break;
 		}
 
 		if( i )
-		{// duplicate check. as the client does this too, only malicious intent should be caught here
+		{
+			// duplicate check. as the client does this too, only malicious intent should be caught here
 			ARR_FIND( 0, i, listidx, sd->buyingstore.items[listidx].nameid == nameid );
 			if( listidx != i )
-			{// duplicate
+			{
+				// duplicate
 				ShowWarning("buyingstore_create: Found duplicate item on buying list (nameid=%d, amount=%hu, account_id=%d, char_id=%d).\n",
 					nameid, amount, sd->status.account_id, sd->status.char_id);
 				break;
@@ -178,14 +187,16 @@ static void buyingstore_create(struct map_session_data *sd, int zenylimit, unsig
 	}
 
 	if( i != count )
-	{// invalid item/amount/price
+	{
+		// invalid item/amount/price
 		sd->buyingstore.slots = 0;
 		clif->buyingstore_open_failed(sd, BUYINGSTORE_CREATE, 0);
 		return;
 	}
 
 	if( (sd->max_weight*90)/100 < weight )
-	{// not able to carry all wanted items without getting overweight (90%)
+	{
+		// not able to carry all wanted items without getting overweight (90%)
 		sd->buyingstore.slots = 0;
 		clif->buyingstore_open_failed(sd, BUYINGSTORE_CREATE_OVERWEIGHT, weight);
 		return;
@@ -226,7 +237,8 @@ static void buyingstore_open(struct map_session_data *sd, int account_id)
 	}
 
 	if( !pc_can_give_items(sd) )
-	{// custom: GM is not allowed to sell
+	{
+		// custom: GM is not allowed to sell
 		clif->message(sd->fd, msg_sd(sd, MSGTBL_CANT_GIVE_ITEMS)); // Your GM level doesn't authorize you to perform this action.
 		return;
 	}
@@ -237,7 +249,8 @@ static void buyingstore_open(struct map_session_data *sd, int account_id)
 	}
 
 	if( !searchstore->queryremote(sd, account_id) && ( sd->bl.m != pl_sd->bl.m || !check_distance_bl(&sd->bl, &pl_sd->bl, AREA_SIZE) ) )
-	{// out of view range
+	{
+		// out of view range
 		return;
 	}
 
@@ -253,7 +266,8 @@ static void buyingstore_trade(struct map_session_data* sd, int account_id, unsig
 
 	nullpo_retv(sd);
 	if( count == 0 )
-	{// nothing to do
+	{
+		// nothing to do
 		return;
 	}
 
@@ -264,7 +278,8 @@ static void buyingstore_trade(struct map_session_data* sd, int account_id, unsig
 	}
 
 	if( !pc_can_give_items(sd) )
-	{// custom: GM is not allowed to sell
+	{
+		// custom: GM is not allowed to sell
 		clif->message(sd->fd, msg_sd(sd, MSGTBL_CANT_GIVE_ITEMS)); // Your GM level doesn't authorize you to perform this action.
 		clif->buyingstore_trade_failed_seller(sd, BUYINGSTORE_TRADE_SELLER_FAILED, 0);
 		return;
@@ -277,7 +292,8 @@ static void buyingstore_trade(struct map_session_data* sd, int account_id, unsig
 	}
 
 	if( !searchstore->queryremote(sd, account_id) && ( sd->bl.m != pl_sd->bl.m || !check_distance_bl(&sd->bl, &pl_sd->bl, AREA_SIZE) ) )
-	{// out of view range
+	{
+		// out of view range
 		clif->buyingstore_trade_failed_seller(sd, BUYINGSTORE_TRADE_SELLER_FAILED, 0);
 		return;
 	}
@@ -285,14 +301,16 @@ static void buyingstore_trade(struct map_session_data* sd, int account_id, unsig
 	searchstore->clearremote(sd);
 
 	if( pl_sd->status.zeny < pl_sd->buyingstore.zenylimit )
-	{// buyer lost zeny in the mean time? fix the limit
+	{
+		// buyer lost zeny in the mean time? fix the limit
 		pl_sd->buyingstore.zenylimit = pl_sd->status.zeny;
 	}
 	weight = pl_sd->weight;
 
 	// check item list
 	for( i = 0; i < count; i++ )
-	{// itemlist: <index>.W <name id>.W <amount>.W
+	{
+		// itemlist: <index>.W <name id>.W <amount>.W
 		int nameid;
 		unsigned short amount;
 		int index;
@@ -302,10 +320,12 @@ static void buyingstore_trade(struct map_session_data* sd, int account_id, unsig
 		amount = itemlist[i].amount;
 
 		if (i)
-		{// duplicate check. as the client does this too, only malicious intent should be caught here
+		{
+			// duplicate check. as the client does this too, only malicious intent should be caught here
 			ARR_FIND(0, i, k, itemlist[k].index - 2 == index);
 			if (k != i)
-			{// duplicate
+			{
+				// duplicate
 				ShowWarning("buyingstore_trade: Found duplicate item on selling list (prevnameid=%d, prevamount=%d, nameid=%d, amount=%hu, account_id=%d, char_id=%d).\n",
 					(int)itemlist[k].itemId, (int)itemlist[k].amount, nameid, amount, sd->status.account_id, sd->status.char_id);
 				clif->buyingstore_trade_failed_seller(sd, BUYINGSTORE_TRADE_SELLER_FAILED, nameid);
@@ -314,7 +334,8 @@ static void buyingstore_trade(struct map_session_data* sd, int account_id, unsig
 		}
 
 		if( index < 0 || index >= ARRAYLENGTH(sd->status.inventory) || sd->inventory_data[index] == NULL || sd->status.inventory[index].nameid != nameid || sd->status.inventory[index].amount < amount )
-		{// invalid input
+		{
+			// invalid input
 			clif->buyingstore_trade_failed_seller(sd, BUYINGSTORE_TRADE_SELLER_FAILED, nameid);
 			return;
 		}
@@ -330,33 +351,38 @@ static void buyingstore_trade(struct map_session_data* sd, int account_id, unsig
 
 		ARR_FIND( 0, pl_sd->buyingstore.slots, listidx, pl_sd->buyingstore.items[listidx].nameid == nameid );
 		if( listidx == pl_sd->buyingstore.slots || pl_sd->buyingstore.items[listidx].amount == 0 )
-		{// there is no such item or the buyer has already bought all of them
+		{
+			// there is no such item or the buyer has already bought all of them
 			clif->buyingstore_trade_failed_seller(sd, BUYINGSTORE_TRADE_SELLER_FAILED, nameid);
 			return;
 		}
 
 		if( pl_sd->buyingstore.items[listidx].amount < amount )
-		{// buyer does not need that much of the item
+		{
+			// buyer does not need that much of the item
 			clif->buyingstore_trade_failed_seller(sd, BUYINGSTORE_TRADE_SELLER_COUNT, nameid);
 			return;
 		}
 
 		if( pc->checkadditem(pl_sd, nameid, amount) == ADDITEM_OVERAMOUNT )
-		{// buyer does not have enough space for this item
+		{
+			// buyer does not have enough space for this item
 			clif->buyingstore_trade_failed_seller(sd, BUYINGSTORE_TRADE_SELLER_FAILED, nameid);
 			return;
 		}
 
 		if( amount*(unsigned int)sd->inventory_data[index]->weight > pl_sd->max_weight-weight )
-		{// normally this is not supposed to happen, as the total weight is
-		 // checked upon creation, but the buyer could have gained items
+		{
+			// normally this is not supposed to happen, as the total weight is
+			// checked upon creation, but the buyer could have gained items
 			clif->buyingstore_trade_failed_seller(sd, BUYINGSTORE_TRADE_SELLER_FAILED, nameid);
 			return;
 		}
 		weight+= amount*sd->inventory_data[index]->weight;
 
 		if( amount*pl_sd->buyingstore.items[listidx].price > pl_sd->buyingstore.zenylimit-zeny )
-		{// buyer does not have enough zeny
+		{
+			// buyer does not have enough zeny
 			clif->buyingstore_trade_failed_seller(sd, BUYINGSTORE_TRADE_SELLER_ZENY, nameid);
 			return;
 		}
@@ -365,7 +391,8 @@ static void buyingstore_trade(struct map_session_data* sd, int account_id, unsig
 
 	// process item list
 	for( i = 0; i < count; i++ )
-	{// itemlist: <index>.W <name id>.W <amount>.W
+	{
+		// itemlist: <index>.W <name id>.W <amount>.W
 		int nameid;
 		unsigned short amount;
 		int index;
@@ -400,15 +427,18 @@ static void buyingstore_trade(struct map_session_data* sd, int account_id, unsig
 	// check whether or not there is still something to buy
 	ARR_FIND( 0, pl_sd->buyingstore.slots, i, pl_sd->buyingstore.items[i].amount != 0 );
 	if( i == pl_sd->buyingstore.slots )
-	{// everything was bought
+	{
+		// everything was bought
 		clif->buyingstore_trade_failed_buyer(pl_sd, BUYINGSTORE_TRADE_BUYER_NO_ITEMS);
 	}
 	else if( pl_sd->buyingstore.zenylimit == 0 )
-	{// zeny limit reached
+	{
+		// zeny limit reached
 		clif->buyingstore_trade_failed_buyer(pl_sd, BUYINGSTORE_TRADE_BUYER_ZENY);
 	}
 	else
-	{// continue buying
+	{
+		// continue buying
 		return;
 	}
 
@@ -434,7 +464,8 @@ static bool buyingstore_search(struct map_session_data *sd, int nameid)
 
 	ARR_FIND( 0, sd->buyingstore.slots, i, sd->buyingstore.items[i].nameid == nameid && sd->buyingstore.items[i].amount );
 	if( i == sd->buyingstore.slots )
-	{// not found
+	{
+		// not found
 		return false;
 	}
 
@@ -451,7 +482,8 @@ static bool buyingstore_searchall(struct map_session_data *sd, const struct s_se
 	nullpo_retr(true, sd);
 
 	if( !sd->state.buyingstore )
-	{// not buying
+	{
+		// not buying
 		return true;
 	}
 
@@ -459,29 +491,34 @@ static bool buyingstore_searchall(struct map_session_data *sd, const struct s_se
 	{
 		ARR_FIND( 0, sd->buyingstore.slots, i, sd->buyingstore.items[i].nameid == s->itemlist[idx] && sd->buyingstore.items[i].amount );
 		if( i == sd->buyingstore.slots )
-		{// not found
+		{
+			// not found
 			continue;
 		}
 		it = &sd->buyingstore.items[i];
 
 		if( s->min_price && s->min_price > (unsigned int)it->price )
-		{// too low price
+		{
+			// too low price
 			continue;
 		}
 
 		if( s->max_price && s->max_price < (unsigned int)it->price )
-		{// too high price
+		{
+			// too high price
 			continue;
 		}
 
 		if( s->card_count )
-		{// ignore cards, as there cannot be any
+		{
+			// ignore cards, as there cannot be any
 			;
 		}
 
 		// TODO: add support for cards, options, grade
 		if (!searchstore->result(s->search_sd, sd->buyer_id, sd->status.account_id, sd->message, it->nameid, it->amount, it->price, buyingstore->blankslots, 0, 0, buyingstore->blankoptions))
-		{// result set full
+		{
+			// result set full
 			return false;
 		}
 	}

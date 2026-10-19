@@ -1104,7 +1104,8 @@ static void intif_parse_Registers(int fd)
 		unsigned int index;
 		int max = RFIFOW(fd, 14), cursor = 16, i;
 
-		script->parser_current_file = "loading char/acc variables";//for script_add_str to refer to here in case errors occur
+		//for script_add_str to refer to here in case errors occur
+		script->parser_current_file = "loading char/acc variables";
 
 		/**
 		 * Vessel!char_reg_num_db

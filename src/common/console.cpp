@@ -70,6 +70,7 @@ static void display_title(void)
 {
 	const char *vcstype = sysinfo->vcstype();
 
+	// clang-format off
 	ShowMessage("\n");
 	ShowMessage(CL_BG_RED CL_BT_WHITE "                                                                      " CL_CLL CL_NORMAL "\n");
 	ShowMessage(CL_BG_RED CL_BT_WHITE "                 Hercules Development Team presents                   " CL_CLL CL_NORMAL "\n");
@@ -82,6 +83,7 @@ static void display_title(void)
 	ShowMessage(CL_BG_RED CL_BT_WHITE "                                                                      " CL_CLL CL_NORMAL "\n");
 	ShowMessage(CL_BG_RED CL_BT_WHITE "                      http://herc.ws/board/                           " CL_CLL CL_NORMAL "\n");
 	ShowMessage(CL_BG_RED CL_BT_WHITE "                                                                      " CL_CLL CL_NORMAL "\n");
+	// clang-format on
 
 	ShowInfo("Hercules %d-bit for %s\n", sysinfo->is64bit() ? 64 : 32, sysinfo->platform());
 	ShowInfo("Build revision: '" CL_WHITE "%d" CL_RESET "'\n", sysinfo->build_revision());

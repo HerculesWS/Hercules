@@ -388,22 +388,38 @@ static bool path_search(struct walkpath_data *wpd, struct block_list *bl, int16 
 
 #define chk_dir(d) ((allowed_dirs & (d)) == (d))
 		// Process neighbors of current node
-		if (chk_dir(DIR_SOUTH|DIR_EAST) && !md->getcellp(md, bl, x+1, y-1, cell))
-			e += add_path(&open_set, tp, x+1, y-1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x+1, y-1, x1, y1)); // (x+1, y-1) 5
-		if (chk_dir(DIR_EAST))
-			e += add_path(&open_set, tp, x+1, y, g_cost + MOVE_COST, current, heuristic(x+1, y, x1, y1)); // (x+1, y) 6
-		if (chk_dir(DIR_NORTH|DIR_EAST) && !md->getcellp(md, bl, x+1, y+1, cell))
-			e += add_path(&open_set, tp, x+1, y+1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x+1, y+1, x1, y1)); // (x+1, y+1) 7
-		if (chk_dir(DIR_NORTH))
-			e += add_path(&open_set, tp, x, y+1, g_cost + MOVE_COST, current, heuristic(x, y+1, x1, y1)); // (x, y+1) 0
-		if (chk_dir(DIR_NORTH|DIR_WEST) && !md->getcellp(md, bl, x-1, y+1, cell))
-			e += add_path(&open_set, tp, x-1, y+1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x-1, y+1, x1, y1)); // (x-1, y+1) 1
-		if (chk_dir(DIR_WEST))
-			e += add_path(&open_set, tp, x-1, y, g_cost + MOVE_COST, current, heuristic(x-1, y, x1, y1)); // (x-1, y) 2
-		if (chk_dir(DIR_SOUTH|DIR_WEST) && !md->getcellp(md, bl, x-1, y-1, cell))
-			e += add_path(&open_set, tp, x-1, y-1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x-1, y-1, x1, y1)); // (x-1, y-1) 3
-		if (chk_dir(DIR_SOUTH))
-			e += add_path(&open_set, tp, x, y-1, g_cost + MOVE_COST, current, heuristic(x, y-1, x1, y1)); // (x, y-1) 4
+		if (chk_dir(DIR_SOUTH|DIR_EAST) && !md->getcellp(md, bl, x+1, y-1, cell)) {
+			// (x+1, y-1) 5
+			e += add_path(&open_set, tp, x+1, y-1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x+1, y-1, x1, y1));
+		}
+		if (chk_dir(DIR_EAST)) {
+			// (x+1, y) 6
+			e += add_path(&open_set, tp, x+1, y, g_cost + MOVE_COST, current, heuristic(x+1, y, x1, y1));
+		}
+		if (chk_dir(DIR_NORTH|DIR_EAST) && !md->getcellp(md, bl, x+1, y+1, cell)) {
+			// (x+1, y+1) 7
+			e += add_path(&open_set, tp, x+1, y+1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x+1, y+1, x1, y1));
+		}
+		if (chk_dir(DIR_NORTH)) {
+			// (x, y+1) 0
+			e += add_path(&open_set, tp, x, y+1, g_cost + MOVE_COST, current, heuristic(x, y+1, x1, y1));
+		}
+		if (chk_dir(DIR_NORTH|DIR_WEST) && !md->getcellp(md, bl, x-1, y+1, cell)) {
+			// (x-1, y+1) 1
+			e += add_path(&open_set, tp, x-1, y+1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x-1, y+1, x1, y1));
+		}
+		if (chk_dir(DIR_WEST)) {
+			// (x-1, y) 2
+			e += add_path(&open_set, tp, x-1, y, g_cost + MOVE_COST, current, heuristic(x-1, y, x1, y1));
+		}
+		if (chk_dir(DIR_SOUTH|DIR_WEST) && !md->getcellp(md, bl, x-1, y-1, cell)) {
+			// (x-1, y-1) 3
+			e += add_path(&open_set, tp, x-1, y-1, g_cost + MOVE_DIAGONAL_COST, current, heuristic(x-1, y-1, x1, y1));
+		}
+		if (chk_dir(DIR_SOUTH)) {
+			// (x, y-1) 4
+			e += add_path(&open_set, tp, x, y-1, g_cost + MOVE_COST, current, heuristic(x, y-1, x1, y1));
+		}
 #undef chk_dir
 		if (e) {
 			BHEAP_CLEAR(open_set);

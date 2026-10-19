@@ -210,8 +210,7 @@ static int inter_party_tosql(struct party *p, int flag, int index)
 
 	if( flag & PS_CREATE )
 	{// Create party
-		if( SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` "
-			"(`name`, `exp`, `item`, `leader_id`, `leader_char`) "
+		if( SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` (`name`, `exp`, `item`, `leader_id`, `leader_char`) " //
 			"VALUES ('%s', '%d', '%d', '%d', '%d')",
 			party_db, esc_name, p->exp, p->item, p->member[index].account_id, p->member[index].char_id) )
 		{

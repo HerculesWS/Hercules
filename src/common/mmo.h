@@ -548,11 +548,14 @@ enum e_skill_flag
 	SKILL_FLAG_PERMANENT,
 	SKILL_FLAG_TEMPORARY,
 	SKILL_FLAG_PLAGIARIZED,
-	SKILL_FLAG_UNUSED,       ///< needed to maintain the order since the values are saved, can be renamed and used if a new flag is necessary
-	SKILL_FLAG_PERM_GRANTED, ///< Permanent, granted through someway (e.g. script).
-	/* */
-	/* MUST be the last, because with it the flag value stores a dynamic value (flag+lv) */
-	SKILL_FLAG_REPLACED_LV_0,   // Temporary skill overshadowing permanent skill of level 'N - SKILL_FLAG_REPLACED_LV_0',
+	/// needed to maintain the order since the values are saved, can be renamed and used if a new flag is necessary
+	SKILL_FLAG_UNUSED,
+	/// Permanent, granted through someway (e.g. script).
+	SKILL_FLAG_PERM_GRANTED,
+
+	/// Temporary skill overshadowing permanent skill of level 'N - SKILL_FLAG_REPLACED_LV_0',
+	/// @remark MUST be the last, because with it the flag value stores a dynamic value (flag+lv)
+	SKILL_FLAG_REPLACED_LV_0,
 };
 
 enum e_mmo_charstatus_opt {
@@ -622,8 +625,10 @@ struct s_skill {
 };
 
 struct script_reg_state {
-	unsigned int type   : 1;/* because I'm a memory hoarder and having them in the same struct would be a 8-byte/instance waste while ints outnumber str on a 10000-to-1 ratio. */
-	unsigned int update : 1;/* whether it needs to be sent to char server for insertion/update/delete */
+	/// because I'm a memory hoarder and having them in the same struct would be a 8-byte/instance waste while ints outnumber str on a 10000-to-1 ratio.
+	unsigned int type   : 1;
+	/// whether it needs to be sent to char server for insertion/update/delete
+	unsigned int update : 1;
 };
 
 struct script_reg_num {
@@ -1055,27 +1060,47 @@ struct clan_relationship {
  * Clan Struct
  */
 struct clan {
-	int clan_id; ///< CLan's Id
-	char constant[NAME_LENGTH]; ///< Clan's Unique Name
-	char name[NAME_LENGTH]; ///< Clan's Name
-	char master[NAME_LENGTH]; ///< Name of the clan's master (used for clan information on client)
-	char map[MAP_NAME_LENGTH_EXT]; ///< The map of that clan (used for clan information on client)
-	struct clan_buff buff; ///< The buff for a clan when a member joins it
-	short max_member; ///< Limit of Members
-	short member_count; ///< Holds the amount of members in this clan, online and offline
-	short connect_member; ///< Members that are Online
-	VECTOR_DECL(struct clan_member) members; ///< Vector of Members
-	VECTOR_DECL(struct clan_relationship) allies; ///< Vector of Allies
-	VECTOR_DECL(struct clan_relationship) antagonists; ///< Vector of Antagonists
-	int kick_time; /// Needed inactive time to be kicked
-	int check_time; ///< Interval to check for inactive players
-	int tid; ///< Timer ID for inactivity kick
-	bool received; ///< Whether or not the requested data was received
-	int req_state; ///< Flag for knowing what to do after receiving the data from inter server
-	int req_count_tid; ///< Timer ID for the timer that handles the timeout of requests for interserver to count members
-	int req_kick_tid; ///< Timer ID for the timer that handles the timeout of requests for interserver to kick inactive members
+	/// Clan's Id
+	int clan_id;
+	/// Clan's Unique Name
+	char constant[NAME_LENGTH];
+	/// Clan's Name
+	char name[NAME_LENGTH];
+	/// Name of the clan's master (used for clan information on client)
+	char master[NAME_LENGTH];
+	/// The map of that clan (used for clan information on client)
+	char map[MAP_NAME_LENGTH_EXT];
+	/// The buff for a clan when a member joins it
+	struct clan_buff buff;
+	/// Limit of Members
+	short max_member;
+	/// Holds the amount of members in this clan, online and offline
+	short member_count;
+	/// Members that are Online
+	short connect_member;
+	/// Vector of Members
+	VECTOR_DECL(struct clan_member) members;
+	/// Vector of Allies
+	VECTOR_DECL(struct clan_relationship) allies;
+	/// Vector of Antagonists
+	VECTOR_DECL(struct clan_relationship) antagonists;
+	/// Needed inactive time to be kicked
+	int kick_time;
+	/// Interval to check for inactive players
+	int check_time;
+	/// Timer ID for inactivity kick
+	int tid;
+	/// Whether or not the requested data was received
+	bool received;
+	/// Flag for knowing what to do after receiving the data from inter server
+	int req_state;
+	/// Timer ID for the timer that handles the timeout of requests for interserver to count members
+	int req_count_tid;
+	/// Timer ID for the timer that handles the timeout of requests for interserver to kick inactive members
+	int req_kick_tid;
 
-	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
+	/// HPM Plugin Data Store
+	struct hplugin_data_store *hdata;
 };
 
 struct fame_list {

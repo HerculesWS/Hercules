@@ -605,7 +605,7 @@ static void Sql_P_ShowDebugMysqlFieldInfo(const char *prefix, enum enum_field_ty
 		SHOW_DEBUG_OF(MYSQL_TYPE_SET);
 		SHOW_DEBUG_OF(MYSQL_TYPE_ENUM);
 		SHOW_DEBUG_OF(MYSQL_TYPE_NULL);
-#undef SHOW_DEBUG_TYPE_OF
+#undef SHOW_DEBUG_OF
 	}
 	PRAGMA_GCC46(GCC diagnostic pop)
 	ShowDebug("%stype=%s%s, length=%lu%s\n", prefix, sign, type_string, length, length_postfix);

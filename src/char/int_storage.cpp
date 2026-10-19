@@ -527,7 +527,7 @@ static bool inter_storage_retrieve_bound_items(int char_id, int account_id, int 
 	/// maybe sometime separate chr->memitemdata_to_sql into different methods in order to use
 	/// call that function here as well [Panikon]
 	StrBuf->Clear(&buf);
-	StrBuf->Printf(&buf,"INSERT INTO `%s` (`guild_id`,`nameid`,`amount`,`equip`,`identify`,`refine`,"
+	StrBuf->Printf(&buf,"INSERT INTO `%s` (`guild_id`,`nameid`,`amount`,`equip`,`identify`,`refine`," //
 						"`grade`, `attribute`,`expire_time`,`bound`,`unique_id`",
 					guild_storage_db);
 	for (s = 0; s < MAX_SLOTS; ++s)

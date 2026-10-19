@@ -97,7 +97,8 @@ static int inter_guild_save_timer(int tid, int64 tick, int id, intptr_t data)
 		last_id = 0; //Reset guild saved, return to beginning.
 
 	state = inter_guild->guild_db->size(inter_guild->guild_db);
-	if( state < 1 ) state = 1; //Calculate the time slot for the next save.
+	//Calculate the time slot for the next save.
+	if( state < 1 ) state = 1;
 	timer->add(tick + autosave_interval/state, inter_guild->save_timer, 0, 0);
 	return 0;
 }
@@ -158,8 +159,8 @@ static bool inter_guild_tosql(struct guild *g, int flag)
 		strcat(t_info, " guild_create");
 
 		// Create a new guild
-		if (SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` "
-				"(`name`,`master`,`guild_lv`,`max_member`,`average_lv`,`char_id`) "
+		if (SQL_ERROR == SQL->Query(inter->sql_handle, "INSERT INTO `%s` " //
+				"(`name`,`master`,`guild_lv`,`max_member`,`average_lv`,`char_id`) " //
 				"VALUES ('%s', '%s', '%d', '%d', '%d', '%d')",
 				guild_db, esc_name, esc_master, g->guild_lv, g->max_member, g->average_lv, g->member[0].char_id)) {
 			Sql_ShowDebug(inter->sql_handle);
@@ -258,7 +259,8 @@ static bool inter_guild_tosql(struct guild *g, int flag)
 			if(m->account_id) {
 				//Since nothing references guild member table as foreign keys, it's safe to use REPLACE INTO
 				SQL->EscapeStringLen(inter->sql_handle, esc_name, m->name, strnlen(m->name, NAME_LENGTH));
-				if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` (`guild_id`,`account_id`,`char_id`,`hair`,`hair_color`,`gender`,`class`,`lv`,`exp`,`exp_payper`,`online`,`position`,`name`) "
+				if( SQL_ERROR == SQL->Query(inter->sql_handle, "REPLACE INTO `%s` " //
+					"(`guild_id`,`account_id`,`char_id`,`hair`,`hair_color`,`gender`,`class`,`lv`,`exp`,`exp_payper`,`online`,`position`,`name`) " //
 					"VALUES ('%d','%d','%d','%d','%d','%d','%d','%d','%" PRIu64 "','%d','%d','%d','%s')",
 					guild_member_db, g->guild_id, m->account_id, m->char_id,
 					m->hair, m->hair_color, m->gender,
@@ -378,8 +380,8 @@ static struct guild *inter_guild_fromsql(int guild_id)
 #endif
 
 	if( SQL_ERROR == SQL->Query(inter->sql_handle,
-		"SELECT g.`name`,c.`name`,g.`guild_lv`,g.`connect_member`,g.`max_member`,g.`max_storage`,"
-		"g.`average_lv`,g.`exp`,g.`next_exp`,g.`skill_point`,g.`mes1`,g.`mes2`,g.`emblem_len`,g.`emblem_id`,g.`emblem_data` "
+		"SELECT g.`name`,c.`name`,g.`guild_lv`,g.`connect_member`,g.`max_member`,g.`max_storage`," //
+		"g.`average_lv`,g.`exp`,g.`next_exp`,g.`skill_point`,g.`mes1`,g.`mes2`,g.`emblem_len`,g.`emblem_id`,g.`emblem_data` " //
 		"FROM `%s` g LEFT JOIN `%s` c ON c.`char_id` = g.`char_id` WHERE g.`guild_id`='%d'", guild_db, char_db, guild_id) )
 	{
 		Sql_ShowDebug(inter->sql_handle);
@@ -575,8 +577,7 @@ static int inter_guild_castle_tosql(struct guild_castle *gc)
 
 	nullpo_ret(gc);
 	StrBuf->Init(&buf);
-	StrBuf->Printf(&buf, "REPLACE INTO `%s` SET `castle_id`='%d', `guild_id`='%d', `economy`='%d', `defense`='%d', "
-	                 "`triggerE`='%d', `triggerD`='%d', `nextTime`='%d', `payTime`='%d', `createTime`='%d', `visibleC`='%d'",
+	StrBuf->Printf(&buf, "REPLACE INTO `%s` SET `castle_id`='%d', `guild_id`='%d', `economy`='%d', `defense`='%d', `triggerE`='%d', `triggerD`='%d', `nextTime`='%d', `payTime`='%d', `createTime`='%d', `visibleC`='%d'",
 	                 guild_castle_db, gc->castle_id, gc->guild_id, gc->economy, gc->defense,
 	                 gc->triggerE, gc->triggerD, gc->nextTime, gc->payTime, gc->createTime, gc->visibleC);
 	for (i = 0; i < MAX_GUARDIANS; ++i)
@@ -603,8 +604,7 @@ static struct guild_castle *inter_guild_castle_fromsql(int castle_id)
 		return gc;
 
 	StrBuf->Init(&buf);
-	StrBuf->AppendStr(&buf, "SELECT `castle_id`, `guild_id`, `economy`, `defense`, `triggerE`, "
-	                    "`triggerD`, `nextTime`, `payTime`, `createTime`, `visibleC`");
+	StrBuf->AppendStr(&buf, "SELECT `castle_id`, `guild_id`, `economy`, `defense`, `triggerE`, `triggerD`, `nextTime`, `payTime`, `createTime`, `visibleC`");
 	for (i = 0; i < MAX_GUARDIANS; ++i)
 		StrBuf->Printf(&buf, ", `visibleG%d`", i);
 	StrBuf->Printf(&buf, " FROM `%s` WHERE `castle_id`='%d'", guild_castle_db, castle_id);
@@ -1487,8 +1487,11 @@ static bool inter_guild_change_alliance(int guild_id1, int guild_id2, int accoun
 	g[0] = inter_guild->fromsql(guild_id1);
 	g[1] = inter_guild->fromsql(guild_id2);
 
-	if(g[0] && g[1]==NULL && (flag & GUILD_ALLIANCE_REMOVE)) //Requested to remove an alliance with a not found guild.
-		return inter_guild->remove_alliance(g[0], guild_id2, account_id1, account_id2, flag); //Try to do a manual removal of said guild.
+	if(g[0] && g[1]==NULL && (flag & GUILD_ALLIANCE_REMOVE)) {
+		//Requested to remove an alliance with a not found guild.
+		//Try to do a manual removal of said guild.
+		return inter_guild->remove_alliance(g[0], guild_id2, account_id1, account_id2, flag);
+	}
 
 	if(g[0]==NULL || g[1]==NULL)
 		return false;
@@ -1640,7 +1643,7 @@ static bool inter_guild_change_leader(int guild_id, const char *name, int len)
 
 static bool inter_guild_is_guild_master(int char_id, int guild_id)
 {
-	if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT g.* FROM `%s` g LEFT JOIN `%s` c ON g.`char_id` = c.`char_id` "
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT g.* FROM `%s` g LEFT JOIN `%s` c ON g.`char_id` = c.`char_id` " //
 		"WHERE c.char_id = '%d' AND g.guild_id = '%d' AND g.`master` = c.`name`",
 		guild_db, char_db, char_id, guild_id))
 	{

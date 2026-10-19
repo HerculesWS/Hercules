@@ -236,7 +236,7 @@ static int mapindex_init(void)
 		switch (sscanf(line, "%12s\t%d", map_name, &index)) {
 			case 1: //Map with no ID given, auto-assign
 				index = last_index+1;
-				/* Fall through */
+				[[fallthrough]];
 			case 2: //Map with ID given
 				mapindex->addmap(index,map_name);
 				total++;

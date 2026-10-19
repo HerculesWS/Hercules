@@ -182,10 +182,14 @@ enum windows_metrics {
  * Values from http://msdn.microsoft.com/en-us/library/windows/desktop/ms724833%28v=vs.85%29.aspx
  */
 enum windows_ver_suite {
-	msVER_SUITE_BLADE          = 0x00000400, ///< Windows Server 2003, Web Edition is installed.
-	msVER_SUITE_STORAGE_SERVER = 0x00002000, ///< Windows Storage Server 2003 R2 or Windows Storage Server 2003 is installed.
-	msVER_SUITE_COMPUTE_SERVER = 0x00004000, ///< Windows Server 2003, Compute Cluster Edition is installed.
-	msVER_SUITE_WH_SERVER      = 0x00008000, ///< Windows Home Server is installed.
+	/// Windows Server 2003, Web Edition is installed.
+	msVER_SUITE_BLADE          = 0x00000400,
+	/// Windows Storage Server 2003 R2 or Windows Storage Server 2003 is installed.
+	msVER_SUITE_STORAGE_SERVER = 0x00002000,
+	/// Windows Server 2003, Compute Cluster Edition is installed.
+	msVER_SUITE_COMPUTE_SERVER = 0x00004000,
+	/// Windows Home Server is installed.
+	msVER_SUITE_WH_SERVER      = 0x00008000,
 };
 
 #else // not WIN32
@@ -264,7 +268,8 @@ static bool sysinfo_svn_get_revision(char **out)
 	// - since it's a cache column, the data might not even exist
 	if ((fp = fopen(".svn" PATHSEP_STR "wc.db", "rb")) != NULL || (fp = fopen(".." PATHSEP_STR ".svn" PATHSEP_STR "wc.db", "rb")) != NULL) {
 
-#ifndef SVNNODEPATH //not sure how to handle branches, so I'll leave this overridable define until a better solution comes up
+#ifndef SVNNODEPATH
+//not sure how to handle branches, so I'll leave this overridable define until a better solution comes up
 #define SVNNODEPATH trunk
 #endif // SVNNODEPATH
 
@@ -1077,14 +1082,13 @@ static int sysinfo_build_revision(void)
 
 static uint32 sysinfo_fflags(void)
 {
-	const uint32 flags = 0
+	const uint32 flags = 0;
 #ifdef ENABLE_CASHSHOP_PREVIEW_PATCH
-		| 1
+	flags |= 1;
 #endif  // ENABLE_CASHSHOP_PREVIEW_PATCH
 #ifdef ENABLE_OLD_CASHSHOP_PREVIEW_PATCH
-		| 2
+	flags |= 2;
 #endif  // ENABLE_OLD_CASHSHOP_PREVIEW_PATCH
-	;
 	return flags;
 }
 

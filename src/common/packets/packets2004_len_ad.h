@@ -43,22 +43,22 @@ packetLen(0x0068, 46)
 packetLen(0x0069, -1)
 
 // Packet: 0x006a
-packetLen(0x006a, 23)
+packetLen(0x006A, 23)
 
 // Packet: 0x006b
-packetLen(0x006b, -1)
+packetLen(0x006B, -1)
 
 // Packet: 0x006c
-packetLen(0x006c, 3)
+packetLen(0x006C, 3)
 
 // Packet: 0x006d
-packetLen(0x006d, 108)
+packetLen(0x006D, 108)
 
 // Packet: 0x006e
-packetLen(0x006e, 3)
+packetLen(0x006E, 3)
 
 // Packet: 0x006f
-packetLen(0x006f, 2)
+packetLen(0x006F, 2)
 
 // Packet: 0x0070
 packetLen(0x0070, 3)
@@ -105,34 +105,34 @@ packetLen(0x0078, 54)
 packetLen(0x0079, 53)
 
 // Packet: 0x007a
-packetLen(0x007a, 58)
+packetLen(0x007A, 58)
 
 // Packet: 0x007b
-packetLen(0x007b, 60)
+packetLen(0x007B, 60)
 
 // Packet: 0x007c
-packetLen(0x007c, 41)
+packetLen(0x007C, 41)
 
 // Packet: 0x007d
-packetLen(0x007d, 2)
+packetLen(0x007D, 2)
 
 // Packet: 0x007e
 #if PACKETVER >= 20041129
-packetLen(0x007e, 34)
+packetLen(0x007E, 34)
 #elif PACKETVER >= 20041005
-packetLen(0x007e, 14)
+packetLen(0x007E, 14)
 #elif PACKETVER >= 20040920
-packetLen(0x007e, 13)
+packetLen(0x007E, 13)
 #elif PACKETVER >= 20040906
-packetLen(0x007e, 15)
+packetLen(0x007E, 15)
 #elif PACKETVER >= 20040809
-packetLen(0x007e, 26)
+packetLen(0x007E, 26)
 #elif PACKETVER >= 20040804
-packetLen(0x007e, 33)
+packetLen(0x007E, 33)
 #endif
 
 // Packet: 0x007f
-packetLen(0x007f, 6)
+packetLen(0x007F, 6)
 
 // Packet: 0x0080
 packetLen(0x0080, 7)
@@ -193,33 +193,33 @@ packetLen(0x0089, 15)
 #endif
 
 // Packet: 0x008a
-packetLen(0x008a, 29)
+packetLen(0x008A, 29)
 
 // Packet: 0x008b
-packetLen(0x008b, 23)
+packetLen(0x008B, 23)
 
 // Packet: 0x008c
 #if PACKETVER >= 20041129
-packetLen(0x008c, 8)
+packetLen(0x008C, 8)
 #elif PACKETVER >= 20041025
-packetLen(0x008c, 102)
+packetLen(0x008C, 102)
 #elif PACKETVER >= 20041005
-packetLen(0x008c, 110)
+packetLen(0x008C, 110)
 #elif PACKETVER >= 20040920
-packetLen(0x008c, 108)
+packetLen(0x008C, 108)
 #elif PACKETVER >= 20040906
-packetLen(0x008c, 110)
+packetLen(0x008C, 110)
 #elif PACKETVER >= 20040809
-packetLen(0x008c, 22)
+packetLen(0x008C, 22)
 #elif PACKETVER >= 20040804
-packetLen(0x008c, 23)
+packetLen(0x008C, 23)
 #endif
 
 // Packet: 0x008d
-packetLen(0x008d, -1)
+packetLen(0x008D, -1)
 
 // Packet: 0x008e
-packetLen(0x008e, -1)
+packetLen(0x008E, -1)
 
 // Packet: 0x0090
 packetLen(0x0090, 7)
@@ -264,389 +264,389 @@ packetLen(0x0098, 3)
 packetLen(0x0099, -1)
 
 // Packet: 0x009a
-packetLen(0x009a, -1)
+packetLen(0x009A, -1)
 
 // Packet: 0x009b
 #if PACKETVER >= 20041129
-packetLen(0x009b, 2)
+packetLen(0x009B, 2)
 #elif PACKETVER >= 20041025
-packetLen(0x009b, 11)
+packetLen(0x009B, 11)
 #elif PACKETVER >= 20041005
-packetLen(0x009b, 13)
+packetLen(0x009B, 13)
 #elif PACKETVER >= 20040920
-packetLen(0x009b, 10)
+packetLen(0x009B, 10)
 #elif PACKETVER >= 20040906
-packetLen(0x009b, 16)
+packetLen(0x009B, 16)
 #elif PACKETVER >= 20040809
-packetLen(0x009b, 8)
+packetLen(0x009B, 8)
 #elif PACKETVER >= 20040804
-packetLen(0x009b, 6)
+packetLen(0x009B, 6)
 #endif
 
 // Packet: 0x009c
-packetLen(0x009c, 9)
+packetLen(0x009C, 9)
 
 // Packet: 0x009d
-packetLen(0x009d, 17)
+packetLen(0x009D, 17)
 
 // Packet: 0x009e
-packetLen(0x009e, 17)
+packetLen(0x009E, 17)
 
 // Packet: 0x009f
 #if PACKETVER >= 20041129
-packetLen(0x009f, 20)
+packetLen(0x009F, 20)
 #elif PACKETVER >= 20040906
-packetLen(0x009f, -1)
+packetLen(0x009F, -1)
 #elif PACKETVER >= 20040809
-packetLen(0x009f, 11)
+packetLen(0x009F, 11)
 #elif PACKETVER >= 20040804
-packetLen(0x009f, 13)
+packetLen(0x009F, 13)
 #endif
 
 // Packet: 0x00a0
-packetLen(0x00a0, 23)
+packetLen(0x00A0, 23)
 
 // Packet: 0x00a1
-packetLen(0x00a1, 6)
+packetLen(0x00A1, 6)
 
 // Packet: 0x00a2
 #if PACKETVER >= 20041129
-packetLen(0x00a2, 9)
+packetLen(0x00A2, 9)
 #elif PACKETVER >= 20041025
-packetLen(0x00a2, 15)
+packetLen(0x00A2, 15)
 #elif PACKETVER >= 20041005
-packetLen(0x00a2, 14)
+packetLen(0x00A2, 14)
 #elif PACKETVER >= 20040920
-packetLen(0x00a2, 16)
+packetLen(0x00A2, 16)
 #elif PACKETVER >= 20040906
-packetLen(0x00a2, 7)
+packetLen(0x00A2, 7)
 #elif PACKETVER >= 20040809
-packetLen(0x00a2, 102)
+packetLen(0x00A2, 102)
 #elif PACKETVER >= 20040804
-packetLen(0x00a2, 103)
+packetLen(0x00A2, 103)
 #endif
 
 // Packet: 0x00a3
-packetLen(0x00a3, -1)
+packetLen(0x00A3, -1)
 
 // Packet: 0x00a4
-packetLen(0x00a4, -1)
+packetLen(0x00A4, -1)
 
 // Packet: 0x00a5
-packetLen(0x00a5, -1)
+packetLen(0x00A5, -1)
 
 // Packet: 0x00a6
-packetLen(0x00a6, -1)
+packetLen(0x00A6, -1)
 
 // Packet: 0x00a7
 #if PACKETVER >= 20041129
-packetLen(0x00a7, 13)
+packetLen(0x00A7, 13)
 #elif PACKETVER >= 20041025
-packetLen(0x00a7, 22)
+packetLen(0x00A7, 22)
 #elif PACKETVER >= 20041005
-packetLen(0x00a7, 30)
+packetLen(0x00A7, 30)
 #elif PACKETVER >= 20040920
-packetLen(0x00a7, 28)
+packetLen(0x00A7, 28)
 #elif PACKETVER >= 20040906
-packetLen(0x00a7, 30)
+packetLen(0x00A7, 30)
 #elif PACKETVER >= 20040809
-packetLen(0x00a7, 15)
+packetLen(0x00A7, 15)
 #elif PACKETVER >= 20040804
-packetLen(0x00a7, 12)
+packetLen(0x00A7, 12)
 #endif
 
 // Packet: 0x00a8
-packetLen(0x00a8, 7)
+packetLen(0x00A8, 7)
 
 // Packet: 0x00a9
-packetLen(0x00a9, 6)
+packetLen(0x00A9, 6)
 
 // Packet: 0x00aa
-packetLen(0x00aa, 7)
+packetLen(0x00AA, 7)
 
 // Packet: 0x00ab
-packetLen(0x00ab, 4)
+packetLen(0x00AB, 4)
 
 // Packet: 0x00ac
-packetLen(0x00ac, 7)
+packetLen(0x00AC, 7)
 
 // Packet: 0x00ae
-packetLen(0x00ae, -1)
+packetLen(0x00AE, -1)
 
 // Packet: 0x00af
-packetLen(0x00af, 6)
+packetLen(0x00AF, 6)
 
 // Packet: 0x00b0
-packetLen(0x00b0, 8)
+packetLen(0x00B0, 8)
 
 // Packet: 0x00b1
-packetLen(0x00b1, 8)
+packetLen(0x00B1, 8)
 
 // Packet: 0x00b2
-packetLen(0x00b2, 3)
+packetLen(0x00B2, 3)
 
 // Packet: 0x00b3
-packetLen(0x00b3, 3)
+packetLen(0x00B3, 3)
 
 // Packet: 0x00b4
-packetLen(0x00b4, -1)
+packetLen(0x00B4, -1)
 
 // Packet: 0x00b5
-packetLen(0x00b5, 6)
+packetLen(0x00B5, 6)
 
 // Packet: 0x00b6
-packetLen(0x00b6, 6)
+packetLen(0x00B6, 6)
 
 // Packet: 0x00b7
-packetLen(0x00b7, -1)
+packetLen(0x00B7, -1)
 
 // Packet: 0x00b8
-packetLen(0x00b8, 7)
+packetLen(0x00B8, 7)
 
 // Packet: 0x00b9
-packetLen(0x00b9, 6)
+packetLen(0x00B9, 6)
 
 // Packet: 0x00ba
-packetLen(0x00ba, 2)
+packetLen(0x00BA, 2)
 
 // Packet: 0x00bb
-packetLen(0x00bb, 5)
+packetLen(0x00BB, 5)
 
 // Packet: 0x00bc
-packetLen(0x00bc, 6)
+packetLen(0x00BC, 6)
 
 // Packet: 0x00bd
-packetLen(0x00bd, 44)
+packetLen(0x00BD, 44)
 
 // Packet: 0x00be
-packetLen(0x00be, 5)
+packetLen(0x00BE, 5)
 
 // Packet: 0x00bf
-packetLen(0x00bf, 3)
+packetLen(0x00BF, 3)
 
 // Packet: 0x00c0
-packetLen(0x00c0, 7)
+packetLen(0x00C0, 7)
 
 // Packet: 0x00c1
-packetLen(0x00c1, 2)
+packetLen(0x00C1, 2)
 
 // Packet: 0x00c2
-packetLen(0x00c2, 6)
+packetLen(0x00C2, 6)
 
 // Packet: 0x00c3
-packetLen(0x00c3, 8)
+packetLen(0x00C3, 8)
 
 // Packet: 0x00c4
-packetLen(0x00c4, 6)
+packetLen(0x00C4, 6)
 
 // Packet: 0x00c5
-packetLen(0x00c5, 7)
+packetLen(0x00C5, 7)
 
 // Packet: 0x00c6
-packetLen(0x00c6, -1)
+packetLen(0x00C6, -1)
 
 // Packet: 0x00c7
-packetLen(0x00c7, -1)
+packetLen(0x00C7, -1)
 
 // Packet: 0x00c8
-packetLen(0x00c8, -1)
+packetLen(0x00C8, -1)
 
 // Packet: 0x00c9
-packetLen(0x00c9, -1)
+packetLen(0x00C9, -1)
 
 // Packet: 0x00ca
-packetLen(0x00ca, 3)
+packetLen(0x00CA, 3)
 
 // Packet: 0x00cb
-packetLen(0x00cb, 3)
+packetLen(0x00CB, 3)
 
 // Packet: 0x00cc
-packetLen(0x00cc, 6)
+packetLen(0x00CC, 6)
 
 // Packet: 0x00cd
-packetLen(0x00cd, 3)
+packetLen(0x00CD, 3)
 
 // Packet: 0x00ce
-packetLen(0x00ce, 2)
+packetLen(0x00CE, 2)
 
 // Packet: 0x00cf
-packetLen(0x00cf, 27)
+packetLen(0x00CF, 27)
 
 // Packet: 0x00d0
-packetLen(0x00d0, 3)
+packetLen(0x00D0, 3)
 
 // Packet: 0x00d1
-packetLen(0x00d1, 4)
+packetLen(0x00D1, 4)
 
 // Packet: 0x00d2
-packetLen(0x00d2, 4)
+packetLen(0x00D2, 4)
 
 // Packet: 0x00d3
-packetLen(0x00d3, 2)
+packetLen(0x00D3, 2)
 
 // Packet: 0x00d4
-packetLen(0x00d4, -1)
+packetLen(0x00D4, -1)
 
 // Packet: 0x00d5
-packetLen(0x00d5, -1)
+packetLen(0x00D5, -1)
 
 // Packet: 0x00d6
-packetLen(0x00d6, 3)
+packetLen(0x00D6, 3)
 
 // Packet: 0x00d7
-packetLen(0x00d7, -1)
+packetLen(0x00D7, -1)
 
 // Packet: 0x00d8
-packetLen(0x00d8, 6)
+packetLen(0x00D8, 6)
 
 // Packet: 0x00d9
-packetLen(0x00d9, 14)
+packetLen(0x00D9, 14)
 
 // Packet: 0x00da
-packetLen(0x00da, 3)
+packetLen(0x00DA, 3)
 
 // Packet: 0x00db
-packetLen(0x00db, -1)
+packetLen(0x00DB, -1)
 
 // Packet: 0x00dc
-packetLen(0x00dc, 28)
+packetLen(0x00DC, 28)
 
 // Packet: 0x00dd
-packetLen(0x00dd, 29)
+packetLen(0x00DD, 29)
 
 // Packet: 0x00de
-packetLen(0x00de, -1)
+packetLen(0x00DE, -1)
 
 // Packet: 0x00df
-packetLen(0x00df, -1)
+packetLen(0x00DF, -1)
 
 // Packet: 0x00e0
-packetLen(0x00e0, 30)
+packetLen(0x00E0, 30)
 
 // Packet: 0x00e1
-packetLen(0x00e1, 30)
+packetLen(0x00E1, 30)
 
 // Packet: 0x00e2
-packetLen(0x00e2, 26)
+packetLen(0x00E2, 26)
 
 // Packet: 0x00e3
-packetLen(0x00e3, 2)
+packetLen(0x00E3, 2)
 
 // Packet: 0x00e4
-packetLen(0x00e4, 6)
+packetLen(0x00E4, 6)
 
 // Packet: 0x00e5
-packetLen(0x00e5, 26)
+packetLen(0x00E5, 26)
 
 // Packet: 0x00e6
-packetLen(0x00e6, 3)
+packetLen(0x00E6, 3)
 
 // Packet: 0x00e7
-packetLen(0x00e7, 3)
+packetLen(0x00E7, 3)
 
 // Packet: 0x00e8
-packetLen(0x00e8, 8)
+packetLen(0x00E8, 8)
 
 // Packet: 0x00e9
-packetLen(0x00e9, 19)
+packetLen(0x00E9, 19)
 
 // Packet: 0x00ea
-packetLen(0x00ea, 5)
+packetLen(0x00EA, 5)
 
 // Packet: 0x00eb
-packetLen(0x00eb, 2)
+packetLen(0x00EB, 2)
 
 // Packet: 0x00ec
-packetLen(0x00ec, 3)
+packetLen(0x00EC, 3)
 
 // Packet: 0x00ed
-packetLen(0x00ed, 2)
+packetLen(0x00ED, 2)
 
 // Packet: 0x00ee
-packetLen(0x00ee, 2)
+packetLen(0x00EE, 2)
 
 // Packet: 0x00ef
-packetLen(0x00ef, 2)
+packetLen(0x00EF, 2)
 
 // Packet: 0x00f0
-packetLen(0x00f0, 3)
+packetLen(0x00F0, 3)
 
 // Packet: 0x00f1
-packetLen(0x00f1, 2)
+packetLen(0x00F1, 2)
 
 // Packet: 0x00f2
-packetLen(0x00f2, 6)
+packetLen(0x00F2, 6)
 
 // Packet: 0x00f3
 #if PACKETVER >= 20041129
-packetLen(0x00f3, 23)
+packetLen(0x00F3, 23)
 #elif PACKETVER >= 20041025
-packetLen(0x00f3, 11)
+packetLen(0x00F3, 11)
 #elif PACKETVER >= 20041005
-packetLen(0x00f3, 8)
+packetLen(0x00F3, 8)
 #elif PACKETVER >= 20040920
-packetLen(0x00f3, 15)
+packetLen(0x00F3, 15)
 #elif PACKETVER >= 20040906
-packetLen(0x00f3, 12)
+packetLen(0x00F3, 12)
 #elif PACKETVER >= 20040804
-packetLen(0x00f3, -1)
+packetLen(0x00F3, -1)
 #endif
 
 // Packet: 0x00f4
-packetLen(0x00f4, 21)
+packetLen(0x00F4, 21)
 
 // Packet: 0x00f5
 #if PACKETVER >= 20041129
-packetLen(0x00f5, 32)
+packetLen(0x00F5, 32)
 #elif PACKETVER >= 20041025
-packetLen(0x00f5, 26)
+packetLen(0x00F5, 26)
 #elif PACKETVER >= 20040920
-packetLen(0x00f5, 29)
+packetLen(0x00F5, 29)
 #elif PACKETVER >= 20040906
-packetLen(0x00f5, 43)
+packetLen(0x00F5, 43)
 #elif PACKETVER >= 20040809
-packetLen(0x00f5, 14)
+packetLen(0x00F5, 14)
 #elif PACKETVER >= 20040804
-packetLen(0x00f5, 17)
+packetLen(0x00F5, 17)
 #endif
 
 // Packet: 0x00f6
-packetLen(0x00f6, 8)
+packetLen(0x00F6, 8)
 
 // Packet: 0x00f7
 #if PACKETVER >= 20041129
-packetLen(0x00f7, 11)
+packetLen(0x00F7, 11)
 #elif PACKETVER >= 20040906
-packetLen(0x00f7, 2)
+packetLen(0x00F7, 2)
 #elif PACKETVER >= 20040809
-packetLen(0x00f7, 8)
+packetLen(0x00F7, 8)
 #elif PACKETVER >= 20040804
-packetLen(0x00f7, 10)
+packetLen(0x00F7, 10)
 #endif
 
 // Packet: 0x00f8
-packetLen(0x00f8, 2)
+packetLen(0x00F8, 2)
 
 // Packet: 0x00f9
-packetLen(0x00f9, 26)
+packetLen(0x00F9, 26)
 
 // Packet: 0x00fa
-packetLen(0x00fa, 3)
+packetLen(0x00FA, 3)
 
 // Packet: 0x00fb
-packetLen(0x00fb, -1)
+packetLen(0x00FB, -1)
 
 // Packet: 0x00fc
-packetLen(0x00fc, 6)
+packetLen(0x00FC, 6)
 
 // Packet: 0x00fd
-packetLen(0x00fd, 27)
+packetLen(0x00FD, 27)
 
 // Packet: 0x00fe
-packetLen(0x00fe, 30)
+packetLen(0x00FE, 30)
 
 // Packet: 0x00ff
-packetLen(0x00ff, 10)
+packetLen(0x00FF, 10)
 
 // Packet: 0x0100
 packetLen(0x0100, 2)
@@ -679,22 +679,22 @@ packetLen(0x0108, -1)
 packetLen(0x0109, -1)
 
 // Packet: 0x010a
-packetLen(0x010a, 4)
+packetLen(0x010A, 4)
 
 // Packet: 0x010b
-packetLen(0x010b, 6)
+packetLen(0x010B, 6)
 
 // Packet: 0x010c
-packetLen(0x010c, 6)
+packetLen(0x010C, 6)
 
 // Packet: 0x010d
-packetLen(0x010d, 2)
+packetLen(0x010D, 2)
 
 // Packet: 0x010e
-packetLen(0x010e, 11)
+packetLen(0x010E, 11)
 
 // Packet: 0x010f
-packetLen(0x010f, -1)
+packetLen(0x010F, -1)
 
 // Packet: 0x0110
 packetLen(0x0110, 10)
@@ -753,22 +753,22 @@ packetLen(0x0118, 2)
 packetLen(0x0119, 13)
 
 // Packet: 0x011a
-packetLen(0x011a, 15)
+packetLen(0x011A, 15)
 
 // Packet: 0x011b
-packetLen(0x011b, 20)
+packetLen(0x011B, 20)
 
 // Packet: 0x011c
-packetLen(0x011c, 68)
+packetLen(0x011C, 68)
 
 // Packet: 0x011d
-packetLen(0x011d, 2)
+packetLen(0x011D, 2)
 
 // Packet: 0x011e
-packetLen(0x011e, 3)
+packetLen(0x011E, 3)
 
 // Packet: 0x011f
-packetLen(0x011f, 16)
+packetLen(0x011F, 16)
 
 // Packet: 0x0120
 packetLen(0x0120, 6)
@@ -801,22 +801,22 @@ packetLen(0x0128, 8)
 packetLen(0x0129, 8)
 
 // Packet: 0x012a
-packetLen(0x012a, 2)
+packetLen(0x012A, 2)
 
 // Packet: 0x012b
-packetLen(0x012b, 2)
+packetLen(0x012B, 2)
 
 // Packet: 0x012c
-packetLen(0x012c, 3)
+packetLen(0x012C, 3)
 
 // Packet: 0x012d
-packetLen(0x012d, 4)
+packetLen(0x012D, 4)
 
 // Packet: 0x012e
-packetLen(0x012e, 2)
+packetLen(0x012E, 2)
 
 // Packet: 0x012f
-packetLen(0x012f, -1)
+packetLen(0x012F, -1)
 
 // Packet: 0x0130
 packetLen(0x0130, 6)
@@ -849,22 +849,22 @@ packetLen(0x0138, 3)
 packetLen(0x0139, 16)
 
 // Packet: 0x013a
-packetLen(0x013a, 4)
+packetLen(0x013A, 4)
 
 // Packet: 0x013b
-packetLen(0x013b, 4)
+packetLen(0x013B, 4)
 
 // Packet: 0x013c
-packetLen(0x013c, 4)
+packetLen(0x013C, 4)
 
 // Packet: 0x013d
-packetLen(0x013d, 6)
+packetLen(0x013D, 6)
 
 // Packet: 0x013e
-packetLen(0x013e, 24)
+packetLen(0x013E, 24)
 
 // Packet: 0x013f
-packetLen(0x013f, 26)
+packetLen(0x013F, 26)
 
 // Packet: 0x0140
 packetLen(0x0140, 22)
@@ -897,22 +897,22 @@ packetLen(0x0148, 8)
 packetLen(0x0149, 9)
 
 // Packet: 0x014a
-packetLen(0x014a, 6)
+packetLen(0x014A, 6)
 
 // Packet: 0x014b
-packetLen(0x014b, 27)
+packetLen(0x014B, 27)
 
 // Packet: 0x014c
-packetLen(0x014c, -1)
+packetLen(0x014C, -1)
 
 // Packet: 0x014d
-packetLen(0x014d, 2)
+packetLen(0x014D, 2)
 
 // Packet: 0x014e
-packetLen(0x014e, 6)
+packetLen(0x014E, 6)
 
 // Packet: 0x014f
-packetLen(0x014f, 6)
+packetLen(0x014F, 6)
 
 // Packet: 0x0150
 packetLen(0x0150, 110)
@@ -945,22 +945,22 @@ packetLen(0x0158, -1)
 packetLen(0x0159, 54)
 
 // Packet: 0x015a
-packetLen(0x015a, 66)
+packetLen(0x015A, 66)
 
 // Packet: 0x015b
-packetLen(0x015b, 54)
+packetLen(0x015B, 54)
 
 // Packet: 0x015c
-packetLen(0x015c, 90)
+packetLen(0x015C, 90)
 
 // Packet: 0x015d
-packetLen(0x015d, 42)
+packetLen(0x015D, 42)
 
 // Packet: 0x015e
-packetLen(0x015e, 6)
+packetLen(0x015E, 6)
 
 // Packet: 0x015f
-packetLen(0x015f, 42)
+packetLen(0x015F, 42)
 
 // Packet: 0x0160
 packetLen(0x0160, -1)
@@ -993,22 +993,22 @@ packetLen(0x0168, 14)
 packetLen(0x0169, 3)
 
 // Packet: 0x016a
-packetLen(0x016a, 30)
+packetLen(0x016A, 30)
 
 // Packet: 0x016b
-packetLen(0x016b, 10)
+packetLen(0x016B, 10)
 
 // Packet: 0x016c
-packetLen(0x016c, 43)
+packetLen(0x016C, 43)
 
 // Packet: 0x016d
-packetLen(0x016d, 14)
+packetLen(0x016D, 14)
 
 // Packet: 0x016e
-packetLen(0x016e, 186)
+packetLen(0x016E, 186)
 
 // Packet: 0x016f
-packetLen(0x016f, 182)
+packetLen(0x016F, 182)
 
 // Packet: 0x0170
 packetLen(0x0170, 14)
@@ -1041,22 +1041,22 @@ packetLen(0x0178, 4)
 packetLen(0x0179, 5)
 
 // Packet: 0x017a
-packetLen(0x017a, 4)
+packetLen(0x017A, 4)
 
 // Packet: 0x017b
-packetLen(0x017b, -1)
+packetLen(0x017B, -1)
 
 // Packet: 0x017c
-packetLen(0x017c, 6)
+packetLen(0x017C, 6)
 
 // Packet: 0x017d
-packetLen(0x017d, 7)
+packetLen(0x017D, 7)
 
 // Packet: 0x017e
-packetLen(0x017e, -1)
+packetLen(0x017E, -1)
 
 // Packet: 0x017f
-packetLen(0x017f, -1)
+packetLen(0x017F, -1)
 
 // Packet: 0x0180
 packetLen(0x0180, 6)
@@ -1086,22 +1086,22 @@ packetLen(0x0188, 8)
 packetLen(0x0189, 4)
 
 // Packet: 0x018a
-packetLen(0x018a, 4)
+packetLen(0x018A, 4)
 
 // Packet: 0x018b
-packetLen(0x018b, 4)
+packetLen(0x018B, 4)
 
 // Packet: 0x018c
-packetLen(0x018c, 29)
+packetLen(0x018C, 29)
 
 // Packet: 0x018d
-packetLen(0x018d, -1)
+packetLen(0x018D, -1)
 
 // Packet: 0x018e
-packetLen(0x018e, 10)
+packetLen(0x018E, 10)
 
 // Packet: 0x018f
-packetLen(0x018f, 6)
+packetLen(0x018F, 6)
 
 // Packet: 0x0190
 #if PACKETVER >= 20041129
@@ -1162,320 +1162,320 @@ packetLen(0x0198, 8)
 packetLen(0x0199, 4)
 
 // Packet: 0x019a
-packetLen(0x019a, 14)
+packetLen(0x019A, 14)
 
 // Packet: 0x019b
-packetLen(0x019b, 10)
+packetLen(0x019B, 10)
 
 // Packet: 0x019c
 #if PACKETVER >= 20041213
-packetLen(0x019c, -1)
+packetLen(0x019C, -1)
 #elif PACKETVER >= 20040804
-packetLen(0x019c, 4)
+packetLen(0x019C, 4)
 #endif
 
 // Packet: 0x019d
-packetLen(0x019d, 6)
+packetLen(0x019D, 6)
 
 // Packet: 0x019e
-packetLen(0x019e, 2)
+packetLen(0x019E, 2)
 
 // Packet: 0x019f
-packetLen(0x019f, 6)
+packetLen(0x019F, 6)
 
 // Packet: 0x01a0
-packetLen(0x01a0, 3)
+packetLen(0x01A0, 3)
 
 // Packet: 0x01a1
-packetLen(0x01a1, 3)
+packetLen(0x01A1, 3)
 
 // Packet: 0x01a2
-packetLen(0x01a2, 35)
+packetLen(0x01A2, 35)
 
 // Packet: 0x01a3
-packetLen(0x01a3, 5)
+packetLen(0x01A3, 5)
 
 // Packet: 0x01a4
-packetLen(0x01a4, 11)
+packetLen(0x01A4, 11)
 
 // Packet: 0x01a5
-packetLen(0x01a5, 26)
+packetLen(0x01A5, 26)
 
 // Packet: 0x01a6
-packetLen(0x01a6, -1)
+packetLen(0x01A6, -1)
 
 // Packet: 0x01a7
-packetLen(0x01a7, 4)
+packetLen(0x01A7, 4)
 
 // Packet: 0x01a8
-packetLen(0x01a8, 4)
+packetLen(0x01A8, 4)
 
 // Packet: 0x01a9
-packetLen(0x01a9, 6)
+packetLen(0x01A9, 6)
 
 // Packet: 0x01aa
-packetLen(0x01aa, 10)
+packetLen(0x01AA, 10)
 
 // Packet: 0x01ab
-packetLen(0x01ab, 12)
+packetLen(0x01AB, 12)
 
 // Packet: 0x01ac
-packetLen(0x01ac, 6)
+packetLen(0x01AC, 6)
 
 // Packet: 0x01ad
-packetLen(0x01ad, -1)
+packetLen(0x01AD, -1)
 
 // Packet: 0x01ae
-packetLen(0x01ae, 4)
+packetLen(0x01AE, 4)
 
 // Packet: 0x01af
-packetLen(0x01af, 4)
+packetLen(0x01AF, 4)
 
 // Packet: 0x01b0
-packetLen(0x01b0, 11)
+packetLen(0x01B0, 11)
 
 // Packet: 0x01b1
-packetLen(0x01b1, 7)
+packetLen(0x01B1, 7)
 
 // Packet: 0x01b2
-packetLen(0x01b2, -1)
+packetLen(0x01B2, -1)
 
 // Packet: 0x01b3
-packetLen(0x01b3, 67)
+packetLen(0x01B3, 67)
 
 // Packet: 0x01b4
-packetLen(0x01b4, 12)
+packetLen(0x01B4, 12)
 
 // Packet: 0x01b5
-packetLen(0x01b5, 18)
+packetLen(0x01B5, 18)
 
 // Packet: 0x01b6
-packetLen(0x01b6, 114)
+packetLen(0x01B6, 114)
 
 // Packet: 0x01b7
-packetLen(0x01b7, 6)
+packetLen(0x01B7, 6)
 
 // Packet: 0x01b8
-packetLen(0x01b8, 3)
+packetLen(0x01B8, 3)
 
 // Packet: 0x01b9
-packetLen(0x01b9, 6)
+packetLen(0x01B9, 6)
 
 // Packet: 0x01ba
-packetLen(0x01ba, 26)
+packetLen(0x01BA, 26)
 
 // Packet: 0x01bb
-packetLen(0x01bb, 26)
+packetLen(0x01BB, 26)
 
 // Packet: 0x01bc
-packetLen(0x01bc, 26)
+packetLen(0x01BC, 26)
 
 // Packet: 0x01bd
-packetLen(0x01bd, 26)
+packetLen(0x01BD, 26)
 
 // Packet: 0x01be
-packetLen(0x01be, 2)
+packetLen(0x01BE, 2)
 
 // Packet: 0x01bf
-packetLen(0x01bf, 3)
+packetLen(0x01BF, 3)
 
 // Packet: 0x01c0
-packetLen(0x01c0, 2)
+packetLen(0x01C0, 2)
 
 // Packet: 0x01c1
-packetLen(0x01c1, 14)
+packetLen(0x01C1, 14)
 
 // Packet: 0x01c2
-packetLen(0x01c2, 10)
+packetLen(0x01C2, 10)
 
 // Packet: 0x01c3
-packetLen(0x01c3, -1)
+packetLen(0x01C3, -1)
 
 // Packet: 0x01c4
-packetLen(0x01c4, 22)
+packetLen(0x01C4, 22)
 
 // Packet: 0x01c5
-packetLen(0x01c5, 22)
+packetLen(0x01C5, 22)
 
 // Packet: 0x01c6
-packetLen(0x01c6, 4)
+packetLen(0x01C6, 4)
 
 // Packet: 0x01c7
-packetLen(0x01c7, 2)
+packetLen(0x01C7, 2)
 
 // Packet: 0x01c8
-packetLen(0x01c8, 13)
+packetLen(0x01C8, 13)
 
 // Packet: 0x01c9
-packetLen(0x01c9, 97)
+packetLen(0x01C9, 97)
 
 // Packet: 0x01ca
 #if PACKETVER >= 20041213
-packetLen(0x01ca, 3)
+packetLen(0x01CA, 3)
 #endif
 
 // Packet: 0x01cb
-packetLen(0x01cb, 9)
+packetLen(0x01CB, 9)
 
 // Packet: 0x01cc
-packetLen(0x01cc, 9)
+packetLen(0x01CC, 9)
 
 // Packet: 0x01cd
-packetLen(0x01cd, 30)
+packetLen(0x01CD, 30)
 
 // Packet: 0x01ce
-packetLen(0x01ce, 6)
+packetLen(0x01CE, 6)
 
 // Packet: 0x01cf
-packetLen(0x01cf, 28)
+packetLen(0x01CF, 28)
 
 // Packet: 0x01d0
-packetLen(0x01d0, 8)
+packetLen(0x01D0, 8)
 
 // Packet: 0x01d1
-packetLen(0x01d1, 14)
+packetLen(0x01D1, 14)
 
 // Packet: 0x01d2
-packetLen(0x01d2, 10)
+packetLen(0x01D2, 10)
 
 // Packet: 0x01d3
-packetLen(0x01d3, 35)
+packetLen(0x01D3, 35)
 
 // Packet: 0x01d4
-packetLen(0x01d4, 6)
+packetLen(0x01D4, 6)
 
 // Packet: 0x01d5
 #if PACKETVER >= 20041213
-packetLen(0x01d5, -1)
+packetLen(0x01D5, -1)
 #elif PACKETVER >= 20040804
-packetLen(0x01d5, 8)
+packetLen(0x01D5, 8)
 #endif
 
 // Packet: 0x01d6
-packetLen(0x01d6, 4)
+packetLen(0x01D6, 4)
 
 // Packet: 0x01d7
-packetLen(0x01d7, 11)
+packetLen(0x01D7, 11)
 
 // Packet: 0x01d8
-packetLen(0x01d8, 54)
+packetLen(0x01D8, 54)
 
 // Packet: 0x01d9
-packetLen(0x01d9, 53)
+packetLen(0x01D9, 53)
 
 // Packet: 0x01da
-packetLen(0x01da, 60)
+packetLen(0x01DA, 60)
 
 // Packet: 0x01db
-packetLen(0x01db, 2)
+packetLen(0x01DB, 2)
 
 // Packet: 0x01dc
-packetLen(0x01dc, -1)
+packetLen(0x01DC, -1)
 
 // Packet: 0x01dd
-packetLen(0x01dd, 47)
+packetLen(0x01DD, 47)
 
 // Packet: 0x01de
-packetLen(0x01de, 33)
+packetLen(0x01DE, 33)
 
 // Packet: 0x01df
-packetLen(0x01df, 6)
+packetLen(0x01DF, 6)
 
 // Packet: 0x01e0
-packetLen(0x01e0, 30)
+packetLen(0x01E0, 30)
 
 // Packet: 0x01e1
-packetLen(0x01e1, 8)
+packetLen(0x01E1, 8)
 
 // Packet: 0x01e2
-packetLen(0x01e2, 34)
+packetLen(0x01E2, 34)
 
 // Packet: 0x01e3
-packetLen(0x01e3, 14)
+packetLen(0x01E3, 14)
 
 // Packet: 0x01e4
-packetLen(0x01e4, 2)
+packetLen(0x01E4, 2)
 
 // Packet: 0x01e5
-packetLen(0x01e5, 6)
+packetLen(0x01E5, 6)
 
 // Packet: 0x01e6
-packetLen(0x01e6, 26)
+packetLen(0x01E6, 26)
 
 // Packet: 0x01e7
-packetLen(0x01e7, 2)
+packetLen(0x01E7, 2)
 
 // Packet: 0x01e8
-packetLen(0x01e8, 28)
+packetLen(0x01E8, 28)
 
 // Packet: 0x01e9
-packetLen(0x01e9, 81)
+packetLen(0x01E9, 81)
 
 // Packet: 0x01ea
-packetLen(0x01ea, 6)
+packetLen(0x01EA, 6)
 
 // Packet: 0x01eb
-packetLen(0x01eb, 10)
+packetLen(0x01EB, 10)
 
 // Packet: 0x01ec
-packetLen(0x01ec, 26)
+packetLen(0x01EC, 26)
 
 // Packet: 0x01ed
-packetLen(0x01ed, 2)
+packetLen(0x01ED, 2)
 
 // Packet: 0x01ee
-packetLen(0x01ee, -1)
+packetLen(0x01EE, -1)
 
 // Packet: 0x01ef
-packetLen(0x01ef, -1)
+packetLen(0x01EF, -1)
 
 // Packet: 0x01f0
-packetLen(0x01f0, -1)
+packetLen(0x01F0, -1)
 
 // Packet: 0x01f1
-packetLen(0x01f1, -1)
+packetLen(0x01F1, -1)
 
 // Packet: 0x01f2
-packetLen(0x01f2, 20)
+packetLen(0x01F2, 20)
 
 // Packet: 0x01f3
-packetLen(0x01f3, 10)
+packetLen(0x01F3, 10)
 
 // Packet: 0x01f4
-packetLen(0x01f4, 32)
+packetLen(0x01F4, 32)
 
 // Packet: 0x01f5
-packetLen(0x01f5, 9)
+packetLen(0x01F5, 9)
 
 // Packet: 0x01f6
-packetLen(0x01f6, 34)
+packetLen(0x01F6, 34)
 
 // Packet: 0x01f7
-packetLen(0x01f7, 14)
+packetLen(0x01F7, 14)
 
 // Packet: 0x01f8
-packetLen(0x01f8, 2)
+packetLen(0x01F8, 2)
 
 // Packet: 0x01f9
-packetLen(0x01f9, 6)
+packetLen(0x01F9, 6)
 
 // Packet: 0x01fa
-packetLen(0x01fa, 48)
+packetLen(0x01FA, 48)
 
 // Packet: 0x01fb
-packetLen(0x01fb, 56)
+packetLen(0x01FB, 56)
 
 // Packet: 0x01fc
-packetLen(0x01fc, -1)
+packetLen(0x01FC, -1)
 
 // Packet: 0x01fd
-packetLen(0x01fd, 4)
+packetLen(0x01FD, 4)
 
 // Packet: 0x01fe
-packetLen(0x01fe, 5)
+packetLen(0x01FE, 5)
 
 // Packet: 0x01ff
-packetLen(0x01ff, 10)
+packetLen(0x01FF, 10)
 
 // Packet: 0x0200
 packetLen(0x0200, 26)
@@ -1508,17 +1508,17 @@ packetLen(0x0208, 14)
 packetLen(0x0209, 36)
 
 // Packet: 0x020a
-packetLen(0x020a, 10)
+packetLen(0x020A, 10)
 
 // Packet: 0x020d
-packetLen(0x020d, -1)
+packetLen(0x020D, -1)
 
 // Packet: 0x020e
-packetLen(0x020e, 24)
+packetLen(0x020E, 24)
 
 // Packet: 0x020f
 #if PACKETVER >= 20040817
-packetLen(0x020f, 10)
+packetLen(0x020F, 10)
 #endif
 
 // Packet: 0x0210
@@ -1568,32 +1568,32 @@ packetLen(0x0219, 282)
 
 // Packet: 0x021a
 #if PACKETVER >= 20041108
-packetLen(0x021a, 282)
+packetLen(0x021A, 282)
 #endif
 
 // Packet: 0x021b
 #if PACKETVER >= 20041108
-packetLen(0x021b, 10)
+packetLen(0x021B, 10)
 #endif
 
 // Packet: 0x021c
 #if PACKETVER >= 20041108
-packetLen(0x021c, 10)
+packetLen(0x021C, 10)
 #endif
 
 // Packet: 0x021d
 #if PACKETVER >= 20041115
-packetLen(0x021d, 6)
+packetLen(0x021D, 6)
 #endif
 
 // Packet: 0x021e
 #if PACKETVER >= 20041213
-packetLen(0x021e, 6)
+packetLen(0x021E, 6)
 #endif
 
 // Packet: 0x021f
 #if PACKETVER >= 20041213
-packetLen(0x021f, 66)
+packetLen(0x021F, 66)
 #endif
 
 // Packet: 0x0220
@@ -1615,6 +1615,5 @@ packetLen(0x0222, 6)
 #if PACKETVER >= 20041129
 packetLen(0x0223, 8)
 #endif
-
 
 #endif /* COMMON_PACKETS2004_LEN_AD_H */

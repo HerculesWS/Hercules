@@ -64,8 +64,7 @@ static int inter_clan_kick_inactive_members(int clan_id, int kick_interval)
 	}
 
 	// Kick Inactive members
-	if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET "
-		"`clan_id` = 0 WHERE `clan_id` = '%d' AND `online` = 0 AND `last_login` < %" PRId64,
+	if (SQL_ERROR == SQL->Query(inter->sql_handle, "UPDATE `%s` SET `clan_id` = 0 WHERE `clan_id` = '%d' AND `online` = 0 AND `last_login` < %" PRId64,
 		char_db, clan_id, (int64)(time(NULL) - kick_interval)))
 	{
 		Sql_ShowDebug(inter->sql_handle);

@@ -88,7 +88,8 @@ static void do_init_loginif(void)
 
 	// send a list of all online account IDs to login server
 	timer->add_func_list(chr->send_accounts_tologin, "chr->send_accounts_tologin");
-	timer->add_interval(timer->gettick() + 1000, chr->send_accounts_tologin, 0, 0, 3600 * 1000); //Sync online accounts every hour
+	//Sync online accounts every hour
+	timer->add_interval(timer->gettick() + 1000, chr->send_accounts_tologin, 0, 0, 3600 * 1000);
 }
 
 static void do_final_loginif(void)

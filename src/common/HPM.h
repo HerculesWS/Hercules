@@ -34,7 +34,7 @@
 	#endif
 	#include <windows.h>
 	#define plugin_open(x)        LoadLibraryA(x)
-	#define plugin_import(x,y,z)  (z)GetProcAddress((x),(y))
+	#define plugin_import(x,y,z)  ((z)GetProcAddress((x),(y)))
 	#define plugin_close(x)       FreeLibrary(x)
 	#define plugin_geterror(buf)  (FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(), 0, buf, sizeof(buf), NULL) ? buf : "Unknown error")
 
@@ -43,7 +43,7 @@
 #else // ! WIN32
 	#include <dlfcn.h>
 	#define plugin_open(x)         dlopen((x), RTLD_NOW)
-	#define plugin_import(x,y,z)   (z)dlsym((x),(y))
+	#define plugin_import(x,y,z)   ((z)dlsym((x),(y)))
 	#define plugin_close(x)        dlclose(x)
 	#define plugin_geterror(buf)   ((void)buf, dlerror())
 

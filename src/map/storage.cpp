@@ -190,10 +190,10 @@ static int storage_storageopen(struct map_session_data *sd, struct storage_data 
 	if (sd->state.storage_flag != STORAGE_FLAG_CLOSED)
 		return 1; // Storage is already open.
 
-	// GM Permission check.
+	//check is this GM level is allowed to put items to storage
 	if (!pc_can_give_items(sd)) {
-		//check is this GM level is allowed to put items to storage
-		clif->message(sd->fd, msg_sd(sd, MSGTBL_CANT_GIVE_ITEMS)); // Your GM level doesn't authorize you to perform this action.
+		// Your GM level doesn't authorize you to perform this action.
+		clif->message(sd->fd, msg_sd(sd, MSGTBL_CANT_GIVE_ITEMS));
 		return 1;
 	}
 
@@ -629,8 +629,10 @@ static int storage_guild_storageopen(struct map_session_data *sd)
 	}
 #endif // PACKETVER >= 20140205
 
-	if (!pc_can_give_items(sd)) { // check if this GM level can open guild storage and store items [Lupus]
-		clif->message(sd->fd, msg_sd(sd, MSGTBL_CANT_GIVE_ITEMS)); // Your GM level doesn't authorize you to perform this action.
+	// check if this GM level can open guild storage and store items [Lupus]
+	if (!pc_can_give_items(sd)) {
+		// Your GM level doesn't authorize you to perform this action.
+		clif->message(sd->fd, msg_sd(sd, MSGTBL_CANT_GIVE_ITEMS));
 		return 1;
 	}
 

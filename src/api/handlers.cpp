@@ -45,35 +45,38 @@
 #include <stdarg.h>
 #include <time.h>
 
-#define SEND_ASYNC_USERHOKEY_V2_TAB(name) \
-	JsonP *name = jsonparser->get(userHotkeyV2, #name); \
-	if (!jsonparser->is_null_or_missing(name)) { \
-		ShowInfo("send tab " # name "\n"); \
-		CREATE_HTTP_DATA(data, userconfig_save_userhotkey_v2); \
-		data.hotkeys.tab = UserHotKey_v2_ ## name; \
-		handlers->sendHotkeyV2Tab(name, &data.hotkeys); \
-		SEND_CHAR_ASYNC_DATA(userconfig_save_userhotkey_v2, &data); \
-	}
+#define SEND_ASYNC_USERHOKEY_V2_TAB(name) do { \
+		JsonP *name = jsonparser->get(userHotkeyV2, #name); \
+		if (!jsonparser->is_null_or_missing(name)) { \
+			ShowInfo("send tab " # name "\n"); \
+			CREATE_HTTP_DATA(data, userconfig_save_userhotkey_v2); \
+			data.hotkeys.tab = UserHotKey_v2_ ## name; \
+			handlers->sendHotkeyV2Tab(name, &data.hotkeys); \
+			SEND_CHAR_ASYNC_DATA(userconfig_save_userhotkey_v2, &data); \
+		} \
+	} while (false)
 
-#define GET_JSON_HEADER(name, json) \
-	if (!aclif->get_valid_header_data_json(sd, CONST_POST_ ## name, POST_ ## name, json)) { \
-		ShowError("Valid post header %s not found. Can be memory leaks.", POST_ ## name); \
-		Assert_report(0); \
-		aclif->terminate_connection(fd); \
-		return false; \
-	}
+#define GET_JSON_HEADER(name, json) do { \
+		if (!aclif->get_valid_header_data_json(sd, CONST_POST_ ## name, POST_ ## name, (json))) { \
+			ShowError("Valid post header %s not found. Can be memory leaks.", POST_ ## name); \
+			Assert_report(0); \
+			aclif->terminate_connection(fd); \
+			return false; \
+		} \
+	} while (false)
 
-#define GET_STR_HEADER(name, var, varSize) \
-	if (!aclif->get_valid_header_data_str(sd, CONST_POST_ ## name, POST_ ## name, var, varSize)) { \
-		ShowError("Valid post header %s not found. Can be memory leaks.", POST_ ## name); \
-		Assert_report(0); \
-		aclif->terminate_connection(fd); \
-		return false; \
-	}
-#define GET_STR_HEADER_EMPTY(name, var, varSize) aclif->get_valid_header_data_str(sd, CONST_POST_ ## name, POST_ ## name, var, varSize);
+#define GET_STR_HEADER(name, var, varSize) do { \
+		if (!aclif->get_valid_header_data_str(sd, CONST_POST_ ## name, POST_ ## name, (var), (varSize))) { \
+			ShowError("Valid post header %s not found. Can be memory leaks.", POST_ ## name); \
+			Assert_report(0); \
+			aclif->terminate_connection(fd); \
+			return false; \
+		} \
+	} while (false)
+#define GET_STR_HEADER_EMPTY(name, var, varSize) aclif->get_valid_header_data_str(sd, CONST_POST_ ## name, POST_ ## name, (var), (varSize))
 
-#define RET_INT_HEADER(name, def) aclif->ret_valid_header_data_int(sd, CONST_POST_ ## name, POST_ ## name, def);
-#define GET_INT_HEADER(name, var) aclif->get_valid_header_data_int(sd, CONST_POST_ ## name, POST_ ## name, var);
+#define RET_INT_HEADER(name, def) aclif->ret_valid_header_data_int(sd, CONST_POST_ ## name, POST_ ## name, (def))
+#define GET_INT_HEADER(name, var) aclif->get_valid_header_data_int(sd, CONST_POST_ ## name, POST_ ## name, (var))
 
 static struct handlers_interface handlers_s;
 struct handlers_interface *handlers;
@@ -258,10 +261,10 @@ HTTP_URL(userconfig_save)
 
 	JsonP *userHotkeyV2 = jsonparser->get(dataNode, "UserHotkey_V2");
 	if (userHotkeyV2 != NULL) {
-		SEND_ASYNC_USERHOKEY_V2_TAB(SkillBar_1Tab)
-		SEND_ASYNC_USERHOKEY_V2_TAB(SkillBar_2Tab)
-		SEND_ASYNC_USERHOKEY_V2_TAB(InterfaceTab)
-		SEND_ASYNC_USERHOKEY_V2_TAB(EmotionTab)
+		SEND_ASYNC_USERHOKEY_V2_TAB(SkillBar_1Tab);
+		SEND_ASYNC_USERHOKEY_V2_TAB(SkillBar_2Tab);
+		SEND_ASYNC_USERHOKEY_V2_TAB(InterfaceTab);
+		SEND_ASYNC_USERHOKEY_V2_TAB(EmotionTab);
 	}
 	JsonP *emotionHotkey = jsonparser->get(dataNode, "EmotionHotkey");
 
@@ -660,10 +663,12 @@ void handlers_defaults(void)
 	handlers->sendHotkeyV2Tab = handlers_sendHotkeyV2Tab;
 	handlers->hotkeyTabIdToName = handlers_hotkeyTabIdToName;
 
-#define handler(method, url, func, flags) handlers->parse_ ## func = handlers_parse_ ## func
-#define handler2(method, url, func, flags) handlers->parse_ ## func = handlers_parse_ ## func; \
-	handlers->func = handlers_ ## func
-#define packet_handler(func) handlers->func = handlers_ ## func
+#define handler(method, url, func, flags) do { handlers->parse_ ## func = handlers_parse_ ## func; } while (false)
+#define handler2(method, url, func, flags) do { \
+		handlers->parse_ ## func = handlers_parse_ ## func; \
+		handlers->func = handlers_ ## func; \
+	} while (false)
+#define packet_handler(func) do { handlers->func = handlers_ ## func; } while (false)
 #include "api/urlhandlers.h"
 #undef handler
 #undef handler2

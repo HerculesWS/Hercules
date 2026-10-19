@@ -752,8 +752,7 @@ static void db_free_add(struct DBMap_impl *db, struct DBNode *node, struct DBNod
 
 	DB_COUNTSTAT(db_free_add);
 	if (db->free_lock == (unsigned int)~0) {
-		ShowFatalError("db_free_add: free_lock overflow\n"
-				"Database allocated at %s:%d\n",
+		ShowFatalError("db_free_add: free_lock overflow - Database allocated at %s:%d\n",
 				db->alloc_file, db->alloc_line);
 		exit(EXIT_FAILURE);
 	}
@@ -766,8 +765,7 @@ static void db_free_add(struct DBMap_impl *db, struct DBNode *node, struct DBNod
 		db->free_max = (db->free_max<<2) +3; // = db->free_max*4 +3
 		if (db->free_max <= db->free_count) {
 			if (db->free_count == (unsigned int)~0) {
-				ShowFatalError("db_free_add: free_count overflow\n"
-						"Database allocated at %s:%d\n",
+				ShowFatalError("db_free_add: free_count overflow - Database allocated at %s:%d\n",
 						db->alloc_file, db->alloc_line);
 				exit(EXIT_FAILURE);
 			}
@@ -828,8 +826,7 @@ static void db_free_lock(struct DBMap_impl *db)
 {
 	DB_COUNTSTAT(db_free_lock);
 	if (db->free_lock == (unsigned int)~0) {
-		ShowFatalError("db_free_lock: free_lock overflow\n"
-				"Database allocated at %s:%d\n",
+		ShowFatalError("db_free_lock: free_lock overflow - Database allocated at %s:%d\n",
 				db->alloc_file, db->alloc_line);
 		exit(EXIT_FAILURE);
 	}
@@ -853,8 +850,7 @@ static void db_free_unlock(struct DBMap_impl *db)
 
 	DB_COUNTSTAT(db_free_unlock);
 	if (db->free_lock == 0) {
-		ShowWarning("db_free_unlock: free_lock was already 0\n"
-				"Database allocated at %s:%d\n",
+		ShowWarning("db_free_unlock: free_lock was already 0 - Database allocated at %s:%d\n",
 				db->alloc_file, db->alloc_line);
 	} else {
 		db->free_lock--;
@@ -1325,7 +1321,8 @@ static struct DBData *dbit_obj_next(struct DBIterator *self, union DBKey *out_ke
 	{
 		// Iterate in the order: left tree, current node, right tree
 		if( node == NULL )
-		{// prepare initial node of this hash
+		{
+			// prepare initial node of this hash
 			node = it->db->ht[it->ht_index];
 			if( node == NULL )
 				continue;// next hash
@@ -1336,13 +1333,15 @@ static struct DBData *dbit_obj_next(struct DBIterator *self, union DBKey *out_ke
 		while( node )
 		{// next node
 			if( node->right )
-			{// continue in the right subtree
+			{
+				// continue in the right subtree
 				node = node->right;
 				while( node->left )
 					node = node->left;// get leftmost node
 			}
 			else
-			{// continue to the next parent (recursive)
+			{
+				// continue to the next parent (recursive)
 				parent = node->parent;
 				while( parent )
 				{
@@ -1360,7 +1359,8 @@ static struct DBData *dbit_obj_next(struct DBIterator *self, union DBKey *out_ke
 			}
 
 			if( !node->deleted )
-			{// found next entry
+			{
+				// found next entry
 				it->node = node;
 				if( out_key )
 					memcpy(out_key, &node->key, sizeof(union DBKey));
@@ -1391,7 +1391,8 @@ static struct DBData *dbit_obj_prev(struct DBIterator *self, union DBKey *out_ke
 
 	DB_COUNTSTAT(dbit_prev);
 	if( it->ht_index >= HASH_SIZE )
-	{// get last node
+	{
+		// get last node
 		it->ht_index = HASH_SIZE-1;
 		it->node = NULL;
 	}
@@ -1401,7 +1402,8 @@ static struct DBData *dbit_obj_prev(struct DBIterator *self, union DBKey *out_ke
 	{
 		// Iterate in the order: right tree, current node, left tree
 		if( node == NULL )
-		{// prepare initial node of this hash
+		{
+			// prepare initial node of this hash
 			node = it->db->ht[it->ht_index];
 			if( node == NULL )
 				continue;// next hash
@@ -1412,13 +1414,15 @@ static struct DBData *dbit_obj_prev(struct DBIterator *self, union DBKey *out_ke
 		while( node )
 		{// next node
 			if( node->left )
-			{// continue in the left subtree
+			{
+				// continue in the left subtree
 				node = node->left;
 				while( node->right )
 					node = node->right;// get rightmost node
 			}
 			else
-			{// continue to the next parent (recursive)
+			{
+				// continue to the next parent (recursive)
 				parent = node->parent;
 				while( parent )
 				{
@@ -1436,7 +1440,8 @@ static struct DBData *dbit_obj_prev(struct DBIterator *self, union DBKey *out_ke
 			}
 
 			if( !node->deleted )
-			{// found previous entry
+			{
+				// found previous entry
 				it->node = node;
 				if( out_key )
 					memcpy(out_key, &node->key, sizeof(union DBKey));
@@ -1807,8 +1812,7 @@ static struct DBData *db_obj_vensure(struct DBMap *self, union DBKey key, DBCrea
 	if (node == NULL) {
 		va_list argscopy;
 		if (db->item_count == UINT32_MAX) {
-			ShowError("db_vensure: item_count overflow, aborting item insertion.\n"
-					"Database allocated at %s:%d",
+			ShowError("db_vensure: item_count overflow, aborting item insertion.\nDatabase allocated at %s:%d",
 					db->alloc_file, db->alloc_line);
 				return NULL;
 		}
@@ -1907,8 +1911,7 @@ static int db_obj_put(struct DBMap *self, union DBKey key, struct DBData data, s
 	DB_COUNTSTAT(db_put);
 	if (db == NULL) return 0; // nullpo candidate
 	if (db->global_lock) {
-		ShowError("db_put: Database is being destroyed, aborting entry insertion.\n"
-				"Database allocated at %s:%d\n",
+		ShowError("db_put: Database is being destroyed, aborting entry insertion.\nDatabase allocated at %s:%d\n",
 				db->alloc_file, db->alloc_line);
 		return 0; // nullpo candidate
 	}
@@ -1922,8 +1925,7 @@ static int db_obj_put(struct DBMap *self, union DBKey key, struct DBData data, s
 	}
 
 	if (db->item_count == UINT32_MAX) {
-		ShowError("db_put: item_count overflow, aborting item insertion.\n"
-				"Database allocated at %s:%d",
+		ShowError("db_put: item_count overflow, aborting item insertion.\nDatabase allocated at %s:%d",
 				db->alloc_file, db->alloc_line);
 		return 0;
 	}
@@ -2011,8 +2013,7 @@ static int db_obj_remove(struct DBMap *self, union DBKey key, struct DBData *out
 	DB_COUNTSTAT(db_remove);
 	if (db == NULL) return 0; // nullpo candidate
 	if (db->global_lock) {
-		ShowError("db_remove: Database is being destroyed. Aborting entry deletion.\n"
-				"Database allocated at %s:%d\n",
+		ShowError("db_remove: Database is being destroyed. Aborting entry deletion.\nDatabase allocated at %s:%d\n",
 				db->alloc_file, db->alloc_line);
 		return 0; // nullpo candidate
 	}
@@ -2253,14 +2254,12 @@ static int db_obj_vdestroy(struct DBMap *self, DBApply func, va_list args)
 	DB_COUNTSTAT(db_vdestroy);
 	if (db == NULL) return 0; // nullpo candidate
 	if (db->global_lock) {
-		ShowError("db_vdestroy: Database is already locked for destruction. Aborting second database destruction.\n"
-				"Database allocated at %s:%d\n",
+		ShowError("db_vdestroy: Database is already locked for destruction. Aborting second database destruction.\nDatabase allocated at %s:%d\n",
 				db->alloc_file, db->alloc_line);
 		return 0;
 	}
 	if (db->free_lock)
-		ShowWarning("db_vdestroy: Database is still in use, %u lock(s) left. Continuing database destruction.\n"
-				"Database allocated at %s:%d\n",
+		ShowWarning("db_vdestroy: Database is still in use, %u lock(s) left. Continuing database destruction.\nDatabase allocated at %s:%d\n",
 				db->free_lock, db->alloc_file, db->alloc_line);
 
 #ifdef DB_ENABLE_STATS
@@ -2826,8 +2825,7 @@ static void db_final(void)
 {
 #ifdef DB_ENABLE_STATS
 	DB_COUNTSTAT(db_final);
-	ShowInfo(CL_WHITE "Database nodes" CL_RESET ":\n"
-			"allocated %u, freed %u\n",
+	ShowInfo(CL_WHITE "Database nodes" CL_RESET ":\nallocated %u, freed %u\n",
 			stats.db_node_alloc, stats.db_node_free);
 	ShowInfo(CL_WHITE "Database types" CL_RESET ":\n"
 			"DB_INT     : allocated %10u, destroyed %10u\n"

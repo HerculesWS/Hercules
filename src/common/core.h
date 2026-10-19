@@ -102,8 +102,8 @@ extern int do_final(void);
 /// Special plugin ID assigned to the Hercules core
 #define HPM_PID_CORE ((unsigned int)-1)
 
-#define CMDLINEARG_DEF(name, shortname, help, options) cmdline->arg_add(HPM_PID_CORE, "--" EXPAND_AND_QUOTE(name), shortname, cmdline_arg_ ## name, help, options)
-#define CMDLINEARG_DEF2(name, funcname, help, options) cmdline->arg_add(HPM_PID_CORE, "--" EXPAND_AND_QUOTE(name), '\0', cmdline_arg_ ## funcname, help, options)
+#define CMDLINEARG_DEF(funcname, shortname, help, options) cmdline->arg_add(HPM_PID_CORE, "--" #funcname, shortname, cmdline_arg_ ## funcname, help, options)
+#define CMDLINEARG_DEF2(name, funcname, help, options) cmdline->arg_add(HPM_PID_CORE, "--" name, '\0', cmdline_arg_ ## funcname, help, options)
 
 void cmdline_defaults(void);
 #endif // HERCULES_CORE

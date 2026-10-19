@@ -579,7 +579,8 @@ static void chrif_authfail(int fd)
 		node->login_id1 == login_id1 &&
 		node->sex == sex &&
 		node->state == ST_LOGIN )
-	{// found a match
+	{
+		// found a match
 		clif->authfail_fd(node->fd, 0); // Disconnected from server
 		chrif->auth_delete(account_id, char_id, ST_LOGIN);
 	}
@@ -914,31 +915,37 @@ static void chrif_idbanned(int fd)
 	sd = ( RFIFOB(fd,6) == 2 ) ? map->charid2sd(id) : map->id2sd(id);
 
 	if ( id < 0 || sd == NULL ) {
-		/* player not online or unknown id, either way no error is necessary (since if you try to ban a offline char it still works) */
+		// player not online or unknown id, either way no error is necessary (since if you try to ban a offline char it still works)
 		return;
 	}
 
-	sd->login_id1++; // change identify, because if player come back in char within the 5 seconds, he can change its characters
+	// change identify, because if player come back in char within the 5 seconds, he can change its characters
+	sd->login_id1++;
 	if (RFIFOB(fd,6) == 0) { // 0: change of status
 		int ret_status = RFIFOL(fd,7); // status or final date of a banishment
-		if(0<ret_status && ret_status<=9)
-			clif->message(sd->fd, msg_sd(sd, (MSGTBL_CHRIF_ACCOUNT_UNREGISTERED - 1) + ret_status)); // Message IDs (for search convenience): 412, 413, 414, 415, 416, 417, 418, 419, 420
-		else if(ret_status==100)
+		if(0<ret_status && ret_status<=9) {
+			// Message IDs (for search convenience): 412, 413, 414, 415, 416, 417, 418, 419, 420
+			clif->message(sd->fd, msg_sd(sd, (MSGTBL_CHRIF_ACCOUNT_UNREGISTERED - 1) + ret_status));
+		} else if(ret_status==100) {
 			clif->message(sd->fd, msg_sd(sd, MSGTBL_CHRIF_ACCOUNT_ERASED)); // Your account has been totally erased.
-		else
-			clif->message(sd->fd, msg_sd(sd, MSGTBL_CHRIF_ACCOUNT_UNAUTHORIZED)); //"Your account is not longer authorized."
+		} else {
+			//"Your account is not longer authorized."
+			clif->message(sd->fd, msg_sd(sd, MSGTBL_CHRIF_ACCOUNT_UNAUTHORIZED));
+		}
 	} else if (RFIFOB(fd,6) == 1) { // 1: ban
-		time_t timestamp;
 		char tmpstr[2048];
-		timestamp = (time_t)RFIFOL(fd,7); // status or final date of a banishment
-		safestrncpy(tmpstr, msg_sd(sd, MSGTBL_CHRIF_ACCOUNT_BANNED), sizeof(tmpstr)); //"Your account has been banished until "
+		// status or final date of a banishment
+		time_t timestamp = (time_t)RFIFOL(fd,7);
+		//"Your account has been banished until "
+		safestrncpy(tmpstr, msg_sd(sd, MSGTBL_CHRIF_ACCOUNT_BANNED), sizeof(tmpstr));
 		strftime(tmpstr + strlen(tmpstr), 24, "%d-%m-%Y %H:%M:%S", localtime(&timestamp));
 		clif->message(sd->fd, tmpstr);
 	} else if (RFIFOB(fd,6) == 2) { // 2: change of status for character
-		time_t timestamp;
 		char tmpstr[2048];
-		timestamp = (time_t)RFIFOL(fd,7); // status or final date of a banishment
-		safestrncpy(tmpstr, msg_sd(sd, MSGTBL_CHRIF_CHAR_BANNED_UNTIL), sizeof(tmpstr)); //"This character has been banned until  "
+		// status or final date of a banishment
+		time_t timestamp = (time_t)RFIFOL(fd,7);
+		//"This character has been banned until  "
+		safestrncpy(tmpstr, msg_sd(sd, MSGTBL_CHRIF_CHAR_BANNED_UNTIL), sizeof(tmpstr));
 		strftime(tmpstr + strlen(tmpstr), 24, "%d-%m-%Y %H:%M:%S", localtime(&timestamp));
 		clif->message(sd->fd, tmpstr);
 	}
@@ -1330,11 +1337,14 @@ static int chrif_parse(int fd)
 		chrif->fd = -1;
 		chrif->on_disconnect();
 		return 0;
-	} else if ( sockt->session[fd]->flag.ping ) {/* we've reached stall time */
-		if( DIFF_TICK(sockt->last_tick, sockt->session[fd]->rdata_tick) > (sockt->stall_time * 2) ) {/* we can't wait any longer */
+	} else if ( sockt->session[fd]->flag.ping ) {
+		// we've reached stall time
+		if( DIFF_TICK(sockt->last_tick, sockt->session[fd]->rdata_tick) > (sockt->stall_time * 2) ) {
+			// we can't wait any longer
 			sockt->eof(fd);
 			return 0;
-		} else if( sockt->session[fd]->flag.ping != 2 ) { /* we haven't sent ping out yet */
+		} else if( sockt->session[fd]->flag.ping != 2 ) {
+			// we haven't sent ping out yet
 			chrif->keepalive(fd);
 			sockt->session[fd]->flag.ping = 2;
 		}
@@ -1362,7 +1372,8 @@ static int chrif_parse(int fd)
 			return 0;
 		}
 
-		if ((packet_len = packets->chrif_db[cmd - MIN_CHRIF_PACKET_DB]) == -1) { // dynamic-length packet, second WORD holds the length
+		if ((packet_len = packets->chrif_db[cmd - MIN_CHRIF_PACKET_DB]) == -1) {
+			// dynamic-length packet, second WORD holds the length
 			if (RFIFOREST(fd) < 4)
 				return 0;
 			packet_len = RFIFOW(fd,2);
@@ -1401,8 +1412,10 @@ static int chrif_parse(int fd)
 				sockt->eof(fd);
 				return 0;
 		}
-		if ( fd == chrif->fd ) //There's the slight chance we lost the connection during parse, in which case this would segfault if not checked [Skotlex]
+		if ( fd == chrif->fd ) {
+			//There's the slight chance we lost the connection during parse, in which case this would segfault if not checked [Skotlex]
 			RFIFOSKIP(fd, packet_len);
+		}
 	}
 
 	return 0;
@@ -1466,8 +1479,10 @@ static int check_connect_char_server(int tid, int64 tick, int id, intptr_t data)
 
 		chrif->state = 0;
 
-		if ((chrif->fd = sockt->make_connection(chrif->ip, chrif->port,NULL)) == -1) //Attempt to connect later. [Skotlex]
+		if ((chrif->fd = sockt->make_connection(chrif->ip, chrif->port,NULL)) == -1) {
+			//Attempt to connect later. [Skotlex]
 			return 0;
+		}
 
 		sockt->session[chrif->fd]->func_parse = chrif->parse;
 		sockt->session[chrif->fd]->flag.server = 1;

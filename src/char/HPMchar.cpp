@@ -85,13 +85,13 @@ HPMDATACHECK_DEFS
  */
 bool HPM_char_data_store_validate(enum HPluginDataTypes type, struct hplugin_data_store **storeptr, bool initialize)
 {
-/*
+#if 0
 	switch (type) {
-		// No supported types at the moment.
-		default:
-			break;
+	// No supported types at the moment.
+	default:
+		break;
 	}
-*/
+#endif // 0
 	return false;
 }
 

@@ -30,8 +30,9 @@ struct config_setting_t;
 struct eri;
 
 #ifndef MAPREG_AUTOSAVE_INTERVAL
-#define MAPREG_AUTOSAVE_INTERVAL (300 * 1000) //!< Interval for auto-saving permanent global variables to the database in milliseconds.
-#endif /** MAPREG_AUTOSAVE_INTERVAL **/
+/// Interval for auto-saving permanent global variables to the database in milliseconds.
+#define MAPREG_AUTOSAVE_INTERVAL (300 * 1000)
+#endif
 
 /** Global variable structure. **/
 struct mapreg_save {

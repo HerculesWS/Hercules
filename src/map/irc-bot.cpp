@@ -239,7 +239,8 @@ static void irc_queue(const char *str)
 			queue_entry->next = NULL;
 			ircbot->message_current = queue_entry;
 			ircbot->message_last = queue_entry;
-			ircbot->queue_tid = timer->add(timer->gettick() + ircbot->flood_protection_rate, ircbot->queue_timer, 0, 0); //start queue timer
+			//start queue timer
+			ircbot->queue_tid = timer->add(timer->gettick() + ircbot->flood_protection_rate, ircbot->queue_timer, 0, 0);
 			ircbot->messages_burst_count = 0;
 		}
 	} else {
@@ -333,7 +334,8 @@ static void irc_privmsg_ctcp(int fd, char *cmd, char *source, char *target, char
 		time(&time_server);  // get time in seconds since 1/1/1970
 		datetime = localtime(&time_server); // convert seconds in structure
 		// like sprintf, but only for date/time (Sunday, November 02 2003 15:12:52)
-		strftime(temp, sizeof(temp)-1, msg_txt(MSGTBL_SERVER_TIME), datetime); // Server time (normal time): %A, %B %d %Y %X.
+		// Server time (normal time): %A, %B %d %Y %X.
+		strftime(temp, sizeof(temp)-1, msg_txt(MSGTBL_SERVER_TIME), datetime);
 
 		snprintf(send_string, IRC_MESSAGE_LENGTH, "NOTICE %s :\001TIME %s\001",source_nick,temp);
 		ircbot->send(send_string, false);
@@ -398,7 +400,8 @@ static void irc_userjoin(int fd, char *cmd, char *source, char *target, char *ms
 		ircbot->parse_source(source,source_nick,source_ident,source_host);
 
 	if( ircbot->channel ) {
-		snprintf(send_string, 150, msg_txt(MSGTBL_IRC_USER_JOIN), ircbot->channel->name, source_nick); // [ #%s ] User IRC.%s joined the channel.
+		// [ #%s ] User IRC.%s joined the channel.
+		snprintf(send_string, 150, msg_txt(MSGTBL_IRC_USER_JOIN), ircbot->channel->name, source_nick);
 		clif->channel_msg2(ircbot->channel,send_string);
 	}
 }
@@ -415,10 +418,13 @@ static void irc_userleave(int fd, char *cmd, char *source, char *target, char *m
 		ircbot->parse_source(source,source_nick,source_ident,source_host);
 
 	if( ircbot->channel ) {
-		if (!strcmpi(cmd, "QUIT"))
-			snprintf(send_string, 150, msg_txt(MSGTBL_IRC_USER_QUIT), ircbot->channel->name, source_nick, msg); // [ #%s ] User IRC.%s left the channel. [Quit: %s]
-		else
-			snprintf(send_string, 150, msg_txt(MSGTBL_IRC_USER_LEFT), ircbot->channel->name, source_nick, msg); // [ #%s ] User IRC.%s left the channel. [%s]
+		if (!strcmpi(cmd, "QUIT")) {
+			// [ #%s ] User IRC.%s left the channel. [Quit: %s]
+			snprintf(send_string, 150, msg_txt(MSGTBL_IRC_USER_QUIT), ircbot->channel->name, source_nick, msg);
+		} else {
+			// [ #%s ] User IRC.%s left the channel. [%s]
+			snprintf(send_string, 150, msg_txt(MSGTBL_IRC_USER_LEFT), ircbot->channel->name, source_nick, msg);
+		}
 		clif->channel_msg2(ircbot->channel,send_string);
 	}
 }
@@ -435,7 +441,8 @@ static void irc_usernick(int fd, char *cmd, char *source, char *target, char *ms
 		ircbot->parse_source(source,source_nick,source_ident,source_host);
 
 	if( ircbot->channel ) {
-		snprintf(send_string, 150, msg_txt(MSGTBL_IRC_USER_NICK), ircbot->channel->name, source_nick, msg); // [ #%s ] User IRC.%s is now known as IRC.%s
+		// [ #%s ] User IRC.%s is now known as IRC.%s
+		snprintf(send_string, 150, msg_txt(MSGTBL_IRC_USER_NICK), ircbot->channel->name, source_nick, msg);
 		clif->channel_msg2(ircbot->channel,send_string);
 	}
 }
