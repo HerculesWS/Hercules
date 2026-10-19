@@ -1208,7 +1208,7 @@ HPShared struct db_interface *DB;
 			/* reduce size */ \
 			VECTOR_DATA(_vec) = static_cast<decltype((_vec)._data_)>(aRealloc(VECTOR_DATA(_vec), (_n)*sizeof(VECTOR_FIRST(_vec)))); /* reallocate */ \
 			VECTOR_CAPACITY(_vec) = (_n); /* update capacity */ \
-			if ((_n) - VECTOR_LENGTH(_vec) > 0) \
+			if (VECTOR_LENGTH(_vec) > (_n)) \
 				VECTOR_LENGTH(_vec) = (_n); /* update length */ \
 		} \
 	} while(false)
