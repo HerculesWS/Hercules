@@ -23,6 +23,7 @@ set(COMMON_SRCS
   des.cpp
   ers.cpp
   extraconf.cpp
+  fifo_buffer.cpp
   grfio.cpp
   HPM.cpp
   mapindex.cpp
@@ -55,6 +56,7 @@ set(COMMON_HDRS
   des.h
   ers.h
   extraconf.h
+  fifo_buffer.h
   grfio.h
   hercules.h
   HPM.h

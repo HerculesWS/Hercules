@@ -22,6 +22,8 @@
 #define COMMON_SOCKET_H
 
 #include "common/hercules.h"
+
+#include "fifo_buffer.h"
 #include "common/db.h"
 
 #ifdef WIN32
@@ -43,8 +45,8 @@ struct config_setting_t;
 #define RFIFOHEAD(fd)
 #define WFIFOHEAD(fd, size) sockt->wfifohead(fd, size)
 
-#define RFIFOP(T, fd, pos) ((const T)(const void *)(sockt->session[fd]->rdata + sockt->session[fd]->rdata_pos + (pos)))
-#define WFIFOP(T, fd, pos) ((T)(void *)(sockt->session[fd]->wdata + sockt->session[fd]->wdata_size + (pos)))
+#define RFIFOP(T, fd, pos) (sockt->session[fd]->rdata->output_ptr<T>(pos))
+#define WFIFOP(T, fd, pos) (sockt->session[fd]->wdata->input_ptr<T>(pos))
 
 #define RFIFOB(fd,pos) (*RFIFOP(uint8 *, (fd),(pos)))
 #define RFIFOSB(fd,pos) (*RFIFOP(int8 *, (fd),(pos)))
@@ -62,31 +64,22 @@ struct config_setting_t;
 #define RFIFOSQ(fd,pos) (*RFIFOP(int64 *, (fd),(pos)))
 #define WFIFOQ(fd,pos) (*WFIFOP(uint64 *, (fd),(pos)))
 #define WFIFOSQ(fd,pos) (*WFIFOP(int64 *, (fd),(pos)))
-#define RFIFOSPACE(fd) (sockt->session[fd]->max_rdata - sockt->session[fd]->rdata_size)
-#define WFIFOSPACE(fd) (sockt->session[fd]->max_wdata - sockt->session[fd]->wdata_size)
+#define RFIFOSPACE(fd) (sockt->session[fd]->rdata->free_space())
+#define WFIFOSPACE(fd) (sockt->session[fd]->wdata->free_space())
 
-#define RFIFOREST(fd)  (sockt->session[fd]->flag.eof ? 0 : sockt->session[fd]->rdata_size - sockt->session[fd]->rdata_pos)
-#define RFIFOFLUSH(fd) \
-	do { \
-		if(sockt->session[fd]->rdata_size == sockt->session[fd]->rdata_pos){ \
-			sockt->session[fd]->rdata_size = sockt->session[fd]->rdata_pos = 0; \
-		} else { \
-			sockt->session[fd]->rdata_size -= sockt->session[fd]->rdata_pos; \
-			memmove(sockt->session[fd]->rdata, sockt->session[fd]->rdata+sockt->session[fd]->rdata_pos, sockt->session[fd]->rdata_size); \
-			sockt->session[fd]->rdata_pos = 0; \
-		} \
-	} while(0)
+#define RFIFOREST(fd)  (sockt->session[fd]->flag.eof ? 0 : sockt->session[fd]->rdata->readable())
+#define RFIFOFLUSH(fd) (sockt->session[fd]->rdata->flush())
 
 #define WFIFOSET(fd, len)  (sockt->wfifoset(fd, len, true))
 #define WFIFOSET2(fd, len)  (sockt->wfifoset(fd, len, false))
 #define RFIFOSKIP(fd, len) (sockt->rfifoskip(fd, len))
 
 /* [Ind/Hercules] */
-#define RFIFO2PTR(T, fd) ((const T)(const void *)(sockt->session[fd]->rdata + sockt->session[fd]->rdata_pos))
+#define RFIFO2PTR(T, fd) (sockt->session[fd]->rdata->output_ptr<T>(0))
 #define RP2PTR(T, fd) RFIFO2PTR(T, fd)
 
 /* [Hemagx/Hercules] */
-#define WFIFO2PTR(T, fd) ((T)(void *)(sockt->session[fd]->wdata + sockt->session[fd]->wdata_size))
+#define WFIFO2PTR(T, fd) (sockt->session[fd]->wdata->input_ptr<T>(0))
 #define WP2PTR(T, fd) WFIFO2PTR(T, fd)
 
 // buffer I/O macros
@@ -142,10 +135,8 @@ struct socket_data {
 
 	uint32 client_addr; // remote client address
 
-	uint8 *rdata, *wdata;
-	size_t max_rdata, max_wdata;
-	size_t rdata_size, wdata_size;
-	size_t rdata_pos;
+	fifo_buffer *rdata;
+	fifo_buffer *wdata;
 	uint32 last_head_size;
 	time_t rdata_tick; // time of last recv (for detecting timeouts); zero when timeout is disabled
 	time_t wdata_tick; // time of last send (for detecting timeouts);
@@ -221,7 +212,7 @@ struct socket_interface {
 	/* */
 	int (*make_listen_bind) (uint32 ip, uint16 port);
 	int (*make_connection) (uint32 ip, uint16 port, struct hSockOpt *opt);
-	int (*realloc_fifo) (int fd, unsigned int rfifo_size, unsigned int wfifo_size);
+	int (*realloc_fifo) (int fd, size_t rfifo_size, size_t wfifo_size);
 	int (*realloc_writefifo) (int fd, size_t addition);
 	int (*wfifoset) (int fd, size_t len, bool validate);
 	void (*wfifohead) (int fd, size_t len);
