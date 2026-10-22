@@ -461,7 +461,7 @@ static int recv_to_fifo(int fd)
 	if (!sockt->session_is_active(fd))
 		return -1;
 
-	len = sRecv(fd, (char *) sockt->session[fd]->rdata + sockt->session[fd]->rdata_size, (int)RFIFOSPACE(fd), 0);
+	len = sRecv(fd, sockt->session[fd]->rdata->input_ptr<char *>(0), (int)RFIFOSPACE(fd), 0);
 
 	if( len == SOCKET_ERROR )
 	{//An exception has occurred
@@ -478,7 +478,7 @@ static int recv_to_fifo(int fd)
 		return 0;
 	}
 
-	sockt->session[fd]->rdata_size += len;
+	sockt->session[fd]->rdata->advance_write(len);
 	sockt->session[fd]->rdata_tick = sockt->last_tick;
 #ifdef SHOW_SERVER_STATS
 	socket_data_i += len;
@@ -498,19 +498,19 @@ static int send_from_fifo(int fd)
 	if (!sockt->session_is_valid(fd))
 		return -1;
 
-	if( sockt->session[fd]->wdata_size == 0 )
+	if (sockt->session[fd]->wdata == nullptr || sockt->session[fd]->wdata->empty() || sockt->session[fd]->wdata->write_cursor() == 0)
 		return 0; // nothing to send
 
-	len = sSend(fd, (const char *) sockt->session[fd]->wdata, (int)sockt->session[fd]->wdata_size, MSG_NOSIGNAL);
+	len = sSend(fd, reinterpret_cast<const char *>(sockt->session[fd]->wdata->data()), (int)sockt->session[fd]->wdata->write_cursor(), MSG_NOSIGNAL);
 
 	if( len == SOCKET_ERROR )
 	{ //An exception has occurred
 		if( sErrno != S_EWOULDBLOCK ) {
 			//ShowDebug("send_from_fifo: %s, ending connection #%d\n", error_msg(), fd);
 #ifdef SHOW_SERVER_STATS
-			socket_data_qo -= sockt->session[fd]->wdata_size;
+			socket_data_qo -= sockt->session[fd]->wdata->write_cursor();
 #endif  // SHOW_SERVER_STATS
-			sockt->session[fd]->wdata_size = 0; //Clear the send queue as we can't send anymore. [Skotlex]
+			sockt->session[fd]->wdata->truncate(); //Clear the send queue as we can't send anymore. [Skotlex]
 			sockt->eof(fd);
 		}
 		return 0;
@@ -521,10 +521,8 @@ static int send_from_fifo(int fd)
 		sockt->session[fd]->wdata_tick = sockt->last_tick;
 		// some data could not be transferred?
 		// shift unsent data to the beginning of the queue
-		if ((size_t)len < sockt->session[fd]->wdata_size)
-			memmove(sockt->session[fd]->wdata, sockt->session[fd]->wdata + len, sockt->session[fd]->wdata_size - len);
+		sockt->session[fd]->wdata->erase(len);
 
-		sockt->session[fd]->wdata_size -= len;
 #ifdef SHOW_SERVER_STATS
 		socket_data_o += len;
 		socket_data_qo -= len;
@@ -753,10 +751,9 @@ static int make_connection(uint32 ip, uint16 port, struct hSockOpt *opt)
 static int create_session(int fd, RecvFunc func_recv, SendFunc func_send, ParseFunc func_parse, ConnectedFunc func_client_connected, DeleteFunc func_delete)
 {
 	CREATE(sockt->session[fd], struct socket_data, 1);
-	CREATE(sockt->session[fd]->rdata, unsigned char, RFIFO_SIZE);
-	CREATE(sockt->session[fd]->wdata, unsigned char, WFIFO_SIZE);
-	sockt->session[fd]->max_rdata  = RFIFO_SIZE;
-	sockt->session[fd]->max_wdata  = WFIFO_SIZE;
+	sockt->session[fd]->rdata = fifo_buffer::create(RFIFO_SIZE);
+	sockt->session[fd]->wdata = fifo_buffer::create(WFIFO_SIZE);
+
 	sockt->session[fd]->func_recv  = func_recv;
 	sockt->session[fd]->func_send  = func_send;
 	sockt->session[fd]->func_parse = func_parse;
@@ -773,12 +770,12 @@ static void delete_session(int fd)
 {
 	if (sockt->session_is_valid(fd)) {
 #ifdef SHOW_SERVER_STATS
-		socket_data_qi -= sockt->session[fd]->rdata_size - sockt->session[fd]->rdata_pos;
-		socket_data_qo -= sockt->session[fd]->wdata_size;
+		socket_data_qi -= sockt->session[fd]->rdata->write_cursor() - sockt->session[fd]->rdata->read_cursor();
+		socket_data_qo -= sockt->session[fd]->wdata->write_cursor();
 #endif  // SHOW_SERVER_STATS
 		sockt->session[fd]->func_delete(fd);
-		aFree(sockt->session[fd]->rdata);
-		aFree(sockt->session[fd]->wdata);
+		fifo_buffer::destroy(sockt->session[fd]->rdata);
+		fifo_buffer::destroy(sockt->session[fd]->wdata);
 		if( sockt->session[fd]->session_data )
 			aFree(sockt->session[fd]->session_data);
 		HPM->data_store_destroy(&sockt->session[fd]->hdata);
@@ -787,19 +784,17 @@ static void delete_session(int fd)
 	}
 }
 
-static int realloc_fifo(int fd, unsigned int rfifo_size, unsigned int wfifo_size)
+static int realloc_fifo(int fd, size_t rfifo_size, size_t wfifo_size)
 {
 	if (!sockt->session_is_valid(fd))
 		return 0;
 
-	if( sockt->session[fd]->max_rdata != rfifo_size && sockt->session[fd]->rdata_size < rfifo_size) {
-		RECREATE(sockt->session[fd]->rdata, unsigned char, rfifo_size);
-		sockt->session[fd]->max_rdata  = rfifo_size;
+	if (sockt->session[fd]->rdata->capacity() != rfifo_size && sockt->session[fd]->rdata->write_cursor() < rfifo_size) {
+		sockt->session[fd]->rdata->resize(rfifo_size);
 	}
 
-	if( sockt->session[fd]->max_wdata != wfifo_size && sockt->session[fd]->wdata_size < wfifo_size) {
-		RECREATE(sockt->session[fd]->wdata, unsigned char, wfifo_size);
-		sockt->session[fd]->max_wdata  = wfifo_size;
+	if (sockt->session[fd]->wdata->capacity() != wfifo_size && sockt->session[fd]->wdata->write_cursor() < wfifo_size) {
+		sockt->session[fd]->wdata->resize(wfifo_size);
 	}
 	return 0;
 }
@@ -811,24 +806,24 @@ static int realloc_writefifo(int fd, size_t addition)
 	if (!sockt->session_is_valid(fd)) // might not happen
 		return 0;
 
-	if (sockt->session[fd]->wdata_size + addition  > sockt->session[fd]->max_wdata) {
+	if (sockt->session[fd]->wdata->write_cursor() + addition  > sockt->session[fd]->wdata->capacity()) {
 		// grow rule; grow in multiples of WFIFO_SIZE
 		newsize = WFIFO_SIZE;
-		while( sockt->session[fd]->wdata_size + addition > newsize ) newsize += WFIFO_SIZE;
-	} else if (sockt->session[fd]->max_wdata >= (size_t)2*(sockt->session[fd]->flag.server?FIFOSIZE_SERVERLINK:WFIFO_SIZE)
-	       && (sockt->session[fd]->wdata_size+addition)*4 < sockt->session[fd]->max_wdata
+		while (sockt->session[fd]->wdata->write_cursor() + addition > newsize)
+			newsize += WFIFO_SIZE;
+	} else if (sockt->session[fd]->wdata->capacity() >= 2 * (sockt->session[fd]->flag.server ? FIFOSIZE_SERVERLINK : WFIFO_SIZE)
+	       && (sockt->session[fd]->wdata->write_cursor() + addition) * 4 < sockt->session[fd]->wdata->capacity()
 	) {
 		// shrink rule, shrink by 2 when only a quarter of the fifo is used, don't shrink below nominal size.
-		newsize = sockt->session[fd]->max_wdata / 2;
+		newsize = sockt->session[fd]->wdata->capacity() / 2;
 	} else {
 		// no change
 		return 0;
 	}
 
-	RECREATE(sockt->session[fd]->wdata, unsigned char, newsize);
-	sockt->session[fd]->max_wdata  = newsize;
+	sockt->session[fd]->wdata->resize(newsize);
 
-	return 0;
+    return 0;
 }
 
 /// advance the RFIFO cursor (marking 'len' bytes as processed)
@@ -841,7 +836,7 @@ static int rfifoskip(int fd, size_t len)
 
 	s = sockt->session[fd];
 
-	if (s->rdata_size < s->rdata_pos + len) {
+	if (s->rdata->write_cursor() < s->rdata->read_cursor() + len) {
 		ShowError("RFIFOSKIP: skipped past end of read buffer! Adjusting from %" PRIuS " to %" PRIuS " (session #%d)\n", len, RFIFOREST(fd), fd);
 		Assert_report(0);
 		len = RFIFOREST(fd);
@@ -875,7 +870,7 @@ static int rfifoskip(int fd, size_t len)
 		}
 	}
 
-	s->rdata_pos = s->rdata_pos + len;
+	s->rdata->advance_read(len);
 #ifdef SHOW_SERVER_STATS
 	socket_data_qi -= len;
 #endif  // SHOW_SERVER_STATS
@@ -889,15 +884,15 @@ static int wfifoset(int fd, size_t len, bool validate)
 		return 0;
 
 	struct socket_data* s = sockt->session[fd];
-	if (s == NULL || s->wdata == NULL)
+	if (s == NULL || s->wdata == nullptr || s->wdata->empty())
 		return 0;
 
 	// we have written len bytes to the buffer already before calling WFIFOSET
-	if (s->wdata_size+len > s->max_wdata) {
+	if (s->wdata->write_cursor() + len > s->wdata->capacity()) {
 		// actually there was a buffer overflow already
 		uint32 ip = s->client_addr;
-		ShowFatalError("WFIFOSET: Write Buffer Overflow. Connection %d (%u.%u.%u.%u) has written %u bytes on a %u/%u bytes buffer.\n", fd, CONVIP(ip), (unsigned int)len, (unsigned int)s->wdata_size, (unsigned int)s->max_wdata);
-		ShowDebug("Likely command that caused it: 0x%x\n", (*(uint16*)(s->wdata + s->wdata_size)));
+		ShowFatalError("WFIFOSET: Write Buffer Overflow. Connection %d (%u.%u.%u.%u) has written %u bytes on a %u/%u bytes buffer.\n", fd, CONVIP(ip), (unsigned int)len, (unsigned int)s->wdata->write_cursor(), (unsigned int)s->wdata->capacity());
+		ShowDebug("Likely command that caused it: 0x%x\n", WFIFOW(fd,0));
 		// no other chance, make a better fifo model
 		exit(EXIT_FAILURE);
 	}
@@ -906,7 +901,7 @@ static int wfifoset(int fd, size_t len, bool validate)
 	{
 		// dynamic packets allow up to UINT16_MAX bytes (<packet_id>.W <packet_len>.W ...)
 		// all known fixed-size packets are within this limit, so use the same limit
-		ShowFatalError("WFIFOSET: Packet 0x%x is too big. (len=%u, max=%u)\n", (*(uint16*)(s->wdata + s->wdata_size)), (unsigned int)len, 0xFFFFU);
+		ShowFatalError("WFIFOSET: Packet 0x%x is too big. (len=%u, max=%u)\n", WFIFOW(fd,0), (unsigned int)len, 0xFFFFU);
 		exit(EXIT_FAILURE);
 	}
 	else if( len == 0 )
@@ -931,12 +926,12 @@ static int wfifoset(int fd, size_t len, bool validate)
 	if (validate && s->flag.validate == 1)
 		sockt->validateWfifo(fd, len);
 
-	s->wdata_size += len;
+	s->wdata->advance_write(len);
 #ifdef SHOW_SERVER_STATS
 	socket_data_qo += len;
 #endif  // SHOW_SERVER_STATS
 	//If the interserver has 200% of its normal size full, flush the data.
-	if( s->flag.server && s->wdata_size >= 2*FIFOSIZE_SERVERLINK )
+	if (s->flag.server && s->wdata->write_cursor() >= 2 * FIFOSIZE_SERVERLINK)
 		sockt->flush(fd);
 
 	// always keep a WFIFO_SIZE reserve in the buffer
@@ -958,7 +953,7 @@ static void wfifohead(int fd, size_t len)
 	Assert_retv(fd >= 0);
 
 	sockt->session[fd]->last_head_size = (uint32)len;
-	if (sockt->session[fd]->wdata_size + len > sockt->session[fd]->max_wdata)
+	if (sockt->session[fd]->wdata->free_space() < len)
 		sockt->realloc_writefifo(fd, len);
 }
 
@@ -979,7 +974,7 @@ static int do_sockets(int next)
 		if (sockt->session[i] == NULL)
 			continue;
 
-		if (sockt->session[i]->wdata_size > 0)
+		if (sockt->session[i]->wdata->write_cursor() != 0)
 			sockt->session[i]->func_send(i);
 	}
 #endif  // SEND_SHORTLIST
@@ -1075,7 +1070,7 @@ static int do_sockets(int next)
 		if(!sockt->session[i])
 			continue;
 
-		if(sockt->session[i]->wdata_size)
+		if(sockt->session[i]->wdata->write_cursor() != 0)
 			sockt->session[i]->func_send(i);
 
 		if (sockt->session[i]->flag.eof) { //func_send can't free a session, this is safe.
@@ -1110,7 +1105,7 @@ static int do_sockets(int next)
 
 		RFIFOFLUSH(i);
 		// after parse, check client's RFIFO size to know if there is an invalid packet (too big and not parsed)
-		if (sockt->session[i]->rdata_size == sockt->session[i]->max_rdata) {
+		if (sockt->session[i]->rdata->write_cursor() == sockt->session[i]->rdata->capacity()) {
 			sockt->eof(i);
 			continue;
 		}
@@ -1573,8 +1568,8 @@ static void socket_final(void)
 			sockt->close(i);
 
 	// sockt->session[0]
-	aFree(sockt->session[0]->rdata);
-	aFree(sockt->session[0]->wdata);
+	fifo_buffer::destroy(sockt->session[0]->rdata);
+	fifo_buffer::destroy(sockt->session[0]->wdata);
 	aFree(sockt->session[0]);
 
 	aFree(sockt->session);
@@ -1984,17 +1979,17 @@ static void send_shortlist_do_sends(void)
 		if( sockt->session[fd] )
 		{
 			// Send data
-			if( sockt->session[fd]->wdata_size )
+			if (sockt->session[fd]->wdata->write_cursor() != 0)
 				sockt->session[fd]->func_send(fd);
 
 			// If it's been marked as eof, call the parse func on it so that
 			// the socket will be immediately closed.
-			if( sockt->session[fd]->flag.eof )
+			if (sockt->session[fd]->flag.eof)
 				sockt->session[fd]->func_parse(fd);
 
 			// If the session still exists, is not eof and has things left to
 			// be sent from it we'll re-add it to the shortlist.
-			if( sockt->session[fd] && !sockt->session[fd]->flag.eof && sockt->session[fd]->wdata_size )
+			if (sockt->session[fd] && !sockt->session[fd]->flag.eof && sockt->session[fd]->wdata->write_cursor() != 0)
 				send_shortlist_add_fd(fd);
 		}
 	}
