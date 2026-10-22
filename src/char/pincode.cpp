@@ -80,7 +80,7 @@ static void pincode_check(int fd, struct char_session_data *sd)
 	if (strlen(sd->pincode) != 4)
 		return;
 
-	safestrncpy(pin, RFIFOP(char *, fd, 6), sizeof(pin));
+	safestrncpy(pin, RFIFOP(char, fd, 6), sizeof(pin));
 	pincode->decrypt(sd->pincode_seed, pin);
 
 	if (pincode->check_blacklist && pincode->isBlacklisted(pin)) {
@@ -150,7 +150,7 @@ static void pincode_change(int fd, struct char_session_data *sd)
 	if (strlen(sd->pincode) != 4)
 		return;
 
-	safestrncpy(oldpin, RFIFOP(char *, fd, 6), sizeof(oldpin));
+	safestrncpy(oldpin, RFIFOP(char, fd, 6), sizeof(oldpin));
 	pincode->decrypt(sd->pincode_seed, oldpin);
 
 	if (!pincode->compare(fd, sd, oldpin)) {
@@ -159,7 +159,7 @@ static void pincode_change(int fd, struct char_session_data *sd)
 		return;
 	}
 
-	safestrncpy(newpin, RFIFOP(char *, fd, 10), sizeof(newpin));
+	safestrncpy(newpin, RFIFOP(char, fd, 10), sizeof(newpin));
 	pincode->decrypt(sd->pincode_seed, newpin);
 
 	if (pincode->check_blacklist && pincode->isBlacklisted(newpin)) {
@@ -182,7 +182,7 @@ static void pincode_setnew(int fd, struct char_session_data *sd)
 	if (strlen(sd->pincode) == 4)
 		return;
 
-	safestrncpy(newpin, RFIFOP(char *, fd, 6), sizeof(newpin));
+	safestrncpy(newpin, RFIFOP(char, fd, 6), sizeof(newpin));
 	pincode->decrypt(sd->pincode_seed, newpin);
 
 	if (pincode->check_blacklist && pincode->isBlacklisted(newpin)) {
@@ -287,7 +287,7 @@ static void pincode_notifyLoginPinUpdate(int account_id, char *pin)
 	WFIFOHEAD(chr->login_fd, 11);
 	WFIFOW(chr->login_fd, 0) = 0x2738;
 	WFIFOL(chr->login_fd, 2) = account_id;
-	safestrncpy(WFIFOP(char *, chr->login_fd, 6), pin, 5);
+	safestrncpy(WFIFOP(char, chr->login_fd, 6), pin, 5);
 	WFIFOSET(chr->login_fd, 11);
 }
 

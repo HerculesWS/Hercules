@@ -49,12 +49,12 @@
 #include <time.h>
 
 #define WFIFOADDSTR(fd, str) do { \
-		memcpy(WFIFOP(char *, fd, 0), str, strlen(str)); \
+		memcpy(WFIFOP(char, fd, 0), str, strlen(str)); \
 		WFIFOSET(fd, strlen(str)); \
 	} while (false)
 
 #define WFIFOADDBUF(fd, buf, buf_size) do { \
-		memcpy(WFIFOP(char *, fd, 0), buf, buf_size); \
+		memcpy(WFIFOP(char, fd, 0), buf, buf_size); \
 		WFIFOSET(fd, buf_size); \
 	} while (false)
 
