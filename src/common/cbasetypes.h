@@ -262,10 +262,6 @@ typedef uintptr_t uintptr;
 #define strncmpi    strncasecmp
 #define strnicmp    strncasecmp
 #endif
-#if defined(_MSC_VER)
-#define strtoull    _strtoui64
-#define strtoll     _strtoi64
-#endif
 
 // keyword replacement
 #ifdef _MSC_VER
