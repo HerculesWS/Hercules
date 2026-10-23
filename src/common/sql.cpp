@@ -579,8 +579,8 @@ static void Sql_P_ShowDebugMysqlFieldInfo(const char *prefix, enum enum_field_ty
 	const char *sign = (is_unsigned ? "UNSIGNED " : "");
 	const char *type_string = NULL;
 	// [4144] probably can be many types and not supported by all mysql versions because this ignore warning about missing type enum values
-	PRAGMA_GCC46(GCC diagnostic push)
-	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	PRAGMA_GCC(GCC diagnostic push)
+	PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 	switch (type) {
 		default:
 			ShowDebug("%stype=%s%u, length=%lu\n", prefix, sign, (unsigned int)type, length);
@@ -607,7 +607,7 @@ static void Sql_P_ShowDebugMysqlFieldInfo(const char *prefix, enum enum_field_ty
 		SHOW_DEBUG_OF(MYSQL_TYPE_NULL);
 #undef SHOW_DEBUG_OF
 	}
-	PRAGMA_GCC46(GCC diagnostic pop)
+	PRAGMA_GCC(GCC diagnostic pop)
 	ShowDebug("%stype=%s%s, length=%lu%s\n", prefix, sign, type_string, length, length_postfix);
 }
 
@@ -751,8 +751,8 @@ static int SqlStmt_BindParam(struct SqlStmt *self, size_t idx, enum SqlDataType 
 	if (idx >= self->max_params)
 		return SQL_SUCCESS; // out of range - ignore
 
-PRAGMA_GCC46(GCC diagnostic push)
-PRAGMA_GCC46(GCC diagnostic ignored "-Wcast-qual")
+PRAGMA_GCC(GCC diagnostic push)
+PRAGMA_GCC(GCC diagnostic ignored "-Wcast-qual")
 	/*
 	 * MySQL uses the same struct with a non-const buffer for both
 	 * parameters (input) and columns (output).
@@ -760,7 +760,7 @@ PRAGMA_GCC46(GCC diagnostic ignored "-Wcast-qual")
 	 * dropping a const qualifier here.
 	 */
 	return Sql_P_BindSqlDataType(self->params+idx, buffer_type, (void *)buffer, buffer_len, NULL, NULL);
-PRAGMA_GCC46(GCC diagnostic pop)
+PRAGMA_GCC(GCC diagnostic pop)
 }
 
 /// Executes the prepared statement.
