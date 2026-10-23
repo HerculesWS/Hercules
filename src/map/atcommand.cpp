@@ -9638,8 +9638,8 @@ ACMD(set)
 		}
 	}
 
-	PRAGMA_GCC46(GCC diagnostic push)
-	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	PRAGMA_GCC(GCC diagnostic push)
+	PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 	switch (data->type) {
 		case C_INT:
 			// %s value is now :%d
@@ -9658,7 +9658,7 @@ ACMD(set)
 			snprintf(atcmd_output, sizeof(atcmd_output),msg_fd(fd, MSGTBL_SET_UNSUPPORTED_TYPE),reg,data->type);
 			break;
 	}
-	PRAGMA_GCC46(GCC diagnostic pop)
+	PRAGMA_GCC(GCC diagnostic pop)
 	clif->message(fd, atcmd_output);
 
 	aFree(data);

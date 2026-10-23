@@ -338,8 +338,8 @@ static int elemental_clean_single_effect(struct elemental_data *ed, uint16 skill
 	bl = battle->get_master(&ed->bl);
 
 	if( type ) {
-		PRAGMA_GCC46(GCC diagnostic push)
-		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+		PRAGMA_GCC(GCC diagnostic push)
+		PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 		switch (type) {
 				// Just remove status change.
 			case SC_PYROTECHNIC_OPTION:
@@ -373,7 +373,7 @@ static int elemental_clean_single_effect(struct elemental_data *ed, uint16 skill
 				ShowWarning("Invalid SC=%d in elemental_clean_single_effect\n",type);
 				break;
 		}
-		PRAGMA_GCC46(GCC diagnostic pop)
+		PRAGMA_GCC(GCC diagnostic pop)
 	}
 
 	return 1;

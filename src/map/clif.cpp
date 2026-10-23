@@ -3607,8 +3607,8 @@ static void clif_updatestatus(struct map_session_data *sd, enum status_point_typ
 	WFIFOW(fd, 0) = HEADER_ZC_PAR_CHANGE;
 	WFIFOW(fd, 2) = type;
 
-	PRAGMA_GCC46(GCC diagnostic push)
-	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	PRAGMA_GCC(GCC diagnostic push)
+	PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 	switch (type) {
 			// 00b0
 		case SP_WEIGHT:
@@ -3853,14 +3853,14 @@ static void clif_updatestatus(struct map_session_data *sd, enum status_point_typ
 			ShowError("clif->updatestatus : unrecognized type %d\n",type);
 			return;
 	}
-	PRAGMA_GCC46(GCC diagnostic pop)
+	PRAGMA_GCC(GCC diagnostic pop)
 
 	WFIFOW(fd, 0) = packetId;
 	WFIFOSET(fd, packet_len(packetId));
 
 	// Additional update packets that should be sent right after
-	PRAGMA_GCC46(GCC diagnostic push)
-	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	PRAGMA_GCC(GCC diagnostic push)
+	PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 	switch (type) {
 		case SP_BASELEVEL:
 			pc->update_job_and_level(sd);
@@ -3877,7 +3877,7 @@ static void clif_updatestatus(struct map_session_data *sd, enum status_point_typ
 				clif->bg_hp(sd);
 			break;
 	}
-	PRAGMA_GCC46(GCC diagnostic pop)
+	PRAGMA_GCC(GCC diagnostic pop)
 }
 
 /// Notifies client of a parameter change of an another player (ZC_PAR_CHANGE_USER).
@@ -3892,8 +3892,8 @@ static void clif_changestatus(struct map_session_data *sd, enum status_point_typ
 	WBUFL(buf,2)=sd->bl.id;
 	WBUFW(buf,6)=type;
 
-	PRAGMA_GCC46(GCC diagnostic push)
-	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	PRAGMA_GCC(GCC diagnostic push)
+	PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 	switch(type)
 	{
 		case SP_MANNER:
@@ -3903,7 +3903,7 @@ static void clif_changestatus(struct map_session_data *sd, enum status_point_typ
 			ShowError("clif_changestatus : unrecognized type %d.\n",type);
 			return;
 	}
-	PRAGMA_GCC46(GCC diagnostic pop)
+	PRAGMA_GCC(GCC diagnostic pop)
 
 	clif->send(buf,packet_len(0x1ab),&sd->bl,AREA_WOS);
 }
@@ -10127,11 +10127,11 @@ static void clif_mobname_additional_ack(int fd, struct block_list *bl)
 	//can parse it. [Skotlex]
 	if ((battle_config.show_mob_info & (4 | 1 | 2)) != 0 && str_p != mobhp) {
 		// ignoring bound check because gcc may detect is as error
-		PRAGMA_GCC46(GCC diagnostic push)
-		PRAGMA_GCC46(GCC diagnostic ignored "-Warray-bounds")
-		PRAGMA_GCC7(GCC diagnostic ignored "-Wstringop-overflow")
+		PRAGMA_GCC(GCC diagnostic push)
+		PRAGMA_GCC(GCC diagnostic ignored "-Warray-bounds")
+		PRAGMA_GCCONLY(GCC diagnostic ignored "-Wstringop-overflow")
 		*(str_p - 3) = '\0'; //Remove trailing space + pipe.
-		PRAGMA_GCC46(GCC diagnostic pop)
+		PRAGMA_GCC(GCC diagnostic pop)
 		memcpy(packet.party_name, mobhp, NAME_LENGTH);
 	}
 
@@ -19420,8 +19420,8 @@ static void clif_mercenary_updatestatus(struct map_session_data *sd, enum status
 	WFIFOW(fd,0) = 0x2a2;
 	WFIFOW(fd,2) = type;
 
-	PRAGMA_GCC46(GCC diagnostic push)
-	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	PRAGMA_GCC(GCC diagnostic push)
+	PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 	switch (type) {
 		case SP_ATK1:
 		{
@@ -19469,7 +19469,7 @@ static void clif_mercenary_updatestatus(struct map_session_data *sd, enum status
 			WFIFOL(fd,4) = mercenary->get_faith(md);
 			break;
 	}
-	PRAGMA_GCC46(GCC diagnostic pop)
+	PRAGMA_GCC(GCC diagnostic pop)
 
 	WFIFOSET(fd,packet_len(0x2a2));
 }
@@ -20109,8 +20109,8 @@ static void clif_elemental_updatestatus(struct map_session_data *sd, enum status
 	WFIFOW(fd,0) = 0x81e;
 	WFIFOW(fd,2) = type;
 
-	PRAGMA_GCC46(GCC diagnostic push)
-	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	PRAGMA_GCC(GCC diagnostic push)
+	PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 	switch (type) {
 		case SP_HP:
 			WFIFOL(fd,4) = estatus->hp;
@@ -20125,7 +20125,7 @@ static void clif_elemental_updatestatus(struct map_session_data *sd, enum status
 			WFIFOL(fd,4) = estatus->max_sp;
 			break;
 	}
-	PRAGMA_GCC46(GCC diagnostic pop)
+	PRAGMA_GCC(GCC diagnostic pop)
 
 	WFIFOSET(fd,8);
 }

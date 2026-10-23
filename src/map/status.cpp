@@ -6696,8 +6696,8 @@ static void status_set_viewdata(struct block_list *bl, int class_)
 		struct map_session_data *sd = BL_UCAST(BL_PC, bl);
 		if (pc->db_checkid(class_)) {
 			if (pc_isridingpeco(sd)) {
-				PRAGMA_GCC46(GCC diagnostic push)
-				PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+				PRAGMA_GCC(GCC diagnostic push)
+				PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 				switch (class_) {
 					//Adapt class to a Mounted one.
 					case JOB_KNIGHT:
@@ -6719,7 +6719,7 @@ static void status_set_viewdata(struct block_list *bl, int class_)
 						class_ = JOB_BABY_CRUSADER2;
 						break;
 				}
-				PRAGMA_GCC46(GCC diagnostic pop)
+				PRAGMA_GCC(GCC diagnostic pop)
 			}
 			sd->vd.class_ = class_;
 			clif->get_weapon_view(sd, &sd->vd.weapon, &sd->vd.shield);
@@ -6912,8 +6912,8 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 
 	if (sc && sc->data[SC_KINGS_GRACE]) {
 		// Protects against status effects
-		PRAGMA_GCC46(GCC diagnostic push)
-		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+		PRAGMA_GCC(GCC diagnostic push)
+		PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 		switch (type) {
 			case SC_POISON:
 			case SC_BLIND:
@@ -6935,11 +6935,11 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 			case SC__CHAOS:
 				return 0;
 		}
-		PRAGMA_GCC46(GCC diagnostic pop)
+		PRAGMA_GCC(GCC diagnostic pop)
 	}
 
-	PRAGMA_GCC46(GCC diagnostic push)
-	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	PRAGMA_GCC(GCC diagnostic push)
+	PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 	switch (type) {
 	case SC_STUN:
 		sc_def = st->vit*100;
@@ -7110,7 +7110,7 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 			return 0;
 		return tick ? tick : 1;
 	}
-	PRAGMA_GCC46(GCC diagnostic pop)
+	PRAGMA_GCC(GCC diagnostic pop)
 
 	if (sd) {
 
@@ -7161,8 +7161,8 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 		rate -= sc_def2;
 
 		//Minimum chances
-		PRAGMA_GCC46(GCC diagnostic push)
-		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+		PRAGMA_GCC(GCC diagnostic push)
+		PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 		switch (type) {
 		case SC_OBLIVIONCURSE:
 			rate = std::max(rate,500); //Minimum of 5%
@@ -7171,7 +7171,7 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 			rate = std::max(rate,5000); //Minimum of 50%
 			break;
 		}
-		PRAGMA_GCC46(GCC diagnostic pop)
+		PRAGMA_GCC(GCC diagnostic pop)
 
 		//Item resistance (only applies to rate%)
 		if (sd && SC_COMMON_MIN <= type && type <= SC_COMMON_MAX)
@@ -7200,8 +7200,8 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 	tick -= tick_def2;
 
 	//Minimum durations
-	PRAGMA_GCC46(GCC diagnostic push)
-	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	PRAGMA_GCC(GCC diagnostic push)
+	PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 	switch (type) {
 	case SC_ANKLESNARE:
 	case SC_BURNING:
@@ -7224,7 +7224,7 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 		tick = std::max(tick, 1);
 		break;
 	}
-	PRAGMA_GCC46(GCC diagnostic pop)
+	PRAGMA_GCC(GCC diagnostic pop)
 
 	return tick;
 #undef SCDEF_LVL_CAP
@@ -7365,8 +7365,8 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 	}
 
 	undead_flag = battle->check_undead(st->race, st->def_ele);
-	PRAGMA_GCC46(GCC diagnostic push)
-	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	PRAGMA_GCC(GCC diagnostic push)
+	PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 	// Check for inmunities / sc fails
 	switch (type) {
 		case SC_DRUMBATTLE:
@@ -7691,7 +7691,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				return 0;
 			break;
 	}
-	PRAGMA_GCC46(GCC diagnostic pop)
+	PRAGMA_GCC(GCC diagnostic pop)
 
 	//Check for BOSS resistances
 	if (st->mode & MD_BOSS && !(flag & SCFLAG_NOAVOID)) {
@@ -7705,8 +7705,8 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 
 	//Check for overlapping fails
 	if( (sce = sc->data[type]) ) {
-		PRAGMA_GCC46(GCC diagnostic push)
-		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+		PRAGMA_GCC(GCC diagnostic push)
+		PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 		switch( type ) {
 			case SC_MER_FLEE:
 			case SC_MER_ATK:
@@ -7839,14 +7839,14 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				if(sce->val1 > val1)
 					return 1; //Return true to not mess up skill animations. [Skotlex]
 		}
-		PRAGMA_GCC46(GCC diagnostic pop)
+		PRAGMA_GCC(GCC diagnostic pop)
 	}
 
 	vd = status->get_viewdata(bl);
 	calc_flag = status->dbs->ChangeFlagTable[type];
 	if(!(flag&SCFLAG_LOADED)) { // Do not parse val settings when loading SCs
-		PRAGMA_GCC46(GCC diagnostic push)
-		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+		PRAGMA_GCC(GCC diagnostic push)
+		PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 		switch(type) {
 			case SC_AUTOTRADE:
 			case SC_KSPROTECTED:
@@ -9995,10 +9995,10 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 					return 0;
 				}
 		}
-		PRAGMA_GCC46(GCC diagnostic pop)
+		PRAGMA_GCC(GCC diagnostic pop)
 	} else { // Special considerations when loading SC data.
-		PRAGMA_GCC46(GCC diagnostic push)
-		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+		PRAGMA_GCC(GCC diagnostic push)
+		PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 		switch (type) {
 			case SC_WEDDING:
 			case SC_XMAS:
@@ -10017,7 +10017,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 			case SC_KAAHI:
 				val4 = INVALID_TIMER;
 				break;
-		PRAGMA_GCC46(GCC diagnostic pop)
+		PRAGMA_GCC(GCC diagnostic pop)
 		}
 	}
 
@@ -10107,8 +10107,8 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 	if(sd && sd->pd)
 		pet->sc_check(sd, type); //Skotlex: Pet Status Effect Healing
 
-	PRAGMA_GCC46(GCC diagnostic push)
-	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	PRAGMA_GCC(GCC diagnostic push)
+	PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 	switch (type) {
 		case SC_BERSERK:
 			if (!(sce->val2)) { //don't heal if already set
@@ -10198,7 +10198,7 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 					clif->crimson_marker(sd, bl, false);
 			break;
 	}
-	PRAGMA_GCC46(GCC diagnostic pop)
+	PRAGMA_GCC(GCC diagnostic pop)
 
 	if( opt_flag&2 && sd && sd->touching_id )
 		npc->touchnext_areanpc(sd,false); // run OnTouch_ on next char in range
@@ -10245,8 +10245,8 @@ static void status_change_start_display(struct map_session_data *sd, enum sc_typ
 
 	if (sd && status->dbs->DisplayType[type]) {
 		int dval1 = 0, dval2 = 0, dval3 = 0;
-		PRAGMA_GCC46(GCC diagnostic push)
-		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+		PRAGMA_GCC(GCC diagnostic push)
+		PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 		switch (type) {
 			case SC_ALL_RIDING:
 				dval1 = 1;
@@ -10260,7 +10260,7 @@ static void status_change_start_display(struct map_session_data *sd, enum sc_typ
 				dval1 = val1;
 				break;
 		}
-		PRAGMA_GCC46(GCC diagnostic pop)
+		PRAGMA_GCC(GCC diagnostic pop)
 		status->display_add(sd, type, dval1, dval2, dval3);
 	}
 }
@@ -10275,8 +10275,8 @@ static void status_change_start_display(struct map_session_data *sd, enum sc_typ
 static int status_get_val_flag(enum sc_type type)
 {
 	int val_flag = 0;
-	PRAGMA_GCC46(GCC diagnostic push)
-	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	PRAGMA_GCC(GCC diagnostic push)
+	PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 	switch (type) {
 		case SC_CLAN_INFO:
 			val_flag |= 1 | 2;
@@ -10414,7 +10414,7 @@ static int status_get_val_flag(enum sc_type type)
 			val_flag |= 1;
 			break;
 	}
-	PRAGMA_GCC46(GCC diagnostic pop)
+	PRAGMA_GCC(GCC diagnostic pop)
 	return val_flag;
 }
 
@@ -10437,8 +10437,8 @@ static int status_change_start_set_option(struct block_list *bl, struct status_c
 
 	nullpo_retr(true, bl);
 	nullpo_retr(true, sc);
-	PRAGMA_GCC46(GCC diagnostic push)
-	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	PRAGMA_GCC(GCC diagnostic push)
+	PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 	switch (type) {
 		//OPT1
 		case SC_STONE:         sc->opt1 = OPT1_STONEWAIT;  break;
@@ -10616,7 +10616,7 @@ static int status_change_start_set_option(struct block_list *bl, struct status_c
 		default:
 			opt_flag = 0;
 	}
-	PRAGMA_GCC46(GCC diagnostic pop)
+	PRAGMA_GCC(GCC diagnostic pop)
 	return opt_flag;
 }
 
@@ -10629,8 +10629,8 @@ static int status_change_start_set_option(struct block_list *bl, struct status_c
 static void status_change_start_stop_action(struct block_list *bl, enum sc_type type)
 {
 	nullpo_retv(bl);
-	PRAGMA_GCC46(GCC diagnostic push)
-	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	PRAGMA_GCC(GCC diagnostic push)
+	PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 	switch (type) {
 		case SC_VACUUM_EXTREME:
 			if (!map_flag_gvg(bl->m))
@@ -10706,7 +10706,7 @@ static void status_change_start_stop_action(struct block_list *bl, enum sc_type 
 				unit->skillcastcancel(bl, 0);
 			break;
 	}
-	PRAGMA_GCC46(GCC diagnostic pop)
+	PRAGMA_GCC(GCC diagnostic pop)
 }
 
 /**
@@ -10732,8 +10732,8 @@ static bool status_end_sc_before_start(struct block_list *bl, struct status_data
 	nullpo_retr(true, st);
 	nullpo_retr(true, sc);
 
-	PRAGMA_GCC46(GCC diagnostic push)
-	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	PRAGMA_GCC(GCC diagnostic push)
+	PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 	switch (type) {
 	case SC_BLESSING:
 		// TODO: Blessing and Agi up should do 1 damage against players on Undead Status, even on PvM
@@ -11130,7 +11130,7 @@ static bool status_end_sc_before_start(struct block_list *bl, struct status_data
 		status_change_end(bl, SC_SOULFAIRY, INVALID_TIMER);
 		break;
 	}
-	PRAGMA_GCC46(GCC diagnostic pop)
+	PRAGMA_GCC(GCC diagnostic pop)
 
 	return false;
 }
@@ -11169,8 +11169,8 @@ static bool status_is_immune_to_status(struct status_change *sc, enum sc_type ty
 	if (sc->data[SC_REFRESH]) {
 		if (type >= SC_COMMON_MIN && type <= SC_COMMON_MAX) // Confirmed.
 			return true; // Immune to status ailements
-		PRAGMA_GCC46(GCC diagnostic push)
-		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+		PRAGMA_GCC(GCC diagnostic push)
+		PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 		switch (type) {
 			case SC__CHAOS:
 			case SC_STONE:
@@ -11186,12 +11186,12 @@ static bool status_is_immune_to_status(struct status_change *sc, enum sc_type ty
 			case SC_MANDRAGORA:
 				return true;
 		}
-		PRAGMA_GCC46(GCC diagnostic pop)
+		PRAGMA_GCC(GCC diagnostic pop)
 	} else if (sc->data[SC_INSPIRATION]) {
 		if (type >= SC_COMMON_MIN && type <= SC_COMMON_MAX)
 			return true; // Immune to status ailements
-		PRAGMA_GCC46(GCC diagnostic push)
-		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+		PRAGMA_GCC(GCC diagnostic push)
+		PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 		switch (type) {
 			case SC__CHAOS:
 			case SC_STONE:
@@ -11214,7 +11214,7 @@ static bool status_is_immune_to_status(struct status_change *sc, enum sc_type ty
 			case SC__WEAKNESS:
 				return true;
 		}
-		PRAGMA_GCC46(GCC diagnostic pop)
+		PRAGMA_GCC(GCC diagnostic pop)
 	}
 	return false;
 }
@@ -11327,8 +11327,8 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 		if (sce->timer != INVALID_TIMER) //Could be a SC with infinite duration
 			timer->delete_(sce->timer,status->change_timer);
 		if (sc->opt1) {
-			PRAGMA_GCC46(GCC diagnostic push)
-			PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+			PRAGMA_GCC(GCC diagnostic push)
+			PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 			switch (type) {
 				//"Ugly workaround"  [Skotlex]
 				//delays status change ending so that a skill that sets opt1 fails to
@@ -11348,7 +11348,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 						return 1;
 					}
 			}
-			PRAGMA_GCC46(GCC diagnostic pop)
+			PRAGMA_GCC(GCC diagnostic pop)
 		}
 	}
 
@@ -11370,8 +11370,8 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 
 	map->freeblock_lock();
 
-	PRAGMA_GCC46(GCC diagnostic push)
-	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	PRAGMA_GCC(GCC diagnostic push)
+	PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 	switch(type) {
 		case SC_GRANITIC_ARMOR:
 		{
@@ -12075,11 +12075,11 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 			break;
 
 	}
-	PRAGMA_GCC46(GCC diagnostic pop)
+	PRAGMA_GCC(GCC diagnostic pop)
 
 	opt_flag = 1;
-	PRAGMA_GCC46(GCC diagnostic push)
-	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	PRAGMA_GCC(GCC diagnostic push)
+	PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 	switch(type) {
 		case SC_STONE:
 		case SC_FREEZE:
@@ -12262,7 +12262,7 @@ static int status_change_end_(struct block_list *bl, enum sc_type type, int tid)
 		default:
 			opt_flag = 0;
 	}
-	PRAGMA_GCC46(GCC diagnostic pop)
+	PRAGMA_GCC(GCC diagnostic pop)
 
 #ifdef ANTI_MAYAP_CHEAT
 	if (invisible && !(sc->option&(OPTION_HIDE|OPTION_CLOAK|OPTION_INVISIBLE))) {
@@ -12405,8 +12405,8 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 		ShowError("status_change_timer: Unexpected NULL status change id: %d data: %" PRIdPTR "\n", id, data); \
 } while(0)
 
-	PRAGMA_GCC46(GCC diagnostic push)
-	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	PRAGMA_GCC(GCC diagnostic push)
+	PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 	switch(type) {
 		case SC_MAXIMIZEPOWER:
 		case SC_CLOAKING:
@@ -13333,7 +13333,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 			}
 			break;
 	}
-	PRAGMA_GCC46(GCC diagnostic pop)
+	PRAGMA_GCC(GCC diagnostic pop)
 
 	// default for all non-handled control paths is to end the status
 	return status_change_end( bl,type,tid );
@@ -13359,8 +13359,8 @@ static int status_change_timer_sub(struct block_list *bl, va_list ap)
 
 	tsc = status->get_sc(bl);
 
-	PRAGMA_GCC46(GCC diagnostic push)
-	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	PRAGMA_GCC(GCC diagnostic push)
+	PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 	switch( type ) {
 		case SC_SIGHT: /* Reveal hidden ennemy on 3*3 range */
 			if( tsc && tsc->data[SC__SHADOWFORM] && (sce && sce->val4 >0 && sce->val4%2000 == 0 /* for every 2 seconds do the checking */) &&
@@ -13422,7 +13422,7 @@ static int status_change_timer_sub(struct block_list *bl, va_list ap)
 			}
 			break;
 	}
-	PRAGMA_GCC46(GCC diagnostic pop)
+	PRAGMA_GCC(GCC diagnostic pop)
 	return 0;
 }
 
@@ -13734,8 +13734,8 @@ static int status_change_clear_buffs(struct block_list *bl, int type)
 			if( type&2 && !(status->get_sc_type((enum sc_type)i)&SC_DEBUFF) )
 				continue;
 		}
-		PRAGMA_GCC46(GCC diagnostic push)
-		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+		PRAGMA_GCC(GCC diagnostic push)
+		PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 		switch (i) {
 		case SC_DEEP_SLEEP:
 		case SC_FROSTMISTY:
@@ -13763,7 +13763,7 @@ static int status_change_clear_buffs(struct block_list *bl, int type)
 				continue;
 
 		}
-		PRAGMA_GCC46(GCC diagnostic pop)
+		PRAGMA_GCC(GCC diagnostic pop)
 		status_change_end(bl, (sc_type)i, INVALID_TIMER);
 	}
 
@@ -13788,8 +13788,8 @@ static int status_change_spread(struct block_list *src, struct block_list *bl, i
 		if( !sc->data[i] || i == SC_COMMON_MAX )
 			continue;
 
-		PRAGMA_GCC46(GCC diagnostic push)
-		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+		PRAGMA_GCC(GCC diagnostic push)
+		PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 		switch( i ) {
 			//Debuffs that can be spreaded.
 			// NOTE: We'll add/delte SCs when we are able to confirm it.
@@ -13851,7 +13851,7 @@ static int status_change_spread(struct block_list *src, struct block_list *bl, i
 		default:
 			continue;
 		}
-		PRAGMA_GCC46(GCC diagnostic pop)
+		PRAGMA_GCC(GCC diagnostic pop)
 		if( i ) {
 			data.val1 = sc->data[i]->val1;
 			data.val2 = sc->data[i]->val2;

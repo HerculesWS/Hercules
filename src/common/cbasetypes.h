@@ -280,26 +280,19 @@ typedef uintptr_t uintptr;
 #define GCC_VERSION 0
 #endif
 
-// Pragma macro only enabled on gcc >= 4.6 or clang - borrowed from Mana Plus
-#if defined(__GNUC__) && (defined(__clang__) || GCC_VERSION >= 40600)
-#define PRAGMA_GCC46(str) _Pragma(#str)
-#else // ! defined(__GNUC__) && (defined(__clang__) || GCC_VERSION >= 40600)
-#define PRAGMA_GCC46(str)
-#endif // ! defined(__GNUC__) && (defined(__clang__) || GCC_VERSION >= 40600)
+// Pragma macro only enabled on gcc or clang - borrowed from Mana Plus
+#if defined(__GNUC__)
+#define PRAGMA_GCC(str) _Pragma(#str)
+#else
+#define PRAGMA_GCC(str)
+#endif
 
-// Pragma macro only enabled on gcc >= 5 or clang - borrowed from Mana Plus
-#if defined(__GNUC__) && (GCC_VERSION >= 50000)
-#define PRAGMA_GCC5(str) _Pragma(#str)
-#else // ! defined(__GNUC__) && (GCC_VERSION >= 50000)
-#define PRAGMA_GCC5(str)
-#endif // ! defined(__GNUC__) && (GCC_VERSION >= 50000)
-
-// Pragma macro only enabled on gcc >= 7
-#if defined(__GNUC__) && (GCC_VERSION >= 70000)
-#define PRAGMA_GCC7(str) _Pragma(#str)
-#else // ! defined(__GNUC__) && (GCC_VERSION >= 70000)
-#define PRAGMA_GCC7(str)
-#endif // ! defined(__GNUC__) && (GCC_VERSION >= 70000)
+// Pragma macro only enabled on gcc (and not on clang)
+#if defined(__GNUC__) && !defined(__clang__)
+#define PRAGMA_GCCONLY(str) _Pragma(#str)
+#else
+#define PRAGMA_GCCONLY(str)
+#endif
 
 // Pragma macro only enabled on gcc >= 9
 #if defined(__GNUC__) && (GCC_VERSION >= 90000)

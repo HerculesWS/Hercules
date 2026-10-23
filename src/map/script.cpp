@@ -260,8 +260,8 @@ static void script_reportdata(struct script_data *data)
 {
 	if( data == NULL )
 		return;
-	PRAGMA_GCC46(GCC diagnostic push)
-	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	PRAGMA_GCC(GCC diagnostic push)
+	PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 	switch( data->type ) {
 		case C_NOP:// no value
 			ShowDebug("Data: nothing (nil)\n");
@@ -297,7 +297,7 @@ static void script_reportdata(struct script_data *data)
 			ShowDebug("Data: %s\n", script->op2name(data->type));
 			break;
 	}
-	PRAGMA_GCC46(GCC diagnostic pop)
+	PRAGMA_GCC(GCC diagnostic pop)
 }
 
 /// Reports on the console information about the current built-in function.
@@ -703,8 +703,8 @@ static void add_scriptl(int l)
 {
 	int backpatch = script->str_data[l].backpatch;
 
-	PRAGMA_GCC46(GCC diagnostic push)
-	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	PRAGMA_GCC(GCC diagnostic push)
+	PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 	switch(script->str_data[l].type) {
 		case C_POS:
 		case C_USERFUNC_POS:
@@ -734,7 +734,7 @@ static void add_scriptl(int l)
 			script->addb(l>>16);
 			break;
 	}
-	PRAGMA_GCC46(GCC diagnostic pop)
+	PRAGMA_GCC(GCC diagnostic pop)
 }
 
 /*==========================================
@@ -1210,8 +1210,8 @@ static const char *parse_variable(const char *p)
 		return NULL;
 	}
 
-	PRAGMA_GCC46(GCC diagnostic push)
-	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	PRAGMA_GCC(GCC diagnostic push)
+	PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 	switch( type ) {
 		case C_ADD_PRE: // pre ++
 		case C_SUB_PRE: // pre --
@@ -1231,7 +1231,7 @@ static const char *parse_variable(const char *p)
 		default: // everything else
 			p = script->skip_space( &p[2] );
 	}
-	PRAGMA_GCC46(GCC diagnostic pop)
+	PRAGMA_GCC(GCC diagnostic pop)
 
 	nullpo_ret(p); // Can't be NULL but silence gcc warnings
 
@@ -3049,8 +3049,8 @@ static struct script_code *parse_script(const char *src, const char *file, int l
 
 			ShowMessage("%06x %s", i, script->op2name(op));
 
-			PRAGMA_GCC46(GCC diagnostic push)
-			PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+			PRAGMA_GCC(GCC diagnostic push)
+			PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 			switch (op) {
 			case C_INT:
 				ShowMessage(" %d", script->get_num(&script->buf, &i));
@@ -3070,7 +3070,7 @@ static struct script_code *parse_script(const char *src, const char *file, int l
 				i += j + 1;
 				break;
 			}
-			PRAGMA_GCC46(GCC diagnostic pop)
+			PRAGMA_GCC(GCC diagnostic pop)
 			ShowMessage(CL_CLL "\n");
 		}
 #endif
@@ -4150,8 +4150,8 @@ static struct script_data *push_retinfo(struct script_stack *stack, struct scrip
 static struct script_data *push_copy(struct script_stack *stack, int pos)
 {
 	nullpo_retr(NULL, stack);
-	PRAGMA_GCC46(GCC diagnostic push)
-	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	PRAGMA_GCC(GCC diagnostic push)
+	PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 	switch( stack->stack_data[pos].type ) {
 		case C_CONSTSTR:
 			return script->push_conststr(stack, stack->stack_data[pos].u.str);
@@ -4171,7 +4171,7 @@ static struct script_data *push_copy(struct script_stack *stack, int pos)
 			);
 			break;
 		}
-	PRAGMA_GCC46(GCC diagnostic pop)
+	PRAGMA_GCC(GCC diagnostic pop)
 }
 
 /// Removes the values in indexes [start,end[ from the stack.
@@ -4496,8 +4496,8 @@ static void op_2str(struct script_state *st, int op, const char *s1, const char 
 {
 	int a = 0;
 
-	PRAGMA_GCC46(GCC diagnostic push)
-	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	PRAGMA_GCC(GCC diagnostic push)
+	PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 	switch(op) {
 	case C_EQ: a = (strcmp(s1,s2) == 0); break;
 	case C_NE: a = (strcmp(s1,s2) != 0); break;
@@ -4585,7 +4585,7 @@ static void op_2str(struct script_state *st, int op, const char *s1, const char 
 		st->state = END;
 		return;
 	}
-	PRAGMA_GCC46(GCC diagnostic pop)
+	PRAGMA_GCC(GCC diagnostic pop)
 
 	script_pushint(st,a);
 }
@@ -4597,8 +4597,8 @@ static void op_2num(struct script_state *st, int op, int i1, int i2)
 	int ret;
 	int64 ret64;
 
-	PRAGMA_GCC46(GCC diagnostic push)
-	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	PRAGMA_GCC(GCC diagnostic push)
+	PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 	switch( op ) {
 	case C_AND:     ret = i1 & i2;    break;
 	case C_OR:      ret = i1 | i2;    break;
@@ -4650,7 +4650,7 @@ static void op_2num(struct script_state *st, int op, int i1, int i2)
 			ret = INT_MAX;
 		}
 	}
-	PRAGMA_GCC46(GCC diagnostic pop)
+	PRAGMA_GCC(GCC diagnostic pop)
 
 	script_pushint(st, ret);
 }
@@ -4677,8 +4677,8 @@ static void op_2(struct script_state *st, int op)
 	script->get_val(st, left);
 	script->get_val(st, right);
 
-	PRAGMA_GCC46(GCC diagnostic push)
-	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	PRAGMA_GCC(GCC diagnostic push)
+	PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 	// automatic conversions
 	switch( op )
 	{
@@ -4695,7 +4695,7 @@ static void op_2(struct script_state *st, int op)
 		}
 		break;
 	}
-	PRAGMA_GCC46(GCC diagnostic pop)
+	PRAGMA_GCC(GCC diagnostic pop)
 
 	if( data_isstring(left) && data_isstring(right) )
 	{// ss => op_2str
@@ -4756,8 +4756,8 @@ static void op_1(struct script_state *st, int op)
 	i1 = (int)data->u.num;
 	script_removetop(st, -1, 0);
 
-	PRAGMA_GCC46(GCC diagnostic push)
-	PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+	PRAGMA_GCC(GCC diagnostic push)
+	PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 	switch( op ) {
 		case C_NEG: i1 = -i1; break;
 		case C_NOT: i1 = ~i1; break;
@@ -4769,7 +4769,7 @@ static void op_1(struct script_state *st, int op)
 			st->state = END;
 			return;
 	}
-	PRAGMA_GCC46(GCC diagnostic pop)
+	PRAGMA_GCC(GCC diagnostic pop)
 
 	script_pushint(st, i1);
 }
@@ -5111,8 +5111,8 @@ static void run_script_main(struct script_state *st)
 
 	while( st->state == RUN ) {
 		enum c_op c = script->get_com(&st->script->script_buf, &st->pos);
-		PRAGMA_GCC46(GCC diagnostic push)
-		PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+		PRAGMA_GCC(GCC diagnostic push)
+		PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 		switch(c) {
 			case C_EOL:
 				if( stack->defsp > stack->sp ) {
@@ -5228,7 +5228,7 @@ static void run_script_main(struct script_state *st)
 				st->state=END;
 				break;
 		}
-		PRAGMA_GCC46(GCC diagnostic pop)
+		PRAGMA_GCC(GCC diagnostic pop)
 		if( !st->freeloop && cmdcount>0 && (--cmdcount)<=0 ) {
 			ShowError("run_script: too many opeartions being processed non-stop !\n");
 			script->reportsrc(st);
@@ -25247,8 +25247,8 @@ static BUILDIN(is_function)
 		int n = script->search_str(str);
 
 		if (n >= 0) {
-			PRAGMA_GCC46(GCC diagnostic push)
-			PRAGMA_GCC46(GCC diagnostic ignored "-Wswitch-enum")
+			PRAGMA_GCC(GCC diagnostic push)
+			PRAGMA_GCC(GCC diagnostic ignored "-Wswitch-enum")
 			switch (script->str_data[n].type) {
 			case C_FUNC:
 				type = FUNCTION_IS_COMMAND;
@@ -25267,7 +25267,7 @@ static BUILDIN(is_function)
 					type = FUNCTION_IS_LOCAL;
 				}
 			}
-			PRAGMA_GCC46(GCC diagnostic pop)
+			PRAGMA_GCC(GCC diagnostic pop)
 		}
 	}
 
