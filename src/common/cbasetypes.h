@@ -101,7 +101,7 @@
 #endif
 
 // disable attributed stuff on non-GNU
-#if !defined(__GNUC__) && !defined(MINGW)
+#if !defined(__GNUC__) && !defined(MINGW) && !defined(__clang__)
 #  define  __attribute__(x)
 #endif
 
