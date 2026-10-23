@@ -198,9 +198,7 @@ enum windows_ver_suite {
 #endif // WIN32
 
 // Compiler detection <http://sourceforge.net/p/predef/wiki/Compilers/>
-#if defined(__BORLANDC__)
-#define SYSINFO_COMPILER "Borland C++"
-#elif defined(__clang__)
+#if defined(__clang__)
 #define SYSINFO_COMPILER "Clang v" EXPAND_AND_QUOTE(__clang_major__) "." EXPAND_AND_QUOTE(__clang_minor__) "." EXPAND_AND_QUOTE(__clang_patchlevel__)
 #elif defined(__INTEL_COMPILER)
 #define SYSINFO_COMPILER "Intel CC v" EXPAND_AND_QUOTE(__INTEL_COMPILER)
