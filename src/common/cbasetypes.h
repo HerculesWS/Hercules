@@ -253,9 +253,6 @@ typedef uintptr_t uintptr;
 #define strcasecmp  stricmp
 #define strncasecmp strnicmp
 #define strncmpi    strnicmp
-#if _MSC_VER < 1900
-#define snprintf    _snprintf
-#endif
 #else
 #define strcmpi     strcasecmp
 #define stricmp     strcasecmp
