@@ -44,7 +44,7 @@
 //////////////////////////////////////////////////////////////////////////
 // setting some defines on platforms
 //////////////////////////////////////////////////////////////////////////
-#if (defined(__WIN32__) || defined(__WIN32) || defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER) || defined(__BORLANDC__)) && !defined(WIN32)
+#if (defined(__WIN32__) || defined(__WIN32) || defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)) && !defined(WIN32)
 #define WIN32
 #endif
 
@@ -249,11 +249,11 @@ typedef uintptr_t uintptr;
 //////////////////////////////////////////////////////////////////////////
 // some redefine of function redefines for some Compilers
 //////////////////////////////////////////////////////////////////////////
-#if defined(_MSC_VER) || defined(__BORLANDC__)
+#if defined(_MSC_VER)
 #define strcasecmp  stricmp
 #define strncasecmp strnicmp
 #define strncmpi    strnicmp
-#if defined(__BORLANDC__) || _MSC_VER < 1900
+#if _MSC_VER < 1900
 #define snprintf    _snprintf
 #endif
 #else
