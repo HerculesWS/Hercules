@@ -9142,6 +9142,10 @@ typedef int (*HPMHOOK_pre_status_change_start) (struct block_list **src, struct 
 typedef int (*HPMHOOK_post_status_change_start) (int retVal___, struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int val1, int val2, int val3, int val4, int tick, int flag, int skill_id);
 typedef int (*HPMHOOK_pre_status_change_start_sub) (struct block_list **src, struct block_list **bl, enum sc_type *type, int *rate, int *val1, int *val2, int *val3, int *val4, int *tick, int *total_tick, int *flag, int *skill_id);
 typedef int (*HPMHOOK_post_status_change_start_sub) (int retVal___, struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int val1, int val2, int val3, int val4, int tick, int total_tick, int flag, int skill_id);
+typedef void (*HPMHOOK_pre_status_change_start_delayed) (struct block_list **src, struct block_list **bl, enum sc_type *type, int *rate, int *val1, int *val2, int *val3, int *val4, int *tick, int *flag, int *skill_id, int *delay);
+typedef void (*HPMHOOK_post_status_change_start_delayed) (struct block_list *src, struct block_list *bl, enum sc_type type, int rate, int val1, int val2, int val3, int val4, int tick, int flag, int skill_id, int delay);
+typedef int (*HPMHOOK_pre_status_change_start_delayed_timer) (int *tid, int64 *tick, int *id, intptr_t *data);
+typedef int (*HPMHOOK_post_status_change_start_delayed_timer) (int retVal___, int tid, int64 tick, int id, intptr_t data);
 typedef int (*HPMHOOK_pre_status_change_end_) (struct block_list **bl, enum sc_type *type, int *tid);
 typedef int (*HPMHOOK_post_status_change_end_) (int retVal___, struct block_list *bl, enum sc_type type, int tid);
 typedef bool (*HPMHOOK_pre_status_is_immune_to_status) (struct status_change **sc, enum sc_type *type);
