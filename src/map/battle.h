@@ -93,6 +93,12 @@ enum e_battle_check_target { //New definitions [Skotlex]
 	BCT_NOENEMY     =   0x3d0000, ///< This must be (~BCT_ENEMY&BCT_ALL)
 
 	BCT_ALL         =   0x3f0000, ///< Sum of BCT_NOONE to BCT_SAMEGUILD
+
+	/// Set by unit->attack() to tell battle->check_target() this is a normal
+	/// attack, not a skill, so the caller's stale unit_data::skill_id (which
+	/// only reflects the last skill *cast*, not the current action) must not
+	/// be used to decide whether to bypass a target's invincible_timer.
+	BCT_NORMAL_ATTACK = 0x1000000,
 };
 
 /**
