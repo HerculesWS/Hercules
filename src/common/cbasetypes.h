@@ -44,7 +44,7 @@
 //////////////////////////////////////////////////////////////////////////
 // setting some defines on platforms
 //////////////////////////////////////////////////////////////////////////
-#if (defined(__WIN32__) || defined(__WIN32) || defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER) || defined(__BORLANDC__)) && !defined(WIN32)
+#if (defined(__WIN32__) || defined(__WIN32) || defined(_WIN32) || defined(_WIN64) || defined(_MSC_VER)) && !defined(WIN32)
 #define WIN32
 #endif
 
@@ -101,7 +101,7 @@
 #endif
 
 // disable attributed stuff on non-GNU
-#if !defined(__GNUC__) && !defined(MINGW)
+#if !defined(__GNUC__) && !defined(MINGW) && !defined(__clang__)
 #  define  __attribute__(x)
 #endif
 
@@ -249,22 +249,15 @@ typedef uintptr_t uintptr;
 //////////////////////////////////////////////////////////////////////////
 // some redefine of function redefines for some Compilers
 //////////////////////////////////////////////////////////////////////////
-#if defined(_MSC_VER) || defined(__BORLANDC__)
+#if defined(_MSC_VER)
 #define strcasecmp  stricmp
 #define strncasecmp strnicmp
 #define strncmpi    strnicmp
-#if defined(__BORLANDC__) || _MSC_VER < 1900
-#define snprintf    _snprintf
-#endif
 #else
 #define strcmpi     strcasecmp
 #define stricmp     strcasecmp
 #define strncmpi    strncasecmp
 #define strnicmp    strncasecmp
-#endif
-#if defined(_MSC_VER)
-#define strtoull    _strtoui64
-#define strtoll     _strtoi64
 #endif
 
 // keyword replacement
@@ -287,26 +280,19 @@ typedef uintptr_t uintptr;
 #define GCC_VERSION 0
 #endif
 
-// Pragma macro only enabled on gcc >= 4.6 or clang - borrowed from Mana Plus
-#if defined(__GNUC__) && (defined(__clang__) || GCC_VERSION >= 40600)
-#define PRAGMA_GCC46(str) _Pragma(#str)
-#else // ! defined(__GNUC__) && (defined(__clang__) || GCC_VERSION >= 40600)
-#define PRAGMA_GCC46(str)
-#endif // ! defined(__GNUC__) && (defined(__clang__) || GCC_VERSION >= 40600)
+// Pragma macro only enabled on gcc or clang - borrowed from Mana Plus
+#if defined(__GNUC__)
+#define PRAGMA_GCC(str) _Pragma(#str)
+#else
+#define PRAGMA_GCC(str)
+#endif
 
-// Pragma macro only enabled on gcc >= 5 or clang - borrowed from Mana Plus
-#if defined(__GNUC__) && (GCC_VERSION >= 50000)
-#define PRAGMA_GCC5(str) _Pragma(#str)
-#else // ! defined(__GNUC__) && (GCC_VERSION >= 50000)
-#define PRAGMA_GCC5(str)
-#endif // ! defined(__GNUC__) && (GCC_VERSION >= 50000)
-
-// Pragma macro only enabled on gcc >= 7
-#if defined(__GNUC__) && (GCC_VERSION >= 70000)
-#define PRAGMA_GCC7(str) _Pragma(#str)
-#else // ! defined(__GNUC__) && (GCC_VERSION >= 70000)
-#define PRAGMA_GCC7(str)
-#endif // ! defined(__GNUC__) && (GCC_VERSION >= 70000)
+// Pragma macro only enabled on gcc (and not on clang)
+#if defined(__GNUC__) && !defined(__clang__)
+#define PRAGMA_GCCONLY(str) _Pragma(#str)
+#else
+#define PRAGMA_GCCONLY(str)
+#endif
 
 // Pragma macro only enabled on gcc >= 9
 #if defined(__GNUC__) && (GCC_VERSION >= 90000)

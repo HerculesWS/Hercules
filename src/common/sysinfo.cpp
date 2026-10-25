@@ -198,9 +198,7 @@ enum windows_ver_suite {
 #endif // WIN32
 
 // Compiler detection <http://sourceforge.net/p/predef/wiki/Compilers/>
-#if defined(__BORLANDC__)
-#define SYSINFO_COMPILER "Borland C++"
-#elif defined(__clang__)
+#if defined(__clang__)
 #define SYSINFO_COMPILER "Clang v" EXPAND_AND_QUOTE(__clang_major__) "." EXPAND_AND_QUOTE(__clang_minor__) "." EXPAND_AND_QUOTE(__clang_patchlevel__)
 #elif defined(__INTEL_COMPILER)
 #define SYSINFO_COMPILER "Intel CC v" EXPAND_AND_QUOTE(__INTEL_COMPILER)
@@ -217,21 +215,7 @@ enum windows_ver_suite {
 #elif defined(__GNUC__)
 #define SYSINFO_COMPILER "GCC v" EXPAND_AND_QUOTE(__GNUC__) "." EXPAND_AND_QUOTE(__GNUC_MINOR__) "." EXPAND_AND_QUOTE(__GNUC_PATCHLEVEL__)
 #elif defined(_MSC_VER)
-#if _MSC_VER >= 1300 && _MSC_VER < 1310
-#define SYSINFO_COMPILER "Microsoft Visual C++ 7.0 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
-#elif _MSC_VER >= 1310 && _MSC_VER < 1400
-#define SYSINFO_COMPILER "Microsoft Visual C++ 2003 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
-#elif _MSC_VER >= 1400 && _MSC_VER < 1500
-#define SYSINFO_COMPILER "Microsoft Visual C++ 2005 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
-#elif _MSC_VER >= 1500 && _MSC_VER < 1600
-#define SYSINFO_COMPILER "Microsoft Visual C++ 2008 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
-#elif _MSC_VER >= 1600 && _MSC_VER < 1700
-#define SYSINFO_COMPILER "Microsoft Visual C++ 2010 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
-#elif _MSC_VER >= 1700 && _MSC_VER < 1800
-#define SYSINFO_COMPILER "Microsoft Visual C++ 2012 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
-#elif _MSC_VER >= 1800 && _MSC_VER < 1900
-#define SYSINFO_COMPILER "Microsoft Visual C++ 2013 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
-#elif _MSC_VER >= 1900 && _MSC_VER < 1910
+#if _MSC_VER >= 1900 && _MSC_VER < 1910
 #define SYSINFO_COMPILER "Microsoft Visual C++ 2015 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
 #elif _MSC_VER >= 1910 && _MSC_VER < 1920
 #define SYSINFO_COMPILER "Microsoft Visual C++ 2017 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
@@ -239,7 +223,7 @@ enum windows_ver_suite {
 #define SYSINFO_COMPILER "Microsoft Visual C++ 2019 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
 #elif _MSC_VER >= 1930 && _MSC_VER < 2000
 #define SYSINFO_COMPILER "Microsoft Visual C++ 2022 (v" EXPAND_AND_QUOTE(_MSC_VER) ")"
-#else // < 1300 || >= 2000
+#else // < 1900 || >= 2000
 #define SYSINFO_COMPILER "Microsoft Visual C++ v" EXPAND_AND_QUOTE(_MSC_VER)
 #endif
 #else
