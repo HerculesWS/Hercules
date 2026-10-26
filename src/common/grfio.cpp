@@ -36,6 +36,7 @@
 #include <zlib.h>
 #include <unordered_map>
 #include <string>
+#include <vector>
 
 /** @file
  * Implementation of the GRF I/O interface.
@@ -96,9 +97,7 @@ enum grf_filelist_type {
 static std::unordered_map<std::string, grf_filelist, grf_filelist_key_hash> filelist;
 
 // stores grf file names
-static char** gentry_table = NULL;
-static int gentry_entrys   = 0;
-static int gentry_maxentry = 0;
+static std::vector<std::string> gentry_table;
 
 // the path to the data directory
 static char data_dir[1024] = "";
@@ -414,7 +413,7 @@ static void *grfio_reads(const char *fname, int *size)
 
 	if (entry != NULL && entry->gentry > 0) {
 		// Archive[GRF] File Read
-		char *grfname = gentry_table[entry->gentry - 1];
+		const char *grfname = gentry_table[entry->gentry - 1].c_str();
 		FILE *in = fopen(grfname, "rb");
 
 		if (in != NULL) {
@@ -777,32 +776,21 @@ static void grfio_resourcecheck(void)
 static int grfio_add(const char *fname)
 {
 	nullpo_retr(1, fname);
-	if (gentry_entrys >= gentry_maxentry) {
-#define GENTRY_ADDS 4 // The number increment of gentry_table entries
-		gentry_maxentry += GENTRY_ADDS;
-		gentry_table = (char **)aRealloc(gentry_table, gentry_maxentry * sizeof(char *));
-		memset(gentry_table + (gentry_maxentry - GENTRY_ADDS), 0, sizeof(char*) * GENTRY_ADDS);
-#undef GENTRY_ADDS
+	constexpr auto allocation_steps = 4;
+
+	if (gentry_table.size() >= gentry_table.capacity()) {
+		gentry_table.reserve(allocation_steps);
 	}
 
-	gentry_table[gentry_entrys++] = aStrdup(fname);
+	gentry_table.push_back(fname);
 
-	return grfio_entryread(fname, gentry_entrys - 1);
+	return grfio_entryread(fname, (int)gentry_table.size() - 1);
 }
 
 /// @copydoc grfio_interface::final()
 static void grfio_final(void)
 {
-	if (gentry_table != NULL) {
-		int i;
-		for (i = 0; i < gentry_entrys; i++)
-			if (gentry_table[i] != NULL)
-				aFree(gentry_table[i]);
-
-		aFree(gentry_table);
-		gentry_table = NULL;
-	}
-	gentry_entrys = gentry_maxentry = 0;
+	return;
 }
 
 /// @copydoc grfio_interface::init()
