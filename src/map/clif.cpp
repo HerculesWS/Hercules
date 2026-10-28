@@ -26492,9 +26492,7 @@ static int clif_parse(int fd)
 
 		if( battle_config.packet_obfuscation == 2 || cmd != RFIFOW(fd, 0) || (sd && sd->parse_cmd_func == clif->parse_cmd_decrypt) ) {
 			// Note: Overriding const qualifier to re-inject the decoded packet ID.
-#define RFIFOP_mutable(T, fd, pos) ((T)(void *)(sockt->session[fd]->rdata + sockt->session[fd]->rdata_pos + (pos)))
-			int16 *packet_id = RFIFOP_mutable(int16 *, fd, 0);
-#undef RFIFOP_mutable
+			int16 *packet_id = reinterpret_cast<int16 *>(sockt->session[fd]->rdata->data() + sockt->session[fd]->rdata->read_cursor());
 			*packet_id = cmd;
 			if( sd ) {
 				// Update key for the next packet

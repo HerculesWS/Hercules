@@ -23,6 +23,8 @@
 
 #include "common/hercules.h"
 
+#include "common/db.h"
+
 #include <stdarg.h>
 #include <string.h>
 #include <type_traits>
@@ -108,9 +110,7 @@ struct s_svstate {
 
 /// StringBuf - dynamic string
 struct StringBuf {
-	char *buf_;
-	char *ptr_;
-	unsigned int max_;
+	VECTOR_DECL(char) buf;
 };
 typedef struct StringBuf StringBuf;
 

@@ -989,8 +989,8 @@ static StringBuf *StringBuf_Malloc(void)
 /// Initializes a previously allocated StringBuf
 static void StringBuf_Init(StringBuf *self)
 {
-	self->max_ = 1024;
-	self->ptr_ = self->buf_ = (char *)aMalloc(self->max_ + 1);
+	VECTOR_INIT(self->buf);
+	VECTOR_RESIZE(self->buf, 1024 + 1);
 }
 
 /// Appends the result of printf to the StringBuf
@@ -1013,87 +1013,83 @@ static int StringBuf_Vprintf(StringBuf *self, const char *fmt, va_list ap)
 {
 	for(;;) {
 		va_list apcopy;
-		int n, off;
+		int n;
 		/* Try to print in the allocated space. */
-		size_t size = self->max_ - (self->ptr_ - self->buf_);
+		size_t size = VECTOR_CAPACITY(self->buf) - VECTOR_LENGTH(self->buf);
+		if (size > 0)
+			size -= 1; // Terminating nul
+
 		va_copy(apcopy, ap);
-		n = vsnprintf(self->ptr_, size, fmt, apcopy);
+		n = vsnprintf(&VECTOR_INDEX(self->buf, VECTOR_LENGTH(self->buf)), size, fmt, apcopy);
 		va_end(apcopy);
 		/* If that worked, return the length. */
 		if( n > -1 && (size_t)n < size ) {
-			self->ptr_ += n;
-			return (int)(self->ptr_ - self->buf_);
+			VECTOR_LENGTH(self->buf) += n; // TODO: remove once std::vector is used
+			return VECTOR_LENGTH(self->buf);
 		}
 		/* Else try again with more space. */
-		self->max_ *= 2; // twice the old size
-		off = (int)(self->ptr_ - self->buf_);
-		self->buf_ = (char *)aRealloc(self->buf_, self->max_ + 1);
-		self->ptr_ = self->buf_ + off;
+		VECTOR_RESIZE(self->buf, std::max((VECTOR_CAPACITY(self->buf) * 2) + 1, 1024)); // twice the old size and a minimum of 1024
 	}
 }
 
 /// Appends the contents of another StringBuf to the StringBuf
 static int StringBuf_Append(StringBuf *self, const StringBuf *sbuf)
 {
-	size_t available = self->max_ - (self->ptr_ - self->buf_);
-	size_t needed = sbuf->ptr_ - sbuf->buf_;
+	size_t available = VECTOR_CAPACITY(self->buf) - VECTOR_LENGTH(self->buf);
+	if (available > 0)
+		available -= 1; // Terminating nul
 
-	if( needed >= available ) {
-		size_t off = (self->ptr_ - self->buf_);
-		self->max_ += needed;
-		self->buf_ = (char *)aRealloc(self->buf_, self->max_ + 1);
-		self->ptr_ = self->buf_ + off;
+	if (VECTOR_LENGTH(sbuf->buf) >= (int)available) {
+		VECTOR_RESIZE(self->buf, VECTOR_CAPACITY(self->buf) + VECTOR_LENGTH(sbuf->buf) + 1);
 	}
 
-	memcpy(self->ptr_, sbuf->buf_, needed);
-	self->ptr_ += needed;
-	return (int)(self->ptr_ - self->buf_);
+	memcpy(&VECTOR_INDEX(self->buf, VECTOR_LENGTH(self->buf)), VECTOR_DATA(sbuf->buf), VECTOR_LENGTH(sbuf->buf));
+	VECTOR_LENGTH(self->buf) += VECTOR_LENGTH(sbuf->buf); // TODO: remove once std::vector is used
+	return VECTOR_LENGTH(self->buf);
 }
 
 // Appends str to the StringBuf
 static int StringBuf_AppendStr(StringBuf *self, const char *str)
 {
-	size_t available = self->max_ - (self->ptr_ - self->buf_);
+	size_t available = VECTOR_CAPACITY(self->buf) - VECTOR_LENGTH(self->buf);
+	if (available > 0)
+		available -= 1; // Terminating nul
+
 	size_t needed = strlen(str);
 
 	if( needed >= available ) {
 		// not enough space, expand the buffer (minimum expansion = 1024)
-		size_t off = (self->ptr_ - self->buf_);
-		self->max_ += std::max(needed, (size_t)1024);
-		self->buf_ = (char *)aRealloc(self->buf_, self->max_ + 1);
-		self->ptr_ = self->buf_ + off;
+		VECTOR_RESIZE(self->buf, VECTOR_CAPACITY(self->buf) + std::max((int)needed, 1024) + 1);
 	}
 
-	memcpy(self->ptr_, str, needed);
-	self->ptr_ += needed;
-	return (int)(self->ptr_ - self->buf_);
+	memcpy(&VECTOR_INDEX(self->buf, VECTOR_LENGTH(self->buf)), str, needed);
+	VECTOR_LENGTH(self->buf) += needed; // TODO: remove once std::vector is used
+	return VECTOR_LENGTH(self->buf);
 }
 
 // Returns the length of the data in the Stringbuf
 static int StringBuf_Length(StringBuf *self)
 {
-	return (int)(self->ptr_ - self->buf_);
+	return VECTOR_LENGTH(self->buf);
 }
 
 /// Returns the data in the StringBuf
 static char *StringBuf_Value(StringBuf *self)
 {
-	*self->ptr_ = '\0';
-	return self->buf_;
+	VECTOR_INDEX(self->buf, VECTOR_LENGTH(self->buf)) = '\0';
+	return VECTOR_DATA(self->buf);
 }
 
 /// Clears the contents of the StringBuf
 static void StringBuf_Clear(StringBuf *self)
 {
-	self->ptr_ = self->buf_;
+	VECTOR_TRUNCATE(self->buf);
 }
 
 /// Destroys the StringBuf
 static void StringBuf_Destroy(StringBuf *self)
 {
-	aFree(self->buf_);
-	self->ptr_ = self->buf_ = 0;
-	self->max_ = 0;
+	VECTOR_CLEAR(self->buf);
 }
 
 // Frees a StringBuf returned by StringBuf_Malloc

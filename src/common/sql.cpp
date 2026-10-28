@@ -26,6 +26,7 @@
 
 #include "common/cbasetypes.h"
 #include "common/conf.h"
+#include "common/db.h"
 #include "common/memmgr.h"
 #include "common/nullpo.h"
 #include "common/showmsg.h"
@@ -68,11 +69,9 @@ typedef struct s_column_length s_column_length;
 struct SqlStmt {
 	StringBuf buf;
 	MYSQL_STMT* stmt;
-	MYSQL_BIND* params;
-	MYSQL_BIND* columns;
-	s_column_length* column_lengths;
-	size_t max_params;
-	size_t max_columns;
+	VECTOR_DECL(MYSQL_BIND) params;
+	VECTOR_DECL(MYSQL_BIND) columns;
+	VECTOR_DECL(s_column_length) column_lengths;
 	bool bind_params;
 	bool bind_columns;
 };
@@ -625,8 +624,8 @@ static void SqlStmt_P_ShowDebugTruncatedColumn(struct SqlStmt *self, size_t i)
 	field = mysql_fetch_field_direct(meta, (unsigned int)i);
 	ShowSQL("DB error - data of field '%s' was truncated.\n", field->name);
 	ShowDebug("column - %lu\n", (unsigned long)i);
-	Sql_P_ShowDebugMysqlFieldInfo("data   - ", field->type, field->flags&UNSIGNED_FLAG, self->column_lengths[i].length, "");
-	column = &self->columns[i];
+	Sql_P_ShowDebugMysqlFieldInfo("data   - ", field->type, field->flags&UNSIGNED_FLAG, VECTOR_INDEX(self->column_lengths, i).length, "");
+	column = &VECTOR_INDEX(self->columns, i);
 	if( column->buffer_type == MYSQL_TYPE_STRING )
 		Sql_P_ShowDebugMysqlFieldInfo("buffer - ", column->buffer_type, column->is_unsigned, column->buffer_length, "+1(null-terminator)");
 	else
@@ -651,11 +650,9 @@ static struct SqlStmt *SqlStmt_Malloc(struct Sql *sql)
 	CREATE(self, struct SqlStmt, 1);
 	StrBuf->Init(&self->buf);
 	self->stmt = stmt;
-	self->params = NULL;
-	self->columns = NULL;
-	self->column_lengths = NULL;
-	self->max_params = 0;
-	self->max_columns = 0;
+	VECTOR_INIT(self->params);
+	VECTOR_INIT(self->columns);
+	VECTOR_INIT(self->column_lengths);
 	self->bind_params = false;
 	self->bind_columns = false;
 
@@ -727,28 +724,29 @@ static size_t SqlStmt_NumParams(struct SqlStmt *self)
 }
 
 /// Binds a parameter to a buffer.
-static int SqlStmt_BindParam(struct SqlStmt *self, size_t idx, enum SqlDataType buffer_type, const void *buffer, size_t buffer_len)
+static int SqlStmt_BindParam(struct SqlStmt *self, size_t idx, enum SqlDataType buffer_type, const void *buffer,
+                             size_t buffer_len)
 {
 	if (self == NULL)
 		return SQL_ERROR;
 
-	if( !self->bind_params )
-	{// initialize the bindings
-		size_t i;
+	if (!self->bind_params) { // initialize the bindings
 		size_t count;
 
 		count = SQL->StmtNumParams(self);
-		if( self->max_params < count )
-		{
-			self->max_params = count;
-			RECREATE(self->params, MYSQL_BIND, count);
+		if ((size_t)VECTOR_LENGTH(self->params) < count) {
+			VECTOR_RESIZE(self->params, (int)count);
 		}
-		memset(self->params, 0, count*sizeof(MYSQL_BIND));
-		for( i = 0; i < count; ++i )
-			self->params[i].buffer_type = MYSQL_TYPE_NULL;
+
+		VECTOR_LENGTH(self->params) = (int)count; // TODO: remove once std::vector is used
+
+		for (int i = 0; i < VECTOR_LENGTH(self->params); ++i)
+			VECTOR_INDEX(self->params, i).buffer_type = MYSQL_TYPE_NULL;
+
 		self->bind_params = true;
 	}
-	if (idx >= self->max_params)
+
+	if (idx >= (size_t)VECTOR_LENGTH(self->params))
 		return SQL_SUCCESS; // out of range - ignore
 
 PRAGMA_GCC(GCC diagnostic push)
@@ -759,7 +757,7 @@ PRAGMA_GCC(GCC diagnostic ignored "-Wcast-qual")
 	 * As such, we get to close our eyes and pretend we didn't see we're
 	 * dropping a const qualifier here.
 	 */
-	return Sql_P_BindSqlDataType(self->params+idx, buffer_type, (void *)buffer, buffer_len, NULL, NULL);
+	return Sql_P_BindSqlDataType(&VECTOR_INDEX(self->params, idx), buffer_type, (void *)buffer, buffer_len, NULL, NULL);
 PRAGMA_GCC(GCC diagnostic pop)
 }
 
@@ -770,7 +768,7 @@ static int SqlStmt_Execute(struct SqlStmt *self)
 		return SQL_ERROR;
 
 	SQL->StmtFreeResult(self);
-	if( (self->bind_params && mysql_stmt_bind_param(self->stmt, self->params)) ||
+	if( (self->bind_params && mysql_stmt_bind_param(self->stmt, VECTOR_DATA(self->params))) ||
 		mysql_stmt_execute(self->stmt) )
 	{
 		ShowSQL("DB error - %s\n", mysql_stmt_error(self->stmt));
@@ -807,44 +805,43 @@ static size_t SqlStmt_NumColumns(struct SqlStmt *self)
 }
 
 /// Binds the result of a column to a buffer.
-static int SqlStmt_BindColumn(struct SqlStmt *self, size_t idx, enum SqlDataType buffer_type, void *buffer, size_t buffer_len, uint32 *out_length, int8 *out_is_null)
+static int SqlStmt_BindColumn(struct SqlStmt *self, size_t idx, enum SqlDataType buffer_type, void *buffer,
+                              size_t buffer_len, uint32 *out_length, int8 *out_is_null)
 {
 	if (self == NULL)
 		return SQL_ERROR;
 
 	if (buffer_type == SQLDT_STRING || buffer_type == SQLDT_ENUM) {
 		if (buffer_len < 1) {
-			ShowDebug("SqlStmt_BindColumn: buffer_len(%" PRIuS ") is too small, no room for the null-terminator\n", buffer_len);
+			ShowDebug("SqlStmt_BindColumn: buffer_len(%" PRIuS ") is too small, no room for the null-terminator\n",
+			          buffer_len);
 			return SQL_ERROR;
 		}
-		--buffer_len;// null-terminator
+		--buffer_len; // null-terminator
 	}
-	if( !self->bind_columns )
-	{// initialize the bindings
-		size_t i;
+	if (!self->bind_columns) { // initialize the bindings
 		size_t cols;
 
 		cols = SQL->StmtNumColumns(self);
-		if( self->max_columns < cols )
-		{
-			self->max_columns = cols;
-			RECREATE(self->columns, MYSQL_BIND, cols);
-			RECREATE(self->column_lengths, s_column_length, cols);
+		if ((size_t)VECTOR_LENGTH(self->columns) < cols) {
+			VECTOR_RESIZE(self->columns, (int)cols);
+			VECTOR_RESIZE(self->column_lengths, (int)cols);
 		}
-		memset(self->columns, 0, cols*sizeof(MYSQL_BIND));
-		memset(self->column_lengths, 0, cols*sizeof(s_column_length));
-		for( i = 0; i < cols; ++i )
-			self->columns[i].buffer_type = MYSQL_TYPE_NULL;
+
+		VECTOR_LENGTH(self->columns) = (int)cols; // TODO: remove once std::vector is used
+		VECTOR_LENGTH(self->column_lengths) = (int)cols; // TODO: remove once std::vector is used
+
+		for (int i = 0; i < VECTOR_LENGTH(self->columns); ++i)
+			VECTOR_INDEX(self->columns, i).buffer_type = MYSQL_TYPE_NULL;
 		self->bind_columns = true;
 	}
-	if( idx < self->max_columns )
-	{
-		self->column_lengths[idx].out_length = out_length;
-		return Sql_P_BindSqlDataType(self->columns+idx, buffer_type, buffer, buffer_len, &self->column_lengths[idx].length, out_is_null);
-	}
-	else
-	{
-		return SQL_SUCCESS;// out of range - ignore
+
+	if (idx < (size_t)VECTOR_LENGTH(self->columns)) {
+		VECTOR_INDEX(self->column_lengths, idx).out_length = out_length;
+		return Sql_P_BindSqlDataType(&VECTOR_INDEX(self->columns, idx), buffer_type, buffer, buffer_len,
+		                             &VECTOR_INDEX(self->column_lengths, idx).length, out_is_null);
+	} else {
+		return SQL_SUCCESS; // out of range - ignore
 	}
 }
 
@@ -868,7 +865,7 @@ static int SqlStmt_NextRow(struct SqlStmt *self)
 		return SQL_ERROR;
 
 	// bind columns
-	if( self->bind_columns && mysql_stmt_bind_result(self->stmt, self->columns) )
+	if (self->bind_columns && mysql_stmt_bind_result(self->stmt, VECTOR_DATA(self->columns)))
 		err = 1;// error binding columns
 	else
 		err = mysql_stmt_fetch(self->stmt);// fetch row
@@ -887,7 +884,7 @@ static int SqlStmt_NextRow(struct SqlStmt *self)
 		// find truncated column
 		cols = SQL->StmtNumColumns(self);
 		for (i = 0; i < cols; ++i) {
-			MYSQL_BIND *column = &self->columns[i];
+			MYSQL_BIND *column = &VECTOR_INDEX(self->columns, i);
 			column->error = &truncated;
 			mysql_stmt_fetch_column(self->stmt, column, (unsigned int)i, 0);
 			column->error = NULL;
@@ -909,10 +906,10 @@ static int SqlStmt_NextRow(struct SqlStmt *self)
 	// propagate column lengths and clear unused parts of string/enum/blob buffers
 	cols = SQL->StmtNumColumns(self);
 	for (i = 0; i < cols; ++i) {
-		unsigned long length = self->column_lengths[i].length;
-		MYSQL_BIND *column = &self->columns[i];
-		if (self->column_lengths[i].out_length)
-			*self->column_lengths[i].out_length = (uint32)length;
+		unsigned long length = VECTOR_INDEX(self->column_lengths, i).length;
+		MYSQL_BIND *column = &VECTOR_INDEX(self->columns, i);
+		if (VECTOR_INDEX(self->column_lengths, i).out_length != nullptr)
+			*VECTOR_INDEX(self->column_lengths, i).out_length = (uint32)length;
 		if (column->buffer_type == MYSQL_TYPE_STRING) {
 			// clear unused part of the string/enum buffer (and null-terminate)
 			memset((char*)column->buffer + length, 0, column->buffer_length - length + 1);
@@ -951,13 +948,9 @@ static void SqlStmt_Free(struct SqlStmt *self)
 		SqlStmt_FreeResult(self);
 		StrBuf->Destroy(&self->buf);
 		mysql_stmt_close(self->stmt);
-		if( self->params )
-			aFree(self->params);
-		if( self->columns )
-		{
-			aFree(self->columns);
-			aFree(self->column_lengths);
-		}
+		VECTOR_CLEAR(self->params);
+		VECTOR_CLEAR(self->columns);
+		VECTOR_CLEAR(self->column_lengths);
 		aFree(self);
 	}
 }

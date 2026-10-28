@@ -76,7 +76,7 @@ struct intif_interface *intif;
 
 static int CheckForCharServer(void)
 {
-	return ((chrif->fd <= 0) || sockt->session[chrif->fd] == NULL || sockt->session[chrif->fd]->wdata == NULL);
+	return ((chrif->fd <= 0) || sockt->session[chrif->fd] == NULL || sockt->session[chrif->fd]->wdata == nullptr);
 }
 
 // pet
