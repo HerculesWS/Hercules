@@ -295,7 +295,7 @@ static int battle_delay_damage_sub(int tid, int64 tick, int id, intptr_t data)
 			status_calc_pc(sd, SCO_FORCE);
 		}
 	}
-	ers_free(battle->delay_damage_ers, dat);
+	battle->delay_damage_ers->free(dat);
 	return 0;
 }
 
@@ -333,7 +333,7 @@ static int battle_delay_damage(int64 tick, int amotion, struct block_list *src, 
 		map->freeblock_unlock();
 		return 0;
 	}
-	dat = ers_alloc(battle->delay_damage_ers, struct delay_damage);
+	dat = battle->delay_damage_ers->alloc();
 	dat->src_id = src->id;
 	dat->target_id = target->id;
 	dat->skill_id = skill_id;
@@ -8552,7 +8552,7 @@ static void do_init_battle(bool minimal)
 	if (minimal)
 		return;
 
-	battle->delay_damage_ers = ers_new(sizeof(struct delay_damage),"battle.cpp::delay_damage_ers",ERS_OPT_CLEAR);
+	battle->delay_damage_ers = ERS<delay_damage>::create("battle.cpp::delay_damage_ers", ERS_OPT_CLEAR);
 	timer->add_func_list(battle->delay_damage_sub, "battle_delay_damage_sub");
 }
 
@@ -8560,7 +8560,7 @@ static void do_final_battle(void)
 {
 	if (map->minimal)
 		return;
-	ers_destroy(battle->delay_damage_ers);
+	ERI::destroy(battle->delay_damage_ers);
 }
 
 /* initialize the interface */

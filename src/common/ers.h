@@ -58,7 +58,20 @@
 #ifndef COMMON_ERS_H
 #define COMMON_ERS_H
 
-#include "common/cbasetypes.h"
+#include "common/memmgr.h"
+#include "common/nullpo.h"
+#include "common/showmsg.h"
+
+#include "common/ers_fwd.h"
+
+#include <array>
+#include <deque>
+#include <forward_list>
+#include <memory>
+#include <unordered_set>
+#include <string>
+#include <tuple>
+#include <vector>
 
 /*****************************************************************************\
  *  (1) All public parts of the Entry Reusage System.                        *
@@ -77,17 +90,6 @@
  */
 //#define DISABLE_ERS
 
-/**
- * Entries are aligned to ERS_ALIGNED bytes in the blocks of entries.
- * By default it aligns to one byte, using the "natural order" of the entries.
- * This should NEVER be set to zero or less.
- * If greater than one, some memory can be wasted. This should never be needed
- * but is here just in case some alignment issues arise.
- */
-#ifndef ERS_ALIGNED
-#	define ERS_ALIGNED 1
-#endif /* not ERS_ALIGN_ENTRY */
-
 enum ERSOptions {
 	ERS_OPT_NONE        = 0x00,
 	/// silently clears any entries left in the manager upon destruction
@@ -99,106 +101,387 @@ enum ERSOptions {
 	/// clears used memory upon ers_free so that its all new to be reused on the next alloc
 	ERS_OPT_CLEAN       = 0x08,
 	/// signs that it should look for its own cache given it'll have a dynamic chunk size, so that it doesn't affect the other ERS it'd otherwise be sharing
-	ERS_OPT_FLEX_CHUNK  = 0x10,
+	// ERS_OPT_FLEX_CHUNK  = 0x10, // UNUSED
+};
 
-	/// Compound, is used to determine whether it should be looking for a cache of matching options
-	ERS_CACHE_OPTIONS   = ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK,
+/**
+ * A common interface for ERS
+ */
+class ERI
+{
+  public:
+	explicit ERI() {
+		m_ers_instance_list.push_front(this);
+	}
+
+	virtual ~ERI() {
+		m_ers_instance_list.remove(this);
+	}
+
+	/**
+	 * Reports debug information for instance cache
+	 * @return used blocks, total blocks, memory used, total memory
+	 */
+	[[nodiscard]] virtual std::tuple<size_t, size_t, size_t, size_t>
+	        print_report_cache() const noexcept = 0;
+
+#ifdef DEBUG
+	/**
+	 * Reports debug information for current instance.
+	 * @return true if reports is displayed, false otherwise.
+	 */
+	[[nodiscard]] virtual bool print_report() const noexcept = 0;
+#endif
+
+	/**
+	 * Print a report about the current state of the Entry Reusage System.
+	 * Shows information about the global system and each entry manager.
+	 * The number of entries are checked and a warning is shown if extra reusable
+	 * entries are found.
+	 * The extra entries are included in the count of reusable entries.
+	 */
+	static void print_full_report() noexcept;
+
+	/**
+	 * Destructs all allocated instances that remained in memory
+	 */
+	static void final() noexcept;
+
+	/**
+	 * Frees a raw pointer of ERS instance
+	 */
+	static void destroy(ERI *ptr) noexcept
+	{
+		delete ptr;
+	}
+
+  private:
+	static std::forward_list<ERI *> m_ers_instance_list; //< A list holding all allocations of ERI interface
+};
+
+/**
+ * Manages an ERS chunk
+ */
+template<typename T, size_t max_blocks_count>
+class ers_chunk
+{
+	static_assert(max_blocks_count > 0, "max_blocks_count has to be greater than 0");
+
+  public:
+	ers_chunk() = default;
+	ers_chunk(ers_chunk &&other)                 = default;
+	ers_chunk &operator=(ers_chunk &&other)      = default;
+	ers_chunk(const ers_chunk &other)            = delete;
+	ers_chunk &operator=(const ers_chunk &other) = delete;
+
+	/**
+	 * Allocates a new object in chunk
+	 * @return a pointer of the type T or nullptr if chunk is full
+	 */
+	template<typename... Args>
+	[[nodiscard]] T *alloc(Args &&...args) noexcept
+	{
+		if (used_memory() >= m_buffer.size())
+			return nullptr;
+
+		T *ptr = reinterpret_cast<T *>(&m_buffer[used_memory()]);
+		new (ptr) T(std::forward<Args>(args)...);
+
+		++m_used_blocks;
+
+		return ptr;
+	}
+
+	/**
+	 * @return Gives current maximum memory capacity in bytes
+	 */
+	[[nodiscard]] size_t memory_capacity() const noexcept
+	{
+		return m_buffer.size();
+	}
+
+	/**
+	 * @return Gives currently used blocks
+	 */
+	[[nodiscard]] size_t used_blocks() const noexcept
+	{
+		return m_used_blocks;
+	}
+
+	/**
+	 * @return Used memory
+	 */
+	[[nodiscard]] size_t used_memory() const noexcept
+	{
+		return used_blocks() * sizeof(T);
+	}
+
+	/**
+	 * @return Unused blocks
+	 */
+	[[nodiscard]] size_t unused_blocks() const noexcept
+	{
+		return (memory_capacity() - used_memory()) / sizeof(T);
+	}
+
+  private:
+	std::array<std::byte, sizeof(T) * max_blocks_count> m_buffer{}; // The memory chunk used
+	size_t m_used_blocks{0}; // Used objects in chunk
 };
 
 /**
  * Public interface of the entry manager.
- * @param alloc Allocate an entry from this manager
- * @param free Free an entry allocated from this manager
- * @param entry_size Return the size of the entries of this manager
- * @param destroy Destroy this instance of the manager
  */
-typedef struct eri {
-
+template<typename T, size_t blocks_per_chunk>
+class ERS final : public ERI
+{
+  public:
 	/**
-	 * Allocate an entry from this entry manager.
-	 * If there are reusable entries available, it reuses one instead.
-	 * @param self Interface of the entry manager
-	 * @return An entry
+	 * Get a new instance of the manager that handles the specified entry type.
+	 * @param name the name of this ERS manager instance
+	 * @param options a bitmask options of this instance manager
 	 */
-	void *(*alloc)(struct eri *self);
-
-	/**
-	 * Free an entry allocated from this manager.
-	 * WARNING: Does not check if the entry was allocated by this manager.
-	 * Freeing such an entry can lead to unexpected behavior.
-	 * @param self Interface of the entry manager
-	 * @param entry Entry to be freed
-	 */
-	void (*free)(struct eri *self, void *entry);
-
-	/**
-	 * Return the size of the entries allocated from this manager.
-	 * @param self Interface of the entry manager
-	 * @return Size of the entries of this manager in bytes
-	 */
-	size_t (*entry_size)(struct eri *self);
+	ERS(const std::string &name, ERSOptions options) noexcept
+	        : ERI(), m_name(name), m_options(options){}; // FIXME: change this to a flag type
 
 	/**
 	 * Destroy this instance of the manager.
 	 * The manager is actually only destroyed when all the instances are destroyed.
 	 * When destroying the manager a warning is shown if the manager has
 	 * missing/extra entries.
-	 * @param self Interface of the entry manager
 	 */
-	void (*destroy)(struct eri *self);
-
-	/* */
-	void (*chunk_size) (struct eri *self, unsigned int new_size);
-} ERS;
-
+	~ERS() noexcept override
+	{
 #ifdef DISABLE_ERS
-// Use memory manager to allocate/free and disable other interface functions
-#	define ers_alloc(obj,type) ((void)(obj), (type *)aMalloc(sizeof(type)))
-#	define ers_free(obj,entry) ((void)(obj), aFree(entry))
-#	define ers_entry_size(obj) ((void)(obj), (size_t)0)
-#	define ers_destroy(obj) ((void)(obj), (void)0)
-#	define ers_chunk_size(obj,size) ((void)(obj), (void)(size), (size_t)0)
-// Disable the public functions
-#	define ers_new(size,name,options) NULL
-#	define ers_report() (void)0
-#	define ers_final() (void)0
-#else /* not DISABLE_ERS */
-// These defines should be used to allow the code to keep working whenever
-// the system is disabled
-#	define ers_alloc(obj,type) ((type *)(obj)->alloc(obj))
-#	define ers_free(obj,entry) ((obj)->free((obj),(entry)))
-#	define ers_entry_size(obj) ((obj)->entry_size(obj))
-#	define ers_destroy(obj)    ((obj)->destroy(obj))
-#	define ers_chunk_size(obj,size) ((obj)->chunk_size((obj),(size)))
+		if ((m_options & ERS_OPT_CLEAR) != 0) {
+			for (auto *object : m_used_list) {
+				object->~T();
+				aFree(object);
+			}
+		}
+#else
+		if (used_blocks() > 0) {
+			if ((m_options & ERS_OPT_CLEAR) == 0) {
+				ShowWarning("Memory leak detected at ERS '%s', %" PRIuS " objects not freed.\n",
+				            m_name.c_str(),
+				            used_blocks());
+			} else { // Call dtor on objects we're supposed to clean
+				for (auto *object : m_used_blocks) {
+					object->~T();
+				}
+			}
+		}
+#endif
+	}
 
-#ifdef HERCULES_CORE
-/**
- * Get a new instance of the manager that handles the specified entry size.
- * Size has to greater than 0.
- * If the specified size is smaller than a pointer, the size of a pointer is
- * used instead.
- * It's also aligned to ERS_ALIGNED bytes, so the smallest multiple of
- * ERS_ALIGNED that is greater or equal to size is what's actually used.
- * @param The requested size of the entry in bytes
- * @return Interface of the object
- */
-ERS *ers_new(uint32 size, const char *name, enum ERSOptions options);
+	/**
+	 * Allocates a new ERS instance and returns a raw pointer to it
+	 * To be used temporarily until everything stored in smart pointers
+	 */
+	template<typename... Args>
+	[[nodiscard]] static ERS<T, blocks_per_chunk> *create(Args &&...args) noexcept
+	{
+		return new ERS<T, blocks_per_chunk>(std::forward<Args>(args)...);
+	}
 
-/**
- * Print a report about the current state of the Entry Reusage System.
- * Shows information about the global system and each entry manager.
- * The number of entries are checked and a warning is shown if extra reusable
- * entries are found.
- * The extra entries are included in the count of reusable entries.
- */
-void ers_report(void);
+	/**
+	 */
 
-/**
- * Clears the remainder of the managers
- **/
-void ers_final(void);
-#endif // HERCULES_CORE
+	/**
+	 * Allocate an entry from this entry manager.
+	 * If there are reusable entries available, it reuses one instead.
+	 * terminates the process if OOM happens
+	 * @param args arguments passed to ctor
+	 * @return An entry
+	 */
+	template<typename... Args>
+	[[nodiscard]] T *alloc(Args &&...args) noexcept
+	{
+#ifdef DISABLE_ERS
+		T *ret = reinterpret_cast<T *>(aCalloc(1, sizeof(T)));
+		add_to_used_list(ret);
+		return new (ret) T(std::forward<Args>(args)...);
+#else
+		T *ret = alloc_sub(std::forward<Args>(args)...);
 
-#endif /* DISABLE_ERS / not DISABLE_ERS */
+		if (Assert_chk(ret != nullptr))
+			std::terminate();
+
+#ifdef DEBUG
+		if (m_peak < used_blocks())
+			m_peak = used_blocks();
+#endif
+#endif
+
+		register_used_block(ret);
+		return ret;
+	}
+
+	/**
+	 * Free an entry allocated from this manager.
+	 * WARNING: Does not check if the entry was allocated by this manager.
+	 * Freeing such an entry can lead to unexpected behavior.
+	 * @param entry Entry to be freed
+	 */
+	void free(T *entry) noexcept
+	{
+#ifdef DISABLE_ERS
+		entry->~T();
+		deregister_used_block(entry);
+		aFree(entry);
+#else
+		if (entry == nullptr) {
+			ShowError("ERS::free: NULL entry, nothing to free.\n");
+			return;
+		}
+
+		entry->~T();
+
+		if ((m_options & ERS_OPT_CLEAN) != 0)
+			memset(entry, 0, sizeof(T));
+
+		m_reusable_blocks.push_front(entry);
+		deregister_used_block(entry);
+#endif
+	}
+
+	/**
+	 * Reports debug information for instance cache
+	 * @return used blocks, total blocks, memory used, total memory
+	 */
+	[[nodiscard]] std::tuple<size_t, size_t, size_t, size_t>
+	        print_report_cache() const noexcept override
+	{
+		ShowMessage(CL_BOLD "[ERS Cache of size '" CL_NORMAL CL_WHITE "%" PRIuS CL_NORMAL CL_BOLD
+		                    "' report]\n" CL_NORMAL,
+		            sizeof(T));
+		ShowMessage("\tblocks in use      : %" PRIuS "/%" PRIuS "\n", used_blocks(), used_blocks() + unused_blocks());
+		ShowMessage("\tblocks unused      : %" PRIuS "\n", unused_blocks());
+		ShowMessage("\tmemory in use      : %.2f MB\n",
+		            used_blocks() == 0 ? 0.
+		                                   : (double)((used_blocks() * sizeof(T)) / 1024) / 1024);
+		ShowMessage("\tmemory allocated   : %.2f MB\n",
+		            (unused_blocks() + used_blocks()) == 0
+		                    ? 0.
+		                    : (double)(((used_blocks() + unused_blocks()) * sizeof(T)) / 1024)
+		                              / 1024);
+
+		return {used_blocks(),
+		        used_blocks() + unused_blocks(),
+		        used_blocks() * sizeof(T),
+		        (used_blocks() + unused_blocks()) * sizeof(T)};
+	}
+
+#ifdef DEBUG
+	/**
+	 * Reports debug information for current instance.
+	 * @return true if reports is displayed, false otherwise.
+	 */
+	[[nodiscard]] bool print_report() const noexcept override
+	{
+		if ((m_options & ERS_OPT_WAIT) != 0 && used_blocks() == 0)
+			return false;
+
+		ShowMessage(CL_BOLD "[ERS Instance " CL_NORMAL CL_WHITE "%s" CL_NORMAL CL_BOLD " report]\n" CL_NORMAL,
+		            m_name.c_str());
+		ShowMessage("\tblock size        : %" PRIuS "\n", sizeof(T));
+		ShowMessage("\tblocks being used : %" PRIuS "\n", used_blocks());
+		ShowMessage("\tpeak blocks       : %" PRIuS "\n", m_peak);
+		ShowMessage("\tmemory in use     : %.2f MB\n",
+		            used_blocks() == 0 ? 0. : (double)((used_blocks() * sizeof(T)) / 1024) / 1024);
+
+		return true;
+	}
+#endif
+
+  private:
+  	/**
+	 * Returns never used blocks
+	 * @return allocated blocks that aren't used
+	 */
+	[[nodiscard]] size_t unused_blocks() const noexcept
+	{
+		if (m_chunks.empty())
+			return 0;
+
+		return m_chunks.back()->unused_blocks();
+	}
+
+	/**
+	 * Returns currently allocated objects
+	 * @return count of objects that are actually allocated for us
+	 */
+	[[nodiscard]] size_t used_blocks() const noexcept
+	{
+		if (m_chunks.empty())
+			return 0;
+
+		return (m_chunks.size() * blocks_per_chunk) - unused_blocks() - m_reusable_blocks.size();
+	}
+
+	/**
+	 * Tries to allocate an object from already allocated memory then create a new chunk
+	 * @param args arguments passed to ctor
+	 * @return a pointer if successful otherwise nullptr
+	 */
+	template<typename... Args>
+	[[nodiscard]] T *alloc_sub(Args &&...args) noexcept
+	{
+		if (m_reusable_blocks.empty() == false) {
+			auto *ret = m_reusable_blocks.front();
+			m_reusable_blocks.pop_front();
+
+			new (ret) T(std::forward<Args>(args)...);
+			return ret;
+		}
+
+		if (m_chunks.empty() == false) {
+			auto chunk_ptr = m_chunks.back()->alloc(std::forward<Args>(args)...);
+			if (chunk_ptr != nullptr)
+				return chunk_ptr;
+		}
+
+		m_chunks.push_back(std::make_unique<ers_chunk<T, blocks_per_chunk>>());
+		return m_chunks.back()->alloc(std::forward<Args>(args)...); // Should never fail unless OOM
+	}
+
+	/**
+	 * Adds an object to the used list, only adds to it if ERS_OPT_CLEAR is set
+	 */
+	void register_used_block(T *p) noexcept
+	{
+		if ((m_options & ERS_OPT_CLEAR) != 0) {
+			if ((m_used_blocks.size() % blocks_per_chunk) == 0)
+				m_used_blocks.reserve(m_used_blocks.size() + blocks_per_chunk);
+
+			m_used_blocks.emplace(p);
+		}
+	}
+
+	/**
+	 * Removes an object from used list
+	 */
+	void deregister_used_block(T *p) noexcept
+	{
+		if ((m_options & ERS_OPT_CLEAR) != 0)
+			std::erase(m_reusable_blocks, p);
+	}
+
+	std::string m_name; //< Name, used for debugging purposes
+
+	ERSOptions m_options {
+		ERS_OPT_NONE
+	}; //< Misc options
+
+#ifdef DEBUG
+	/* for data analysis [Ind/Hercules] */
+	size_t m_peak{0};
+#endif
+
+
+	std::deque<T *> m_reusable_blocks; //< Reuse linked list
+	std::unordered_set<T *> m_used_blocks; //< List of used objects only used if ERS_OPT_CLEAR is set
+	std::vector<std::unique_ptr<ers_chunk<T, blocks_per_chunk>>> m_chunks; //< Memory blocks array
+};
 
 #endif /* COMMON_ERS_H */

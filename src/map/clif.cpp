@@ -949,11 +949,11 @@ static int clif_clearunit_delayed_sub(int tid, int64 tick, int id, intptr_t data
 	Assert_ret(bl->m >= 0 && bl->m < map->count);
 	if (map->list[bl->m].block == NULL) {
 		// avoid error report for missing/removed map
-		ers_free(clif->delay_clearunit_ers, bl);
+		clif->delay_clearunit_ers->free(BL_UCAST(BL_MOB, bl));
 		return 0;
 	}
 	clif->clearunit_area(bl, (enum clr_type) id);
-	ers_free(clif->delay_clearunit_ers, bl);
+	clif->delay_clearunit_ers->free(BL_UCAST(BL_MOB, bl));
 	return 0;
 }
 
@@ -961,7 +961,7 @@ static void clif_clearunit_delayed(struct block_list *bl, enum clr_type type, in
 {
 	nullpo_retv(bl);
 	Assert_retv(bl->type == BL_MOB);
-	struct mob_data *md = ers_alloc(clif->delay_clearunit_ers, struct mob_data);
+	struct mob_data *md = clif->delay_clearunit_ers->alloc();
 	memcpy (md, bl, sizeof (struct mob_data));
 	timer->add(tick, clif->clearunit_delayed_sub, (int)type, (intptr_t)md);
 }
@@ -22117,7 +22117,7 @@ static int clif_delay_damage_sub(int tid, int64 tick, int id, intptr_t data)
 
 	clif->send(&dd->p,sizeof(struct packet_damage),&dd->bl,AREA_WOS);
 
-	ers_free(clif->delayed_damage_ers,dd);
+	clif->delayed_damage_ers->free(dd);
 
 	return 0;
 }
@@ -22163,7 +22163,7 @@ static int clif_delay_damage(int64 tick, struct block_list *src, struct block_li
 
 	type = clif_calc_delay(type,div,damage,ddelay);
 
-	dd = ers_alloc(clif->delayed_damage_ers, struct cdelayed_damage);
+	dd = clif->delayed_damage_ers->alloc();
 
 	dd->p.PacketType = damageType;
 	dd->p.GID = src->id;
@@ -22190,7 +22190,7 @@ static int clif_delay_damage(int64 tick, struct block_list *src, struct block_li
 	else {
 		clif->send(&dd->p,sizeof(struct packet_damage),&dd->bl,AREA_WOS);
 
-		ers_free(clif->delayed_damage_ers,dd);
+		clif->delayed_damage_ers->free(dd);
 	}
 
 	return clif->calc_walkdelay(dst,ddelay,type,damage,div);
@@ -26676,8 +26676,8 @@ static int do_init_clif(bool minimal)
 	timer->add_func_list(clif->clearunit_delayed_sub, "clif_clearunit_delayed_sub");
 	timer->add_func_list(clif->delayquit, "clif_delayquit");
 
-	clif->delay_clearunit_ers = ers_new(sizeof(struct mob_data), "clif.cpp::delay_clearunit_ers", ERS_OPT_CLEAR);
-	clif->delayed_damage_ers = ers_new(sizeof(struct cdelayed_damage),"clif.cpp::delayed_damage_ers",ERS_OPT_CLEAR);
+	clif->delay_clearunit_ers = ERS<mob_data>::create("clif.cpp::delay_clearunit_ers", ERS_OPT_CLEAR);
+	clif->delayed_damage_ers = ERS<cdelayed_damage>::create("clif.cpp::delayed_damage_ers", ERS_OPT_CLEAR);
 
 #if PACKETVER_MAIN_NUM >= 20190403 || PACKETVER_RE_NUM >= 20190320
 	timer->add_func_list(clif->pingTimer, "clif_pingTimer");
@@ -26692,8 +26692,8 @@ static void do_final_clif(void)
 {
 	unsigned char i;
 
-	ers_destroy(clif->delay_clearunit_ers);
-	ers_destroy(clif->delayed_damage_ers);
+	ERI::destroy(clif->delay_clearunit_ers);
+	ERI::destroy(clif->delayed_damage_ers);
 
 	for(i = 0; i < CASHSHOP_TAB_MAX; i++) {
 		int k;

@@ -1282,9 +1282,9 @@ static int pet_delay_item_drop(int tid, int64 tick, int id, intptr_t data)
 			list->first_charid, list->second_charid, list->third_charid, 0, false);
 		ditem_prev = ditem;
 		ditem = ditem->next;
-		ers_free(pet->item_drop_ers, ditem_prev);
+		pet->item_drop_ers->free(ditem_prev);
 	}
-	ers_free(pet->item_drop_list_ers, list);
+	pet->item_drop_list_ers->free(list);
 	return 0;
 }
 
@@ -1295,7 +1295,7 @@ static int pet_lootitem_drop(struct pet_data *pd, struct map_session_data *sd)
 	struct item_drop *ditem;
 	if(!pd || !pd->loot || !pd->loot->count)
 		return 0;
-	dlist = ers_alloc(pet->item_drop_list_ers, struct item_drop_list);
+	dlist = pet->item_drop_list_ers->alloc();
 	dlist->m = pd->bl.m;
 	dlist->x = pd->bl.x;
 	dlist->y = pd->bl.y;
@@ -1309,13 +1309,13 @@ static int pet_lootitem_drop(struct pet_data *pd, struct map_session_data *sd)
 		if (sd) {
 			if ((flag = pc->additem(sd,it,it->amount,LOG_TYPE_PICKDROP_PLAYER))) {
 				clif->additem(sd,0,0,flag);
-				ditem = ers_alloc(pet->item_drop_ers, struct item_drop);
+				ditem = pet->item_drop_ers->alloc();
 				memcpy(&ditem->item_data, it, sizeof(struct item));
 				ditem->next = dlist->item;
 				dlist->item = ditem;
 			}
 		} else {
-			ditem = ers_alloc(pet->item_drop_ers, struct item_drop);
+			ditem = pet->item_drop_ers->alloc();
 			memcpy(&ditem->item_data, it, sizeof(struct item));
 			ditem->next = dlist->item;
 			dlist->item = ditem;
@@ -1330,7 +1330,7 @@ static int pet_lootitem_drop(struct pet_data *pd, struct map_session_data *sd)
 	if (dlist->item)
 		timer->add(timer->gettick()+540,pet->delay_item_drop,0,(intptr_t)dlist);
 	else
-		ers_free(pet->item_drop_list_ers, dlist);
+		pet->item_drop_list_ers->free(dlist);
 	return 1;
 }
 
@@ -1907,8 +1907,8 @@ static int do_init_pet(bool minimal)
 
 	pet->read_db();
 
-	pet->item_drop_ers = ers_new(sizeof(struct item_drop),"pet.cpp::item_drop_ers",ERS_OPT_NONE);
-	pet->item_drop_list_ers = ers_new(sizeof(struct item_drop_list),"pet.cpp::item_drop_list_ers",ERS_OPT_NONE);
+	pet->item_drop_ers = ERS<item_drop>::create("pet.cpp::item_drop_ers", ERS_OPT_NONE);
+	pet->item_drop_list_ers = ERS<item_drop_list>::create("pet.cpp::item_drop_list_ers", ERS_OPT_NONE);
 
 	timer->add_func_list(pet->hungry,"pet_hungry");
 	timer->add_func_list(pet->ai_hard,"pet_ai_hard");
@@ -1944,8 +1944,8 @@ static int do_final_pet(void)
 		}
 		VECTOR_CLEAR(pet->db[i].evolve_data);
 	}
-	ers_destroy(pet->item_drop_ers);
-	ers_destroy(pet->item_drop_list_ers);
+	ERI::destroy(pet->item_drop_ers);
+	ERI::destroy(pet->item_drop_list_ers);
 
 	return 0;
 }

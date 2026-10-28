@@ -38,7 +38,7 @@
 #include "map/unit.h" // struct unit_data, struct view_data
 #include "map/vending.h" // struct s_vending
 #include "common/db.h"
-#include "common/ers.h" // struct eri
+#include "common/ers_fwd.h"
 #include "common/hercules.h"
 #include "common/mmo.h" // JOB_*, MAX_FAME_LIST, struct fame_list, struct mmo_charstatus, NEW_CARTS, struct s_achievement
 
@@ -989,14 +989,14 @@ END_ZEROED_BLOCK; /* End */
 	unsigned int equip_pos[EQI_MAX];
 	struct sg_data sg_info[MAX_PC_FEELHATE];
 	/* */
-	struct eri *sc_display_ers;
+	ERS<sc_display_entry, 150> *sc_display_ers;
 	/* global expiration timer id */
 	int expiration_tid;
 	/**
 	 * ERS for the bulk of pc vars
 	 **/
-	struct eri *num_reg_ers;
-	struct eri *str_reg_ers;
+	ERS<script_reg_num, 300> *num_reg_ers;
+	ERS<script_reg_str, 50> *str_reg_ers;
 	/* */
 	bool reg_load;
 	/* funcs */

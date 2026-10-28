@@ -64,6 +64,7 @@
 #include "common/cbasetypes.h"
 #include "common/conf.h"
 #include "common/db.h"
+#include "common/ers.h"
 #include "common/memmgr.h"
 #include "common/md5calc.h"
 #include "common/mmo.h" // NEW_CARTS
@@ -3513,7 +3514,7 @@ static int script_free_array_db(union DBKey key, struct DBData *data, va_list ap
 {
 	struct script_array *sa = (struct script_array *)DB->data2ptr(data);
 	aFree(sa->members);
-	ers_free(script->array_ers, sa);
+	script->array_ers->free(sa);
 	return 0;
 }
 /**
@@ -3525,7 +3526,7 @@ static void script_array_delete(struct reg_db *src, struct script_array *sa)
 	nullpo_retv(sa);
 	aFree(sa->members);
 	idb_remove(src->arrays, sa->id);
-	ers_free(script->array_ers, sa);
+	script->array_ers->free(sa);
 }
 /**
  * Removes a member from a script_array list
@@ -3655,7 +3656,7 @@ static void script_array_update(struct reg_db *src, int64 num, bool empty)
 			/* we do nothing if its empty, no point in modifying array data for a new empty member */
 		}
 	} else if ( !empty ) {/* we only move to create if not empty */
-		sa = ers_alloc(script->array_ers, struct script_array);
+		sa = script->array_ers->alloc();
 		sa->id = id;
 		sa->members = NULL;
 		sa->size = 0;
@@ -4281,8 +4282,8 @@ static struct script_state *script_alloc_state(struct script_code *rootscript, i
 {
 	struct script_state* st;
 
-	st = ers_alloc(script->st_ers, struct script_state);
-	st->stack = ers_alloc(script->stack_ers, struct script_stack);
+	st = script->st_ers->alloc();
+	st->stack = script->stack_ers->alloc();
 	st->pending_refs = NULL;
 	st->pending_ref_count = 0;
 	st->stack->sp = 0;
@@ -4347,7 +4348,7 @@ static void script_free_state(struct script_state *st)
 				st->stack->scope.arrays->destroy(st->stack->scope.arrays,script->array_free_db);
 			script->pop_stack(st, 0, st->stack->sp);
 			aFree(st->stack->stack_data);
-			ers_free(script->stack_ers, st->stack);
+			script->stack_ers->free(st->stack);
 			st->stack = NULL;
 		}
 		if( st->script && st->script->instances != USHRT_MAX && --st->script->instances == 0 ) {
@@ -4368,7 +4369,7 @@ static void script_free_state(struct script_state *st)
 			st->pending_refs = NULL;
 		}
 		idb_remove(script->st_db, st->id);
-		ers_free(script->st_ers, st);
+		script->st_ers->free(st);
 		if( --script->active_scripts == 0 ) {
 			script->next_id = 0;
 		}
@@ -5440,9 +5441,9 @@ static int script_reg_destroy(union DBKey key, struct DBData *data, va_list ap)
 		if( p->value )
 			aFree(p->value);
 
-		ers_free(pc->str_reg_ers,p);
+		pc->str_reg_ers->free(p);
 	} else {
-		ers_free(pc->num_reg_ers,(struct script_reg_num*)src);
+		pc->num_reg_ers->free((struct script_reg_num*)src);
 	}
 	return 0;
 }
@@ -5461,9 +5462,9 @@ static void script_reg_destroy_single(struct map_session_data *sd, int64 reg, st
 		if( p->value )
 			aFree(p->value);
 
-		ers_free(pc->str_reg_ers,p);
+		pc->str_reg_ers->free(p);
 	} else {
-		ers_free(pc->num_reg_ers,(struct script_reg_num*)data);
+		pc->num_reg_ers->free((struct script_reg_num*)data);
 	}
 }
 static unsigned int *script_array_cpy_list(struct script_array *sa)
@@ -5648,15 +5649,15 @@ static void do_final_script(void)
 	script->local_casecheck.clear();
 #endif // ENABLE_CASE_CHECK
 
-	ers_destroy(script->st_ers);
-	ers_destroy(script->stack_ers);
+	ERI::destroy(script->st_ers);
+	ERI::destroy(script->stack_ers);
 
 	db_destroy(script->st_db);
 
 	if( script->labels != NULL )
 		aFree(script->labels);
 
-	ers_destroy(script->array_ers);
+	ERI::destroy(script->array_ers);
 
 	if( script->generic_ui_array )
 		aFree(script->generic_ui_array);
@@ -6163,12 +6164,9 @@ static void do_init_script(bool minimal)
 	script->userfunc_db = strdb_alloc(DB_OPT_DUP_KEY,0);
 	script->autobonus_db = strdb_alloc(DB_OPT_DUP_KEY,0);
 
-	script->st_ers = ers_new(sizeof(struct script_state), "script.cpp::st_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
-	script->stack_ers = ers_new(sizeof(struct script_stack), "script.cpp::script_stack", (enum ERSOptions)(ERS_OPT_NONE | ERS_OPT_FLEX_CHUNK));
-	script->array_ers = ers_new(sizeof(struct script_array), "script.cpp::array_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_CLEAR));
-
-	ers_chunk_size(script->st_ers, 10);
-	ers_chunk_size(script->stack_ers, 10);
+	script->st_ers = ERS<script_state, 10>::create("script.cpp::st_ers", ERS_OPT_CLEAN);
+	script->stack_ers = ERS<script_stack, 10>::create("script.cpp::script_stack", ERS_OPT_NONE);
+	script->array_ers = ERS<script_array>::create("script.cpp::array_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_CLEAR));
 
 	VECTOR_INIT(script->hq);
 	VECTOR_INIT(script->hqi);

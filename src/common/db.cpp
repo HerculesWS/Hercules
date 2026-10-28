@@ -215,7 +215,7 @@ struct DBMap_impl {
 	unsigned int free_max;
 	unsigned int free_lock;
 	// Other
-	ERS *nodes;
+	ERS<DBNode> *nodes;
 	DBComparator cmp;
 	DBHasher hash;
 	DBReleaser release;
@@ -358,8 +358,8 @@ static struct db_stats {
 #endif /* !defined(DB_ENABLE_STATS) */
 
 /* [Ind/Hercules] */
-static struct eri *db_iterator_ers;
-static struct eri *db_alloc_ers;
+static ERS<DBIterator_impl, 10> *db_iterator_ers;
+static ERS<DBMap_impl, 50> *db_alloc_ers;
 
 /*****************************************************************************\
  *  (2) Section of private functions used by the database system.            *
@@ -862,7 +862,7 @@ static void db_free_unlock(struct DBMap_impl *db)
 		db_rebalance_erase(db->free_list[i].node, db->free_list[i].root);
 		db_dup_key_free(db, db->free_list[i].node->key);
 		DB_COUNTSTAT(db_node_free);
-		ers_free(db->nodes, db->free_list[i].node);
+		db->nodes->free(db->free_list[i].node);
 	}
 	db->free_count = 0;
 }
@@ -1519,7 +1519,7 @@ static void dbit_obj_destroy(struct DBIterator *self)
 	// unlock the database
 	db_free_unlock(it->db);
 	// free iterator
-	ers_free(db_iterator_ers,self);
+	db_iterator_ers->free(it);
 }
 
 /**
@@ -1537,7 +1537,7 @@ static struct DBIterator *db_obj_iterator(struct DBMap *self)
 	struct DBIterator_impl *it;
 
 	DB_COUNTSTAT(db_iterator);
-	it = ers_alloc(db_iterator_ers, struct DBIterator_impl);
+	it = db_iterator_ers->alloc();
 	/* Interface of the iterator **/
 	it->vtable.first   = dbit_obj_first;
 	it->vtable.last    = dbit_obj_last;
@@ -1817,7 +1817,7 @@ static struct DBData *db_obj_vensure(struct DBMap *self, union DBKey key, DBCrea
 				return NULL;
 		}
 		DB_COUNTSTAT(db_node_alloc);
-		node = ers_alloc(db->nodes, struct DBNode);
+		node = db->nodes->alloc();
 		node->left = NULL;
 		node->right = NULL;
 		node->deleted = 0;
@@ -1955,7 +1955,7 @@ static int db_obj_put(struct DBMap *self, union DBKey key, struct DBData data, s
 	// allocate a new node if necessary
 	if (node == NULL) {
 		DB_COUNTSTAT(db_node_alloc);
-		node = ers_alloc(db->nodes, struct DBNode);
+		node = db->nodes->alloc();
 		node->left = NULL;
 		node->right = NULL;
 		node->deleted = 0;
@@ -2191,7 +2191,7 @@ static int db_obj_vclear(struct DBMap *self, DBApply func, va_list args)
 				else
 					parent->right = NULL;
 			}
-			ers_free(db->nodes, node);
+			db->nodes->free(node);
 			node = parent;
 		}
 		db->ht[i] = NULL;
@@ -2278,9 +2278,9 @@ static int db_obj_vdestroy(struct DBMap *self, DBApply func, va_list args)
 	aFree(db->free_list);
 	db->free_list = NULL;
 	db->free_max = 0;
-	ers_destroy(db->nodes);
+	ERI::destroy(db->nodes);
 	db_free_unlock(db);
-	ers_free(db_alloc_ers, db);
+	db_alloc_ers->free(db);
 	return sum;
 }
 
@@ -2583,7 +2583,7 @@ static struct DBMap *db_alloc(const char *file, const char *func, int line, enum
 		case DB_UINT64: DB_COUNTSTAT(db_uint64_alloc); break;
 	}
 #endif /* DB_ENABLE_STATS */
-	db = ers_alloc(db_alloc_ers, struct DBMap_impl);
+	db = db_alloc_ers->alloc();
 
 	options = DB->fix_options(type, options);
 	/* Interface of the database */
@@ -2615,7 +2615,7 @@ static struct DBMap *db_alloc(const char *file, const char *func, int line, enum
 	db->free_lock = 0;
 	/* Other */
 	snprintf(ers_name, 50, "db_alloc:nodes:%s:%s:%d",func,file,line);
-	db->nodes = ers_new(sizeof(struct DBNode),ers_name,(enum ERSOptions)(ERS_OPT_WAIT|ERS_OPT_CLEAN)); // FIXME: change this to a flag type
+	db->nodes = ERS<DBNode>::create(ers_name,(enum ERSOptions)(ERS_OPT_WAIT|ERS_OPT_CLEAN)); // FIXME: change this to a flag type
 	db->cmp = DB->default_cmp(type);
 	db->hash = DB->default_hash(type);
 	db->release = DB->default_release(type, options);
@@ -2809,10 +2809,8 @@ static void *db_data2ptr(struct DBData *data)
  */
 static void db_init(void)
 {
-	db_iterator_ers = ers_new(sizeof(struct DBIterator_impl),"db.cpp::db_iterator_ers", (enum ERSOptions)(ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK)); // FIXME: change this to a flag type
-	db_alloc_ers = ers_new(sizeof(struct DBMap_impl),"db.cpp::db_alloc_ers",(enum ERSOptions)(ERS_OPT_CLEAN|ERS_OPT_FLEX_CHUNK)); // FIXME: change this to a flag type
-	ers_chunk_size(db_alloc_ers, 50);
-	ers_chunk_size(db_iterator_ers, 10);
+	db_iterator_ers = ERS<DBIterator_impl, 10>::create("db.cpp::db_iterator_ers", ERS_OPT_CLEAN); // FIXME: change this to a flag type
+	db_alloc_ers = ERS<DBMap_impl, 50>::create("db.cpp::db_alloc_ers", ERS_OPT_CLEAN); // FIXME: change this to a flag type
 	DB_COUNTSTAT(db_init);
 }
 
@@ -2914,8 +2912,8 @@ static void db_final(void)
 			stats.db_data2ui,         stats.db_data2ptr,
 			stats.db_init,            stats.db_final);
 #endif /* DB_ENABLE_STATS */
-	ers_destroy(db_iterator_ers);
-	ers_destroy(db_alloc_ers);
+	ERI::destroy(db_iterator_ers);
+	ERI::destroy(db_alloc_ers);
 }
 
 // Link DB System - jAthena

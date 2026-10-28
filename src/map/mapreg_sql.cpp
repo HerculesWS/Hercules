@@ -104,7 +104,7 @@ static bool mapreg_set_num_db(int64 uid, const char *name, unsigned int index, i
 	if (index != 0)
 		script->array_update(&mapreg->regs, uid, false);
 
-	var = ers_alloc(mapreg->ers, struct mapreg_save);
+	var = mapreg->ers->alloc();
 	var->u.i = value;
 	var->uid = uid;
 	var->save = false;
@@ -155,7 +155,7 @@ static bool mapreg_delete_num_db(int64 uid, const char *name, unsigned int index
 	struct mapreg_save *var = (struct mapreg_save *)i64db_get(mapreg->regs.vars, uid);
 
 	if (var != NULL)
-		ers_free(mapreg->ers, var);
+		mapreg->ers->free(var);
 
 	if (index != 0)
 		script->array_update(&mapreg->regs, uid, true);
@@ -249,7 +249,7 @@ static bool mapreg_set_str_db(int64 uid, const char *name, unsigned int index, c
 	if (index != 0)
 		script->array_update(&mapreg->regs, uid, false);
 
-	var = ers_alloc(mapreg->ers, struct mapreg_save);
+	var = mapreg->ers->alloc();
 	var->u.str = aStrdup(value);
 	var->uid = uid;
 	var->save = false;
@@ -303,7 +303,7 @@ static bool mapreg_delete_str_db(int64 uid, const char *name, unsigned int index
 		if (var->u.str != NULL)
 			aFree(var->u.str);
 
-		ers_free(mapreg->ers, var);
+		mapreg->ers->free(var);
 	}
 
 	if (index != 0)
@@ -610,7 +610,7 @@ static int mapreg_destroy_reg(union DBKey key, struct DBData *data, va_list ap)
 	if (var->is_string && var->u.str != NULL)
 		aFree(var->u.str);
 
-	ers_free(mapreg->ers, var);
+	mapreg->ers->free(var);
 	return 0;
 }
 
@@ -677,7 +677,7 @@ static void mapreg_final(void)
 {
 	mapreg->save();
 	mapreg->regs.vars->destroy(mapreg->regs.vars, mapreg->destroyreg);
-	ers_destroy(mapreg->ers);
+	ERI::destroy(mapreg->ers);
 
 	if (mapreg->regs.arrays != NULL)
 		mapreg->regs.arrays->destroy(mapreg->regs.arrays, script->array_free_db);
@@ -690,7 +690,7 @@ static void mapreg_final(void)
 static void mapreg_init(void)
 {
 	mapreg->regs.vars = i64db_alloc(DB_OPT_BASE);
-	mapreg->ers = ers_new(sizeof(struct mapreg_save), "mapreg_sql.cpp::mapreg_ers", ERS_OPT_CLEAN);
+	mapreg->ers = ERS<mapreg_save>::create("mapreg_sql.cpp::mapreg_ers", ERS_OPT_CLEAN);
 	mapreg->load();
 	timer->add_func_list(mapreg->save_timer, "mapreg_save_timer");
 	timer->add_interval(timer->gettick() + MAPREG_AUTOSAVE_INTERVAL, mapreg->save_timer, 0, 0, MAPREG_AUTOSAVE_INTERVAL);
