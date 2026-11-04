@@ -401,7 +401,7 @@ static int guild_payexp_timer_sub(union DBKey key, struct DBData *data, va_list 
 	if ((g = guild->search(c->guild_id)) == NULL
 	 || (i = guild->getindex(g, c->account_id, c->char_id)) == INDEX_NOT_FOUND
 	) {
-		ers_free(guild->expcache_ers, c);
+		guild->expcache_ers->free(c);
 		return 0;
 	}
 
@@ -414,7 +414,7 @@ static int guild_payexp_timer_sub(union DBKey key, struct DBData *data, va_list 
 		GMI_EXP,&g->member[i].exp,sizeof(g->member[i].exp));
 	c->exp=0;
 
-	ers_free(guild->expcache_ers, c);
+	guild->expcache_ers->free(c);
 	return 0;
 }
 
@@ -1432,7 +1432,7 @@ static struct DBData create_expcache(union DBKey key, va_list args)
 	struct guild_expcache *c;
 	struct map_session_data *sd = va_arg(args, struct map_session_data*);
 
-	c = ers_alloc(guild->expcache_ers, struct guild_expcache);
+	c = guild->expcache_ers->alloc();
 	nullpo_retr(DB->ptr2data(c), sd);
 	c->guild_id = sd->status.guild_id;
 	c->account_id = sd->status.account_id;
@@ -2448,7 +2448,7 @@ static int eventlist_db_final(union DBKey key, struct DBData *data, va_list ap)
  */
 static int guild_expcache_db_final(union DBKey key, struct DBData *data, va_list ap)
 {
-	ers_free(guild->expcache_ers, DB->data2ptr(data));
+	guild->expcache_ers->free(reinterpret_cast<guild_expcache *>(DB->data2ptr(data)));
 	return 0;
 }
 
@@ -2492,7 +2492,7 @@ static void do_init_guild(bool minimal)
 	guild->castle_db    = idb_alloc(DB_OPT_BASE);
 	guild->expcache_db  = idb_alloc(DB_OPT_BASE);
 	guild->infoevent_db = idb_alloc(DB_OPT_BASE);
-	guild->expcache_ers = ers_new(sizeof(struct guild_expcache),"guild.cpp::expcache_ers",ERS_OPT_NONE);
+	guild->expcache_ers = ERS<guild_expcache>::create("guild.cpp::expcache_ers", ERS_OPT_NONE);
 
 	guild->read_castledb_libconfig();
 	//guild skill tree [Komurka]
@@ -2523,7 +2523,7 @@ static void do_final_guild(void)
 	guild->castle_db->destroy(guild->castle_db,guild->castle_db_final);
 	guild->expcache_db->destroy(guild->expcache_db,guild->expcache_db_final);
 	guild->infoevent_db->destroy(guild->infoevent_db,guild->eventlist_db_final);
-	ers_destroy(guild->expcache_ers);
+	ERI::destroy(guild->expcache_ers);
 
 	if( guild->flags )
 		aFree(guild->flags);

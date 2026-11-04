@@ -60,6 +60,7 @@
 #include "common/cbasetypes.h"
 #include "common/conf.h"
 #include "common/core.h" // get_svn_revision()
+#include "common/ers.h"
 #include "common/HPM.h"
 #include "common/memmgr.h"
 #include "common/mmo.h" // NAME_LENGTH, MAX_CARTS, NEW_CARTS
@@ -9639,7 +9640,7 @@ static void pc_setregstr(struct map_session_data *sd, int64 reg, const char *str
 	nullpo_retv(sd);
 	nullpo_retv(str);
 	if( str[0] ) {
-		struct script_reg_str *p_new = ers_alloc(pc->str_reg_ers, struct script_reg_str);
+		struct script_reg_str *p_new = pc->str_reg_ers->alloc();
 
 		p_new->value = aStrdup(str);
 		p_new->flag.type = 1;
@@ -9648,7 +9649,7 @@ static void pc_setregstr(struct map_session_data *sd, int64 reg, const char *str
 			struct script_reg_str *p_old = (struct script_reg_str *)DB->data2ptr(&prev);
 			if (p_old->value)
 				aFree(p_old->value);
-			ers_free(pc->str_reg_ers, p_old);
+			pc->str_reg_ers->free(p_old);
 		} else {
 			if( index )
 				script->array_update(&sd->regs, reg, false);
@@ -9658,7 +9659,7 @@ static void pc_setregstr(struct map_session_data *sd, int64 reg, const char *str
 			struct script_reg_str *p_old = (struct script_reg_str *)DB->data2ptr(&prev);
 			if (p_old->value)
 				aFree(p_old->value);
-			ers_free(pc->str_reg_ers, p_old);
+			pc->str_reg_ers->free(p_old);
 			if( index )
 				script->array_update(&sd->regs, reg, true);
 		}
@@ -9777,7 +9778,7 @@ static int pc_setregistry(struct map_session_data *sd, int64 reg, int val)
 		if( index )
 			script->array_update(&sd->regs, reg, false);
 
-		p = ers_alloc(pc->num_reg_ers, struct script_reg_num);
+		p = pc->num_reg_ers->alloc();
 
 		p->value = val;
 		if( !pc->reg_load )
@@ -9786,7 +9787,7 @@ static int pc_setregistry(struct map_session_data *sd, int64 reg, int val)
 		if( sd->regs.vars->put(sd->regs.vars, DB->i642key(reg), DB->ptr2data(p), &prev) ) {
 			// TODO: Is this intentionally overwriting p? (see the check below to decide whether to mark as dirty)
 			p = (struct script_reg_num *)DB->data2ptr(&prev);
-			ers_free(pc->num_reg_ers, p);
+			pc->num_reg_ers->free(p);
 		}
 	}
 
@@ -9834,7 +9835,7 @@ static int pc_setregistry_str(struct map_session_data *sd, int64 reg, const char
 		if( index )
 			script->array_update(&sd->regs, reg, false);
 
-		p = ers_alloc(pc->str_reg_ers, struct script_reg_str);
+		p = pc->str_reg_ers->alloc();
 
 		p->value = aStrdup(val);
 		if( !pc->reg_load )
@@ -9846,7 +9847,7 @@ static int pc_setregistry_str(struct map_session_data *sd, int64 reg, const char
 			p = (struct script_reg_str *)DB->data2ptr(&prev);
 			if( p->value )
 				aFree(p->value);
-			ers_free(pc->str_reg_ers, p);
+			pc->str_reg_ers->free(p);
 		}
 	}
 
@@ -12956,9 +12957,9 @@ static void do_final_pc(void)
 
 	pc->clear_exp_groups();
 
-	ers_destroy(pc->sc_display_ers);
-	ers_destroy(pc->num_reg_ers);
-	ers_destroy(pc->str_reg_ers);
+	ERI::destroy(pc->sc_display_ers);
+	ERI::destroy(pc->num_reg_ers);
+	ERI::destroy(pc->str_reg_ers);
 
 	return;
 }
@@ -13004,13 +13005,9 @@ static void do_init_pc(bool minimal)
 
 	pcg->init();
 
-	pc->sc_display_ers = ers_new(sizeof(struct sc_display_entry), "pc.cpp:sc_display_ers", ERS_OPT_FLEX_CHUNK);
-	pc->num_reg_ers = ers_new(sizeof(struct script_reg_num), "pc.cpp::num_reg_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
-	pc->str_reg_ers = ers_new(sizeof(struct script_reg_str), "pc.cpp::str_reg_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
-
-	ers_chunk_size(pc->sc_display_ers, 150);
-	ers_chunk_size(pc->num_reg_ers, 300);
-	ers_chunk_size(pc->str_reg_ers, 50);
+	pc->sc_display_ers = ERS<sc_display_entry, 150>::create("pc.cpp:sc_display_ers", ERS_OPT_NONE);
+	pc->num_reg_ers = ERS<script_reg_num, 300>::create("pc.cpp::num_reg_ers", ERS_OPT_CLEAN);
+	pc->str_reg_ers = ERS<script_reg_str, 50>::create("pc.cpp::str_reg_ers", ERS_OPT_CLEAN);
 }
 
 /*=====================================

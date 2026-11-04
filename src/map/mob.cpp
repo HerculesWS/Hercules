@@ -94,8 +94,8 @@ struct item_drop_ratio {
 static struct item_drop_ratio *item_drop_ratio_db[MAX_ITEMDB];
 static struct DBMap *item_drop_ratio_other_db = NULL;
 
-static struct eri *item_drop_ers; //For loot drops delay structures.
-static struct eri *item_drop_list_ers;
+static ERS<item_drop> *item_drop_ers; //For loot drops delay structures.
+static ERS<item_drop_list> *item_drop_list_ers;
 
 static struct mob_db *mob_db_(int index)
 {
@@ -2171,7 +2171,7 @@ static void mob_setdropitem_options(struct item *item, struct optdrop_group *opt
  *------------------------------------------*/
 static struct item_drop *mob_setdropitem(int nameid, struct optdrop_group *options, int qty, struct item_data *data)
 {
-	struct item_drop *drop = ers_alloc(item_drop_ers, struct item_drop);
+	struct item_drop *drop = item_drop_ers->alloc();
 	drop->item_data.nameid = nameid;
 	drop->item_data.amount = qty;
 	drop->item_data.identify = data ? itemdb->isidentified2(data) : itemdb->isidentified(nameid);
@@ -2193,7 +2193,7 @@ static struct item_drop *mob_setlootitem(struct item *item)
 	struct item_drop *drop ;
 
 	nullpo_retr(NULL, item);
-	drop = ers_alloc(item_drop_ers, struct item_drop);
+	drop = item_drop_ers->alloc();
 	memcpy(&drop->item_data, item, sizeof(struct item));
 	drop->showdropeffect = false;
 	drop->next = NULL;
@@ -2217,9 +2217,9 @@ static int mob_delay_item_drop(int tid, int64 tick, int id, intptr_t data)
 		    ditem->showdropeffect);
 		ditem_prev = ditem;
 		ditem = ditem->next;
-		ers_free(item_drop_ers, ditem_prev);
+		item_drop_ers->free(ditem_prev);
 	}
-	ers_free(item_drop_list_ers, list);
+	item_drop_list_ers->free(list);
 	return 0;
 }
 
@@ -2257,7 +2257,7 @@ static void mob_item_drop(struct mob_data *md, struct item_drop_list *dlist, str
 		if (party->share_loot(party->search(sd->status.party_id),
 			sd, &ditem->item_data, sd->status.char_id) == 0
 		) {
-			ers_free(item_drop_ers, ditem);
+			item_drop_ers->free(ditem);
 			return;
 		}
 	}
@@ -2738,7 +2738,7 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 		(md->special_state.ai == AI_SPHERE && battle_config.alchemist_summon_reward == 1) //Marine Sphere Drops items.
 		) )
 	{ // Item Drop
-		struct item_drop_list *dlist = ers_alloc(item_drop_list_ers, struct item_drop_list);
+		struct item_drop_list *dlist = item_drop_list_ers->alloc();
 		struct item_drop *ditem;
 		struct item_data* it = NULL;
 		int drop_rate;
@@ -2902,10 +2902,10 @@ static int mob_dead(struct mob_data *md, struct block_list *src, int type)
 		if (dlist->item) //There are drop items.
 			timer->add(tick + (!battle_config.delay_battle_damage?500:0), mob->delay_item_drop, 0, (intptr_t)dlist);
 		else //No drops
-			ers_free(item_drop_list_ers, dlist);
+			item_drop_list_ers->free(dlist);
 	} else if (md->lootitem && md->lootitem_count) {
 		//Loot MUST drop!
-		struct item_drop_list *dlist = ers_alloc(item_drop_list_ers, struct item_drop_list);
+		struct item_drop_list *dlist = item_drop_list_ers->alloc();
 		dlist->m = md->bl.m;
 		dlist->x = md->bl.x;
 		dlist->y = md->bl.y;
@@ -6126,8 +6126,8 @@ static int do_init_mob(bool minimal)
 	memset(mob->db_data,0,sizeof(mob->db_data)); //Clear the array
 	mob->db_data[0] = (struct mob_db *)aCalloc(1, sizeof (struct mob_db)); //This mob is used for random spawns
 	mob->makedummymobdb(0); //The first time this is invoked, it creates the dummy mob
-	item_drop_ers = ers_new(sizeof(struct item_drop),"mob.cpp::item_drop_ers",ERS_OPT_CLEAN);
-	item_drop_list_ers = ers_new(sizeof(struct item_drop_list),"mob.cpp::item_drop_list_ers",ERS_OPT_NONE);
+	item_drop_ers = ERS<item_drop>::create("mob.cpp::item_drop_ers", ERS_OPT_CLEAN);
+	item_drop_list_ers = ERS<item_drop_list>::create("mob.cpp::item_drop_list_ers", ERS_OPT_NONE);
 
 	mob->load(minimal);
 
@@ -6217,8 +6217,8 @@ static int do_final_mob(void)
 	}
 	mob->item_drop_ratio_other_db->clear(mob->item_drop_ratio_other_db, mob->final_ratio_sub);
 	db_destroy(mob->item_drop_ratio_other_db);
-	ers_destroy(item_drop_ers);
-	ers_destroy(item_drop_list_ers);
+	ERI::destroy(item_drop_ers);
+	ERI::destroy(item_drop_list_ers);
 	return 0;
 }
 

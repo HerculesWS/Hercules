@@ -26,6 +26,7 @@
 #include "map/unit.h" // struct unit_data
 #include "common/hercules.h"
 #include "common/db.h"
+#include "common/ers_fwd.h"
 
 #include <pcre.h>
 
@@ -33,6 +34,7 @@
 struct hplugin_data_store;
 struct itemlist; // map/itemdb.h
 struct view_data;
+struct timer_event_data;
 
 enum market_buy_result;
 
@@ -216,7 +218,7 @@ struct npc_interface {
 	/// const char* npc_name -> struct npc_data*
 	struct DBMap *name_db;
 	struct DBMap *path_db;
-	struct eri *timer_event_ers; ///< For the npc timer data. [Skotlex]
+	ERS<timer_event_data> *timer_event_ers; ///< For the npc timer data. [Skotlex]
 	struct npc_data *fake_nd;
 	struct npc_src_list *src_files;
 	struct unit_data base_ud;

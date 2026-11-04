@@ -62,6 +62,7 @@
 #include "common/cbasetypes.h"
 #include "common/conf.h"
 #include "common/core.h"
+#include "common/ers.h"
 #include "common/memmgr.h"
 #include "common/mmo.h" // MAX_CARTS
 #include "common/msgtable.h"
@@ -10653,11 +10654,11 @@ ACMD(cddebug)
 			for(i = 0; i < cd->cursor; i++) {
 				if( !cd->entry[i] ) continue;
 				timer->delete_(cd->entry[i]->timer,skill->blockpc_end);
-				ers_free(skill->cd_entry_ers, cd->entry[i]);
+				skill->cd_entry_ers->free(cd->entry[i]);
 			}
 
 			idb_remove(skill->cd_db,sd->status.char_id);
-			ers_free(skill->cd_ers, cd);
+			skill->cd_ers->free(cd);
 		}
 	}
 

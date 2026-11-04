@@ -4679,7 +4679,7 @@ static int skill_timerskill_(int tid, int64 tick, int id, intptr_t data)
 		}
 	} while (0);
 	//Free skl now that it is no longer needed.
-	ers_free(skill->timer_ers, skl);
+	skill->timer_ers->free(skl);
 	return 0;
 }
 
@@ -4714,7 +4714,7 @@ static int skill_addtimerskill(struct block_list *src, int64 tick, int target, i
 	ARR_FIND( 0, MAX_SKILLTIMERSKILL, i, ud->skilltimerskill[i] == 0 );
 	if( i == MAX_SKILLTIMERSKILL ) return 1;
 
-	ud->skilltimerskill[i] = ers_alloc(skill->timer_ers, struct skill_timerskill);
+	ud->skilltimerskill[i] = skill->timer_ers->alloc();
 	ud->skilltimerskill[i]->timer = timer->add(tick, skill->timerskill, src->id, i);
 	ud->skilltimerskill[i]->src_id = src->id;
 	ud->skilltimerskill[i]->target_id = target;
@@ -4757,7 +4757,7 @@ static int skill_cleartimerskill(struct block_list *src)
 						continue;
 			}
 			timer->delete_(ud->skilltimerskill[i]->timer, skill->timerskill);
-			ers_free(skill->timer_ers, ud->skilltimerskill[i]);
+			skill->timer_ers->free(ud->skilltimerskill[i]);
 			ud->skilltimerskill[i]=NULL;
 		}
 	}
@@ -19517,7 +19517,7 @@ static struct skill_unit_group *skill_initunitgroup(struct block_list *src, int 
 		i = MAX_SKILLUNITGROUP-1;
 	}
 
-	group              = ers_alloc(skill->unit_ers, struct skill_unit_group);
+	group              = skill->unit_ers->alloc();
 	group->src_id      = src->id;
 	group->party_id    = status->get_party_id(src);
 	group->guild_id    = status->get_guild_id(src);
@@ -19673,7 +19673,7 @@ static int skill_delunitgroup(struct skill_unit_group *group)
 	if( i < MAX_SKILLUNITGROUP ) {
 		ud->skillunit[i] = ud->skillunit[j];
 		ud->skillunit[j] = NULL;
-		ers_free(skill->unit_ers, group);
+		skill->unit_ers->free(group);
 	} else
 		ShowError("skill_delunitgroup: Group not found! (src_id: %d skill_id: %d)\n", group->src_id, group->skill_id);
 
@@ -21384,7 +21384,7 @@ static int skill_blockpc_end(int tid, int64 tick, int id, intptr_t data)
 		} else {
 			int cursor = 0;
 
-			ers_free(skill->cd_entry_ers, cd->entry[i]);
+			skill->cd_entry_ers->free(cd->entry[i]);
 
 			cd->entry[i] = NULL;
 
@@ -21398,7 +21398,7 @@ static int skill_blockpc_end(int tid, int64 tick, int id, intptr_t data)
 
 			if( (cd->cursor = cursor) == 0 ) {
 				idb_remove(skill->cd_db,sd->status.char_id);
-				ers_free(skill->cd_ers, cd);
+				skill->cd_ers->free(cd);
 			}
 		}
 	}
@@ -21435,7 +21435,7 @@ static int skill_blockpc_start_(struct map_session_data *sd, uint16 skill_id, in
 
 	if ((cd = (struct skill_cd *)idb_get(skill->cd_db, sd->status.char_id)) == NULL) {
 		// create a new skill cooldown object for map storage
-		cd = ers_alloc(skill->cd_ers, struct skill_cd);
+		cd = skill->cd_ers->alloc();
 
 		idb_put( skill->cd_db, sd->status.char_id, cd );
 	} else {
@@ -21458,7 +21458,7 @@ static int skill_blockpc_start_(struct map_session_data *sd, uint16 skill_id, in
 			else {
 				int cursor;
 				/* somehow, the timer vanished. (bugreport:8367) */
-				ers_free(skill->cd_entry_ers, cd->entry[i]);
+				skill->cd_entry_ers->free(cd->entry[i]);
 
 				cd->entry[i] = NULL;
 
@@ -21480,7 +21480,7 @@ static int skill_blockpc_start_(struct map_session_data *sd, uint16 skill_id, in
 		return -1;
 	}
 
-	cd->entry[cd->cursor] = ers_alloc(skill->cd_entry_ers,struct skill_cd_entry);
+	cd->entry[cd->cursor] = skill->cd_entry_ers->alloc();
 
 	cd->entry[cd->cursor]->duration = tick;
 	cd->entry[cd->cursor]->total = tick;
@@ -25778,15 +25778,10 @@ static int do_init_skill(bool minimal)
 	skill->cd_db = idb_alloc(DB_OPT_BASE);
 	skill->usave_db = idb_alloc(DB_OPT_RELEASE_DATA);
 	skill->bowling_db = idb_alloc(DB_OPT_BASE);
-	skill->unit_ers = ers_new(sizeof(struct skill_unit_group), "skill.cpp::skill_unit_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
-	skill->timer_ers  = ers_new(sizeof(struct skill_timerskill), "skill.cpp::skill_timer_ers", (enum ERSOptions)(ERS_OPT_NONE | ERS_OPT_FLEX_CHUNK));
-	skill->cd_ers = ers_new(sizeof(struct skill_cd), "skill.cpp::skill_cd_ers", (enum ERSOptions)(ERS_OPT_CLEAR | ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
-	skill->cd_entry_ers = ers_new(sizeof(struct skill_cd_entry), "skill.cpp::skill_cd_entry_ers", (enum ERSOptions)(ERS_OPT_CLEAR | ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
-
-	ers_chunk_size(skill->cd_ers, 25);
-	ers_chunk_size(skill->cd_entry_ers, 100);
-	ers_chunk_size(skill->unit_ers, 150);
-	ers_chunk_size(skill->timer_ers, 150);
+	skill->unit_ers = ERS<skill_unit_group, 150>::create("skill.cpp::skill_unit_ers", ERS_OPT_CLEAN);
+	skill->timer_ers  = ERS<skill_timerskill, 150>::create("skill.cpp::skill_timer_ers", ERS_OPT_NONE);
+	skill->cd_ers = ERS<skill_cd, 25>::create("skill.cpp::skill_cd_ers", (enum ERSOptions)(ERS_OPT_CLEAR | ERS_OPT_CLEAN));
+	skill->cd_entry_ers = ERS<skill_cd_entry, 100>::create("skill.cpp::skill_cd_entry_ers", (enum ERSOptions)(ERS_OPT_CLEAR | ERS_OPT_CLEAN));
 
 	timer->add_func_list(skill->unit_timer,"skill_unit_timer");
 	timer->add_func_list(skill->castend_id,"skill_castend_id");
@@ -25807,10 +25802,10 @@ static int do_final_skill(void)
 	db_destroy(skill->cd_db);
 	db_destroy(skill->usave_db);
 	db_destroy(skill->bowling_db);
-	ers_destroy(skill->unit_ers);
-	ers_destroy(skill->timer_ers);
-	ers_destroy(skill->cd_ers);
-	ers_destroy(skill->cd_entry_ers);
+	ERI::destroy(skill->unit_ers);
+	ERI::destroy(skill->timer_ers);
+	ERI::destroy(skill->cd_ers);
+	ERI::destroy(skill->cd_entry_ers);
 	return 0;
 }
 

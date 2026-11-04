@@ -153,7 +153,7 @@ static int map_freeblock(struct block_list *bl)
 
 	if (map->block_free_lock == 0) {
 		if( bl->type == BL_ITEM )
-			ers_free(map->flooritem_ers, bl);
+			map->flooritem_ers->free(BL_UCAST(BL_ITEM, bl));
 		else
 			aFree(bl);
 		bl = NULL;
@@ -194,7 +194,7 @@ static int map_freeblock_unlock(void)
 			map->block_free_sanitize[i] = NULL;
 #endif
 			if( map->block_free[i]->type == BL_ITEM )
-				ers_free(map->flooritem_ers, map->block_free[i]);
+				map->flooritem_ers->free(BL_UCAST(BL_ITEM, map->block_free[i]));
 			else
 				aFree(map->block_free[i]);
 			map->block_free[i] = NULL;
@@ -1869,7 +1869,7 @@ static int map_addflooritem(const struct block_list *bl, struct item *item_data,
 		return 0;
 	r=rnd();
 
-	fitem = ers_alloc(map->flooritem_ers, struct flooritem_data);
+	fitem = map->flooritem_ers->alloc();
 
 	fitem->bl.type = BL_ITEM;
 	fitem->bl.prev = fitem->bl.next = NULL;
@@ -1879,7 +1879,7 @@ static int map_addflooritem(const struct block_list *bl, struct item *item_data,
 	fitem->bl.id = map->get_new_object_id();
 	fitem->showdropeffect = showdropeffect;
 	if(fitem->bl.id==0){
-		ers_free(map->flooritem_ers, fitem);
+		map->flooritem_ers->free(fitem);
 		return 0;
 	}
 
@@ -2664,7 +2664,7 @@ static struct s_mapiterator *mapit_alloc(enum e_mapitflags flags, enum bl_type t
 {
 	struct s_mapiterator* iter;
 
-	iter = ers_alloc(map->iterator_ers, struct s_mapiterator);
+	iter = map->iterator_ers->alloc();
 	iter->flags = flags;
 	iter->types = types;
 	if( types == BL_PC )       iter->dbi = db_iterator(map->pc_db);
@@ -2681,7 +2681,7 @@ static void mapit_free(struct s_mapiterator *iter)
 	nullpo_retv(iter);
 
 	dbi_destroy(iter->dbi);
-	ers_free(map->iterator_ers, iter);
+	map->iterator_ers->free(iter);
 }
 
 /// Returns the first block_list that matches the description.
@@ -6591,8 +6591,8 @@ int do_final(void)
 	db_destroy(map->regen_db);
 
 	map->sql_close();
-	ers_destroy(map->iterator_ers);
-	ers_destroy(map->flooritem_ers);
+	ERI::destroy(map->iterator_ers);
+	ERI::destroy(map->flooritem_ers);
 
 	for (i = 0; i < map->count; ++i) {
 		if (map->list[i].cell_buf.data != NULL)
@@ -7064,11 +7064,9 @@ int do_init(int argc, char *argv[])
 	map->iwall_db  = strdb_alloc((enum DBOptions)(DB_OPT_DUP_KEY | DB_OPT_RELEASE_DATA), 2*NAME_LENGTH+2+1); // [Zephyrus] Invisible Walls
 	map->zone_db   = strdb_alloc((enum DBOptions)(DB_OPT_DUP_KEY | DB_OPT_RELEASE_DATA), MAP_ZONE_NAME_LENGTH);
 
-	map->iterator_ers = ers_new(sizeof(struct s_mapiterator), "map.cpp::map_iterator_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
-	ers_chunk_size(map->iterator_ers, 25);
+	map->iterator_ers = ERS<s_mapiterator, 25>::create("map.cpp::map_iterator_ers", ERS_OPT_CLEAN);
 
-	map->flooritem_ers = ers_new(sizeof(struct flooritem_data), "map.cpp::map_flooritem_ers", (enum ERSOptions)(ERS_OPT_CLEAN | ERS_OPT_FLEX_CHUNK));
-	ers_chunk_size(map->flooritem_ers, 100);
+	map->flooritem_ers = ERS<flooritem_data, 100>::create("map.cpp::map_flooritem_ers", ERS_OPT_CLEAN);
 
 	if (!minimal) {
 		map->sql_init();
