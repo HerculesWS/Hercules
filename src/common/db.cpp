@@ -210,9 +210,7 @@ struct DBMap_impl {
 	const char *alloc_file;
 	int alloc_line;
 	// Lock system
-	struct db_free *free_list;
-	unsigned int free_count;
-	unsigned int free_max;
+	VECTOR_DECL(db_free) free_list;
 	unsigned int free_lock;
 	// Other
 	ERS<DBNode> *nodes;
@@ -761,22 +759,23 @@ static void db_free_add(struct DBMap_impl *db, struct DBNode *node, struct DBNod
 		node->key = db_dup_key(db, node->key);
 		db->release(old_key, node->data, DB_RELEASE_KEY);
 	}
-	if (db->free_count == db->free_max) { // No more space, expand free_list
-		db->free_max = (db->free_max<<2) +3; // = db->free_max*4 +3
-		if (db->free_max <= db->free_count) {
-			if (db->free_count == (unsigned int)~0) {
-				ShowFatalError("db_free_add: free_count overflow - Database allocated at %s:%d\n",
-						db->alloc_file, db->alloc_line);
-				exit(EXIT_FAILURE);
-			}
-			db->free_max = (unsigned int)~0;
+	if (VECTOR_LENGTH(db->free_list) == VECTOR_CAPACITY(db->free_list)) { // No more space, expand free_list
+		if (VECTOR_LENGTH(db->free_list) == INT32_MAX) {
+			// TODO: Change to max_size when switching to std::vector or just remove this check
+			ShowFatalError("db_free_add: free_count overflow - Database allocated at %s:%d\n", db->alloc_file,
+			               db->alloc_line);
+			exit(EXIT_FAILURE);
 		}
-		RECREATE(db->free_list, struct db_free, db->free_max);
+
+		VECTOR_RESIZE(db->free_list, (VECTOR_LENGTH(db->free_list) * 4) + 3);
 	}
+
+	VECTOR_PUSHZEROED(db->free_list);
+	auto &entry = VECTOR_LAST(db->free_list);
+
 	node->deleted = 1;
-	db->free_list[db->free_count].node = node;
-	db->free_list[db->free_count].root = root;
-	db->free_count++;
+	entry.node = node;
+	entry.root = root;
 	db->item_count--;
 }
 
@@ -795,22 +794,24 @@ static void db_free_add(struct DBMap_impl *db, struct DBNode *node, struct DBNod
  */
 static void db_free_remove(struct DBMap_impl *db, struct DBNode *node)
 {
-	unsigned int i;
+	int i;
 
 	DB_COUNTSTAT(db_free_remove);
-	for (i = 0; i < db->free_count; i++) {
-		if (db->free_list[i].node == node) {
-			if (i < db->free_count -1) // copy the last item to where the removed one was
-				memcpy(&db->free_list[i], &db->free_list[db->free_count -1], sizeof(struct db_free));
+	for (i = 0; i < VECTOR_LENGTH(db->free_list); i++) {
+		if (VECTOR_INDEX(db->free_list, i).node == node) {
+			if (i < VECTOR_LENGTH(db->free_list) - 1) // copy the last item to where the removed one was
+				memcpy(&VECTOR_INDEX(db->free_list, i), &VECTOR_INDEX(db->free_list, VECTOR_LENGTH(db->free_list) - 1), sizeof(VECTOR_FIRST(db->free_list)));
 			db_dup_key_free(db, node->key);
 			break;
 		}
 	}
+
 	node->deleted = 0;
-	if (i == db->free_count) {
+
+	if (i == VECTOR_LENGTH(db->free_list)) {
 		ShowWarning("db_free_remove: node was not found - database allocated at %s:%d\n", db->alloc_file, db->alloc_line);
 	} else {
-		db->free_count--;
+		(void)VECTOR_POP(db->free_list);
 	}
 	db->item_count++;
 }
@@ -846,8 +847,6 @@ static void db_free_lock(struct DBMap_impl *db)
  */
 static void db_free_unlock(struct DBMap_impl *db)
 {
-	unsigned int i;
-
 	DB_COUNTSTAT(db_free_unlock);
 	if (db->free_lock == 0) {
 		ShowWarning("db_free_unlock: free_lock was already 0 - Database allocated at %s:%d\n",
@@ -858,13 +857,14 @@ static void db_free_unlock(struct DBMap_impl *db)
 	if (db->free_lock)
 		return; // Not last lock
 
-	for (i = 0; i < db->free_count ; i++) {
-		db_rebalance_erase(db->free_list[i].node, db->free_list[i].root);
-		db_dup_key_free(db, db->free_list[i].node->key);
+	for (int i = 0; i < VECTOR_LENGTH(db->free_list) ; i++) {
+		db_rebalance_erase(VECTOR_INDEX(db->free_list, i).node, VECTOR_INDEX(db->free_list, i).root);
+		db_dup_key_free(db, VECTOR_INDEX(db->free_list, i).node->key);
 		DB_COUNTSTAT(db_node_free);
-		db->nodes->free(db->free_list[i].node);
+		db->nodes->free(VECTOR_INDEX(db->free_list, i).node);
 	}
-	db->free_count = 0;
+
+	VECTOR_TRUNCATE(db->free_list);
 }
 
 /*****************************************************************************\
@@ -2196,7 +2196,8 @@ static int db_obj_vclear(struct DBMap *self, DBApply func, va_list args)
 		}
 		db->ht[i] = NULL;
 	}
-	db->free_count = 0;
+
+	VECTOR_TRUNCATE(db->free_list);
 	db->item_count = 0;
 	db_free_unlock(db);
 	return sum;
@@ -2275,9 +2276,7 @@ static int db_obj_vdestroy(struct DBMap *self, DBApply func, va_list args)
 	db_free_lock(db);
 	db->global_lock = 1;
 	sum = self->vclear(self, func, args);
-	aFree(db->free_list);
-	db->free_list = NULL;
-	db->free_max = 0;
+	VECTOR_CLEAR(db->free_list);
 	ERI::destroy(db->nodes);
 	db_free_unlock(db);
 	db_alloc_ers->free(db);
@@ -2609,9 +2608,7 @@ static struct DBMap *db_alloc(const char *file, const char *func, int line, enum
 	db->alloc_file = file;
 	db->alloc_line = line;
 	/* Lock system */
-	db->free_list = NULL;
-	db->free_count = 0;
-	db->free_max = 0;
+	VECTOR_INIT(db->free_list);
 	db->free_lock = 0;
 	/* Other */
 	snprintf(ers_name, 50, "db_alloc:nodes:%s:%s:%d",func,file,line);
