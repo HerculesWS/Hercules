@@ -808,6 +808,8 @@ struct {
 	struct HPMHookPoint *HP_sockt_net_config_read_sub_post;
 	struct HPMHookPoint *HP_sockt_net_config_read_pre;
 	struct HPMHookPoint *HP_sockt_net_config_read_post;
+	struct HPMHookPoint *HP_sockt_inject_packet_id_pre;
+	struct HPMHookPoint *HP_sockt_inject_packet_id_post;
 	struct HPMHookPoint *HP_SQL_Connect_pre;
 	struct HPMHookPoint *HP_SQL_Connect_post;
 	struct HPMHookPoint *HP_SQL_GetTimeout_pre;
@@ -1819,6 +1821,8 @@ struct {
 	int HP_sockt_net_config_read_sub_post;
 	int HP_sockt_net_config_read_pre;
 	int HP_sockt_net_config_read_post;
+	int HP_sockt_inject_packet_id_pre;
+	int HP_sockt_inject_packet_id_post;
 	int HP_SQL_Connect_pre;
 	int HP_SQL_Connect_post;
 	int HP_SQL_GetTimeout_pre;

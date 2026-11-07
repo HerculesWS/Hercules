@@ -3534,6 +3534,7 @@ struct HookingPointData HookingPoints[] = {
 	{ HP_POP(sockt->trusted_ip_check, HP_sockt_trusted_ip_check) },
 	{ HP_POP(sockt->net_config_read_sub, HP_sockt_net_config_read_sub) },
 	{ HP_POP(sockt->net_config_read, HP_sockt_net_config_read) },
+	{ HP_POP(sockt->inject_packet_id, HP_sockt_inject_packet_id) },
 /* sql_interface */
 	{ HP_POP(SQL->Connect, HP_SQL_Connect) },
 	{ HP_POP(SQL->GetTimeout, HP_SQL_GetTimeout) },

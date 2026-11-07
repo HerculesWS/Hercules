@@ -8936,8 +8936,8 @@ typedef int (*HPMHOOK_pre_sockt_make_listen_bind) (uint32 *ip, uint16 *port);
 typedef int (*HPMHOOK_post_sockt_make_listen_bind) (int retVal___, uint32 ip, uint16 port);
 typedef int (*HPMHOOK_pre_sockt_make_connection) (uint32 *ip, uint16 *port, struct hSockOpt **opt);
 typedef int (*HPMHOOK_post_sockt_make_connection) (int retVal___, uint32 ip, uint16 port, struct hSockOpt *opt);
-typedef int (*HPMHOOK_pre_sockt_realloc_fifo) (int *fd, unsigned int *rfifo_size, unsigned int *wfifo_size);
-typedef int (*HPMHOOK_post_sockt_realloc_fifo) (int retVal___, int fd, unsigned int rfifo_size, unsigned int wfifo_size);
+typedef int (*HPMHOOK_pre_sockt_realloc_fifo) (int *fd, size_t *rfifo_size, size_t *wfifo_size);
+typedef int (*HPMHOOK_post_sockt_realloc_fifo) (int retVal___, int fd, size_t rfifo_size, size_t wfifo_size);
 typedef int (*HPMHOOK_pre_sockt_realloc_writefifo) (int *fd, size_t *addition);
 typedef int (*HPMHOOK_post_sockt_realloc_writefifo) (int retVal___, int fd, size_t addition);
 typedef int (*HPMHOOK_pre_sockt_wfifoset) (int *fd, size_t *len, bool *validate);
@@ -8994,6 +8994,8 @@ typedef int (*HPMHOOK_pre_sockt_net_config_read_sub) (struct config_setting_t **
 typedef int (*HPMHOOK_post_sockt_net_config_read_sub) (int retVal___, struct config_setting_t *t, struct s_subnet_vector *list, const char *filename, const char *groupname);
 typedef void (*HPMHOOK_pre_sockt_net_config_read) (const char **filename);
 typedef void (*HPMHOOK_post_sockt_net_config_read) (const char *filename);
+typedef void (*HPMHOOK_pre_sockt_inject_packet_id) (int *fd, uint16_t *packet_id);
+typedef void (*HPMHOOK_post_sockt_inject_packet_id) (int fd, uint16_t packet_id);
 #endif
 #ifdef COMMON_SQL_H /* SQL */
 typedef int (*HPMHOOK_pre_SQL_Connect) (struct Sql **self, const char **user, const char **passwd, const char **host, uint16 *port, const char **db);

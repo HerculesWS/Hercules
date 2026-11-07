@@ -91604,14 +91604,14 @@ int HP_sockt_make_connection(uint32 ip, uint16 port, struct hSockOpt *opt) {
 	}
 	return retVal___;
 }
-int HP_sockt_realloc_fifo(int fd, unsigned int rfifo_size, unsigned int wfifo_size) {
+int HP_sockt_realloc_fifo(int fd, size_t rfifo_size, size_t wfifo_size) {
 	int hIndex = 0;
 	int retVal___ = 0;
 	if (HPMHooks.count.HP_sockt_realloc_fifo_pre > 0) {
-		int (*preHookFunc) (int *fd, unsigned int *rfifo_size, unsigned int *wfifo_size);
+		int (*preHookFunc) (int *fd, size_t *rfifo_size, size_t *wfifo_size);
 		*HPMforce_return = false;
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_sockt_realloc_fifo_pre; hIndex++) {
-			preHookFunc = (int (*) (int *fd, unsigned int *rfifo_size, unsigned int *wfifo_size))HPMHooks.list.HP_sockt_realloc_fifo_pre[hIndex].func;
+			preHookFunc = (int (*) (int *fd, size_t *rfifo_size, size_t *wfifo_size))HPMHooks.list.HP_sockt_realloc_fifo_pre[hIndex].func;
 			retVal___ = preHookFunc(&fd, &rfifo_size, &wfifo_size);
 		}
 		if (*HPMforce_return) {
@@ -91623,9 +91623,9 @@ int HP_sockt_realloc_fifo(int fd, unsigned int rfifo_size, unsigned int wfifo_si
 		retVal___ = HPMHooks.source.sockt.realloc_fifo(fd, rfifo_size, wfifo_size);
 	}
 	if (HPMHooks.count.HP_sockt_realloc_fifo_post > 0) {
-		int (*postHookFunc) (int retVal___, int fd, unsigned int rfifo_size, unsigned int wfifo_size);
+		int (*postHookFunc) (int retVal___, int fd, size_t rfifo_size, size_t wfifo_size);
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_sockt_realloc_fifo_post; hIndex++) {
-			postHookFunc = (int (*) (int retVal___, int fd, unsigned int rfifo_size, unsigned int wfifo_size))HPMHooks.list.HP_sockt_realloc_fifo_post[hIndex].func;
+			postHookFunc = (int (*) (int retVal___, int fd, size_t rfifo_size, size_t wfifo_size))HPMHooks.list.HP_sockt_realloc_fifo_post[hIndex].func;
 			retVal___ = postHookFunc(retVal___, fd, rfifo_size, wfifo_size);
 		}
 	}
@@ -92371,6 +92371,32 @@ void HP_sockt_net_config_read(const char *filename) {
 		for (hIndex = 0; hIndex < HPMHooks.count.HP_sockt_net_config_read_post; hIndex++) {
 			postHookFunc = (void (*) (const char *filename))HPMHooks.list.HP_sockt_net_config_read_post[hIndex].func;
 			postHookFunc(filename);
+		}
+	}
+	return;
+}
+void HP_sockt_inject_packet_id(int fd, uint16_t packet_id) {
+	int hIndex = 0;
+	if (HPMHooks.count.HP_sockt_inject_packet_id_pre > 0) {
+		void (*preHookFunc) (int *fd, uint16_t *packet_id);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_sockt_inject_packet_id_pre; hIndex++) {
+			preHookFunc = (void (*) (int *fd, uint16_t *packet_id))HPMHooks.list.HP_sockt_inject_packet_id_pre[hIndex].func;
+			preHookFunc(&fd, &packet_id);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return;
+		}
+	}
+	{
+		HPMHooks.source.sockt.inject_packet_id(fd, packet_id);
+	}
+	if (HPMHooks.count.HP_sockt_inject_packet_id_post > 0) {
+		void (*postHookFunc) (int fd, uint16_t packet_id);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_sockt_inject_packet_id_post; hIndex++) {
+			postHookFunc = (void (*) (int fd, uint16_t packet_id))HPMHooks.list.HP_sockt_inject_packet_id_post[hIndex].func;
+			postHookFunc(fd, packet_id);
 		}
 	}
 	return;
