@@ -615,10 +615,10 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheck, "~= operator", .@y, 4);
 	callsub(OnCheck, "~= operator", $@regexmatchcount, 4);
 	if( $@regexmatchcount == 4 ) {
-		callsub(OnCheck, "~= operator", $@regexmatch$[0], .@x$);
-		callsub(OnCheck, "~= operator", $@regexmatch$[1], "quis");
-		callsub(OnCheck, "~= operator", $@regexmatch$[2], "Duis");
-		callsub(OnCheck, "~= operator", $@regexmatch$[3], "laborum.");
+		callsub(OnCheckStr, "~= operator", $@regexmatch$[0], .@x$);
+		callsub(OnCheckStr, "~= operator", $@regexmatch$[1], "quis");
+		callsub(OnCheckStr, "~= operator", $@regexmatch$[2], "Duis");
+		callsub(OnCheckStr, "~= operator", $@regexmatch$[3], "laborum.");
 	}
 	.@y = (.@x$ ~! "^Not Lorem.*, ([a-z]*).*(Duis).* ([a-z.]*)$");
 	callsub(OnCheck, "~! operator", .@y);
@@ -1062,15 +1062,15 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheck, "Getdatatype (getarg integer value)", callsub(OnTestGetdatatype, 5), DATATYPE_INT);
 	callsub(OnCheck, "Getdatatype (getarg string)",        callsub(OnTestGetdatatype, "foo"), DATATYPE_STR | DATATYPE_CONST);
 
-	callsub(OnCheck, "data_to_string (NIL)",              data_to_string(), "");
-	callsub(OnCheck, "data_to_string (empty string)",     data_to_string(""), "");
-	callsub(OnCheck, "data_to_string (string)",           data_to_string("foo"), "foo");
-	callsub(OnCheck, "data_to_string (integer)",          data_to_string(5), "5");
-	callsub(OnCheck, "data_to_string (parameter)",        data_to_string(Hp), "Hp");
-	callsub(OnCheck, "data_to_string (constant)",         data_to_string(DATATYPE_CONST), "DATATYPE_CONST");
-	callsub(OnCheck, "data_to_string (label)",            data_to_string(OnTestGetdatatype), "OnTestGetdatatype");
-	callsub(OnCheck, "data_to_string (string variable)",  data_to_string(.@x$), ".@x$");
-	callsub(OnCheck, "data_to_string (integer variable)", data_to_string(.@x), ".@x");
+	callsub(OnCheckStr, "data_to_string (NIL)",              data_to_string(), "");
+	callsub(OnCheckStr, "data_to_string (empty string)",     data_to_string(""), "");
+	callsub(OnCheckStr, "data_to_string (string)",           data_to_string("foo"), "foo");
+	callsub(OnCheckStr, "data_to_string (integer)",          data_to_string(5), "5");
+	callsub(OnCheckStr, "data_to_string (parameter)",        data_to_string(Hp), "Hp");
+	callsub(OnCheckStr, "data_to_string (constant)",         data_to_string(DATATYPE_CONST), "DATATYPE_CONST");
+	callsub(OnCheckStr, "data_to_string (label)",            data_to_string(OnTestGetdatatype), "OnTestGetdatatype"); // FIXME: Failing
+	callsub(OnCheckStr, "data_to_string (string variable)",  data_to_string(.@x$), ".@x$");
+	callsub(OnCheckStr, "data_to_string (integer variable)", data_to_string(.@x), ".@x");
 
 	"export test"::RefTest(.@refTest = 69);
 	callsub(OnCheck, "function as event (regression)",           $@something_bad_happened[0], false);
