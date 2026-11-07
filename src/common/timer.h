@@ -32,7 +32,7 @@
 enum {
 	TIMER_ONCE_AUTODEL = 0x01,
 	TIMER_INTERVAL = 0x02,
-	TIMER_REMOVE_HEAP = 0x10,
+	// TIMER_REMOVE_HEAP = 0x10, /// No longer used now we clean the bheap the moment a timer is removed
 };
 
 // Struct declaration
@@ -64,7 +64,21 @@ struct timer_interface {
 
 	int (*add) (int64 tick, TimerFunc func, int id, intptr_t data);
 	int (*add_interval) (int64 tick, TimerFunc func, int id, intptr_t data, int interval);
-	const struct TimerData *(*get) (int tid);
+
+	/**
+	 * Retrieves internal timer data
+	 * The returned pointer life time is only guaranteed until the next acquire_time() is called
+	 * Currently the following function calls MAY invalidate the returned pointer
+	 * timer->add()
+	 * timer->add_interval()
+	 * timer->delete_() *Only if called for this specific tid
+	 * For the timers with the type TIMER_ONCE_AUTODEL it's deleted once executed
+	 *
+	 * @param tid Timer ID
+	 * @return Pointer to the internal timer structure for given tid or nullptr otherwise
+	 */
+	const struct TimerData *(*get)(int tid);
+
 	int (*delete_) (int tid, TimerFunc func);
 
 	int64 (*addtick) (int tid, int64 tick);

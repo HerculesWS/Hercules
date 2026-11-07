@@ -429,7 +429,7 @@ ACMD(send)
 				// terminate the string
 				if(off < end)
 				{// fill the rest with 0's
-					memset(WFIFOP(char *, sd->fd, off),0,end-off);
+					memset(WFIFOP(char, sd->fd, off),0,end-off);
 					off=end;
 				}
 			} else
@@ -445,7 +445,7 @@ ACMD(send)
 			WFIFOSET(sd->fd,off);
 		} else {// send static packet
 			if(off < len)
-				memset(WFIFOP(char *, sd->fd, off), 0, len-off);
+				memset(WFIFOP(char, sd->fd, off), 0, len-off);
 			WFIFOSET(sd->fd,len);
 		}
 	} else {

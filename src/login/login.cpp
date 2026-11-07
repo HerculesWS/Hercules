@@ -178,7 +178,7 @@ static int charif_sendallwos(int sfd, uint8 *buf, size_t len)
 		int fd = login->dbs->server[i].fd;
 		if (sockt->session_is_valid(fd) && fd != sfd) {
 			WFIFOHEAD(fd,len);
-			memcpy(WFIFOP(uint8 *, fd,0), buf, len);
+			memcpy(WFIFOP(uint8, fd,0), buf, len);
 			WFIFOSET(fd,len);
 			++c;
 		}
@@ -373,7 +373,7 @@ static void login_fromchar_parse_request_change_email(int fd, int id, const char
 	char email[40];
 
 	int account_id = RFIFOL(fd,2);
-	safestrncpy(email, RFIFOP(char *, fd, 6), 40); remove_control_chars(email);
+	safestrncpy(email, RFIFOP(char, fd, 6), 40); remove_control_chars(email);
 	RFIFOSKIP(fd,46);
 
 	if( e_mail_check(email) == 0 )
@@ -412,22 +412,22 @@ static void login_fromchar_account(int fd, int account_id, struct mmo_account *a
 		if (pincode[0] == '\0')
 			memset(pincode,'\0',sizeof(pincode));
 
-		safestrncpy(WFIFOP(char *, fd, 6), email, 40);
+		safestrncpy(WFIFOP(char, fd, 6), email, 40);
 		WFIFOL(fd,46) = (uint32)expiration_time;
 		WFIFOB(fd,50) = (unsigned char)group_id;
 		WFIFOB(fd,51) = char_slots;
-		safestrncpy(WFIFOP(char *, fd, 52), birthdate, 10+1);
-		safestrncpy(WFIFOP(char *, fd, 63), pincode, 4+1);
+		safestrncpy(WFIFOP(char, fd, 52), birthdate, 10+1);
+		safestrncpy(WFIFOP(char, fd, 63), pincode, 4+1);
 		WFIFOL(fd,68) = acc->pincode_change;
 	}
 	else
 	{
-		safestrncpy(WFIFOP(char *, fd, 6), "", 40);
+		safestrncpy(WFIFOP(char, fd, 6), "", 40);
 		WFIFOL(fd,46) = 0;
 		WFIFOB(fd,50) = 0;
 		WFIFOB(fd,51) = 0;
-		safestrncpy(WFIFOP(char *, fd, 52), "", 10+1);
-		safestrncpy(WFIFOP(char *, fd, 63), "\0\0\0\0", 4+1);
+		safestrncpy(WFIFOP(char, fd, 52), "", 10+1);
+		safestrncpy(WFIFOP(char, fd, 63), "\0\0\0\0", 4+1);
 		WFIFOL(fd,68) = 0;
 	}
 	WFIFOSET(fd,72);
@@ -470,8 +470,8 @@ static void login_fromchar_parse_change_email(int fd, int id, const char *const 
 	char new_email[40];
 
 	int account_id = RFIFOL(fd,2);
-	safestrncpy(actual_email, RFIFOP(char *, fd, 6), 40);
-	safestrncpy(new_email, RFIFOP(char *, fd, 46), 40);
+	safestrncpy(actual_email, RFIFOP(char, fd, 6), 40);
+	safestrncpy(new_email, RFIFOP(char, fd, 46), 40);
 	RFIFOSKIP(fd, 86);
 
 	if( e_mail_check(actual_email) == 0 )
@@ -665,7 +665,7 @@ static void login_fromchar_parse_unban(int fd, int id, const char *const ip)
 
 static void login_fromchar_parse_account_online(int fd, int id)
 {
-	const struct PACKET_CHARLOGIN_SET_ACCOUNT_ONLINE *p = RP2PTR(struct PACKET_CHARLOGIN_SET_ACCOUNT_ONLINE *, fd);
+	const struct PACKET_CHARLOGIN_SET_ACCOUNT_ONLINE *p = RP2PTR(struct PACKET_CHARLOGIN_SET_ACCOUNT_ONLINE, fd);
 
 	login->add_online_user(id, p->account_id);
 
@@ -687,7 +687,7 @@ static void login_fromchar_parse_online_accounts(int fd, int id)
 {
 	login->online_db->foreach(login->online_db, login->online_db_setoffline, id); //Set all chars from this char-server offline first
 
-	const struct PACKET_CHARLOGIN_ONLINE_ACCOUNTS *p = RP2PTR(struct PACKET_CHARLOGIN_ONLINE_ACCOUNTS *, fd);
+	const struct PACKET_CHARLOGIN_ONLINE_ACCOUNTS *p = RP2PTR(struct PACKET_CHARLOGIN_ONLINE_ACCOUNTS, fd);
 	for (uint32 i = 0; i < p->list_length; i++) {
 		int aid = p->accounts[i];
 		struct online_login_data *login_data = (struct online_login_data *)idb_ensure(login->online_db, aid, login->create_online_user);
@@ -728,7 +728,7 @@ static void login_fromchar_parse_change_pincode(int fd)
 	struct mmo_account acc;
 
 	if (accounts->load_num(accounts, &acc, RFIFOL(fd,2))) {
-		safestrncpy(acc.pincode, RFIFOP(char *, fd, 6), sizeof(acc.pincode));
+		safestrncpy(acc.pincode, RFIFOP(char, fd, 6), sizeof(acc.pincode));
 		acc.pincode_change = ((unsigned int)time(NULL));
 		accounts->save(accounts, &acc);
 	}
@@ -762,22 +762,22 @@ static void login_fromchar_accinfo(int fd, int account_id, int u_fd, int u_aid, 
 	{
 		WFIFOHEAD(fd,183);
 		WFIFOW(fd,0) = 0x2737;
-		safestrncpy(WFIFOP(char *, fd, 2), acc->userid, NAME_LENGTH);
+		safestrncpy(WFIFOP(char, fd, 2), acc->userid, NAME_LENGTH);
 		if (u_group >= acc->group_id)
-			safestrncpy(WFIFOP(char *, fd, 26), acc->pass, 33);
+			safestrncpy(WFIFOP(char, fd, 26), acc->pass, 33);
 		else
-			memset(WFIFOP(char *, fd, 26), '\0', 33);
-		safestrncpy(WFIFOP(char *, fd, 59), acc->email, 40);
-		safestrncpy(WFIFOP(char *, fd, 99), acc->last_ip, 16);
+			memset(WFIFOP(char, fd, 26), '\0', 33);
+		safestrncpy(WFIFOP(char, fd, 59), acc->email, 40);
+		safestrncpy(WFIFOP(char, fd, 99), acc->last_ip, 16);
 		WFIFOL(fd,115) = acc->group_id;
-		safestrncpy(WFIFOP(char *, fd, 119), acc->lastlogin, 24);
+		safestrncpy(WFIFOP(char, fd, 119), acc->lastlogin, 24);
 		WFIFOL(fd,143) = acc->logincount;
 		WFIFOL(fd,147) = acc->state;
 		if (u_group >= acc->group_id)
-			safestrncpy(WFIFOP(char *, fd, 151), acc->pincode, 5);
+			safestrncpy(WFIFOP(char, fd, 151), acc->pincode, 5);
 		else
-			memset(WFIFOP(char *, fd, 151), '\0', 5);
-		safestrncpy(WFIFOP(char *, fd, 156), acc->birthdate, 11);
+			memset(WFIFOP(char, fd, 151), '\0', 5);
+		safestrncpy(WFIFOP(char, fd, 156), acc->birthdate, 11);
 		WFIFOL(fd,167) = map_fd;
 		WFIFOL(fd,171) = u_fd;
 		WFIFOL(fd,175) = u_aid;
@@ -1431,7 +1431,7 @@ static bool login_client_login_otp(int fd, struct login_session_data *sd)
 	// send ok response with fake token
 	const int len = sizeof(struct PACKET_AC_LOGIN_OTP) + 6;  // + "token" string
 	WFIFOHEAD(fd, len);
-	struct PACKET_AC_LOGIN_OTP *packet = WP2PTR(struct PACKET_AC_LOGIN_OTP *, sd->fd);
+	struct PACKET_AC_LOGIN_OTP *packet = WP2PTR(struct PACKET_AC_LOGIN_OTP, sd->fd);
 	memset(packet, 0, len);
 	packet->packet_id = HEADER_AC_LOGIN_OTP;
 	packet->packet_len = len;
@@ -1453,7 +1453,7 @@ static void login_client_login_mobile_otp_request(int fd, struct login_session_d
 {
 #if PACKETVER_MAIN_NUM >= 20181114 || PACKETVER_RE_NUM >= 20181114 || defined(PACKETVER_ZERO)
 	WFIFOHEAD(sd->fd, sizeof(struct PACKET_AC_REQ_MOBILE_OTP));
-	struct PACKET_AC_REQ_MOBILE_OTP *packet = WP2PTR(struct PACKET_AC_REQ_MOBILE_OTP *, sd->fd);
+	struct PACKET_AC_REQ_MOBILE_OTP *packet = WP2PTR(struct PACKET_AC_REQ_MOBILE_OTP, sd->fd);
 	packet->packet_id = HEADER_AC_REQ_MOBILE_OTP;
 	packet->aid = sd->account_id;
 	WFIFOSET(fd, sizeof(struct PACKET_AC_REQ_MOBILE_OTP));
@@ -1490,15 +1490,15 @@ static void login_parse_request_connection(int fd, struct login_session_data* sd
 	uint16 new_;
 	int result;
 
-	safestrncpy(sd->userid, RFIFOP(char *, fd, 2), NAME_LENGTH);
-	safestrncpy(sd->passwd, RFIFOP(char *, fd, 26), NAME_LENGTH);
+	safestrncpy(sd->userid, RFIFOP(char, fd, 2), NAME_LENGTH);
+	safestrncpy(sd->passwd, RFIFOP(char, fd, 26), NAME_LENGTH);
 	if (login->config->use_md5_passwds)
 		md5->string(sd->passwd, sd->passwd);
 	sd->passwdenc = PWENC_NONE;
 	sd->version = login->config->client_version_to_connect; // hack to skip version check
 	server_ip = ntohl(RFIFOL(fd,54));
 	server_port = ntohs(RFIFOW(fd,58));
-	safestrncpy(server_name, RFIFOP(char *, fd, 60), 20);
+	safestrncpy(server_name, RFIFOP(char, fd, 60), 20);
 	type = RFIFOW(fd,82);
 	new_ = RFIFOW(fd,84);
 
@@ -1552,8 +1552,8 @@ static void login_parse_request_api_connection(int fd, struct login_session_data
 	uint32 server_ip = sockt->session[fd]->client_addr;
 	int result;
 
-	safestrncpy(sd->userid, RFIFOP(char *, fd, 2), NAME_LENGTH);
-	safestrncpy(sd->passwd, RFIFOP(char *, fd, 26), NAME_LENGTH);
+	safestrncpy(sd->userid, RFIFOP(char, fd, 2), NAME_LENGTH);
+	safestrncpy(sd->passwd, RFIFOP(char, fd, 26), NAME_LENGTH);
 	if (login->config->use_md5_passwds)
 		md5->string(sd->passwd, sd->passwd);
 	sd->passwdenc = PWENC_NONE;

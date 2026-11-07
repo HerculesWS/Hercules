@@ -142,7 +142,7 @@ static int mapif_send(const unsigned char *buf, unsigned int len)
 	if (fd < 0)
 		return -1;
 	WFIFOHEAD(fd, len);
-	memcpy(WFIFOP(unsigned char *, fd, 0), buf, len);
+	memcpy(WFIFOP(unsigned char, fd, 0), buf, len);
 	WFIFOSET(fd, len);
 	return 0;
 }
@@ -179,7 +179,7 @@ static void mapif_auction_sendlist(int fd, int char_id, short count, short pages
 	WFIFOL(fd, 4) = char_id;
 	WFIFOW(fd, 8) = count;
 	WFIFOW(fd, 10) = pages;
-	memcpy(WFIFOP(unsigned char *, fd, 12), buf, len - 12);
+	memcpy(WFIFOP(unsigned char, fd, 12), buf, len - 12);
 	WFIFOSET(fd, len);
 }
 
@@ -194,7 +194,7 @@ static void mapif_parse_auction_requestlist(int fd)
 	struct DBIterator *iter = db_iterator(inter_auction->db);
 	short i = 0, j = 0, pages = 1;
 
-	memcpy(searchtext, RFIFOP(char *, fd, 16), NAME_LENGTH);
+	memcpy(searchtext, RFIFOP(char, fd, 16), NAME_LENGTH);
 
 	for (struct auction_data *auction = (struct auction_data *)dbi_first(iter); dbi_exists(iter); auction = (struct auction_data *)dbi_next(iter)) {
 		if ((type == 0 && auction->type != IT_ARMOR && auction->type != IT_PETARMOR)
@@ -234,7 +234,7 @@ static void mapif_auction_register(int fd, struct auction_data *auction)
 	WFIFOHEAD(fd,len);
 	WFIFOW(fd, 0) = 0x3851;
 	WFIFOW(fd, 2) = len;
-	memcpy(WFIFOP(struct auction_data *, fd, 4), auction, sizeof(struct auction_data));
+	memcpy(WFIFOP(struct auction_data, fd, 4), auction, sizeof(struct auction_data));
 	WFIFOSET(fd, len);
 }
 
@@ -244,7 +244,7 @@ static void mapif_parse_auction_register(int fd)
 	if( RFIFOW(fd, 2) != sizeof(struct auction_data) + 4 )
 		return;
 
-	memcpy(&auction, RFIFOP(struct auction_data *, fd, 4), sizeof(struct auction_data));
+	memcpy(&auction, RFIFOP(struct auction_data, fd, 4), sizeof(struct auction_data));
 	if( inter_auction->count(auction.seller_id, false) < 5 )
 		auction.auction_id = inter_auction->create(&auction);
 
@@ -363,7 +363,7 @@ static void mapif_parse_auction_bid(int fd)
 	}
 
 	auction->buyer_id = char_id;
-	safestrncpy(auction->buyer_name, RFIFOP(char *, fd, 16), NAME_LENGTH);
+	safestrncpy(auction->buyer_name, RFIFOP(char, fd, 16), NAME_LENGTH);
 	auction->price = bid;
 
 	if (bid >= auction->buynow) {
@@ -392,7 +392,7 @@ static void mapif_elemental_send(int fd, struct s_elemental *ele, unsigned char 
 	WFIFOW(fd, 0) = 0x387c;
 	WFIFOW(fd, 2) = size;
 	WFIFOB(fd, 4) = flag;
-	memcpy(WFIFOP(struct s_elemental *, fd, 5), ele, sizeof(struct s_elemental));
+	memcpy(WFIFOP(struct s_elemental, fd, 5), ele, sizeof(struct s_elemental));
 	WFIFOSET(fd, size);
 }
 
@@ -714,7 +714,7 @@ static int mapif_guild_castle_dataload(int fd, int sz, const int *castle_ids)
 	WFIFOW(fd, 2) = len;
 	for (i = 0; i < num; i++) {
 		gc = inter_guild->castle_fromsql(*(castle_ids++));
-		memcpy(WFIFOP(struct guild_castle *, fd, 4 + i * sizeof(*gc)), gc, sizeof(*gc));
+		memcpy(WFIFOP(struct guild_castle, fd, 4 + i * sizeof(*gc)), gc, sizeof(*gc));
 	}
 	WFIFOSET(fd, len);
 	return 0;
@@ -832,7 +832,7 @@ static int mapif_parse_GuildNotice(int fd, int guild_id, const char *mes1, const
 
 static int mapif_parse_GuildEmblem(int fd)
 {
-	const struct PACKET_MAPCHAR_GUILD_EMBLEM *p = RP2PTR(struct PACKET_MAPCHAR_GUILD_EMBLEM *, fd);
+	const struct PACKET_MAPCHAR_GUILD_EMBLEM *p = RP2PTR(struct PACKET_MAPCHAR_GUILD_EMBLEM, fd);
 	RFIFO_CHUNKED_INIT(p, p->packetLength - sizeof(struct PACKET_MAPCHAR_GUILD_EMBLEM), mapif->emblem_tmp);
 
 	RFIFO_CHUNKED_ERROR(p) {
@@ -875,7 +875,7 @@ static void mapif_homunculus_created(int fd, int account_id, const struct s_homu
 	WFIFOW(fd, 2) = sizeof(struct s_homunculus) + 9;
 	WFIFOL(fd, 4) = account_id;
 	WFIFOB(fd, 8) = flag;
-	memcpy(WFIFOP(struct s_homunculus *, fd, 9), sh, sizeof(struct s_homunculus));
+	memcpy(WFIFOP(struct s_homunculus, fd, 9), sh, sizeof(struct s_homunculus));
 	WFIFOSET(fd, WFIFOW(fd, 2));
 }
 
@@ -895,10 +895,10 @@ static void mapif_homunculus_loaded(int fd, int account_id, struct s_homunculus 
 	WFIFOL(fd, 4) = account_id;
 	if (hd != NULL) {
 		WFIFOB(fd, 8) = 1; // success
-		memcpy(WFIFOP(struct s_homunculus *, fd, 9), hd, sizeof(struct s_homunculus));
+		memcpy(WFIFOP(struct s_homunculus, fd, 9), hd, sizeof(struct s_homunculus));
 	} else {
 		WFIFOB(fd, 8) = 0; // not found.
-		memset(WFIFOP(struct s_homunculus *, fd, 9), 0, sizeof(struct s_homunculus));
+		memset(WFIFOP(struct s_homunculus, fd, 9), 0, sizeof(struct s_homunculus));
 	}
 	WFIFOSET(fd, sizeof(struct s_homunculus) + 9);
 }
@@ -920,7 +920,7 @@ static void mapif_homunculus_renamed(int fd, int account_id, int char_id, unsign
 	WFIFOL(fd, 2) = account_id;
 	WFIFOL(fd, 6) = char_id;
 	WFIFOB(fd, 10) = flag;
-	safestrncpy(WFIFOP(char *, fd, 11), name, NAME_LENGTH);
+	safestrncpy(WFIFOP(char, fd, 11), name, NAME_LENGTH);
 	WFIFOSET(fd, NAME_LENGTH + 12);
 }
 
@@ -969,7 +969,7 @@ static void mapif_mail_sendinbox(int fd, int char_id, unsigned char flag, struct
 	WFIFOW(fd, 2) = sizeof(struct mail_data) + 9;
 	WFIFOL(fd, 4) = char_id;
 	WFIFOB(fd, 8) = flag;
-	memcpy(WFIFOP(struct mail_data *, fd, 9),md,sizeof(struct mail_data));
+	memcpy(WFIFOP(struct mail_data, fd, 9),md,sizeof(struct mail_data));
 	WFIFOSET(fd,WFIFOW(fd, 2));
 }
 
@@ -1003,7 +1003,7 @@ static void mapif_mail_sendattach(int fd, int char_id, struct mail_message *msg)
 	WFIFOW(fd, 2) = sizeof(struct item) + 12;
 	WFIFOL(fd, 4) = char_id;
 	WFIFOL(fd, 8) = (msg->zeny > 0) ? msg->zeny : 0;
-	memcpy(WFIFOP(struct item *, fd, 12), &msg->item, sizeof(struct item));
+	memcpy(WFIFOP(struct item, fd, 12), &msg->item, sizeof(struct item));
 	WFIFOSET(fd,WFIFOW(fd, 2));
 }
 
@@ -1094,7 +1094,7 @@ static void mapif_mail_send(int fd, struct mail_message* msg)
 	WFIFOHEAD(fd, len);
 	WFIFOW(fd, 0) = 0x384d;
 	WFIFOW(fd, 2) = len;
-	memcpy(WFIFOP(struct mail_message *, fd, 4), msg, sizeof(struct mail_message));
+	memcpy(WFIFOP(struct mail_message, fd, 4), msg, sizeof(struct mail_message));
 	WFIFOSET(fd,len);
 }
 
@@ -1107,7 +1107,7 @@ static void mapif_parse_mail_send(int fd)
 		return;
 
 	account_id = RFIFOL(fd, 4);
-	memcpy(&msg, RFIFOP(struct mail_message *, fd, 8), sizeof(struct mail_message));
+	memcpy(&msg, RFIFOP(struct mail_message, fd, 8), sizeof(struct mail_message));
 
 	inter_mail->send(account_id, &msg);
 
@@ -1124,7 +1124,7 @@ static void mapif_mercenary_send(int fd, struct s_mercenary *merc, unsigned char
 	WFIFOW(fd, 0) = 0x3870;
 	WFIFOW(fd, 2) = size;
 	WFIFOB(fd, 4) = flag;
-	memcpy(WFIFOP(struct s_mercenary *, fd, 5), merc, sizeof(struct s_mercenary));
+	memcpy(WFIFOP(struct s_mercenary, fd, 5), merc, sizeof(struct s_mercenary));
 	WFIFOSET(fd,size);
 }
 
@@ -1184,12 +1184,12 @@ static int mapif_party_created(int fd, int account_id, int char_id, struct party
 	if (p != NULL) {
 		WFIFOB(fd, 10) = 0;
 		WFIFOL(fd, 11) = p->party_id;
-		memcpy(WFIFOP(char *, fd, 15), p->name, NAME_LENGTH);
+		memcpy(WFIFOP(char, fd, 15), p->name, NAME_LENGTH);
 		ShowInfo("int_party: Party created (%d - %s)\n", p->party_id, p->name);
 	} else {
 		WFIFOB(fd, 10) = 1;
 		WFIFOL(fd, 11) = 0;
-		memset(WFIFOP(char *, fd, 15), 0, NAME_LENGTH);
+		memset(WFIFOP(char, fd, 15), 0, NAME_LENGTH);
 	}
 	WFIFOSET(fd, 39);
 
@@ -1400,7 +1400,7 @@ static int mapif_pet_info(int fd, int account_id, struct s_pet *p)
 	WFIFOW(fd, 2) = sizeof(struct s_pet) + 9;
 	WFIFOL(fd, 4) = account_id;
 	WFIFOB(fd, 8) = 0;
-	memcpy(WFIFOP(struct s_pet *, fd, 9), p, sizeof(struct s_pet));
+	memcpy(WFIFOP(struct s_pet, fd, 9), p, sizeof(struct s_pet));
 	WFIFOSET(fd, WFIFOW(fd, 2));
 
 	return 0;
@@ -1413,7 +1413,7 @@ static int mapif_pet_noinfo(int fd, int account_id)
 	WFIFOW(fd, 2) = sizeof(struct s_pet) + 9;
 	WFIFOL(fd, 4) = account_id;
 	WFIFOB(fd, 8) = 1;
-	memset(WFIFOP(struct s_pet *, fd, 9), 0, sizeof(struct s_pet));
+	memset(WFIFOP(struct s_pet, fd, 9), 0, sizeof(struct s_pet));
 	WFIFOSET(fd, WFIFOW(fd, 2));
 
 	return 0;
@@ -1467,7 +1467,7 @@ static int mapif_delete_pet(int fd, int pet_id)
 
 static int mapif_parse_CreatePet(int fd)
 {
-	const struct PACKET_INTER_CREATE_PET *p = RP2PTR(struct PACKET_INTER_CREATE_PET *, fd);
+	const struct PACKET_INTER_CREATE_PET *p = RP2PTR(struct PACKET_INTER_CREATE_PET, fd);
 
 	struct s_pet *pet = inter_pet->create(p->account_id,
 		p->char_id,
@@ -1508,7 +1508,7 @@ static int mapif_parse_LoadPet(int fd)
 static int mapif_parse_SavePet(int fd)
 {
 	RFIFOHEAD(fd);
-	mapif->save_pet(fd, RFIFOL(fd, 4), RFIFOP(struct s_pet *, fd, 8));
+	mapif->save_pet(fd, RFIFOL(fd, 4), RFIFOP(struct s_pet, fd, 8));
 	return 0;
 }
 
@@ -1543,7 +1543,7 @@ static int mapif_parse_quest_save(int fd)
 	bool success;
 
 	if (num > 0)
-		qd = RFIFOP(struct quest *, fd, 8);
+		qd = RFIFOP(struct quest, fd, 8);
 
 	success = inter_quest->save(char_id, qd, num);
 
@@ -1562,7 +1562,7 @@ static void mapif_send_quests(int fd, int char_id, struct quest *tmp_questlog, i
 
 	if (num_quests > 0) {
 		nullpo_retv(tmp_questlog);
-		memcpy(WFIFOP(struct quest *, fd, 8), tmp_questlog, sizeof(struct quest) * num_quests);
+		memcpy(WFIFOP(struct quest, fd, 8), tmp_questlog, sizeof(struct quest) * num_quests);
 	}
 
 	WFIFOSET(fd, num_quests * sizeof(struct quest) + 8);
@@ -1654,7 +1654,7 @@ static void mapif_rodex_sendinbox(int fd, int char_id, int8 opentype, int8 flag,
 		WFIFOL(fd, 12) = limit;
 		WFIFOQ(fd, 16) = mail_id;
 		for (j = 0; j < limit; ++j, ++sent, i += sizeof(struct rodex_message)) {
-			memcpy(WFIFOP(struct rodex_message *, fd, i), &VECTOR_INDEX(*mails, sent), sizeof(struct rodex_message));
+			memcpy(WFIFOP(struct rodex_message, fd, i), &VECTOR_INDEX(*mails, sent), sizeof(struct rodex_message));
 		}
 		WFIFOSET(fd, size);
 
@@ -1713,7 +1713,7 @@ static void mapif_parse_rodex_send(int fd)
 	if (RFIFOW(fd,2) != 4 + sizeof(struct rodex_message))
 		return;
 
-	memcpy(&msg, RFIFOP(struct rodex_message *, fd, 4), sizeof(struct rodex_message));
+	memcpy(&msg, RFIFOP(struct rodex_message, fd, 4), sizeof(struct rodex_message));
 	if (msg.receiver_id > 0 || msg.receiver_accountid > 0)
 		msg.id = inter_rodex->savemessage(&msg);
 
@@ -1744,7 +1744,7 @@ static void mapif_parse_rodex_checkname(int fd)
 	int target_char_id, target_level;
 	int target_class;
 
-	safestrncpy(name, RFIFOP(char *, fd, 6), NAME_LENGTH);
+	safestrncpy(name, RFIFOP(char, fd, 6), NAME_LENGTH);
 
 	if (inter_rodex->checkname(name, &target_char_id, &target_class, &target_level) == true)
 		mapif->rodex_checkname(fd, reqchar_id, target_char_id, target_class, target_level, name);
@@ -1764,7 +1764,7 @@ static void mapif_rodex_checkname(int fd, int reqchar_id, int target_char_id, in
 	WFIFOL(fd, 6) = target_char_id;
 	WFIFOL(fd, 10) = target_class;
 	WFIFOL(fd, 14) = target_level;
-	safestrncpy(WFIFOP(char *, fd, 18), name, NAME_LENGTH);
+	safestrncpy(WFIFOP(char, fd, 18), name, NAME_LENGTH);
 	WFIFOSET(fd, 18 + NAME_LENGTH);
 }
 
@@ -1801,7 +1801,7 @@ static int mapif_load_guild_storage(int fd, int account_id, int guild_id, char f
 			WFIFOL(fd, 13) = gs->items.capacity;
 			WFIFOL(fd, 17) = gs->items.amount;
 			if (gs->items.data != NULL) {
-				memcpy(WFIFOP(struct item *, fd, 21), gs->items.data, sizeof gs->items.data[0] * gs->items.capacity);
+				memcpy(WFIFOP(struct item, fd, 21), gs->items.data, sizeof gs->items.data[0] * gs->items.capacity);
 				aFree(gs->items.data);
 			}
 			WFIFOSET(fd, size);
@@ -1859,7 +1859,7 @@ static int mapif_account_storage_load(int fd, int account_id, int storage_id, in
 	WFIFOL(fd, 4) = account_id;
 	WFIFOW(fd, 8) = storage_id;
 	for (i = 0; i < count; i++)
-		memcpy(WFIFOP(struct item *, fd, 10 + i * sizeof(struct item)), &VECTOR_INDEX(stor.item, i), sizeof(struct item));
+		memcpy(WFIFOP(struct item, fd, 10 + i * sizeof(struct item)), &VECTOR_INDEX(stor.item, i), sizeof(struct item));
 	WFIFOSET(fd, len);
 
 	VECTOR_CLEAR(stor.item);
@@ -1927,7 +1927,7 @@ static int mapif_parse_AccountStorageSave(int fd)
 		VECTOR_ENSURE(p_stor.item, count, 1);
 
 		for (i = 0; i < count; i++) {
-			const struct item *it = RFIFOP(struct item *, fd, 10 + i * sizeof(struct item));
+			const struct item *it = RFIFOP(struct item, fd, 10 + i * sizeof(struct item));
 
 			VECTOR_PUSH(p_stor.item, *it);
 		}
@@ -2010,7 +2010,7 @@ static int mapif_parse_SaveGuildStorage(int fd)
 
 	if (storage_capacity > 0) {
 		gstor.items.data = (struct item *)aCalloc(storage_capacity, sizeof gstor.items.data[0]);
-		memcpy(gstor.items.data, RFIFOP(struct item *, fd, 20), sizeof gstor.items.data[0] * storage_capacity);
+		memcpy(gstor.items.data, RFIFOP(struct item, fd, 20), sizeof gstor.items.data[0] * storage_capacity);
 	}
 	gstor.items.amount = storage_amount;
 	gstor.items.capacity = storage_capacity;
@@ -2066,7 +2066,7 @@ static void mapif_parse_accinfo(int fd)
 	char query[NAME_LENGTH];
 	int u_fd = RFIFOL(fd, 2), aid = RFIFOL(fd, 6), castergroup = RFIFOL(fd, 10);
 
-	safestrncpy(query, RFIFOP(char *, fd, 14), NAME_LENGTH);
+	safestrncpy(query, RFIFOP(char, fd, 14), NAME_LENGTH);
 
 	inter->accinfo(u_fd, aid, castergroup, query, fd);
 }
@@ -2105,7 +2105,7 @@ static int mapif_parse_Registry(int fd)
 		for (i = 0; i < count; i++) {
 			unsigned int index;
 			int len = RFIFOB(fd, cursor);
-			safestrncpy(key, RFIFOP(char *, fd, cursor + 1), std::min((int)sizeof(key), len));
+			safestrncpy(key, RFIFOP(char, fd, cursor + 1), std::min((int)sizeof(key), len));
 			cursor += len + 1;
 
 			index = RFIFOL(fd, cursor);
@@ -2123,7 +2123,7 @@ static int mapif_parse_Registry(int fd)
 			/* str */
 			case 2:
 				len = RFIFOB(fd, cursor);
-				safestrncpy(sval, RFIFOP(char *, fd, cursor + 1), std::min((int)sizeof(sval), len + 1));
+				safestrncpy(sval, RFIFOP(char, fd, cursor + 1), std::min((int)sizeof(sval), len + 1));
 				cursor += len + 2;
 				inter->savereg(account_id, char_id, key, index, (intptr_t)sval, true);
 				break;
@@ -2166,7 +2166,7 @@ static void mapif_namechange_ack(int fd, int account_id, int char_id, int type, 
 	WFIFOL(fd, 6) = char_id;
 	WFIFOB(fd, 10) = type;
 	WFIFOB(fd, 11) = flag;
-	memcpy(WFIFOP(char *, fd, 12), name, NAME_LENGTH);
+	memcpy(WFIFOP(char, fd, 12), name, NAME_LENGTH);
 	WFIFOSET(fd, NAME_LENGTH + 13);
 }
 
@@ -2178,7 +2178,7 @@ static int mapif_parse_NameChangeRequest(int fd)
 	account_id = RFIFOL(fd, 2);
 	char_id = RFIFOL(fd, 6);
 	type = RFIFOB(fd, 10);
-	const char *name = RFIFOP(char *, fd, 11);
+	const char *name = RFIFOP(char, fd, 11);
 
 	// Check Authorized letters/symbols in the name
 	if (char_name_option == 1) { // only letters/symbols in char_name_letters are authorized
@@ -2288,7 +2288,7 @@ static void mapif_send_achievements_to_map(int fd, int char_id, const struct cha
 	WFIFOW(fd, 2) = (8 + data_size);
 	WFIFOL(fd, 4) = char_id;
 	for (i = 0; i < VECTOR_LENGTH(*cp); i++)
-		memcpy(WFIFOP(struct achievement *, fd, 8 + i * sizeof(struct achievement)), &VECTOR_INDEX(*cp, i), sizeof(struct achievement));
+		memcpy(WFIFOP(struct achievement, fd, 8 + i * sizeof(struct achievement)), &VECTOR_INDEX(*cp, i), sizeof(struct achievement));
 	WFIFOSET(fd, 8 + data_size);
 }
 
@@ -2313,7 +2313,7 @@ static void mapif_parse_save_achievements(int fd)
 
 	for (i = 0; i < payload_count; i++) {
 		struct achievement ach{};
-		memcpy(&ach, RFIFOP(struct achievement *, fd, 8 + i * sizeof(struct achievement)), sizeof(struct achievement));
+		memcpy(&ach, RFIFOP(struct achievement, fd, 8 + i * sizeof(struct achievement)), sizeof(struct achievement));
 		VECTOR_PUSH(p, ach);
 	}
 
@@ -2365,7 +2365,7 @@ static void mapif_rodex_getitemsack(int char_id, int64 mail_id, uint8 opentype, 
 static void mapif_agency_joinPartyResult(int fd, int char_id, enum adventurer_agency_result result)
 {
 	WFIFOHEAD(fd, sizeof(struct PACKET_CHARMAP_AGENCY_JOIN_PARTY));
-	struct PACKET_CHARMAP_AGENCY_JOIN_PARTY *p = WP2PTR(struct PACKET_CHARMAP_AGENCY_JOIN_PARTY *, fd);
+	struct PACKET_CHARMAP_AGENCY_JOIN_PARTY *p = WP2PTR(struct PACKET_CHARMAP_AGENCY_JOIN_PARTY, fd);
 
 	p->packetType = 0x389b;
 	p->char_id = char_id;

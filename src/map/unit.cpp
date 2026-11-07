@@ -64,6 +64,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <optional>
 
 const short dirx[8] = { 0, -1, -1, -1, 0, 1, 1, 1 };
 const short diry[8] = { 1, 1, 0, -1, -1, -1, 0, 1 };
@@ -1154,23 +1155,25 @@ static int unit_warp(struct block_list *bl, short m, short x, short y, enum clr_
 static int unit_stop_walking(struct block_list *bl, int flag)
 {
 	struct unit_data *ud;
-	const struct TimerData* td;
 	int64 tick;
 	nullpo_ret(bl);
 
 	ud = unit->bl2ud(bl);
 	if(!ud || ud->walktimer == INVALID_TIMER)
 		return 0;
-	//NOTE: We are using timer data after deleting it because we know the
-	//timer->delete_ function does not messes with it. If the function's
-	//behavior changes in the future, this code could break!
-	td = timer->get(ud->walktimer);
+
+	// We're copying timer data as next call to timer->delete_ will invalidate this timer pointer
+	std::optional<TimerData> td{};
+	if (auto *timer_ptr = timer->get(ud->walktimer); timer_ptr != nullptr) {
+		td          = *timer_ptr;
+	}
+
 	timer->delete_(ud->walktimer, unit->walk_toxy_timer);
 	ud->walktimer = INVALID_TIMER;
 	ud->state.change_walk_target = 0;
 	tick = timer->gettick();
 	if( (flag&STOPWALKING_FLAG_ONESTEP && !ud->walkpath.path_pos) /* Force moving at least one cell. */
-	||  (flag&STOPWALKING_FLAG_NEXTCELL && td && DIFF_TICK(td->tick, tick) <= td->data/2) /* Enough time has passed to cover half-cell */
+	||  (flag&STOPWALKING_FLAG_NEXTCELL && td.has_value() && DIFF_TICK(td.value().tick, tick) <= td.value().data / 2) /* Enough time has passed to cover half-cell */
 	) {
 		ud->walkpath.path_len = ud->walkpath.path_pos+1;
 		unit->walk_toxy_timer(INVALID_TIMER, tick, bl->id, ud->walkpath.path_pos);

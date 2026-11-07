@@ -143,7 +143,7 @@ static int irc_parse(int fd)
 		return 0;
 
 	char *parse_string = (char *)aMalloc(RFIFOREST(fd));
-	safestrncpy(parse_string, RFIFOP(char *, fd, 0), RFIFOREST(fd));
+	safestrncpy(parse_string, RFIFOP(char, fd, 0), RFIFOREST(fd));
 	RFIFOSKIP(fd, RFIFOREST(fd));
 	RFIFOFLUSH(fd);
 
@@ -289,7 +289,7 @@ static void irc_send(const char *str, bool force)
 	}
 
 	WFIFOHEAD(ircbot->fd, len);
-	snprintf(WFIFOP(char *, ircbot->fd, 0), IRC_MESSAGE_LENGTH, "%s\r\n", str);
+	snprintf(WFIFOP(char, ircbot->fd, 0), IRC_MESSAGE_LENGTH, "%s\r\n", str);
 	WFIFOSET(ircbot->fd, len);
 }
 

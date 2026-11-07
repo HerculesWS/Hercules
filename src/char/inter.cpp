@@ -186,7 +186,7 @@ static void inter_vmsg_to_fd(int fd, int u_fd, int aid, const char *msg, va_list
 	WFIFOW(fd,2) = 12 + (unsigned short)len;
 	WFIFOL(fd,4) = u_fd;
 	WFIFOL(fd,8) = aid;
-	safestrncpy(WFIFOP(char *, fd, 12), msg_out, len);
+	safestrncpy(WFIFOP(char, fd, 12), msg_out, len);
 
 	WFIFOSET(fd,12 + len);
 
@@ -443,7 +443,7 @@ static int inter_accreg_fromsql(int account_id, int char_id, int fd, int type)
 		WFIFOB(fd, plen) = (unsigned char)len;/* won't be higher; the column size is 32 */
 		plen += 1;
 
-		safestrncpy(WFIFOP(char *, fd, plen), data, len);
+		safestrncpy(WFIFOP(char, fd, plen), data, len);
 		plen += len;
 
 		SQL->GetData(inter->sql_handle, 1, &data, NULL);
@@ -457,7 +457,7 @@ static int inter_accreg_fromsql(int account_id, int char_id, int fd, int type)
 		WFIFOB(fd, plen) = (unsigned char)len; // Won't be higher; the column size is 255.
 		plen += 1;
 
-		safestrncpy(WFIFOP(char *, fd, plen), data, len + 1);
+		safestrncpy(WFIFOP(char, fd, plen), data, len + 1);
 		plen += len + 1;
 
 		WFIFOW(fd, 14) += 1;
@@ -524,7 +524,7 @@ static int inter_accreg_fromsql(int account_id, int char_id, int fd, int type)
 		WFIFOB(fd, plen) = (unsigned char)len;/* won't be higher; the column size is 32 */
 		plen += 1;
 
-		safestrncpy(WFIFOP(char *, fd, plen), data, len);
+		safestrncpy(WFIFOP(char, fd, plen), data, len);
 		plen += len;
 
 		SQL->GetData(inter->sql_handle, 1, &data, NULL);

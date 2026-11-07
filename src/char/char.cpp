@@ -218,7 +218,7 @@ static void char_set_account_online(int account_id, bool standalone)
 {
 	WFIFOHEAD(chr->login_fd, sizeof(struct PACKET_CHARLOGIN_SET_ACCOUNT_ONLINE));
 	
-	struct PACKET_CHARLOGIN_SET_ACCOUNT_ONLINE *p = WP2PTR(struct PACKET_CHARLOGIN_SET_ACCOUNT_ONLINE *, chr->login_fd);
+	struct PACKET_CHARLOGIN_SET_ACCOUNT_ONLINE *p = WP2PTR(struct PACKET_CHARLOGIN_SET_ACCOUNT_ONLINE, chr->login_fd);
 	p->packetType = HEADER_CHARLOGIN_SET_ACCOUNT_ONLINE;
 	p->account_id = account_id;
 	p->standalone = standalone ? 1 : 0;
@@ -2154,10 +2154,10 @@ static void char_send_HC_ACK_CHARINFO_PER_PAGE(int fd, struct char_session_data 
 #if PACKETVER_MAIN_NUM >= 20130522 || PACKETVER_RE_NUM >= 20130327 || defined(PACKETVER_ZERO)
 	const int len = sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE);
 	WFIFOHEAD(fd, len + (MAX_CHARS * MAX_CHAR_BUF));
-	struct PACKET_HC_ACK_CHARINFO_PER_PAGE *p = WP2PTR(struct PACKET_HC_ACK_CHARINFO_PER_PAGE *, fd);
+	struct PACKET_HC_ACK_CHARINFO_PER_PAGE *p = WP2PTR(struct PACKET_HC_ACK_CHARINFO_PER_PAGE, fd);
 	int count = 0;
 	p->packetId = HEADER_HC_ACK_CHARINFO_PER_PAGE;
-	p->packetLen = chr->mmo_chars_fromsql(sd, WFIFOP(uint8 *, fd, len), &count) + len;
+	p->packetLen = chr->mmo_chars_fromsql(sd, WFIFOP(uint8, fd, len), &count) + len;
 	WFIFOSET(fd, p->packetLen);
 	// send empty packet if chars count is 3, for trigger final code in client
 	if (count == 3) {
@@ -2171,7 +2171,7 @@ static void char_send_HC_ACK_CHARINFO_PER_PAGE_tail(int fd, struct char_session_
 #if PACKETVER_MAIN_NUM >= 20130522 || PACKETVER_RE_NUM >= 20130327 || defined(PACKETVER_ZERO)
 	const int len = sizeof(struct PACKET_HC_ACK_CHARINFO_PER_PAGE);
 	WFIFOHEAD(fd, len);
-	struct PACKET_HC_ACK_CHARINFO_PER_PAGE *p = WP2PTR(struct PACKET_HC_ACK_CHARINFO_PER_PAGE *, fd);
+	struct PACKET_HC_ACK_CHARINFO_PER_PAGE *p = WP2PTR(struct PACKET_HC_ACK_CHARINFO_PER_PAGE, fd);
 	p->packetId = HEADER_HC_ACK_CHARINFO_PER_PAGE;
 	p->packetLen = len;
 	WFIFOSET(fd, p->packetLen);
@@ -2196,7 +2196,7 @@ static void char_mmo_char_send_ban_list(int fd, struct char_session_data *sd)
 
 		for(i = 0, c = 0; i < MAX_CHARS; i++) {
 			if( sd->unban_time[i] ) {
-				timestamp2string(WFIFOP(char *, fd, 8 + (28*c)), 20, sd->unban_time[i], "%Y-%m-%d %H:%M:%S");
+				timestamp2string(WFIFOP(char, fd, 8 + (28*c)), 20, sd->unban_time[i], "%Y-%m-%d %H:%M:%S");
 
 				if( sd->unban_time[i] > now )
 					WFIFOL(fd, 4 + (24*c)) = sd->found_char[i];
@@ -2234,7 +2234,7 @@ static void char_mmo_char_send_slots_info(int fd, struct char_session_data *sd)
 	WFIFOB(fd, 6) = 0;
 	WFIFOB(fd, 7) = sd->char_slots;
 	WFIFOB(fd, 8) = sd->char_slots;
-	memset(WFIFOP(void *, fd, 9), 0, 20); // unused bytes
+	memset(WFIFOP(void, fd, 9), 0, 20); // unused bytes
 	WFIFOSET(fd, 29);
 #endif
 }
@@ -2262,8 +2262,8 @@ static int char_mmo_char_send_characters(int fd, struct char_session_data *sd)
 	// Premium slots. AKA any existent chars past sd->char_slots but within MAX_CHARS will show a 'Premium Service' in red
 	WFIFOB(fd,6) = MAX_CHARS;
 #endif
-	memset(WFIFOP(void *, fd,4 + offset), 0, 20); // unknown bytes
-	j += chr->mmo_chars_fromsql(sd, WFIFOP(uint8 *, fd, j), NULL);
+	memset(WFIFOP(void, fd,4 + offset), 0, 20); // unknown bytes
+	j += chr->mmo_chars_fromsql(sd, WFIFOP(uint8, fd, j), NULL);
 	WFIFOW(fd,2) = j; // packet len
 	WFIFOSET(fd,j);
 
@@ -2503,7 +2503,7 @@ static void char_parse_fromlogin_account_data(int fd)
 	// find the authenticated session with this account id
 	ARR_FIND(0, sockt->fd_max, i, sockt->session[i] && (sd = (struct char_session_data *)sockt->session[i]->session_data) && sd->auth && sd->account_id == RFIFOSL(fd,2));
 	if( i < sockt->fd_max ) {
-		memcpy(sd->email, RFIFOP(char *, fd, 6), 40);
+		memcpy(sd->email, RFIFOP(char, fd, 6), 40);
 		sd->expiration_time = (time_t)RFIFOL(fd,46);
 		sd->group_id = RFIFOB(fd,50);
 		sd->char_slots = RFIFOB(fd,51);
@@ -2512,8 +2512,8 @@ static void char_parse_fromlogin_account_data(int fd)
 			sd->char_slots = MAX_CHARS;/* cap to maximum */
 		} else if ( sd->char_slots <= 0 )/* no value aka 0 in sql */
 			sd->char_slots = MAX_CHARS;/* cap to maximum */
-		safestrncpy(sd->birthdate, RFIFOP(char *, fd, 52), sizeof(sd->birthdate));
-		safestrncpy(sd->pincode, RFIFOP(char *, fd, 63), sizeof(sd->pincode));
+		safestrncpy(sd->birthdate, RFIFOP(char, fd, 52), sizeof(sd->birthdate));
+		safestrncpy(sd->pincode, RFIFOP(char, fd, 63), sizeof(sd->pincode));
 		sd->pincode_change = RFIFOL(fd,68);
 		// continued from chr->auth_ok...
 		if( (max_connect_user == 0 && sd->group_id != gm_allow_group) ||
@@ -2679,7 +2679,7 @@ static int char_parse_fromlogin_changesex_reply(int fd)
 static void char_parse_fromlogin_account_reg2(int fd)
 {
 	//Receive account_reg2 registry, forward to map servers.
-	mapif->send(RFIFOP(unsigned char *, fd, 0), RFIFOW(fd, 2));
+	mapif->send(RFIFOP(unsigned char, fd, 0), RFIFOW(fd, 2));
 	RFIFOSKIP(fd, RFIFOW(fd,2));
 }
 
@@ -2761,8 +2761,8 @@ static void char_parse_fromlogin_accinfo2_failed(int fd)
 static void char_parse_fromlogin_accinfo2_ok(int fd)
 {
 	inter->accinfo2(true, RFIFOL(fd, 167), RFIFOL(fd, 171), RFIFOL(fd, 175), RFIFOL(fd, 179),
-	                      RFIFOP(char *, fd, 2), RFIFOP(char *, fd, 26), RFIFOP(char *, fd, 59), RFIFOP(char *, fd, 99), RFIFOP(char *, fd, 119),
-	                      RFIFOP(char *, fd, 151), RFIFOP(char *, fd, 156), RFIFOL(fd, 115), RFIFOL(fd, 143), RFIFOL(fd, 147));
+	                      RFIFOP(char, fd, 2), RFIFOP(char, fd, 26), RFIFOP(char, fd, 59), RFIFOP(char, fd, 99), RFIFOP(char, fd, 119),
+	                      RFIFOP(char, fd, 151), RFIFOP(char, fd, 156), RFIFOL(fd, 115), RFIFOL(fd, 143), RFIFOL(fd, 147));
 	RFIFOSKIP(fd,183);
 }
 
@@ -2943,7 +2943,7 @@ static void char_global_accreg_to_login_add(const char *key, unsigned int index,
 	WFIFOB(chr->login_fd, nlen) = (unsigned char)len;/* won't be higher; the column size is 32 */
 	nlen += 1;
 
-	safestrncpy(WFIFOP(char *, chr->login_fd, nlen), key, len);
+	safestrncpy(WFIFOP(char, chr->login_fd, nlen), key, len);
 	nlen += len;
 
 	WFIFOL(chr->login_fd, nlen) = index;
@@ -2960,7 +2960,7 @@ static void char_global_accreg_to_login_add(const char *key, unsigned int index,
 			WFIFOB(chr->login_fd, nlen) = (unsigned char)len; // Won't be higher; the column size is 255.
 			nlen += 1;
 
-			safestrncpy(WFIFOP(char *, chr->login_fd, nlen), sval, len + 1);
+			safestrncpy(WFIFOP(char, chr->login_fd, nlen), sval, len + 1);
 			nlen += len + 1;
 		}
 	} else {
@@ -3136,7 +3136,7 @@ static void char_map_received_ok(int fd)
 	WFIFOHEAD(fd, 3 + NAME_LENGTH);
 	WFIFOW(fd,0) = 0x2afb;
 	WFIFOB(fd,2) = 0;
-	memcpy(WFIFOP(char *, fd, 3), wisp_server_name, NAME_LENGTH);
+	memcpy(WFIFOP(char, fd, 3), wisp_server_name, NAME_LENGTH);
 	WFIFOSET(fd,3+NAME_LENGTH);
 }
 
@@ -3187,7 +3187,7 @@ static void char_send_scdata(int fd, int aid, int cid)
 			SQL->GetData(inter->sql_handle, 4, &data, NULL); scdata.val2 = atoi(data);
 			SQL->GetData(inter->sql_handle, 5, &data, NULL); scdata.val3 = atoi(data);
 			SQL->GetData(inter->sql_handle, 6, &data, NULL); scdata.val4 = atoi(data);
-			memcpy(WFIFOP(struct status_change_data *, fd, 14 + count*sizeof(struct status_change_data)), &scdata, sizeof(struct status_change_data));
+			memcpy(WFIFOP(struct status_change_data, fd, 14 + count*sizeof(struct status_change_data)), &scdata, sizeof(struct status_change_data));
 		}
 		if (count >= 50)
 			ShowWarning("Too many status changes for %d:%d, some of them were not loaded.\n", aid, cid);
@@ -3274,7 +3274,7 @@ static void char_parse_frommap_save_character(int fd)
 	    && character->char_id == cid)
 	) {
 		struct mmo_charstatus char_dat;
-		memcpy(&char_dat, RFIFOP(struct mmo_charstatus *, fd, 13), sizeof(struct mmo_charstatus));
+		memcpy(&char_dat, RFIFOP(struct mmo_charstatus, fd, 13), sizeof(struct mmo_charstatus));
 		chr->mmo_char_tosql(cid, &char_dat);
 	} else {
 		//This may be valid on char-server reconnection, when re-sending characters that already logged off.
@@ -3355,10 +3355,10 @@ static void char_char_name_ack(int fd, int char_id)
 	WFIFOW(fd,0) = 0x2b09;
 	WFIFOL(fd,2) = char_id;
 #if PACKETVER_MAIN_NUM >= 20180307 || PACKETVER_RE_NUM >= 20180221 || PACKETVER_ZERO_NUM >= 20180328
-	if (chr->loadName(char_id, WFIFOP(char *, fd, 6)) == 0)
+	if (chr->loadName(char_id, WFIFOP(char, fd, 6)) == 0)
 		WFIFOL(fd, 6) = 0;
 #else
-	chr->loadName(char_id, WFIFOP(char *, fd, 6));
+	chr->loadName(char_id, WFIFOP(char, fd, 6));
 #endif
 	WFIFOSET(fd,30);
 }
@@ -3374,7 +3374,7 @@ static void char_parse_frommap_change_email(int fd)
 	if (chr->login_fd > 0) { // don't send request if no login-server
 		WFIFOHEAD(chr->login_fd,86);
 		// 0x2722 <account_id>.L <actual_e-mail>.40B <new_e-mail>.40B
-		memcpy(WFIFOP(void *, chr->login_fd, 0), RFIFOP(void *, fd, 0), 86);
+		memcpy(WFIFOP(void, chr->login_fd, 0), RFIFOP(void, fd, 0), 86);
 		WFIFOW(chr->login_fd,0) = 0x2722;
 		WFIFOSET(chr->login_fd,86);
 	}
@@ -3439,7 +3439,7 @@ static void char_ask_name_ack(int fd, int acc, const char *name, int type, int r
 	WFIFOHEAD(fd,34);
 	WFIFOW(fd, 0) = 0x2b0f;
 	WFIFOL(fd, 2) = acc;
-	safestrncpy(WFIFOP(char *, fd, 6), name, NAME_LENGTH);
+	safestrncpy(WFIFOP(char, fd, 6), name, NAME_LENGTH);
 	WFIFOW(fd,30) = type;
 	WFIFOW(fd,32) = result;
 	WFIFOSET(fd,34);
@@ -3519,7 +3519,7 @@ static void char_parse_frommap_change_account(int fd)
 	// account_id of who ask (-1 if server itself made this request)
 	int acc = RFIFOL(fd,2);
 	// name of the target character
-	const char *name = RFIFOP(char *, fd, 6);
+	const char *name = RFIFOP(char, fd, 6);
 	// type of operation: 1-block, 2-ban, 3-unblock, 4-unban, 5 changesex, 6 charban, 7 charunban
 	enum zh_char_ask_name_type type = (enum zh_char_ask_name_type)RFIFOW(fd,30);
 	short year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0;
@@ -3718,7 +3718,7 @@ static void char_parse_frommap_save_status_change_data(int fd)
 		StrBuf->Printf(&buf, "INSERT INTO `%s` (`account_id`, `char_id`, `type`, `tick`, `total_tick`, `val1`, `val2`, `val3`, `val4`) VALUES ", scdata_db);
 		for( i = 0; i < count; ++i )
 		{
-			memcpy (&data, RFIFOP(struct status_change_data *, fd, 14 + i * sizeof(struct status_change_data)), sizeof(struct status_change_data));
+			memcpy (&data, RFIFOP(struct status_change_data, fd, 14 + i * sizeof(struct status_change_data)), sizeof(struct status_change_data));
 			if( i > 0 )
 				StrBuf->AppendStr(&buf, ", ");
 			StrBuf->Printf(&buf, "('%d','%d','%hu','%d','%d','%d','%d','%d','%d')", aid, cid,
@@ -3769,7 +3769,7 @@ static void char_map_auth_ok(int fd, int account_id, struct char_auth_node *node
 		WFIFOL(fd,20) = 0;
 		WFIFOB(fd,24) = 0;
 	}
-	memcpy(WFIFOP(struct mmo_charstatus *, fd, 25), cd, sizeof(struct mmo_charstatus));
+	memcpy(WFIFOP(struct mmo_charstatus, fd, 25), cd, sizeof(struct mmo_charstatus));
 	WFIFOSET(fd, WFIFOW(fd,2));
 }
 
@@ -3789,7 +3789,7 @@ static void char_parse_frommap_auth_request(int fd)
 {
 	struct mmo_charstatus char_dat;
 
-	const struct PACKET_MAPCHAR_AUTH_REQ *p = RP2PTR(struct PACKET_MAPCHAR_AUTH_REQ *, fd);
+	const struct PACKET_MAPCHAR_AUTH_REQ *p = RP2PTR(struct PACKET_MAPCHAR_AUTH_REQ, fd);
 
 	int account_id   = p->account_id;
 	int char_id      = p->char_id;
@@ -4475,14 +4475,14 @@ static void char_send_map_info(int fd, uint32 subnet_map_ip, struct mmo_charstat
 	WFIFOHEAD(fd, len);
 	WFIFOW(fd, 0) = cmd;
 	WFIFOL(fd, 2) = cd->char_id;
-	mapindex->getmapname_ext(mapindex_id2name(cd->last_point.map), WFIFOP(char *, fd, 6));
+	mapindex->getmapname_ext(mapindex_id2name(cd->last_point.map), WFIFOP(char, fd, 6));
 	WFIFOL(fd, 22) = htonl((subnet_map_ip) ? subnet_map_ip : chr->map_server.ip);
 	WFIFOW(fd, 26) = sockt->ntows(htons(chr->map_server.port)); // [!] LE byte order here [!]
 #if PACKETVER >= 20170329
 	if (dnsHost != NULL) {
-		safestrncpy(WFIFOP(char *, fd, 28), dnsHost, 128);
+		safestrncpy(WFIFOP(char, fd, 28), dnsHost, 128);
 	} else {
-		memset(WFIFOP(char *, fd, 28), 0, 128);
+		memset(WFIFOP(char, fd, 28), 0, 128);
 	}
 #endif
 	WFIFOSET(fd, len);
@@ -4493,7 +4493,7 @@ static void char_send_wait_char_server(int fd)
 	WFIFOHEAD(fd, 24);
 	WFIFOW(fd, 0) = 0x840;
 	WFIFOW(fd, 2) = 24;
-	safestrncpy(WFIFOP(char *, fd,4), "0", 20);/* we can't send empty (otherwise the list will pop up) */
+	safestrncpy(WFIFOP(char, fd,4), "0", 20);/* we can't send empty (otherwise the list will pop up) */
 	WFIFOSET(fd, 24);
 }
 
@@ -4692,7 +4692,7 @@ static void char_creation_ok(int fd, struct mmo_charstatus *char_dat)
 	// send to player
 	WFIFOHEAD(fd, 2 + MAX_CHAR_BUF);
 	WFIFOW(fd, 0) = HEADER_HC_ACCEPT_MAKECHAR;
-	len = 2 + chr->mmo_char_tobuf(WFIFOP(uint8 *, fd, 2), char_dat);
+	len = 2 + chr->mmo_char_tobuf(WFIFOP(uint8, fd, 2), char_dat);
 	WFIFOSET(fd, len);
 }
 
@@ -4719,11 +4719,11 @@ static void char_parse_char_create_new_char(int fd, struct char_session_data *sd
 				RFIFOSKIP(fd, 36);
 				return;
 		}
-		result = chr->make_new_char_sql(sd, RFIFOP(char *, fd, 2), 1, 1, 1, 1, 1, 1, RFIFOB(fd, 26), RFIFOW(fd, 27), RFIFOW(fd, 29), RFIFOL(fd, 31), sex);
+		result = chr->make_new_char_sql(sd, RFIFOP(char, fd, 2), 1, 1, 1, 1, 1, 1, RFIFOB(fd, 26), RFIFOW(fd, 27), RFIFOW(fd, 29), RFIFOL(fd, 31), sex);
 #elif PACKETVER >= 20120307
-		result = chr->make_new_char_sql(sd, RFIFOP(char *, fd, 2), 1, 1, 1, 1, 1, 1, RFIFOB(fd, 26), RFIFOW(fd, 27), RFIFOW(fd, 29), JOB_NOVICE, 'U');
+		result = chr->make_new_char_sql(sd, RFIFOP(char, fd, 2), 1, 1, 1, 1, 1, 1, RFIFOB(fd, 26), RFIFOW(fd, 27), RFIFOW(fd, 29), JOB_NOVICE, 'U');
 #else
-		result = chr->make_new_char_sql(sd, RFIFOP(char *, fd, 2), RFIFOB(fd, 26), RFIFOB(fd, 27), RFIFOB(fd, 28), RFIFOB(fd, 29), RFIFOB(fd, 30), RFIFOB(fd, 31), RFIFOB(fd, 32), RFIFOW(fd, 33), RFIFOW(fd, 35), JOB_NOVICE, 'U');
+		result = chr->make_new_char_sql(sd, RFIFOP(char, fd, 2), RFIFOB(fd, 26), RFIFOB(fd, 27), RFIFOB(fd, 28), RFIFOB(fd, 29), RFIFOB(fd, 30), RFIFOB(fd, 31), RFIFOB(fd, 32), RFIFOW(fd, 33), RFIFOW(fd, 35), JOB_NOVICE, 'U');
 #endif
 	}
 
@@ -4783,7 +4783,7 @@ static void char_parse_char_delete_char(int fd, struct char_session_data *sd, un
 	}
 #endif
 	ShowInfo(CL_RED "Request Char Deletion: " CL_GREEN "%d (%d)" CL_RESET "\n", sd->account_id, cid);
-	memcpy(email, RFIFOP(char *, fd, 6), 40);
+	memcpy(email, RFIFOP(char, fd, 6), 40);
 	RFIFOSKIP(fd,( cmd == 0x68) ? 46 : 56);
 
 	// Check if e-mail is correct
@@ -4837,7 +4837,7 @@ static void char_parse_char_rename_char(int fd, struct char_session_data *sd)
 {
 	int i, cid =RFIFOL(fd,2);
 	char name[NAME_LENGTH];
-	safestrncpy(name, RFIFOP(char *, fd, 6), NAME_LENGTH);
+	safestrncpy(name, RFIFOP(char, fd, 6), NAME_LENGTH);
 	RFIFOSKIP(fd,30);
 
 	ARR_FIND( 0, MAX_CHARS, i, sd->found_char[i] == cid );
@@ -4860,7 +4860,7 @@ static void char_parse_char_rename_char2(int fd, struct char_session_data *sd)
 {
 	int i, aid = RFIFOL(fd,2), cid =RFIFOL(fd,6);
 	char name[NAME_LENGTH];
-	safestrncpy(name, RFIFOP(char *, fd, 10), NAME_LENGTH);
+	safestrncpy(name, RFIFOP(char, fd, 10), NAME_LENGTH);
 	RFIFOSKIP(fd,34);
 
 	if( aid != sd->account_id )
@@ -4956,8 +4956,8 @@ static void char_login_map_server_ack(int fd, uint8 flag)
 static void char_parse_char_login_map_server(int fd, uint32 ipl)
 {
 	char l_user[24], l_pass[24];
-	safestrncpy(l_user, RFIFOP(char *, fd, 2), 24);
-	safestrncpy(l_pass, RFIFOP(char *, fd, 26), 24);
+	safestrncpy(l_user, RFIFOP(char, fd, 2), 24);
+	safestrncpy(l_pass, RFIFOP(char, fd, 26), 24);
 
 	if (core->runflag != CHARSERVER_ST_RUNNING ||
 		chr->map_server.fd > 0 ||
@@ -5307,7 +5307,7 @@ static int char_send_accounts_tologin(int tid, int64 tick, int id, intptr_t data
 		int len = sizeof(struct PACKET_CHARLOGIN_ONLINE_ACCOUNTS) + sizeof(*p->accounts) * users;
 
 		WFIFOHEAD(chr->login_fd, len);
-		p = WP2PTR(struct PACKET_CHARLOGIN_ONLINE_ACCOUNTS *, chr->login_fd);
+		p = WP2PTR(struct PACKET_CHARLOGIN_ONLINE_ACCOUNTS, chr->login_fd);
 		p->packetType = HEADER_CHARLOGIN_ONLINE_ACCOUNTS;
 
 		chr->online_char_db->foreach(chr->online_char_db, chr->send_accounts_tologin_sub, &i, p->accounts);

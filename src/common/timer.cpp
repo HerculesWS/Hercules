@@ -40,6 +40,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unordered_map>
 
 static struct timer_interface timer_s;
 struct timer_interface *timer;
@@ -49,16 +50,11 @@ struct timer_interface *timer;
 #define TIMER_MIN_INTERVAL 50
 #define TIMER_MAX_INTERVAL 1000
 
-// timers (array)
-static struct TimerData* timer_data = NULL;
-static int timer_data_max = 0;
-static int timer_data_num = 1;
-
-// free timers (array)
-static int *free_timer_list = NULL;
-static int free_timer_list_max = 0;
-static int free_timer_list_pos = 0;
-
+// timers
+namespace
+{
+std::unordered_map<uint32_t, TimerData> timer_data;
+} // namespace
 
 /// Comparator for the timer heap. (minimum tick at top)
 /// Returns negative if tid1's tick is smaller, positive if tid2's tick is smaller, 0 if equal.
@@ -66,7 +62,7 @@ static int free_timer_list_pos = 0;
 /// @param tid1 First timer
 /// @param tid2 Second timer
 /// @return negative if tid1 is top, positive if tid2 is top, 0 if equal
-#define DIFFTICK_MINTOPCMP(tid1,tid2) DIFF_TICK(timer_data[tid1].tick,timer_data[tid2].tick)
+#define DIFFTICK_MINTOPCMP(tid1,tid2) DIFF_TICK(timer_data.at(tid1).tick, timer_data.at(tid2).tick)
 
 // timer heap (binary heap of tid's)
 static BHEAP_VAR(int, timer_heap);
@@ -278,33 +274,21 @@ static void push_timer_heap(int tid)
 /// Returns a free timer id.
 static int acquire_timer(void)
 {
-	int tid;
+	constexpr auto allocation_steps = 256;
+	static uint32_t tid = 1; // timer ids starts from 1
 
-	// select a free timer
-	if (free_timer_list_pos) {
-		do {
-			tid = free_timer_list[--free_timer_list_pos];
-		} while(tid >= timer_data_num && free_timer_list_pos > 0);
-	} else
-		tid = timer_data_num;
-
-	// check available space
-	if( tid >= timer_data_num )
-		// possible timer_data null pointer
-		for (tid = timer_data_num; tid < timer_data_max && timer_data[tid].type; tid++);
-	if (tid >= timer_data_num && tid >= timer_data_max)
-	{// expand timer array
-		timer_data_max += 256;
-		if( timer_data )
-			RECREATE(timer_data, struct TimerData, timer_data_max);
+	while(timer_data.contains(tid)) {
+		if (tid == UINT32_MAX)
+			tid = 1;
 		else
-			CREATE(timer_data, struct TimerData, timer_data_max);
-		memset(timer_data + (timer_data_max - 256), 0, sizeof(struct TimerData)*256);
+			++tid;
 	}
 
-	if( tid >= timer_data_num )
-		timer_data_num = tid + 1;
+	if (timer_data.size() % allocation_steps == 0) {
+		timer_data.reserve(timer_data.size() + allocation_steps);
+	}
 
+	timer_data.insert({tid, {}});
 	return tid;
 }
 
@@ -317,16 +301,6 @@ static int timer_add(int64 tick, TimerFunc func, int id, intptr_t data)
 	nullpo_retr(INVALID_TIMER, func);
 
 	tid = acquire_timer();
-	if (timer_data[tid].type != 0 && timer_data[tid].type != TIMER_REMOVE_HEAP)
-	{
-		ShowError("timer_add error: wrong tid type: %d, [%d]%p(%s) -> %p(%s)\n", timer_data[tid].type, tid, func, search_timer_func_list(func), timer_data[tid].func, search_timer_func_list(timer_data[tid].func));
-		Assert_retr(INVALID_TIMER, 0);
-	}
-	if (timer_data[tid].func != NULL)
-	{
-		ShowError("timer_add error: func non NULL: [%d]%p(%s) -> %p(%s)\n", tid, func, search_timer_func_list(func), timer_data[tid].func, search_timer_func_list(timer_data[tid].func));
-		Assert_retr(INVALID_TIMER, 0);
-	}
 	timer_data[tid].tick     = tick;
 	timer_data[tid].func     = func;
 	timer_data[tid].id       = id;
@@ -352,18 +326,6 @@ static int timer_add_interval(int64 tick, TimerFunc func, int id, intptr_t data,
 	}
 
 	tid = acquire_timer();
-	if (timer_data[tid].type != 0 && timer_data[tid].type != TIMER_REMOVE_HEAP)
-	{
-		ShowError("timer_add_interval: wrong tid type: %d, [%d]%p(%s) -> %p(%s)\n", timer_data[tid].type, tid, func, search_timer_func_list(func), timer_data[tid].func, search_timer_func_list(timer_data[tid].func));
-		Assert_retr(INVALID_TIMER, 0);
-		return INVALID_TIMER;
-	}
-	if (timer_data[tid].func != NULL)
-	{
-		ShowError("timer_add_interval: func non NULL: [%d]%p(%s) -> %p(%s)\n", tid, func, search_timer_func_list(func), timer_data[tid].func, search_timer_func_list(timer_data[tid].func));
-		Assert_retr(INVALID_TIMER, 0);
-		return INVALID_TIMER;
-	}
 	timer_data[tid].tick     = tick;
 	timer_data[tid].func     = func;
 	timer_data[tid].id       = id;
@@ -375,11 +337,11 @@ static int timer_add_interval(int64 tick, TimerFunc func, int id, intptr_t data,
 	return tid;
 }
 
-/// Retrieves internal timer data
+/// @copydoc timer_interface::get()
 static const struct TimerData *timer_get(int tid)
 {
-	Assert_retr(NULL, tid > 0);
-	return ( tid >= 0 && tid < timer_data_num ) ? &timer_data[tid] : NULL;
+	Assert_retr(nullptr, tid > 0);
+	return (timer_data.contains(tid)) ? &timer_data[tid] : nullptr;
 }
 
 /// Marks a timer specified by 'id' for immediate deletion once it expires.
@@ -389,7 +351,7 @@ static int timer_do_delete(int tid, TimerFunc func)
 {
 	nullpo_ret(func);
 
-	if (tid < 1 || tid >= timer_data_num) {
+	if (timer_data.contains(tid) == false) {
 		ShowError("timer_do_delete error : no such timer [%d](%p(%s))\n", tid, func, search_timer_func_list(func));
 		Assert_retr(-1, 0);
 		return -1;
@@ -400,15 +362,13 @@ static int timer_do_delete(int tid, TimerFunc func)
 		return -2;
 	}
 
-	if (timer_data[tid].type == 0 || timer_data[tid].type == TIMER_REMOVE_HEAP)
-	{
-		ShowError("timer_do_delete: timer already deleted: %d, [%d]%p(%s) -> %p(%s)\n", timer_data[tid].type, tid, func, search_timer_func_list(func), func, search_timer_func_list(func));
-		Assert_retr(-3, 0);
-		return -3;
+	int i;
+	ARR_FIND(0, BHEAP_LENGTH(timer_heap), i, BHEAP_DATA(timer_heap)[i] == tid);
+	if (i < BHEAP_LENGTH(timer_heap)) {
+		BHEAP_POPINDEX(timer_heap, i, DIFFTICK_MINTOPCMP, std::swap);
 	}
 
-	timer_data[tid].func = NULL;
-	timer_data[tid].type = TIMER_ONCE_AUTODEL;
+	timer_data.erase(tid);
 
 	return 0;
 }
@@ -417,7 +377,7 @@ static int timer_do_delete(int tid, TimerFunc func)
 /// Returns the new tick value, or -1 if it fails.
 static int64 timer_addtick(int tid, int64 tick)
 {
-	if (tid < 1 || tid >= timer_data_num) {
+	if (timer_data.contains(tid) == false) {
 		ShowError("timer_addtick error : no such timer [%d]\n", tid);
 		Assert_retr(-1, 0);
 		return -1;
@@ -437,6 +397,12 @@ static int64 timer_settick(int tid, int64 tick)
 {
 	int i;
 
+	if (timer_data.contains(tid) == false) {
+		ShowError("timer_settick error: set tick for deleted timer %d\n", tid);
+		Assert_retr(-1, 0);
+		return -1;
+	}
+
 	// search timer position
 	ARR_FIND(0, BHEAP_LENGTH(timer_heap), i, BHEAP_DATA(timer_heap)[i] == tid);
 	if (i == BHEAP_LENGTH(timer_heap)) {
@@ -445,11 +411,6 @@ static int64 timer_settick(int tid, int64 tick)
 		return -1;
 	}
 
-	if (timer_data[tid].type == 0 || timer_data[tid].type == TIMER_REMOVE_HEAP) {
-		ShowError("timer_settick error: set tick for deleted timer %d, [%d](%p(%s))\n", timer_data[tid].type, tid, timer_data[tid].func, search_timer_func_list(timer_data[tid].func));
-		Assert_retr(-1, 0);
-		return -1;
-	}
 	if (timer_data[tid].func == NULL) {
 		ShowError("timer_settick error: set tick for timer with wrong func [%d](%p(%s))\n", tid, timer_data[tid].func, search_timer_func_list(timer_data[tid].func));
 		Assert_retr(-1, 0);
@@ -489,7 +450,6 @@ static int do_timer(int64 tick)
 
 		// remove timer
 		BHEAP_POP(timer_heap, DIFFTICK_MINTOPCMP, std::swap);
-		timer_data[tid].type |= TIMER_REMOVE_HEAP;
 
 		if( timer_data[tid].func ) {
 			if( diff < -1000 )
@@ -499,30 +459,18 @@ static int do_timer(int64 tick)
 				timer_data[tid].func(tid, timer_data[tid].tick, timer_data[tid].id, timer_data[tid].data);
 		}
 
-		// in the case the function didn't change anything...
-		if( timer_data[tid].type & TIMER_REMOVE_HEAP ) {
-			timer_data[tid].type &= ~TIMER_REMOVE_HEAP;
-
-			switch( timer_data[tid].type ) {
-				default:
-				case TIMER_ONCE_AUTODEL:
-					timer_data[tid].type = 0;
-					timer_data[tid].func = NULL;
-					if (free_timer_list_pos >= free_timer_list_max) {
-						free_timer_list_max += 256;
-						RECREATE(free_timer_list,int,free_timer_list_max);
-						memset(free_timer_list + (free_timer_list_max - 256), 0, 256 * sizeof(int));
-					}
-					free_timer_list[free_timer_list_pos++] = tid;
-				break;
-				case TIMER_INTERVAL:
-					if( DIFF_TICK(timer_data[tid].tick, tick) < -1000 )
-						timer_data[tid].tick = tick + timer_data[tid].interval;
-					else
-						timer_data[tid].tick += timer_data[tid].interval;
-					push_timer_heap(tid);
-				break;
-			}
+		switch (timer_data[tid].type) {
+		default:
+		case TIMER_ONCE_AUTODEL:
+			timer_data.erase(tid);
+			break;
+		case TIMER_INTERVAL:
+			if (DIFF_TICK(timer_data[tid].tick, tick) < -1000)
+				timer_data[tid].tick = tick + timer_data[tid].interval;
+			else
+				timer_data[tid].tick += timer_data[tid].interval;
+			push_timer_heap(tid);
+			break;
 		}
 	}
 
@@ -555,9 +503,8 @@ static void timer_final(void)
 		aFree(tfl);
 	}
 
-	if (timer_data) aFree(timer_data);
+	timer_data.clear();
 	BHEAP_CLEAR(timer_heap);
-	if (free_timer_list) aFree(free_timer_list);
 }
 
 #ifdef BUILDBOT
