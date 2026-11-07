@@ -373,6 +373,7 @@ function	script	HerculesSelfTestHelper	{
 		return .errors;
 	.once = 1;
 	.errors = 0;
+	freeloop(true); // This function is too long and it would trigger the infinite loop limiter
 
 	// number literals
 	callsub(OnCheck, "decimal number literal", 255, 255);
@@ -615,10 +616,10 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheck, "~= operator", .@y, 4);
 	callsub(OnCheck, "~= operator", $@regexmatchcount, 4);
 	if( $@regexmatchcount == 4 ) {
-		callsub(OnCheckStr, "~= operator", $@regexmatch$[0], .@x$);
-		callsub(OnCheckStr, "~= operator", $@regexmatch$[1], "quis");
-		callsub(OnCheckStr, "~= operator", $@regexmatch$[2], "Duis");
-		callsub(OnCheckStr, "~= operator", $@regexmatch$[3], "laborum.");
+		callsub(OnCheck, "~= operator", $@regexmatch$[0], .@x$);
+		callsub(OnCheck, "~= operator", $@regexmatch$[1], "quis");
+		callsub(OnCheck, "~= operator", $@regexmatch$[2], "Duis");
+		callsub(OnCheck, "~= operator", $@regexmatch$[3], "laborum.");
 	}
 	.@y = (.@x$ ~! "^Not Lorem.*, ([a-z]*).*(Duis).* ([a-z.]*)$");
 	callsub(OnCheck, "~! operator", .@y);
@@ -638,7 +639,7 @@ function	script	HerculesSelfTestHelper	{
 
 	.@x$ = "string "
 		"concatenation" /* test */ " succeeded";
-	callsub(OnCheckStr, "String concatenation", .@x$, "string concatenation succeeded");
+	callsub(OnCheck, "String concatenation", .@x$, "string concatenation succeeded");
 
 
 	// Bitwise & operator
@@ -1011,23 +1012,23 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheck, "Callfunc (return NPC variables from another NPC)", callfunc("F_TestVarOfAnotherNPC", "TestVarOfAnotherNPC"), 1);
 	callsub(OnCheck, "Callfunc (return NPC variables from another NPC - local variable overwrite check)", .x, 2);
 
-	callsub(OnCheckStr, "sprintf (%%)",         sprintf("'%%'"), "'%'");
-	callsub(OnCheckStr, "sprintf (%d)",         sprintf("'%d'", 5), "'5'");
-	callsub(OnCheckStr, "sprintf (neg. %d)",    sprintf("'%d'", -5), "'-5'");
-	callsub(OnCheckStr, "sprintf (%u)",         sprintf("'%u'", 5), "'5'");
-	callsub(OnCheckStr, "sprintf (%x)",         sprintf("'%x'", 10), "'a'");
-	callsub(OnCheckStr, "sprintf (%X)",         sprintf("'%X'", 31), "'1F'");
-	callsub(OnCheckStr, "sprintf (%s)",         sprintf("'%s'", "Hello World!"), "'Hello World!'");
-	callsub(OnCheckStr, "sprintf (%c)",         sprintf("'%c'", "Hello World!"), "'H'");
-	callsub(OnCheckStr, "sprintf (%+d)",        sprintf("'%+d'", 5), "'+5'");
-	callsub(OnCheckStr, "sprintf (%{n}d)",      sprintf("'%5d'", 5), "'    5'");
-	callsub(OnCheckStr, "sprintf (%-{n}d)",     sprintf("'%-5d'", 5), "'5    '");
-	callsub(OnCheckStr, "sprintf (%-+{n}d)",    sprintf("'%-+5d'", 5), "'+5   '");
-	callsub(OnCheckStr, "sprintf (%+0{n}d)",    sprintf("'%+05d'", 5), "'+0005'");
-	callsub(OnCheckStr, "sprintf (%0*d)",       sprintf("'%0*d'", 5, 10), "'00010'");
-	callsub(OnCheckStr, "sprintf (Two args)",   sprintf("'%+05d' '%x'", 5, 0x7f), "'+0005' '7f'");
-	callsub(OnCheckStr, "sprintf (positional)", sprintf("'%2$+05d'", 5, 6), "'+0006'");
-	callsub(OnCheckStr, "sprintf (positional)", sprintf("'%2$s' '%1$c'", "First", "Second"), "'Second' 'F'");
+	callsub(OnCheck, "sprintf (%%)",         sprintf("'%%'"), "'%'");
+	callsub(OnCheck, "sprintf (%d)",         sprintf("'%d'", 5), "'5'");
+	callsub(OnCheck, "sprintf (neg. %d)",    sprintf("'%d'", -5), "'-5'");
+	callsub(OnCheck, "sprintf (%u)",         sprintf("'%u'", 5), "'5'");
+	callsub(OnCheck, "sprintf (%x)",         sprintf("'%x'", 10), "'a'");
+	callsub(OnCheck, "sprintf (%X)",         sprintf("'%X'", 31), "'1F'");
+	callsub(OnCheck, "sprintf (%s)",         sprintf("'%s'", "Hello World!"), "'Hello World!'");
+	callsub(OnCheck, "sprintf (%c)",         sprintf("'%c'", "Hello World!"), "'H'");
+	callsub(OnCheck, "sprintf (%+d)",        sprintf("'%+d'", 5), "'+5'");
+	callsub(OnCheck, "sprintf (%{n}d)",      sprintf("'%5d'", 5), "'    5'");
+	callsub(OnCheck, "sprintf (%-{n}d)",     sprintf("'%-5d'", 5), "'5    '");
+	callsub(OnCheck, "sprintf (%-+{n}d)",    sprintf("'%-+5d'", 5), "'+5   '");
+	callsub(OnCheck, "sprintf (%+0{n}d)",    sprintf("'%+05d'", 5), "'+0005'");
+	callsub(OnCheck, "sprintf (%0*d)",       sprintf("'%0*d'", 5, 10), "'00010'");
+	callsub(OnCheck, "sprintf (Two args)",   sprintf("'%+05d' '%x'", 5, 0x7f), "'+0005' '7f'");
+	callsub(OnCheck, "sprintf (positional)", sprintf("'%2$+05d'", 5, 6), "'+0006'");
+	callsub(OnCheck, "sprintf (positional)", sprintf("'%2$s' '%1$c'", "First", "Second"), "'Second' 'F'");
 	.@x = 0;
 	/*@TRUE
 	.@x = 1;
@@ -1062,15 +1063,15 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheck, "Getdatatype (getarg integer value)", callsub(OnTestGetdatatype, 5), DATATYPE_INT);
 	callsub(OnCheck, "Getdatatype (getarg string)",        callsub(OnTestGetdatatype, "foo"), DATATYPE_STR | DATATYPE_CONST);
 
-	callsub(OnCheckStr, "data_to_string (NIL)",              data_to_string(), "");
-	callsub(OnCheckStr, "data_to_string (empty string)",     data_to_string(""), "");
-	callsub(OnCheckStr, "data_to_string (string)",           data_to_string("foo"), "foo");
-	callsub(OnCheckStr, "data_to_string (integer)",          data_to_string(5), "5");
-	callsub(OnCheckStr, "data_to_string (parameter)",        data_to_string(Hp), "Hp");
-	callsub(OnCheckStr, "data_to_string (constant)",         data_to_string(DATATYPE_CONST), "DATATYPE_CONST");
-	callsub(OnCheckStr, "data_to_string (label)",            data_to_string(OnTestGetdatatype), "Label (unknown)"); // FIXME: "OnTestGetdatatype" - see notes in BUILDIN(data_to_string)
-	callsub(OnCheckStr, "data_to_string (string variable)",  data_to_string(.@x$), ".@x$");
-	callsub(OnCheckStr, "data_to_string (integer variable)", data_to_string(.@x), ".@x");
+	callsub(OnCheck, "data_to_string (NIL)",              data_to_string(), "");
+	callsub(OnCheck, "data_to_string (empty string)",     data_to_string(""), "");
+	callsub(OnCheck, "data_to_string (string)",           data_to_string("foo"), "foo");
+	callsub(OnCheck, "data_to_string (integer)",          data_to_string(5), "5");
+	callsub(OnCheck, "data_to_string (parameter)",        data_to_string(Hp), "Hp");
+	callsub(OnCheck, "data_to_string (constant)",         data_to_string(DATATYPE_CONST), "DATATYPE_CONST");
+	callsub(OnCheck, "data_to_string (label)",            data_to_string(OnTestGetdatatype), "Label (unknown)"); // FIXME: "OnTestGetdatatype" - see notes in BUILDIN(data_to_string)
+	callsub(OnCheck, "data_to_string (string variable)",  data_to_string(.@x$), ".@x$");
+	callsub(OnCheck, "data_to_string (integer variable)", data_to_string(.@x), ".@x");
 
 	"export test"::RefTest(.@refTest = 69);
 	callsub(OnCheck, "function as event (regression)",           $@something_bad_happened[0], false);
@@ -1096,6 +1097,8 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheck, "mesurl: with dimensions", F_TestMesUrl_Dimensions(), true);
 
 	callsub(OnCheck, "mestipbox", F_TestMesTipBox(), true);
+
+	freeloop(false);
 
 	if (.errors) {
 		consolemes(CONSOLEMES_DEBUG, "Script engine self-test   [ \033[0;31mFAILED\033[0m ]");
@@ -1147,33 +1150,49 @@ OnTestGetdatatypeDefault:
 OnTestGetdatatype:
 	return getdatatype(getarg(0));
 
-OnReportError:
+OnReportGeneralError:
 	.@msg$ = getarg(0,"Unknown Error");
-	.@val$ = getarg(1,"");
-	.@ref$ = getarg(2,"");
 	if (.errors == 1)
 		consolemes(CONSOLEMES_DEBUG, "**** WARNING: Any self-test results past this point are unreliable because of previous errors. ****");
-	consolemes(CONSOLEMES_DEBUG, "Error: "+.@msg$+": '"+.@val$+"' (found) != '"+.@ref$+"' (expected)");
+	consolemes(CONSOLEMES_DEBUG, "Error: %s", .@msg$);
 	++.errors;
 	//end;
 	return;
 
-OnCheck:
-	.@msg$ = getarg(0,"Unknown Error");
-	.@val = getarg(1,0);
-	.@ref = getarg(2,1);
-	if (.@val != .@ref) {
-		callsub(OnReportError, .@msg$, ""+.@val, ""+.@ref); // String coercion
-	}
-	return;
-OnCheckStr:
+OnReportError:
 	.@msg$ = getarg(0,"Unknown Error");
 	.@val$ = getarg(1,"");
 	.@ref$ = getarg(2,"");
-	if (.@val$ != .@ref$) {
-		callsub(OnReportError, .@msg$, .@val$, .@ref$);
+	callsub(OnReportGeneralError, .@msg$+": '"+.@val$+"' (found) != '"+.@ref$+"' (expected)");
+	return;
+
+OnCheck:
+	.@msg$ = getarg(0,"Unknown Error");
+	if (getargcount() < 2) {
+		callsub(OnReportGeneralError, .@msg$ + ": [INTERNAL ERROR] Unexpected amount of arguments for OnCheck call. Expected at least 2, received " + getargcount());
+		return;
+	}
+	if (isstr(getarg(1)) == 0 && isstr(getarg(2, 1)) == 0) {
+		// Integers
+		.@val = getarg(1);
+		.@ref = getarg(2, 1);
+		if (.@val != .@ref) {
+			callsub(OnReportError, .@msg$, ""+.@val, ""+.@ref); // String coercion
+		}
+	} else if (isstr(getarg(1)) == 1 && isstr(getarg(2, "")) == 1) {
+		// Strings
+		.@val$ = getarg(1);
+		.@ref$ = getarg(2, "");
+		if (.@val$ != .@ref$) {
+			callsub(OnReportError, .@msg$, .@val$, .@ref$);
+		}
+	} else if (getargcount() == 3) {
+		callsub(OnReportGeneralError, .@msg$ + ": [INTERNAL ERROR] Argument type mismatch in OnCheck: " + isstr(getarg(1)) + " - " + isstr(getarg(2)));
+	} else {
+		callsub(OnReportGeneralError, .@msg$ + ": [INTERNAL ERROR] Argument type unexpected in OnCheck: " + isstr(getarg(1)));
 	}
 	return;
+
 OnSetReference:
 	set getarg(0), getarg(0) + 1;
 	return getarg(0);
