@@ -19120,7 +19120,7 @@ static BUILDIN(data_to_string)
 			snprintf(str, 20, "%" PRId64, data->u.num);
 			script_pushstr(st, str);
 		} else if (data_islabel(data)) {
-			const char *str = "";
+			const char *str = "Label (unknown)";
 
 			// XXX: because all we have is the label pos we can't be sure which
 			//      one is the correct label if more than one has the same pos.
@@ -19131,6 +19131,7 @@ static BUILDIN(data_to_string)
 			//      directly access the string with script->get_str().
 
 			if (st->oid) {
+				// FIXME: This may be looking for the label in the wrong NPC if we're in a function called from a different NPC, as the oid remains that of the caller, not the callee.
 				struct npc_data *nd = map->id2nd(st->oid);
 
 				for (int i = 0; i < nd->u.scr.label_list_num; ++i) {

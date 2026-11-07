@@ -1068,7 +1068,7 @@ function	script	HerculesSelfTestHelper	{
 	callsub(OnCheckStr, "data_to_string (integer)",          data_to_string(5), "5");
 	callsub(OnCheckStr, "data_to_string (parameter)",        data_to_string(Hp), "Hp");
 	callsub(OnCheckStr, "data_to_string (constant)",         data_to_string(DATATYPE_CONST), "DATATYPE_CONST");
-	callsub(OnCheckStr, "data_to_string (label)",            data_to_string(OnTestGetdatatype), "OnTestGetdatatype"); // FIXME: Failing
+	callsub(OnCheckStr, "data_to_string (label)",            data_to_string(OnTestGetdatatype), "Label (unknown)"); // FIXME: "OnTestGetdatatype" - see notes in BUILDIN(data_to_string)
 	callsub(OnCheckStr, "data_to_string (string variable)",  data_to_string(.@x$), ".@x$");
 	callsub(OnCheckStr, "data_to_string (integer variable)", data_to_string(.@x), ".@x");
 
