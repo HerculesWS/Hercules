@@ -121,6 +121,9 @@ class ERI
 		g_ers_instance_list.remove(this);
 	}
 
+	ERI(const ERI &other)            = delete;
+	ERI &operator=(const ERI &other) = delete;
+
 	/**
 	 * Reports debug information for instance cache
 	 * @return used blocks, total blocks, memory used, total memory
@@ -274,6 +277,9 @@ class ERS final : public ERI
 		}
 #endif
 	}
+
+	ERS(const ERS &other)            = delete;
+	ERS &operator=(const ERS &other) = delete;
 
 	/**
 	 * Allocates a new ERS instance and returns a raw pointer to it
