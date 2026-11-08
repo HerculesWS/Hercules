@@ -87,10 +87,9 @@ void HPM_api_plugin_load_sub(struct hplugin *plugin)
 	plugin->hpi->sql_handle = api->mysql_handle;
 }
 
-
 void HPM_api_do_init(void)
 {
-	HPM->load_sub = HPM_api_plugin_load_sub;
+	HPM->load_sub                = HPM_api_plugin_load_sub;
 	HPM->data_store_validate_sub = HPM_api_data_store_validate;
 	HPM->datacheck_init(HPMDataCheck, HPMDataCheckLen, HPMDataCheckVer);
 	HPM_shared_symbols(SERVER_TYPE_API);
