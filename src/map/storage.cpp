@@ -619,14 +619,11 @@ static int storage_guild_storageopen(struct map_session_data *sd)
 #ifdef OFFICIAL_GUILD_STORAGE
 	if (!guild->checkskill(sd->guild, GD_GUILD_STORAGE))
 		return 3; // Can't open storage if guild has none
-#endif // OFFICIAL_GUILD_STORAGE
+#endif
 
 #if PACKETVER >= 20140205
-	{
-		int pos;
-		if ((pos = guild->getposition(sd->guild, sd)) < 0 || (sd->guild->position[pos].mode & GPERM_STORAGE) == 0)
-			return 4; // Doesn't have permission
-	}
+	if (int pos = guild->getposition(sd->guild, sd); pos < 0 || (sd->guild->position[pos].mode & GPERM_STORAGE) == 0)
+		return 4; // Doesn't have permission
 #endif // PACKETVER >= 20140205
 
 	// check if this GM level can open guild storage and store items [Lupus]

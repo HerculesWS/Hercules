@@ -70,17 +70,20 @@ static void duel_showinfo(const unsigned int did, struct map_session_data *sd)
 	int p=0;
 	char output[256];
 
-	if(duel->list[did].max_players_limit > 0)
-		sprintf(output, msg_sd(sd, MSGTBL_DUEL_INFO_LIMIT), //" -- Duels: %d/%d, Members: %d/%d, Max players: %d --"
+	if(duel->list[did].max_players_limit > 0) {
+		//" -- Duels: %d/%d, Members: %d/%d, Max players: %d --"
+		sprintf(output, msg_sd(sd, MSGTBL_DUEL_INFO_LIMIT),
 			did, duel->count,
 			duel->list[did].members_count,
 			duel->list[did].members_count + duel->list[did].invites_count,
 			duel->list[did].max_players_limit);
-	else
-		sprintf(output, msg_sd(sd, MSGTBL_DUEL_INFO_NO_LIMIT), //" -- Duels: %d/%d, Members: %d/%d --"
+	} else {
+		//" -- Duels: %d/%d, Members: %d/%d --"
+		sprintf(output, msg_sd(sd, MSGTBL_DUEL_INFO_NO_LIMIT),
 			did, duel->count,
 			duel->list[did].members_count,
 			duel->list[did].members_count + duel->list[did].invites_count);
+	}
 
 	clif_disp_onlyself(sd, output);
 	map->foreachpc(duel_showinfo_sub, sd, &p);
@@ -102,7 +105,8 @@ static unsigned int duel_create(struct map_session_data *sd, const unsigned int 
 	duel->list[i].invites_count = 0;
 	duel->list[i].max_players_limit = maxpl;
 
-	safestrncpy(output, msg_sd(sd, MSGTBL_DUEL_CREATED), sizeof(output)); // " -- Duel has been created (@invite/@leave) --"
+	// " -- Duel has been created (@invite/@leave) --"
+	safestrncpy(output, msg_sd(sd, MSGTBL_DUEL_CREATED), sizeof(output));
 	clif_disp_onlyself(sd, output);
 
 	clif->map_property(sd, MAPPROPERTY_FREEPVPZONE);

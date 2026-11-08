@@ -1015,7 +1015,8 @@ static bool Sql_inter_server_read(const char *filename, bool imported)
 
 	// import should overwrite any previous configuration, so it should be called last
 	if (libconfig->lookup_string(&config, "import", &import) == CONFIG_TRUE) {
-		if (strcmp(import, filename) == 0 || strcmp(import, "conf/common/inter-server.conf") == 0) { // FIXME: Hardcoded path
+		// FIXME: Hardcoded path
+		if (strcmp(import, filename) == 0 || strcmp(import, "conf/common/inter-server.conf") == 0) {
 			ShowWarning("Sql_inter_server_read: Loop detected in %s! Skipping 'import'...\n", filename);
 		} else {
 			if (!Sql_inter_server_read(import, true))
@@ -1049,7 +1050,7 @@ void Sql_HerculesUpdateCheck(struct Sql *self)
 		char timestamp[11];// "1360186680" (10) + 1
 		FILE* ufp;/* upgrade fp */
 
-		if( line[0] == '\n' || line[0] == '\r' || ( line[0] == '/' && line[1] == '/' ) )/* skip \n, \r and "//" comments */
+		if (line[0] == '\n' || line[0] == '\r' || (line[0] == '/' && line[1] == '/')) // skip \n, \r and "//" comments
 			continue;
 
 		sprintf(path,"sql-files/upgrades/%s",line);
@@ -1064,7 +1065,7 @@ void Sql_HerculesUpdateCheck(struct Sql *self)
 			continue;
 		}
 
-		if (fseek(ufp,1,SEEK_SET) == 0 /* woo. skip the # */
+		if (fseek(ufp,1,SEEK_SET) == 0 /* skip the # */
 		 && fgets(timestamp,sizeof(timestamp),ufp)) {
 			unsigned int timestampui = (unsigned int)atol(timestamp);
 			if( SQL_ERROR == SQL->Query(self, "SELECT 1 FROM `sql_updates` WHERE `timestamp` = '%u' LIMIT 1", timestampui) )

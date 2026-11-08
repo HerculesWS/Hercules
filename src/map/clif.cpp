@@ -6476,7 +6476,8 @@ static void clif_displaymessage2(const int fd, const char *mes)
 			// Limit message to 255+1 characters (otherwise it causes a buffer overflow in the client)
 			int len = (int)strnlen(line, 255);
 
-			if (len > 0) { // don't send a void message (it's not displaying on the client chat). @help can send void line.
+			if (len > 0) {
+				// don't send a void message (it's not displaying on the client chat). @help can send void line.
 				if( map->cpsd_active && fd == 0 ) {
 					ShowInfo("HCP: %s\n",line);
 				} else {
@@ -10659,7 +10660,7 @@ static void clif_viewequip_ack(struct map_session_data *sd, struct map_session_d
 	packet->sex         = tsd->vd.sex;
 
 	clif->send(packet, packet->PacketLength, &sd->bl, SELF);
-#endif  // PACKETVER_AD_NUM >= 20071211 || PACKETVER_SAK_NUM >= 20071127 || PACKETVER_MAIN_NUM >= 20071211 || defined(PACKETVER_RE) || defined(PACKETVER_ZERO)
+#endif
 }
 
 /**
@@ -15747,12 +15748,18 @@ PRAGMA_PACK_POP()
 	if (grfio->decode_zip(buf, &buf_len, emblem, emblem_len) != 0
 	 || buf_len < BITMAPFILEHEADER_SIZE + BITMAPINFOHEADER_SIZE
 	 || (int)buf_len > extraconf->emblems->max_bmp_guild_emblem_size
-	 || RBUFW(buf,0) != 0x4d42 /* BITMAPFILEHEADER.bfType (signature) */
-	 || RBUFL(buf,2) != buf_len /* BITMAPFILEHEADER.bfSize (file size) */
-	 || RBUFL(buf,14) != BITMAPINFOHEADER_SIZE /* BITMAPINFOHEADER.biSize (other headers are not supported) */
-	 || RBUFSL(buf,18) != extraconf->emblems->guild_emblem_width /* BITMAPINFOHEADER.biWidth */
-	 || RBUFSL(buf,22) != extraconf->emblems->guild_emblem_height /* BITMAPINFOHEADER.biHeight (top-down bitmaps (-24) are not supported) */
-	 || RBUFL(buf,30) != 0 /* BITMAPINFOHEADER.biCompression == BI_RGB (compression not supported) */
+	 /* BITMAPFILEHEADER.bfType (signature) */
+	 || RBUFW(buf,0) != 0x4d42
+	 /* BITMAPFILEHEADER.bfSize (file size) */
+	 || RBUFL(buf,2) != buf_len
+	 /* BITMAPINFOHEADER.biSize (other headers are not supported) */
+	 || RBUFL(buf,14) != BITMAPINFOHEADER_SIZE
+	 /* BITMAPINFOHEADER.biWidth */
+	 || RBUFSL(buf,18) != extraconf->emblems->guild_emblem_width
+	 /* BITMAPINFOHEADER.biHeight (top-down bitmaps (-24) are not supported) */
+	 || RBUFSL(buf,22) != extraconf->emblems->guild_emblem_height
+	 /* BITMAPINFOHEADER.biCompression == BI_RGB (compression not supported) */
+	 || RBUFL(buf,30) != 0
 	 ) {
 		// Invalid data
 		return false;
@@ -22470,7 +22477,8 @@ static void clif_parse_RouletteGenerate(int fd, struct map_session_data *sd)
 			it.nameid = clif->rd.nameid[stage][0];
 			it.identify = 1;
 
-			pc->additem(sd, &it, clif->rd.qty[stage][0], LOG_TYPE_ROULETTE);/** TODO maybe a new log type for roulette items? **/
+			// TODO maybe a new log type for roulette items?
+			pc->additem(sd, &it, clif->rd.qty[stage][0], LOG_TYPE_ROULETTE);
 
 			sd->roulette.stage = 0;
 			result = GENERATE_ROULETTE_LOSING;

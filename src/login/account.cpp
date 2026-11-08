@@ -272,7 +272,8 @@ static bool account_db_sql_set_property(AccountDB *self, struct config_t *config
 	libconfig->setting_lookup_mutable_string(setting, "db_username", db->db_username, sizeof(db->db_username));
 	libconfig->setting_lookup_mutable_string(setting, "db_password", db->db_password, sizeof(db->db_password));
 	libconfig->setting_lookup_mutable_string(setting, "db_database", db->db_database, sizeof(db->db_database));
-	libconfig->setting_lookup_mutable_string(setting, "codepage", db->codepage, sizeof(db->codepage)); // FIXME: Why do we need both codepage and default_codepage?
+	// FIXME: Why do we need both codepage and default_codepage?
+	libconfig->setting_lookup_mutable_string(setting, "codepage", db->codepage, sizeof(db->codepage));
 	libconfig->setting_lookup_uint16(setting, "db_port", &db->db_port);
 	libconfig->setting_lookup_bool_real(setting, "case_sensitive", &db->case_sensitive);
 

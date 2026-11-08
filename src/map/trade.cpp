@@ -92,8 +92,8 @@ static void trade_traderequest(struct map_session_data *sd, struct map_session_d
 		return;
 	}
 
-	if (!pc_can_give_items(sd) || !pc_can_give_items(target_sd)) //check if both GMs are allowed to trade
-	{
+	//check if both GMs are allowed to trade
+	if (!pc_can_give_items(sd) || !pc_can_give_items(target_sd)) {
 		// Your GM level doesn't authorize you to perform this action.
 		clif->message(sd->fd, msg_sd(sd, MSGTBL_CANT_GIVE_ITEMS));
 		clif->tradestart(sd, 2); // GM is not allowed to trade
@@ -417,8 +417,8 @@ static void trade_tradeadditem(struct map_session_data *sd, short index, short a
 
 	//Locate a trade position
 	ARR_FIND( 0, 10, trade_i, sd->deal.item[trade_i].index == index || sd->deal.item[trade_i].amount == 0 );
-	if( trade_i == 10 ) //No space left
-	{
+	if (trade_i == 10) {
+		//No space left
 		clif->tradeitemok(sd, index+2, TIO_OVERWEIGHT);
 		return;
 	}

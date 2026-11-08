@@ -170,22 +170,24 @@ static void md5_Round_Calculate(const unsigned char *block,
 /// @copydoc md5_interface::binary()
 static void md5_buf2binary(const uint8 *buf, const int buf_size, uint8 *output)
 {
-//var
 	/*8bit*/
-	unsigned char padding_message[64]; //Extended message   512bit 64byte
-	const uint8 *pbuf;      // The position of string in the present scanning notes is held.
+	unsigned char padding_message[64]; ///< Extended message   512bit 64byte
+	const uint8 *pbuf;      ///< The position of string in the present scanning notes is held.
 
 	/*32bit*/
-	unsigned int buf_bit_len,      //The bit length of string is held.
-	             copy_len,            //The number of bytes which is used by 1-3 and which remained
-	             msg_digest[4];       //Message digest   128bit 4byte
-	unsigned int *A = &msg_digest[0], //The message digest in accordance with RFC (reference)
-	             *B = &msg_digest[1],
-	             *C = &msg_digest[2],
-	             *D = &msg_digest[3];
+	/// The bit length of string is held.
+	unsigned int buf_bit_len;
+	/// The number of bytes which is used by 1-3 and which remained
+	unsigned int copy_len;
+	/// Message digest   128bit 4byte
+	unsigned int msg_digest[4];
+	/// The message digest in accordance with RFC (reference)
+	unsigned int *A = &msg_digest[0];
+	unsigned int *B = &msg_digest[1];
+	unsigned int *C = &msg_digest[2];
+	unsigned int *D = &msg_digest[3];
 	int i;
 
-//prog
 	//Step 3.Initialize MD Buffer (although it is the initialization; step 3 of A, B, C, and D -- unavoidable -- a head)
 	*A = 0x67452301;
 	*B = 0xefcdab89;

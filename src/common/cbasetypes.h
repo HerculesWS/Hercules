@@ -66,15 +66,19 @@
 #define __ARM_ARCH_VERSION__ __ARM_ARCH
 #else
 #if defined(__ARMV6__) || defined(__ARM_ARCH_6__) || defined(__ARM_ARCH_6J__) || defined(__ARM_ARCH_6K__) \
-	|| defined(__ARM_ARCH_6Z__) || defined(__ARM_ARCH_6ZK__) || defined(__ARM_ARCH_6T2__) // gcc ARMv6
+	|| defined(__ARM_ARCH_6Z__) || defined(__ARM_ARCH_6ZK__) || defined(__ARM_ARCH_6T2__)
+// gcc ARMv6
 #define __ARM_ARCH_VERSION__ 6
-#elif defined(__ARM_ARCH_7__) || defined(__ARM_ARCH_7A__) || defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7R__) || defined(__ARM_ARCH_7S__) // gcc ARMv7
+#elif defined(__ARM_ARCH_7__) || defined(__ARM_ARCH_7A__) || defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7R__) || defined(__ARM_ARCH_7S__)
+// gcc ARMv7
 #define __ARM_ARCH_VERSION__ 7
 #elif defined(__ARM_ARCH_8__) || defined(__ARM_ARCH_8A__)
 #define __ARM_ARCH_VERSION__ 8
-#elif defined(_M_ARM) // MSVC
+#elif defined(_M_ARM)
+// MSVC
 #define __ARM_ARCH_VERSION__ _M_ARM
-#elif defined(__TARGET_ARCH_ARM) // RVCT
+#elif defined(__TARGET_ARCH_ARM)
+// RVCT
 #define __ARM_ARCH_VERSION__ __TARGET_ARCH_ARM
 #else
 #define __ARM_ARCH_VERSION__ 0
@@ -204,13 +208,11 @@ typedef unsigned long int   ppuint32;
 #include <stddef.h> // size_t
 
 #if defined(WIN32) && !defined(MINGW) // does not have a signed size_t
-//////////////////////////////
 #if defined(_WIN64) // native 64bit windows platform
 typedef __int64 ssize_t;
 #else
 typedef int     ssize_t;
 #endif
-//////////////////////////////
 #endif
 //////////////////////////////
 

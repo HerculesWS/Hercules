@@ -562,12 +562,15 @@ static int64 battle_calc_weapon_damage(struct block_list *src, struct block_list
  * it calculates nothing extra fancy, is needed for magnum breaks WATK_ELEMENT bonus. [Skotlex]
  *------------------------------------------
  * Pass damage2 as NULL to not calc it.
- * Flag values: // TODO: Check whether these values are correct (the flag parameter seems to be passed through to other functions), and replace them with an enum.
- * &1: Critical hit
- * &2: Arrow attack
- * &4: Skill is Magic Crasher
- * &8: Skip target size adjustment (Extremity Fist?)
- *&16: Arrow attack but BOW, REVOLVER, RIFLE, SHOTGUN, GATLING or GRENADE type weapon not equipped (i.e. shuriken, kunai and venom knives not affected by DEX)
+ * Flag values:
+ * // TODO: Check whether these values are correct (the flag parameter seems to be passed through to other functions),
+ *          and replace them with an enum.
+ *  &1: Critical hit
+ *  &2: Arrow attack
+ *  &4: Skill is Magic Crasher
+ *  &8: Skip target size adjustment (Extremity Fist?)
+ * &16: Arrow attack but BOW, REVOLVER, RIFLE, SHOTGUN, GATLING or GRENADE type weapon not equipped (i.e. shuriken,
+ *      kunai and venom knives not affected by DEX)
  */
 /* 'battle_calc_base_damage' is used on renewal, 'battle_calc_base_damage2' otherwise. */
 // FIXME: Missing documentation for flag2
@@ -3357,8 +3360,8 @@ static int64 battle_calc_damage(struct block_list *src, struct block_list *bl, s
 			return 0;
 		}
 
-		if( (sce=sc->data[SC_PARRYING]) && flag&BF_WEAPON && skill_id != WS_CARTTERMINATION && rnd()%100 < sce->val2 )
-		{ // attack blocked by Parrying
+		if( (sce=sc->data[SC_PARRYING]) && flag&BF_WEAPON && skill_id != WS_CARTTERMINATION && rnd()%100 < sce->val2 ) {
+			// attack blocked by Parrying
 			clif->skill_nodamage(bl, bl, LK_PARRYING, sce->val1,1);
 			return 0;
 		}
@@ -4698,15 +4701,14 @@ static struct Damage battle_calc_misc_attack(struct block_list *src, struct bloc
 	if (!(nk&NK_IGNORE_FLEE))
 	{
 		bool hit = false;
-		if(tsc && tsc->opt1 && tsc->opt1 != OPT1_STONEWAIT && tsc->opt1 != OPT1_BURNING)
+		if(tsc && tsc->opt1 && tsc->opt1 != OPT1_STONEWAIT && tsc->opt1 != OPT1_BURNING) {
 			hit = true;
-		else {
-			short
-				flee = tstatus->flee,
+		} else {
+			short flee = tstatus->flee;
 #ifdef RENEWAL
-				hitrate = 0; //Default hitrate
+			short hitrate = 0; //Default hitrate
 #else
-				hitrate = 80; //Default hitrate
+			short hitrate = 80; //Default hitrate
 #endif
 
 			if (battle_config.agi_penalty_type != 0 && (battle_config.agi_penalty_target & target->type) != 0) {
@@ -5558,18 +5560,16 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 				break;
 			default:
 			{
-				i = (flag.cri
+				i = (flag.arrow?2:0);
+				i |= (!skill_id && sc && sc->data[SC_HLIF_CHANGE]?4:0);
+				i |= (sc && sc->data[SC_WEAPONPERFECT]?8:0);
 #ifdef RENEWAL
-					|| (sc && sc->data[SC_MAXIMIZEPOWER])
+				i |= (flag.cri || (sc && sc->data[SC_MAXIMIZEPOWER]) ?1:0);
+#else
+				i |= (flag.cri ? 1 : 0);
+				i |= (skill_id == HW_MAGICCRASHER?4:0);
+				i |= (skill_id == MO_EXTREMITYFIST?8:0);
 #endif
-					?1:0)|
-					(flag.arrow?2:0)|
-#ifndef RENEWAL
-					(skill_id == HW_MAGICCRASHER?4:0)|
-					(skill_id == MO_EXTREMITYFIST?8:0)|
-#endif
-					(!skill_id && sc && sc->data[SC_HLIF_CHANGE]?4:0)|
-					(sc && sc->data[SC_WEAPONPERFECT]?8:0);
 				if (flag.arrow && sd)
 				switch (sd->weapontype) {
 					case W_BOW:
@@ -6030,19 +6030,28 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 #endif
 			) {
 			//Defense reduction
+#ifdef RENEWAL
 			wd.damage = battle->calc_defense(BF_WEAPON, src, target, skill_id, skill_lv, wd.damage,
 											 (flag.idef?1:0)|(flag.pdef?2:0)
-#ifdef RENEWAL
 											 |(flag.tdef?4:0)
-#endif
 											 , flag.pdef);
-			if( wd.damage2 )
+#else
+			wd.damage = battle->calc_defense(BF_WEAPON, src, target, skill_id, skill_lv, wd.damage,
+											 (flag.idef?1:0)|(flag.pdef?2:0)
+											 , flag.pdef);
+#endif
+			if( wd.damage2 ) {
+#ifdef RENEWAL
 				wd.damage2 = battle->calc_defense(BF_WEAPON, src, target, skill_id, skill_lv, wd.damage2,
 												  (flag.idef2?1:0)|(flag.pdef2?2:0)
-#ifdef RENEWAL
 												  |(flag.tdef?4:0)
-#endif
 												  , flag.pdef2);
+#else
+				wd.damage2 = battle->calc_defense(BF_WEAPON, src, target, skill_id, skill_lv, wd.damage2,
+												  (flag.idef2?1:0)|(flag.pdef2?2:0)
+												  , flag.pdef2);
+#endif
+			}
 		}
 
 #ifdef RENEWAL
@@ -6434,8 +6443,9 @@ static struct Damage battle_calc_attack(int attack_type, struct block_list *bl, 
 
 	if( d.damage + d.damage2 < 1 ) { //Miss/Absorbed
 		//Weapon attacks should go through to cause additional effects.
-		if (d.dmg_lv == ATK_DEF /* && attack_type&(BF_MAGIC|BF_MISC) Isn't it that additional effects don't apply if miss? */)
+		if (d.dmg_lv == ATK_DEF /* && attack_type&(BF_MAGIC|BF_MISC) Isn't it that additional effects don't apply if miss? */) {
 			d.dmg_lv = ATK_MISS;
+		}
 		d.dmotion = 0;
 	} else {
 		// Some skills like Weaponry Research will cause damage even if attack is dodged

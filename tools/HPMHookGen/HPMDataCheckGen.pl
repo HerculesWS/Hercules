@@ -99,13 +99,15 @@ print FH <<"EOF";
 #define HPM_DATA_CHECK_H
 
 #if !defined(HPMHOOKGEN)
-#include "common/HPMSymbols.inc.h"
+  #include "common/HPMSymbols.inc.h"
 #endif // ! HPMHOOKGEN
 #ifdef HPM_SYMBOL
-#undef HPM_SYMBOL
+  #undef HPM_SYMBOL
 #endif // HPM_SYMBOL
 
-namespace {
+namespace
+{
+// clang-format off
 const struct s_HPMDataCheck HPMDataCheck_s[] = {
 EOF
 
@@ -128,6 +130,8 @@ EOF
 }
 print FH <<"EOF";
 };
+// clang-format on
+
 constexpr unsigned int HPMDataCheckLen_s = ARRAYLENGTH(HPMDataCheck_s);
 constexpr int HPMDataCheckVer_s          = $HPMDataCheckAPIVer;
 } // namespace

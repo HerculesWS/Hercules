@@ -3177,14 +3177,15 @@ static void status_calc_bl_main(struct block_list *bl, e_scb_flag flag)
 #ifdef RENEWAL
 			&& st->luk == bst->luk
 #endif
-			)
+		) {
 			st->hit = status->calc_hit(bl, sc, bst->hit, true);
-		else
-			st->hit = status->calc_hit(bl, sc, bst->hit + (st->dex - bst->dex)
+		} else {
 #ifdef RENEWAL
-			+ (st->luk/3 - bst->luk/3)
+			st->hit = status->calc_hit(bl, sc, bst->hit + (st->dex - bst->dex)+ (st->luk/3 - bst->luk/3), true);
+#else
+			st->hit = status->calc_hit(bl, sc, bst->hit + (st->dex - bst->dex), true);
 #endif
-			, true);
+		}
 	}
 
 	if(flag&SCB_FLEE) {
@@ -3192,14 +3193,16 @@ static void status_calc_bl_main(struct block_list *bl, e_scb_flag flag)
 #ifdef RENEWAL
 			&& st->luk == bst->luk
 #endif
-			)
+		) {
 			st->flee = status->calc_flee(bl, sc, bst->flee, true);
-		else
-			st->flee = status->calc_flee(bl, sc, bst->flee +(st->agi - bst->agi)
+		} else {
 #ifdef RENEWAL
-			+ (st->luk/5 - bst->luk/5)
+			st->flee = status->calc_flee(bl, sc, bst->flee +(st->agi - bst->agi)
+			+ (st->luk/5 - bst->luk/5), true);
+#else
+			st->flee = status->calc_flee(bl, sc, bst->flee +(st->agi - bst->agi), true);
 #endif
-			, true);
+		}
 	}
 
 	if(flag&SCB_DEF) {
@@ -3214,16 +3217,15 @@ static void status_calc_bl_main(struct block_list *bl, e_scb_flag flag)
 #ifdef RENEWAL
 			&& st->agi == bst->agi
 #endif
-			)
+		) {
 			st->def2 = status->calc_def2(bl, sc, bst->def2, true);
-		else
-			st->def2 = status->calc_def2(bl, sc, bst->def2
+		} else {
 #ifdef RENEWAL
-			+ (int)( ((float)st->vit/2 - (float)bst->vit/2) + ((float)st->agi/5 - (float)bst->agi/5) )
+			st->def2 = status->calc_def2(bl, sc, bst->def2 + (int)( ((float)st->vit/2 - (float)bst->vit/2) + ((float)st->agi/5 - (float)bst->agi/5) ), true);
 #else
-			+ (st->vit - bst->vit)
+			st->def2 = status->calc_def2(bl, sc, bst->def2 + (st->vit - bst->vit), true);
 #endif
-			, true);
+		}
 	}
 
 	if(flag&SCB_MDEF) {
@@ -3238,16 +3240,16 @@ static void status_calc_bl_main(struct block_list *bl, e_scb_flag flag)
 #ifdef RENEWAL
 			&& st->dex == bst->dex
 #endif
-			)
+		) {
 			st->mdef2 = status->calc_mdef2(bl, sc, bst->mdef2, true);
-		else
-			st->mdef2 = status->calc_mdef2(bl, sc, bst->mdef2 +(st->int_ - bst->int_)
+		} else {
 #ifdef RENEWAL
-			+ (int)( ((float)st->dex/5 - (float)bst->dex/5) + ((float)st->vit/5 - (float)bst->vit/5) )
+			st->mdef2 = status->calc_mdef2(bl, sc, bst->mdef2 +(st->int_ - bst->int_)
+			+ (int)( ((float)st->dex/5 - (float)bst->dex/5) + ((float)st->vit/5 - (float)bst->vit/5) ), true);
 #else
-			+ ((st->vit - bst->vit)>>1)
+			st->mdef2 = status->calc_mdef2(bl, sc, bst->mdef2 +(st->int_ - bst->int_) + ((st->vit - bst->vit)>>1), true);
 #endif
-			, true);
+		}
 	}
 
 	if(flag&SCB_SPEED) {
@@ -6898,7 +6900,8 @@ static int status_get_sc_def(struct block_list *src, struct block_list *bl, enum
 
 	//Status that are blocked by Golden Thief Bug card or Wand of Hermod
 	if (status->isimmune(bl) && (skill->get_inf(skill_id) & INF_SELF_SKILL) == 0 /* [Aegis] self-cast skills are not blocked, even if magic */
-	    && ((skill->get_type(skill_id, 1) & BF_MAGIC) != 0 /* [Aegis] if an SC is caused by magic then it's blocked, no matter what SC */
+		/* [Aegis] if an SC is caused by magic then it's blocked, no matter what SC */
+	    && ((skill->get_type(skill_id, 1) & BF_MAGIC) != 0
 	        || (status->get_sc_type(type) & SC_NO_MAGIC_BLOCK) != 0))
 		return 0;
 
@@ -7442,7 +7445,8 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 		case SC_ADRENALINE:
 			if (sd && !pc_check_weapontype(sd, skill->get_weapontype(BS_ADRENALINE)))
 				return 0;
-			if (sc->data[SC_QUAGMIRE] || sc->data[SC_DEC_AGI] || sc->option&OPTION_MADOGEAR) // Adrenaline doesn't affect Mado Gear [Ind]
+			// Adrenaline doesn't affect Mado Gear [Ind]
+			if (sc->data[SC_QUAGMIRE] || sc->data[SC_DEC_AGI] || sc->option&OPTION_MADOGEAR)
 				return 0;
 			break;
 		case SC_ADRENALINE2:
@@ -8302,7 +8306,9 @@ static int status_change_start_sub(struct block_list *src, struct block_list *bl
 				//val4&1 signals the presence of a wall.
 				//val4&2 makes cloak not end on normal attacks [Skotlex]
 				//val4&4 makes cloak not end on using skills
-				if (bl->type == BL_PC || (bl->type == BL_MOB && BL_UCCAST(BL_MOB, bl)->special_state.clone)) //Standard cloaking.
+
+				//Standard cloaking.
+				if (bl->type == BL_PC || (bl->type == BL_MOB && BL_UCCAST(BL_MOB, bl)->special_state.clone))
 					val4 |= battle_config.pc_cloak_check_type&7;
 				else
 					val4 |= battle_config.monster_cloak_check_type&7;
@@ -12426,7 +12432,7 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 
 			if (!sc->data[SC_CHASEWALK2]) {
 				sc_start(bl, bl, SC_CHASEWALK2, 100, 1 << (sce->val1 - 1),
-					(sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_ROGUE ? 10 : 1) //SL bonus -> x10 duration
+					(sc->data[SC_SOULLINK] && sc->data[SC_SOULLINK]->val2 == SL_ROGUE ? 10 : 1 /* SL bonus -> x10 duration */)
 					* skill->get_time2(status->sc2skill(type), sce->val1), status->sc2skill(type));
 			}
 			sc_timer_next(sce->val2+tick, status->change_timer, bl->id, data);
@@ -12531,16 +12537,13 @@ static int status_change_timer(int tid, int64 tick, int id, intptr_t data)
 
 		case SC_KNOWLEDGE:
 			if (!sd) break;
-		{
-			int i;
-			for (i = 0; i < MAX_PC_FEELHATE; i++) {
+			for (int i = 0; i < MAX_PC_FEELHATE; i++) {
 				if (bl->m == sd->feel_map[i].m) {
 					//Timeout will be handled by pc->setpos
 					sce->timer = INVALID_TIMER;
 					return 0;
 				}
 			}
-		}
 			break;
 
 		case SC_BLOODING:
@@ -13601,7 +13604,7 @@ static void status_get_matk_sub(struct block_list *bl, int flag, unsigned short 
 		*matk_min = (*matk_min) * sd->matk_rate / 100;
 	}
 
-	if ( (bl->type&BL_HOM && battle_config.hom_setting & 0x20)  //Hom Min Matk is always the same as Max Matk
+	if ( (bl->type&BL_HOM && battle_config.hom_setting & 0x20 /* Hom Min Matk is always the same as Max Matk */)
 		|| (sc && sc->data[SC_RECOGNIZEDSPELL]) )
 		*matk_min = *matk_max;
 
@@ -15095,8 +15098,11 @@ void status_defaults(void)
 	/* vars */
 	//we need it for new cards 15 Feb 2005, to check if the combo cards are insrerted into the CURRENT weapon only
 	//to avoid cards exploits
-	status->current_equip_item_index = 0; //Contains inventory index of an equipped item. To pass it into the EQUP_SCRIPT [Lupus]
-	status->current_equip_card_id = 0;    //To prevent card-stacking (from jA) [Skotlex]
+
+	//Contains inventory index of an equipped item. To pass it into the EQUP_SCRIPT [Lupus]
+	status->current_equip_item_index = 0;
+	//To prevent card-stacking (from jA) [Skotlex]
+	status->current_equip_card_id = 0;
 
 	// These macros are used instead of a sum of sizeof(), to ensure that padding won't interfere with our size, and code won't rot when adding more fields
 	memset(ZEROED_BLOCK_POS(status->dbs), 0, ZEROED_BLOCK_SIZE(status->dbs));
