@@ -43,16 +43,16 @@ enum userconfig_from_sql_result {
  **/
 struct inter_userconfig_interface {
 	struct inter_userconfig_dbs *dbs;
-	void (*init) (void);
-	bool (*config_read) (const char *filename, const struct config_t *config, bool imported);
-	bool (*load_emotes) (int account_id, struct userconfig_emotes *emotes);
-	int (*save_emotes) (int account_id, const struct userconfig_emotes *emotes);
-	void (*use_default_emotes) (int account_id, struct userconfig_emotes *emotes);
-	enum userconfig_from_sql_result (*emotes_from_sql) (int account_id, struct userconfig_emotes *emotes);
-	bool (*emotes_to_sql) (int account_id, const struct userconfig_emotes *emotes);
-	void (*hotkey_tab_tosql) (int account_id, const struct userconfig_userhotkeys_v2 *hotkeys);
-	void (*hotkey_tab_clear) (int account_id, int tab_id);
-	bool (*hotkey_tab_fromsql) (int account_id, struct userconfig_userhotkeys_v2 *hotkeys, int tab_id);
+	void (*init)(void);
+	bool (*config_read)(const char *filename, const struct config_t *config, bool imported);
+	bool (*load_emotes)(int account_id, struct userconfig_emotes *emotes);
+	int (*save_emotes)(int account_id, const struct userconfig_emotes *emotes);
+	void (*use_default_emotes)(int account_id, struct userconfig_emotes *emotes);
+	enum userconfig_from_sql_result (*emotes_from_sql)(int account_id, struct userconfig_emotes *emotes);
+	bool (*emotes_to_sql)(int account_id, const struct userconfig_emotes *emotes);
+	void (*hotkey_tab_tosql)(int account_id, const struct userconfig_userhotkeys_v2 *hotkeys);
+	void (*hotkey_tab_clear)(int account_id, int tab_id);
+	bool (*hotkey_tab_fromsql)(int account_id, struct userconfig_userhotkeys_v2 *hotkeys, int tab_id);
 };
 
 #ifdef HERCULES_CORE
