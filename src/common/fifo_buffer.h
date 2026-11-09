@@ -77,11 +77,11 @@ class fifo_buffer
 	 */
 	[[nodiscard]] bool empty() const noexcept;
 
-    /**
-     * Gives you how much left in the buffer to read
-     * @return the amount of bytes available to read
-     */
-    [[nodiscard]] size_t readable() const noexcept;
+	/**
+	 * Gives you how much left in the buffer to read
+	 * @return the amount of bytes available to read
+	 */
+	[[nodiscard]] size_t readable() const noexcept;
 
 	/**
 	 * Advances the write position cursor

@@ -82,11 +82,11 @@ static void packets_final(void)
 
 void packets_defaults(void)
 {
-	packets = &packets_s;
-	packets->init = packets_init;
-	packets->final = packets_final;
-	packets->addLens = packets_addLens;
-	packets->addLen = packets_addLen;
+	packets              = &packets_s;
+	packets->init        = packets_init;
+	packets->final       = packets_final;
+	packets->addLens     = packets_addLens;
+	packets->addLen      = packets_addLen;
 	packets->addLenIntif = packets_addLenIntif;
 	packets->addLenInter = packets_addLenInter;
 	packets->addLenChrif = packets_addLenChrif;

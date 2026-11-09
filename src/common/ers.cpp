@@ -89,10 +89,15 @@ void ERI::print_full_report() noexcept
 		memory_t += memory_total;
 	}
 #ifdef DEBUG
-	ShowInfo("ers_report: '" CL_WHITE "%u" CL_NORMAL "' instances in use, '" CL_WHITE "%u" CL_NORMAL "' displayed\n", instance_c, instance_c_d);
+	ShowInfo("ers_report: '" CL_WHITE "%u" CL_NORMAL "' instances in use, '" CL_WHITE "%u" CL_NORMAL "' displayed\n",
+	         instance_c, instance_c_d);
 #endif
-	ShowInfo("ers_report: '" CL_WHITE "%" PRIuS CL_NORMAL "' blocks in use, consuming '" CL_WHITE "%.2f MB" CL_NORMAL "'\n",blocks_u,(double)((memory_b)/1024)/1024);
-	ShowInfo("ers_report: '" CL_WHITE "%" PRIuS CL_NORMAL "' blocks total, consuming '" CL_WHITE "%.2f MB" CL_NORMAL "' \n",blocks_a,(double)((memory_t)/1024)/1024);
+	ShowInfo("ers_report: '" CL_WHITE "%" PRIuS CL_NORMAL "' blocks in use, consuming '" CL_WHITE "%.2f MB" CL_NORMAL
+	         "'\n",
+	         blocks_u, (double)((memory_b) / 1024) / 1024);
+	ShowInfo("ers_report: '" CL_WHITE "%" PRIuS CL_NORMAL "' blocks total, consuming '" CL_WHITE "%.2f MB" CL_NORMAL
+	         "' \n",
+	         blocks_a, (double)((memory_t) / 1024) / 1024);
 }
 
 /**

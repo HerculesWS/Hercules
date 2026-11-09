@@ -29,7 +29,6 @@
 
 PRAGMA_PACK_PUSH(1)
 
-
 struct PACKET_CHARMAP_AGENCY_JOIN_PARTY {
 	int16 packetType;
 	int char_id;
@@ -44,13 +43,14 @@ struct PACKET_CHARMAP_GUILD_EMBLEM {
 	uint8 flag;
 	char data[];
 } __attribute__((packed));
-DEFINE_PACKET_ID(CHARMAP_GUILD_EMBLEM, 0x383f)
+DEFINE_PACKET_ID(CHARMAP_GUILD_EMBLEM, 0x383F)
 
 struct PACKET_CHARMAP_GUILD_INFO_EMPTY {
 	int16 packetType;
 	uint16 packetLength;
 	int guild_id;
 } __attribute__((packed));
+
 struct PACKET_CHARMAP_GUILD_INFO {
 	int16 packetType;
 	uint16 packetLength;
@@ -66,7 +66,7 @@ struct PACKET_CHARMAP_GUILD_INFO_EMBLEM {
 	uint8 flag;
 	char data[];
 } __attribute__((packed));
-DEFINE_PACKET_ID(CHARMAP_GUILD_INFO_EMBLEM, 0x389c)
+DEFINE_PACKET_ID(CHARMAP_GUILD_INFO_EMBLEM, 0x389C)
 
 PRAGMA_PACK_POP()
 

@@ -29,10 +29,10 @@
 #include "common/timer.h"
 
 #ifdef WIN32
-#include "common/winapi.h"
+  #include "common/winapi.h"
 #else
-#include <pthread.h>
-#include <sys/time.h>
+  #include <pthread.h>
+  #include <sys/time.h>
 #endif
 
 /** @file
@@ -55,8 +55,8 @@ struct cond_data {
 	HANDLE events[2];
 	ra_align(8) volatile LONG nWaiters;
 	CRITICAL_SECTION waiters_lock;
-#define EVENT_COND_SIGNAL 0
-#define EVENT_COND_BROADCAST 1
+  #define EVENT_COND_SIGNAL    0
+  #define EVENT_COND_BROADCAST 1
 #else
 	pthread_cond_t hCond;
 #endif
@@ -143,10 +143,10 @@ static struct cond_data *cond_create(void)
 	}
 
 #ifdef WIN32
-	c->nWaiters = 0;
+	c->nWaiters                     = 0;
 	c->events[EVENT_COND_SIGNAL]    = CreateEvent(NULL, FALSE, FALSE, NULL);
-	c->events[EVENT_COND_BROADCAST] = CreateEvent(NULL, TRUE,  FALSE, NULL);
-	InitializeCriticalSection( &c->waiters_lock );
+	c->events[EVENT_COND_BROADCAST] = CreateEvent(NULL, TRUE, FALSE, NULL);
+	InitializeCriticalSection(&c->waiters_lock);
 #else
 	pthread_cond_init(&c->hCond, NULL);
 #endif
@@ -203,22 +203,22 @@ static void cond_wait(struct cond_data *c, struct mutex_data *m, sysint timeout_
 	// we are the last waiter that has to be notified, or to stop waiting
 	// so we have to do a manual reset
 	if (is_last == true)
-		ResetEvent( c->events[EVENT_COND_BROADCAST] );
+		ResetEvent(c->events[EVENT_COND_BROADCAST]);
 
 	mutex->lock(m);
 
 #else
 	nullpo_retv(m);
 	if (timeout_ticks < 0) {
-		pthread_cond_wait(&c->hCond,  &m->hMutex);
+		pthread_cond_wait(&c->hCond, &m->hMutex);
 	} else {
 		struct timespec wtime;
 		int64 exact_timeout = timer->gettick() + timeout_ticks;
 
-		wtime.tv_sec = exact_timeout/1000;
-		wtime.tv_nsec = (exact_timeout%1000)*1000000;
+		wtime.tv_sec  = exact_timeout / 1000;
+		wtime.tv_nsec = (exact_timeout % 1000) * 1000000;
 
-		pthread_cond_timedwait( &c->hCond,  &m->hMutex,  &wtime);
+		pthread_cond_timedwait(&c->hCond, &m->hMutex, &wtime);
 	}
 #endif
 }
@@ -227,7 +227,7 @@ static void cond_wait(struct cond_data *c, struct mutex_data *m, sysint timeout_
 static void cond_signal(struct cond_data *c)
 {
 #ifdef WIN32
-#	if 0
+  #if 0
 	bool has_waiters = false;
 	nullpo_retv(c);
 	EnterCriticalSection(&c->waiters_lock);
@@ -236,8 +236,8 @@ static void cond_signal(struct cond_data *c)
 	LeaveCriticalSection(&c->waiters_lock);
 
 	if(has_waiters == true)
-#	endif // 0
-		SetEvent(c->events[EVENT_COND_SIGNAL]);
+  #endif // 0
+	SetEvent(c->events[EVENT_COND_SIGNAL]);
 #else
 	nullpo_retv(c);
 	pthread_cond_signal(&c->hCond);
@@ -248,7 +248,7 @@ static void cond_signal(struct cond_data *c)
 static void cond_broadcast(struct cond_data *c)
 {
 #ifdef WIN32
-#	if 0
+  #if 0
 	bool has_waiters = false;
 	nullpo_retv(c);
 	EnterCriticalSection(&c->waiters_lock);
@@ -257,8 +257,8 @@ static void cond_broadcast(struct cond_data *c)
 	LeaveCriticalSection(&c->waiters_lock);
 
 	if(has_waiters == true)
-#	endif // 0
-		SetEvent(c->events[EVENT_COND_BROADCAST]);
+  #endif // 0
+	SetEvent(c->events[EVENT_COND_BROADCAST]);
 #else
 	nullpo_retv(c);
 	pthread_cond_broadcast(&c->hCond);
@@ -270,16 +270,16 @@ static void cond_broadcast(struct cond_data *c)
  */
 void mutex_defaults(void)
 {
-	mutex = &mutex_s;
-	mutex->create = mutex_create;
+	mutex          = &mutex_s;
+	mutex->create  = mutex_create;
 	mutex->destroy = mutex_destroy;
-	mutex->lock = mutex_lock;
+	mutex->lock    = mutex_lock;
 	mutex->trylock = mutex_trylock;
-	mutex->unlock = mutex_unlock;
+	mutex->unlock  = mutex_unlock;
 
-	mutex->cond_create = cond_create;
-	mutex->cond_destroy = cond_destroy;
-	mutex->cond_wait = cond_wait;
-	mutex->cond_signal = cond_signal;
+	mutex->cond_create    = cond_create;
+	mutex->cond_destroy   = cond_destroy;
+	mutex->cond_wait      = cond_wait;
+	mutex->cond_signal    = cond_signal;
 	mutex->cond_broadcast = cond_broadcast;
 }

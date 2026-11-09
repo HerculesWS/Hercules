@@ -34,60 +34,72 @@
 #include "common/cbasetypes.h"
 
 #if defined(_MSC_VER)
-#include "common/winapi.h"
+  #include "common/winapi.h"
 
 #elif defined(__GNUC__)
 
-// The __sync functions are available on x86 or ARMv6+
-#if !defined(__x86_64__) && !defined(__i386__) \
-	&& !defined(__ppc64__) && ! defined(__powerpc64__) \
-	&& ( !defined(__ARM_ARCH_VERSION__) || __ARM_ARCH_VERSION__ < 6 )
-#error Target platform currently not supported
-#endif
+  // The __sync functions are available on x86 or ARMv6+
+  #if !defined(__x86_64__) \
+	&& !defined(__i386__) \
+	&& !defined(__ppc64__) \
+	&& !defined(__powerpc64__) \
+	&& (!defined(__ARM_ARCH_VERSION__) || __ARM_ARCH_VERSION__ < 6)
+	#error Target platform currently not supported
+  #endif
 
-static forceinline int64 InterlockedExchangeAdd64(volatile int64 *addend, int64 increment){
+static forceinline int64 InterlockedExchangeAdd64(volatile int64 *addend, int64 increment)
+{
 	return __sync_fetch_and_add(addend, increment);
 }
 
-#if !defined(__MINGW32__) && !defined(MINGW)
-static forceinline int32 InterlockedExchangeAdd(volatile int32 *addend, int32 increment){
+  #if !defined(__MINGW32__) && !defined(MINGW)
+static forceinline int32 InterlockedExchangeAdd(volatile int32 *addend, int32 increment)
+{
 	return __sync_fetch_and_add(addend, increment);
 }
 
-static forceinline int64 InterlockedIncrement64(volatile int64 *addend){
+static forceinline int64 InterlockedIncrement64(volatile int64 *addend)
+{
 	return __sync_add_and_fetch(addend, 1);
 }
 
-static forceinline int32 InterlockedIncrement(volatile int32 *addend){
+static forceinline int32 InterlockedIncrement(volatile int32 *addend)
+{
 	return __sync_add_and_fetch(addend, 1);
 }
 
-static forceinline int64 InterlockedDecrement64(volatile int64 *addend){
+static forceinline int64 InterlockedDecrement64(volatile int64 *addend)
+{
 	return __sync_sub_and_fetch(addend, 1);
 }
 
-static forceinline int32 InterlockedDecrement(volatile int32 *addend){
+static forceinline int32 InterlockedDecrement(volatile int32 *addend)
+{
 	return __sync_sub_and_fetch(addend, 1);
 }
 
-static forceinline int64 InterlockedCompareExchange64(volatile int64 *dest, int64 exch, int64 cmp){
+static forceinline int64 InterlockedCompareExchange64(volatile int64 *dest, int64 exch, int64 cmp)
+{
 	return __sync_val_compare_and_swap(dest, cmp, exch);
 }
 
-static forceinline int32 InterlockedCompareExchange(volatile int32 *dest, int32 exch, int32 cmp){
+static forceinline int32 InterlockedCompareExchange(volatile int32 *dest, int32 exch, int32 cmp)
+{
 	return __sync_val_compare_and_swap(dest, cmp, exch);
 }
 
-static forceinline int64 InterlockedExchange64(volatile int64 *target, int64 val){
+static forceinline int64 InterlockedExchange64(volatile int64 *target, int64 val)
+{
 	return __sync_lock_test_and_set(target, val);
 }
 
-static forceinline int32 InterlockedExchange(volatile int32 *target, int32 val){
+static forceinline int32 InterlockedExchange(volatile int32 *target, int32 val)
+{
 	return __sync_lock_test_and_set(target, val);
 }
 
-#endif  // !defined(__MINGW32__) && !defined(MINGW)
+  #endif // !defined(__MINGW32__) && !defined(MINGW)
 
-#endif //endif compiler decision
+#endif // endif compiler decision
 
 #endif /* COMMON_ATOMIC_H */

@@ -84,14 +84,14 @@ enum grf_filelist_type {
 	FILELIST_TYPE_ENCRYPT_HEADER = 0x04, ///< encryption mode 1 (header DES only)
 };
 
-//gentry ... > 0  : data read from a grf file (gentry_table[gentry-1])
-//gentry ... 0    : data read from a local file (data directory)
-//gentry ... < 0  : entry "-(gentry)" is marked for a local file check
-//                  - if local file exists, gentry will be set to 0 (thus using the local file)
-//                  - if local file doesn't exist, sign is inverted (thus using the original file inside a grf)
-//                  (NOTE: this case is only used once (during startup) and only if GRFIO_LOCAL is enabled)
-//                  (NOTE: probably meant to be used to override grf contents by files in the data directory)
-//#define GRFIO_LOCAL
+// gentry ... > 0  : data read from a grf file (gentry_table[gentry-1])
+// gentry ... 0    : data read from a local file (data directory)
+// gentry ... < 0  : entry "-(gentry)" is marked for a local file check
+//                   - if local file exists, gentry will be set to 0 (thus using the local file)
+//                   - if local file doesn't exist, sign is inverted (thus using the original file inside a grf)
+//                   (NOTE: this case is only used once (during startup) and only if GRFIO_LOCAL is enabled)
+//                   (NOTE: probably meant to be used to override grf contents by files in the data directory)
+// #define GRFIO_LOCAL
 
 // stores info about every loaded file
 static std::unordered_map<std::string, grf_filelist, grf_filelist_key_hash> filelist;
@@ -132,29 +132,58 @@ static uint8_t grf_substitution(uint8_t in)
 {
 	uint8_t out;
 
-	switch( in )
-	{
-	case 0x00: out = 0x2B; break;
-	case 0x2B: out = 0x00; break;
-	case 0x6C: out = 0x80; break;
-	case 0x01: out = 0x68; break;
-	case 0x68: out = 0x01; break;
-	case 0x48: out = 0x77; break;
-	case 0x60: out = 0xFF; break;
-	case 0x77: out = 0x48; break;
-	case 0xB9: out = 0xC0; break;
-	case 0xC0: out = 0xB9; break;
-	case 0xFE: out = 0xEB; break;
-	case 0xEB: out = 0xFE; break;
-	case 0x80: out = 0x6C; break;
-	case 0xFF: out = 0x60; break;
-	default:   out = in;   break;
+	switch (in) {
+	case 0x00:
+		out = 0x2B;
+		break;
+	case 0x2B:
+		out = 0x00;
+		break;
+	case 0x6C:
+		out = 0x80;
+		break;
+	case 0x01:
+		out = 0x68;
+		break;
+	case 0x68:
+		out = 0x01;
+		break;
+	case 0x48:
+		out = 0x77;
+		break;
+	case 0x60:
+		out = 0xFF;
+		break;
+	case 0x77:
+		out = 0x48;
+		break;
+	case 0xB9:
+		out = 0xC0;
+		break;
+	case 0xC0:
+		out = 0xB9;
+		break;
+	case 0xFE:
+		out = 0xEB;
+		break;
+	case 0xEB:
+		out = 0xFE;
+		break;
+	case 0x80:
+		out = 0x6C;
+		break;
+	case 0xFF:
+		out = 0x60;
+		break;
+	default:
+		out = in;
+		break;
 	}
 
 	return out;
 }
 
-#if 0 /* this is not used anywhere, is it ok to delete?  */
+#if 0  /* this is not used anywhere, is it ok to delete?  */
 static void grf_shuffle_enc(struct des_bit64 *src)
 {
 	struct des_bit64 out;
@@ -199,7 +228,7 @@ static void grf_shuffle_dec(struct des_bit64 *src)
 static void grf_decode_header(unsigned char *buf, size_t len)
 {
 	struct des_bit64 *p = (struct des_bit64 *)buf;
-	size_t nblocks = len / sizeof(struct des_bit64);
+	size_t nblocks      = len / sizeof(struct des_bit64);
 	size_t i;
 	nullpo_retv(buf);
 
@@ -220,7 +249,7 @@ static void grf_decode_header(unsigned char *buf, size_t len)
 static void grf_decode_full(unsigned char *buf, size_t len, int cycle)
 {
 	struct des_bit64 *p = (struct des_bit64 *)buf;
-	size_t nblocks = len / sizeof(struct des_bit64);
+	size_t nblocks      = len / sizeof(struct des_bit64);
 	int dcycle, scycle;
 	size_t i, j;
 
@@ -279,10 +308,7 @@ static void grf_decode(unsigned char *buf, size_t len, char entry_type, int entr
 		// choose size of gap between two encrypted blocks
 		// digits:  0  1  2  3  4  5  6  7  8  9 ...
 		//  cycle:  1  1  1  4  5 14 15 22 23 24 ...
-		cycle = ( digits < 3 ) ? 1
-		      : ( digits < 5 ) ? digits + 1
-		      : ( digits < 7 ) ? digits + 9
-		      :                  digits + 15;
+		cycle = (digits < 3) ? 1 : (digits < 5) ? digits + 1 : (digits < 7) ? digits + 9 : digits + 15;
 
 		grf_decode_full(buf, len, cycle);
 	} else if (entry_type & FILELIST_TYPE_ENCRYPT_HEADER) {
@@ -297,7 +323,7 @@ static void grf_decode(unsigned char *buf, size_t len, char entry_type, int entr
 /// @copydoc grfio_interface::crc32()
 static unsigned long grfio_crc32(const unsigned char *buf, unsigned int len)
 {
-	return crc32(crc32(0L, Z_NULL, 0), buf, len);
+	return crc32(crc32(0l, Z_NULL, 0), buf, len);
 }
 
 /// @copydoc grfio_interface::decode_zip
@@ -352,7 +378,7 @@ static void grfio_localpath_create(char *buffer, size_t size, const char *filena
 	nullpo_retv(buffer);
 	len = strlen(data_dir);
 
-	if (data_dir[0] == '\0' || data_dir[len-1] == '/' || data_dir[len-1] == '\\')
+	if (data_dir[0] == '\0' || data_dir[len - 1] == '/' || data_dir[len - 1] == '\\')
 		snprintf(buffer, size, "%s%s", data_dir, filename);
 	else
 		snprintf(buffer, size, "%s/%s", data_dir, filename);
@@ -380,18 +406,18 @@ static void *grfio_reads(const char *fname, int *size)
 		in = fopen(lfname, "rb");
 		if (in != NULL) {
 			int declen;
-			hseek(in,0,SEEK_END);
+			hseek(in, 0, SEEK_END);
 			declen = (int)htell(in);
 			if (declen == -1) {
-				ShowError("An error occurred in fread grfio_reads, fname=%s \n",fname);
+				ShowError("An error occurred in fread grfio_reads, fname=%s \n", fname);
 				fclose(in);
 				return NULL;
 			}
-			hseek(in,0,SEEK_SET);
+			hseek(in, 0, SEEK_SET);
 			unsigned char *buf = (unsigned char *)aMalloc(declen + 1); // +1 for resnametable zero-termination
-			buf[declen] = '\0';
+			buf[declen]        = '\0';
 			if (fread(buf, 1, declen, in) != (size_t)declen) {
-				ShowError("An error occurred in fread grfio_reads, fname=%s \n",fname);
+				ShowError("An error occurred in fread grfio_reads, fname=%s \n", fname);
 				aFree(buf);
 				fclose(in);
 				return NULL;
@@ -414,21 +440,20 @@ static void *grfio_reads(const char *fname, int *size)
 	if (entry != NULL && entry->gentry > 0) {
 		// Archive[GRF] File Read
 		const char *grfname = gentry_table[entry->gentry - 1].c_str();
-		FILE *in = fopen(grfname, "rb");
+		FILE *in            = fopen(grfname, "rb");
 
 		if (in != NULL) {
-			int fsize = entry->srclen_aligned;
+			int fsize          = entry->srclen_aligned;
 			unsigned char *buf = (unsigned char *)aMalloc(fsize);
-			if (hseek(in, entry->srcpos, SEEK_SET) != 0
-			 || fread(buf, 1, fsize, in) != (size_t)fsize) {
-				ShowError("An error occurred in fread in grfio_reads, grfname=%s\n",grfname);
+			if (hseek(in, entry->srcpos, SEEK_SET) != 0 || fread(buf, 1, fsize, in) != (size_t)fsize) {
+				ShowError("An error occurred in fread in grfio_reads, grfname=%s\n", grfname);
 				aFree(buf);
 				fclose(in);
 				return NULL;
 			}
 			fclose(in);
 
-			unsigned char *buf2 = (unsigned char *)aMalloc(entry->declen+1); // +1 for resnametable zero-termination
+			unsigned char *buf2 = (unsigned char *)aMalloc(entry->declen + 1); // +1 for resnametable zero-termination
 			buf2[entry->declen] = '\0';
 			if (entry->type & FILELIST_TYPE_FILE) {
 				// file
@@ -473,10 +498,10 @@ static char *grfio_decode_filename(unsigned char *buf, int len)
 	int i;
 	nullpo_retr(NULL, buf);
 	for (i = 0; i < len; i += 8) {
-		NibbleSwap(&buf[i],8);
-		des->decrypt(&buf[i],8);
+		NibbleSwap(&buf[i], 8);
+		des->decrypt(&buf[i], 8);
 	}
-	return (char*)buf;
+	return (char *)buf;
 }
 
 /**
@@ -491,7 +516,7 @@ static bool grfio_is_full_encrypt(const char *fname)
 	nullpo_retr(false, fname);
 	ext = strrchr(fname, '.');
 	if (ext != NULL) {
-		static const char *extensions[] = { ".gnd", ".gat", ".act", ".str" };
+		static const char *extensions[] = {".gnd", ".gat", ".act", ".str"};
 		int i;
 		for (i = 0; i < ARRAYLENGTH(extensions); ++i)
 			if (strcmpi(ext, extensions[i]) == 0)
@@ -511,8 +536,8 @@ static bool grfio_is_full_encrypt(const char *fname)
  */
 static int grfio_entryread(const char *grfname, int gentry)
 {
-	unsigned char grf_header[0x2e] = { 0 };
-	int entry,entrys,ofs,grf_version;
+	unsigned char grf_header[0x2E] = {0};
+	int entry, entrys, ofs, grf_version;
 	FILE *fp;
 
 	nullpo_retr(1, grfname);
@@ -523,28 +548,30 @@ static int grfio_entryread(const char *grfname, int gentry)
 	}
 	ShowInfo("GRF data file found: '%s'\n", grfname);
 
-	hseek(fp,0,SEEK_END);
+	hseek(fp, 0, SEEK_END);
 	int64 grf_size = htell(fp);
-	hseek(fp,0,SEEK_SET);
+	hseek(fp, 0, SEEK_SET);
 
-	if (fread(grf_header,1,0x2e,fp) != 0x2e) {
+	if (fread(grf_header, 1, 0x2E, fp) != 0x2E) {
 		ShowError("Couldn't read all grf_header element of %s \n", grfname);
 		fclose(fp);
 		return 2; // 2:file format error
 	}
-	if (strcmp((const char*)grf_header, "Master of Magic") != 0 || hseek(fp, getlong(grf_header+0x1e), SEEK_CUR) != 0) {
+	if (
+	  strcmp((const char *)grf_header, "Master of Magic") != 0 || hseek(fp, getlong(grf_header + 0x1E), SEEK_CUR) != 0
+	) {
 		fclose(fp);
 		ShowError("GRF %s read error\n", grfname);
 		return 2; // 2:file format error
 	}
 
-	grf_version = getlong(grf_header+0x2a) >> 8;
+	grf_version = getlong(grf_header + 0x2A) >> 8;
 
 	if (grf_version == 0x01) {
 		// ****** Grf version 01xx ******
-		int64 list_size = grf_size - htell(fp);
+		int64 list_size             = grf_size - htell(fp);
 		unsigned char *grf_filelist = (unsigned char *)aMalloc(list_size);
-		if (fread(grf_filelist,1,list_size,fp) != (size_t)list_size) {
+		if (fread(grf_filelist, 1, list_size, fp) != (size_t)list_size) {
 			ShowError("Couldn't read all grf_filelist element of %s \n", grfname);
 			aFree(grf_filelist);
 			fclose(fp);
@@ -552,16 +579,16 @@ static int grfio_entryread(const char *grfname, int gentry)
 		}
 		fclose(fp);
 
-		entrys = getlong(grf_header+0x26) - getlong(grf_header+0x22) - 7;
+		entrys = getlong(grf_header + 0x26) - getlong(grf_header + 0x22) - 7;
 
 		// Get an entry
 		for (entry = 0, ofs = 0; entry < entrys; ++entry) {
 			struct grf_filelist aentry{};
-			int ofs2 = ofs+getlong(grf_filelist+ofs)+4;
-			unsigned char type = grf_filelist[ofs2+12];
-			if (type&FILELIST_TYPE_FILE) {
-				char *fname = grfio->decode_filename(grf_filelist+ofs+6, grf_filelist[ofs]-6);
-				int srclen = getlong(grf_filelist+ofs2+0) - getlong(grf_filelist+ofs2+8) - 715;
+			int ofs2           = ofs + getlong(grf_filelist + ofs) + 4;
+			unsigned char type = grf_filelist[ofs2 + 12];
+			if (type & FILELIST_TYPE_FILE) {
+				char *fname = grfio->decode_filename(grf_filelist + ofs + 6, grf_filelist[ofs] - 6);
+				int srclen  = getlong(grf_filelist + ofs2 + 0) - getlong(grf_filelist + ofs2 + 8) - 715;
 
 				if (strlen(fname) > sizeof(aentry.fn) - 1) {
 					ShowFatalError("GRF file name %s is too long\n", fname);
@@ -572,16 +599,17 @@ static int grfio_entryread(const char *grfname, int gentry)
 				type |= grfio_is_full_encrypt(fname) ? FILELIST_TYPE_ENCRYPT_MIXED : FILELIST_TYPE_ENCRYPT_HEADER;
 
 				aentry.srclen         = srclen;
-				aentry.srclen_aligned = getlong(grf_filelist+ofs2+4)-37579;
-				aentry.declen         = getlong(grf_filelist+ofs2+8);
-				aentry.srcpos         = getlong(grf_filelist+ofs2+13)+0x2e;
+				aentry.srclen_aligned = getlong(grf_filelist + ofs2 + 4) - 37579;
+				aentry.declen         = getlong(grf_filelist + ofs2 + 8);
+				aentry.srcpos         = getlong(grf_filelist + ofs2 + 13) + 0x2E;
 				aentry.type           = type;
 				safestrncpy(aentry.fn, fname, sizeof(aentry.fn));
-				aentry.fnd            = NULL;
+				aentry.fnd = NULL;
 #ifdef GRFIO_LOCAL
-				aentry.gentry         = -(gentry+1); // As Flag for making it a negative number carrying out the first time LocalFileCheck
+				aentry.gentry
+				  = -(gentry + 1); // As Flag for making it a negative number carrying out the first time LocalFileCheck
 #else
-				aentry.gentry         = (char)(gentry+1); // With no first time LocalFileCheck
+				aentry.gentry = (char)(gentry + 1); // With no first time LocalFileCheck
 #endif
 				filelist.insert_or_assign(aentry.fn, aentry);
 			}
@@ -595,22 +623,22 @@ static int grfio_entryread(const char *grfname, int gentry)
 		unsigned char eheader[8];
 		uLongf rSize, eSize;
 
-		if (fread(eheader,1,8,fp) != 8) {
+		if (fread(eheader, 1, 8, fp) != 8) {
 			ShowError("An error occurred in fread while reading header buffer\n");
 			fclose(fp);
 			return 4;
 		}
-		rSize = getlong(eheader); // Read Size
-		eSize = getlong(eheader+4); // Extend Size
+		rSize = getlong(eheader);     // Read Size
+		eSize = getlong(eheader + 4); // Extend Size
 
-		if ((long)rSize > grf_size-htell(fp)) {
+		if ((long)rSize > grf_size - htell(fp)) {
 			fclose(fp);
 			ShowError("Illegal data format: GRF compress entry size\n");
 			return 4;
 		}
 
 		unsigned char *rBuf = (unsigned char *)aMalloc(rSize); // Get a Read Size
-		if (fread(rBuf,1,rSize,fp) != rSize) {
+		if (fread(rBuf, 1, rSize, fp) != rSize) {
 			ShowError("An error occurred in fread \n");
 			fclose(fp);
 			aFree(rBuf);
@@ -618,38 +646,39 @@ static int grfio_entryread(const char *grfname, int gentry)
 		}
 		fclose(fp);
 		unsigned char *grf_filelist = (unsigned char *)aMalloc(eSize); // Get a Extend Size
-		grfio->decode_zip(grf_filelist, &eSize, rBuf, rSize); // Decode function
+		grfio->decode_zip(grf_filelist, &eSize, rBuf, rSize);          // Decode function
 		aFree(rBuf);
 
-		entrys = getlong(grf_header+0x26) - 7;
+		entrys = getlong(grf_header + 0x26) - 7;
 		Assert_retr(4, entrys >= 0);
 
 		// Get an entry
 		for (entry = 0, ofs = 0; entry < entrys; ++entry) {
 			struct grf_filelist aentry;
-			char *fname = (char*)(grf_filelist+ofs);
-			int ofs2 = ofs + (int)strlen(fname)+1;
-			int type = grf_filelist[ofs2+12];
+			char *fname = (char *)(grf_filelist + ofs);
+			int ofs2    = ofs + (int)strlen(fname) + 1;
+			int type    = grf_filelist[ofs2 + 12];
 
-			if (strlen(fname) > sizeof(aentry.fn)-1) {
+			if (strlen(fname) > sizeof(aentry.fn) - 1) {
 				ShowFatalError("GRF file name %s is too long\n", fname);
 				aFree(grf_filelist);
 				return 5; // 5: file name too long
 			}
 
-			if (type&FILELIST_TYPE_FILE) {
+			if (type & FILELIST_TYPE_FILE) {
 				// file
-				aentry.srclen         = getlong(grf_filelist+ofs2+0);
-				aentry.srclen_aligned = getlong(grf_filelist+ofs2+4);
-				aentry.declen         = getlong(grf_filelist+ofs2+8);
-				aentry.srcpos         = getlong(grf_filelist+ofs2+13)+0x2e;
+				aentry.srclen         = getlong(grf_filelist + ofs2 + 0);
+				aentry.srclen_aligned = getlong(grf_filelist + ofs2 + 4);
+				aentry.declen         = getlong(grf_filelist + ofs2 + 8);
+				aentry.srcpos         = getlong(grf_filelist + ofs2 + 13) + 0x2E;
 				aentry.type           = (char)type;
 				safestrncpy(aentry.fn, fname, sizeof(aentry.fn));
-				aentry.fnd            = NULL;
+				aentry.fnd = NULL;
 #ifdef GRFIO_LOCAL
-				aentry.gentry         = -(gentry+1); // As Flag for making it a negative number carrying out the first time LocalFileCheck
+				aentry.gentry
+				  = -(gentry + 1); // As Flag for making it a negative number carrying out the first time LocalFileCheck
 #else
-				aentry.gentry         = (char)(gentry+1); // With no first time LocalFileCheck
+				aentry.gentry = (char)(gentry + 1); // With no first time LocalFileCheck
 #endif
 				filelist.insert_or_assign(aentry.fn, aentry);
 			}
@@ -661,7 +690,7 @@ static int grfio_entryread(const char *grfname, int gentry)
 	} else {
 		// ****** Grf Other version ******
 		fclose(fp);
-		ShowError("GRF version %04x not supported\n",getlong(grf_header+0x2a));
+		ShowError("GRF version %04x not supported\n", getlong(grf_header + 0x2A));
 		return 4;
 	}
 
@@ -724,7 +753,7 @@ static void grfio_resourcecheck(void)
 {
 	char restable[256];
 	char *buf = NULL;
-	FILE *fp = NULL;
+	FILE *fp  = NULL;
 	int size = 0, i = 0;
 
 	// read resnametable from data directory and return if successful
@@ -739,7 +768,8 @@ static void grfio_resourcecheck(void)
 		}
 
 		fclose(fp);
-		ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", i, "resnametable.txt");
+		ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", i,
+		           "resnametable.txt");
 		return; // we're done here!
 	}
 
@@ -761,7 +791,8 @@ static void grfio_resourcecheck(void)
 		}
 
 		aFree(buf);
-		ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", i, "data\\resnametable.txt");
+		ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", i,
+		           "data\\resnametable.txt");
 		return;
 	}
 }
@@ -819,7 +850,7 @@ static void grfio_init(const char *fname)
 				// GRF file
 				if (grfio_add(w2) == 0)
 					++grf_num;
-			} else if (strcmp(w1,"data_dir") == 0) {
+			} else if (strcmp(w1, "data_dir") == 0) {
 				// Data directory
 				safestrncpy(data_dir, w2, sizeof(data_dir));
 			}
@@ -839,34 +870,34 @@ static void grfio_init(const char *fname)
 static void grfio_report_error(int err)
 {
 	switch (err) {
-		case Z_OK:
-			return;
-		case Z_BUF_ERROR:
-			ShowError("Zlib buffer error. Probably destination buffer too small\n");
-			break;
-		case Z_MEM_ERROR:
-			ShowError("Zlib buffer error. Insufficient memory\n");
-			break;
-		case Z_DATA_ERROR:
-			ShowError("Zlib buffer error. Compressed data was corrupted\n");
-			break;
-		default:
-			ShowError("Unknown zlib error: %d: %s\n", err, zError(err));
-			break;
+	case Z_OK:
+		return;
+	case Z_BUF_ERROR:
+		ShowError("Zlib buffer error. Probably destination buffer too small\n");
+		break;
+	case Z_MEM_ERROR:
+		ShowError("Zlib buffer error. Insufficient memory\n");
+		break;
+	case Z_DATA_ERROR:
+		ShowError("Zlib buffer error. Compressed data was corrupted\n");
+		break;
+	default:
+		ShowError("Unknown zlib error: %d: %s\n", err, zError(err));
+		break;
 	}
 }
 
 /// Interface base initialization.
 void grfio_defaults(void)
 {
-	grfio = &grfio_s;
-	grfio->init = grfio_init;
-	grfio->final = grfio_final;
-	grfio->reads = grfio_reads;
-	grfio->find_file = grfio_find_file;
-	grfio->crc32 = grfio_crc32;
-	grfio->decode_zip = grfio_decode_zip;
-	grfio->encode_zip = grfio_encode_zip;
-	grfio->report_error = grfio_report_error;
+	grfio                  = &grfio_s;
+	grfio->init            = grfio_init;
+	grfio->final           = grfio_final;
+	grfio->reads           = grfio_reads;
+	grfio->find_file       = grfio_find_file;
+	grfio->crc32           = grfio_crc32;
+	grfio->decode_zip      = grfio_decode_zip;
+	grfio->encode_zip      = grfio_encode_zip;
+	grfio->report_error    = grfio_report_error;
 	grfio->decode_filename = grfio_decode_filename;
 }
