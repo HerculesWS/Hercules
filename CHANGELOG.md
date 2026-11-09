@@ -22,6 +22,59 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2026.10] `November 2026`
+
+### Added
+- Added a halper macro to apply `#pragma pack` to platforms that supports it only. (#3515)
+- Added a policy on machine-assisted and 'AI' assisted contributions. (#3516)
+
+### Changed
+- Marked macros `EXPAND_AND_QUOTE`, `QUOTE`, `PRAGMA_GCC46`, `PRAGMA_GCC5`, `PRAGMA_GCC7` and `PRAGMA_GCC9` as whitespace-sensitive in clang-format. (#3515)
+- Changed `CMDLINEARG_DE`F and `CMDLINEARG_DEF2` macros to take string literal instead of unquoted space-sensitive string. (#3515)
+- Fixed an errors in `HPM_PLUGIN_DEFS_ALL` macro. (#3515)
+- Removed pre-C++ hack to ensure the correct size of `e_scb_flag` enum. (#3515)
+- Removed some 'fall through' comments with C++ annotation `[[fallthrough]]`. (#3515)
+- Updated clang-format configuration with the recommended code style, targeting specifically clang-23. (#3515)
+- Tweaked several code lines that looks weird or uneasy on the new clang-format specifications. (#3515)
+- Removed the overrides for `strtoull` and `strtoll` in MSVC builds as they're now guaranteed by C++ standard. (#3519)
+- Removed support for code no longer supported (Borland C++, MSVC older than VS2015, GCC older than 8.0). (#3519)
+- Rewrote ERS implementation as a type-safe template class. (#3518)
+- Rewrote FIFO buffer implementation in `socket.c` to a re-usable class `fifo_buffer`. (#3520)
+- Removed all direct usage of `RECREATE`, `aRealloc` and `aReallocz` from `common` target. (#3520)
+- Changed `OnCheck` function in script self-test to a more robust function that can handle strings and numbers. (#3521)
+
+### Fixed
+- Fixed Soul Siphon it no longer allows casts on non-player targets, also attempts to cast on non-supported units will not consume SP. (#3480, #3499)
+- Fixed warnings about invalid escape sequences in some Python scripts. (#3515)
+- Sanitized several macros across the codebase. (#3515)
+- Fixed a case in `VECTOR_RESIZE` macro that instead of shortening the length and discarded extra data it did the opposite. (#3517)
+- Fixed `clangd` breaking with errors in system header with MSVC builds. (#3519)
+- Fixed Asura Strike being blocked by walk delay, it now ignores walk delay when cast on a user, and only stopping on true immobilization only. (#3491, #3490)
+- Fixed Final Strike not keeping the original facing direction. (#3500, #3489)
+- Fixed item skills canceling the player invincibility timer. (#3493, #3474)
+- Fixed Basilica behavior in pre-renewal. (#3495, #3476)
+  - Changed the check for the free area to only happen when requesting to cast, so now players entering in during cast won't cancel the skill cast.
+  - Creating it now requires a clear 7x7 area instead of 5x5.
+  - It no longer removes other ground skills so it can now exists with other ground skills.
+  - It now only removed the basilica unit group instead of all unit groups owned by caster.
+- Fixed an incorrect use of `OnCheck` function for string in script self-test API. (#3521)
+
+<!--
+If you are reading this in a text editor, simply ignore this section
+
+## [vYYYY.MM] `MMMM YYYY`
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Deprecated
+
+### Removed
+-->
+
 ## [v2026.09] `September 2026`
 
 ### Codebase migration to C++
