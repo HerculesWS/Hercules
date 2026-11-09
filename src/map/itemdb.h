@@ -34,50 +34,53 @@ struct hplugin_data_store;
  * Defines
  **/
 #ifndef MAX_ITEMDB
-#define MAX_ITEMDB 0xFFFF
+  #define MAX_ITEMDB 0xFFFF
 #endif
 
 #ifndef MAX_ITEM_ID
-#if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
-#define MAX_ITEM_ID INT32_MAX
-#else
-#define MAX_ITEM_ID 0xFFFF
-#endif
+  #if PACKETVER_MAIN_NUM >= 20181121 || PACKETVER_RE_NUM >= 20180704 || PACKETVER_ZERO_NUM >= 20181114
+	#define MAX_ITEM_ID INT32_MAX
+  #else
+	#define MAX_ITEM_ID 0xFFFF
+  #endif
 #endif
 
 #ifndef MAX_ITEMDELAYS
-#define MAX_ITEMDELAYS 10 // The maximum number of item delays
+  #define MAX_ITEMDELAYS 10 // The maximum number of item delays
 #endif
 
 #ifndef MAX_SEARCH
-#define MAX_SEARCH 5 //Designed for search functions, species max number of matches to display.
+  #define MAX_SEARCH 5 // Designed for search functions, species max number of matches to display.
 #endif
 
 #ifndef MAX_ITEMS_PER_COMBO
-#define MAX_ITEMS_PER_COMBO 6 /* maximum amount of items a combo may require */
+  #define MAX_ITEMS_PER_COMBO 6 /* maximum amount of items a combo may require */
 #endif
 
-#define CARD0_FORGE 0x00FF
+#define CARD0_FORGE  0x00FF
 #define CARD0_CREATE 0x00FE
-#define CARD0_PET ((short)(uint16)0xFF00)
+#define CARD0_PET    ((short)(uint16)0xFF00)
 
-//Marks if the card0 given is "special" (non-item id used to mark pets/created items. [Skotlex]
+// Marks if the card0 given is "special" (non-item id used to mark pets/created items. [Skotlex]
 #define itemdb_isspecial(i) ((i) == CARD0_FORGE || (i) == CARD0_CREATE || (i) == CARD0_PET)
 
 #ifndef UNKNOWN_ITEM_ID
-//Use apple for unknown items.
-#define UNKNOWN_ITEM_ID 512
+  // Use apple for unknown items.
+  #define UNKNOWN_ITEM_ID 512
 #endif
 
 #if MAX_ITEM_ID < MAX_ITEMDB
-#error "MAX_ITEM_ID must be bigger or same with MAX_ITEMDB"
+  #error "MAX_ITEM_ID must be bigger or same with MAX_ITEMDB"
 #endif
-#if MAX_ITEM_ID > 0xFFFF && PACKETVER_MAIN_NUM < 20181121 && PACKETVER_RE_NUM < 20180704 && PACKETVER_ZERO_NUM < 20181114
-#error "For clients before 20181121 Main and 20180704 RE and 20181114 zero, MAX_ITEM_ID must be smaller than 0x10000"
+#if MAX_ITEM_ID > 0xFFFF \
+  && PACKETVER_MAIN_NUM < 20181121 \
+  && PACKETVER_RE_NUM < 20180704 \
+  && PACKETVER_ZERO_NUM < 20181114
+  #error "For clients before 20181121 Main and 20180704 RE and 20181114 zero, MAX_ITEM_ID must be smaller than 0x10000"
 #endif
 
 #ifndef MAX_ITEM_GRADE
-#define MAX_ITEM_GRADE 7
+  #define MAX_ITEM_GRADE 7
 #endif
 
 enum item_itemid {
@@ -383,7 +386,7 @@ enum item_class_upper {
 	ITEMUPPER_THIRD      = 0x08,
 	ITEMUPPER_THIRDUPPER = 0x10,
 	ITEMUPPER_THIRDBABY  = 0x20,
-	ITEMUPPER_ALL        = 0x3f, // Sum of all the above
+	ITEMUPPER_ALL        = 0x3F, // Sum of all the above
 };
 
 /**
@@ -401,7 +404,7 @@ enum ItemTradeRestrictions {
 	ITR_NOMAIL          = 0x080, ///< Item can't be attached to mail messages
 	ITR_NOAUCTION       = 0x100, ///< Item can't be auctioned
 
-	ITR_ALL             = 0x1ff  ///< Sum of all the above values
+	ITR_ALL = 0x1FF ///< Sum of all the above values
 };
 
 /**
@@ -411,7 +414,7 @@ enum ItemNouseRestrictions {
 	INR_NONE    = 0x0, ///< No restrictions
 	INR_SITTING = 0x1, ///< Item can't be used while sitting
 
-	INR_ALL     = 0x1 ///< Sum of all the above values
+	INR_ALL = 0x1 ///< Sum of all the above values
 };
 
 /**
@@ -435,7 +438,7 @@ enum item_name_search_flag : int {
 };
 
 enum item_reform_status : int {
-	IT_REFORM_SUCCESS = 0,
+	IT_REFORM_SUCCESS              = 0,
 	IT_REFORM_NOT_ENOUGH_MATERIALS = 3,
 };
 
@@ -444,12 +447,13 @@ struct itemlist_entry {
 	int id;       ///< Item ID or (inventory) index
 	int16 amount; ///< Amount
 };
+
 /** Convenience item list used in various functions */
 VECTOR_STRUCT_DECL(itemlist, struct itemlist_entry);
 
 struct item_combo {
 	struct script_code *script;
-	int nameid[MAX_ITEMS_PER_COMBO];/* nameid array */
+	int nameid[MAX_ITEMS_PER_COMBO]; /* nameid array */
 	unsigned char count;
 	int id; /* id of this combo */
 };
@@ -476,9 +480,9 @@ struct item_package_rand_entry {
 	unsigned short qty;
 	unsigned short rate;
 	unsigned short hours;
-	unsigned int announce : 1;
-	unsigned int named : 1;
-	unsigned int force_serial: 1;
+	unsigned int announce     : 1;
+	unsigned int named        : 1;
+	unsigned int force_serial : 1;
 	struct item_package_rand_entry *next;
 };
 
@@ -486,8 +490,8 @@ struct item_package_must_entry {
 	int id;
 	unsigned short qty;
 	unsigned short hours;
-	unsigned int announce : 1;
-	unsigned int named : 1;
+	unsigned int announce     : 1;
+	unsigned int named        : 1;
 	unsigned int force_serial : 1;
 };
 
@@ -544,13 +548,14 @@ struct item_reform {
 
 struct item_data {
 	int nameid;
-	char name[ITEM_NAME_LENGTH],jname[ITEM_NAME_LENGTH];
+	char name[ITEM_NAME_LENGTH], jname[ITEM_NAME_LENGTH];
 
 	int value_buy;
 	int value_sell;
 	int type;
 	int subtype;
-	///For logs, for external game info, for scripts: Max drop chance of this item (e.g. 0.01% , etc.. if it = 0, then monsters don't drop it, -1 denotes items sold in shops only) [Lupus]
+	/// For logs, for external game info, for scripts: Max drop chance of this item (e.g. 0.01% , etc.. if it = 0, then
+	/// monsters don't drop it, -1 denotes items sold in shops only) [Lupus]
 	int maxchance;
 	int sex;
 	int equip;
@@ -564,14 +569,16 @@ struct item_data {
 	int wlv;
 	int view_id;
 	int matk;
-	int elvmax;/* maximum level for this item */
+	int elvmax; /* maximum level for this item */
 	int dropeffectmode;
 
 	int delay;
 	/// Specifies if the base can wear this item (split in 3 indexes per type: 1-1, 2-1, 2-2)
 	uint64 class_base[3];
-	/// Specifies if the upper-type can equip it (bitfield, 0x01: normal, 0x02: upper, 0x04: baby normal, 0x08: third normal, 0x10: third upper, 0x20: third baby)
+	/// Specifies if the upper-type can equip it (bitfield, 0x01: normal, 0x02: upper, 0x04: baby normal, 0x08: third
+	/// normal, 0x10: third upper, 0x20: third baby)
 	unsigned class_upper : 6;
+
 	struct {
 		unsigned short chance;
 		int id;
@@ -581,38 +588,42 @@ struct item_data {
 	struct script_code *unequip_script; ///< Script executed once when unequipping.
 	struct script_code *rental_start_script; ///< Script executed once this item get rented
 	struct script_code *rental_end_script;   ///< Script executed once this item rent ends
+
 	struct {
-		unsigned available : 1;
-		unsigned no_refine : 1; // [celest]
-		unsigned no_grade : 1;
-		unsigned delay_consume : 1;     ///< Signifies items that are not consumed immediately upon double-click [Skotlex]
+		unsigned available     : 1;
+		unsigned no_refine     : 1; // [celest]
+		unsigned no_grade      : 1;
+		unsigned delay_consume : 1; ///< Signifies items that are not consumed immediately upon double-click [Skotlex]
 		unsigned trade_restriction : 9; ///< Item trade restrictions mask (@see enum ItemTradeRestrictions)
-		unsigned autoequip : 1;
-		unsigned auto_favorite : 1;
-		unsigned buyingstore : 1;
-		unsigned bindonequip : 1;
-		unsigned keepafteruse : 1;
-		unsigned force_serial : 1;
+		unsigned autoequip         : 1;
+		unsigned auto_favorite     : 1;
+		unsigned buyingstore       : 1;
+		unsigned bindonequip       : 1;
+		unsigned keepafteruse      : 1;
+		unsigned force_serial      : 1;
 		/// disallows use of item options on the item. (non-equippable items are automatically flagged) [Smokexyz]
-		unsigned no_options: 1;
-		unsigned drop_announce : 1; // Official Drop Announce [Jedzkie]
-		unsigned showdropeffect: 1; // < Allow showing effect on item drop [Asheraf]
-		unsigned ignore_discount : 1; // [Jedzkie]
+		unsigned no_options        : 1;
+		unsigned drop_announce     : 1; // Official Drop Announce [Jedzkie]
+		unsigned showdropeffect    : 1; // < Allow showing effect on item drop [Asheraf]
+		unsigned ignore_discount   : 1; // [Jedzkie]
 		unsigned ignore_overcharge : 1; // [Jedzkie]
-		unsigned select_package : 1;
+		unsigned select_package    : 1;
 	} flag;
+
 	/// item stacking limitation
 	struct {
 		unsigned short amount;
-		unsigned int inventory:1;
-		unsigned int cart:1;
-		unsigned int storage:1;
-		unsigned int guildstorage:1;
+		unsigned int inventory    : 1;
+		unsigned int cart         : 1;
+		unsigned int storage      : 1;
+		unsigned int guildstorage : 1;
 	} stack;
+
 	struct {
 		unsigned int flag; ///< Item nouse restriction mask (@see enum ItemNouseRestrictions)
 		unsigned short override;
 	} item_usage;
+
 	short gm_lv_trade_override; ///< GM-level to override trade_restriction
 	/* bugreport:309 */
 	struct item_combo **combos;
@@ -626,27 +637,27 @@ struct item_data {
 	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 
-#define itemdb_name(n)        (itemdb->search(n)->name)
-#define itemdb_jname(n)       (itemdb->search(n)->jname)
-#define itemdb_type(n)        ((enum item_types)itemdb->search(n)->type)
-#define itemdb_atk(n)         (itemdb->search(n)->atk)
-#define itemdb_def(n)         (itemdb->search(n)->def)
-#define itemdb_subtype(n)     (itemdb->search(n)->subtype)
-#define itemdb_sprite(n)      (itemdb->search(n)->view_sprite)
-#define itemdb_weight(n)      (itemdb->search(n)->weight)
-#define itemdb_equip(n)       (itemdb->search(n)->equip)
-#define itemdb_usescript(n)   (itemdb->search(n)->script)
-#define itemdb_equipscript(n) (itemdb->search(n)->script)
-#define itemdb_wlv(n)         (itemdb->search(n)->wlv)
-#define itemdb_range(n)       (itemdb->search(n)->range)
-#define itemdb_slot(n)        (itemdb->search(n)->slot)
-#define itemdb_available(n)   (itemdb->search(n)->flag.available)
-#define itemdb_viewid(n)      (itemdb->search(n)->view_id)
-#define itemdb_autoequip(n)   (itemdb->search(n)->flag.autoequip)
-#define itemdb_value_buy(n)   (itemdb->search(n)->value_buy)
-#define itemdb_value_sell(n)  (itemdb->search(n)->value_sell)
-#define itemdb_canrefine(n)   (!itemdb->search(n)->flag.no_refine)
-#define itemdb_allowoption(n) (!itemdb->search(n)->flag.no_options)
+#define itemdb_name(n)           (itemdb->search(n)->name)
+#define itemdb_jname(n)          (itemdb->search(n)->jname)
+#define itemdb_type(n)           ((enum item_types)itemdb->search(n)->type)
+#define itemdb_atk(n)            (itemdb->search(n)->atk)
+#define itemdb_def(n)            (itemdb->search(n)->def)
+#define itemdb_subtype(n)        (itemdb->search(n)->subtype)
+#define itemdb_sprite(n)         (itemdb->search(n)->view_sprite)
+#define itemdb_weight(n)         (itemdb->search(n)->weight)
+#define itemdb_equip(n)          (itemdb->search(n)->equip)
+#define itemdb_usescript(n)      (itemdb->search(n)->script)
+#define itemdb_equipscript(n)    (itemdb->search(n)->script)
+#define itemdb_wlv(n)            (itemdb->search(n)->wlv)
+#define itemdb_range(n)          (itemdb->search(n)->range)
+#define itemdb_slot(n)           (itemdb->search(n)->slot)
+#define itemdb_available(n)      (itemdb->search(n)->flag.available)
+#define itemdb_viewid(n)         (itemdb->search(n)->view_id)
+#define itemdb_autoequip(n)      (itemdb->search(n)->flag.autoequip)
+#define itemdb_value_buy(n)      (itemdb->search(n)->value_buy)
+#define itemdb_value_sell(n)     (itemdb->search(n)->value_sell)
+#define itemdb_canrefine(n)      (!itemdb->search(n)->flag.no_refine)
+#define itemdb_allowoption(n)    (!itemdb->search(n)->flag.no_options)
 #define itemdb_showdropeffect(n) (itemdb->search(n)->flag.showdropeffect)
 #define itemdb_dropeffectmode(n) (itemdb->search(n)->dropeffectmode)
 
@@ -656,25 +667,34 @@ struct item_data {
 #define itemid_isgemstone(n)     ((n) >= ITEMID_YELLOW_GEMSTONE && (n) <= ITEMID_BLUE_GEMSTONE)
 #define itemdb_is_GNbomb(n)      ((n) >= ITEMID_APPLE_BOMB && (n) <= ITEMID_VERY_HARD_LUMP)
 #define itemdb_is_GNthrowable(n) ((n) >= ITEMID_MYSTERIOUS_POWDER && (n) <= ITEMID_BLACK_THING_TO_THROW)
-#define itemdb_is_shadowequip(n) ((n) & (EQP_SHADOW_ARMOR|EQP_SHADOW_WEAPON|EQP_SHADOW_SHIELD|EQP_SHADOW_SHOES|EQP_SHADOW_ACC_R|EQP_SHADOW_ACC_L))
-#define itemdb_is_costumeequip(n) ((n) & (EQP_COSTUME_HEAD_TOP|EQP_COSTUME_HEAD_MID|EQP_COSTUME_HEAD_LOW|EQP_COSTUME_GARMENT))
+#define itemdb_is_shadowequip(n) \
+	((n) \
+	 & (EQP_SHADOW_ARMOR \
+	    | EQP_SHADOW_WEAPON \
+	    | EQP_SHADOW_SHIELD \
+	    | EQP_SHADOW_SHOES \
+	    | EQP_SHADOW_ACC_R \
+	    | EQP_SHADOW_ACC_L))
+#define itemdb_is_costumeequip(n) \
+	((n) & (EQP_COSTUME_HEAD_TOP | EQP_COSTUME_HEAD_MID | EQP_COSTUME_HEAD_LOW | EQP_COSTUME_GARMENT))
 
-//Item trade restrictions [Skotlex]
-#define itemdb_isdropable(item, gmlv)             (itemdb->isrestricted((item), (gmlv), 0, itemdb->isdropable_sub))
-#define itemdb_cantrade(item, gmlv, gmlv2)        (itemdb->isrestricted((item), (gmlv), (gmlv2), itemdb->cantrade_sub))
-#define itemdb_canpartnertrade(item, gmlv, gmlv2) (itemdb->isrestricted((item), (gmlv), (gmlv2), itemdb->canpartnertrade_sub))
-#define itemdb_cansell(item, gmlv)                (itemdb->isrestricted((item), (gmlv), 0, itemdb->cansell_sub))
-#define itemdb_cancartstore(item, gmlv)           (itemdb->isrestricted((item), (gmlv), 0, itemdb->cancartstore_sub))
-#define itemdb_canstore(item, gmlv)               (itemdb->isrestricted((item), (gmlv), 0, itemdb->canstore_sub))
-#define itemdb_canguildstore(item, gmlv)          (itemdb->isrestricted((item), (gmlv), 0, itemdb->canguildstore_sub))
-#define itemdb_canmail(item, gmlv)                (itemdb->isrestricted((item), (gmlv), 0, itemdb->canmail_sub))
-#define itemdb_canauction(item, gmlv)             (itemdb->isrestricted((item), (gmlv), 0, itemdb->canauction_sub))
+// Item trade restrictions [Skotlex]
+#define itemdb_isdropable(item, gmlv)      (itemdb->isrestricted((item), (gmlv), 0, itemdb->isdropable_sub))
+#define itemdb_cantrade(item, gmlv, gmlv2) (itemdb->isrestricted((item), (gmlv), (gmlv2), itemdb->cantrade_sub))
+#define itemdb_canpartnertrade(item, gmlv, gmlv2) \
+	(itemdb->isrestricted((item), (gmlv), (gmlv2), itemdb->canpartnertrade_sub))
+#define itemdb_cansell(item, gmlv)       (itemdb->isrestricted((item), (gmlv), 0, itemdb->cansell_sub))
+#define itemdb_cancartstore(item, gmlv)  (itemdb->isrestricted((item), (gmlv), 0, itemdb->cancartstore_sub))
+#define itemdb_canstore(item, gmlv)      (itemdb->isrestricted((item), (gmlv), 0, itemdb->canstore_sub))
+#define itemdb_canguildstore(item, gmlv) (itemdb->isrestricted((item), (gmlv), 0, itemdb->canguildstore_sub))
+#define itemdb_canmail(item, gmlv)       (itemdb->isrestricted((item), (gmlv), 0, itemdb->canmail_sub))
+#define itemdb_canauction(item, gmlv)    (itemdb->isrestricted((item), (gmlv), 0, itemdb->canauction_sub))
 
 struct itemdb_interface {
-	void (*init) (bool minimal);
-	void (*final) (void);
-	void (*reload) (void);
-	void (*name_constants) (void);
+	void (*init)(bool minimal);
+	void (*final)(void);
+	void (*reload)(void);
+	void (*name_constants)(void);
 	/* */
 	struct item_group *groups;
 	unsigned short group_count;
@@ -692,92 +712,92 @@ struct itemdb_interface {
 	struct DBMap *names;
 	/* */
 	struct item_data *array[MAX_ITEMDB];
-	struct DBMap *other;// int nameid -> struct item_data*
-	struct DBMap *options; // int opt_id -> struct itemdb_option*
-	struct item_data dummy; //This is the default dummy item used for non-existant items. [Skotlex]
-	struct DBMap *reform; // int reform_id -> struct item_reform *
+	struct DBMap *other;    // int nameid -> struct item_data*
+	struct DBMap *options;  // int opt_id -> struct itemdb_option*
+	struct item_data dummy; // This is the default dummy item used for non-existant items. [Skotlex]
+	struct DBMap *reform;   // int reform_id -> struct item_reform *
 	/* */
-	void (*read_groups) (void);
-	void (*read_chains) (void);
-	void (*read_packages) (void);
-	void (*read_options) (void);
+	void (*read_groups)(void);
+	void (*read_chains)(void);
+	void (*read_packages)(void);
+	void (*read_options)(void);
 	/* */
-	void (*write_cached_packages) (const char *config_filename);
-	bool (*read_cached_packages) (const char *config_filename);
+	void (*write_cached_packages)(const char *config_filename);
+	bool (*read_cached_packages)(const char *config_filename);
 	/* */
-	struct item_data* (*name2id) (const char *str);
-	struct item_data* (*search_name) (const char *name);
-	int (*search_name_array) (struct item_data **data, const int size, const char *str, enum item_name_search_flag flag);
-	struct item_data* (*load)(int nameid);
-	struct item_data* (*search)(int nameid);
-	struct item_data* (*exists) (int nameid);
-	struct itemdb_option* (*option_exists) (int idx);
-	struct item_reform* (*reform_exists) (int idx);
-	bool (*in_group) (struct item_group *group, int nameid);
-	const struct item_group *(*search_group) (int nameid);
-	int (*group_item) (struct item_group *group);
-	int (*chain_item) (unsigned short chain_id, int *rate);
-	void (*package_item) (struct map_session_data *sd, struct item_package *package);
-	int (*searchname_sub) (union DBKey key, struct DBData *data, va_list ap);
-	int (*searchname_array_sub) (union DBKey key, struct DBData data, va_list ap);
-	int (*searchrandomid) (struct item_group *group);
-	const char *(*type_to_name) (enum item_types type);
-	void (*jobmask2mapid) (uint64 *bclass, uint64 jobmask);
-	void (*jobid2mapid) (uint64 *bclass, int job_class, bool enable);
-	void (*create_dummy_data) (void);
-	struct item_data* (*create_item_data) (int nameid);
-	int (*isequip) (int nameid);
-	int (*isequip2) (struct item_data *data);
-	int (*isstackable) (int nameid);
-	int (*isstackable2) (struct item_data *data);
-	int (*isdropable_sub) (struct item_data *item, int gmlv, int unused);
-	int (*cantrade_sub) (struct item_data *item, int gmlv, int gmlv2);
-	int (*canpartnertrade_sub) (struct item_data *item, int gmlv, int gmlv2);
-	int (*cansell_sub) (struct item_data *item, int gmlv, int unused);
-	int (*cancartstore_sub) (struct item_data *item, int gmlv, int unused);
-	int (*canstore_sub) (struct item_data *item, int gmlv, int unused);
-	int (*canguildstore_sub) (struct item_data *item, int gmlv, int unused);
-	int (*canmail_sub) (struct item_data *item, int gmlv, int unused);
-	int (*canauction_sub) (struct item_data *item, int gmlv, int unused);
-	int (*isrestricted) (struct item *item, int gmlv, int gmlv2, int(*func)(struct item_data *, int, int));
-	int (*isidentified) (int nameid);
-	int (*isidentified2) (struct item_data *data);
-	bool (*read_combodb_libconfig) (void);
-	bool (*read_combodb_libconfig_sub) (struct config_setting_t *it, int idx, const char *source);
-	int (*gendercheck) (struct item_data *id);
-	int (*validate_entry) (struct item_data *entry, int n, const char *source);
-	void (*readdb_options_additional_fields) (struct itemdb_option *ito, struct config_setting_t *t, const char *source);
-	void (*readdb_additional_fields) (int itemid, struct config_setting_t *it, int n, const char *source, struct DBMap *itemconst_db);
-	void (*readdb_job_sub) (struct item_data *id, struct config_setting_t *t);
-	int (*readdb_libconfig_sub) (struct config_setting_t *it, int n, const char *source, struct DBMap *itemconst_db);
-	int (*readdb_libconfig) (const char *filename, struct DBMap *itemconst_db);
-	uint64 (*unique_id) (struct map_session_data *sd);
-	void (*read) (bool minimal);
-	void (*destroy_item_data) (struct item_data *self, int free_self);
-	int (*final_sub) (union DBKey key, struct DBData *data, va_list ap);
-	int (*options_final_sub) (union DBKey key, struct DBData *data, va_list ap);
-	int (*reform_final_sub) (union DBKey key, struct DBData *data, va_list ap);
-	void (*clear) (bool total);
-	struct item_combo * (*id2combo) (int id);
-	bool (*is_item_usable) (struct item_data *item);
-	int (*addname_sub) (union DBKey key, struct DBData *data, va_list ap);
-	bool (*read_libconfig_lapineddukddak) (void);
-	bool (*read_libconfig_lapineddukddak_sub) (struct config_setting_t *it, const char *source);
-	bool (*read_libconfig_lapineddukddak_sub_sources) (struct config_setting_t *sources, struct item_data *data);
+	struct item_data *(*name2id)(const char *str);
+	struct item_data *(*search_name)(const char *name);
+	int (*search_name_array)(struct item_data **data, const int size, const char *str, enum item_name_search_flag flag);
+	struct item_data *(*load)(int nameid);
+	struct item_data *(*search)(int nameid);
+	struct item_data *(*exists)(int nameid);
+	struct itemdb_option *(*option_exists)(int idx);
+	struct item_reform *(*reform_exists)(int idx);
+	bool (*in_group)(struct item_group *group, int nameid);
+	const struct item_group *(*search_group)(int nameid);
+	int (*group_item)(struct item_group *group);
+	int (*chain_item)(unsigned short chain_id, int *rate);
+	void (*package_item)(struct map_session_data *sd, struct item_package *package);
+	int (*searchname_sub)(union DBKey key, struct DBData *data, va_list ap);
+	int (*searchname_array_sub)(union DBKey key, struct DBData data, va_list ap);
+	int (*searchrandomid)(struct item_group *group);
+	const char *(*type_to_name)(enum item_types type);
+	void (*jobmask2mapid)(uint64 *bclass, uint64 jobmask);
+	void (*jobid2mapid)(uint64 *bclass, int job_class, bool enable);
+	void (*create_dummy_data)(void);
+	struct item_data *(*create_item_data)(int nameid);
+	int (*isequip)(int nameid);
+	int (*isequip2)(struct item_data *data);
+	int (*isstackable)(int nameid);
+	int (*isstackable2)(struct item_data *data);
+	int (*isdropable_sub)(struct item_data *item, int gmlv, int unused);
+	int (*cantrade_sub)(struct item_data *item, int gmlv, int gmlv2);
+	int (*canpartnertrade_sub)(struct item_data *item, int gmlv, int gmlv2);
+	int (*cansell_sub)(struct item_data *item, int gmlv, int unused);
+	int (*cancartstore_sub)(struct item_data *item, int gmlv, int unused);
+	int (*canstore_sub)(struct item_data *item, int gmlv, int unused);
+	int (*canguildstore_sub)(struct item_data *item, int gmlv, int unused);
+	int (*canmail_sub)(struct item_data *item, int gmlv, int unused);
+	int (*canauction_sub)(struct item_data *item, int gmlv, int unused);
+	int (*isrestricted)(struct item *item, int gmlv, int gmlv2, int (*func)(struct item_data *, int, int));
+	int (*isidentified)(int nameid);
+	int (*isidentified2)(struct item_data *data);
+	bool (*read_combodb_libconfig)(void);
+	bool (*read_combodb_libconfig_sub)(struct config_setting_t *it, int idx, const char *source);
+	int (*gendercheck)(struct item_data *id);
+	int (*validate_entry)(struct item_data *entry, int n, const char *source);
+	void (*readdb_options_additional_fields)(struct itemdb_option *ito, struct config_setting_t *t, const char *source);
+	void (*readdb_additional_fields)(int itemid, struct config_setting_t *it, int n, const char *source,
+	                                 struct DBMap *itemconst_db);
+	void (*readdb_job_sub)(struct item_data *id, struct config_setting_t *t);
+	int (*readdb_libconfig_sub)(struct config_setting_t *it, int n, const char *source, struct DBMap *itemconst_db);
+	int (*readdb_libconfig)(const char *filename, struct DBMap *itemconst_db);
+	uint64 (*unique_id)(struct map_session_data *sd);
+	void (*read)(bool minimal);
+	void (*destroy_item_data)(struct item_data *self, int free_self);
+	int (*final_sub)(union DBKey key, struct DBData *data, va_list ap);
+	int (*options_final_sub)(union DBKey key, struct DBData *data, va_list ap);
+	int (*reform_final_sub)(union DBKey key, struct DBData *data, va_list ap);
+	void (*clear)(bool total);
+	struct item_combo *(*id2combo)(int id);
+	bool (*is_item_usable)(struct item_data *item);
+	int (*addname_sub)(union DBKey key, struct DBData *data, va_list ap);
+	bool (*read_libconfig_lapineddukddak)(void);
+	bool (*read_libconfig_lapineddukddak_sub)(struct config_setting_t *it, const char *source);
+	bool (*read_libconfig_lapineddukddak_sub_sources)(struct config_setting_t *sources, struct item_data *data);
 
-	bool (*read_libconfig_lapineupgrade) (void);
-	bool (*read_libconfig_lapineupgrade_sub) (struct config_setting_t *it, const char *source);
-	bool (*read_libconfig_lapineupgrade_sub_targets) (struct config_setting_t *sources, struct item_data *data);
-	bool (*read_libconfig_item_reform_info) (void);
-	bool (*read_libconfig_item_reform_info_sub) (struct config_setting_t *it, const char *source);
-	bool (*read_libconfig_item_reform_info_materials) (struct config_setting_t *it, struct item_reform *ir);
-	bool (*read_libconfig_item_reform_info_reqinfo) (struct config_setting_t *it, struct item_reform *ir);
-	bool (*read_libconfig_item_reform_info_behinfo) (struct config_setting_t *it, struct item_reform *ir);
-	bool (*read_libconfig_item_reform_list) (void);
-	bool (*read_libconfig_item_reform_list_sub) (struct config_setting_t *it, const char *source);
-	void (*item_reform) (struct map_session_data *sd, const struct item_reform *ir, int idx);
-	const struct item_reform *(*search_reform_baseitem) (const struct item_data *itd, int nameid);
-
+	bool (*read_libconfig_lapineupgrade)(void);
+	bool (*read_libconfig_lapineupgrade_sub)(struct config_setting_t *it, const char *source);
+	bool (*read_libconfig_lapineupgrade_sub_targets)(struct config_setting_t *sources, struct item_data *data);
+	bool (*read_libconfig_item_reform_info)(void);
+	bool (*read_libconfig_item_reform_info_sub)(struct config_setting_t *it, const char *source);
+	bool (*read_libconfig_item_reform_info_materials)(struct config_setting_t *it, struct item_reform *ir);
+	bool (*read_libconfig_item_reform_info_reqinfo)(struct config_setting_t *it, struct item_reform *ir);
+	bool (*read_libconfig_item_reform_info_behinfo)(struct config_setting_t *it, struct item_reform *ir);
+	bool (*read_libconfig_item_reform_list)(void);
+	bool (*read_libconfig_item_reform_list_sub)(struct config_setting_t *it, const char *source);
+	void (*item_reform)(struct map_session_data *sd, const struct item_reform *ir, int idx);
+	const struct item_reform *(*search_reform_baseitem)(const struct item_data *itd, int nameid);
 };
 
 #ifdef HERCULES_CORE

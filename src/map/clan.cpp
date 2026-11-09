@@ -104,7 +104,8 @@ static struct map_session_data *clan_getonlinesd(struct clan *c)
 	int i;
 	nullpo_retr(NULL, c);
 
-	ARR_FIND(0, VECTOR_LENGTH(c->members), i, (VECTOR_INDEX(c->members, i).sd != NULL && VECTOR_INDEX(c->members, i).online == 1));
+	ARR_FIND(0, VECTOR_LENGTH(c->members), i,
+	         (VECTOR_INDEX(c->members, i).sd != NULL && VECTOR_INDEX(c->members, i).online == 1));
 	return (i < VECTOR_LENGTH(c->members)) ? VECTOR_INDEX(c->members, i).sd : NULL;
 }
 
@@ -177,7 +178,7 @@ static bool clan_join(struct map_session_data *sd, int clan_id)
 	if (sd->status.guild_id > 0 || sd->guild != NULL) {
 		ShowError("clan_join: Player already joined in a guild. char_id: %d\n", sd->status.char_id);
 		return false;
-	} else if ( sd->status.clan_id > 0 || sd->clan != NULL) {
+	} else if (sd->status.clan_id > 0 || sd->clan != NULL) {
 		ShowError("clan_join: Player already joined in a clan. char_id: %d\n", sd->status.char_id);
 		return false;
 	}
@@ -204,9 +205,9 @@ static bool clan_join(struct map_session_data *sd, int clan_id)
 
 	VECTOR_ENSURE(c->members, 1, 1);
 
-	m.sd = sd;
-	m.char_id = sd->status.char_id;
-	m.online = 1;
+	m.sd         = sd;
+	m.char_id    = sd->status.char_id;
+	m.online     = 1;
 	m.last_login = sd->status.last_login;
 	VECTOR_PUSH(c->members, m);
 
@@ -214,7 +215,7 @@ static bool clan_join(struct map_session_data *sd, int clan_id)
 	c->member_count++;
 
 	sd->status.clan_id = c->clan_id;
-	sd->clan = c;
+	sd->clan           = c;
 
 	sc_start2(NULL, &sd->bl, SC_CLAN_INFO, 10000, 0, c->clan_id, INFINITE_DURATION, 0);
 	status_calc_pc(sd, SCO_FORCE);
@@ -239,7 +240,8 @@ static void clan_member_online(struct map_session_data *sd, bool first)
 
 	// For invalid values we must reset it to 0 (no clan)
 	if (sd->status.clan_id < 0) {
-		ShowError("clan_member_online: Invalid clan id, changing to '0'. clan_id='%d' char_id='%d'\n", sd->status.clan_id, sd->status.char_id);
+		ShowError("clan_member_online: Invalid clan id, changing to '0'. clan_id='%d' char_id='%d'\n",
+		          sd->status.clan_id, sd->status.char_id);
 		sd->status.clan_id = 0;
 		return;
 	}
@@ -249,7 +251,7 @@ static void clan_member_online(struct map_session_data *sd, bool first)
 		// This is a silent return because it will reset clan_id in case
 		// a custom clan that was removed and this is a remaining member
 		sd->status.clan_id = 0;
-		sd->clan = NULL;
+		sd->clan           = NULL;
 		if (!first) {
 			status_change_end(&sd->bl, SC_CLAN_INFO, INVALID_TIMER); // Remove the status
 			status_calc_pc(sd, SCO_FORCE);
@@ -267,14 +269,14 @@ static void clan_member_online(struct map_session_data *sd, bool first)
 		return;
 	}
 
-	i = clan->getindex(c, sd->status.char_id);
+	i          = clan->getindex(c, sd->status.char_id);
 	inactivity = (int)(time(NULL) - sd->status.last_login);
 	if (i == INDEX_NOT_FOUND) {
 		struct clan_member m;
 
 		if (c->kick_time > 0 && inactivity > c->kick_time) {
 			sd->status.clan_id = 0;
-			sd->clan = NULL;
+			sd->clan           = NULL;
 			clan->buff_end(sd, c);
 			status_change_end(&sd->bl, SC_CLAN_INFO, INVALID_TIMER);
 			clif->clan_leave(sd);
@@ -283,33 +285,32 @@ static void clan_member_online(struct map_session_data *sd, bool first)
 
 		VECTOR_ENSURE(c->members, 1, 1);
 
-		m.sd = sd;
-		m.char_id = sd->status.char_id;
-		m.online = 1;
+		m.sd         = sd;
+		m.char_id    = sd->status.char_id;
+		m.online     = 1;
 		m.last_login = sd->status.last_login;
 		VECTOR_PUSH(c->members, m);
 	} else {
 		struct clan_member *m = &VECTOR_INDEX(c->members, i);
 
-
 		if (c->kick_time > 0 && inactivity > c->kick_time) {
 			if (m->online == 1) {
 				m->online = 0;
-				m->sd = NULL;
+				m->sd     = NULL;
 				c->connect_member--;
 				c->member_count--;
 			}
 			clan->buff_end(sd, c);
 			sd->status.clan_id = 0;
-			sd->clan = NULL;
+			sd->clan           = NULL;
 			status_change_end(&sd->bl, SC_CLAN_INFO, INVALID_TIMER);
 			VECTOR_ERASE(c->members, i);
 			clif->clan_leave(sd);
 			return;
 		}
 
-		m->sd = sd;
-		m->online = 1;
+		m->sd         = sd;
+		m->online     = 1;
 		m->last_login = sd->status.last_login;
 	}
 
@@ -370,7 +371,7 @@ static bool clan_leave(struct map_session_data *sd, bool first)
 	}
 
 	sd->status.clan_id = 0;
-	sd->clan = NULL;
+	sd->clan           = NULL;
 	clan->buff_end(sd, c);
 
 	status_change_end(&sd->bl, SC_CLAN_INFO, INVALID_TIMER);
@@ -406,12 +407,11 @@ static void clan_member_offline(struct map_session_data *sd)
 	if (i != INDEX_NOT_FOUND && VECTOR_INDEX(c->members, i).online == 1) {
 		// Only if it is online, because unit->free is called twice
 		VECTOR_INDEX(c->members, i).online = 0;
-		VECTOR_INDEX(c->members, i).sd = NULL;
+		VECTOR_INDEX(c->members, i).sd     = NULL;
 		c->connect_member--;
 	}
 	clif->clan_onlinecount(c);
 }
-
 
 /**
  * Sends a message to the whole clan
@@ -430,7 +430,8 @@ static bool clan_send_message(struct map_session_data *sd, const char *mes)
 	clan->recv_message(sd->clan, mes, len);
 
 	// Chat logging type 'C' / Clan Chat
-	logs->chat(LOG_CHAT_CLAN, sd->status.clan_id, sd->status.char_id, sd->status.account_id, mapindex_id2name(sd->mapindex), sd->bl.x, sd->bl.y, NULL, mes);
+	logs->chat(LOG_CHAT_CLAN, sd->status.clan_id, sd->status.char_id, sd->status.account_id,
+	           mapindex_id2name(sd->mapindex), sd->bl.x, sd->bl.y, NULL, mes);
 
 	return true;
 }
@@ -476,8 +477,7 @@ static int clan_get_id(const struct block_list *bl)
 		const struct pet_data *pd = BL_UCCAST(BL_PET, bl);
 		if (pd->msd != NULL)
 			return pd->msd->status.clan_id;
-	}
-		break;
+	} break;
 	case BL_MOB: {
 		const struct mob_data *md = BL_UCCAST(BL_MOB, bl);
 		const struct map_session_data *msd;
@@ -491,21 +491,18 @@ static int clan_get_id(const struct block_list *bl)
 		if (hd->master != NULL) {
 			return hd->master->status.clan_id;
 		}
-	}
-		break;
+	} break;
 	case BL_MER: {
 		const struct mercenary_data *md = BL_UCCAST(BL_MER, bl);
 		if (md->master != NULL) {
 			return md->master->status.clan_id;
 		}
-	}
-		break;
+	} break;
 	case BL_SKILL: {
 		const struct skill_unit *su = BL_UCCAST(BL_SKILL, bl);
 		if (su->group != NULL)
 			return su->group->clan_id;
-	}
-		break;
+	} break;
 	case BL_NUL:
 	case BL_ITEM:
 	case BL_ELEM:
@@ -527,9 +524,9 @@ static int clan_inactivity_kick(int tid, int64 tick, int id, intptr_t data)
 
 	if ((c = clan->search(id)) != NULL) {
 		if (!c->kick_time || c->tid != tid || tid == INVALID_TIMER || c->tid == INVALID_TIMER) {
-		  ShowError("Timer Mismatch (Time: %d seconds) %d != %d", c->kick_time, c->tid, tid);
-		  Assert_report(0);
-		  return 0;
+			ShowError("Timer Mismatch (Time: %d seconds) %d != %d", c->kick_time, c->tid, tid);
+			Assert_report(0);
+			return 0;
 		}
 		for (i = 0; i < VECTOR_LENGTH(c->members); i++) {
 			struct clan_member *m = &VECTOR_INDEX(c->members, i);
@@ -547,7 +544,7 @@ static int clan_inactivity_kick(int tid, int64 tick, int id, intptr_t data)
 				clif->clan_onlinecount(c);
 			}
 		}
-		//Perform the kick for offline members that didn't connect after a server restart
+		// Perform the kick for offline members that didn't connect after a server restart
 		c->received = false;
 		intif->clan_kickoffline(c->clan_id, c->kick_time);
 		c->tid = timer->add(timer->gettick() + c->check_time, clan->inactivity_kick, c->clan_id, 0);
@@ -564,8 +561,8 @@ static int clan_request_kickoffline(int tid, int64 tick, int id, intptr_t data)
 
 	if ((c = clan->search(id)) != NULL) {
 		if (c->req_kick_tid != tid || c->req_kick_tid == INVALID_TIMER) {
-		  ShowError("Timer Mismatch %d != %d", c->tid, tid);
-		  return 0;
+			ShowError("Timer Mismatch %d != %d", c->tid, tid);
+			return 0;
 		}
 
 		if (c->received) {
@@ -588,8 +585,8 @@ static int clan_request_membercount(int tid, int64 tick, int id, intptr_t data)
 
 	if ((c = clan->search(id)) != NULL) {
 		if (c->req_count_tid != tid || c->req_count_tid == INVALID_TIMER) {
-		  ShowError("Timer Mismatch %d != %d", c->tid, tid);
-		  return 0;
+			ShowError("Timer Mismatch %d != %d", c->tid, tid);
+			return 0;
 		}
 
 		if (c->received) {
@@ -690,7 +687,8 @@ static int clan_read_db_sub(struct config_setting_t *settings, const char *sourc
 			}
 
 			if (strlen(aConst) > NAME_LENGTH) {
-				ShowError("clan_read_db: Clan Name '%s' is longer than %d characters, skipping...\n", aConst, NAME_LENGTH);
+				ShowError("clan_read_db: Clan Name '%s' is longer than %d characters, skipping...\n", aConst,
+				          NAME_LENGTH);
 				return false;
 			}
 
@@ -710,7 +708,8 @@ static int clan_read_db_sub(struct config_setting_t *settings, const char *sourc
 			}
 
 			if (strlen(aName) > NAME_LENGTH) {
-				ShowError("clan_read_db: Clan Name '%s' is longer than %d characters, skipping...\n", aName, NAME_LENGTH);
+				ShowError("clan_read_db: Clan Name '%s' is longer than %d characters, skipping...\n", aName,
+				          NAME_LENGTH);
 				return false;
 			}
 
@@ -741,17 +740,19 @@ static int clan_read_db_sub(struct config_setting_t *settings, const char *sourc
 		safestrncpy(c->master, aLeader, NAME_LENGTH);
 		safestrncpy(c->map, aMap, MAP_NAME_LENGTH_EXT);
 		c->connect_member = 0;
-		c->member_count = 0; // Char server will count members for us
-		c->received = false;
-		c->req_count_tid = INVALID_TIMER;
-		c->req_kick_tid = INVALID_TIMER;
-		c->tid = INVALID_TIMER;
+		c->member_count   = 0; // Char server will count members for us
+		c->received       = false;
+		c->req_count_tid  = INVALID_TIMER;
+		c->req_kick_tid   = INVALID_TIMER;
+		c->tid            = INVALID_TIMER;
 
 		if (libconfig->setting_lookup_int(cl, "MaxMembers", &max_members)) {
 			if (max_members > 0) {
 				c->max_member = max_members;
 			} else {
-				ShowError("clan_read_db: Clan #%d has invalid value for 'MaxMembers' setting, defaulting to 'clan->max'...\n", id);
+				ShowError(
+				  "clan_read_db: Clan #%d has invalid value for 'MaxMembers' setting, defaulting to 'clan->max'...\n",
+				  id);
 				c->max_member = clan->max;
 			}
 		} else {
@@ -784,7 +785,9 @@ static int clan_read_db_sub(struct config_setting_t *settings, const char *sourc
 				const char *allyConst;
 
 				if (a > clan->max_relations) {
-					ShowWarning("clan_read_db: Clan %d has more allies(%d) than allowed(%d), reading only the first %d...\n", c->clan_id, a, clan->max_relations, clan->max_relations);
+					ShowWarning(
+					  "clan_read_db: Clan %d has more allies(%d) than allowed(%d), reading only the first %d...\n",
+					  c->clan_id, a, clan->max_relations, clan->max_relations);
 					a = clan->max_relations;
 				}
 
@@ -792,18 +795,20 @@ static int clan_read_db_sub(struct config_setting_t *settings, const char *sourc
 				for (i = 0; i < a; i++) {
 					struct clan_relationship r;
 					if ((allyConst = libconfig->setting_get_string_elem(allies, i)) != NULL) {
-						ARR_FIND(0, VECTOR_LENGTH(c->allies), j,  strcmp(VECTOR_INDEX(c->allies, j).constant, allyConst) == 0);
+						ARR_FIND(0, VECTOR_LENGTH(c->allies), j,
+						         strcmp(VECTOR_INDEX(c->allies, j).constant, allyConst) == 0);
 						if (j != VECTOR_LENGTH(c->allies)) {
-							ShowError("clan_read_db: Duplicate entry '%s' in allies for Clan %d in '%s', skipping...\n", allyConst, c->clan_id, source);
+							ShowError("clan_read_db: Duplicate entry '%s' in allies for Clan %d in '%s', skipping...\n",
+							          allyConst, c->clan_id, source);
 							continue;
 						} else if (strcmp(allyConst, c->constant) == 0) {
-							ShowError("clan_read_db: Clans can't be allies of themselves! Clan Id: %d, in '%s'\n", c->clan_id, source);
+							ShowError("clan_read_db: Clans can't be allies of themselves! Clan Id: %d, in '%s'\n",
+							          c->clan_id, source);
 							continue;
 						}
 						safestrncpy(r.constant, allyConst, NAME_LENGTH);
 						VECTOR_PUSH(c->allies, r);
 					}
-
 				}
 			}
 		}
@@ -817,7 +822,9 @@ static int clan_read_db_sub(struct config_setting_t *settings, const char *sourc
 				const char *antagonistConst;
 
 				if (a > clan->max_relations) {
-					ShowWarning("clan_read_db: Clan %d has more antagonists(%d) than allowed(%d), reading only the first %d...\n", c->clan_id, a, clan->max_relations, clan->max_relations);
+					ShowWarning(
+					  "clan_read_db: Clan %d has more antagonists(%d) than allowed(%d), reading only the first %d...\n",
+					  c->clan_id, a, clan->max_relations, clan->max_relations);
 					a = clan->max_relations;
 				}
 
@@ -825,12 +832,16 @@ static int clan_read_db_sub(struct config_setting_t *settings, const char *sourc
 				for (i = 0; i < a; i++) {
 					struct clan_relationship r;
 					if ((antagonistConst = libconfig->setting_get_string_elem(antagonists, i)) != NULL) {
-						ARR_FIND(0, VECTOR_LENGTH(c->antagonists), j,  strcmp(VECTOR_INDEX(c->antagonists, j).constant, antagonistConst) == 0);
+						ARR_FIND(0, VECTOR_LENGTH(c->antagonists), j,
+						         strcmp(VECTOR_INDEX(c->antagonists, j).constant, antagonistConst) == 0);
 						if (j != VECTOR_LENGTH(c->antagonists)) {
-							ShowError("clan_read_db: Duplicate entry '%s' in antagonists for Clan %d in '%s', skipping...\n", antagonistConst, c->clan_id, source);
+							ShowError(
+							  "clan_read_db: Duplicate entry '%s' in antagonists for Clan %d in '%s', skipping...\n",
+							  antagonistConst, c->clan_id, source);
 							continue;
 						} else if (strcmp(antagonistConst, c->constant) == 0) {
-							ShowError("clan_read_db: Clans can't be antagonists of themselves! Clan Id: %d, in '%s'\n", c->clan_id, source);
+							ShowError("clan_read_db: Clans can't be antagonists of themselves! Clan Id: %d, in '%s'\n",
+							          c->clan_id, source);
 							continue;
 						}
 						safestrncpy(r.constant, antagonistConst, NAME_LENGTH);
@@ -844,8 +855,8 @@ static int clan_read_db_sub(struct config_setting_t *settings, const char *sourc
 		if (c->kick_time > 0) {
 			c->tid = timer->add(timer->gettick() + c->check_time, clan->inactivity_kick, c->clan_id, 0);
 		}
-		c->received = false;
-		c->req_state = reload ? CLAN_REQ_RELOAD : CLAN_REQ_FIRST;
+		c->received      = false;
+		c->req_state     = reload ? CLAN_REQ_RELOAD : CLAN_REQ_FIRST;
 		c->req_count_tid = timer->add(timer->gettick() + clan->req_timeout, clan->request_membercount, c->clan_id, 0);
 		idb_put(clan->db, c->clan_id, c);
 		VECTOR_INIT(c->members);
@@ -858,15 +869,18 @@ static int clan_read_db_sub(struct config_setting_t *settings, const char *sourc
 		struct clan *c;
 		int i;
 
-		for (struct clan *c_ok = (struct clan *)dbi_first(iter); dbi_exists(iter); c_ok = (struct clan *)dbi_next(iter)) {
+		for (
+		  struct clan *c_ok = (struct clan *)dbi_first(iter); dbi_exists(iter); c_ok = (struct clan *)dbi_next(iter)
+		) {
 			i = VECTOR_LENGTH(c_ok->allies);
-			while ( i > 0) {
+			while (i > 0) {
 				struct clan_relationship *r;
 
 				i--;
 				r = &VECTOR_INDEX(c_ok->allies, i);
 				if ((c = clan->searchname(r->constant)) == NULL) {
-					ShowError("clan_read_db: Invalid (nonexistent) Ally '%s' for clan %d in '%s', skipping ally...\n", r->constant, c_ok->clan_id, source);
+					ShowError("clan_read_db: Invalid (nonexistent) Ally '%s' for clan %d in '%s', skipping ally...\n",
+					          r->constant, c_ok->clan_id, source);
 					VECTOR_ERASE(c_ok->allies, i);
 				} else {
 					r->clan_id = c->clan_id;
@@ -874,13 +888,15 @@ static int clan_read_db_sub(struct config_setting_t *settings, const char *sourc
 			}
 
 			i = VECTOR_LENGTH(c_ok->antagonists);
-			while ( i > 0) {
+			while (i > 0) {
 				struct clan_relationship *r;
 
 				i--;
 				r = &VECTOR_INDEX(c_ok->antagonists, i);
 				if ((c = clan->searchname(r->constant)) == NULL) {
-					ShowError("clan_read_db: Invalid (nonexistent) Antagonist '%s' for clan %d in '%s', skipping antagonist...", r->constant, c_ok->clan_id, source);
+					ShowError(
+					  "clan_read_db: Invalid (nonexistent) Antagonist '%s' for clan %d in '%s', skipping antagonist...",
+					  r->constant, c_ok->clan_id, source);
 					VECTOR_ERASE(c_ok->antagonists, i);
 				} else {
 					r->clan_id = c->clan_id;
@@ -890,7 +906,9 @@ static int clan_read_db_sub(struct config_setting_t *settings, const char *sourc
 		dbi_destroy(iter);
 	}
 
-	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' valid clans of '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", valid, total, source);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' valid clans of '" CL_WHITE "%d" CL_RESET
+	           "' entries in '" CL_WHITE "%s" CL_RESET "'.\n",
+	           valid, total, source);
 	return valid;
 }
 
@@ -927,12 +945,15 @@ static bool clan_config_read(bool reload)
 {
 	struct config_t clan_conf;
 	struct config_setting_t *settings = NULL;
-	const char *config_filename = "conf/clans.conf"; // FIXME: hardcoded name
+	const char *config_filename       = "conf/clans.conf"; // FIXME: hardcoded name
 	int kicktime = 0, kickchecktime = 0;
 
 	if (reload) {
 		struct DBIterator *iter = db_iterator(clan->db);
-		for (struct clan *c_clear = (struct clan *)dbi_first(iter); dbi_exists(iter); c_clear = (struct clan *)dbi_next(iter)) {
+		for (
+		  struct clan *c_clear = (struct clan *)dbi_first(iter); dbi_exists(iter);
+		  c_clear              = (struct clan *)dbi_next(iter)
+		) {
 			if (c_clear->buff.script != NULL) {
 				script->free_code(c_clear->buff.script);
 			}
@@ -966,7 +987,7 @@ static bool clan_config_read(bool reload)
 	}
 
 	// On config file we set the time in hours but here we use in seconds
-	clan->kicktime = 60 * 60 * kicktime;
+	clan->kicktime  = 60 * 60 * kicktime;
 	clan->checktime = 60 * 60 * std::max(kickchecktime, 1) * 1000;
 
 	clan->config_read_additional_settings(settings, config_filename);
@@ -1038,39 +1059,39 @@ void clan_defaults(void)
 {
 	clan = &clan_s;
 
-	clan->init = do_init_clan;
-	clan->final = do_final_clan;
+	clan->init                            = do_init_clan;
+	clan->final                           = do_final_clan;
 	/* */
-	clan->db = NULL;
-	clan->max = 0;
-	clan->max_relations = 0;
-	clan->kicktime = 0;
-	clan->checktime = 0;
-	clan->req_timeout = 60;
+	clan->db                              = NULL;
+	clan->max                             = 0;
+	clan->max_relations                   = 0;
+	clan->kicktime                        = 0;
+	clan->checktime                       = 0;
+	clan->req_timeout                     = 60;
 	/* */
-	clan->config_read = clan_config_read;
+	clan->config_read                     = clan_config_read;
 	clan->config_read_additional_settings = clan_config_read_additional_settings;
-	clan->read_db = clan_read_db;
-	clan->read_db_sub = clan_read_db_sub;
-	clan->read_db_additional_fields = clan_read_db_additional_fields;
-	clan->read_buffs = clan_read_buffs;
-	clan->search = clan_search;
-	clan->searchname = clan_searchname;
-	clan->getonlinesd = clan_getonlinesd;
-	clan->getindex = clan_getindex;
-	clan->join = clan_join;
-	clan->member_online = clan_member_online;
-	clan->leave = clan_leave;
-	clan->send_message = clan_send_message;
-	clan->recv_message = clan_recv_message;
-	clan->member_offline = clan_member_offline;
-	clan->set_constants = clan_set_constants;
-	clan->get_id = clan_get_id;
-	clan->buff_start = clan_buff_start;
-	clan->buff_end = clan_buff_end;
-	clan->reload = clan_reload;
-	clan->rejoin = clan_rejoin;
-	clan->inactivity_kick = clan_inactivity_kick;
-	clan->request_kickoffline = clan_request_kickoffline;
-	clan->request_membercount = clan_request_membercount;
+	clan->read_db                         = clan_read_db;
+	clan->read_db_sub                     = clan_read_db_sub;
+	clan->read_db_additional_fields       = clan_read_db_additional_fields;
+	clan->read_buffs                      = clan_read_buffs;
+	clan->search                          = clan_search;
+	clan->searchname                      = clan_searchname;
+	clan->getonlinesd                     = clan_getonlinesd;
+	clan->getindex                        = clan_getindex;
+	clan->join                            = clan_join;
+	clan->member_online                   = clan_member_online;
+	clan->leave                           = clan_leave;
+	clan->send_message                    = clan_send_message;
+	clan->recv_message                    = clan_recv_message;
+	clan->member_offline                  = clan_member_offline;
+	clan->set_constants                   = clan_set_constants;
+	clan->get_id                          = clan_get_id;
+	clan->buff_start                      = clan_buff_start;
+	clan->buff_end                        = clan_buff_end;
+	clan->reload                          = clan_reload;
+	clan->rejoin                          = clan_rejoin;
+	clan->inactivity_kick                 = clan_inactivity_kick;
+	clan->request_kickoffline             = clan_request_kickoffline;
+	clan->request_membercount             = clan_request_membercount;
 }

@@ -109,16 +109,16 @@
 HPMDATACHECK_DEFS
 
 struct HPM_atcommand_list {
-	//tracking currently not enabled
-	// - requires modifying how plugins calls atcommand creation
-	// - needs load/unload during runtime support
-	//unsigned int pID;/* plugin id */
+	// tracking currently not enabled
+	//  - requires modifying how plugins calls atcommand creation
+	//  - needs load/unload during runtime support
+	// unsigned int pID;/* plugin id */
 	char name[ATCOMMAND_LENGTH];
 	AtCommandFunc func;
 };
 
 static struct HPM_atcommand_list *atcommand_list = NULL;
-static unsigned int atcommand_list_items = 0;
+static unsigned int atcommand_list_items         = 0;
 
 /**
  * HPM plugin data store validator sub-handler (map-server)
@@ -153,9 +153,9 @@ bool HPM_map_data_store_validate(enum HPluginDataTypes type, struct hplugin_data
 
 void HPM_map_plugin_load_sub(struct hplugin *plugin)
 {
-	plugin->hpi->sql_handle = map->mysql_handle;
-	plugin->hpi->addCommand = atcommand->create;
-	plugin->hpi->addScript  = script->addScript;
+	plugin->hpi->sql_handle       = map->mysql_handle;
+	plugin->hpi->addCommand       = atcommand->create;
+	plugin->hpi->addScript        = script->addScript;
 	plugin->hpi->addPCGPermission = HPM_map_add_group_permission;
 }
 
@@ -163,8 +163,8 @@ bool HPM_map_add_atcommand(const char *name, AtCommandFunc func)
 {
 	unsigned int i = 0;
 
-	for(i = 0; i < atcommand_list_items; i++) {
-		if( !strcmpi(atcommand_list[i].name,name) ) {
+	for (i = 0; i < atcommand_list_items; i++) {
+		if (!strcmpi(atcommand_list[i].name, name)) {
 			ShowDebug("HPM_map_add_atcommand: duplicate command '%s', skipping...\n", name);
 			return false;
 		}
@@ -172,7 +172,7 @@ bool HPM_map_add_atcommand(const char *name, AtCommandFunc func)
 
 	i = atcommand_list_items;
 
-	RECREATE(atcommand_list, struct HPM_atcommand_list , ++atcommand_list_items);
+	RECREATE(atcommand_list, struct HPM_atcommand_list, ++atcommand_list_items);
 
 	safestrncpy(atcommand_list[i].name, name, sizeof(atcommand_list[i].name));
 	atcommand_list[i].func = func;
@@ -184,8 +184,8 @@ void HPM_map_atcommands(void)
 {
 	unsigned int i;
 
-	for(i = 0; i < atcommand_list_items; i++) {
-		atcommand->add(atcommand_list[i].name,atcommand_list[i].func,true);
+	for (i = 0; i < atcommand_list_items; i++) {
+		atcommand->add(atcommand_list[i].name, atcommand_list[i].func, true);
 	}
 }
 
@@ -198,14 +198,14 @@ void HPM_map_add_group_permission(unsigned int pluginID, const char *name, unsig
 
 	RECREATE(pcg->HPMpermissions, struct pc_groups_new_permission, ++pcg->HPMpermissions_count);
 
-	pcg->HPMpermissions[index].pID = pluginID;
+	pcg->HPMpermissions[index].pID  = pluginID;
 	pcg->HPMpermissions[index].name = aStrdup(name);
 	pcg->HPMpermissions[index].mask = mask;
 }
 
 void HPM_map_do_init(void)
 {
-	HPM->load_sub = HPM_map_plugin_load_sub;
+	HPM->load_sub                = HPM_map_plugin_load_sub;
 	HPM->data_store_validate_sub = HPM_map_data_store_validate;
 	HPM->datacheck_init(HPMDataCheck, HPMDataCheckLen, HPMDataCheckVer);
 	HPM_shared_symbols(SERVER_TYPE_MAP);

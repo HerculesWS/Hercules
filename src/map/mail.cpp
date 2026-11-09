@@ -41,9 +41,9 @@ static void mail_clear(struct map_session_data *sd)
 {
 	nullpo_retv(sd);
 	sd->mail.nameid = 0;
-	sd->mail.index = 0;
+	sd->mail.index  = 0;
 	sd->mail.amount = 0;
-	sd->mail.zeny = 0;
+	sd->mail.zeny   = 0;
 
 	return;
 }
@@ -52,8 +52,7 @@ static int mail_removeitem(struct map_session_data *sd, short flag)
 {
 	nullpo_ret(sd);
 
-	if( sd->mail.amount )
-	{
+	if (sd->mail.amount) {
 		if (flag) // Item send
 			pc->delitem(sd, sd->mail.index, sd->mail.amount, 1, DELITEM_NORMAL, LOG_TYPE_MAIL);
 		else
@@ -61,7 +60,7 @@ static int mail_removeitem(struct map_session_data *sd, short flag)
 	}
 
 	sd->mail.nameid = 0;
-	sd->mail.index = 0;
+	sd->mail.index  = 0;
 	sd->mail.amount = 0;
 	return 1;
 }
@@ -70,9 +69,8 @@ static int mail_removezeny(struct map_session_data *sd, short flag)
 {
 	nullpo_ret(sd);
 
-	if (flag && sd->mail.zeny > 0)
-	{  //Zeny send
-		pc->payzeny(sd,sd->mail.zeny,LOG_TYPE_MAIL, NULL);
+	if (flag && sd->mail.zeny > 0) { // Zeny send
+		pc->payzeny(sd, sd->mail.zeny, LOG_TYPE_MAIL, NULL);
 	}
 	sd->mail.zeny = 0;
 
@@ -86,11 +84,11 @@ static unsigned char mail_setitem(struct map_session_data *sd, int idx, int amou
 	if (pc_istrading_except_npc(sd) || (sd->npc_id != 0 && sd->state.using_megaphone == 0))
 		return 1;
 
-	if( idx == 0 ) { // Zeny Transfer
-		if( amount < 0 || !pc_can_give_items(sd) )
+	if (idx == 0) { // Zeny Transfer
+		if (amount < 0 || !pc_can_give_items(sd))
 			return 1;
 
-		if( amount > sd->status.zeny )
+		if (amount > sd->status.zeny)
 			amount = sd->status.zeny;
 
 		sd->mail.zeny = amount;
@@ -102,14 +100,17 @@ static unsigned char mail_setitem(struct map_session_data *sd, int idx, int amou
 
 		if (idx < 0 || idx >= sd->status.inventorySize)
 			return 1;
-		if( amount <= 0 || amount > sd->status.inventory[idx].amount )
+		if (amount <= 0 || amount > sd->status.inventory[idx].amount)
 			return 1;
-		if( !pc_can_give_items(sd) || sd->status.inventory[idx].expire_time ||
-			!itemdb_canmail(&sd->status.inventory[idx],pc_get_group_level(sd)) ||
-			(sd->status.inventory[idx].bound && !pc_can_give_bound_items(sd)) )
+		if (
+		  !pc_can_give_items(sd)
+		  || sd->status.inventory[idx].expire_time
+		  || !itemdb_canmail(&sd->status.inventory[idx], pc_get_group_level(sd))
+		  || (sd->status.inventory[idx].bound && !pc_can_give_bound_items(sd))
+		)
 			return 1;
 
-		sd->mail.index = idx;
+		sd->mail.index  = idx;
 		sd->mail.nameid = sd->status.inventory[idx].nameid;
 		sd->mail.amount = amount;
 
@@ -121,38 +122,36 @@ static bool mail_setattachment(struct map_session_data *sd, struct mail_message 
 {
 	int n;
 
-	nullpo_retr(false,sd);
-	nullpo_retr(false,msg);
+	nullpo_retr(false, sd);
+	nullpo_retr(false, msg);
 
-	if( sd->mail.zeny < 0 || sd->mail.zeny > sd->status.zeny )
+	if (sd->mail.zeny < 0 || sd->mail.zeny > sd->status.zeny)
 		return false;
 
 	n = sd->mail.index;
 	Assert_retr(false, n >= 0 && n < sd->status.inventorySize);
-	if( sd->mail.amount )
-	{
-		if( sd->status.inventory[n].nameid != sd->mail.nameid )
+	if (sd->mail.amount) {
+		if (sd->status.inventory[n].nameid != sd->mail.nameid)
 			return false;
 
-		if( sd->status.inventory[n].amount < sd->mail.amount )
+		if (sd->status.inventory[n].amount < sd->mail.amount)
 			return false;
 
-		if( sd->weight > sd->max_weight )
+		if (sd->weight > sd->max_weight)
 			return false;
 
 		memcpy(&msg->item, &sd->status.inventory[n], sizeof(struct item));
 		msg->item.amount = sd->mail.amount;
-		if (msg->item.amount != sd->mail.amount)  // check for amount overflow
+		if (msg->item.amount != sd->mail.amount) // check for amount overflow
 			return false;
-	}
-	else
+	} else
 		memset(&msg->item, 0x00, sizeof(struct item));
 
 	msg->zeny = sd->mail.zeny;
 
 	// Removes the attachment from sender
-	mail->removeitem(sd,1);
-	mail->removezeny(sd,1);
+	mail->removeitem(sd, 1);
+	mail->removezeny(sd, 1);
 
 	return true;
 }
@@ -161,15 +160,13 @@ static void mail_getattachment(struct map_session_data *sd, int zeny, struct ite
 {
 	nullpo_retv(sd);
 	nullpo_retv(item);
-	if( item->nameid > 0 && item->amount > 0 )
-	{
+	if (item->nameid > 0 && item->amount > 0) {
 		pc->additem(sd, item, item->amount, LOG_TYPE_MAIL);
 		clif->mail_getattachment(sd->fd, 0);
 	}
 
-	if( zeny > 0 )
-	{  //Zeny receive
-		pc->getzeny(sd, zeny,LOG_TYPE_MAIL, NULL);
+	if (zeny > 0) { // Zeny receive
+		pc->getzeny(sd, zeny, LOG_TYPE_MAIL, NULL);
 	}
 }
 
@@ -177,7 +174,13 @@ static int mail_openmail(struct map_session_data *sd)
 {
 	nullpo_ret(sd);
 
-	if (sd->state.storage_flag != STORAGE_FLAG_CLOSED || sd->state.vending || sd->state.prevend || sd->state.buyingstore || sd->state.trading)
+	if (
+	  sd->state.storage_flag != STORAGE_FLAG_CLOSED
+	  || sd->state.vending
+	  || sd->state.prevend
+	  || sd->state.buyingstore
+	  || sd->state.trading
+	)
 		return 0;
 
 	clif->mail_window(sd->fd, 0);
@@ -190,15 +193,13 @@ static void mail_deliveryfail(struct map_session_data *sd, struct mail_message *
 	nullpo_retv(sd);
 	nullpo_retv(msg);
 
-	if( msg->item.amount > 0 )
-	{
+	if (msg->item.amount > 0) {
 		// Item receive (due to failure)
 		pc->additem(sd, &msg->item, msg->item.amount, LOG_TYPE_MAIL);
 	}
 
-	if( msg->zeny > 0 )
-	{
-		pc->getzeny(sd,msg->zeny,LOG_TYPE_MAIL, NULL); //Zeny receive (due to failure)
+	if (msg->zeny > 0) {
+		pc->getzeny(sd, msg->zeny, LOG_TYPE_MAIL, NULL); // Zeny receive (due to failure)
 	}
 
 	clif->mail_send(sd->fd, true);
@@ -208,7 +209,7 @@ static void mail_deliveryfail(struct map_session_data *sd, struct mail_message *
 static bool mail_invalid_operation(struct map_session_data *sd)
 {
 	nullpo_retr(false, sd);
-	if( !map->list[sd->bl.m].flag.town && !pc->can_use_command(sd, "@mail") ) {
+	if (!map->list[sd->bl.m].flag.town && !pc->can_use_command(sd, "@mail")) {
 		ShowWarning("clif->parse_Mail: char '%s' trying to do invalid mail operations.\n", sd->status.name);
 		return true;
 	}
@@ -220,13 +221,13 @@ void mail_defaults(void)
 {
 	mail = &mail_s;
 
-	mail->clear = mail_clear;
-	mail->removeitem = mail_removeitem;
-	mail->removezeny = mail_removezeny;
-	mail->setitem = mail_setitem;
-	mail->setattachment = mail_setattachment;
-	mail->getattachment = mail_getattachment;
-	mail->openmail = mail_openmail;
-	mail->deliveryfail = mail_deliveryfail;
+	mail->clear             = mail_clear;
+	mail->removeitem        = mail_removeitem;
+	mail->removezeny        = mail_removezeny;
+	mail->setitem           = mail_setitem;
+	mail->setattachment     = mail_setattachment;
+	mail->getattachment     = mail_getattachment;
+	mail->openmail          = mail_openmail;
+	mail->deliveryfail      = mail_deliveryfail;
 	mail->invalid_operation = mail_invalid_operation;
 }

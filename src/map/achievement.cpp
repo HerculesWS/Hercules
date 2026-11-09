@@ -1,24 +1,24 @@
 /**
-* This file is part of Hercules.
-* http://herc.ws - http://github.com/HerculesWS/Hercules
-*
-* Copyright (C) 2017-2026 Hercules Dev Team
-* Copyright (C) Smokexyz
-* Copyright (C) Dastgir
-*
-* Hercules is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * This file is part of Hercules.
+ * http://herc.ws - http://github.com/HerculesWS/Hercules
+ *
+ * Copyright (C) 2017-2026 Hercules Dev Team
+ * Copyright (C) Smokexyz
+ * Copyright (C) Dastgir
+ *
+ * Hercules is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #define HERCULES_CORE
 
 #include "map/achievement.h"
@@ -65,7 +65,7 @@ static const struct achievement_data *achievement_get(int aid)
 static struct achievement *achievement_ensure(struct map_session_data *sd, const struct achievement_data *ad)
 {
 	struct achievement *s_ad = NULL;
-	int i = 0;
+	int i                    = 0;
 
 	nullpo_retr(NULL, sd);
 	nullpo_retr(NULL, ad);
@@ -94,15 +94,16 @@ static struct achievement *achievement_ensure(struct map_session_data *sd, const
  * @param[out] rank             pointer to completed var
  * @param[out] curr_rank_points pointer to achievement rank var
  */
-static void achievement_calculate_totals(const struct map_session_data *sd, int *total_points, int *completed, int *rank, int *curr_rank_points)
+static void achievement_calculate_totals(const struct map_session_data *sd, int *total_points, int *completed,
+                                         int *rank, int *curr_rank_points)
 {
-	const struct achievement *a = NULL;
+	const struct achievement *a       = NULL;
 	const struct achievement_data *ad = NULL;
-	int tmp_curr_points = 0;
-	int tmp_total_points = 0;
-	int tmp_total_completed = 0;
-	int tmp_rank = 0;
-	int i = 0;
+	int tmp_curr_points               = 0;
+	int tmp_total_points              = 0;
+	int tmp_total_completed           = 0;
+	int tmp_rank                      = 0;
+	int i                             = 0;
 
 	nullpo_retv(sd);
 
@@ -120,9 +121,12 @@ static void achievement_calculate_totals(const struct map_session_data *sd, int 
 
 	if (tmp_total_points > 0) {
 		tmp_curr_points = tmp_total_points;
-		for (i = 0; i < MAX_ACHIEVEMENT_RANKS
-			 && tmp_curr_points >= VECTOR_INDEX(achievement->rank_exp, i)
-			 && i < VECTOR_LENGTH(achievement->rank_exp); i++) {
+		for (
+		  i = 0; i < MAX_ACHIEVEMENT_RANKS
+		         && tmp_curr_points >= VECTOR_INDEX(achievement->rank_exp, i)
+		         && i < VECTOR_LENGTH(achievement->rank_exp);
+		  i++
+		) {
 			tmp_curr_points -= VECTOR_INDEX(achievement->rank_exp, i);
 			tmp_rank++;
 		}
@@ -172,7 +176,8 @@ static bool achievement_check_complete(struct map_session_data *sd, const struct
  * @param obj_idx    [in] as the index of the objective.
  * @param progress   [in] as the progress of the objective to be added.
  */
-static void achievement_progress_add(struct map_session_data *sd, const struct achievement_data *ad, unsigned int obj_idx, int progress)
+static void achievement_progress_add(struct map_session_data *sd, const struct achievement_data *ad,
+                                     unsigned int obj_idx, int progress)
 {
 	struct achievement *ach = NULL;
 
@@ -190,7 +195,8 @@ static void achievement_progress_add(struct map_session_data *sd, const struct a
 
 	// Check and increment the objective count.
 	if (!ach->objective[obj_idx] || ach->objective[obj_idx] < VECTOR_INDEX(ad->objective, obj_idx).goal) {
-		ach->objective[obj_idx] = std::min(progress + ach->objective[obj_idx], VECTOR_INDEX(ad->objective, obj_idx).goal);
+		ach->objective[obj_idx]
+		  = std::min(progress + ach->objective[obj_idx], VECTOR_INDEX(ad->objective, obj_idx).goal);
 
 		// Check if the Achievement is complete.
 		if (achievement->check_complete(sd, ad)) {
@@ -213,7 +219,8 @@ static void achievement_progress_add(struct map_session_data *sd, const struct a
  * @param obj_idx     [in] index of the objective in question.
  * @param progress  progress of the objective in question.
  */
-static void achievement_progress_set(struct map_session_data *sd, const struct achievement_data *ad, unsigned int obj_idx, int progress)
+static void achievement_progress_set(struct map_session_data *sd, const struct achievement_data *ad,
+                                     unsigned int obj_idx, int progress)
 {
 	struct achievement *ach = NULL;
 
@@ -224,7 +231,6 @@ static void achievement_progress_set(struct map_session_data *sd, const struct a
 	Assert_retv(obj_idx < (size_t)VECTOR_LENGTH(ad->objective));
 
 	if (progress >= VECTOR_INDEX(ad->objective, obj_idx).goal) {
-
 		if ((ach = achievement->ensure(sd, ad)) == NULL)
 			return;
 
@@ -245,12 +251,13 @@ static void achievement_progress_set(struct map_session_data *sd, const struct a
 }
 
 /**
-* Checks if the given criteria satisfies the achievement's objective.
-* @param objective   [in] pointer to the achievement's objectives data.
-* @param criteria    [in] pointer to the current session's criteria as a comparand.
-* @return true if all criteria are satisfied, else false.
-*/
-static bool achievement_check_criteria(const struct achievement_objective *objective, const struct achievement_objective *criteria)
+ * Checks if the given criteria satisfies the achievement's objective.
+ * @param objective   [in] pointer to the achievement's objectives data.
+ * @param criteria    [in] pointer to the current session's criteria as a comparand.
+ * @return true if all criteria are satisfied, else false.
+ */
+static bool achievement_check_criteria(const struct achievement_objective *objective,
+                                       const struct achievement_objective *criteria)
 {
 	int i = 0, j = 0;
 
@@ -261,13 +268,21 @@ static bool achievement_check_criteria(const struct achievement_objective *objec
 	if (objective->unique_type == CRITERIA_UNIQUE_ITEM_ID && objective->unique.itemid != criteria->unique.itemid)
 		return false;
 	/* Weapon Level */
-	else if (objective->unique_type == CRITERIA_UNIQUE_WEAPON_LV && objective->unique.weapon_lv != criteria->unique.weapon_lv)
+	else if (
+	  objective->unique_type == CRITERIA_UNIQUE_WEAPON_LV && objective->unique.weapon_lv != criteria->unique.weapon_lv
+	)
 		return false;
 	/* Status Types */
-	else if (objective->unique_type == CRITERIA_UNIQUE_STATUS_TYPE && objective->unique.status_type != criteria->unique.status_type)
+	else if (
+	  objective->unique_type == CRITERIA_UNIQUE_STATUS_TYPE
+	  && objective->unique.status_type != criteria->unique.status_type
+	)
 		return false;
 	/* Achievement Id */
-	else if (objective->unique_type == CRITERIA_UNIQUE_ACHIEVE_ID && objective->unique.achieve_id != criteria->unique.achieve_id)
+	else if (
+	  objective->unique_type == CRITERIA_UNIQUE_ACHIEVE_ID
+	  && objective->unique.achieve_id != criteria->unique.achieve_id
+	)
 		return false;
 
 	/* Monster Id */
@@ -280,7 +295,8 @@ static bool achievement_check_criteria(const struct achievement_objective *objec
 
 	/* Job Ids */
 	for (i = 0; i < VECTOR_LENGTH(objective->jobid); i++) {
-		ARR_FIND(0, VECTOR_LENGTH(criteria->jobid), j, VECTOR_INDEX(criteria->jobid, j) != VECTOR_INDEX(objective->jobid, i));
+		ARR_FIND(0, VECTOR_LENGTH(criteria->jobid), j,
+		         VECTOR_INDEX(criteria->jobid, j) != VECTOR_INDEX(objective->jobid, i));
 		if (j < VECTOR_LENGTH(criteria->jobid))
 			return false;
 	}
@@ -296,7 +312,8 @@ static bool achievement_check_criteria(const struct achievement_objective *objec
  * @param[in] progress   as the current progress of the objective.
  * @return total number of updated achievements on success, 0 on failure.
  */
-static int achievement_validate_type(struct map_session_data *sd, enum achievement_types type, const struct achievement_objective *criteria, bool additive)
+static int achievement_validate_type(struct map_session_data *sd, enum achievement_types type,
+                                     const struct achievement_objective *criteria, bool additive)
 {
 	int i = 0, total = 0;
 	struct achievement *ach = NULL;
@@ -310,17 +327,19 @@ static int achievement_validate_type(struct map_session_data *sd, enum achieveme
 		return 0;
 
 	if (type == ACH_QUEST) {
-		ShowError("achievement_validate_type: ACH_QUEST is not handled by this function. (use achievement_validate())\n");
+		ShowError(
+		  "achievement_validate_type: ACH_QUEST is not handled by this function. (use achievement_validate())\n");
 		return 0;
 	} else if (type >= ACH_TYPE_MAX) {
-		ShowError("achievement_validate_type: Invalid Achievement Type %d! (min: %d, max: %d)\n", (int)type, (int)ACH_QUEST, (int)ACH_TYPE_MAX - 1);
+		ShowError("achievement_validate_type: Invalid Achievement Type %d! (min: %d, max: %d)\n", (int)type,
+		          (int)ACH_QUEST, (int)ACH_TYPE_MAX - 1);
 		return 0;
 	}
 
 	/* Loop through all achievements of the type, checking for possible matches. */
 	for (i = 0; i < VECTOR_LENGTH(achievement->category[type]); i++) {
-		int j = 0;
-		bool updated = false;
+		int j                             = 0;
+		bool updated                      = false;
 		const struct achievement_data *ad = NULL;
 
 		if ((ad = achievement->get(VECTOR_INDEX(achievement->category[type], i))) == NULL)
@@ -357,10 +376,11 @@ static int achievement_validate_type(struct map_session_data *sd, enum achieveme
  * @param[in] index      index of the objective.
  * @param[in] progress   progress to be added towards the goal.
  */
-static bool achievement_validate(struct map_session_data *sd, int aid, unsigned int obj_idx, int progress, bool additive)
+static bool achievement_validate(struct map_session_data *sd, int aid, unsigned int obj_idx, int progress,
+                                 bool additive)
 {
 	const struct achievement_data *ad = NULL;
-	struct achievement *ach = NULL;
+	struct achievement *ach           = NULL;
 
 	nullpo_retr(false, sd);
 	Assert_retr(false, progress > 0);
@@ -408,7 +428,7 @@ static void achievement_validate_mob_kill(struct map_session_data *sd, int mob_i
 		return;
 
 	criteria.mobid = mob_id;
-	criteria.goal = 1;
+	criteria.goal  = 1;
 
 	achievement->validate_type(sd, ACH_KILL_MOB_CLASS, &criteria, true);
 }
@@ -431,7 +451,7 @@ static void achievement_validate_mob_damage(struct map_session_data *sd, unsigne
 	if (sd->achievements_received == false)
 		return;
 
-	criteria.goal = (int) damage;
+	criteria.goal = (int)damage;
 
 	if (received) {
 		achievement->validate_type(sd, ACH_DAMAGE_MOB_REC_MAX, &criteria, false);
@@ -440,7 +460,6 @@ static void achievement_validate_mob_damage(struct map_session_data *sd, unsigne
 		achievement->validate_type(sd, ACH_DAMAGE_MOB_MAX, &criteria, false);
 		achievement->validate_type(sd, ACH_DAMAGE_MOB_TOTAL, &criteria, true);
 	}
-
 }
 
 /**
@@ -489,7 +508,8 @@ static void achievement_validate_pc_kill(struct map_session_data *sd, struct map
  * @param[in] dstsd      pointer to target player's session data.
  * @param[in] damage     amount of damage dealt / received.
  */
-static void achievement_validate_pc_damage(struct map_session_data *sd, struct map_session_data *dstsd, unsigned int damage)
+static void achievement_validate_pc_damage(struct map_session_data *sd, struct map_session_data *dstsd,
+                                           unsigned int damage)
 {
 	struct achievement_objective criteria{};
 
@@ -501,7 +521,7 @@ static void achievement_validate_pc_damage(struct map_session_data *sd, struct m
 	if (damage == 0)
 		return;
 
-	criteria.goal = (int) damage;
+	criteria.goal = (int)damage;
 
 	/* */
 	achievement->validate_type(sd, ACH_DAMAGE_PC_MAX, &criteria, false);
@@ -559,7 +579,7 @@ static void achievement_validate_stats(struct map_session_data *sd, enum status_
 		return;
 
 	if (!achievement_valid_status_types(stat_type)) {
-		ShowError("achievement_validate_stats: Invalid status type %d given.\n", (int) stat_type);
+		ShowError("achievement_validate_stats: Invalid status type %d given.\n", (int)stat_type);
 		return;
 	}
 
@@ -743,7 +763,7 @@ static void achievement_validate_zeny(struct map_session_data *sd, int amount)
 		criteria.goal = amount;
 		achievement->validate_type(sd, ACH_ZENY_GET_ONCE, &criteria, false);
 		achievement->validate_type(sd, ACH_ZENY_GET_TOTAL, &criteria, true);
-	}  else {
+	} else {
 		criteria.goal = -amount;
 		achievement->validate_type(sd, ACH_ZENY_SPEND_ONCE, &criteria, false);
 		achievement->validate_type(sd, ACH_ZENY_SPEND_TOTAL, &criteria, true);
@@ -787,34 +807,29 @@ static void achievement_validate_refine(struct map_session_data *sd, unsigned in
 		return;
 
 	/* Universal */
-	achievement->validate_type(sd,
-			success ? ACH_EQUIP_REFINE_SUCCESS : ACH_EQUIP_REFINE_FAILURE,
-			&criteria, false);
+	achievement->validate_type(sd, success ? ACH_EQUIP_REFINE_SUCCESS : ACH_EQUIP_REFINE_FAILURE, &criteria, false);
 
 	/* Total */
 	criteria.goal = 1;
-	achievement->validate_type(sd,
-			success ? ACH_EQUIP_REFINE_SUCCESS_TOTAL : ACH_EQUIP_REFINE_FAILURE_TOTAL,
-			&criteria, true);
+	achievement->validate_type(sd, success ? ACH_EQUIP_REFINE_SUCCESS_TOTAL : ACH_EQUIP_REFINE_FAILURE_TOTAL, &criteria,
+	                           true);
 
 	/* By Weapon Level */
 	if (id->type == IT_WEAPON) {
-		criteria.item_type = id->type;
+		criteria.item_type        = id->type;
 		criteria.unique.weapon_lv = id->wlv;
-		criteria.goal = sd->status.inventory[idx].refine;
-		achievement->validate_type(sd,
-				success ? ACH_EQUIP_REFINE_SUCCESS_WLV : ACH_EQUIP_REFINE_FAILURE_WLV,
-				&criteria, false);
-		criteria.item_type = 0;
+		criteria.goal             = sd->status.inventory[idx].refine;
+		achievement->validate_type(sd, success ? ACH_EQUIP_REFINE_SUCCESS_WLV : ACH_EQUIP_REFINE_FAILURE_WLV, &criteria,
+		                           false);
+		criteria.item_type        = 0;
 		criteria.unique.weapon_lv = 0; // cleanup
 	}
 
 	/* By NameId */
 	criteria.unique.itemid = id->nameid;
-	criteria.goal = sd->status.inventory[idx].refine;
-	achievement->validate_type(sd,
-			success ? ACH_EQUIP_REFINE_SUCCESS_ID : ACH_EQUIP_REFINE_FAILURE_ID,
-			&criteria, false);
+	criteria.goal          = sd->status.inventory[idx].refine;
+	achievement->validate_type(sd, success ? ACH_EQUIP_REFINE_SUCCESS_ID : ACH_EQUIP_REFINE_FAILURE_ID, &criteria,
+	                           false);
 	criteria.unique.itemid = 0; // cleanup
 }
 
@@ -841,7 +856,7 @@ static void achievement_validate_item_get(struct map_session_data *sd, int namei
 	nullpo_retv(it);
 
 	criteria.unique.itemid = it->nameid;
-	criteria.goal = amount;
+	criteria.goal          = amount;
 	achievement->validate_type(sd, ACH_ITEM_GET_COUNT, &criteria, false);
 	criteria.unique.itemid = 0; // cleanup
 
@@ -851,7 +866,7 @@ static void achievement_validate_item_get(struct map_session_data *sd, int namei
 
 	/* Item Type */
 	criteria.item_type = it->type;
-	criteria.goal = 1;
+	criteria.goal      = 1;
 	achievement->validate_type(sd, ACH_ITEM_GET_COUNT_ITEMTYPE, &criteria, false);
 	criteria.item_type = 0; // cleanup
 }
@@ -928,7 +943,7 @@ static void achievement_validate_taming(struct map_session_data *sd, int class_)
 	Assert_retv(mob->db(class_) != mob->dummy);
 
 	criteria.mobid = class_;
-	criteria.goal = 1;
+	criteria.goal  = 1;
 
 	achievement->validate_type(sd, ACH_PET_CREATE, &criteria, true);
 }
@@ -962,20 +977,22 @@ static void achievement_validate_achievement_rank(struct map_session_data *sd, i
  */
 static bool achievement_type_requires_criteria(enum achievement_types type)
 {
-	if (type == ACH_KILL_PC_JOB
-		|| type == ACH_KILL_PC_JOBTYPE
-		|| type == ACH_KILL_MOB_CLASS
-		|| type == ACH_JOB_CHANGE
-		|| type == ACH_STATUS
-		|| type == ACH_STATUS_BY_JOB
-		|| type == ACH_STATUS_BY_JOBTYPE
-		|| type == ACH_EQUIP_REFINE_SUCCESS_WLV
-		|| type == ACH_EQUIP_REFINE_FAILURE_WLV
-		|| type == ACH_EQUIP_REFINE_SUCCESS_ID
-		|| type == ACH_EQUIP_REFINE_FAILURE_ID
-		|| type == ACH_ITEM_GET_COUNT
-		|| type == ACH_PET_CREATE
-		|| type == ACH_ACHIEVE)
+	if (
+	  type == ACH_KILL_PC_JOB
+	  || type == ACH_KILL_PC_JOBTYPE
+	  || type == ACH_KILL_MOB_CLASS
+	  || type == ACH_JOB_CHANGE
+	  || type == ACH_STATUS
+	  || type == ACH_STATUS_BY_JOB
+	  || type == ACH_STATUS_BY_JOBTYPE
+	  || type == ACH_EQUIP_REFINE_SUCCESS_WLV
+	  || type == ACH_EQUIP_REFINE_FAILURE_WLV
+	  || type == ACH_EQUIP_REFINE_SUCCESS_ID
+	  || type == ACH_EQUIP_REFINE_FAILURE_ID
+	  || type == ACH_ITEM_GET_COUNT
+	  || type == ACH_PET_CREATE
+	  || type == ACH_ACHIEVE
+	)
 		return true;
 
 	return false;
@@ -993,7 +1010,7 @@ static void achievement_init_titles(struct map_session_data *sd)
 	VECTOR_INIT(sd->title_ids);
 	/* Browse through the session's achievement list and gather their values. */
 	for (i = 0; i < VECTOR_LENGTH(sd->achievement); i++) {
-		struct achievement *a = &VECTOR_INDEX(sd->achievement, i);
+		struct achievement *a             = &VECTOR_INDEX(sd->achievement, i);
 		const struct achievement_data *ad = NULL;
 
 		/* Sanity check for nonull pointers. */
@@ -1013,7 +1030,8 @@ static void achievement_init_titles(struct map_session_data *sd)
  * @param[in]  title_id        Title ID
  * @return true, if title has been earned, else false
  */
-static bool achievement_check_title(struct map_session_data *sd, int title_id) {
+static bool achievement_check_title(struct map_session_data *sd, int title_id)
+{
 	int i;
 
 	nullpo_retr(false, sd);
@@ -1052,7 +1070,7 @@ static void achievement_get_rewards_items(struct map_session_data *sd, const str
 		it.nameid = VECTOR_INDEX(ad->rewards.item, i).id;
 		int total = VECTOR_INDEX(ad->rewards.item, i).amount;
 
-		//Check if it's stackable.
+		// Check if it's stackable.
 		if (!itemdb->isstackable(it.nameid)) {
 			it.amount = 1;
 			for (int j = 0; j < total; ++j)
@@ -1123,7 +1141,7 @@ static void achievement_readdb_ranks(void)
 		char rank[16];
 
 		if (!(conf = libconfig->setting_get_elem(ardb, entry))) {
-			ShowError("achievement_readdb_ranks: Could not read value for entry %d, skipping...\n", entry+1);
+			ShowError("achievement_readdb_ranks: Could not read value for entry %d, skipping...\n", entry + 1);
 			continue;
 		}
 
@@ -1141,14 +1159,17 @@ static void achievement_readdb_ranks(void)
 
 			VECTOR_ENSURE(achievement->rank_exp, 1, 1);
 			VECTOR_PUSH(achievement->rank_exp, exp);
-		} else  {
-			ShowWarning("achievement_readdb_ranks: Ranks are not in order! Ignoring all ranks after Rank %d...\n", entry);
+		} else {
+			ShowWarning("achievement_readdb_ranks: Ranks are not in order! Ignoring all ranks after Rank %d...\n",
+			            entry);
 			break; // break if elements are not in order or rank doesn't exist.
 		}
 	}
 
 	if (libconfig->setting_length(ardb) > MAX_ACHIEVEMENT_RANKS)
-		ShowWarning("achievement_rankdb_ranks: Maximum number of achievement ranks exceeded. Skipping all after entry %d...\n", entry);
+		ShowWarning(
+		  "achievement_rankdb_ranks: Maximum number of achievement ranks exceeded. Skipping all after entry %d...\n",
+		  entry);
 
 	libconfig->destroy(&ar_conf);
 
@@ -1169,9 +1190,11 @@ static void achievement_readdb_ranks(void)
  * @param[in]  obj_idx  Index of the objective entry being parsed.
  * @return false on failure, true on success
  */
-static bool achievement_readdb_validate_criteria_mobid(const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx)
+static bool achievement_readdb_validate_criteria_mobid(const struct config_setting_t *t,
+                                                       struct achievement_objective *obj, enum achievement_types type,
+                                                       int entry_id, int obj_idx)
 {
-	int val = 0;
+	int val            = 0;
 	const char *string = NULL;
 
 	nullpo_retr(false, t);
@@ -1179,20 +1202,26 @@ static bool achievement_readdb_validate_criteria_mobid(const struct config_setti
 
 	if (libconfig->setting_lookup_int(t, "MobId", &val)) {
 		if (mob->db_checkid(val) == 0) {
-			ShowError("achievement_readdb_validate_criteria_mobid: Non-existant monster with ID %id provided (Achievement: %d, Objective: %d). Skipping...\n", val, entry_id, obj_idx);
+			ShowError(
+			  "achievement_readdb_validate_criteria_mobid: Non-existant monster with ID %id provided (Achievement: %d, Objective: %d). Skipping...\n",
+			  val, entry_id, obj_idx);
 			return false;
 		}
 
 		obj->mobid = val;
 	} else if (libconfig->setting_lookup_string(t, "MobId", &string)) {
 		if (!script->get_constant(string, &val)) {
-			ShowError("achievement_readdb_validate_criteria_mobid: Non-existant constant %s provided (Achievement: %d, Objective: %d). Skipping...\n", string, entry_id, obj_idx);
+			ShowError(
+			  "achievement_readdb_validate_criteria_mobid: Non-existant constant %s provided (Achievement: %d, Objective: %d). Skipping...\n",
+			  string, entry_id, obj_idx);
 			return false;
 		}
 
 		obj->mobid = val;
 	} else if (achievement_criteria_mobid(type)) {
-		ShowError("achievement_readdb_validate_criteria_mobid: Achievement type of ID %d requires MobId as objective criteria, setting not provided. Skipping...\n", entry_id);
+		ShowError(
+		  "achievement_readdb_validate_criteria_mobid: Achievement type of ID %d requires MobId as objective criteria, setting not provided. Skipping...\n",
+		  entry_id);
 		return false;
 	}
 
@@ -1208,10 +1237,12 @@ static bool achievement_readdb_validate_criteria_mobid(const struct config_setti
  * @param[in]  obj_idx  Index of the objective entry being parsed.
  * @return false on failure, true on success.
  */
-static bool achievement_readdb_validate_criteria_jobid(const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx)
+static bool achievement_readdb_validate_criteria_jobid(const struct config_setting_t *t,
+                                                       struct achievement_objective *obj, enum achievement_types type,
+                                                       int entry_id, int obj_idx)
 {
-	int job_id = 0;
-	const char *string = NULL;
+	int job_id                  = 0;
+	const char *string          = NULL;
 	struct config_setting_t *tt = NULL;
 
 	nullpo_retr(false, t);
@@ -1222,7 +1253,9 @@ static bool achievement_readdb_validate_criteria_jobid(const struct config_setti
 
 	if (libconfig->setting_lookup_int(t, "JobId", &job_id)) {
 		if (pc->jobid2mapid(job_id) == -1) {
-			ShowError("achievement_readdb_validate_criteria_jobid: Invalid JobId %d provided (Achievement: %d, Objective: %d). Skipping...\n", job_id, entry_id, obj_idx);
+			ShowError(
+			  "achievement_readdb_validate_criteria_jobid: Invalid JobId %d provided (Achievement: %d, Objective: %d). Skipping...\n",
+			  job_id, entry_id, obj_idx);
 			return false;
 		}
 
@@ -1230,7 +1263,9 @@ static bool achievement_readdb_validate_criteria_jobid(const struct config_setti
 		VECTOR_PUSH(obj->jobid, job_id);
 	} else if (libconfig->setting_lookup_string(t, "JobId", &string)) {
 		if (script->get_constant(string, &job_id) == false) {
-			ShowError("achievement_readdb_validate_criteria_jobid: Invalid JobId %d provided (Achievement: %d, Objective: %d). Skipping...\n", job_id, entry_id, obj_idx);
+			ShowError(
+			  "achievement_readdb_validate_criteria_jobid: Invalid JobId %d provided (Achievement: %d, Objective: %d). Skipping...\n",
+			  job_id, entry_id, obj_idx);
 			return false;
 		}
 
@@ -1241,8 +1276,13 @@ static bool achievement_readdb_validate_criteria_jobid(const struct config_setti
 
 		while (j < libconfig->setting_length(tt)) {
 			if ((job_id = libconfig->setting_get_int_elem(tt, j)) == 0) {
-				if ((string = libconfig->setting_get_string_elem(tt, j)) != NULL && script->get_constant(string, &job_id) == false) {
-					ShowError("achievement_readdb_validate_criteria_jobid: Invalid JobId provided at index %d (Achievement: %d, Objective: %d). Skipping...\n", j, entry_id, obj_idx);
+				if (
+				  (string = libconfig->setting_get_string_elem(tt, j)) != NULL
+				  && script->get_constant(string, &job_id) == false
+				) {
+					ShowError(
+					  "achievement_readdb_validate_criteria_jobid: Invalid JobId provided at index %d (Achievement: %d, Objective: %d). Skipping...\n",
+					  j, entry_id, obj_idx);
 					continue;
 				}
 			}
@@ -1254,12 +1294,13 @@ static bool achievement_readdb_validate_criteria_jobid(const struct config_setti
 			j++;
 		}
 	} else if (achievement_criteria_jobid(type)) {
-		ShowError("achievement_readdb_validate_criteria_jobid: Achievement type of ID %d requires a JobId field in the objective criteria, setting not provided. Skipping...\n", entry_id);
+		ShowError(
+		  "achievement_readdb_validate_criteria_jobid: Achievement type of ID %d requires a JobId field in the objective criteria, setting not provided. Skipping...\n",
+		  entry_id);
 		return false;
 	}
 
 	return true;
-
 }
 
 /**
@@ -1271,39 +1312,50 @@ static bool achievement_readdb_validate_criteria_jobid(const struct config_setti
  * @param[in]  obj_idx  Index of the objective entry being parsed.
  * @return false on failure, true on success.
  */
-static bool achievement_readdb_validate_criteria_itemid(const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx)
+static bool achievement_readdb_validate_criteria_itemid(const struct config_setting_t *t,
+                                                        struct achievement_objective *obj, enum achievement_types type,
+                                                        int entry_id, int obj_idx)
 {
-	int val = 0;
+	int val            = 0;
 	const char *string = NULL;
 
 	nullpo_retr(false, t);
 	nullpo_retr(false, obj);
 
-
 	if (libconfig->setting_lookup_int(t, "ItemId", &val)) {
 		if (itemdb->exists(val) == NULL) {
-			ShowError("achievement_readdb_validate_criteria_itemid: Invalid ItemID %d provided (Achievement: %d, Objective: %d). Skipping...\n", val, entry_id, obj_idx);
+			ShowError(
+			  "achievement_readdb_validate_criteria_itemid: Invalid ItemID %d provided (Achievement: %d, Objective: %d). Skipping...\n",
+			  val, entry_id, obj_idx);
 			return false;
 		} else if (obj->unique_type != CRITERIA_UNIQUE_NONE) {
-			ShowError("achievement_readdb_validate_criteria_itemid: Unique criteria has already been set to type %d. (Achievement: %d, Objective: %d). Skipping...\n", (int) obj->unique_type, entry_id, obj_idx);
+			ShowError(
+			  "achievement_readdb_validate_criteria_itemid: Unique criteria has already been set to type %d. (Achievement: %d, Objective: %d). Skipping...\n",
+			  (int)obj->unique_type, entry_id, obj_idx);
 			return false;
 		}
 
 		obj->unique.itemid = val;
-		obj->unique_type = CRITERIA_UNIQUE_ITEM_ID;
+		obj->unique_type   = CRITERIA_UNIQUE_ITEM_ID;
 	} else if (libconfig->setting_lookup_string(t, "ItemId", &string)) {
 		if (script->get_constant(string, &val) == false) {
-			ShowError("achievement_readdb_validate_criteria_itemid: Invalid ItemID %d provided (Achievement: %d, Objective: %d). Skipping...\n", val, entry_id, obj_idx);
+			ShowError(
+			  "achievement_readdb_validate_criteria_itemid: Invalid ItemID %d provided (Achievement: %d, Objective: %d). Skipping...\n",
+			  val, entry_id, obj_idx);
 			return false;
 		} else if (obj->unique_type != CRITERIA_UNIQUE_NONE) {
-			ShowError("achievement_readdb_validate_criteria_itemid: Unique criteria has already been set to type %d. (Achievement: %d, Objective: %d). Skipping...\n", (int) obj->unique_type, entry_id, obj_idx);
+			ShowError(
+			  "achievement_readdb_validate_criteria_itemid: Unique criteria has already been set to type %d. (Achievement: %d, Objective: %d). Skipping...\n",
+			  (int)obj->unique_type, entry_id, obj_idx);
 			return false;
 		}
 
 		obj->unique.itemid = val;
-		obj->unique_type = CRITERIA_UNIQUE_ITEM_ID;
+		obj->unique_type   = CRITERIA_UNIQUE_ITEM_ID;
 	} else if (achievement_criteria_itemid(type)) {
-		ShowError("achievement_readdb_validate_criteria_itemid: Criteria requires a ItemId field (Achievement: %d, Objective: %d). Skipping...\n", entry_id, obj_idx);
+		ShowError(
+		  "achievement_readdb_validate_criteria_itemid: Criteria requires a ItemId field (Achievement: %d, Objective: %d). Skipping...\n",
+		  entry_id, obj_idx);
 		return false;
 	}
 
@@ -1319,9 +1371,11 @@ static bool achievement_readdb_validate_criteria_itemid(const struct config_sett
  * @param[in]  obj_idx  Index of the objective entry being parsed.
  * @return false on failure, true on success.
  */
-static bool achievement_readdb_validate_criteria_statustype(const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx)
+static bool achievement_readdb_validate_criteria_statustype(const struct config_setting_t *t,
+                                                            struct achievement_objective *obj,
+                                                            enum achievement_types type, int entry_id, int obj_idx)
 {
-	int val = 0;
+	int val            = 0;
 	const char *string = NULL;
 
 	nullpo_retr(false, t);
@@ -1329,38 +1383,57 @@ static bool achievement_readdb_validate_criteria_statustype(const struct config_
 
 	if (libconfig->setting_lookup_int(t, "StatusType", &val)) {
 		if (!achievement_valid_status_types(val)) {
-			ShowError("achievement_readdb_validate_criteria_statustype: Invalid StatusType %d provided (Achievement: %d, Objective: %d). Skipping...\n", val, entry_id, obj_idx);
+			ShowError(
+			  "achievement_readdb_validate_criteria_statustype: Invalid StatusType %d provided (Achievement: %d, Objective: %d). Skipping...\n",
+			  val, entry_id, obj_idx);
 			return false;
 		} else if (obj->unique_type != CRITERIA_UNIQUE_NONE) {
-			ShowError("achievement_readdb_validate_criteria_statustype: Unique criteria has already been set to type %d. (Achievement: %d, Objective: %d). Skipping...\n", (int) obj->unique_type, entry_id, obj_idx);
+			ShowError(
+			  "achievement_readdb_validate_criteria_statustype: Unique criteria has already been set to type %d. (Achievement: %d, Objective: %d). Skipping...\n",
+			  (int)obj->unique_type, entry_id, obj_idx);
 			return false;
 		}
 
-		obj->unique.status_type = (enum status_point_types) val;
-		obj->unique_type = CRITERIA_UNIQUE_STATUS_TYPE;
+		obj->unique.status_type = (enum status_point_types)val;
+		obj->unique_type        = CRITERIA_UNIQUE_STATUS_TYPE;
 	} else if (libconfig->setting_lookup_string(t, "StatusType", &string)) {
-		if      (strcmp(string, "SP_STR") == 0)       val = SP_STR;
-		else if (strcmp(string, "SP_AGI") == 0)       val = SP_AGI;
-		else if (strcmp(string, "SP_VIT") == 0)       val = SP_VIT;
-		else if (strcmp(string, "SP_INT") == 0)       val = SP_INT;
-		else if (strcmp(string, "SP_DEX") == 0)       val = SP_DEX;
-		else if (strcmp(string, "SP_LUK") == 0)       val = SP_LUK;
-		else if (strcmp(string, "SP_BASELEVEL") == 0) val = SP_BASELEVEL;
-		else if (strcmp(string, "SP_JOBLEVEL") == 0)  val = SP_JOBLEVEL;
-		else val = SP_NONE;
+		if (strcmp(string, "SP_STR") == 0)
+			val = SP_STR;
+		else if (strcmp(string, "SP_AGI") == 0)
+			val = SP_AGI;
+		else if (strcmp(string, "SP_VIT") == 0)
+			val = SP_VIT;
+		else if (strcmp(string, "SP_INT") == 0)
+			val = SP_INT;
+		else if (strcmp(string, "SP_DEX") == 0)
+			val = SP_DEX;
+		else if (strcmp(string, "SP_LUK") == 0)
+			val = SP_LUK;
+		else if (strcmp(string, "SP_BASELEVEL") == 0)
+			val = SP_BASELEVEL;
+		else if (strcmp(string, "SP_JOBLEVEL") == 0)
+			val = SP_JOBLEVEL;
+		else
+			val = SP_NONE;
 
 		if (!achievement_valid_status_types(val)) {
-			ShowError("achievement_readdb_validate_criteria_statustype: Invalid StatusType %s provided (Achievement: %d, Objective: %d). Skipping...\n", string, entry_id, obj_idx);
+			ShowError(
+			  "achievement_readdb_validate_criteria_statustype: Invalid StatusType %s provided (Achievement: %d, Objective: %d). Skipping...\n",
+			  string, entry_id, obj_idx);
 			return false;
 		} else if (obj->unique_type != CRITERIA_UNIQUE_NONE) {
-			ShowError("achievement_readdb_validate_criteria_statustype: Unique criteria has already been set to type %d. (Achievement: %d, Objective: %d). Skipping...\n", (int) obj->unique_type, entry_id, obj_idx);
+			ShowError(
+			  "achievement_readdb_validate_criteria_statustype: Unique criteria has already been set to type %d. (Achievement: %d, Objective: %d). Skipping...\n",
+			  (int)obj->unique_type, entry_id, obj_idx);
 			return false;
 		}
 
-		obj->unique.status_type = (enum status_point_types) val;
-		obj->unique_type = CRITERIA_UNIQUE_STATUS_TYPE;
+		obj->unique.status_type = (enum status_point_types)val;
+		obj->unique_type        = CRITERIA_UNIQUE_STATUS_TYPE;
 	} else if (achievement_criteria_stattype(type)) {
-		ShowError("achievement_readdb_validate_criteria_statustype: Criteria requires a StatusType field (Achievement: %d, Objective: %d). Skipping...\n", entry_id, obj_idx);
+		ShowError(
+		  "achievement_readdb_validate_criteria_statustype: Criteria requires a StatusType field (Achievement: %d, Objective: %d). Skipping...\n",
+		  entry_id, obj_idx);
 		return false;
 	}
 
@@ -1376,10 +1449,12 @@ static bool achievement_readdb_validate_criteria_statustype(const struct config_
  * @param[in]  obj_idx  Index of the objective entry being parsed.
  * @return false on failure, true on success.
  */
-static bool achievement_readdb_validate_criteria_itemtype(const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx)
+static bool achievement_readdb_validate_criteria_itemtype(const struct config_setting_t *t,
+                                                          struct achievement_objective *obj,
+                                                          enum achievement_types type, int entry_id, int obj_idx)
 {
-	int val = 0;
-	const char *string = NULL;
+	int val                     = 0;
+	const char *string          = NULL;
 	struct config_setting_t *tt = NULL;
 
 	nullpo_retr(false, t);
@@ -1387,7 +1462,9 @@ static bool achievement_readdb_validate_criteria_itemtype(const struct config_se
 
 	if (libconfig->setting_lookup_int(t, "ItemType", &val)) {
 		if (val < IT_HEALING || val > IT_MAX) {
-			ShowError("achievement_readdb_validate_criteria_itemtype: Invalid ItemType %d provided (Achievement: %d, Objective: %d). Skipping...\n", val, entry_id, obj_idx);
+			ShowError(
+			  "achievement_readdb_validate_criteria_itemtype: Invalid ItemType %d provided (Achievement: %d, Objective: %d). Skipping...\n",
+			  val, entry_id, obj_idx);
 			return false;
 		}
 
@@ -1399,7 +1476,9 @@ static bool achievement_readdb_validate_criteria_itemtype(const struct config_se
 
 	} else if (libconfig->setting_lookup_string(t, "ItemType", &string)) {
 		if (!script->get_constant(string, &val) || val < IT_HEALING || val > IT_MAX) {
-			ShowError("achievement_readdb_validate_criteria_itemtype: Invalid ItemType %d provided (Achievement: %d, Objective: %d). Skipping...\n", val, entry_id, obj_idx);
+			ShowError(
+			  "achievement_readdb_validate_criteria_itemtype: Invalid ItemType %d provided (Achievement: %d, Objective: %d). Skipping...\n",
+			  val, entry_id, obj_idx);
 			return false;
 		}
 
@@ -1414,7 +1493,9 @@ static bool achievement_readdb_validate_criteria_itemtype(const struct config_se
 		while (j < libconfig->setting_length(tt)) {
 			if ((val = libconfig->setting_get_int_elem(tt, j))) {
 				if (val < IT_HEALING || val > IT_MAX) {
-					ShowError("achievement_readdb_validate_criteria_itemtype: Invalid ItemType %d provided (Achievement: %d, Objective: %d). Skipping...\n", val, entry_id, obj_idx);
+					ShowError(
+					  "achievement_readdb_validate_criteria_itemtype: Invalid ItemType %d provided (Achievement: %d, Objective: %d). Skipping...\n",
+					  val, entry_id, obj_idx);
 					continue;
 				}
 				if (val == IT_MAX) {
@@ -1424,10 +1505,12 @@ static bool achievement_readdb_validate_criteria_itemtype(const struct config_se
 				}
 			} else if ((string = libconfig->setting_get_string_elem(tt, j))) {
 				if (!script->get_constant(string, &val)) {
-					ShowError("achievement_readdb_validate_criteria_itemtype: Invalid ItemType %s provided (Achievement: %d, Objective: %d). Skipping...\n", string, entry_id, obj_idx);
-					continue;			
+					ShowError(
+					  "achievement_readdb_validate_criteria_itemtype: Invalid ItemType %s provided (Achievement: %d, Objective: %d). Skipping...\n",
+					  string, entry_id, obj_idx);
+					continue;
 				}
-				
+
 				if (val == IT_MAX) {
 					obj->item_type |= (2 << val) - 1;
 				} else {
@@ -1437,7 +1520,9 @@ static bool achievement_readdb_validate_criteria_itemtype(const struct config_se
 			j++;
 		}
 	} else if (achievement_criteria_itemtype(type)) {
-		ShowError("achievement_readdb_validate_criteria_itemtype: Criteria requires a ItemType field (Achievement: %d, Objective: %d). Skipping...\n", entry_id, obj_idx);
+		ShowError(
+		  "achievement_readdb_validate_criteria_itemtype: Criteria requires a ItemType field (Achievement: %d, Objective: %d). Skipping...\n",
+		  entry_id, obj_idx);
 		return false;
 	}
 
@@ -1453,7 +1538,9 @@ static bool achievement_readdb_validate_criteria_itemtype(const struct config_se
  * @param[in]  obj_idx  Index of the objective entry being parsed.
  * @return false on failure, true on success.
  */
-static bool achievement_readdb_validate_criteria_weaponlv(const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx)
+static bool achievement_readdb_validate_criteria_weaponlv(const struct config_setting_t *t,
+                                                          struct achievement_objective *obj,
+                                                          enum achievement_types type, int entry_id, int obj_idx)
 {
 	int val = 0;
 
@@ -1462,17 +1549,23 @@ static bool achievement_readdb_validate_criteria_weaponlv(const struct config_se
 
 	if (libconfig->setting_lookup_int(t, "WeaponLevel", &val)) {
 		if (val < 1 || val > 4) {
-			ShowError("achievement_readdb_validate_criteria_weaponlv: Invalid WeaponLevel %d provided (Achievement: %d, Objective: %d). Skipping...\n", val, entry_id, obj_idx);
+			ShowError(
+			  "achievement_readdb_validate_criteria_weaponlv: Invalid WeaponLevel %d provided (Achievement: %d, Objective: %d). Skipping...\n",
+			  val, entry_id, obj_idx);
 			return false;
 		} else if (obj->unique_type != CRITERIA_UNIQUE_NONE) {
-			ShowError("achievement_readdb_validate_criteria_weaponlv: Unique criteria has already been set to type %d. (Achievement: %d, Objective: %d). Skipping...\n", (int) obj->unique_type, entry_id, obj_idx);
+			ShowError(
+			  "achievement_readdb_validate_criteria_weaponlv: Unique criteria has already been set to type %d. (Achievement: %d, Objective: %d). Skipping...\n",
+			  (int)obj->unique_type, entry_id, obj_idx);
 			return false;
 		}
 
 		obj->unique.weapon_lv = val;
-		obj->unique_type = CRITERIA_UNIQUE_WEAPON_LV;
+		obj->unique_type      = CRITERIA_UNIQUE_WEAPON_LV;
 	} else if (achievement_criteria_weaponlv(type)) {
-		ShowError("achievement_readdb_validate_criteria_weaponlv: Criteria requires a WeaponType field. (Achievement: %d, Objective: %d). Skipping...\n", entry_id, obj_idx);
+		ShowError(
+		  "achievement_readdb_validate_criteria_weaponlv: Criteria requires a WeaponType field. (Achievement: %d, Objective: %d). Skipping...\n",
+		  entry_id, obj_idx);
 		return false;
 	}
 
@@ -1488,7 +1581,9 @@ static bool achievement_readdb_validate_criteria_weaponlv(const struct config_se
  * @param[in]  obj_idx  Index of the objective entry being parsed.
  * @return false on failure, true on success.
  */
-static bool achievement_readdb_validate_criteria_achievement(const struct config_setting_t *t, struct achievement_objective *obj, enum achievement_types type, int entry_id, int obj_idx)
+static bool achievement_readdb_validate_criteria_achievement(const struct config_setting_t *t,
+                                                             struct achievement_objective *obj,
+                                                             enum achievement_types type, int entry_id, int obj_idx)
 {
 	int val = 0;
 
@@ -1497,17 +1592,23 @@ static bool achievement_readdb_validate_criteria_achievement(const struct config
 
 	if (libconfig->setting_lookup_int(t, "Achieve", &val)) {
 		if (achievement->get(val) == NULL) {
-			ShowError("achievement_readdb_validate_criteria_achievement: Invalid Achievement %d provided as objective (Achievement %d, Objective %d). Skipping...\n", val, entry_id, obj_idx);
+			ShowError(
+			  "achievement_readdb_validate_criteria_achievement: Invalid Achievement %d provided as objective (Achievement %d, Objective %d). Skipping...\n",
+			  val, entry_id, obj_idx);
 			return false;
 		} else if (obj->unique_type != CRITERIA_UNIQUE_NONE) {
-			ShowError("achievement_readdb_validate_criteria_achievement: Unique criteria has already been set to type %d. (Achievement: %d, Objective: %d). Skipping...\n", (int) obj->unique_type, entry_id, obj_idx);
+			ShowError(
+			  "achievement_readdb_validate_criteria_achievement: Unique criteria has already been set to type %d. (Achievement: %d, Objective: %d). Skipping...\n",
+			  (int)obj->unique_type, entry_id, obj_idx);
 			return false;
 		}
 
 		obj->unique.achieve_id = val;
-		obj->unique_type = CRITERIA_UNIQUE_ACHIEVE_ID;
+		obj->unique_type       = CRITERIA_UNIQUE_ACHIEVE_ID;
 	} else if (type == ACH_ACHIEVE) {
-		ShowError("achievement_readdb_validate_criteria_achievement: Achievement type of ID %d requires an Achieve field in the objective criteria, setting not provided. Skipping...\n", entry_id);
+		ShowError(
+		  "achievement_readdb_validate_criteria_achievement: Achievement type of ID %d requires an Achieve field in the objective criteria, setting not provided. Skipping...\n",
+		  entry_id);
 		return false;
 	}
 
@@ -1521,7 +1622,8 @@ static bool achievement_readdb_validate_criteria_achievement(const struct config
  * @param[out] entry   pointer to the achievement db entry being parsed.
  * @return false on failure, true on success.
  */
-static bool achievement_readdb_objective_sub(const struct config_setting_t *conf, int index, struct achievement_data *entry)
+static bool achievement_readdb_objective_sub(const struct config_setting_t *conf, int index,
+                                             struct achievement_data *entry)
 {
 	struct config_setting_t *tt = NULL;
 	char objnum[13];
@@ -1535,8 +1637,13 @@ static bool achievement_readdb_objective_sub(const struct config_setting_t *conf
 		struct config_setting_t *c = NULL;
 
 		/* Description */
-		if (libconfig->setting_lookup_mutable_string(tt, "Description", obj.description, OBJECTIVE_DESCRIPTION_LENGTH) == 0) {
-			ShowError("achievement_readdb_objective_sub: Objective %d has no description for Achievement %d, skipping...\n", index, entry->id);
+		if (
+		  libconfig->setting_lookup_mutable_string(tt, "Description", obj.description, OBJECTIVE_DESCRIPTION_LENGTH)
+		  == 0
+		) {
+			ShowError(
+			  "achievement_readdb_objective_sub: Objective %d has no description for Achievement %d, skipping...\n",
+			  index, entry->id);
 			return false;
 		}
 
@@ -1567,14 +1674,16 @@ static bool achievement_readdb_objective_sub(const struct config_setting_t *conf
 				return false;
 
 			/**
-			 * Vectors are read last to avoid memory leaks if either of the above break, in cases where they are stacked with other criteria.
-			 * Note to future editors - be sure to cleanup previous vectors before breaks.
+			 * Vectors are read last to avoid memory leaks if either of the above break, in cases where they are stacked
+			 * with other criteria. Note to future editors - be sure to cleanup previous vectors before breaks.
 			 */
 			/* JobId */
 			if (achievement->readdb_validate_criteria_jobid(c, &obj, entry->type, entry->id, index) == false)
 				return false;
 		} else if (achievement->type_requires_criteria(entry->type)) {
-			ShowError("achievement_readdb_objective_sub: No criteria field added (Achievement: %d, Objective: %d)! Skipping...\n", entry->id, index);
+			ShowError(
+			  "achievement_readdb_objective_sub: No criteria field added (Achievement: %d, Objective: %d)! Skipping...\n",
+			  entry->id, index);
 			return false;
 		}
 
@@ -1588,7 +1697,9 @@ static bool achievement_readdb_objective_sub(const struct config_setting_t *conf
 		/* Push buffer */
 		VECTOR_PUSH(entry->objective, obj);
 	} else { // Break if not in order, to comply with the client's objective order.
-		ShowWarning("achievement_readdb_objective_sub: Objectives for Achievement %d are not in order (starting from *%d). Remaining objectives will be skipped.\n", entry->id, index);
+		ShowWarning(
+		  "achievement_readdb_objective_sub: Objectives for Achievement %d are not in order (starting from *%d). Remaining objectives will be skipped.\n",
+		  entry->id, index);
 		return false;
 	}
 
@@ -1619,9 +1730,12 @@ static bool achievement_readdb_objectives(const struct config_setting_t *conf, s
 
 		// Assess total objectives.
 		if (libconfig->setting_length(t) > MAX_ACHIEVEMENT_OBJECTIVES)
-			ShowWarning("achievement_readdb_objectives: Exceeded maximum number of objectives (%d) for Achievement %d. Remaining objectives will be skipped.\n", MAX_ACHIEVEMENT_OBJECTIVES, entry->id);
+			ShowWarning(
+			  "achievement_readdb_objectives: Exceeded maximum number of objectives (%d) for Achievement %d. Remaining objectives will be skipped.\n",
+			  MAX_ACHIEVEMENT_OBJECTIVES, entry->id);
 		if (i == 0) {
-			ShowError("achievement_readdb_objectives: No Objectives provided for Achievement %d, skipping...\n", entry->id);
+			ShowError("achievement_readdb_objectives: No Objectives provided for Achievement %d, skipping...\n",
+			          entry->id);
 			return false;
 		}
 	} else {
@@ -1639,13 +1753,14 @@ static bool achievement_readdb_objectives(const struct config_setting_t *conf, s
  * @param[out] entry   pointer to the achievement entry being parsed.
  * @return false on failure, true on success.
  */
-static bool achievement_readdb_validate_reward_item_sub(const struct config_setting_t *t, int index, struct achievement_data *entry)
+static bool achievement_readdb_validate_reward_item_sub(const struct config_setting_t *t, int index,
+                                                        struct achievement_data *entry)
 {
 	struct config_setting_t *it = NULL;
 	struct achievement_reward_item item{};
 	const char *name = NULL;
-	int amount = 0;
-	int val = 0;
+	int amount       = 0;
+	int val          = 0;
 
 	nullpo_retr(false, t);
 	nullpo_retr(false, entry);
@@ -1653,25 +1768,29 @@ static bool achievement_readdb_validate_reward_item_sub(const struct config_sett
 	if ((it = libconfig->setting_get_elem(t, index)) == NULL)
 		return false;
 
-	name = config_setting_name(it);
+	name   = config_setting_name(it);
 	amount = libconfig->setting_get_int(it);
 
-	if (name[0] == 'I' && name[1] == 'D' && itemdb->exists(atoi(name+2))) {
+	if (name[0] == 'I' && name[1] == 'D' && itemdb->exists(atoi(name + 2))) {
 		val = atoi(name);
 	} else if (!script->get_constant(name, &val)) {
-		ShowWarning("achievement_readdb_validate_reward_item_sub: Non existant Item %s provided as a reward in Achievement %d, skipping...\n", name, entry->id);
+		ShowWarning(
+		  "achievement_readdb_validate_reward_item_sub: Non existant Item %s provided as a reward in Achievement %d, skipping...\n",
+		  name, entry->id);
 		return false;
 	}
 
 	if (amount <= 0) {
-		ShowWarning("achievement_readdb_validate_reward_item_sub: No amount provided for Item %s as a reward in Achievement %d, skipping...\n", name, entry->id);
+		ShowWarning(
+		  "achievement_readdb_validate_reward_item_sub: No amount provided for Item %s as a reward in Achievement %d, skipping...\n",
+		  name, entry->id);
 		return false;
 	}
 
 	/* Ensure size and allocation */
 	VECTOR_ENSURE(entry->rewards.item, 1, 1);
 
-	item.id = val;
+	item.id     = val;
 	item.amount = amount;
 
 	/* push buffer */
@@ -1688,7 +1807,7 @@ static bool achievement_readdb_validate_reward_item_sub(const struct config_sett
 static void achievement_readdb_validate_reward_items(const struct config_setting_t *t, struct achievement_data *entry)
 {
 	struct config_setting_t *tt = NULL;
-	int i = 0;
+	int i                       = 0;
 
 	nullpo_retv(t);
 	nullpo_retv(entry);
@@ -1699,7 +1818,9 @@ static void achievement_readdb_validate_reward_items(const struct config_setting
 				continue;
 
 		if (libconfig->setting_length(tt) > MAX_ACHIEVEMENT_ITEM_REWARDS)
-			ShowError("achievement_readdb_validate_reward_items: Maximum amount of item rewards (%d) exceeded for Achievement %d. Remaining items will be skipped.\n", MAX_ACHIEVEMENT_ITEM_REWARDS, entry->id);
+			ShowError(
+			  "achievement_readdb_validate_reward_items: Maximum amount of item rewards (%d) exceeded for Achievement %d. Remaining items will be skipped.\n",
+			  MAX_ACHIEVEMENT_ITEM_REWARDS, entry->id);
 	}
 }
 
@@ -1709,7 +1830,8 @@ static void achievement_readdb_validate_reward_items(const struct config_setting
  * @param[out] entry    pointer to the achievement entry being parsed.
  * @param[in] source   pointer to the source file name.
  */
-static void achievement_readdb_validate_reward_bonus(const struct config_setting_t *t, struct achievement_data *entry, const char *source)
+static void achievement_readdb_validate_reward_bonus(const struct config_setting_t *t, struct achievement_data *entry,
+                                                     const char *source)
 {
 	const char *string = NULL;
 
@@ -1740,7 +1862,8 @@ static void achievement_readdb_validate_reward_titleid(const struct config_setti
  * @param[out] entry    pointer to the achievement entry being parsed.
  * @param[in] source   pointer to the source file name.
  */
-static bool achievement_readdb_rewards(const struct config_setting_t *conf, struct achievement_data *entry, const char *source)
+static bool achievement_readdb_rewards(const struct config_setting_t *conf, struct achievement_data *entry,
+                                       const char *source)
 {
 	struct config_setting_t *t = NULL;
 
@@ -1760,7 +1883,6 @@ static bool achievement_readdb_rewards(const struct config_setting_t *conf, stru
 		/* Title Id */
 		// @TODO Check Title ID against title DB!
 		achievement->readdb_validate_reward_titleid(t, entry);
-
 	}
 
 	return true;
@@ -1772,7 +1894,8 @@ static bool achievement_readdb_rewards(const struct config_setting_t *conf, stru
  * @param[out] entry    pointer to the achievement entry being parsed.
  * @param[in] source   pointer to the source file name.
  */
-static void achievement_readdb_additional_fields(const struct config_setting_t *conf, struct achievement_data *entry, const char *source)
+static void achievement_readdb_additional_fields(const struct config_setting_t *conf, struct achievement_data *entry,
+                                                 const char *source)
 {
 	// plugins do their own thing.
 }
@@ -1833,11 +1956,12 @@ static void achievement_readb(void)
 			ShowError("achievement_readdb: Type field not provided for Achievement %d! Skipping...\n", t_ad.id);
 			continue;
 		} else if (!script->get_constant(string, &val)) {
-			ShowError("achievement_readdb: Invalid constant %s provided as type for Achievement %d! Skipping...\n", string, t_ad.id);
+			ShowError("achievement_readdb: Invalid constant %s provided as type for Achievement %d! Skipping...\n",
+			          string, t_ad.id);
 			continue;
 		}
 
-		t_ad.type = (enum achievement_types) val;
+		t_ad.type = (enum achievement_types)val;
 
 		/* Objectives */
 		achievement->readdb_objectives(conf, &t_ad);
@@ -1906,10 +2030,10 @@ static void do_init_achievement(bool minimal)
  */
 static int achievement_db_finalize(union DBKey key, struct DBData *data, va_list args)
 {
-	int i = 0;
+	int i                       = 0;
 	struct achievement_data *ad = (struct achievement_data *)DB->data2ptr(data);
 
-	for(i = 0; i < VECTOR_LENGTH(ad->objective); i++)
+	for (i = 0; i < VECTOR_LENGTH(ad->objective); i++)
 		VECTOR_CLEAR(VECTOR_INDEX(ad->objective, i).jobid);
 
 	VECTOR_CLEAR(ad->objective);
@@ -1944,73 +2068,73 @@ static void do_final_achievement(void)
  */
 void achievement_defaults(void)
 {
-	achievement = &achievement_s;
+	achievement                                       = &achievement_s;
 	/* */
-	achievement->init = do_init_achievement;
-	achievement->final = do_final_achievement;
+	achievement->init                                 = do_init_achievement;
+	achievement->final                                = do_final_achievement;
 	/* */
-	achievement->db_finalize = achievement_db_finalize;
+	achievement->db_finalize                          = achievement_db_finalize;
 	/* */
-	achievement->readdb = achievement_readb;
+	achievement->readdb                               = achievement_readb;
 	/* */
-	achievement->readdb_objectives_sub = achievement_readdb_objective_sub;
-	achievement->readdb_objectives = achievement_readdb_objectives;
+	achievement->readdb_objectives_sub                = achievement_readdb_objective_sub;
+	achievement->readdb_objectives                    = achievement_readdb_objectives;
 	/* */
-	achievement->readdb_validate_criteria_mobid = achievement_readdb_validate_criteria_mobid;
-	achievement->readdb_validate_criteria_jobid = achievement_readdb_validate_criteria_jobid;
-	achievement->readdb_validate_criteria_itemid = achievement_readdb_validate_criteria_itemid;
-	achievement->readdb_validate_criteria_statustype = achievement_readdb_validate_criteria_statustype;
-	achievement->readdb_validate_criteria_itemtype = achievement_readdb_validate_criteria_itemtype;
-	achievement->readdb_validate_criteria_weaponlv = achievement_readdb_validate_criteria_weaponlv;
+	achievement->readdb_validate_criteria_mobid       = achievement_readdb_validate_criteria_mobid;
+	achievement->readdb_validate_criteria_jobid       = achievement_readdb_validate_criteria_jobid;
+	achievement->readdb_validate_criteria_itemid      = achievement_readdb_validate_criteria_itemid;
+	achievement->readdb_validate_criteria_statustype  = achievement_readdb_validate_criteria_statustype;
+	achievement->readdb_validate_criteria_itemtype    = achievement_readdb_validate_criteria_itemtype;
+	achievement->readdb_validate_criteria_weaponlv    = achievement_readdb_validate_criteria_weaponlv;
 	achievement->readdb_validate_criteria_achievement = achievement_readdb_validate_criteria_achievement;
 	/* */
-	achievement->readdb_rewards = achievement_readdb_rewards;
-	achievement->readdb_validate_reward_items = achievement_readdb_validate_reward_items;
-	achievement->readdb_validate_reward_item_sub = achievement_readdb_validate_reward_item_sub;
-	achievement->readdb_validate_reward_bonus = achievement_readdb_validate_reward_bonus;
-	achievement->readdb_validate_reward_titleid = achievement_readdb_validate_reward_titleid;
+	achievement->readdb_rewards                       = achievement_readdb_rewards;
+	achievement->readdb_validate_reward_items         = achievement_readdb_validate_reward_items;
+	achievement->readdb_validate_reward_item_sub      = achievement_readdb_validate_reward_item_sub;
+	achievement->readdb_validate_reward_bonus         = achievement_readdb_validate_reward_bonus;
+	achievement->readdb_validate_reward_titleid       = achievement_readdb_validate_reward_titleid;
 	/* */
-	achievement->readdb_additional_fields = achievement_readdb_additional_fields;
+	achievement->readdb_additional_fields             = achievement_readdb_additional_fields;
 	/* */
-	achievement->readdb_ranks = achievement_readdb_ranks;
+	achievement->readdb_ranks                         = achievement_readdb_ranks;
 	/* */
-	achievement->get = achievement_get;
-	achievement->ensure = achievement_ensure;
+	achievement->get                                  = achievement_get;
+	achievement->ensure                               = achievement_ensure;
 	/* */
-	achievement->calculate_totals = achievement_calculate_totals;
-	achievement->check_complete = achievement_check_complete;
-	achievement->progress_add = achievement_progress_add;
-	achievement->progress_set = achievement_progress_set;
-	achievement->check_criteria = achievement_check_criteria;
+	achievement->calculate_totals                     = achievement_calculate_totals;
+	achievement->check_complete                       = achievement_check_complete;
+	achievement->progress_add                         = achievement_progress_add;
+	achievement->progress_set                         = achievement_progress_set;
+	achievement->check_criteria                       = achievement_check_criteria;
 	/* */
-	achievement->validate = achievement_validate;
-	achievement->validate_type = achievement_validate_type;
+	achievement->validate                             = achievement_validate;
+	achievement->validate_type                        = achievement_validate_type;
 	/* */
-	achievement->validate_mob_kill = achievement_validate_mob_kill;
-	achievement->validate_mob_damage = achievement_validate_mob_damage;
-	achievement->validate_pc_kill = achievement_validate_pc_kill;
-	achievement->validate_pc_damage = achievement_validate_pc_damage;
-	achievement->validate_jobchange = achievement_validate_jobchange;
-	achievement->validate_stats = achievement_validate_stats;
-	achievement->validate_chatroom_create = achievement_validate_chatroom_create;
-	achievement->validate_chatroom_members = achievement_validate_chatroom_members;
-	achievement->validate_friend_add = achievement_validate_friend_add;
-	achievement->validate_party_create = achievement_validate_party_create;
-	achievement->validate_marry = achievement_validate_marry;
-	achievement->validate_adopt = achievement_validate_adopt;
-	achievement->validate_zeny = achievement_validate_zeny;
-	achievement->validate_refine = achievement_validate_refine;
-	achievement->validate_item_get = achievement_validate_item_get;
-	achievement->validate_item_sell = achievement_validate_item_sell;
-	achievement->validate_achieve = achievement_validate_achieve;
-	achievement->validate_taming = achievement_validate_taming;
-	achievement->validate_achievement_rank = achievement_validate_achievement_rank;
+	achievement->validate_mob_kill                    = achievement_validate_mob_kill;
+	achievement->validate_mob_damage                  = achievement_validate_mob_damage;
+	achievement->validate_pc_kill                     = achievement_validate_pc_kill;
+	achievement->validate_pc_damage                   = achievement_validate_pc_damage;
+	achievement->validate_jobchange                   = achievement_validate_jobchange;
+	achievement->validate_stats                       = achievement_validate_stats;
+	achievement->validate_chatroom_create             = achievement_validate_chatroom_create;
+	achievement->validate_chatroom_members            = achievement_validate_chatroom_members;
+	achievement->validate_friend_add                  = achievement_validate_friend_add;
+	achievement->validate_party_create                = achievement_validate_party_create;
+	achievement->validate_marry                       = achievement_validate_marry;
+	achievement->validate_adopt                       = achievement_validate_adopt;
+	achievement->validate_zeny                        = achievement_validate_zeny;
+	achievement->validate_refine                      = achievement_validate_refine;
+	achievement->validate_item_get                    = achievement_validate_item_get;
+	achievement->validate_item_sell                   = achievement_validate_item_sell;
+	achievement->validate_achieve                     = achievement_validate_achieve;
+	achievement->validate_taming                      = achievement_validate_taming;
+	achievement->validate_achievement_rank            = achievement_validate_achievement_rank;
 	/* */
-	achievement->type_requires_criteria = achievement_type_requires_criteria;
+	achievement->type_requires_criteria               = achievement_type_requires_criteria;
 	/* */
-	achievement->init_titles = achievement_init_titles;
-	achievement->check_title = achievement_check_title;
-	achievement->get_rewards = achievement_get_rewards;
-	achievement->get_rewards_buffs = achievement_get_rewards_buffs;
-	achievement->get_rewards_items = achievement_get_rewards_items;
+	achievement->init_titles                          = achievement_init_titles;
+	achievement->check_title                          = achievement_check_title;
+	achievement->get_rewards                          = achievement_get_rewards;
+	achievement->get_rewards_buffs                    = achievement_get_rewards_buffs;
+	achievement->get_rewards_items                    = achievement_get_rewards_items;
 }

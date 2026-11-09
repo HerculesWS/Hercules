@@ -33,17 +33,17 @@
 #define GOLDPC_MAX_POINTS 300
 
 // Account variables for persistence
-#define GOLDPC_POINTS_VAR "#GOLDPC_POINTS"
+#define GOLDPC_POINTS_VAR   "#GOLDPC_POINTS"
 #define GOLDPC_PLAYTIME_VAR "#GOLDPC_PLAYTIME"
 
 /**
  * Represents a setting of GoldPC.
  */
 struct goldpc_mode {
-	int id; //< mode id (sent to client for display)
+	int id;            //< mode id (sent to client for display)
 	int required_time; //< required time to gain points in this mode
-	int points; //< points granted once required_time seconds passes
-	int time_offset; //< seconds to compensate required_time difference to GOLDPC_MAX_TIME
+	int points;        //< points granted once required_time seconds passes
+	int time_offset;   //< seconds to compensate required_time difference to GOLDPC_MAX_TIME
 };
 
 /**
@@ -54,21 +54,21 @@ struct goldpc_interface {
 	struct DBMap *db; // int mode_id -> struct goldpc_mode *
 
 	/* core */
-	int (*init) (bool minimal);
-	void (*final) (void);
-	struct goldpc_mode *(*exists) (int id);
+	int (*init)(bool minimal);
+	void (*final)(void);
+	struct goldpc_mode *(*exists)(int id);
 
 	/* database */
-	void (*read_db_libconfig) (void);
-	bool (*read_db_libconfig_sub) (const struct config_setting_t *it, int n, const char *source);
-	bool (*read_db_validate) (struct goldpc_mode *mode, const char *source);
+	void (*read_db_libconfig)(void);
+	bool (*read_db_libconfig_sub)(const struct config_setting_t *it, int n, const char *source);
+	bool (*read_db_validate)(struct goldpc_mode *mode, const char *source);
 
 	/* process */
-	int (*timeout) (int tid, int64 tick, int id, intptr_t data);
-	void (*addpoints) (struct map_session_data *sd, int points);
-	void (*load) (struct map_session_data *sd);
-	void (*start) (struct map_session_data *sd);
-	void (*stop) (struct map_session_data *sd);
+	int (*timeout)(int tid, int64 tick, int id, intptr_t data);
+	void (*addpoints)(struct map_session_data *sd, int points);
+	void (*load)(struct map_session_data *sd);
+	void (*start)(struct map_session_data *sd);
+	void (*stop)(struct map_session_data *sd);
 };
 
 #ifdef HERCULES_CORE

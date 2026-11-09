@@ -60,7 +60,8 @@ static bool stylist_read_db_libconfig(void)
 	}
 
 	libconfig->destroy(&stylist_conf);
-	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", i, config_filename);
+	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", i,
+	           config_filename);
 	return true;
 }
 
@@ -74,18 +75,21 @@ static bool stylist_read_db_libconfig_sub(struct config_setting_t *it, int idx, 
 	nullpo_ret(source);
 
 	if (!map->setting_lookup_const(it, "Type", &type) || type >= MAX_STYLIST_TYPE || type < 0) {
-		ShowWarning("stylist_read_db_libconfig_sub: Invalid or missing Type (%d) in \"%s\", entry #%d, skipping.\n", type, source, idx);
+		ShowWarning("stylist_read_db_libconfig_sub: Invalid or missing Type (%d) in \"%s\", entry #%d, skipping.\n",
+		            type, source, idx);
 		return false;
 	}
 	if (!map->setting_lookup_const(it, "Id", &i32) || i32 < 0) {
-		ShowWarning("stylist_read_db_libconfig_sub: Invalid or missing Id (%d) in \"%s\", entry #%d, skipping.\n", i32, source, idx);
+		ShowWarning("stylist_read_db_libconfig_sub: Invalid or missing Id (%d) in \"%s\", entry #%d, skipping.\n", i32,
+		            source, idx);
 		return false;
 	}
 	entry.id = i32;
 
 	if (libconfig->setting_lookup_int64(it, "Zeny", &i64)) {
 		if (i64 > MAX_ZENY) {
-			ShowWarning("stylist_read_db_libconfig_sub: zeny is too big in \"%s\", entry #%d, capping to MAX_ZENY.\n", source, idx);
+			ShowWarning("stylist_read_db_libconfig_sub: zeny is too big in \"%s\", entry #%d, capping to MAX_ZENY.\n",
+			            source, idx);
 			entry.zeny = MAX_ZENY;
 		} else {
 			entry.zeny = (int)i64;
@@ -143,16 +147,16 @@ static void stylist_send_rodexitem(struct map_session_data *sd, int itemid)
 
 	nullpo_retv(sd);
 
-	msg.receiver_id = sd->status.char_id;
-	msg.items[0].item.nameid = itemid;
-	msg.items[0].item.amount = 1;
+	msg.receiver_id            = sd->status.char_id;
+	msg.items[0].item.nameid   = itemid;
+	msg.items[0].item.amount   = 1;
 	msg.items[0].item.identify = 1;
-	msg.type = MAIL_TYPE_NPC | MAIL_TYPE_ITEM;
+	msg.type                   = MAIL_TYPE_NPC | MAIL_TYPE_ITEM;
 
 	safestrncpy(msg.sender_name, msg_txt(MSGTBL_STYLESHOP_MAIL_SENDER), NAME_LENGTH);
 	safestrncpy(msg.title, msg_txt(MSGTBL_STYLESHOP_MAIL_TITLE), RODEX_TITLE_LENGTH);
 	safestrncpy(msg.body, msg_txt(MSGTBL_STYLESHOP_MAIL_BODY), MAIL_BODY_LENGTH);
-	msg.send_date = (int)time(NULL);
+	msg.send_date   = (int)time(NULL);
 	msg.expire_date = (int)time(NULL) + RODEX_EXPIRE;
 
 	intif->rodex_sendmail(&msg);
@@ -182,6 +186,7 @@ static void stylist_vector_init(void)
 	for (int i = 0; i < MAX_STYLIST_TYPE; i++)
 		VECTOR_INIT(stylist->data[i]);
 }
+
 static void stylist_vector_clear(void)
 {
 	for (int i = 0; i < MAX_STYLIST_TYPE; i++)
@@ -211,16 +216,16 @@ void stylist_defaults(void)
 	stylist = &stylist_s;
 
 	/* core */
-	stylist->init = do_init_stylist;
-	stylist->final = do_final_stylist;
+	stylist->init                  = do_init_stylist;
+	stylist->final                 = do_final_stylist;
 	/* */
-	stylist->vector_init = stylist_vector_init;
-	stylist->vector_clear = stylist_vector_clear;
+	stylist->vector_init           = stylist_vector_init;
+	stylist->vector_clear          = stylist_vector_clear;
 	/* database */
-	stylist->read_db_libconfig = stylist_read_db_libconfig;
+	stylist->read_db_libconfig     = stylist_read_db_libconfig;
 	stylist->read_db_libconfig_sub = stylist_read_db_libconfig_sub;
 	/* */
-	stylist->request_style_change = stylist_request_style_change;
+	stylist->request_style_change  = stylist_request_style_change;
 	stylist->validate_requirements = stylist_validate_requirements;
-	stylist->send_rodexitem = stylist_send_rodexitem;
+	stylist->send_rodexitem        = stylist_send_rodexitem;
 }

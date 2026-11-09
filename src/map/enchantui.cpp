@@ -57,8 +57,8 @@ static void enchantui_read_db_libconfig(void)
 		return;
 	}
 
-	int i = 0;
-	int count = 0;
+	int i                       = 0;
+	int count                   = 0;
 	struct config_setting_t *it = NULL;
 
 	while ((it = libconfig->setting_get_elem(enchant_db, i++)) != NULL) {
@@ -118,13 +118,14 @@ static bool enchantui_read_db_libconfig_sub(const struct config_setting_t *it, i
 
 	// Copy the entry into the database
 	struct enchant_info *s_ei = (struct enchant_info *)aCalloc(1, sizeof(struct enchant_info));
-	*s_ei = ei;
+	*s_ei                     = ei;
 	idb_put(enchantui->db, ei.Id, s_ei);
 
 	return true;
 }
 
-static bool enchantui_read_db_libconfig_slot_order(const struct config_setting_t *it, struct enchant_info *einfo, int n, const char *source)
+static bool enchantui_read_db_libconfig_slot_order(const struct config_setting_t *it, struct enchant_info *einfo, int n,
+                                                   const char *source)
 {
 	nullpo_retr(false, it);
 	nullpo_retr(false, einfo);
@@ -138,7 +139,8 @@ static bool enchantui_read_db_libconfig_slot_order(const struct config_setting_t
 	const int len = libconfig->setting_length(it);
 
 	if (len < 0 || len > MAX_SLOTS) {
-		ShowError("%s: SlotOrder must be shorter than MAX_SLOTS for entry %d in '%s', skipping...\n", __func__, n, source);
+		ShowError("%s: SlotOrder must be shorter than MAX_SLOTS for entry %d in '%s', skipping...\n", __func__, n,
+		          source);
 		return false;
 	}
 
@@ -146,7 +148,8 @@ static bool enchantui_read_db_libconfig_slot_order(const struct config_setting_t
 		int slot_order = libconfig->setting_get_int_elem(it, i);
 
 		if (slot_order < 0 || slot_order > MAX_SLOTS) {
-			ShowError("%s: Invalid SlotOrder (%d) must be in range 0..MAX_SLOTS for entry %d in '%s', skipping...\n", __func__, slot_order, n, source);
+			ShowError("%s: Invalid SlotOrder (%d) must be in range 0..MAX_SLOTS for entry %d in '%s', skipping...\n",
+			          __func__, slot_order, n, source);
 			return false;
 		}
 	}
@@ -161,7 +164,8 @@ static bool enchantui_read_db_libconfig_slot_order(const struct config_setting_t
 	return true;
 }
 
-static bool enchantui_read_db_libconfig_target_items(const struct config_setting_t *it, struct enchant_info *einfo, int n, const char *source)
+static bool enchantui_read_db_libconfig_target_items(const struct config_setting_t *it, struct enchant_info *einfo,
+                                                     int n, const char *source)
 {
 	nullpo_retr(false, it);
 	nullpo_retr(false, einfo);
@@ -174,7 +178,7 @@ static bool enchantui_read_db_libconfig_target_items(const struct config_setting
 
 	VECTOR_INIT(einfo->TargetItems);
 
-	int i = 0;
+	int i            = 0;
 	const char *name = NULL;
 	while ((name = libconfig->setting_get_string_elem(it, i++)) != NULL) {
 		const struct item_data *id = itemdb->search_name(name);
@@ -184,7 +188,8 @@ static bool enchantui_read_db_libconfig_target_items(const struct config_setting
 		}
 
 		if (id->slot > (MAX_SLOTS - VECTOR_LENGTH(einfo->SlotOrder))) {
-			ShowError("%s: Target item \"%s\" has more active slots than allowed for entry %d in '%s', skipping...\n", __func__, name, n, source);
+			ShowError("%s: Target item \"%s\" has more active slots than allowed for entry %d in '%s', skipping...\n",
+			          __func__, name, n, source);
 			continue;
 		}
 
@@ -194,17 +199,20 @@ static bool enchantui_read_db_libconfig_target_items(const struct config_setting
 	return true;
 }
 
-static bool enchantui_read_db_libconfig_slot_info(const struct config_setting_t *it, struct enchant_info *einfo, int n, const char *source)
+static bool enchantui_read_db_libconfig_slot_info(const struct config_setting_t *it, struct enchant_info *einfo, int n,
+                                                  const char *source)
 {
 	nullpo_retr(false, it);
 	nullpo_retr(false, einfo);
 	nullpo_retr(false, source);
 
-	int i = 0;
+	int i                          = 0;
 	struct config_setting_t *entry = NULL;
 	while ((entry = libconfig->setting_get_elem(it, i++)) != NULL) {
 		int slot_id = 0;
-		if (libconfig->setting_lookup_int(entry, "SlotId", &slot_id) == CONFIG_FALSE || slot_id < 0 || slot_id > MAX_SLOTS) {
+		if (
+		  libconfig->setting_lookup_int(entry, "SlotId", &slot_id) == CONFIG_FALSE || slot_id < 0 || slot_id > MAX_SLOTS
+		) {
 			ShowError("%s: Invalid SlotId provided for entry %d in '%s', skipping...\n", __func__, n, source);
 			continue;
 		}
@@ -215,7 +223,8 @@ static bool enchantui_read_db_libconfig_slot_info(const struct config_setting_t 
 	return true;
 }
 
-static bool enchantui_read_db_libconfig_slot_info_sub(const struct config_setting_t *it, struct enchant_slot_info *sinfo, int n, const char *source)
+static bool enchantui_read_db_libconfig_slot_info_sub(const struct config_setting_t *it,
+                                                      struct enchant_slot_info *sinfo, int n, const char *source)
 {
 	nullpo_retr(false, it);
 	nullpo_retr(false, sinfo);
@@ -253,29 +262,32 @@ static bool enchantui_read_db_libconfig_slot_info_sub(const struct config_settin
 	return true;
 }
 
-static bool enchantui_read_db_libconfig_gradebonus(const struct config_setting_t *it, struct enchant_slot_info *sinfo, int n, const char *source)
+static bool enchantui_read_db_libconfig_gradebonus(const struct config_setting_t *it, struct enchant_slot_info *sinfo,
+                                                   int n, const char *source)
 {
 	nullpo_retr(false, it);
 	nullpo_retr(false, sinfo);
 	nullpo_retr(false, source);
 
-	int i = 0;
+	int i                          = 0;
 	struct config_setting_t *entry = NULL;
 	while ((entry = libconfig->setting_get_elem(it, i++)) != NULL) {
 		const char *name = config_setting_name(entry);
 
 		if (strncmp(name, "Grade", 5) != 0 || strspn(&name[strlen(name) - 1], "0123456789") == 0) {
-			ShowError("%s: Invalid key name %s provided for entry %d in '%s', skipping...\n", __func__, name, n, source);
+			ShowError("%s: Invalid key name %s provided for entry %d in '%s', skipping...\n", __func__, name, n,
+			          source);
 			continue;
 		}
 
-		int grade_level = atoi(name + 5);
+		int grade_level                = atoi(name + 5);
 		sinfo->GradeBonus[grade_level] = libconfig->setting_get_int(entry);
 	}
 	return true;
 }
 
-static bool enchantui_read_db_libconfig_normal_info(const struct config_setting_t *it, struct enchant_info_normal *ninfo, int n, const char *source)
+static bool enchantui_read_db_libconfig_normal_info(const struct config_setting_t *it,
+                                                    struct enchant_info_normal *ninfo, int n, const char *source)
 {
 	nullpo_retr(false, it);
 	nullpo_retr(false, ninfo);
@@ -291,14 +303,15 @@ static bool enchantui_read_db_libconfig_normal_info(const struct config_setting_
 	if (materials != NULL && !enchantui->read_db_libconfig_materials_list(materials, &ninfo->Materials, n, source))
 		return false;
 
-	int i = 0;
-	struct config_setting_t *entry = NULL;
+	int i                                   = 0;
+	struct config_setting_t *entry          = NULL;
 	const struct config_setting_t *itemrate = libconfig->setting_get_member(it, "ItemList");
 	while ((entry = libconfig->setting_get_elem(itemrate, i++)) != NULL) {
 		const char *name = config_setting_name(entry);
 
 		if (strncmp(name, "Grade", 5) != 0 || strspn(&name[strlen(name) - 1], "0123456789") == 0) {
-			ShowError("%s: Invalid key name %s provided for entry %d in '%s', skipping...\n", __func__, name, n, source);
+			ShowError("%s: Invalid key name %s provided for entry %d in '%s', skipping...\n", __func__, name, n,
+			          source);
 			continue;
 		}
 
@@ -309,7 +322,8 @@ static bool enchantui_read_db_libconfig_normal_info(const struct config_setting_
 	return true;
 }
 
-static bool enchantui_read_db_libconfig_perfect_info(const struct config_setting_t *it, struct enchant_info_perfect *epinfo, int n, const char *source)
+static bool enchantui_read_db_libconfig_perfect_info(const struct config_setting_t *it,
+                                                     struct enchant_info_perfect *epinfo, int n, const char *source)
 {
 	nullpo_retr(false, it);
 	nullpo_retr(false, epinfo);
@@ -317,7 +331,7 @@ static bool enchantui_read_db_libconfig_perfect_info(const struct config_setting
 
 	VECTOR_INIT(*epinfo);
 
-	int i = 0;
+	int i                          = 0;
 	struct config_setting_t *entry = NULL;
 	while ((entry = libconfig->setting_get_elem(it, i++)) != NULL) {
 		struct enchant_info_perfect_entry perfentry{};
@@ -325,19 +339,23 @@ static bool enchantui_read_db_libconfig_perfect_info(const struct config_setting
 
 		struct item_data *idata = itemdb->name2id(name);
 		if (idata == NULL) {
-			ShowWarning("%s: unknown PerfectEnchants item '%s' for entry %d in '%s', skipping...\n", __func__, name, n, source);
+			ShowWarning("%s: unknown PerfectEnchants item '%s' for entry %d in '%s', skipping...\n", __func__, name, n,
+			            source);
 			continue;
 		}
 		perfentry.BaseItem = idata->nameid;
 
 		libconfig->setting_lookup_int(entry, "Zeny", &perfentry.Zeny);
 		if (perfentry.Zeny < 0 || perfentry.Zeny > MAX_ZENY) {
-			ShowWarning("%s: invalid PerfectEnchants zeny (%d) for entry %d in '%s', skipping...\n", __func__, perfentry.Zeny, n, source);
+			ShowWarning("%s: invalid PerfectEnchants zeny (%d) for entry %d in '%s', skipping...\n", __func__,
+			            perfentry.Zeny, n, source);
 			continue;
 		}
 
 		const struct config_setting_t *materials = libconfig->setting_get_member(entry, "Materials");
-		if (materials != NULL && !enchantui->read_db_libconfig_materials_list(materials, &perfentry.Materials, n, source))
+		if (
+		  materials != NULL && !enchantui->read_db_libconfig_materials_list(materials, &perfentry.Materials, n, source)
+		)
 			continue;
 
 		VECTOR_ENSURE(*epinfo, 1, 1);
@@ -347,7 +365,8 @@ static bool enchantui_read_db_libconfig_perfect_info(const struct config_setting
 	return true;
 }
 
-static bool enchantui_read_db_libconfig_upgrade_info(const struct config_setting_t *it, struct enchant_info_upgrade *uinfo, int n, const char *source)
+static bool enchantui_read_db_libconfig_upgrade_info(const struct config_setting_t *it,
+                                                     struct enchant_info_upgrade *uinfo, int n, const char *source)
 {
 	nullpo_retr(false, it);
 	nullpo_retr(false, uinfo);
@@ -355,7 +374,7 @@ static bool enchantui_read_db_libconfig_upgrade_info(const struct config_setting
 
 	VECTOR_INIT(*uinfo);
 
-	int i = 0;
+	int i                          = 0;
 	struct config_setting_t *entry = NULL;
 	while ((entry = libconfig->setting_get_elem(it, i++)) != NULL) {
 		struct enchant_info_upgrade_entry upgentry{};
@@ -363,7 +382,8 @@ static bool enchantui_read_db_libconfig_upgrade_info(const struct config_setting
 
 		struct item_data *idata = itemdb->name2id(name);
 		if (idata == NULL) {
-			ShowWarning("%s: unknown UpgradeInfo item '%s' for entry %d in '%s', skipping...\n", __func__, name, n, source);
+			ShowWarning("%s: unknown UpgradeInfo item '%s' for entry %d in '%s', skipping...\n", __func__, name, n,
+			            source);
 			continue;
 		}
 		upgentry.BaseItem = idata->nameid;
@@ -377,12 +397,15 @@ static bool enchantui_read_db_libconfig_upgrade_info(const struct config_setting
 
 		libconfig->setting_lookup_int(entry, "Zeny", &upgentry.Zeny);
 		if (upgentry.Zeny < 0 || upgentry.Zeny > MAX_ZENY) {
-			ShowWarning("%s: invalid UpgradeInfo zeny (%d) for entry %d in '%s', skipping...\n", __func__, upgentry.Zeny, n, source);
+			ShowWarning("%s: invalid UpgradeInfo zeny (%d) for entry %d in '%s', skipping...\n", __func__,
+			            upgentry.Zeny, n, source);
 			continue;
 		}
 
 		const struct config_setting_t *materials = libconfig->setting_get_member(entry, "Materials");
-		if (materials != NULL && !enchantui->read_db_libconfig_materials_list(materials, &upgentry.Materials, n, source))
+		if (
+		  materials != NULL && !enchantui->read_db_libconfig_materials_list(materials, &upgentry.Materials, n, source)
+		)
 			continue;
 
 		VECTOR_ENSURE(*uinfo, 1, 1);
@@ -392,7 +415,8 @@ static bool enchantui_read_db_libconfig_upgrade_info(const struct config_setting
 	return true;
 }
 
-static bool enchantui_read_db_libconfig_reset_info(const struct config_setting_t *it, struct enchant_info_reset *rinfo, int n, const char *source)
+static bool enchantui_read_db_libconfig_reset_info(const struct config_setting_t *it, struct enchant_info_reset *rinfo,
+                                                   int n, const char *source)
 {
 	nullpo_retr(false, it);
 	nullpo_retr(false, rinfo);
@@ -417,7 +441,8 @@ static bool enchantui_read_db_libconfig_reset_info(const struct config_setting_t
 	return true;
 }
 
-static bool enchantui_read_db_libconfig_materials_list(const struct config_setting_t *it, struct itemlist *materials, int n, const char *source)
+static bool enchantui_read_db_libconfig_materials_list(const struct config_setting_t *it, struct itemlist *materials,
+                                                       int n, const char *source)
 {
 	nullpo_retr(false, it);
 	nullpo_retr(false, materials);
@@ -430,25 +455,27 @@ static bool enchantui_read_db_libconfig_materials_list(const struct config_setti
 
 	VECTOR_INIT(*materials);
 
-	int i = 0;
+	int i                          = 0;
 	struct config_setting_t *entry = NULL;
 	while ((entry = libconfig->setting_get_elem(it, i++)) != NULL) {
 		const char *name = config_setting_name(entry);
 
 		struct item_data *idata = itemdb->name2id(name);
 		if (idata == NULL) {
-			ShowWarning("%s: unknown materials item '%s' for entry %d in '%s', skipping...\n", __func__, name, n , source);
+			ShowWarning("%s: unknown materials item '%s' for entry %d in '%s', skipping...\n", __func__, name, n,
+			            source);
 			continue;
 		}
 
 		int i32 = 0;
 		if ((i32 = libconfig->setting_get_int(entry)) == CONFIG_TRUE && (i32 <= 0 || i32 > MAX_AMOUNT)) {
-			ShowWarning("%s: invalid materials amount (%d) for entry %d in '%s', skipping...\n", __func__, i32, n, source);
+			ShowWarning("%s: invalid materials amount (%d) for entry %d in '%s', skipping...\n", __func__, i32, n,
+			            source);
 			continue;
 		}
 
 		struct itemlist_entry mitem{};
-		mitem.id = idata->nameid;
+		mitem.id     = idata->nameid;
 		mitem.amount = i32;
 		VECTOR_ENSURE(*materials, 1, 1);
 		VECTOR_PUSH(*materials, mitem);
@@ -456,7 +483,8 @@ static bool enchantui_read_db_libconfig_materials_list(const struct config_setti
 	return true;
 }
 
-static bool enchantui_read_db_libconfig_itemrate_list(const struct config_setting_t *it, struct enchant_item_list *elist, int n, const char *source)
+static bool enchantui_read_db_libconfig_itemrate_list(const struct config_setting_t *it,
+                                                      struct enchant_item_list *elist, int n, const char *source)
 {
 	nullpo_retr(false, it);
 	nullpo_retr(false, elist);
@@ -469,25 +497,27 @@ static bool enchantui_read_db_libconfig_itemrate_list(const struct config_settin
 
 	VECTOR_INIT(*elist);
 
-	int i = 0;
+	int i                          = 0;
 	struct config_setting_t *entry = NULL;
 	while ((entry = libconfig->setting_get_elem(it, i++)) != NULL) {
 		const char *name = config_setting_name(entry);
 
 		struct item_data *idata = itemdb->name2id(name);
 		if (idata == NULL) {
-			ShowWarning("%s: unknown ItemList item '%s' for entry %d in '%s', skipping...\n", __func__, name, n, source);
+			ShowWarning("%s: unknown ItemList item '%s' for entry %d in '%s', skipping...\n", __func__, name, n,
+			            source);
 			continue;
 		}
 
 		int i32 = 0;
 		if ((i32 = libconfig->setting_get_int(entry)) == CONFIG_TRUE && (i32 <= 0 || i32 > MAX_AMOUNT)) {
-			ShowWarning("%s: invalid ItemList amount (%d) for entry %d in '%s', skipping...\n", __func__, i32, n, source);
+			ShowWarning("%s: invalid ItemList amount (%d) for entry %d in '%s', skipping...\n", __func__, i32, n,
+			            source);
 			continue;
 		}
 
 		struct enchant_item_rate_entry ritem{};
-		ritem.id = idata->nameid;
+		ritem.id   = idata->nameid;
 		ritem.rate = i32;
 		VECTOR_ENSURE(*elist, 1, 1);
 		VECTOR_PUSH(*elist, ritem);
@@ -503,12 +533,18 @@ static bool enchantui_read_db_libconfig_itemrate_list(const struct config_settin
  * @param[in] index               the target item index.
  * @return pointer to the enchant info data or NULL on failure.
  */
-static const struct enchant_info *enchantui_validate_targetitem(struct map_session_data *sd, int64 enchant_group, int index)
+static const struct enchant_info *enchantui_validate_targetitem(struct map_session_data *sd, int64 enchant_group,
+                                                                int index)
 {
 	nullpo_retr(NULL, sd);
 
 	// Validate the item index
-	if (index < 0 || index >= sd->status.inventorySize || sd->status.inventory[index].nameid <= 0 || sd->inventory_data[index] == NULL)
+	if (
+	  index < 0
+	  || index >= sd->status.inventorySize
+	  || sd->status.inventory[index].nameid <= 0
+	  || sd->inventory_data[index] == NULL
+	)
 		return NULL;
 
 	// Validate the enchant group
@@ -518,7 +554,8 @@ static const struct enchant_info *enchantui_validate_targetitem(struct map_sessi
 
 	// Validate the existence of the item in the group
 	int i = 0;
-	ARR_FIND(0, VECTOR_LENGTH(ei->TargetItems), i, VECTOR_INDEX(ei->TargetItems, i) == sd->status.inventory[index].nameid);
+	ARR_FIND(0, VECTOR_LENGTH(ei->TargetItems), i,
+	         VECTOR_INDEX(ei->TargetItems, i) == sd->status.inventory[index].nameid);
 	if (i == VECTOR_LENGTH(ei->TargetItems))
 		return NULL;
 
@@ -583,7 +620,8 @@ static int enchantui_validate_slot_id(struct map_session_data *sd, const struct 
  * @param[in] materials		a pointer to itemlist.
  * @return true if all items are available or false if not.
  */
-static bool enchantui_validate_requirements(struct map_session_data *sd, const int zeny, const struct itemlist *materials)
+static bool enchantui_validate_requirements(struct map_session_data *sd, const int zeny,
+                                            const struct itemlist *materials)
 {
 	nullpo_retr(false, sd);
 	nullpo_retr(false, materials);
@@ -613,7 +651,7 @@ static bool enchantui_validate_material_list(struct map_session_data *sd, const 
 
 	for (int i = 0; i < VECTOR_LENGTH(*materials); ++i) {
 		const struct itemlist_entry *entry = &VECTOR_INDEX(*materials, i);
-		int mat_idx = pc->search_inventory(sd, entry->id);
+		int mat_idx                        = pc->search_inventory(sd, entry->id);
 
 		if (mat_idx == INDEX_NOT_FOUND || sd->status.inventory[mat_idx].amount < entry->amount)
 			return false;
@@ -635,7 +673,7 @@ static bool enchantui_consume_material_list(struct map_session_data *sd, const s
 
 	for (int i = 0; i < VECTOR_LENGTH(*materials); ++i) {
 		const struct itemlist_entry *entry = &VECTOR_INDEX(*materials, i);
-		int mat_idx = pc->search_inventory(sd, entry->id);
+		int mat_idx                        = pc->search_inventory(sd, entry->id);
 
 		if (pc->delitem(sd, mat_idx, entry->amount, 0, DELITEM_NORMAL, LOG_TYPE_NPC) != 0)
 			return false;
@@ -688,7 +726,7 @@ static void enchantui_normal_request(struct map_session_data *sd, int64 enchant_
 	{
 		// Limit the iterations to avoid lag
 		int count = battle->bc->enchant_ui_max_loop * enchant_count + (rnd() % enchant_count);
-		int idx = 0;
+		int idx   = 0;
 		while (count > 0 && rnd() % 100000 >= VECTOR_INDEX(ei_normal->ItemList[(int)it->grade], idx).rate) {
 			idx = (idx + 1) % enchant_count;
 			--count;
@@ -729,6 +767,7 @@ static void enchantui_perfect_request(struct map_session_data *sd, int64 enchant
 
 	// Validate the perfect enchant id
 	const struct enchant_info_perfect *ei_perfect = &ei->SlotInfo[slot_id].PerfectEnchants;
+
 	const struct enchant_info_perfect_entry *ei_entry = NULL;
 	{
 		int i = 0;
@@ -786,6 +825,7 @@ static void enchantui_upgrade_request(struct map_session_data *sd, int64 enchant
 
 	// Validate the upgrade enchant id
 	const struct enchant_info_upgrade *ei_upgrade = &ei->SlotInfo[slot_id].UpgradeInfo;
+
 	const struct enchant_info_upgrade_entry *ei_entry = NULL;
 	{
 		int i = 0;
@@ -902,34 +942,34 @@ void enchantui_defaults(void)
 	enchantui = &enchantui_s;
 
 	/* core */
-	enchantui->init = do_init_enchantui;
-	enchantui->final = do_final_enchantui;
+	enchantui->init         = do_init_enchantui;
+	enchantui->final        = do_final_enchantui;
 	enchantui->db_final_sub = enchantui_db_final_sub;
-	enchantui->exists = enchantui_db_exists;
+	enchantui->exists       = enchantui_db_exists;
 
 	/* database */
-	enchantui->read_db_libconfig = enchantui_read_db_libconfig;
-	enchantui->read_db_libconfig_sub = enchantui_read_db_libconfig_sub;
-	enchantui->read_db_libconfig_slot_order = enchantui_read_db_libconfig_slot_order;
-	enchantui->read_db_libconfig_target_items = enchantui_read_db_libconfig_target_items;
-	enchantui->read_db_libconfig_slot_info = enchantui_read_db_libconfig_slot_info;
-	enchantui->read_db_libconfig_slot_info_sub = enchantui_read_db_libconfig_slot_info_sub;
-	enchantui->read_db_libconfig_gradebonus = enchantui_read_db_libconfig_gradebonus;
-	enchantui->read_db_libconfig_normal_info = enchantui_read_db_libconfig_normal_info;
-	enchantui->read_db_libconfig_perfect_info = enchantui_read_db_libconfig_perfect_info;
-	enchantui->read_db_libconfig_upgrade_info = enchantui_read_db_libconfig_upgrade_info;
-	enchantui->read_db_libconfig_reset_info = enchantui_read_db_libconfig_reset_info;
+	enchantui->read_db_libconfig                = enchantui_read_db_libconfig;
+	enchantui->read_db_libconfig_sub            = enchantui_read_db_libconfig_sub;
+	enchantui->read_db_libconfig_slot_order     = enchantui_read_db_libconfig_slot_order;
+	enchantui->read_db_libconfig_target_items   = enchantui_read_db_libconfig_target_items;
+	enchantui->read_db_libconfig_slot_info      = enchantui_read_db_libconfig_slot_info;
+	enchantui->read_db_libconfig_slot_info_sub  = enchantui_read_db_libconfig_slot_info_sub;
+	enchantui->read_db_libconfig_gradebonus     = enchantui_read_db_libconfig_gradebonus;
+	enchantui->read_db_libconfig_normal_info    = enchantui_read_db_libconfig_normal_info;
+	enchantui->read_db_libconfig_perfect_info   = enchantui_read_db_libconfig_perfect_info;
+	enchantui->read_db_libconfig_upgrade_info   = enchantui_read_db_libconfig_upgrade_info;
+	enchantui->read_db_libconfig_reset_info     = enchantui_read_db_libconfig_reset_info;
 	enchantui->read_db_libconfig_materials_list = enchantui_read_db_libconfig_materials_list;
-	enchantui->read_db_libconfig_itemrate_list = enchantui_read_db_libconfig_itemrate_list;
+	enchantui->read_db_libconfig_itemrate_list  = enchantui_read_db_libconfig_itemrate_list;
 
 	/* processing requests */
-	enchantui->validate_targetitem = enchantui_validate_targetitem;
-	enchantui->validate_slot_id = enchantui_validate_slot_id;
-	enchantui->validate_requirements = enchantui_validate_requirements;
+	enchantui->validate_targetitem    = enchantui_validate_targetitem;
+	enchantui->validate_slot_id       = enchantui_validate_slot_id;
+	enchantui->validate_requirements  = enchantui_validate_requirements;
 	enchantui->validate_material_list = enchantui_validate_material_list;
-	enchantui->consume_material_list = enchantui_consume_material_list;
-	enchantui->normal_request = enchantui_normal_request;
-	enchantui->perfect_request = enchantui_perfect_request;
-	enchantui->upgrade_request = enchantui_upgrade_request;
-	enchantui->reset_request = enchantui_reset_request;
+	enchantui->consume_material_list  = enchantui_consume_material_list;
+	enchantui->normal_request         = enchantui_normal_request;
+	enchantui->perfect_request        = enchantui_perfect_request;
+	enchantui->upgrade_request        = enchantui_upgrade_request;
+	enchantui->reset_request          = enchantui_reset_request;
 }

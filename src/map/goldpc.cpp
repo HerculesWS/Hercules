@@ -53,8 +53,8 @@ void goldpc_read_db_libconfig(void)
 		return;
 	}
 
-	int i = 0;
-	int count = 0;
+	int i                       = 0;
+	int count                   = 0;
 	struct config_setting_t *it = NULL;
 
 	while ((it = libconfig->setting_get_elem(goldpc_db, i++)) != NULL) {
@@ -104,7 +104,7 @@ bool goldpc_read_db_libconfig_sub(const struct config_setting_t *it, int n, cons
 	mode.time_offset = (GOLDPC_MAX_TIME - mode.required_time);
 
 	struct goldpc_mode *mode_entry = (struct goldpc_mode *)aCalloc(1, sizeof(struct goldpc_mode));
-	*mode_entry = mode;
+	*mode_entry                    = mode;
 	idb_put(goldpc->db, mode.id, mode_entry);
 
 	script->set_constant2(const_name, mode.id, false, false);
@@ -119,22 +119,22 @@ bool goldpc_read_db_validate(struct goldpc_mode *mode, const char *source)
 
 	if (mode->id == 0) {
 		ShowError(
-			"%s: Invalid GoldPC mode Id (%d) provided in '%s'. Id '0' is reserved for disabled state. Skipping...\n",
-			__func__, mode->id, source);
+		  "%s: Invalid GoldPC mode Id (%d) provided in '%s'. Id '0' is reserved for disabled state. Skipping...\n",
+		  __func__, mode->id, source);
 		return false;
 	}
 
 	if (mode->required_time < 1 || mode->required_time > GOLDPC_MAX_TIME) {
 		ShowError(
-			"%s: Invalid GoldPC mode Time provided for ID %d in '%s'. Time must be between 1 and %d. Skipping...\n",
-			__func__, mode->id, source, GOLDPC_MAX_TIME);
+		  "%s: Invalid GoldPC mode Time provided for ID %d in '%s'. Time must be between 1 and %d. Skipping...\n",
+		  __func__, mode->id, source, GOLDPC_MAX_TIME);
 		return false;
 	}
 
 	if (mode->points < 0 || mode->points > GOLDPC_MAX_POINTS) {
 		ShowError(
-			"%s: Invalid GoldPC mode Points provided for ID %d in '%s'. Points must be between 0 and %d. Skipping...\n",
-			__func__, mode->id, source, GOLDPC_MAX_POINTS);
+		  "%s: Invalid GoldPC mode Points provided for ID %d in '%s'. Points must be between 0 and %d. Skipping...\n",
+		  __func__, mode->id, source, GOLDPC_MAX_POINTS);
 		return false;
 	}
 
@@ -168,11 +168,11 @@ static void goldpc_load(struct map_session_data *sd)
 	if (!battle_config.feature_goldpc_enable)
 		return;
 
-	sd->goldpc.mode = goldpc->exists(battle_config.feature_goldpc_default_mode);
-	sd->goldpc.points = pc_readaccountreg(sd,script->add_variable(GOLDPC_POINTS_VAR));
-	sd->goldpc.play_time = pc_readaccountreg(sd,script->add_variable(GOLDPC_PLAYTIME_VAR));
-	sd->goldpc.tid = INVALID_TIMER;
-	sd->goldpc.loaded = true;
+	sd->goldpc.mode      = goldpc->exists(battle_config.feature_goldpc_default_mode);
+	sd->goldpc.points    = pc_readaccountreg(sd, script->add_variable(GOLDPC_POINTS_VAR));
+	sd->goldpc.play_time = pc_readaccountreg(sd, script->add_variable(GOLDPC_PLAYTIME_VAR));
+	sd->goldpc.tid       = INVALID_TIMER;
+	sd->goldpc.loaded    = true;
 
 	if (sd->state.autotrade > 0 || sd->state.standalone > 0)
 		return;
@@ -217,12 +217,7 @@ static void goldpc_start(struct map_session_data *sd)
 			return;
 		}
 
-		sd->goldpc.tid = timer->add(
-			sd->goldpc.start_tick + remaining_time * 1000,
-			goldpc->timeout,
-			sd->bl.id,
-			0
-		);
+		sd->goldpc.tid = timer->add(sd->goldpc.start_tick + remaining_time * 1000, goldpc->timeout, sd->bl.id, 0);
 	}
 
 	clif->goldpc_info(sd);
@@ -244,9 +239,9 @@ static int goldpc_timeout(int tid, int64 tick, int id, intptr_t data)
 		return 0;
 	}
 
-	sd->goldpc.play_time = 0;
+	sd->goldpc.play_time  = 0;
 	sd->goldpc.start_tick = 0;
-	sd->goldpc.tid = INVALID_TIMER;
+	sd->goldpc.tid        = INVALID_TIMER;
 
 	if (sd->goldpc.mode == NULL || sd->goldpc.points >= GOLDPC_MAX_POINTS)
 		return 0;
@@ -273,8 +268,8 @@ static void goldpc_stop(struct map_session_data *sd)
 
 	if (sd->goldpc.tid != INVALID_TIMER) {
 		if (sd->goldpc.start_tick > 0) {
-			int played_ticks = (int) ((timer->gettick() - sd->goldpc.start_tick) / 1000);
-			int playtime = (int)std::clamp(played_ticks + sd->goldpc.play_time, 0, GOLDPC_MAX_TIME);
+			int played_ticks = (int)((timer->gettick() - sd->goldpc.start_tick) / 1000);
+			int playtime     = (int)std::clamp(played_ticks + sd->goldpc.play_time, 0, GOLDPC_MAX_TIME);
 
 			sd->goldpc.play_time = playtime;
 			pc_setaccountreg(sd, script->add_variable(GOLDPC_PLAYTIME_VAR), playtime);
@@ -289,7 +284,7 @@ static void goldpc_stop(struct map_session_data *sd)
  * Checks if a goldpc with given id exists.
  * Returns NULL if it doesn't.
  */
-static struct goldpc_mode * goldpc_db_exists(int id)
+static struct goldpc_mode *goldpc_db_exists(int id)
 {
 	return (struct goldpc_mode *)idb_get(goldpc->db, id);
 }
@@ -315,19 +310,19 @@ void goldpc_defaults(void)
 	goldpc = &goldpc_s;
 
 	/* core */
-	goldpc->init = do_init_goldpc;
-	goldpc->final = do_final_goldpc;
+	goldpc->init   = do_init_goldpc;
+	goldpc->final  = do_final_goldpc;
 	goldpc->exists = goldpc_db_exists;
 
 	/* database */
-	goldpc->read_db_libconfig = goldpc_read_db_libconfig;
+	goldpc->read_db_libconfig     = goldpc_read_db_libconfig;
 	goldpc->read_db_libconfig_sub = goldpc_read_db_libconfig_sub;
-	goldpc->read_db_validate = goldpc_read_db_validate;
+	goldpc->read_db_validate      = goldpc_read_db_validate;
 
 	/* process */
 	goldpc->addpoints = goldpc_addpoints;
-	goldpc->load = goldpc_load;
-	goldpc->start = goldpc_start;
-	goldpc->timeout = goldpc_timeout;
-	goldpc->stop = goldpc_stop;
+	goldpc->load      = goldpc_load;
+	goldpc->start     = goldpc_start;
+	goldpc->timeout   = goldpc_timeout;
+	goldpc->stop      = goldpc_stop;
 }
