@@ -43,13 +43,13 @@ struct loginlog_interface {
 	struct Sql *sql_handle;
 	bool enabled;
 	struct s_loginlog_dbs *dbs;
-	unsigned long (*failedattempts) (uint32 ip, unsigned int minutes);
-	void (*log) (uint32 ip, const char* username, int rcode, const char* message);
-	bool (*init) (void);
-	bool (*final) (void);
-	bool (*config_read_names) (const char *filename, struct config_t *config, bool imported);
-	bool (*config_read_log) (const char *filename, struct config_t *config, bool imported);
-	bool (*config_read) (const char *filename, bool imported);
+	unsigned long (*failedattempts)(uint32 ip, unsigned int minutes);
+	void (*log)(uint32 ip, const char *username, int rcode, const char *message);
+	bool (*init)(void);
+	bool (*final)(void);
+	bool (*config_read_names)(const char *filename, struct config_t *config, bool imported);
+	bool (*config_read_log)(const char *filename, struct config_t *config, bool imported);
+	bool (*config_read)(const char *filename, bool imported);
 };
 
 #ifdef HERCULES_CORE
