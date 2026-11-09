@@ -785,10 +785,12 @@ static bool chrif_char_ask_name_answer(int acc, const char *player_name, uint16 
 	if( type == CHAR_ASK_NAME_CHARBAN ) type = CHAR_ASK_NAME_BAN;
 	if( type == CHAR_ASK_NAME_CHARUNBAN ) type = CHAR_ASK_NAME_UNBAN;
 
-	if( type >= CHAR_ASK_NAME_BLOCK && type <= CHAR_ASK_NAME_CHANGESEX )
-		snprintf(action, 25, "%s", msg_sd(sd, MSGTBL_CHRIF_LOGIN_SERVER_OFFLINE + type)); //block|ban|unblock|unban|change the sex of
-	else
+	if( type >= CHAR_ASK_NAME_BLOCK && type <= CHAR_ASK_NAME_CHANGESEX ) {
+		//block|ban|unblock|unban|change the sex of
+		snprintf(action, 25, "%s", msg_sd(sd, MSGTBL_CHRIF_LOGIN_SERVER_OFFLINE + type));
+	} else {
 		snprintf(action,25,"???");
+	}
 
 	switch( answer ) {
 		case CHAR_ASK_NAME_ANS_DONE: {

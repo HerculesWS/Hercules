@@ -42,10 +42,10 @@
 #ifndef MAXCONN
 #ifdef SOCKET_EPOLL
 #define MAXCONN 3072
-#else  // SOCKET_EPOLL
+#else
 #define MAXCONN FD_SETSIZE
-#endif  // SOCKET_EPOLL
-#endif  // MAXCONN
+#endif
+#endif
 
 #ifdef SOCKET_EPOLL
 #include <sys/epoll.h>
@@ -53,17 +53,17 @@
 
 #ifdef WIN32
 #	include "common/winapi.h"
-#else  // WIN32
+#else
 #	include <arpa/inet.h>
 #	include <errno.h>
 #	include <net/if.h>
 #	include <netdb.h>
 #if defined __linux__ || defined __linux
 #       include <linux/tcp.h>
-#else  // defined __linux__ || defined __linux
+#else
 #	include <netinet/in.h>
 #	include <netinet/tcp.h>
-#endif  // defined __linux__ || defined __linux
+#endif
 #	include <sys/ioctl.h>
 #	include <sys/socket.h>
 #	include <sys/time.h>
@@ -71,14 +71,14 @@
 
 #ifndef SIOCGIFCONF
 #	include <sys/sockio.h> // SIOCGIFCONF on Solaris, maybe others? [Shinomori]
-#endif  // SIOCGIFCONF
+#endif
 #ifndef FIONBIO
 #	include <sys/filio.h> // FIONBIO on Solaris [FlavioJS]
-#endif  // FIONBIO
+#endif
 
 #ifdef HAVE_SETRLIMIT
 #	include <sys/resource.h>
-#endif  // HAVE_SETRLIMIT
+#endif
 #endif  // WIN32
 
 /**
@@ -157,8 +157,8 @@ static int sock2newfd(SOCKET s)
 	for( fd = 1; fd < sock_arr_len; ++fd )
 		if( sock_arr[fd] == INVALID_SOCKET )
 			break;// empty position
-	if( fd == ARRAYLENGTH(sock_arr) )
-	{// too many sockets
+	if (fd == ARRAYLENGTH(sock_arr)) {
+		// too many sockets
 		closesocket(s);
 		WSASetLastError(WSAEMFILE);
 		return -1;
@@ -260,7 +260,7 @@ static char *sErr(int code)
 
 #ifndef MSG_NOSIGNAL
 	#define MSG_NOSIGNAL 0
-#endif  // MSG_NOSIGNAL
+#endif
 
 #ifndef SOCKET_EPOLL
 // Select based Event Dispatcher:
@@ -401,8 +401,8 @@ static void setsocketopts(int fd, struct hSockOpt *opt)
 #ifdef SO_REUSEPORT
 	if (sSetsockopt(fd, SOL_SOCKET, SO_REUSEPORT, (char *)&yes, sizeof(yes)))
 		ShowWarning("setsocketopts: Unable to set SO_REUSEPORT mode for connection #%d!\n", fd);
-#endif // SO_REUSEPORT
-#endif // WIN32
+#endif
+#endif
 
 	// Set the socket into no-delay mode; otherwise packets get delayed for up to 200ms, likely creating server-side lag.
 	// The RO protocol is mainly single-packet request/response, plus the FIFO model already does packet grouping anyway.
@@ -412,10 +412,10 @@ static void setsocketopts(int fd, struct hSockOpt *opt)
 	if (opt && opt->setTimeo) {
 #if defined(WIN32)
 		DWORD timeout = 5000; // https://msdn.microsoft.com/en-us/library/windows/desktop/ms740476(v=vs.85).aspx
-#else // not WIN32
+#else
 		struct timeval timeout{};
 		timeout.tv_sec = 5;
-#endif // WIN32
+#endif
 
 		if (sSetsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof(timeout)))
 			ShowWarning("setsocketopts: Unable to set SO_RCVTIMEO for connection #%d!\n", fd);
@@ -433,11 +433,11 @@ static void setsocketopts(int fd, struct hSockOpt *opt)
 #ifdef TCP_THIN_LINEAR_TIMEOUTS
 	if (sSetsockopt(fd, IPPROTO_TCP, TCP_THIN_LINEAR_TIMEOUTS, (char *)&yes, sizeof(yes)))
 		ShowWarning("setsocketopts: Unable to set TCP_THIN_LINEAR_TIMEOUTS mode for connection #%d!\n", fd);
-#endif  // TCP_THIN_LINEAR_TIMEOUTS
+#endif
 #ifdef TCP_THIN_DUPACK
 	if (sSetsockopt(fd, IPPROTO_TCP, TCP_THIN_DUPACK, (char *)&yes, sizeof(yes)))
 		ShowWarning("setsocketopts: Unable to set TCP_THIN_DUPACK mode for connection #%d!\n", fd);
-#endif  // TCP_THIN_DUPACK
+#endif
 }
 
 /*======================================
@@ -449,7 +449,7 @@ static void set_eof(int fd)
 #ifdef SEND_SHORTLIST
 		// Add this socket to the shortlist for eof handling.
 		send_shortlist_add_fd(fd);
-#endif  // SEND_SHORTLIST
+#endif
 		sockt->session[fd]->flag.eof = 1;
 	}
 }
@@ -487,7 +487,7 @@ static int recv_to_fifo(int fd)
 	{
 		socket_data_ci += len;
 	}
-#endif  // SHOW_SERVER_STATS
+#endif
 	return (int)len;
 }
 
@@ -509,7 +509,7 @@ static int send_from_fifo(int fd)
 			//ShowDebug("send_from_fifo: %s, ending connection #%d\n", error_msg(), fd);
 #ifdef SHOW_SERVER_STATS
 			socket_data_qo -= sockt->session[fd]->wdata->size();
-#endif  // SHOW_SERVER_STATS
+#endif
 			sockt->session[fd]->wdata->truncate(); //Clear the send queue as we can't send anymore. [Skotlex]
 			sockt->eof(fd);
 		}
@@ -530,7 +530,7 @@ static int send_from_fifo(int fd)
 		{
 			socket_data_co += len;
 		}
-#endif  // SHOW_SERVER_STATS
+#endif
 	}
 
 	return 0;
@@ -589,7 +589,7 @@ static int connect_client(int listen_fd)
 	// Select Based Event Dispatcher
 	sFD_SET(fd,&readfds);
 
-#else  // SOCKET_EPOLL
+#else
 	// Epoll based Event Dispatcher
 	epevent.data.fd = fd;
 	epevent.events = EPOLLIN;
@@ -600,7 +600,7 @@ static int connect_client(int listen_fd)
 		return -1;
 	}
 
-#endif  // SOCKET_EPOLL
+#endif
 
 	if( sockt->fd_max <= fd ) sockt->fd_max = fd + 1;
 
@@ -657,7 +657,7 @@ static int make_listen_bind(uint32 ip, uint16 port)
 	// Select Based Event Dispatcher
 	sFD_SET(fd,&readfds);
 
-#else  // SOCKET_EPOLL
+#else
 	// Epoll based Event Dispatcher
 	epevent.data.fd = fd;
 	epevent.events = EPOLLIN;
@@ -668,7 +668,7 @@ static int make_listen_bind(uint32 ip, uint16 port)
 		exit(EXIT_FAILURE);
 	}
 
-#endif  // SOCKET_EPOLL
+#endif
 
 	if(sockt->fd_max <= fd) sockt->fd_max = fd + 1;
 
@@ -727,7 +727,7 @@ static int make_connection(uint32 ip, uint16 port, struct hSockOpt *opt)
 	// Select Based Event Dispatcher
 	sFD_SET(fd,&readfds);
 
-#else  // SOCKET_EPOLL
+#else
 	// Epoll based Event Dispatcher
 	epevent.data.fd = fd;
 	epevent.events = EPOLLIN;
@@ -738,7 +738,7 @@ static int make_connection(uint32 ip, uint16 port, struct hSockOpt *opt)
 		return -1;
 	}
 
-#endif  // SOCKET_EPOLL
+#endif
 
 	if(sockt->fd_max <= fd) sockt->fd_max = fd + 1;
 
@@ -772,7 +772,7 @@ static void delete_session(int fd)
 #ifdef SHOW_SERVER_STATS
 		socket_data_qi -= sockt->session[fd]->rdata->readable();
 		socket_data_qo -= sockt->session[fd]->wdata->size();
-#endif  // SHOW_SERVER_STATS
+#endif
 		sockt->session[fd]->func_delete(fd);
 		fifo_buffer::destroy(sockt->session[fd]->rdata);
 		fifo_buffer::destroy(sockt->session[fd]->wdata);
@@ -873,7 +873,7 @@ static int rfifoskip(int fd, size_t len)
 	s->rdata->advance_read(len);
 #ifdef SHOW_SERVER_STATS
 	socket_data_qi -= len;
-#endif  // SHOW_SERVER_STATS
+#endif
 	return 0;
 }
 
@@ -929,7 +929,7 @@ static int wfifoset(int fd, size_t len, bool validate)
 	s->wdata->advance_write(len);
 #ifdef SHOW_SERVER_STATS
 	socket_data_qo += len;
-#endif  // SHOW_SERVER_STATS
+#endif
 	//If the interserver has 200% of its normal size full, flush the data.
 	if (s->flag.server && s->wdata->size() >= 2 * FIFOSIZE_SERVERLINK)
 		sockt->flush(fd);
@@ -962,7 +962,7 @@ static int do_sockets(int next)
 #ifndef SOCKET_EPOLL
 	fd_set rfd;
 	struct timeval timeout;
-#endif  // SOCKET_EPOLL
+#endif
 	int ret,i;
 
 	// PRESEND Timers are executed before do_sendrecv and can send packets and/or set sessions to eof.
@@ -998,7 +998,7 @@ static int do_sockets(int next)
 		}
 		return 0; // interrupted by a signal, just loop and try again
 	}
-#else  // SOCKET_EPOLL
+#else
 	// Epoll based Event Dispatcher
 
 	ret = epoll_wait(epfd, epevents, epoll_maxevents, next);
@@ -1011,7 +1011,7 @@ static int do_sockets(int next)
 		}
 		return 0; // interrupted by a signal, just loop and try again
 	}
-#endif  // SOCKET_EPOLL
+#endif
 
 	sockt->last_tick = time(NULL);
 
@@ -1049,7 +1049,7 @@ static int do_sockets(int next)
 
 	}
 
-#else  // defined(SOCKET_EPOLL)
+#else
 	// otherwise assume that the fd_set is a bit-array and enumerate it in a standard way
 	for( i = 1; ret && i < sockt->fd_max; ++i )
 	{
@@ -1059,7 +1059,7 @@ static int do_sockets(int next)
 			--ret;
 		}
 	}
-#endif  // defined(SOCKET_EPOLL)
+#endif
 
 	// POSTSEND Send remaining data and handle eof sessions.
 #ifdef SEND_SHORTLIST
@@ -1328,10 +1328,16 @@ static int access_ipmask(const char *str, struct access_control *acc)
 		if( ((n=sscanf(str,"%u.%u.%u.%u/%u.%u.%u.%u",a,a+1,a+2,a+3,m,m+1,m+2,m+3)) != 8 /* not an ip + standard mask */
 				&& (n=sscanf(str,"%u.%u.%u.%u/%u",a,a+1,a+2,a+3,m)) != 5 /* not an ip + bit mask */
 				&& (n=sscanf(str,"%u.%u.%u.%u",a,a+1,a+2,a+3)) != 4 ) /* not an ip */
-				|| a[0] > 255 || a[1] > 255 || a[2] > 255 || a[3] > 255 /* invalid ip */
-				|| (n == 8 && (m[0] > 255 || m[1] > 255 || m[2] > 255 || m[3] > 255)) /* invalid standard mask */
-				|| (n == 5 && m[0] > 32) /* invalid bit mask */
 		) {
+			return 0;
+		}
+		if (a[0] > 255 || a[1] > 255 || a[2] > 255 || a[3] > 255) { /* invalid ip */
+			return 0;
+		}
+		if (n == 8 && (m[0] > 255 || m[1] > 255 || m[2] > 255 || m[3] > 255)) { /* invalid standard mask */
+			return 0;
+		}
+		if (n == 5 && m[0] > 32) {/* invalid bit mask */
 			return 0;
 		}
 		ip = MAKEIP(a[0],a[1],a[2],a[3]);
@@ -1527,7 +1533,7 @@ static bool socket_config_read(const char *filename, bool imported)
 			i32 = 16; // minimum that seems to be useful
 		epoll_maxevents = i32;
 	}
-#endif  // SOCKET_EPOLL
+#endif
 
 	{
 		uint32 ui32 = 0;
@@ -1588,7 +1594,7 @@ static void socket_final(void)
 		aFree(epevents);
 		epevents = NULL;
 	}
-#endif  // SOCKET_EPOLL
+#endif
 
 }
 
@@ -1607,7 +1613,8 @@ static void socket_close(int fd)
 	// Epoll based Event Dispatcher
 	epevent.data.fd = fd;
 	epevent.events = EPOLLIN;
-	epoll_ctl(epfd, EPOLL_CTL_DEL, fd, &epevent); // removing the socket from epoll when it's being closed is not required but recommended
+	// removing the socket from epoll when it's being closed is not required but recommended
+	epoll_ctl(epfd, EPOLL_CTL_DEL, fd, &epevent);
 #endif
 
 	sShutdown(fd, SHUT_RDWR); // Disallow further reads/writes
@@ -1684,9 +1691,9 @@ static int socket_getips(uint32 *ips, int max)
 				}
 	#if (defined(BSD) && BSD >= 199103) || defined(_AIX) || defined(__APPLE__)
 				pos += ir->ifr_addr.sa_len + sizeof(ir->ifr_name);
-	#else// not AIX or APPLE
+	#else
 				pos += sizeof(struct ifreq);
-	#endif//not AIX or APPLE
+	#endif
 			}
 		}
 		sClose(fd);
@@ -1766,7 +1773,7 @@ static void socket_init(void)
 	sFD_ZERO(&readfds);
 	ShowInfo("Server uses '" CL_WHITE "select" CL_RESET "' as event dispatcher\n");
 
-#else  // SOCKET_EPOLL
+#else
 	// Epoll based Event Dispatcher:
 	epfd = epoll_create(MAXCONN); // 2.6.8 or newer ignores the expected socket amount argument
 	if(epfd == SOCKET_ERROR){
@@ -1779,7 +1786,7 @@ static void socket_init(void)
 
 	ShowInfo("Server uses '" CL_WHITE "epoll" CL_RESET "' with up to " CL_WHITE "%d" CL_RESET " events per cycle as event dispatcher\n", epoll_maxevents);
 
-#endif  // SOCKET_EPOLL
+#endif
 
 #if defined(SEND_SHORTLIST)
 	memset(send_shortlist_set, 0, sizeof(send_shortlist_set));

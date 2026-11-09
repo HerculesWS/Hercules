@@ -1670,8 +1670,10 @@ static void pc_calc_skilltree_clear(struct map_session_data *sd)
 	for (i = 0; i < MAX_SKILL_DB; i++) {
 		if (sd->status.skill[i].flag == SKILL_FLAG_PLAGIARIZED || sd->status.skill[i].flag == SKILL_FLAG_PERM_GRANTED
 		    || (sd->cloneskill_id != 0 && sd->status.skill[i].id == sd->cloneskill_id)
-			|| (sd->reproduceskill_id != 0 && sd->status.skill[i].id == sd->reproduceskill_id)) //Don't touch these
+			|| (sd->reproduceskill_id != 0 && sd->status.skill[i].id == sd->reproduceskill_id)) {
+				//Don't touch these
 			continue;
+		}
 		sd->status.skill[i].id = 0; //First clear skills.
 		/* permanent skills that must be re-checked */
 		if (sd->status.skill[i].flag == SKILL_FLAG_PERMANENT) {
@@ -1813,10 +1815,12 @@ static int pc_calc_skilltree(struct map_session_data *sd)
 
 				sd->status.skill[idx].id = id;
 
+				//Spirit skills cannot be learned, they will only show up on your tree when you get buffed.
 				if(inf2&INF2_SPIRIT_SKILL) {
-					//Spirit skills cannot be learned, they will only show up on your tree when you get buffed.
-					sd->status.skill[idx].lv = 1; // need to manually specify a skill level
-					sd->status.skill[idx].flag = SKILL_FLAG_TEMPORARY; //So it is not saved, and tagged as a "bonus" skill.
+					// need to manually specify a skill level
+					sd->status.skill[idx].lv = 1;
+					//So it is not saved, and tagged as a "bonus" skill.
+					sd->status.skill[idx].flag = SKILL_FLAG_TEMPORARY;
 				}
 				changed = true; // skill list has changed, perform another pass
 			}
@@ -1855,7 +1859,8 @@ static void pc_calc_skilltree_bonus(struct map_session_data *sd, int classidx)
 				sd->status.skill[idx].id = id;
 				sd->status.skill[idx].flag = SKILL_FLAG_TEMPORARY; // So it is not saved, and tagged as a "bonus" skill.
 			} else if( id != NV_BASIC ) {
-				sd->status.skill[idx].flag = SKILL_FLAG_REPLACED_LV_0 + sd->status.skill[idx].lv; // Remember original level
+				// Remember original level
+				sd->status.skill[idx].flag = SKILL_FLAG_REPLACED_LV_0 + sd->status.skill[idx].lv;
 			}
 
 			sd->status.skill[idx].lv = skill->tree_get_max(id, sd->status.class_);
@@ -4908,7 +4913,7 @@ static int pc_additem(struct map_session_data *sd, const struct item *item_data,
 
 	logs->pick_pc(sd, log_type, amount, &sd->status.inventory[i],sd->inventory_data[i]);
 
-	achievement->validate_item_get(sd, sd->status.inventory[i].nameid, sd->status.inventory[i].amount); // Achievements [Smokexyz/Hercules]
+	achievement->validate_item_get(sd, sd->status.inventory[i].nameid, sd->status.inventory[i].amount);
 
 	sd->weight += w;
 	clif->updatestatus(sd,SP_WEIGHT);

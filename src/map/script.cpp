@@ -29423,7 +29423,7 @@ static void script_parse_builtin(void)
 		BUILDIN_DEF(isequipped,"i*"), // check whether another item/card has been equipped [Celest]
 		BUILDIN_DEF(isequippedcnt,"i*"), // check how many items/cards are being equipped [Celest]
 		BUILDIN_DEF(cardscnt,"i*"), // check how many items/cards are being equipped in the same arm [Lupus]
-		BUILDIN_DEF(getrefine,""), // returns the refined number of the current item, or an item with index specified [celest]
+		BUILDIN_DEF(getrefine,""), // returns the refine level of an item
 		BUILDIN_DEF(night,""), // sets the server to night time
 		BUILDIN_DEF(day,""), // sets the server to day time
 		BUILDIN_DEF(defpattern,"iss"), // Define pattern to listen for [MouseJstr]

@@ -376,12 +376,12 @@ static void login_fromchar_parse_request_change_email(int fd, int id, const char
 	safestrncpy(email, RFIFOP(char, fd, 6), 40); remove_control_chars(email);
 	RFIFOSKIP(fd,46);
 
-	if( e_mail_check(email) == 0 )
+	if( e_mail_check(email) == 0 ) {
 		ShowNotice("Char-server '%s': Attempt to create an e-mail on an account with a default e-mail REFUSED - e-mail is invalid (account: %d, ip: %s)\n", login->dbs->server[id].name, account_id, ip);
-	else
-	if( !accounts->load_num(accounts, &acc, account_id) || strcmp(acc.email, "a@a.com") == 0 || acc.email[0] == '\0' )
+	} else
+	if( !accounts->load_num(accounts, &acc, account_id) || strcmp(acc.email, "a@a.com") == 0 || acc.email[0] == '\0' ) {
 		ShowNotice("Char-server '%s': Attempt to create an e-mail on an account with a default e-mail REFUSED - account doesn't exist or e-mail of account isn't default e-mail (account: %d, ip: %s).\n", login->dbs->server[id].name, account_id, ip);
-	else {
+	} else {
 		memcpy(acc.email, email, sizeof(acc.email));
 		ShowNotice("Char-server '%s': Create an e-mail on an account with a default e-mail (account: %d, new e-mail: %s, ip: %s).\n", login->dbs->server[id].name, account_id, email, ip);
 		// Save
@@ -474,21 +474,21 @@ static void login_fromchar_parse_change_email(int fd, int id, const char *const 
 	safestrncpy(new_email, RFIFOP(char, fd, 46), 40);
 	RFIFOSKIP(fd, 86);
 
-	if( e_mail_check(actual_email) == 0 )
+	if( e_mail_check(actual_email) == 0 ) {
 		ShowNotice("Char-server '%s': Attempt to modify an e-mail on an account (@email GM command), but actual email is invalid (account: %d, ip: %s)\n", login->dbs->server[id].name, account_id, ip);
-	else
-	if( e_mail_check(new_email) == 0 )
+	} else
+	if( e_mail_check(new_email) == 0 ) {
 		ShowNotice("Char-server '%s': Attempt to modify an e-mail on an account (@email GM command) with a invalid new e-mail (account: %d, ip: %s)\n", login->dbs->server[id].name, account_id, ip);
-	else
-	if( strcmpi(new_email, "a@a.com") == 0 )
+	} else
+	if( strcmpi(new_email, "a@a.com") == 0 ) {
 		ShowNotice("Char-server '%s': Attempt to modify an e-mail on an account (@email GM command) with a default e-mail (account: %d, ip: %s)\n", login->dbs->server[id].name, account_id, ip);
-	else
-	if( !accounts->load_num(accounts, &acc, account_id) )
+	} else
+	if( !accounts->load_num(accounts, &acc, account_id) ) {
 		ShowNotice("Char-server '%s': Attempt to modify an e-mail on an account (@email GM command), but account doesn't exist (account: %d, ip: %s).\n", login->dbs->server[id].name, account_id, ip);
-	else
-	if( strcmpi(acc.email, actual_email) != 0 )
+	} else
+	if( strcmpi(acc.email, actual_email) != 0 ) {
 		ShowNotice("Char-server '%s': Attempt to modify an e-mail on an account (@email GM command), but actual e-mail is incorrect (account: %d (%s), actual e-mail: %s, proposed e-mail: %s, ip: %s).\n", login->dbs->server[id].name, account_id, acc.userid, acc.email, actual_email, ip);
-	else {
+	} else {
 		safestrncpy(acc.email, new_email, sizeof(acc.email));
 		ShowNotice("Char-server '%s': Modify an e-mail on an account (@email GM command) (account: %d (%s), new e-mail: %s, ip: %s).\n", login->dbs->server[id].name, account_id, acc.userid, new_email, ip);
 		// Save
@@ -514,12 +514,12 @@ static void login_fromchar_parse_account_update(int fd, int id, const char *cons
 	unsigned int state = RFIFOL(fd,6);
 	RFIFOSKIP(fd,10);
 
-	if( !accounts->load_num(accounts, &acc, account_id) )
+	if( !accounts->load_num(accounts, &acc, account_id) ) {
 		ShowNotice("Char-server '%s': Error of Status change (account: %d not found, suggested status %u, ip: %s).\n", login->dbs->server[id].name, account_id, state, ip);
-	else
-	if( acc.state == state )
+	} else
+	if( acc.state == state ) {
 		ShowNotice("Char-server '%s':  Error of Status change - actual status is already the good status (account: %d, status %u, ip: %s).\n", login->dbs->server[id].name, account_id, state, ip);
-	else {
+	} else {
 		ShowNotice("Char-server '%s': Status change (account: %d, new status %u, ip: %s).\n", login->dbs->server[id].name, account_id, state, ip);
 
 		acc.state = state;
@@ -609,12 +609,12 @@ static void login_fromchar_parse_change_sex(int fd, int id, const char *const ip
 	int account_id = RFIFOL(fd,2);
 	RFIFOSKIP(fd,6);
 
-	if( !accounts->load_num(accounts, &acc, account_id) )
+	if( !accounts->load_num(accounts, &acc, account_id) ) {
 		ShowNotice("Char-server '%s': Error of sex change (account: %d not found, ip: %s).\n", login->dbs->server[id].name, account_id, ip);
-	else
-	if( acc.sex == 'S' )
+	} else
+	if( acc.sex == 'S' ) {
 		ShowNotice("Char-server '%s': Error of sex change - account to change is a Server account (account: %d, ip: %s).\n", login->dbs->server[id].name, account_id, ip);
-	else
+	} else
 	{
 		char sex = ( acc.sex == 'M' ) ? 'F' : 'M'; //Change gender
 
@@ -650,12 +650,12 @@ static void login_fromchar_parse_unban(int fd, int id, const char *const ip)
 	int account_id = RFIFOL(fd,2);
 	RFIFOSKIP(fd,6);
 
-	if( !accounts->load_num(accounts, &acc, account_id) )
+	if( !accounts->load_num(accounts, &acc, account_id) ) {
 		ShowNotice("Char-server '%s': Error of Unban request (account: %d not found, ip: %s).\n", login->dbs->server[id].name, account_id, ip);
-	else
-	if( acc.unban_time == 0 )
+	} else
+	if( acc.unban_time == 0 ) {
 		ShowNotice("Char-server '%s': Error of Unban request (account: %d, no change for unban date, ip: %s).\n", login->dbs->server[id].name, account_id, ip);
-	else
+	} else
 	{
 		ShowNotice("Char-server '%s': Unban request (account: %d, ip: %s).\n", login->dbs->server[id].name, account_id, ip);
 		acc.unban_time = 0;
@@ -1268,10 +1268,10 @@ static void login_auth_ok(struct login_session_data *sd)
 
 	{
 		struct online_login_data *data = (struct online_login_data *)idb_get(login->online_db, sd->account_id);
-		if( data )
-		{// account is already marked as online!
-			if( data->char_server > -1 )
-			{// Request char servers to kick this account out. [Skotlex]
+		if (data != nullptr) {
+			// account is already marked as online!
+			if (data->char_server > -1) {
+				// Request char servers to kick this account out. [Skotlex]
 				ShowNotice("User '%s' is already online - Rejected.\n", sd->userid);
 				login->kick(sd);
 				if( data->waiting_disconnect == INVALID_TIMER )
@@ -1281,8 +1281,8 @@ static void login_auth_ok(struct login_session_data *sd)
 				return;
 			}
 			else
-			if( data->char_server == -1 )
-			{// client has authed but did not access char-server yet
+			if (data->char_server == -1) {
+				// client has authed but did not access char-server yet
 				// wipe previous session
 				idb_remove(login->auth_db, sd->account_id);
 				login->remove_online_user(sd->account_id);

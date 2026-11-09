@@ -2233,7 +2233,8 @@ static int skill_additional_effect(struct block_list *src, struct block_list *bl
 			sc_start(src, bl, SC_FEAR, 5 + 5 * skill_lv, skill_lv, skill->get_time(skill_id, skill_lv), skill_id);
 			break;
 		case SO_EARTHGRAVE:
-			sc_start2(src, bl, SC_BLOODING, 5 * skill_lv, skill_lv, src->id, skill->get_time2(skill_id, skill_lv), skill_id); // Need official rate. [LimitLine]
+			// Need official rate. [LimitLine]
+			sc_start2(src, bl, SC_BLOODING, 5 * skill_lv, skill_lv, src->id, skill->get_time2(skill_id, skill_lv), skill_id);
 			break;
 		case SO_DIAMONDDUST:
 			rate = 5 + 5 * skill_lv;
@@ -2830,8 +2831,10 @@ static int skill_counter_additional_effect(struct block_list *src, struct block_
 	}
 
 	if (sd != NULL && (sd->job & MAPID_UPPERMASK) == MAPID_STAR_GLADIATOR
-	 && rnd()%10000 < battle_config.sg_miracle_skill_ratio) // SG_MIRACLE [Komurka]
+	 && rnd()%10000 < battle_config.sg_miracle_skill_ratio) {
+		// SG_MIRACLE [Komurka]
 		sc_start(src, src, SC_MIRACLE, 100, 1, battle_config.sg_miracle_skill_duration, skill_id);
+	 }
 
 	if( sd && skill_id && attack_type&BF_MAGIC && status->isdead(bl)
 	 && !(skill->get_inf(skill_id)&(INF_GROUND_SKILL|INF_SELF_SKILL))
@@ -3581,12 +3584,15 @@ static int skill_attack(int attack_type, struct block_list *src, struct block_li
 			break;
 
 		case AS_SPLASHER:
-			if( flag&SD_ANIMATION ) // the surrounding targets
+			if( flag&SD_ANIMATION ) {
+				// the surrounding targets
 				// needs -1 as skill level
 				dmg.dmotion = clif->skill_damage(dsrc,bl,tick, dmg.amotion, dmg.dmotion, damage, dmg.div_, skill_id, -1, BDT_SPLASH);
-			else // the central target doesn't display an animation
+			} else {
+				// the central target doesn't display an animation
 				// needs -2(!) as skill level
 				dmg.dmotion = clif->skill_damage(dsrc,bl,tick, dmg.amotion, dmg.dmotion, damage, dmg.div_, skill_id, -2, BDT_SPLASH);
+			}
 			break;
 		case WL_HELLINFERNO:
 		case SR_EARTHSHAKER:
@@ -7668,8 +7674,10 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 		case HAMI_DEFENCE:
 		{
 			int duration = skill->get_time(skill_id,skill_lv);
-			clif->skill_nodamage(bl, bl, skill_id, skill_lv, sc_start(src, bl, type, 100, skill_lv, duration, skill_id)); // Master
-			clif->skill_nodamage(src, src, skill_id, skill_lv, sc_start(src, src, type, 100, skill_lv, duration, skill_id)); // Homun
+			// Master
+			clif->skill_nodamage(bl, bl, skill_id, skill_lv, sc_start(src, bl, type, 100, skill_lv, duration, skill_id));
+			// Homun
+			clif->skill_nodamage(src, src, skill_id, skill_lv, sc_start(src, src, type, 100, skill_lv, duration, skill_id));
 		}
 			break;
 		case NJ_BUNSINJYUTSU:
@@ -7713,8 +7721,8 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 					dstsd->sc.data[SC_PROPERTYDARK] ||
 					dstsd->sc.data[SC_PROPERTYTELEKINESIS]
 					/* || dstsd->sc.data[SC_ENCHANTPOISON] */
-					// People say you should be able to recast to lengthen the timer. [Skotlex]
 				) {
+						// People say you should be able to recast to lengthen the timer. [Skotlex]
 						clif->skill_nodamage(src,bl,skill_id,skill_lv,0);
 						clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 						break;
@@ -18324,7 +18332,8 @@ static void skill_repairweapon(struct map_session_data *sd, int idx)
 
 	clif->equipList(target_sd);
 
-	pc->delitem(sd, pc->search_inventory(sd, material), 1, 0, DELITEM_NORMAL, LOG_TYPE_CONSUME); // FIXME: is this the correct reason flag?
+	// FIXME: is this the correct reason flag?
+	pc->delitem(sd, pc->search_inventory(sd, material), 1, 0, DELITEM_NORMAL, LOG_TYPE_CONSUME);
 
 	clif->item_repaireffect(sd,idx,0);
 
@@ -20902,8 +20911,8 @@ static int skill_produce_mix(struct map_session_data *sd, uint16 skill_id, int n
 					clif->misceffect(&sd->bl,5);
 					break;
 				default: //Those that don't require a skill?
-					if( skill->dbs->produce_db[idx].itemlv > 10 && skill->dbs->produce_db[idx].itemlv <= 20)
-					{ //Cooking items.
+					if( skill->dbs->produce_db[idx].itemlv > 10 && skill->dbs->produce_db[idx].itemlv <= 20) {
+						//Cooking items.
 						clif->specialeffect(&sd->bl, 608, AREA);
 						if( sd->cook_mastery < 1999 )
 							pc_setglobalreg(sd, script->add_variable("COOK_MASTERY"),sd->cook_mastery + ( 1 << ( (skill->dbs->produce_db[idx].itemlv - 11) / 2 ) ) * 5);
@@ -21375,8 +21384,11 @@ static int skill_changematerial(struct map_session_data *sd, const struct itemli
 #endif
 								return 0;
 							}
-							if( nameid == skill->dbs->produce_db[i].mat_id[j] && (amount-p*skill->dbs->produce_db[i].mat_amount[j]) >= skill->dbs->produce_db[i].mat_amount[j]
-								&& (amount-p*skill->dbs->produce_db[i].mat_amount[j])%skill->dbs->produce_db[i].mat_amount[j] == 0 ) // must be in exact amount
+							if( nameid == skill->dbs->produce_db[i].mat_id[j]
+								&& (amount-p*skill->dbs->produce_db[i].mat_amount[j]) >= skill->dbs->produce_db[i].mat_amount[j]
+								/* must be in exact amount */
+								&& (amount-p*skill->dbs->produce_db[i].mat_amount[j])%skill->dbs->produce_db[i].mat_amount[j] == 0
+								)
 								c++; // match
 						}
 					}

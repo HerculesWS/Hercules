@@ -816,8 +816,9 @@ static void memmgr_final(void)
 	char vcsinfo[256];
 #ifdef LOG_MEMMGR
 	int count = 0;
-#endif /* LOG_MEMMGR */
-	snprintf(vcsinfo, sizeof(vcsinfo), "%s rev '%s'", sysinfo->vcstype(), sysinfo->vcsrevision_src()); // Cache VCS info before we free() it
+#endif
+	// Cache VCS info before we free() it
+	snprintf(vcsinfo, sizeof(vcsinfo), "%s rev '%s'", sysinfo->vcstype(), sysinfo->vcsrevision_src());
 	sysinfo->final();
 
 	while (block) {

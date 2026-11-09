@@ -47,44 +47,44 @@
 
 static forceinline int64 InterlockedExchangeAdd64(volatile int64 *addend, int64 increment){
 	return __sync_fetch_and_add(addend, increment);
-}//end: InterlockedExchangeAdd64()
+}
 
 #if !defined(__MINGW32__) && !defined(MINGW)
 static forceinline int32 InterlockedExchangeAdd(volatile int32 *addend, int32 increment){
 	return __sync_fetch_and_add(addend, increment);
-}//end: InterlockedExchangeAdd()
+}
 
 static forceinline int64 InterlockedIncrement64(volatile int64 *addend){
 	return __sync_add_and_fetch(addend, 1);
-}//end: InterlockedIncrement64()
+}
 
 static forceinline int32 InterlockedIncrement(volatile int32 *addend){
 	return __sync_add_and_fetch(addend, 1);
-}//end: InterlockedIncrement()
+}
 
 static forceinline int64 InterlockedDecrement64(volatile int64 *addend){
 	return __sync_sub_and_fetch(addend, 1);
-}//end: InterlockedDecrement64()
+}
 
 static forceinline int32 InterlockedDecrement(volatile int32 *addend){
 	return __sync_sub_and_fetch(addend, 1);
-}//end: InterlockedDecrement()
+}
 
 static forceinline int64 InterlockedCompareExchange64(volatile int64 *dest, int64 exch, int64 cmp){
 	return __sync_val_compare_and_swap(dest, cmp, exch);
-}//end: InterlockedCompareExchange64()
+}
 
 static forceinline int32 InterlockedCompareExchange(volatile int32 *dest, int32 exch, int32 cmp){
 	return __sync_val_compare_and_swap(dest, cmp, exch);
-}//end: InterlockedCompareExchnage()
+}
 
 static forceinline int64 InterlockedExchange64(volatile int64 *target, int64 val){
 	return __sync_lock_test_and_set(target, val);
-}//end: InterlockedExchange64()
+}
 
 static forceinline int32 InterlockedExchange(volatile int32 *target, int32 val){
 	return __sync_lock_test_and_set(target, val);
-}//end: InterlockedExchange()
+}
 
 #endif  // !defined(__MINGW32__) && !defined(MINGW)
 

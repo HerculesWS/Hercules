@@ -2292,7 +2292,7 @@ static int char_char_married(int pl1, int pl2)
 static int char_char_child(int parent_id, int child_id)
 {
 	if (parent_id == 0 || child_id == 0) {
-		// Failsafe, avoild querys and fix EXP bug dividing with lower level chars
+		// Failsafe, avoid queries and fix EXP bug dividing with lower level chars
 		return 0;
 	}
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `child` FROM `%s` WHERE `char_id` = '%d'", char_db, parent_id) )
@@ -2314,8 +2314,10 @@ static int char_char_child(int parent_id, int child_id)
 
 static int char_char_family(int cid1, int cid2, int cid3)
 {
-	if (cid1 == 0 || cid2 == 0 || cid3 == 0) //Failsafe, and avoid querys where there is no sense to keep executing if any of the inputs are 0
+	if (cid1 == 0 || cid2 == 0 || cid3 == 0) {
+		//Failsafe, and avoid queries where there is no sense to keep executing if any of the inputs are 0
 		return 0;
+	}
 	if( SQL_ERROR == SQL->Query(inter->sql_handle, "SELECT `char_id`,`partner_id`,`child` FROM `%s` WHERE `char_id` IN ('%d','%d','%d')", char_db, cid1, cid2, cid3) )
 		Sql_ShowDebug(inter->sql_handle);
 	else while( SQL_SUCCESS == SQL->NextRow(inter->sql_handle) )
@@ -2510,8 +2512,9 @@ static void char_parse_fromlogin_account_data(int fd)
 		if( sd->char_slots > MAX_CHARS ) {
 			ShowError("Account '%d' `character_slots` column is higher than supported MAX_CHARS (%d), update MAX_CHARS in mmo.h! capping to MAX_CHARS...\n",sd->account_id,sd->char_slots);
 			sd->char_slots = MAX_CHARS;/* cap to maximum */
-		} else if ( sd->char_slots <= 0 )/* no value aka 0 in sql */
+		} else if ( sd->char_slots <= 0 ) { /* no value aka 0 in sql */
 			sd->char_slots = MAX_CHARS;/* cap to maximum */
+		}
 		safestrncpy(sd->birthdate, RFIFOP(char, fd, 52), sizeof(sd->birthdate));
 		safestrncpy(sd->pincode, RFIFOP(char, fd, 63), sizeof(sd->pincode));
 		sd->pincode_change = RFIFOL(fd,68);
@@ -4327,8 +4330,7 @@ static void char_delete2_accept(int fd, struct char_session_data *sd)
 		return;
 	}
 
-	if( strcmp(sd->birthdate+2, birthdate) )  // +2 to cut off the century
-	{
+	if (strcmp(sd->birthdate+2, birthdate) != 0) { // +2 to cut off the century
 		// birth date is wrong
 		chr->delete2_accept_ack(fd, char_id, 5); // 5: Date of birth do not match
 		return;
@@ -5041,12 +5043,13 @@ static void char_parse_char_move_character(int fd, struct char_session_data *sd)
 	bool ret = chr->char_slotchange(sd, fd, RFIFOW(fd, 2), RFIFOW(fd, 4));
 	chr->change_character_slot_ack(fd, ret);
 	/* for some stupid reason it requires the char data again (gravity -_-) */
-	if( ret )
+	if( ret ) {
 #if PACKETVER_MAIN_NUM >= 20130522 || PACKETVER_RE_NUM >= 20130327 || defined(PACKETVER_ZERO)
 		chr->send_HC_ACK_CHARINFO_PER_PAGE(fd, sd);
 #else
 		chr->mmo_char_send_characters(fd, sd);
 #endif
+	}
 	RFIFOSKIP(fd, 8);
 }
 

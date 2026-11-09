@@ -317,7 +317,7 @@ static void homunculus_skillup(struct homun_data *hd, uint16 skill_id)
 	Assert_retv(i >= 0 && i < MAX_HOMUNSKILL && i < MAX_SKILL_TREE);
 	if (hd->homunculus.skillpts > 0 &&
 		hd->homunculus.hskill[i].id &&
-		hd->homunculus.hskill[i].flag == SKILL_FLAG_PERMANENT /* Don't allow raising while you have granted skills. [Skotlex] */
+		hd->homunculus.hskill[i].flag == SKILL_FLAG_PERMANENT /* Don't allow raising while you have granted skills. */
 		&& hd->homunculus.hskill[i].lv < homun->skill_tree_get_max(skill_id, hd->homunculus.class_)
 		)
 	{

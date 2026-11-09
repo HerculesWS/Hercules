@@ -566,7 +566,8 @@ static void console_parse_init(void)
 	}
 
 	timer->add_func_list(console->input->parse_timer, "console_parse_timer");
-	timer->add_interval(timer->gettick() + 1000, console->input->parse_timer, 0, 0, 500);/* start listening in 1s; re-try every 0.5s */
+	// start listening in 1s; re-try every 0.5s
+	timer->add_interval(timer->gettick() + 1000, console->input->parse_timer, 0, 0, 500);
 }
 
 static void console_setSQL(struct Sql *SQL_handle)

@@ -33,9 +33,7 @@ struct backtrace_state;
 /** Assert */
 
 #if defined(ASSERT_CHECK)
-// extern "C" {
 #include <assert.h>
-// }
 #if !defined(DEFCPP) && defined(WIN32) && !defined(MINGW)
 #include <crtdbg.h>
 #endif // !DEFCPP && WIN && !MINGW

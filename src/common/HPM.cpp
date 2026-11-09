@@ -295,7 +295,7 @@ static void hplugins_addToHPData(enum HPluginDataTypes type, uint32 pluginID, st
 		return;
 	}
 
-	/* hplugin_data_entry is always same size, probably better to use the ERS (with reasonable chunk size e.g. 10/25/50) */
+	// hplugin_data_entry is always same size, probably better to use the ERS (with reasonable chunk size e.g. 10/25/50)
 	CREATE(entry, struct hplugin_data_entry, 1);
 
 	/* input */
@@ -715,7 +715,8 @@ static void hplugins_config_read(void)
 
 		for (i = 0; i < length; i++) {
 			const char *plugin_name = libconfig->setting_get_string_elem(plist,i);
-			if (strcmpi(plugin_name, "HPMHooking") == 0 || strcmpi(plugin_name, hooking_plugin_name) == 0) { //must load it first
+			if (strcmpi(plugin_name, "HPMHooking") == 0 || strcmpi(plugin_name, hooking_plugin_name) == 0) {
+				//must load it first
 				struct hplugin *plugin;
 				snprintf(filename, sizeof(filename), "%s/herc-plugins/%s%s", base_path, hooking_plugin_name, DLL_EXT);
 				if ((plugin = HPM->load(filename))) {

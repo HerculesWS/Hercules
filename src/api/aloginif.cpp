@@ -143,11 +143,14 @@ static int aloginif_parse(int fd)
 		aloginif->fd = -1;
 		aloginif->on_disconnect();
 		return 0;
-	} else if (sockt->session[fd]->flag.ping) { /* we've reached stall time */
-		if (DIFF_TICK(sockt->last_tick, sockt->session[fd]->rdata_tick) > (sockt->stall_time * 2)) { /* we can't wait any longer */
+	} else if (sockt->session[fd]->flag.ping) {
+		// we've reached stall time
+		if (DIFF_TICK(sockt->last_tick, sockt->session[fd]->rdata_tick) > (sockt->stall_time * 2)) {
+			// we can't wait any longer
 			sockt->eof(fd);
 			return 0;
-		} else if (sockt->session[fd]->flag.ping != 2) { /* we haven't sent ping out yet */
+		} else if (sockt->session[fd]->flag.ping != 2) {
+			// we haven't sent ping out yet
 			aloginif->keepalive(fd);
 			sockt->session[fd]->flag.ping = 2;
 		}

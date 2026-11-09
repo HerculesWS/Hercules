@@ -242,8 +242,7 @@ static const char *strlib_stristr(const char *haystack, const char *needle)
 					break;
 				}
 			}
-			if ( !*n ) // matched all of 'needle' to null termination
-			{
+			if (!*n) { // matched all of 'needle' to null termination
 				return haystack; // return the start of the match
 			}
 		}
@@ -831,7 +830,8 @@ static size_t sv_unescape_c(char *out_dest, const char *src, size_t len)
 					++i;
 				} while( i < len && ISXDIGIT(src[i]) );
 				out_dest[j++] = (char)c;
-			} else if( src[i] == '0' || src[i] == '1' || src[i] == '2' || src[i] == '3' ) {// octal escape sequence (255=0377)
+			} else if( src[i] == '0' || src[i] == '1' || src[i] == '2' || src[i] == '3' ) {
+				// octal escape sequence (255=0377)
 				unsigned char c = src[i]-'0';
 				++i;// '0', '1', '2' or '3'
 				if( i < len && src[i] >= '0' && src[i] <= '7' ) {

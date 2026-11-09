@@ -184,7 +184,8 @@ static int api_check_connect_login_server(int tid, int64 tick, int id, intptr_t 
 
 	ShowInfo("Attempt to connect to login-server...\n");
 
-	if ((aloginif->fd = sockt->make_connection(aloginif->ip, aloginif->port, NULL)) == -1) { //Try again later. [Skotlex]
+	if ((aloginif->fd = sockt->make_connection(aloginif->ip, aloginif->port, NULL)) == -1) {
+		//Try again later. [Skotlex]
 		aloginif->fd = 0;
 		return 0;
 	}

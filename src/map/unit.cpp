@@ -190,9 +190,14 @@ static int unit_walk_toxy_sub(struct block_list *bl)
 		return 1;
 
 #ifdef OFFICIAL_WALKPATH
-	if (bl->type != BL_NPC /* If type is an NPC, disregard */
-	    && !path->search_long(NULL, bl, bl->m, bl->x, bl->y, ud->to_x, ud->to_y, CELL_CHKNOPASS) /* Check if there is an obstacle between */
-	    && wpd.path_len > 14 /* Official number of walkable cells is 14 if and only if there is an obstacle between. [malufett] */) {
+	if (
+		/* If type is an NPC, disregard */
+		bl->type != BL_NPC
+		/* Check if there is an obstacle between */
+	    && !path->search_long(NULL, bl, bl->m, bl->x, bl->y, ud->to_x, ud->to_y, CELL_CHKNOPASS)
+		/* Official number of walkable cells is 14 if and only if there is an obstacle between. [malufett] */
+	    && wpd.path_len > 14
+	) {
 			return 1;
 	}
 #endif
@@ -960,7 +965,9 @@ static int unit_move_pos(struct block_list *bl, short dst_x, short dst_y, int ea
 		// Check if pet needs to be teleported. [Skotlex]
 		if (sd->status.pet_id > 0 && sd->pd != NULL && sd->pd->pet.intimate > PET_INTIMACY_NONE) {
 			struct block_list* pbl = &sd->pd->bl;
-			if ((!checkpath && !path->search(NULL, pbl, pbl->m, pbl->x, pbl->y, dst_x, dst_y, 0, CELL_CHKNOPASS)) /* No path to master */
+			if ((!checkpath
+				/* No path to master */
+				&& !path->search(NULL, pbl, pbl->m, pbl->x, pbl->y, dst_x, dst_y, 0, CELL_CHKNOPASS))
 			    || !check_distance_bl(bl, pbl, AREA_SIZE)) {
 				// Too far, teleport.
 				unit->move_pos(pbl, bl->x, bl->y, 0, false);
@@ -1276,8 +1283,10 @@ static int unit_can_move(struct block_list *bl, std::optional<e_skill> skill_id)
 		    ||  sc->data[SC_TRICKDEAD]
 		    ||  sc->data[SC_BLADESTOP]
 		    ||  sc->data[SC_BLADESTOP_WAIT]
-		    || (sc->data[SC_GOSPEL] && sc->data[SC_GOSPEL]->val4 == BCT_SELF) /* cannot move while gospel is in effect */
-		    || (sc->data[SC_BASILICA] && sc->data[SC_BASILICA]->val4 == bl->id) /* Basilica caster cannot move */
+			/* cannot move while gospel is in effect */
+		    || (sc->data[SC_GOSPEL] && sc->data[SC_GOSPEL]->val4 == BCT_SELF)
+			/* Basilica caster cannot move */
+		    || (sc->data[SC_BASILICA] && sc->data[SC_BASILICA]->val4 == bl->id)
 		    ||  sc->data[SC_STOP]
 			|| sc->data[SC_FALLENEMPIRE]
 		    ||  sc->data[SC_RG_CCONFINE_M]
@@ -1303,7 +1312,8 @@ static int unit_can_move(struct block_list *bl, std::optional<e_skill> skill_id)
 			|| sc->data[SC_NETHERWORLD]
 			|| sc->data[SC_SUHIDE]
 		    || (sc->data[SC_SPIDERWEB] && sc->data[SC_SPIDERWEB]->val1)
-		    || (sc->data[SC_CLOAKING] && sc->data[SC_CLOAKING]->val1 < 3 && !(sc->data[SC_CLOAKING]->val4&1)) /* Need wall at level 1-2 */
+			/* Need wall at level 1-2 */
+		    || (sc->data[SC_CLOAKING] && sc->data[SC_CLOAKING]->val1 < 3 && !(sc->data[SC_CLOAKING]->val4&1))
 		    || (
 		         sc->data[SC_DANCING] && sc->data[SC_DANCING]->val4
 		         && (
@@ -2210,11 +2220,13 @@ static int unit_attack(struct block_list *src, int target_id, int continuous)
 		return 0; // Attacking will be handled by unit_walk_toxy_timer in this case
 	}
 
-	if(DIFF_TICK(ud->attackabletime, timer->gettick()) > 0)
+	if(DIFF_TICK(ud->attackabletime, timer->gettick()) > 0) {
 		//Do attack next time it is possible. [Skotlex]
 		ud->attacktimer=timer->add(ud->attackabletime,unit->attack_timer,src->id,0);
-	else //Attack NOW.
+	} else {
+		//Attack NOW.
 		unit->attack_timer(INVALID_TIMER, timer->gettick(), src->id, 0);
+	}
 
 	return 0;
 }
@@ -2295,10 +2307,16 @@ static bool unit_can_reach_bl(struct block_list *bl, struct block_list *tbl, int
 		return false;
 
 #ifdef OFFICIAL_WALKPATH
-	if( !path->search_long(NULL, bl, bl->m, bl->x, bl->y, tbl->x-dx, tbl->y-dy, CELL_CHKNOPASS) /* Check if there is an obstacle between */
-	  && wpd.path_len > 14 /* Official number of walkable cells is 14 if and only if there is an obstacle between. [malufett] */
-	  && (bl->type != BL_NPC) /* If type is a NPC, please disregard. */)
+	if(
+		/* Check if there is an obstacle between */
+		!path->search_long(NULL, bl, bl->m, bl->x, bl->y, tbl->x-dx, tbl->y-dy, CELL_CHKNOPASS)
+		/* Official number of walkable cells is 14 if and only if there is an obstacle between. [malufett] */
+		&& wpd.path_len > 14
+		/* If type is a NPC, please disregard. */
+		&& (bl->type != BL_NPC)
+	) {
 		return false;
+	}
 #endif
 
 	return true;

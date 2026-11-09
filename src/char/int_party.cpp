@@ -787,8 +787,10 @@ static int inter_party_CharOffline(int char_id, int party_id)
 	p->party.member[i].online = 0; /// Set member offline.
 	inter_party->calc_state(p); /// Count online/offline members and check family state and even share range.
 
-	if (p->party.count == 0) /// Parties don't have any data that needs be saved at this point... so just remove it from memory.
+	if (p->party.count == 0) {
+		// Parties don't have any data that needs be saved at this point... so just remove it from memory.
 		idb_remove(inter_party->db, party_id);
+	}
 
 	return 1;
 }

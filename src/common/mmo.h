@@ -156,7 +156,7 @@
 // (27 = 9 skills x 3 bars)               (0x02b9,191)
 #define MAX_HOTKEYS 27
 #endif
-#endif  // PACKETVER_MAIN_NUM >= 20070711 || PACKETVER_RE_NUM >= 20080827 || PACKETVER_AD_NUM >= 20070711 || PACKETVER_SAK_NUM >= 20070628 || defined(PACKETVER_ZERO)
+#endif
 
 #if PACKETVER_MAIN_NUM >= 20190522 || PACKETVER_RE_NUM >= 20190508 || PACKETVER_ZERO_NUM >= 20190605
 #define MAX_HOTKEYS_DB ((MAX_HOTKEYS) * 2)
@@ -423,9 +423,11 @@ static_assert(MAX_ITEM_OPTIONS <= 5, "This value is limited by the client and da
 #define JOBL_BABY  0x2000
 #define JOBL_THIRD 0x4000
 
-#define SCRIPT_VARNAME_LENGTH 32 ///< Maximum length of a script variable's name including affixes and excluding NULL-terminator.
+/// Maximum length of a script variable's name including affixes and excluding NULL-terminator.
+#define SCRIPT_VARNAME_LENGTH 32
 static_assert(SCRIPT_VARNAME_LENGTH <= 32, "This value is limited by the inter-server communication and database layout and should only be increased if you know the consequences.");
-#define SCRIPT_STRING_VAR_LENGTH 255 ///< Maximum length of strings stored in script variables excluding NULL-terminator.
+/// Maximum length of strings stored in script variables excluding NULL-terminator.
+#define SCRIPT_STRING_VAR_LENGTH 255
 static_assert(SCRIPT_STRING_VAR_LENGTH <= 255, "This value is limited by the inter-server communication and database layout and should only be increased if you know the consequences.");
 
 #define INFINITE_DURATION (-1) // Infinite duration for status changes
@@ -923,8 +925,8 @@ struct party {
 	int party_id;
 	char name[NAME_LENGTH];
 	unsigned char count; //Count of online characters.
-	unsigned exp : 1,
-				item : 2; //&1: Party-Share (round-robin), &2: pickup style: shared.
+	unsigned exp : 1;
+	unsigned item : 2; //&1: Party-Share (round-robin), &2: pickup style: shared.
 	struct party_member member[MAX_PARTY];
 };
 

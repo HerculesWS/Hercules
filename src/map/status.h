@@ -1173,11 +1173,11 @@ struct status_data {
 		amotion, adelay, dmotion,
 		mode;
 	int32 hit, flee, cri, flee2,
-		def2, mdef2,
+		def2, mdef2;
 #ifdef RENEWAL_ASPD
-		aspd_rate2,
+	int32 aspd_rate2;
 #endif
-		aspd_rate;
+	int32 aspd_rate;
 	/**
 	 * defType is RENEWAL dependent and defined in src/map/config/data/const.h
 	 **/
