@@ -641,6 +641,7 @@ struct Script_Config {
 	bool functions_private_by_default;
 	bool functions_as_events;
 	bool load_gm_scripts;
+	bool duplicate_npc_vars_shared;
 	int check_cmdcount;
 	int check_gotocount;
 	int input_min_value;
