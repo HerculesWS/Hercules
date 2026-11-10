@@ -37,15 +37,21 @@ sub trim($) {
 sub parse($$) {
 	my ($p, $d) = @_;
 
-	$p =~ s/^.*?\)\((.*)\).*$/$1/; # Clean up extra parentheses )(around the arglist)
+	$p =~ s/^.*?\)?\((.*)\).*$/$1/; # Clean up extra parentheses )(around the arglist)
 
 	# Retrieve return type
-	unless ($d =~ /^(.+)\(\*\s*[a-zA-Z0-9_]+_interface(?:_private)?::([^\)]+)\s*\)\s*\(.*\)$/) {
+	my $rt;
+	my $name;
+	if ($d =~ /^(.+)\(\*\)\s*[a-zA-Z0-9_]+_interface(?:_private)?::([^\)\(]+)\s*\(.*\)$/) {
+		$rt = trim($1);   #return type
+		$name = trim($2); #function name
+	} elsif ($d =~ /^(.+)\(\*\s*[a-zA-Z0-9_]+_interface(?:_private)?::([^\)]+)\s*\)\s*\(.*\)$/) {
+		$rt = trim($1);   #return type
+		$name = trim($2); #function name
+	} else {
 		print "Error: unable to parse '$d'\n";
 		return {};
 	}
-	my $rt = trim($1);   #return type
-	my $name = trim($2); #function name
 
 	my @args;
 	my ($anonvars, $variadic) = (0, 0);
