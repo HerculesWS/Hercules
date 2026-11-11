@@ -143,37 +143,6 @@ OnInit:
 	sellitem Cinquedea;
 }
 
-aldeba_in,94,56,5	trader	Tool Dealer#alde	4_M_01,{
-OnInit:
-	sellitem Red_Potion;
-	sellitem Orange_Potion;
-	sellitem Yellow_Potion;
-	sellitem White_Potion;
-	sellitem Green_Potion;
-	sellitem Center_Potion;
-	sellitem Awakening_Potion;
-	sellitem Wing_Of_Fly;
-	sellitem Wing_Of_Butterfly;
-	sellitem Spectacles;
-	sellitem Leaf_Of_Yggdrasil;
-}
-
-alde_alche,38,184,3	trader	Material Seller#alche	4_M_SAGE_C,{
-OnInit:
-	sellitem Life_Force_Pot;
-	sellitem Yggdrasilberry_Dew;
-	sellitem Seed_Of_Life;
-	if (RENEWAL) {
-		sellitem Melange_Pot;
-		sellitem Cooking_Skewer;
-		sellitem Black_Charcoal;
-		sellitem Large_Cookpot;
-		sellitem Fine_Noodle;
-		sellitem Cool_Gravy;
-		sellitem Bottle_To_Throw;
-	}
-}
-
 //== Amatsu ================================================
 ama_in01,89,28,5	trader	Armor Dealer#ama	4_F_JPN2,{
 OnInit:
@@ -941,18 +910,6 @@ OnInit:
 	sellitem Milk;
 }
 
-lighthalzen,222,191,4	trader	Pet Groomer#lhz	4_M_TELEPORTER,{
-OnInit:
-	sellitem Pet_Food;
-	sellitem Pet_Incubator;
-	sellitem Backpack;
-	sellitem Rocker_Glasses;
-	sellitem Mojji;
-	sellitem Vital_Flower_;
-	sellitem Flame_Gemstone;
-	sellitem Bun_;
-}
-
 lhz_in02,286,95,4	trader	Beginner's Merchant#lhz	1_M_SIZ,{
 OnInit:
 	sellitem Super_Novice_Hat;
@@ -1047,47 +1004,11 @@ OnInit:
 	sellitem Tuxedo;
 }
 
-lhz_in02,31,145,4	trader	Tool Dealer#lhz	4_F_01,{
-OnInit:
-	sellitem Spectacles;
-	sellitem Yellow_Potion;
-	sellitem White_Potion;
-	sellitem Green_Potion;
-	sellitem Berserk_Potion;
-	sellitem Awakening_Potion;
-	sellitem Wing_Of_Fly;
-	sellitem Wing_Of_Butterfly;
-	sellitem Booby_Trap;
-	sellitem Leaf_Of_Yggdrasil;
-	sellitem Iron_Arrow;
-}
-
 lhz_in02,85,216,5	trader	Doll Supplier#lhz	4_F_LGTGIRL,{
 OnInit:
 	sellitem Stuffed_Doll;
 	sellitem Poring_Doll;
 	sellitem Chonchon_Doll;
-}
-
-lhz_in02,87,208,3	trader	Toy Supplier#lhz	4_M_PIERROT,{
-OnInit:
-	sellitem Spinning_Eyes;
-	sellitem Eye_Bandage;
-	sellitem Luxury_Sunglasses;
-	sellitem Granpa_Beard;
-}
-
-lhz_in03,239,106,5	trader	Tool Dealer#lhz2	4_F_EINWOMAN,{
-OnInit:
-	sellitem Red_Potion;
-	sellitem Orange_Potion;
-	sellitem Green_Potion;
-	sellitem Center_Potion;
-	sellitem Awakening_Potion;
-	sellitem Wing_Of_Fly;
-	sellitem Wing_Of_Butterfly;
-	sellitem Booby_Trap;
-	sellitem Spectacles;
 }
 
 lhz_in03,258,101,3	trader	Arrow Merchant#lhz	4_M_EINMAN,{
@@ -1793,13 +1714,6 @@ OnInit:
 }
 
 //== Cooking Addition ======================================
-aldebaran,165,107,2	trader	Chef Assistant#alde	4W_M_01,{
-OnInit:
-	sellitem Red_Spice;
-	sellitem Yellow_Spice;
-	sellitem Bread;
-}
-
 comodo,225,164,3	trader	Chef Assistant#cmd	4_M_01,{
 OnInit:
 	sellitem Hot_Sauce;
@@ -1823,12 +1737,6 @@ OnInit:
 einbroch,224,207,5	trader	Chef Assistant#ein	4_M_01,{
 OnInit:
 	sellitem Cooking_Oil;
-}
-
-lighthalzen,126,126,3	trader	Chef Assistant#lhz	4_M_01,{
-OnInit:
-	sellitem Red_Spice;
-	sellitem Yellow_Spice;
 }
 
 amatsu,206,150,3	trader	Chef Assistant#ama	4_M_01,{

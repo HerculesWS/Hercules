@@ -192,6 +192,7 @@ lighthalzen,207,310,5	script	Lighthalzen Guide#lhz01::GuideLighthazlen	4_M_EIN_S
 		}
 	}
 	end;
+
 L_Mark:
 	mes "[Lighthalzen Guide]";
 	mes "I will mark the location";
@@ -200,6 +201,8 @@ L_Mark:
 	mes "Would you like to check any other locations?";
 	return;
 }
+
 lighthalzen,220,310,3	duplicate(GuideLighthazlen)	Lighthalzen Guide#lhz02	4_M_EIN_SOLDIER
 lighthalzen,154,100,5	duplicate(GuideLighthazlen)	Lighthalzen Guide#lhz03	4_M_EIN_SOLDIER
 lighthalzen,307,224,3	duplicate(GuideLighthazlen)	Lighthalzen Guide#lhz04	4_M_EIN_SOLDIER
+lighthalzen,247,82,5	duplicate(GuideLighthazlen)	Lighthalzen Guide#lhz05	4_M_EIN_SOLDIER
