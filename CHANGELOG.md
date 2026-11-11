@@ -22,7 +22,13 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
-## [v2026.10] `November 2026`
+## [v2026.10+1] `October 2026` `PATCH 1`
+
+### Fixed
+- Fixed HPM hooks generator failing on a different output by newer doxygen on Arch Linux (#3524)
+- Fixed HPM hooks inability to parse templated and namespaced types (#3524)
+
+## [v2026.10] `October 2026`
 
 ### Added
 - Added a halper macro to apply `#pragma pack` to platforms that supports it only. (#3515)
