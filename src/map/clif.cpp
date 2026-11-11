@@ -21326,13 +21326,14 @@ static void clif_cashShopOpen(int fd, struct map_session_data *sd, int tab)
 	p->tab = tab;
 #endif
 	WFIFOSET(fd, sizeof(struct PACKET_ZC_SE_CASHSHOP_OPEN));
+	sd->state.cashshop_ui = 1;
 #endif
 }
 
 static void clif_parse_cashShopClose(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 static void clif_parse_cashShopClose(int fd, struct map_session_data *sd)
 {
-	/* TODO apply some state tracking */
+	sd->state.cashshop_ui = 0;
 }
 
 static void clif_parse_cashShopSchedule(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
@@ -22213,7 +22214,6 @@ static void clif_parse_NPCShopClosed(int fd, struct map_session_data *sd) __attr
 /* Thanks to Yommy */
 static void clif_parse_NPCShopClosed(int fd, struct map_session_data *sd)
 {
-	/* TODO track the state <3~ */
 	sd->npc_shopid = 0;
 }
 
@@ -22254,7 +22254,6 @@ static void clif_npc_market_open(struct map_session_data *sd, struct npc_data *n
 static void clif_parse_NPCMarketClosed(int fd, struct map_session_data *sd) __attribute__((nonnull (2)));
 static void clif_parse_NPCMarketClosed(int fd, struct map_session_data *sd)
 {
-	/* TODO track the state <3~ */
 	sd->npc_shopid = 0;
 }
 
