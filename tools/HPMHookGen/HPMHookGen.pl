@@ -37,15 +37,21 @@ sub trim($) {
 sub parse($$) {
 	my ($p, $d) = @_;
 
-	$p =~ s/^.*?\)\((.*)\).*$/$1/; # Clean up extra parentheses )(around the arglist)
+	$p =~ s/^.*?\)?\((.*)\).*$/$1/; # Clean up extra parentheses )(around the arglist)
 
 	# Retrieve return type
-	unless ($d =~ /^(.+)\(\*\s*[a-zA-Z0-9_]+_interface(?:_private)?::([^\)]+)\s*\)\s*\(.*\)$/) {
+	my $rt;
+	my $name;
+	if ($d =~ /^(.+)\(\*\)\s*[a-zA-Z0-9_]+_interface(?:_private)?::([^\)\(]+)\s*\(.*\)$/) {
+		$rt = trim($1);   #return type
+		$name = trim($2); #function name
+	} elsif ($d =~ /^(.+)\(\*\s*[a-zA-Z0-9_]+_interface(?:_private)?::([^\)]+)\s*\)\s*\(.*\)$/) {
+		$rt = trim($1);   #return type
+		$name = trim($2); #function name
+	} else {
 		print "Error: unable to parse '$d'\n";
 		return {};
 	}
-	my $rt = trim($1);   #return type
-	my $name = trim($2); #function name
 
 	my @args;
 	my ($anonvars, $variadic) = (0, 0);
@@ -54,20 +60,21 @@ sub parse($$) {
 	$p = ' ' unless $p; # ensure there's at least one character (we don't want a do{} block)
 	while ($p) { # Scan the string for variables
 		my $current = '';
-		my ($paren, $needspace) = (0, 0);
+		my $needspace = 0;
+		my @nest = ();
 
 		while ($p) { # Parse tokens
 			$p =~ s|^(?:\s*(?:/\*.*?\*/)?)*||; # strip heading whitespace and c-style comments
 			last unless $p;
 
-			if ($p =~ s/^([a-zA-Z0-9_]+)//) { # Word (variable, type)
+			if ($p =~ s/^((?:[a-zA-Z0-9_]+::)*[a-zA-Z0-9_]+)//) { # Word (variable, type)
 				$current .= ' ' if $needspace;
 				$current .= $1;
 				$needspace = 1;
 				next;
 			}
 			if ($p =~ s/^(,)//) { # Comma
-				last unless $paren; # Argument terminator unless inside parentheses
+				last unless $#nest ge 0; # Argument terminator unless inside parentheses
 				$current .= $1;
 				$needspace = 1;
 				next;
@@ -87,17 +94,34 @@ sub parse($$) {
 				$current .= ' ' if $needspace;
 				$current .= $1;
 				$needspace = 0;
-				$paren++;
+				push(@nest, '(');
 				next;
 			}
 			if ($p =~ s/^(\))//) { # Closed parenthesis
 				$current .= $1;
 				$needspace = 1;
-				if (!$paren) {
+				if ($#nest lt 0 or $nest[-1] ne '(') {
 					$notes .= "\n/* Error: unexpected ')' */";
 					print "Error: unexpected ')' at '$p'\n";
 				} else {
-					$paren--;
+					pop(@nest);
+				}
+				next;
+			}
+			if ($p =~ s/^(<)//) { # Open angular bracket
+				$current .= $1;
+				$needspace = 0;
+				push(@nest, '<');
+				next;
+			}
+			if ($p =~ s/^(>)//) { # Closed angular bracket
+				$current .= $1;
+				$needspace = 1;
+				if ($#nest lt 0 or $nest[-1] ne '<') {
+					$notes .= "\n/* Error: unexpected '>' */";
+					print "Error: unexpected '>' at '$p'\n";
+				} else {
+					pop(@nest);
 				}
 				next;
 			}
@@ -154,7 +178,7 @@ sub parse($$) {
 				}
 				last; # No other modifiers
 			}
-			if ($current =~ /^\s*(\w+)((?:const|[*\s])*)(\w*)\s*((?:\[\])?)$/) { # Variable type and name
+			if ($current =~ /^\s*((?:[a-zA-Z0-9_]+::)*\w+(?:<.*>)?)((?:const|[*\s])*)(\w*)\s*((?:\[\])?)$/) { # Variable type and name
 				$type1 .= trim($1);
 				$indir = trim($2 // '');
 				$var = trim($3 // '');
