@@ -6842,6 +6842,8 @@ struct {
 	struct HPMHookPoint *HP_skill_check_npc_chaospanic_post;
 	struct HPMHookPoint *HP_skill_count_wos_pre;
 	struct HPMHookPoint *HP_skill_count_wos_post;
+	struct HPMHookPoint *HP_skill_basilica_area_clear_pre;
+	struct HPMHookPoint *HP_skill_basilica_area_clear_post;
 	struct HPMHookPoint *HP_skill_add_bard_dancer_soullink_songs_pre;
 	struct HPMHookPoint *HP_skill_add_bard_dancer_soullink_songs_post;
 	struct HPMHookPoint *HP_sockt_init_pre;
@@ -14465,6 +14467,8 @@ struct {
 	int HP_skill_check_npc_chaospanic_post;
 	int HP_skill_count_wos_pre;
 	int HP_skill_count_wos_post;
+	int HP_skill_basilica_area_clear_pre;
+	int HP_skill_basilica_area_clear_post;
 	int HP_skill_add_bard_dancer_soullink_songs_pre;
 	int HP_skill_add_bard_dancer_soullink_songs_post;
 	int HP_sockt_init_pre;

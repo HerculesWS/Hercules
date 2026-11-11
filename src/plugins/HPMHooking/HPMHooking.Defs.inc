@@ -8920,6 +8920,8 @@ typedef int (*HPMHOOK_pre_skill_check_npc_chaospanic) (struct block_list **bl, v
 typedef int (*HPMHOOK_post_skill_check_npc_chaospanic) (int retVal___, struct block_list *bl, va_list args);
 typedef int (*HPMHOOK_pre_skill_count_wos) (struct block_list **bl, va_list ap);
 typedef int (*HPMHOOK_post_skill_count_wos) (int retVal___, struct block_list *bl, va_list ap);
+typedef bool (*HPMHOOK_pre_skill_basilica_area_clear) (struct block_list **src, int *x, int *y);
+typedef bool (*HPMHOOK_post_skill_basilica_area_clear) (bool retVal___, struct block_list *src, int x, int y);
 typedef void (*HPMHOOK_pre_skill_add_bard_dancer_soullink_songs) (struct map_session_data **sd);
 typedef void (*HPMHOOK_post_skill_add_bard_dancer_soullink_songs) (struct map_session_data *sd);
 #endif

@@ -91418,6 +91418,33 @@ int HP_skill_count_wos(struct block_list *bl, va_list ap) {
 	}
 	return retVal___;
 }
+bool HP_skill_basilica_area_clear(struct block_list *src, int x, int y) {
+	int hIndex = 0;
+	bool retVal___ = false;
+	if (HPMHooks.count.HP_skill_basilica_area_clear_pre > 0) {
+		bool (*preHookFunc) (struct block_list **src, int *x, int *y);
+		*HPMforce_return = false;
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_basilica_area_clear_pre; hIndex++) {
+			preHookFunc = (bool (*) (struct block_list **src, int *x, int *y))HPMHooks.list.HP_skill_basilica_area_clear_pre[hIndex].func;
+			retVal___ = preHookFunc(&src, &x, &y);
+		}
+		if (*HPMforce_return) {
+			*HPMforce_return = false;
+			return retVal___;
+		}
+	}
+	{
+		retVal___ = HPMHooks.source.skill.basilica_area_clear(src, x, y);
+	}
+	if (HPMHooks.count.HP_skill_basilica_area_clear_post > 0) {
+		bool (*postHookFunc) (bool retVal___, struct block_list *src, int x, int y);
+		for (hIndex = 0; hIndex < HPMHooks.count.HP_skill_basilica_area_clear_post; hIndex++) {
+			postHookFunc = (bool (*) (bool retVal___, struct block_list *src, int x, int y))HPMHooks.list.HP_skill_basilica_area_clear_post[hIndex].func;
+			retVal___ = postHookFunc(retVal___, src, x, y);
+		}
+	}
+	return retVal___;
+}
 void HP_skill_add_bard_dancer_soullink_songs(struct map_session_data *sd) {
 	int hIndex = 0;
 	if (HPMHooks.count.HP_skill_add_bard_dancer_soullink_songs_pre > 0) {
