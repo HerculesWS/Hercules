@@ -2,11 +2,8 @@ Hercules
 ========
 
 Build Status:
-![Github Action Status](https://github.com/HerculesWS/Hercules/workflows/build/badge.svg)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/cm9xbwurpbltqjop?svg=true)](https://ci.appveyor.com/project/Haru/hercules)
+[![Github Action Status](https://github.com/HerculesWS/Hercules/actions/workflows/controller.yml/badge.svg?branch=stable)](https://github.com/HerculesWS/Hercules/actions/workflows/controller.yml)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/3892/badge.svg)](https://scan.coverity.com/projects/herculesws-hercules)
-[![Pipeline Status](https://gitlab.com/HerculesWS/Hercules/badges/master/pipeline.svg)](https://gitlab.com/HerculesWS/Hercules/-/commits/master)
-[![Coverage Report](https://gitlab.com/HerculesWS/Hercules/badges/master/coverage.svg)](https://gitlab.com/HerculesWS/Hercules/-/commits/master)
 
 Issues and pull requests:
 [![Open Issues](https://img.shields.io/github/issues-raw/HerculesWS/Hercules.svg?label=Open%20Issues)](https://github.com/HerculesWS/Hercules/issues)
@@ -21,7 +18,7 @@ Development and Community:
 
 Project Info:
 [![Release](https://img.shields.io/github/release/HerculesWS/Hercules.svg)](https://github.com/HerculesWS/Hercules/releases)
-![Language](https://img.shields.io/badge/language-C-yellow.svg)
+![Language](https://img.shields.io/badge/language-C++-yellow.svg)
 [![License](https://img.shields.io/badge/license-GPLv3-663399.svg)](https://github.com/HerculesWS/Hercules/blob/master/LICENSE)
 [![GitHub contributors](https://img.shields.io/github/contributors/HerculesWS/Hercules.svg)](https://github.com/HerculesWS/Hercules/graphs/contributors)
 
@@ -62,6 +59,7 @@ For a list of supported platforms, please refer to the [Supported Platforms](htt
   - perl (required to rebuild the HPM Hooks and HPMDataCheck)
     - requires the XML::Simple module, which in turn requires libexpat-dev
   - Doxygen (required to rebuild the HPM Hooks and HPMDataCheck)
+  - Python (required to rebuild HPM Hooks and HPMDataCheck and some other migration and sanity check scripts)
 
 For a full list of prerequisites, please refer to the [Building](https://github.com/HerculesWS/Hercules/wiki/Building) wiki page.
 
