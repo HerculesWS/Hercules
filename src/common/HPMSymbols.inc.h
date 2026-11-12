@@ -669,7 +669,7 @@ HPExport const char *HPM_shared_symbols(int server_type)
 		return "mapiif";
 #endif
 #ifdef COMMON_MAPINDEX_H /* mapindex */
-	if ((server_type & (SERVER_TYPE_MAP | SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("mapindex", mapindex))
+	if ((server_type & (SERVER_TYPE_MAP|SERVER_TYPE_CHAR)) != 0 && !HPM_SYMBOL("mapindex", mapindex))
 		return "mapindex";
 #endif
 #ifdef MAP_MAP_H /* mapit */
