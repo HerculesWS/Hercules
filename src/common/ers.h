@@ -88,19 +88,20 @@
  * All code except the typedef of ERInterface will be disabled.
  * To allow a smooth transition,
  */
-//#define DISABLE_ERS
+// #define DISABLE_ERS
 
 enum ERSOptions {
-	ERS_OPT_NONE        = 0x00,
+	ERS_OPT_NONE  = 0x00,
 	/// silently clears any entries left in the manager upon destruction
-	ERS_OPT_CLEAR       = 0x01,
+	ERS_OPT_CLEAR = 0x01,
 	/// wait for entries to come in order to list!
-	ERS_OPT_WAIT        = 0x02,
+	ERS_OPT_WAIT  = 0x02,
 	/// name is dynamic memory, and should be freed // UNUSED
 	// ERS_OPT_FREE_NAME   = 0x04, // UNUSED
 	/// clears used memory upon ers_free so that its all new to be reused on the next alloc
-	ERS_OPT_CLEAN       = 0x08,
-	/// signs that it should look for its own cache given it'll have a dynamic chunk size, so that it doesn't affect the other ERS it'd otherwise be sharing
+	ERS_OPT_CLEAN = 0x08,
+	/// signs that it should look for its own cache given it'll have a dynamic chunk size, so that it doesn't affect the
+	/// other ERS it'd otherwise be sharing
 	// ERS_OPT_FLEX_CHUNK  = 0x10, // UNUSED
 };
 
@@ -110,11 +111,13 @@ enum ERSOptions {
 class ERI
 {
   public:
-	explicit ERI() {
+	explicit ERI()
+	{
 		g_ers_instance_list.push_front(this);
 	}
 
-	virtual ~ERI() {
+	virtual ~ERI()
+	{
 		g_ers_instance_list.remove(this);
 	}
 
@@ -122,8 +125,7 @@ class ERI
 	 * Reports debug information for instance cache
 	 * @return used blocks, total blocks, memory used, total memory
 	 */
-	[[nodiscard]] virtual std::tuple<size_t, size_t, size_t, size_t>
-	        print_report_cache() const noexcept = 0;
+	[[nodiscard]] virtual std::tuple<size_t, size_t, size_t, size_t> print_report_cache() const noexcept = 0;
 
 #ifdef DEBUG
 	/**
@@ -168,7 +170,7 @@ class ers_chunk
 	static_assert(max_blocks_count > 0, "max_blocks_count has to be greater than 0");
 
   public:
-	ers_chunk() = default;
+	ers_chunk()                                  = default;
 	ers_chunk(ers_chunk &&other)                 = default;
 	ers_chunk &operator=(ers_chunk &&other)      = default;
 	ers_chunk(const ers_chunk &other)            = delete;
@@ -226,7 +228,7 @@ class ers_chunk
 
   private:
 	std::array<std::byte, sizeof(T) * max_blocks_count> m_buffer{}; // The memory chunk used
-	size_t m_used_blocks{0}; // Used objects in chunk
+	size_t m_used_blocks{0};                                        // Used objects in chunk
 };
 
 /**
@@ -242,7 +244,7 @@ class ERS final : public ERI
 	 * @param options a bitmask options of this instance manager
 	 */
 	ERS(const std::string &name, ERSOptions options) noexcept
-	        : ERI(), m_name(name), m_options(options){}; // FIXME: change this to a flag type
+	    : ERI(), m_name(name), m_options(options) {}; // FIXME: change this to a flag type
 
 	/**
 	 * Destroy this instance of the manager.
@@ -262,8 +264,7 @@ class ERS final : public ERI
 #else
 		if (used_blocks() > 0) {
 			if ((m_options & ERS_OPT_CLEAR) == 0) {
-				ShowWarning("Memory leak detected at ERS '%s', %" PRIuS " objects not freed.\n",
-				            m_name.c_str(),
+				ShowWarning("Memory leak detected at ERS '%s', %" PRIuS " objects not freed.\n", m_name.c_str(),
 				            used_blocks());
 			} else { // Call dtor on objects we're supposed to clean
 				for (auto *object : m_used_blocks) {
@@ -306,10 +307,10 @@ class ERS final : public ERI
 		if (Assert_chk(ret != nullptr))
 			std::terminate();
 
-#ifdef DEBUG
+  #ifdef DEBUG
 		if (m_peak < used_blocks())
 			m_peak = used_blocks();
-#endif
+  #endif
 #endif
 
 		register_used_block(ret);
@@ -348,8 +349,7 @@ class ERS final : public ERI
 	 * Reports debug information for instance cache
 	 * @return used blocks, total blocks, memory used, total memory
 	 */
-	[[nodiscard]] std::tuple<size_t, size_t, size_t, size_t>
-	        print_report_cache() const noexcept override
+	[[nodiscard]] std::tuple<size_t, size_t, size_t, size_t> print_report_cache() const noexcept override
 	{
 		ShowMessage(CL_BOLD "[ERS Cache of size '" CL_NORMAL CL_WHITE "%" PRIuS CL_NORMAL CL_BOLD
 		                    "' report]\n" CL_NORMAL,
@@ -357,18 +357,16 @@ class ERS final : public ERI
 		ShowMessage("\tblocks in use      : %" PRIuS "/%" PRIuS "\n", used_blocks(), used_blocks() + unused_blocks());
 		ShowMessage("\tblocks unused      : %" PRIuS "\n", unused_blocks());
 		ShowMessage("\tmemory in use      : %.2f MB\n",
-		            used_blocks() == 0 ? 0.
-		                                   : (double)((used_blocks() * sizeof(T)) / 1024) / 1024);
+		            used_blocks() == 0 ? 0. : (double)((used_blocks() * sizeof(T)) / 1024) / 1024);
 		ShowMessage("\tmemory allocated   : %.2f MB\n",
 		            (unused_blocks() + used_blocks()) == 0
-		                    ? 0.
-		                    : (double)(((used_blocks() + unused_blocks()) * sizeof(T)) / 1024)
-		                              / 1024);
+		              ? 0.
+		              : (double)(((used_blocks() + unused_blocks()) * sizeof(T)) / 1024) / 1024);
 
-		return {used_blocks(),
-		        used_blocks() + unused_blocks(),
-		        used_blocks() * sizeof(T),
-		        (used_blocks() + unused_blocks()) * sizeof(T)};
+		return {
+		    used_blocks(), used_blocks() + unused_blocks(), used_blocks() * sizeof(T),
+		    (used_blocks() + unused_blocks()) * sizeof(T)
+		};
 	}
 
 #ifdef DEBUG
@@ -394,7 +392,7 @@ class ERS final : public ERI
 #endif
 
   private:
-  	/**
+	/**
 	 * Returns never used blocks
 	 * @return allocated blocks that aren't used
 	 */
@@ -468,17 +466,14 @@ class ERS final : public ERI
 
 	std::string m_name; //< Name, used for debugging purposes
 
-	ERSOptions m_options {
-		ERS_OPT_NONE
-	}; //< Misc options
+	ERSOptions m_options{ERS_OPT_NONE}; //< Misc options
 
 #ifdef DEBUG
 	/* for data analysis [Ind/Hercules] */
 	size_t m_peak{0};
 #endif
 
-
-	std::deque<T *> m_reusable_blocks; //< Reuse linked list
+	std::deque<T *> m_reusable_blocks;     //< Reuse linked list
 	std::unordered_set<T *> m_used_blocks; //< List of used objects only used if ERS_OPT_CLEAR is set
 	std::vector<std::unique_ptr<ers_chunk<T, blocks_per_chunk>>> m_chunks; //< Memory blocks array
 };

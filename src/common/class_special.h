@@ -23,7 +23,8 @@
 // - JOB_CONSTANT - The name of the constant representing this job ID. This will generate JOB_ and MAPID_ constants
 //                  (e.g. NOVICE --> generates JOB_NOVICE and MAPID_NOVICE)
 // - JOB_ID - Official numerical ID value of the job, as expected by the client
-// - MSGTBL_CONSTANT - Constant for the Job name in messages.conf, should be a msgtable.h enum value WITHOUT MSGTBL_ prefix.
+// - MSGTBL_CONSTANT - Constant for the Job name in messages.conf, should be a msgtable.h enum value WITHOUT MSGTBL_
+// prefix.
 //                  (e.g. JOB_NOVICE --> becomes MSGTBL_JOB_NOVICE)
 
 JOB_ENUM_VALUE(BARD, 19, JOB_BARD)

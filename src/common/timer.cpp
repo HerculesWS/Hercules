@@ -30,10 +30,10 @@
 #include "common/utils.h"
 
 #ifdef WIN32
-#	include "common/winapi.h" // GetTickCount()
+  #include "common/winapi.h" // GetTickCount()
 #else
-#	include <sys/time.h> // struct timeval, gettimeofday()
-#	include <unistd.h>
+  #include <sys/time.h> // struct timeval, gettimeofday()
+  #include <unistd.h>
 #endif
 
 #include <algorithm>
@@ -62,45 +62,43 @@ std::unordered_map<uint32_t, TimerData> timer_data;
 /// @param tid1 First timer
 /// @param tid2 Second timer
 /// @return negative if tid1 is top, positive if tid2 is top, 0 if equal
-#define DIFFTICK_MINTOPCMP(tid1,tid2) DIFF_TICK(timer_data.at(tid1).tick, timer_data.at(tid2).tick)
+#define DIFFTICK_MINTOPCMP(tid1, tid2) DIFF_TICK(timer_data.at(tid1).tick, timer_data.at(tid2).tick)
 
 // timer heap (binary heap of tid's)
 static BHEAP_VAR(int, timer_heap);
 
-
 // server startup time
 static time_t start_time;
-
 
 /*----------------------------
  * Timer debugging
  *----------------------------*/
 static struct timer_func_list {
-	struct timer_func_list* next;
+	struct timer_func_list *next;
 	TimerFunc func;
-	const char* name;
+	const char *name;
 } *tfl_root = NULL;
 
 /// Sets the name of a timer function.
 static int timer_add_func_list(TimerFunc func, const char *name)
 {
-	struct timer_func_list* tfl;
+	struct timer_func_list *tfl;
 
 	nullpo_ret(func);
 	nullpo_ret(name);
 	if (name) {
-		for( tfl=tfl_root; tfl != NULL; tfl=tfl->next )
-		{// check suspicious cases
-			if( func == tfl->func )
-				ShowWarning("timer_add_func_list: duplicating function %p(%s) as %s.\n",tfl->func,tfl->name,name);
-			else if( strcmp(name,tfl->name) == 0 )
-				ShowWarning("timer_add_func_list: function %p has the same name as %p(%s)\n",func,tfl->func,tfl->name);
+		for (tfl = tfl_root; tfl != NULL; tfl = tfl->next) { // check suspicious cases
+			if (func == tfl->func)
+				ShowWarning("timer_add_func_list: duplicating function %p(%s) as %s.\n", tfl->func, tfl->name, name);
+			else if (strcmp(name, tfl->name) == 0)
+				ShowWarning("timer_add_func_list: function %p has the same name as %p(%s)\n", func, tfl->func,
+				            tfl->name);
 		}
-		CREATE(tfl,struct timer_func_list,1);
+		CREATE(tfl, struct timer_func_list, 1);
 		tfl->next = tfl_root;
 		tfl->func = func;
 		tfl->name = aStrdup(name);
-		tfl_root = tfl;
+		tfl_root  = tfl;
 	}
 	return 0;
 }
@@ -108,9 +106,9 @@ static int timer_add_func_list(TimerFunc func, const char *name)
 /// Returns the name of the timer function.
 static const char *search_timer_func_list(TimerFunc func)
 {
-	struct timer_func_list* tfl;
+	struct timer_func_list *tfl;
 
-	for( tfl=tfl_root; tfl != NULL; tfl=tfl->next )
+	for (tfl = tfl_root; tfl != NULL; tfl = tfl->next)
 		if (func == tfl->func)
 			return tfl->name;
 
@@ -123,7 +121,7 @@ static const char *search_timer_func_list(TimerFunc func)
 
 #if defined(ENABLE_RDTSC)
 static uint64 RDTSC_BEGINTICK = 0;
-static uint64 RDTSC_CLOCK = 0;
+static uint64 RDTSC_CLOCK     = 0;
 
 static __inline uint64 rdtsc_(void)
 {
@@ -132,7 +130,8 @@ static __inline uint64 rdtsc_(void)
 		uint32 dw[2];
 	} t;
 
-	asm volatile("rdtsc":"=a"(t.dw[0]), "=d"(t.dw[1]) );
+	asm volatile("rdtsc"
+	             : "=a"(t.dw[0]), "=d"(t.dw[1]));
 
 	return t.qw;
 }
@@ -146,17 +145,17 @@ static void rdtsc_calibrate(void)
 
 	RDTSC_CLOCK = 0;
 
-	for(i = 0; i < 5; i++){
+	for (i = 0; i < 5; i++) {
 		t1 = rdtsc_();
-		usleep(1000000); //1000 MS
-		t2 = rdtsc_();
+		usleep(1000000); // 1000 MS
+		t2           = rdtsc_();
 		RDTSC_CLOCK += (t2 - t1) / 1000;
 	}
 	RDTSC_CLOCK /= 5;
 
 	RDTSC_BEGINTICK = rdtsc_();
 
-	ShowMessage(" done. (Frequency: %u Mhz)\n", (uint32)(RDTSC_CLOCK/1000) );
+	ShowMessage(" done. (Frequency: %u Mhz)\n", (uint32)(RDTSC_CLOCK / 1000));
 }
 
 #endif
@@ -180,13 +179,13 @@ static int64 sys_tick(void)
 	//   2008 or newer. Since we still support older versions, this runtime
 	//   check is required in order not to crash.
 	// http://msdn.microsoft.com/en-us/library/windows/desktop/ms724411%28v=vs.85%29.aspx
-	static bool first = true;
-	static ULONGLONG (WINAPI *pGetTickCount64)(void) = NULL;
+	static bool first                                = true;
+	static ULONGLONG(WINAPI * pGetTickCount64)(void) = NULL;
 
-	if( first ) {
+	if (first) {
 		HMODULE hlib = GetModuleHandle(TEXT("KERNEL32.DLL"));
-		if( hlib != NULL )
-			pGetTickCount64 = (ULONGLONG (WINAPI *)(void))GetProcAddress(hlib, "GetTickCount64");
+		if (hlib != NULL)
+			pGetTickCount64 = (ULONGLONG(WINAPI *)(void))GetProcAddress(hlib, "GetTickCount64");
 		first = false;
 	}
 	if (pGetTickCount64)
@@ -237,8 +236,9 @@ static int64 timer_gettick_nocache(void)
 
 static int64 timer_gettick(void)
 {
-	return ( --gettick_count == 0 ) ? gettick_nocache() : gettick_cache;
+	return (--gettick_count == 0) ? gettick_nocache() : gettick_cache;
 }
+
 //////////////////////////////
 #else
 //////////////////////////////
@@ -252,6 +252,7 @@ static int64 timer_gettick(void)
 {
 	return sys_tick();
 }
+
 //////////////////////////////////////////////////////////////////////////
 #endif
 //////////////////////////////////////////////////////////////////////////
@@ -275,9 +276,9 @@ static void push_timer_heap(int tid)
 static int acquire_timer(void)
 {
 	constexpr auto allocation_steps = 256;
-	static uint32_t tid = 1; // timer ids starts from 1
+	static uint32_t tid             = 1; // timer ids starts from 1
 
-	while(timer_data.contains(tid)) {
+	while (timer_data.contains(tid)) {
 		if (tid == UINT32_MAX)
 			tid = 1;
 		else
@@ -300,7 +301,7 @@ static int timer_add(int64 tick, TimerFunc func, int id, intptr_t data)
 
 	nullpo_retr(INVALID_TIMER, func);
 
-	tid = acquire_timer();
+	tid                      = acquire_timer();
 	timer_data[tid].tick     = tick;
 	timer_data[tid].func     = func;
 	timer_data[tid].id       = id;
@@ -320,12 +321,13 @@ static int timer_add_interval(int64 tick, TimerFunc func, int id, intptr_t data,
 
 	nullpo_retr(INVALID_TIMER, func);
 	if (interval < 1) {
-		ShowError("timer_add_interval: invalid interval (tick=%" PRId64 " %p[%s] id=%d data=%" PRIdPTR " diff_tick=%" PRId64 ")\n",
+		ShowError("timer_add_interval: invalid interval (tick=%" PRId64 " %p[%s] id=%d data=%" PRIdPTR
+		          " diff_tick=%" PRId64 ")\n",
 		          tick, func, search_timer_func_list(func), id, data, DIFF_TICK(tick, timer->gettick()));
 		return INVALID_TIMER;
 	}
 
-	tid = acquire_timer();
+	tid                      = acquire_timer();
 	timer_data[tid].tick     = tick;
 	timer_data[tid].func     = func;
 	timer_data[tid].id       = id;
@@ -356,8 +358,9 @@ static int timer_do_delete(int tid, TimerFunc func)
 		Assert_retr(-1, 0);
 		return -1;
 	}
-	if( timer_data[tid].func != func ) {
-		ShowError("timer_do_delete error : function mismatch [%d]%p(%s) != %p(%s)\n", tid, timer_data[tid].func, search_timer_func_list(timer_data[tid].func), func, search_timer_func_list(func));
+	if (timer_data[tid].func != func) {
+		ShowError("timer_do_delete error : function mismatch [%d]%p(%s) != %p(%s)\n", tid, timer_data[tid].func,
+		          search_timer_func_list(timer_data[tid].func), func, search_timer_func_list(func));
 		Assert_retr(-2, 0);
 		return -2;
 	}
@@ -382,7 +385,7 @@ static int64 timer_addtick(int tid, int64 tick)
 		Assert_retr(-1, 0);
 		return -1;
 	}
-	return timer->settick(tid, timer_data[tid].tick+tick);
+	return timer->settick(tid, timer_data[tid].tick + tick);
 }
 
 /**
@@ -406,21 +409,23 @@ static int64 timer_settick(int tid, int64 tick)
 	// search timer position
 	ARR_FIND(0, BHEAP_LENGTH(timer_heap), i, BHEAP_DATA(timer_heap)[i] == tid);
 	if (i == BHEAP_LENGTH(timer_heap)) {
-		ShowError("timer_settick: no such timer [%d](%p(%s))\n", tid, timer_data[tid].func, search_timer_func_list(timer_data[tid].func));
+		ShowError("timer_settick: no such timer [%d](%p(%s))\n", tid, timer_data[tid].func,
+		          search_timer_func_list(timer_data[tid].func));
 		Assert_retr(-1, 0);
 		return -1;
 	}
 
 	if (timer_data[tid].func == NULL) {
-		ShowError("timer_settick error: set tick for timer with wrong func [%d](%p(%s))\n", tid, timer_data[tid].func, search_timer_func_list(timer_data[tid].func));
+		ShowError("timer_settick error: set tick for timer with wrong func [%d](%p(%s))\n", tid, timer_data[tid].func,
+		          search_timer_func_list(timer_data[tid].func));
 		Assert_retr(-1, 0);
 		return -1;
 	}
 
-	if( tick == -1 )
+	if (tick == -1)
 		tick = 0; // add 1ms to avoid the error value -1
 
-	if( timer_data[tid].tick == tick )
+	if (timer_data[tid].tick == tick)
 		return tick; // nothing to do, already in proper position
 
 	// pop and push adjusted timer
@@ -442,17 +447,17 @@ static int do_timer(int64 tick)
 
 	// process all timers one by one
 	while (BHEAP_LENGTH(timer_heap) > 0) {
-		int tid = BHEAP_PEEK(timer_heap);// top element in heap (smallest tick)
+		int tid = BHEAP_PEEK(timer_heap); // top element in heap (smallest tick)
 
 		diff = DIFF_TICK(timer_data[tid].tick, tick);
-		if( diff > 0 )
+		if (diff > 0)
 			break; // no more expired timers to process
 
 		// remove timer
 		BHEAP_POP(timer_heap, DIFFTICK_MINTOPCMP, std::swap);
 
-		if( timer_data[tid].func ) {
-			if( diff < -1000 )
+		if (timer_data[tid].func) {
+			if (diff < -1000)
 				// timer was delayed for more than 1 second, use current tick instead
 				timer_data[tid].func(tid, tick, timer_data[tid].id, timer_data[tid].data);
 			else
@@ -496,7 +501,7 @@ static void timer_final(void)
 	struct timer_func_list *tfl;
 	struct timer_func_list *next;
 
-	for( tfl=tfl_root; tfl != NULL; tfl = next ) {
+	for (tfl = tfl_root; tfl != NULL; tfl = next) {
 		next = tfl->next; // copy next pointer
 		// free structures
 		aFree((char *)tfl->name); // FIXME: we shouldn't pass const to aFree
@@ -508,10 +513,10 @@ static void timer_final(void)
 }
 
 #ifdef BUILDBOT
-#define ShowClockError ShowInfo
-#else  // BUILDBOT
-#define ShowClockError ShowError
-#endif  // BUILDBOT
+  #define ShowClockError ShowInfo
+#else // BUILDBOT
+  #define ShowClockError ShowError
+#endif // BUILDBOT
 
 static bool timer_get_current_clocksource(char *buf, int buf_size)
 {
@@ -535,7 +540,7 @@ static bool timer_get_current_clocksource(char *buf, int buf_size)
 	return true;
 #else  // defined(__linux) || defined(__linux__)
 	return false;
-#endif  // defined(__linux) || defined(__linux__)
+#endif // defined(__linux) || defined(__linux__)
 }
 
 static bool timer_get_available_clocksource(char *buf, int buf_size)
@@ -560,7 +565,7 @@ static bool timer_get_available_clocksource(char *buf, int buf_size)
 	return true;
 #else  // defined(__linux) || defined(__linux__)
 	return false;
-#endif  // defined(__linux) || defined(__linux__)
+#endif // defined(__linux) || defined(__linux__)
 }
 
 static void timer_check_timers(void)
@@ -576,12 +581,14 @@ static void timer_check_timers(void)
 	const bool haveTsc = (strstr(bufAll, "tsc ") != NULL);
 	if (strcmp(bufCur, "tsc") != 0) {
 		if (haveTsc || (strcmp(bufCur, "hyperv_clocksource_tsc_page") != 0 && strcmp(bufCur, "kvm-clock") != 0)) {
-			ShowClockError("Unoptimal clock source detected: '%s'. Please set clock source to 'tsc' or 'hyperv_clocksource_tsc_page' or 'kvm-clock'\n", bufCur);
+			ShowClockError(
+			  "Unoptimal clock source detected: '%s'. Please set clock source to 'tsc' or 'hyperv_clocksource_tsc_page' or 'kvm-clock'\n",
+			  bufCur);
 			return;
 		}
 	}
 	ShowInfo("Using optimal clock source: '%s'\n", bufCur);
-#endif  // defined(__linux) || defined(__linux__)
+#endif // defined(__linux) || defined(__linux__)
 }
 
 #undef ShowClockError
@@ -596,20 +603,20 @@ void timer_defaults(void)
 	timer = &timer_s;
 
 	/* funcs */
-	timer->gettick = timer_gettick;
-	timer->gettick_nocache = timer_gettick_nocache;
-	timer->add = timer_add;
-	timer->add_interval = timer_add_interval;
-	timer->add_func_list = timer_add_func_list;
-	timer->get = timer_get;
-	timer->delete_ = timer_do_delete;
-	timer->addtick = timer_addtick;
-	timer->settick = timer_settick;
-	timer->get_uptime = timer_get_uptime;
-	timer->perform = do_timer;
-	timer->init = timer_init;
-	timer->final = timer_final;
-	timer->check_timers = timer_check_timers;
-	timer->get_current_clocksource = timer_get_current_clocksource;
+	timer->gettick                   = timer_gettick;
+	timer->gettick_nocache           = timer_gettick_nocache;
+	timer->add                       = timer_add;
+	timer->add_interval              = timer_add_interval;
+	timer->add_func_list             = timer_add_func_list;
+	timer->get                       = timer_get;
+	timer->delete_                   = timer_do_delete;
+	timer->addtick                   = timer_addtick;
+	timer->settick                   = timer_settick;
+	timer->get_uptime                = timer_get_uptime;
+	timer->perform                   = do_timer;
+	timer->init                      = timer_init;
+	timer->final                     = timer_final;
+	timer->check_timers              = timer_check_timers;
+	timer->get_current_clocksource   = timer_get_current_clocksource;
 	timer->get_available_clocksource = timer_get_available_clocksource;
 }

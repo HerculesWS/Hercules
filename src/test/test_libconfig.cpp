@@ -31,18 +31,19 @@
 
 #include <stdlib.h>
 
-#define TEST(name, function, ...) do { \
-	const char *message = NULL; \
-	ShowMessage("-------------------------------------------------------------------------------\n"); \
-	ShowNotice("Testing %s...\n", (name)); \
-	if ((message = (function)(##__VA_ARGS__)) != NULL) { \
-		ShowError("Failed. %s\n", message); \
-		ShowMessage("===============================================================================\n"); \
-		ShowFatalError("Failure. Aborting further tests.\n"); \
-		exit(EXIT_FAILURE); \
-	} \
-	ShowInfo("Test passed.\n"); \
-} while (false)
+#define TEST(name, function, ...) \
+	do { \
+		const char *message = NULL; \
+		ShowMessage("-------------------------------------------------------------------------------\n"); \
+		ShowNotice("Testing %s...\n", (name)); \
+		if ((message = (function)(##__VA_ARGS__)) != NULL) { \
+			ShowError("Failed. %s\n", message); \
+			ShowMessage("===============================================================================\n"); \
+			ShowFatalError("Failure. Aborting further tests.\n"); \
+			exit(EXIT_FAILURE); \
+		} \
+		ShowInfo("Test passed.\n"); \
+	} while (false)
 
 static const char *test_libconfig_truefalse(void)
 {
@@ -266,7 +267,12 @@ static const char *test_libconfig_lookup(void)
 		return "libconfig->lookup_bool failed.";
 	}
 
-	if (libconfig->lookup_string(&config, "Setting_String", &str) == CONFIG_FALSE || str == NULL || str[0] != '1' || str[1] != '\0') {
+	if (
+	  libconfig->lookup_string(&config, "Setting_String", &str) == CONFIG_FALSE
+	  || str == NULL
+	  || str[0] != '1'
+	  || str[1] != '\0'
+	) {
 		libconfig->destroy(&config);
 		return "libconfig->lookup_string failed.";
 	}
@@ -310,7 +316,11 @@ static const char *test_libconfig_setting_get(void)
 		return "libconfig->lookup_int64 failed.";
 	}
 
-	if ((t = libconfig->lookup(&config, "Setting_Float")) == NULL || (f = libconfig->setting_get_float(t)) < 1.0 - 0.1 || f > 1.0 + 0.1) {
+	if (
+	  (t = libconfig->lookup(&config, "Setting_Float")) == NULL
+	  || (f = libconfig->setting_get_float(t)) < 1.0 - 0.1
+	  || f > 1.0 + 0.1
+	) {
 		libconfig->destroy(&config);
 		return "libconfig->lookup_float failed.";
 	}
@@ -320,7 +330,12 @@ static const char *test_libconfig_setting_get(void)
 		return "libconfig->lookup_bool failed.";
 	}
 
-	if ((t = libconfig->lookup(&config, "Setting_String")) == NULL || (str = libconfig->setting_get_string(t)) == NULL || str[0] != '1' || str[1] != '\0') {
+	if (
+	  (t = libconfig->lookup(&config, "Setting_String")) == NULL
+	  || (str = libconfig->setting_get_string(t)) == NULL
+	  || str[0] != '1'
+	  || str[1] != '\0'
+	) {
 		libconfig->destroy(&config);
 		return "libconfig->lookup_string failed.";
 	}
@@ -357,12 +372,18 @@ static const char *test_libconfig_setting_get(void)
 		return "libconfig->setting_get_elem failed.";
 	}
 
-	if ((t = libconfig->setting_get_member(config.root, "Setting_Int")) == NULL || libconfig->setting_get_int(t) != 1 || strcmp(config_setting_name(t), "Setting_Int") != 0) {
+	if (
+	  (t = libconfig->setting_get_member(config.root, "Setting_Int")) == NULL
+	  || libconfig->setting_get_int(t) != 1
+	  || strcmp(config_setting_name(t), "Setting_Int") != 0
+	) {
 		libconfig->destroy(&config);
 		return "libconfig->setting_get_member failed.";
 	}
 
-	if ((t = libconfig->setting_get_elem(config.root, 0)) == NULL || strcmp(config_setting_name(t), "Setting_Int") != 0) {
+	if (
+	  (t = libconfig->setting_get_elem(config.root, 0)) == NULL || strcmp(config_setting_name(t), "Setting_Int") != 0
+	) {
 		libconfig->destroy(&config);
 		return "config_setting_name failed.";
 	}
@@ -428,7 +449,11 @@ static const char *test_libconfig_setting_lookup(void)
 		return "libconfig->setting_lookup_int64 failed.";
 	}
 
-	if (libconfig->setting_lookup_float(config.root, "Setting_Float", &f) == CONFIG_FALSE || f < 1.0 - 0.1 || f > 1.0 + 0.1) {
+	if (
+	  libconfig->setting_lookup_float(config.root, "Setting_Float", &f) == CONFIG_FALSE
+	  || f < 1.0 - 0.1
+	  || f > 1.0 + 0.1
+	) {
 		libconfig->destroy(&config);
 		return "libconfig->setting_lookup_float failed.";
 	}
@@ -438,7 +463,12 @@ static const char *test_libconfig_setting_lookup(void)
 		return "libconfig->setting_lookup_bool failed.";
 	}
 
-	if (libconfig->setting_lookup_string(config.root, "Setting_String", &str) == CONFIG_FALSE || str == NULL || str[0] != '1' || str[1] != '\0') {
+	if (
+	  libconfig->setting_lookup_string(config.root, "Setting_String", &str) == CONFIG_FALSE
+	  || str == NULL
+	  || str[0] != '1'
+	  || str[1] != '\0'
+	) {
 		libconfig->destroy(&config);
 		return "libconfig->setting_lookup_string failed.";
 	}
@@ -475,65 +505,113 @@ static const char *test_libconfig_setting_types(void)
 		return "CONFIG_TYPE_GROUP failed.";
 	}
 
-	if ((t = libconfig->lookup(&config, "Setting_Int")) == NULL || config_setting_type(t) != CONFIG_TYPE_INT
-			|| config_setting_is_group(t) || config_setting_is_array(t) || config_setting_is_list(t)
-			|| config_setting_is_aggregate(t) || !config_setting_is_scalar(t) || !config_setting_is_number(t)
+	if (
+	  (t = libconfig->lookup(&config, "Setting_Int")) == NULL
+	  || config_setting_type(t) != CONFIG_TYPE_INT
+	  || config_setting_is_group(t)
+	  || config_setting_is_array(t)
+	  || config_setting_is_list(t)
+	  || config_setting_is_aggregate(t)
+	  || !config_setting_is_scalar(t)
+	  || !config_setting_is_number(t)
 	) {
 		libconfig->destroy(&config);
 		return "CONFIG_TYPE_INT failed.";
 	}
 
-	if ((t = libconfig->lookup(&config, "Setting_Int64")) == NULL || config_setting_type(t) != CONFIG_TYPE_INT64
-			|| config_setting_is_group(t) || config_setting_is_array(t) || config_setting_is_list(t)
-			|| config_setting_is_aggregate(t) || !config_setting_is_scalar(t) || !config_setting_is_number(t)
+	if (
+	  (t = libconfig->lookup(&config, "Setting_Int64")) == NULL
+	  || config_setting_type(t) != CONFIG_TYPE_INT64
+	  || config_setting_is_group(t)
+	  || config_setting_is_array(t)
+	  || config_setting_is_list(t)
+	  || config_setting_is_aggregate(t)
+	  || !config_setting_is_scalar(t)
+	  || !config_setting_is_number(t)
 	) {
 		libconfig->destroy(&config);
 		return "CONFIG_TYPE_INT64 failed.";
 	}
 
-	if ((t = libconfig->lookup(&config, "Setting_Float")) == NULL || config_setting_type(t) != CONFIG_TYPE_FLOAT
-			|| config_setting_is_group(t) || config_setting_is_array(t) || config_setting_is_list(t)
-			|| config_setting_is_aggregate(t) || !config_setting_is_scalar(t) || !config_setting_is_number(t)
+	if (
+	  (t = libconfig->lookup(&config, "Setting_Float")) == NULL
+	  || config_setting_type(t) != CONFIG_TYPE_FLOAT
+	  || config_setting_is_group(t)
+	  || config_setting_is_array(t)
+	  || config_setting_is_list(t)
+	  || config_setting_is_aggregate(t)
+	  || !config_setting_is_scalar(t)
+	  || !config_setting_is_number(t)
 	) {
 		libconfig->destroy(&config);
 		return "CONFIG_TYPE_FLOAT failed.";
 	}
 
-	if ((t = libconfig->lookup(&config, "Setting_Bool")) == NULL || config_setting_type(t) != CONFIG_TYPE_BOOL
-			|| config_setting_is_group(t) || config_setting_is_array(t) || config_setting_is_list(t)
-			|| config_setting_is_aggregate(t) || !config_setting_is_scalar(t) || config_setting_is_number(t)
+	if (
+	  (t = libconfig->lookup(&config, "Setting_Bool")) == NULL
+	  || config_setting_type(t) != CONFIG_TYPE_BOOL
+	  || config_setting_is_group(t)
+	  || config_setting_is_array(t)
+	  || config_setting_is_list(t)
+	  || config_setting_is_aggregate(t)
+	  || !config_setting_is_scalar(t)
+	  || config_setting_is_number(t)
 	) {
 		libconfig->destroy(&config);
 		return "CONFIG_TYPE_BOOL failed.";
 	}
 
-	if ((t = libconfig->lookup(&config, "Setting_String")) == NULL || config_setting_type(t) != CONFIG_TYPE_STRING
-			|| config_setting_is_group(t) || config_setting_is_array(t) || config_setting_is_list(t)
-			|| config_setting_is_aggregate(t) || !config_setting_is_scalar(t) || config_setting_is_number(t)
+	if (
+	  (t = libconfig->lookup(&config, "Setting_String")) == NULL
+	  || config_setting_type(t) != CONFIG_TYPE_STRING
+	  || config_setting_is_group(t)
+	  || config_setting_is_array(t)
+	  || config_setting_is_list(t)
+	  || config_setting_is_aggregate(t)
+	  || !config_setting_is_scalar(t)
+	  || config_setting_is_number(t)
 	) {
 		libconfig->destroy(&config);
 		return "CONFIG_TYPE_STRING failed.";
 	}
 
-	if ((t = libconfig->lookup(&config, "Setting_Array")) == NULL || config_setting_type(t) != CONFIG_TYPE_ARRAY
-			|| config_setting_is_group(t) || !config_setting_is_array(t) || config_setting_is_list(t)
-			|| !config_setting_is_aggregate(t) || config_setting_is_scalar(t) || config_setting_is_number(t)
+	if (
+	  (t = libconfig->lookup(&config, "Setting_Array")) == NULL
+	  || config_setting_type(t) != CONFIG_TYPE_ARRAY
+	  || config_setting_is_group(t)
+	  || !config_setting_is_array(t)
+	  || config_setting_is_list(t)
+	  || !config_setting_is_aggregate(t)
+	  || config_setting_is_scalar(t)
+	  || config_setting_is_number(t)
 	) {
 		libconfig->destroy(&config);
 		return "CONFIG_TYPE_ARRAY failed.";
 	}
 
-	if ((t = libconfig->lookup(&config, "Setting_Group")) == NULL || config_setting_type(t) != CONFIG_TYPE_GROUP
-			|| !config_setting_is_group(t) || config_setting_is_array(t) || config_setting_is_list(t)
-			|| !config_setting_is_aggregate(t) || config_setting_is_scalar(t) || config_setting_is_number(t)
+	if (
+	  (t = libconfig->lookup(&config, "Setting_Group")) == NULL
+	  || config_setting_type(t) != CONFIG_TYPE_GROUP
+	  || !config_setting_is_group(t)
+	  || config_setting_is_array(t)
+	  || config_setting_is_list(t)
+	  || !config_setting_is_aggregate(t)
+	  || config_setting_is_scalar(t)
+	  || config_setting_is_number(t)
 	) {
 		libconfig->destroy(&config);
 		return "CONFIG_TYPE_GROUP failed.";
 	}
 
-	if ((t = libconfig->lookup(&config, "Setting_List")) == NULL || config_setting_type(t) != CONFIG_TYPE_LIST
-			|| config_setting_is_group(t) || config_setting_is_array(t) || !config_setting_is_list(t)
-			|| !config_setting_is_aggregate(t) || config_setting_is_scalar(t) || config_setting_is_number(t)
+	if (
+	  (t = libconfig->lookup(&config, "Setting_List")) == NULL
+	  || config_setting_type(t) != CONFIG_TYPE_LIST
+	  || config_setting_is_group(t)
+	  || config_setting_is_array(t)
+	  || !config_setting_is_list(t)
+	  || !config_setting_is_aggregate(t)
+	  || config_setting_is_scalar(t)
+	  || config_setting_is_number(t)
 	) {
 		libconfig->destroy(&config);
 		return "CONFIG_TYPE_LIST failed.";
@@ -810,7 +888,6 @@ static const char *test_libconfig_duplicate_keys(void)
 		return "Wrong amount of duplicates scanned.";
 	}
 
-
 	libconfig->destroy(&config);
 	return NULL;
 }
@@ -881,17 +958,22 @@ int do_init(int argc, char **argv)
 	return EXIT_SUCCESS;
 }
 
-int do_final(void) {
+int do_final(void)
+{
 	ShowMessage("===============================================================================\n");
 	ShowStatus("All tests passed.\n");
 	return EXIT_SUCCESS;
 }
 
-void do_abort(void) { }
+void do_abort(void)
+{
+}
 
 void set_server_type(void)
 {
 	SERVER_TYPE = SERVER_TYPE_UNKNOWN;
 }
 
-void cmdline_args_init_local(void) { }
+void cmdline_args_init_local(void)
+{
+}
