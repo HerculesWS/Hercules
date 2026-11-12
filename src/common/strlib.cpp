@@ -33,6 +33,12 @@
 
 #define J_MAX_MALLOC_SIZE 65535
 
+namespace
+{
+constexpr auto str_buf_minimum_expansion = 1024;                          // strbuf minimum expansion
+constexpr auto str_buf_minimum_size      = str_buf_minimum_expansion + 1; // 1024 characters + nul terminator
+}; // namespace
+
 static struct strlib_interface strlib_s;
 static struct stringbuf_interface stringbuf_s;
 static struct sv_interface sv_s;
@@ -1012,7 +1018,7 @@ static StringBuf *StringBuf_Malloc(void)
 static void StringBuf_Init(StringBuf *self)
 {
 	VECTOR_INIT(self->buf);
-	VECTOR_RESIZE(self->buf, 1024 + 1);
+	VECTOR_RESIZE(self->buf, str_buf_minimum_size);
 }
 
 /// Appends the result of printf to the StringBuf
@@ -1050,7 +1056,11 @@ static int StringBuf_Vprintf(StringBuf *self, const char *fmt, va_list ap)
 			return VECTOR_LENGTH(self->buf);
 		}
 		/* Else try again with more space. */
-		VECTOR_RESIZE(self->buf, (VECTOR_CAPACITY(self->buf) - 1) * 2); // twice the old size and a minimum of 1024
+		if (VECTOR_CAPACITY(self->buf) < str_buf_minimum_size) {
+			VECTOR_RESIZE(self->buf, str_buf_minimum_size);
+		} else {
+			VECTOR_RESIZE(self->buf, (VECTOR_CAPACITY(self->buf) - 1) * 2 + 1); // twice the old size and a minimum of 1024
+		}
 	}
 }
 
@@ -1076,7 +1086,7 @@ static int StringBuf_AppendStr(StringBuf *self, const char *str)
 
 	if (needed >= available) {
 		// not enough space, expand the buffer (minimum expansion = 1024)
-		VECTOR_RESIZE(self->buf, VECTOR_CAPACITY(self->buf) + std::max((int)needed, 1024) + 1);
+		VECTOR_RESIZE(self->buf, VECTOR_CAPACITY(self->buf) + std::max((int)needed, str_buf_minimum_expansion) + 1);
 	}
 
 	memcpy(&VECTOR_INDEX(self->buf, VECTOR_LENGTH(self->buf)), str, needed);
