@@ -22,7 +22,8 @@
 #ifndef COMMON_FIFO_BUFFER_H
 #define COMMON_FIFO_BUFFER_H
 
-#include <cstdint>
+#include "common/hercules.h"
+
 #include <vector>
 
 /**
