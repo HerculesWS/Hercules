@@ -20356,13 +20356,13 @@ static BUILDIN(sscanf)
 			if (ref_str == NULL) {
 				CREATE(ref_str, char, strlen(str) + 1);
 			}
-			if (sscanf(str, buf, ref_str) == 0) {
+			if (auto result = sscanf(str, buf, ref_str); result == 0 || result == EOF) {
 				break;
 			}
 			script->set_reg(st, sd, reference_uid(reference_getid(data), reference_getindex(data)), buf_p, ref_str,
 			                reference_getref(data));
 		} else { // Number
-			if (sscanf(str, buf, &ref_int) == 0) {
+			if (auto result = sscanf(str, buf, &ref_int); result == 0 || result == EOF) {
 				break;
 			}
 			script->set_reg(st, sd, reference_uid(reference_getid(data), reference_getindex(data)), buf_p,
