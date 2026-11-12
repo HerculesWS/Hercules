@@ -22,6 +22,49 @@ If you are reading this in a text editor, simply ignore this section
 ### Removed
 -->
 
+## [v2026.10+2] `October 2026` `PATCH 2`
+
+### Changed
+
+#### Full code re-format
+
+The formatting was done with the clang-format tool built into clangd, as provided by the "clangd" (`llvm-vs-code-extensions.vscode-clangd`) vscode extension. The clangd runtime used was version 23.1.0 (which is, at the time of writing, the most recent version offered through the builtin 'clangd: Check for language server update' command).
+To apply the formatting in batch, the 'Format in context menu' `lacroixdavid1.vscode-format-context-menu` vscode extension was used.
+
+##### Suggested workflow to merge this release
+
+**read and familiarize with all the steps before starting**
+
+1. **Merge everything up to the special tag `v2026.10-before-clangformat`** normally, solving all conflicts and testing that there are no errors.
+2. **Check** that **the differences between your branch and the `v2026.10-before-clangformat` tag** only consist in your own changes (`git diff v2026.10-before-clangformat HEAD`). If not, check that you've merged everything until this point.
+3. From this step onwards, **continue on a temporary branch** until you're sure everything went well (i.e. `git checkout -b clang-format-temp`)
+4. **Attempt to merge the special tag `v2026.10-after-clangformat`** (which contains this PR). If this succeeds with no conflicts or small conflicts you can easily solve, you're done, else continue to step 5.
+5. **If the merge attempts produces conflicts too large** to handle, abort it (`git merge --abort`) and make sure your working copy has returned to the last known good state without unmerged temporary files
+6. **Ensure that you have clang-format version 23 installed** (tested through the vscode clangd extension, see above, which doesn't require special configuration if your environment is set up with the provided setup_env script and your copy of hercules builds correctly in that environment)
+7. **Manually apply clang-format to your src folder, following the same order as this PR**
+  - you can use the `lacroixdavid1.vscode-format-context-menu` or a similar addon to format several files or entire directories in one go) and create a commit after each step
+  - Note that each step will take some time, watch the progress bar in the bottom right corner of your vscode window
+  - If using clangd in vscode and batch-formatting several files, you may occasionally see an error saying the language server has crashed (it's been observed occasionally when formatting the entire src/map/* at once, crashing when it reaches script.cpp or status.cpp). If that happens, restart the language server (or if you prefer, restart vscode) try again with a smaller set of files
+  - Recommended order of commits:
+    - src/api/*
+    - src/test/*
+    - src/plugins/*
+    - src/common/*
+    - src/config/*
+    - src/login/*
+    - src/char/*
+    - src/map/packet_keys* src/map/packets_shuffle* src/map/packets.h
+    - src/map/messages_*
+    - src/map/packets_struct.h
+    - src/map/*
+8. **Compare your work branch against the Hercules `v2026.10-after-clangformat` tag** (i.e. `git diff v2026.10-after-clangformat HEAD`). If you only see changes that you recognize as your own (similar to what you saw on step 2), it's safe to proceed. If not, it's possible that you didn't fully merge the releases until now, or you missed some step.
+9. Mark the `v2026.10-after-clangformat` tag as merged by ignoring the upstream changes that you already reproduced independently (`git merge v2026.10-after-clangformat --strategy=ours`). **Note that if you do this without ensuring the correctness of step 8, your fork is at risk of permanently diverging from Hercules, and become unable to further merge releases without large conflicts. Do not proceed until you're certain**.
+10. **You can now merge** (or fast-forward) **your work branch** into your master branch
+11. **Continue merging the rest of the `v2026.10+2` release** (`git merge v2026.10+2`) into your master branch.
+
+## Fixed
+- Removed unused badges from README.md and corrected the badge for Github Actions (f3dc06bd97f543333f4c36a81df1e9de7a61c1dd)
+
 ## [v2026.10+1] `October 2026` `PATCH 1`
 
 ### Fixed
